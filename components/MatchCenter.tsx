@@ -15,6 +15,7 @@ interface MatchCenterProps {
     onInstantFinish: (matchId: string) => void;
     onSubstitute: (playerInId: string, playerOutId: string) => void;
     onUpdateTactic: (tactic: TeamTactic) => void;
+    onAutoFix: () => void;
     userTeamId: string;
     t: Translation;
     debugLogs: string[];
@@ -51,7 +52,7 @@ const lerpAngle = (start: number, end: number, t: number) => {
 
 export const MatchCenter: React.FC<MatchCenterProps> = ({
     match, homeTeam, awayTeam, homePlayers, awayPlayers,
-    onTick, onFinish, onInstantFinish, onSubstitute, onUpdateTactic, userTeamId, t, onPlayerClick
+    onTick, onFinish, onInstantFinish, onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, onPlayerClick
 }) => {
     const [speed, setSpeed] = useState<number>(1);
     const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
@@ -517,6 +518,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             onPlayerClick={onPlayerClick}
                             onUpdateLineup={(id, status) => { }}
                             onSwapPlayers={onSubstitute}
+                            onAutoFix={onAutoFix}
                             t={t}
                         />
                         <div className="mt-4 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded text-yellow-200 text-xs md:text-sm flex items-center gap-2">

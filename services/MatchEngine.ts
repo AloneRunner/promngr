@@ -223,18 +223,29 @@ export class MatchEngine {
     private internalMinute: number = 0;
     private currentLooseBallChaserId: string | null = null;
     private lastTouchTeamId: string | null = null;
+    private lastShooterId: string | null = null;
 
-    constructor(match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[]) {
+    // Substitution tracking
+    private homeSubsMade: number = 0;
+    private awaySubsMade: number = 0;
+    private readonly MAX_SUBS: number = 5; // Modern rules allow 5 subs
+    private lastAISubCheck: number = 0;
+    private userTeamId: string | null = null; // User's team won't get AI subs
+
+    constructor(match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) {
         this.match = match;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.homePlayers = homePlayers.filter(p => p.lineup === 'STARTING');
-        this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING');
+        // Keep all players (STARTING + BENCH) so substitutions can work
+        this.homePlayers = homePlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+        this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+        this.userTeamId = userTeamId || null;
 
         this.internalMinute = match.currentMinute;
 
-        this.initializeTactics(this.homePlayers, this.homeTeam.tactic);
-        this.initializeTactics(this.awayPlayers, this.awayTeam.tactic);
+        // Only initialize STARTING players on the pitch
+        this.initializeTactics(this.homePlayers.filter(p => p.lineup === 'STARTING'), this.homeTeam.tactic);
+        this.initializeTactics(this.awayPlayers.filter(p => p.lineup === 'STARTING'), this.awayTeam.tactic);
 
         [...this.homePlayers, ...this.awayPlayers].forEach(p => {
             if (!p.personality) {
@@ -272,12 +283,15 @@ export class MatchEngine {
             this.resetPositions('KICKOFF');
         }
 
-        [...this.homePlayers, ...this.awayPlayers].forEach(p => {
-            if (!this.sim.players[p.id]) {
-                const base = this.baseOffsets[p.id] || { x: 50, y: 50 };
-                this.sim.players[p.id] = { x: base.x, y: base.y, facing: 0, vx: 0, vy: 0, state: 'IDLE' };
-            }
-        });
+        // Only add STARTING players to the pitch simulation
+        [...this.homePlayers, ...this.awayPlayers]
+            .filter(p => p.lineup === 'STARTING')
+            .forEach(p => {
+                if (!this.sim.players[p.id]) {
+                    const base = this.baseOffsets[p.id] || { x: 50, y: 50 };
+                    this.sim.players[p.id] = { x: base.x, y: base.y, facing: 0, vx: 0, vy: 0, state: 'IDLE' };
+                }
+            });
     }
 
     private initializeTactics(players: Player[], tactic: TeamTactic) {
@@ -303,6 +317,10 @@ export class MatchEngine {
     }
 
     private getPlayer(id: string) { return [...this.homePlayers, ...this.awayPlayers].find(p => p.id === id); }
+
+    public getPlayerStamina(id: string): number | undefined {
+        return this.playerStates[id]?.currentStamina;
+    }
 
     // --- COMMUNICATION SYSTEM ---
     private emitTeamSignal(from: Player, type: 'CALL' | 'POINT' | 'HOLD', targetId?: string, radius: number = 45, durationTicks: number = 10) {
@@ -340,13 +358,20 @@ export class MatchEngine {
         const list = isHome ? this.homePlayers : this.awayPlayers;
         if (isHome) this.homeTeam.tactic = newTactic;
         else this.awayTeam.tactic = newTactic;
-        this.initializeTactics(list, newTactic);
+        this.initializeTactics(list.filter(p => p.lineup === 'STARTING'), newTactic);
     }
 
-    public substitutePlayer(playerIn: Player, playerOutId: string) {
+    public substitutePlayer(playerIn: Player, playerOutId: string, isAI: boolean = false) {
         const isHome = this.homeTeam.id === playerIn.teamId;
         const list = isHome ? this.homePlayers : this.awayPlayers;
         const idx = list.findIndex(p => p.id === playerOutId);
+
+        // Check sub limit
+        const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
+        if (subsMade >= this.MAX_SUBS) {
+            this.traceLog.push(`DEĞİŞİKLİK REDDEDİLDİ: ${isHome ? 'Ev sahibi' : 'Deplasman'} maksimum değişiklik hakkını kullandı.`);
+            return;
+        }
 
         if (idx !== -1) {
             const oldPos = this.sim.players[playerOutId];
@@ -364,14 +389,144 @@ export class MatchEngine {
             }
 
             this.playerStates[playerIn.id] = {
-                currentStamina: playerIn.condition || 100,
+                currentStamina: (playerIn.condition !== undefined ? playerIn.condition : 100),
                 decisionTimer: 0, possessionCooldown: 0, actionLock: 0, targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
             };
 
             list[idx] = playerIn;
-            this.initializeTactics(list, isHome ? this.homeTeam.tactic : this.awayTeam.tactic);
-            this.traceLog.push(`OYUNCU DEĞİŞİKLİĞİ: ${playerIn.lastName} oyunda.`);
+            this.initializeTactics(list.filter(p => p.lineup === 'STARTING'), isHome ? this.homeTeam.tactic : this.awayTeam.tactic);
+
+            // Increment sub counter
+            if (isHome) this.homeSubsMade++;
+            else this.awaySubsMade++;
+
+            this.traceLog.push(`OYUNCU DEĞİŞİKLİĞİ: ${playerIn.lastName} oyunda. (${isHome ? this.homeSubsMade : this.awaySubsMade}/${this.MAX_SUBS})`);
         }
+    }
+
+    // AI-driven substitutions for non-user teams
+    private processAISubstitutions(isHome: boolean) {
+        const team = isHome ? this.homeTeam : this.awayTeam;
+        const players = isHome ? this.homePlayers : this.awayPlayers;
+        const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
+
+        if (subsMade >= this.MAX_SUBS) return;
+        if (this.internalMinute < 55) return; // Only consider subs after 55th minute
+
+        const starters = players.filter(p => p.lineup === 'STARTING');
+        const bench = players.filter(p => p.lineup === 'BENCH');
+
+        if (bench.length === 0) return;
+
+        // Find player with worst stamina/performance
+        let worstPlayer: Player | null = null;
+        let worstScore = Infinity;
+
+        for (const p of starters) {
+            if (normalizePos(p) === Position.GK) continue; // Don't sub GK unless injured
+
+            const state = this.playerStates[p.id];
+            if (!state) continue;
+
+            // Score based on stamina and position match
+            let score = state.currentStamina;
+
+            // If very tired (below 50%), prioritize subbing greatly
+            if (state.currentStamina < 50) {
+                score -= 30;
+            }
+
+            if (score < worstScore) {
+                worstScore = score;
+                worstPlayer = p;
+            }
+        }
+
+        // Only sub if the player is getting tired (Yellow/Red)
+        // Yellow is usually around 60-70. So threshold 65 should catch them eventually.
+        if (!worstPlayer || worstScore > 65) return;
+
+        // Find best bench replacement for the position
+        const neededPos = normalizePos(worstPlayer);
+        let bestSub: Player | null = null;
+        let bestSubScore = -Infinity;
+
+        for (const sub of bench) {
+            const subState = this.playerStates[sub.id];
+            const stamina = subState ? subState.currentStamina : (sub.condition || 100);
+
+            // CRITICAL FIX: NEVER SUB A GK FOR A FIELD PLAYER OR VICE VERSA
+            const subIsGK = normalizePos(sub) === Position.GK;
+            const neededIsGK = neededPos === Position.GK; // This theoretically won't happen for subs as we filtered GK out of 'starters' loop, but for safety.
+
+            if (subIsGK !== neededIsGK) continue;
+
+            // Prefer same position
+            const posMatch = normalizePos(sub) === neededPos ? 10 : 0;
+            const score = sub.overall + posMatch + (stamina / 10);
+
+            if (score > bestSubScore) {
+                bestSubScore = score;
+                bestSub = sub;
+            }
+        }
+
+        if (bestSub) {
+            // Update lineup statuses
+            worstPlayer.lineup = 'BENCH';
+            bestSub.lineup = 'STARTING';
+            bestSub.lineupIndex = worstPlayer.lineupIndex;
+
+            this.substitutePlayer(bestSub, worstPlayer.id, true);
+            this.traceLog.push(`AI DEĞİŞİKLİK: ${team.name} - ${worstPlayer.lastName} çıktı, ${bestSub.lastName} girdi (yorgunluk: ${Math.round(worstScore)}%)`);
+        }
+    }
+
+    public syncLineups(homePlayers: Player[], awayPlayers: Player[]) {
+        // 1. Update lists (keep Bench for subs)
+        this.homePlayers = homePlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+        this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+
+        // 2. Re-initialize tactics/offsets
+        this.initializeTactics(this.homePlayers.filter(p => p.lineup === 'STARTING'), this.homeTeam.tactic);
+        this.initializeTactics(this.awayPlayers.filter(p => p.lineup === 'STARTING'), this.awayTeam.tactic);
+
+        // 3. Sync Simulation State
+        const allStarting = [...this.homePlayers, ...this.awayPlayers].filter(p => p.lineup === 'STARTING');
+        const newIds = new Set(allStarting.map(p => p.id));
+
+        // Remove players no longer starting
+        Object.keys(this.sim.players).forEach(id => {
+            if (!newIds.has(id)) {
+                delete this.sim.players[id];
+            }
+        });
+
+        // Add/Update players
+        allStarting.forEach(p => {
+            const base = this.baseOffsets[p.id] || { x: 50, y: 50 };
+            const isHome = p.teamId === this.homeTeam.id;
+
+            if (!this.sim.players[p.id]) {
+                // New player entering pitch
+                this.sim.players[p.id] = {
+                    x: isHome ? base.x : 100 - base.x,
+                    y: isHome ? base.y : 100 - base.y,
+                    facing: 0, vx: 0, vy: 0, state: 'IDLE'
+                };
+
+                // Init state if missing
+                if (!this.playerStates[p.id]) {
+                    this.playerStates[p.id] = {
+                        currentStamina: p.condition || 100,
+                        decisionTimer: Math.random() * 5, possessionCooldown: 0, actionLock: 0,
+                        targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
+                    };
+                }
+            }
+        });
+
+        this.traceLog.push("KADRO GÜNCELLENDİ: Auto-Fix uygulandı.");
     }
 
     private resetPositions(mode: SetPieceMode, concedingTeamId?: string) {
@@ -379,88 +534,96 @@ export class MatchEngine {
         this.currentLooseBallChaserId = null;
         this.lastTouchTeamId = null;
 
-        [...this.homePlayers, ...this.awayPlayers].forEach(p => {
-            const isHome = p.teamId === this.homeTeam.id;
-            const base = this.baseOffsets[p.id];
+        // Only reset positions for STARTING players (BENCH players aren't on the pitch)
+        [...this.homePlayers, ...this.awayPlayers]
+            .filter(p => p.lineup === 'STARTING')
+            .forEach(p => {
+                const isHome = p.teamId === this.homeTeam.id;
+                const base = this.baseOffsets[p.id];
+                if (!base) return; // Skip if no base offset defined
 
-            let startX = isHome ? base.x : 100 - base.x;
-            let startY = isHome ? base.y : 100 - base.y;
+                let startX = isHome ? base.x : 100 - base.x;
+                let startY = isHome ? base.y : 100 - base.y;
 
-            if (mode === 'KICKOFF') {
-                if (isHome) startX = Math.min(startX, 49);
-                else startX = Math.max(startX, 51);
-            }
-            else if (mode.includes('GOAL_KICK')) {
-                const isHomeKick = mode === 'GOAL_KICK_HOME';
-                const kickingTeam = isHomeKick === isHome;
-                const role = this.playerRoles[p.id];
-
-                if (kickingTeam) {
-                    if (role === Position.GK) { startX = isHome ? 5 : 95; startY = 50; }
-                    else if (role === Position.DEF) {
-                        startX = isHome ? 12 : 88;
-                        startY = startY > 50 ? 80 : 20;
-                    }
-                    else if (role === Position.MID) { startX = isHome ? 35 : 65; }
-                    else if (role === Position.FWD) { startX = isHome ? 60 : 40; }
-                } else {
-                    if (role === Position.FWD) { startX = isHome ? 75 : 25; }
-                    else if (role === Position.DEF) { startX = isHome ? 45 : 55; }
+                if (mode === 'KICKOFF') {
+                    if (isHome) startX = Math.min(startX, 49);
+                    else startX = Math.max(startX, 51);
                 }
-            }
-            else if (mode.includes('CORNER')) {
-                const isHomeCorner = mode.startsWith('CORNER_HOME');
-                const isTop = mode.includes('TOP');
-                const attacking = isHomeCorner === isHome;
-                const role = this.playerRoles[p.id];
+                else if (mode.includes('GOAL_KICK')) {
+                    const isHomeKick = mode === 'GOAL_KICK_HOME';
+                    const kickingTeam = isHomeKick === isHome;
+                    const role = this.playerRoles[p.id];
 
-                if (attacking) {
-                    if (role === Position.GK) { startX = isHome ? 10 : 90; }
-                    else if (role === Position.DEF) {
-                        if (p.attributes.strength > 75) {
-                            startX = isHome ? 92 : 8;
-                            startY = 50 + (Math.random() * 20 - 10);
-                        } else {
-                            startX = isHome ? 60 : 40;
+                    if (kickingTeam) {
+                        if (role === Position.GK) { startX = isHome ? 5 : 95; startY = 50; }
+                        else if (role === Position.DEF) {
+                            startX = isHome ? 12 : 88;
+                            startY = startY > 50 ? 80 : 20;
+                        }
+                        else if (role === Position.MID) { startX = isHome ? 35 : 65; }
+                        else if (role === Position.FWD) { startX = isHome ? 60 : 40; }
+                    } else {
+                        if (role === Position.FWD) { startX = isHome ? 75 : 25; }
+                        else if (role === Position.DEF) { startX = isHome ? 45 : 55; }
+                    }
+                }
+                else if (mode.includes('CORNER')) {
+                    const isHomeCorner = mode.startsWith('CORNER_HOME');
+                    const isTop = mode.includes('TOP');
+                    const attacking = isHomeCorner === isHome;
+                    const role = this.playerRoles[p.id];
+
+                    if (attacking) {
+                        if (role === Position.GK) { startX = isHome ? 10 : 90; }
+                        else if (role === Position.DEF) {
+                            if (p.attributes.strength > 75) {
+                                startX = isHome ? 92 : 8;
+                                startY = 50 + (Math.random() * 20 - 10);
+                            } else {
+                                startX = isHome ? 60 : 40;
+                            }
+                        }
+                        else {
+                            startX = isHome ? 94 : 6;
+                            startY = 50 + (Math.random() * 30 - 15);
+                        }
+                    } else {
+                        if (role === Position.GK) { startX = isHome ? 2 : 98; startY = 50; }
+                        else {
+                            startX = isHome ? 6 : 94;
+                            startY = 50 + (Math.random() * 30 - 15);
                         }
                     }
-                    else {
-                        startX = isHome ? 94 : 6;
-                        startY = 50 + (Math.random() * 30 - 15);
-                    }
-                } else {
-                    if (role === Position.GK) { startX = isHome ? 2 : 98; startY = 50; }
-                    else {
-                        startX = isHome ? 6 : 94;
-                        startY = 50 + (Math.random() * 30 - 15);
-                    }
                 }
-            }
 
-            this.sim.players[p.id] = {
-                x: startX,
-                y: startY,
-                facing: isHome ? 0 : Math.PI,
-                vx: 0, vy: 0, state: 'IDLE'
-            };
+                this.sim.players[p.id] = {
+                    x: startX,
+                    y: startY,
+                    facing: isHome ? 0 : Math.PI,
+                    vx: 0, vy: 0, state: 'IDLE'
+                };
 
-            if (this.playerStates[p.id]) {
-                this.playerStates[p.id].possessionCooldown = 0;
-                this.playerStates[p.id].actionLock = 0;
-                this.playerStates[p.id].targetX = startX;
-                this.playerStates[p.id].targetY = startY;
-                this.playerStates[p.id].isPressing = false;
-            }
-        });
+                if (this.playerStates[p.id]) {
+                    this.playerStates[p.id].possessionCooldown = 0;
+                    this.playerStates[p.id].actionLock = 0;
+                    this.playerStates[p.id].targetX = startX;
+                    this.playerStates[p.id].targetY = startY;
+                    this.playerStates[p.id].isPressing = false;
+                }
+            });
 
         if (mode === 'KICKOFF') {
-            let kickoffTeamPlayers = Math.random() > 0.5 ? this.homePlayers : this.awayPlayers;
+            let kickoffTeamPlayers = Math.random() > 0.5
+                ? this.homePlayers.filter(p => p.lineup === 'STARTING')
+                : this.awayPlayers.filter(p => p.lineup === 'STARTING');
             if (concedingTeamId) {
-                kickoffTeamPlayers = concedingTeamId === this.homeTeam.id ? this.homePlayers : this.awayPlayers;
+                kickoffTeamPlayers = concedingTeamId === this.homeTeam.id
+                    ? this.homePlayers.filter(p => p.lineup === 'STARTING')
+                    : this.awayPlayers.filter(p => p.lineup === 'STARTING');
             }
 
             const kickers = kickoffTeamPlayers.filter(p => this.playerRoles[p.id] === Position.FWD || this.playerRoles[p.id] === Position.MID).slice(0, 2);
-            if (kickers.length < 2) kickers.push(kickoffTeamPlayers[0]);
+            if (kickers.length < 2 && kickoffTeamPlayers.length > 0) kickers.push(kickoffTeamPlayers[0]);
 
             const k1 = kickers[0];
             const k2 = kickers[1];
@@ -475,18 +638,18 @@ export class MatchEngine {
             this.sim.players[k2.id].y = 53;
             this.sim.players[k2.id].facing = isHomeKick ? 0 : Math.PI;
 
-            const enemyPlayers = isHomeKick ? this.awayPlayers : this.homePlayers;
+            const enemyPlayers = (isHomeKick ? this.awayPlayers : this.homePlayers).filter(p => p.lineup === 'STARTING');
             enemyPlayers.forEach(ep => {
-                if (dist(50, 50, this.sim.players[ep.id].x, this.sim.players[ep.id].y) < 10) {
+                if (this.sim.players[ep.id] && dist(50, 50, this.sim.players[ep.id].x, this.sim.players[ep.id].y) < 10) {
                     this.sim.players[ep.id].x = isHomeKick ? 62 : 38;
                 }
             });
 
         } else if (mode.includes('GOAL_KICK')) {
             const isHome = mode === 'GOAL_KICK_HOME';
-            const team = isHome ? this.homePlayers : this.awayPlayers;
+            const team = (isHome ? this.homePlayers : this.awayPlayers).filter(p => p.lineup === 'STARTING');
             const gk = team.find(p => this.playerRoles[p.id] === Position.GK);
-            if (gk) {
+            if (gk && this.sim.players[gk.id]) {
                 this.sim.players[gk.id].x = isHome ? 5 : 95;
                 this.sim.players[gk.id].y = 50;
                 this.sim.ball.ownerId = gk.id;
@@ -495,13 +658,13 @@ export class MatchEngine {
         } else if (mode.includes('CORNER')) {
             const isHome = mode.startsWith('CORNER_HOME');
             const isTop = mode.includes('TOP');
-            const team = isHome ? this.homePlayers : this.awayPlayers;
+            const team = (isHome ? this.homePlayers : this.awayPlayers).filter(p => p.lineup === 'STARTING');
             const taker = team.sort((a, b) => (b.attributes.passing + b.attributes.vision) - (a.attributes.passing + a.attributes.vision))[0];
 
             const cX = isHome ? 100 : 0;
             const cY = isTop ? 0 : 100;
 
-            if (taker) {
+            if (taker && this.sim.players[taker.id]) {
                 this.sim.players[taker.id].x = cX;
                 this.sim.players[taker.id].y = cY;
                 this.sim.ball.ownerId = taker.id;
@@ -540,6 +703,17 @@ export class MatchEngine {
             this.internalMinute++;
             this.tickCount = 0;
             this.updateTeamMentality();
+
+            // AI substitution check every 5 minutes for non-user teams
+            if (this.internalMinute >= 55 && this.internalMinute % 5 === 0) {
+                // Only process AI subs for teams that are NOT user-controlled
+                if (this.userTeamId !== this.homeTeam.id) {
+                    this.processAISubstitutions(true);
+                }
+                if (this.userTeamId !== this.awayTeam.id) {
+                    this.processAISubstitutions(false);
+                }
+            }
         }
 
         this.clearExpiredSignals();
@@ -1069,12 +1243,15 @@ export class MatchEngine {
     private detectObstacles(p: Player, x: number, y: number): Player[] {
         const obstacles: Player[] = [];
         const searchDist = 6;
-        [...this.homePlayers, ...this.awayPlayers].forEach(other => {
-            if (other.id === p.id || other.teamId === p.teamId) return;
-            const otherPos = this.sim.players[other.id];
-            const d = dist(x, y, otherPos.x, otherPos.y);
-            if (d < searchDist) obstacles.push(other);
-        });
+        [...this.homePlayers, ...this.awayPlayers]
+            .filter(other => other.lineup === 'STARTING')
+            .forEach(other => {
+                if (other.id === p.id || other.teamId === p.teamId) return;
+                const otherPos = this.sim.players[other.id];
+                if (!otherPos) return;
+                const d = dist(x, y, otherPos.x, otherPos.y);
+                if (d < searchDist) obstacles.push(other);
+            });
         return obstacles;
     }
 
@@ -1083,17 +1260,20 @@ export class MatchEngine {
         let minD = 10;
         const simP = this.sim.players[p.id];
         const forwardAngle = isHome ? 0 : Math.PI;
-        [...this.homePlayers, ...this.awayPlayers].forEach(other => {
-            if (other.teamId === p.teamId) return;
-            const otherPos = this.sim.players[other.id];
-            const d = dist(simP.x, simP.y, otherPos.x, otherPos.y);
-            if (d < minD) {
-                const angleTo = Math.atan2(otherPos.y - simP.y, otherPos.x - simP.x);
-                let diff = Math.abs(forwardAngle - angleTo);
-                if (diff > Math.PI) diff = (2 * Math.PI) - diff;
-                if (diff < Math.PI / 3.5) { minD = d; nearest = other; }
-            }
-        });
+        [...this.homePlayers, ...this.awayPlayers]
+            .filter(other => other.lineup === 'STARTING')
+            .forEach(other => {
+                if (other.teamId === p.teamId) return;
+                const otherPos = this.sim.players[other.id];
+                if (!otherPos) return;
+                const d = dist(simP.x, simP.y, otherPos.x, otherPos.y);
+                if (d < minD) {
+                    const angleTo = Math.atan2(otherPos.y - simP.y, otherPos.x - simP.x);
+                    let diff = Math.abs(forwardAngle - angleTo);
+                    if (diff > Math.PI) diff = (2 * Math.PI) - diff;
+                    if (diff < Math.PI / 3.5) { minD = d; nearest = other; }
+                }
+            });
         return nearest;
     }
 
@@ -1462,6 +1642,9 @@ export class MatchEngine {
             // Very slow recovery if standing still
             state.currentStamina = Math.min(100, state.currentStamina + 0.05);
         }
+
+        // SYNC TO PUBLIC STATE for UI
+        simP.stamina = state.currentStamina;
     }
 
     private resolveCollisions() {
@@ -1512,12 +1695,18 @@ export class MatchEngine {
         if (outLeft || outRight) {
             if (b.y > 46.3 && b.y < 53.7 && b.z < 2.44) {
                 if (outLeft) {
+                    const scorerId = this.lastShooterId;
+                    const scorer = scorerId ? this.getPlayer(scorerId) : null;
+                    this.lastShooterId = null;
                     this.resetPositions('KICKOFF', this.homeTeam.id);
-                    return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${this.awayTeam.name}`, teamId: this.awayTeam.id };
+                    return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.awayTeam.name}`, teamId: this.awayTeam.id, playerId: scorerId || undefined };
                 }
                 if (outRight) {
+                    const scorerId = this.lastShooterId;
+                    const scorer = scorerId ? this.getPlayer(scorerId) : null;
+                    this.lastShooterId = null;
                     this.resetPositions('KICKOFF', this.awayTeam.id);
-                    return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${this.homeTeam.name}`, teamId: this.homeTeam.id };
+                    return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.homeTeam.name}`, teamId: this.homeTeam.id, playerId: scorerId || undefined };
                 }
             }
             else {
@@ -1653,9 +1842,10 @@ export class MatchEngine {
             else this.match.stats.awayOnTarget++;
         }
 
-        const enemies = isHome ? this.awayPlayers : this.homePlayers;
+        const enemies = (isHome ? this.awayPlayers : this.homePlayers).filter(e => e.lineup === 'STARTING');
         for (const e of enemies) {
             const ePos = this.sim.players[e.id];
+            if (!ePos) continue;
             const d = dist(pos.x, pos.y, ePos.x, ePos.y);
             if (d < 3) {
                 const angleToE = Math.atan2(ePos.y - pos.y, ePos.x - pos.x);
@@ -1686,6 +1876,7 @@ export class MatchEngine {
         this.playerStates[p.id].possessionCooldown = 15;
         this.sim.players[p.id].state = 'KICK';
         this.lastTouchTeamId = p.teamId;
+        this.lastShooterId = p.id;
         this.traceLog.push(`${p.lastName} şut çekti!`);
     }
 
