@@ -2,7 +2,7 @@
 export const ANTALYASPOR_SQUAD = [
   {
     ad: "Nikola Storm",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Belçika",
     mevki: "SLO",
     reyting: 74,
@@ -13,7 +13,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Georgiy Dzhikiya",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Rusya",
     mevki: "STP",
     reyting: 73,
@@ -24,7 +24,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Abdülkadir Ömür",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 73,
@@ -35,7 +35,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Tomáš Čvančara",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SNT",
     reyting: 72,
@@ -46,7 +46,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Lautaro Giannetti",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Arjantin",
     mevki: "STP",
     reyting: 72,
@@ -57,7 +57,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Güray Vural",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 70,
@@ -68,7 +68,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Ramzi Safuri",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "İsrail",
     mevki: "MOO",
     reyting: 70,
@@ -79,7 +79,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Kenneth Paal",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Surinam",
     mevki: "SLB",
     reyting: 69,
@@ -90,7 +90,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Soner Dikmen",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 67,
@@ -101,7 +101,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Dario Šarić",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Bosna Hersek",
     mevki: "MO",
     reyting: 67,
@@ -112,7 +112,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Hüseyin Türkmen",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -123,7 +123,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Veysel Sarı",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -134,7 +134,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Erdoğan Yeşilyurt",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 66,
@@ -145,7 +145,7 @@ export const ANTALYASPOR_SQUAD = [
   },
   {
     ad: "Jesper Ceesay",
-    takim: "Antalyaspor",
+    takim: "Antalya Scorpions",
     uyruk: "Gambiya",
     mevki: "MO",
     reyting: 66,

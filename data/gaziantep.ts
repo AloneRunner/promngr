@@ -2,7 +2,7 @@
 export const GAZIANTEP_SQUAD = [
   {
     ad: "Alexandru Maxim",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Romanya",
     mevki: "MOO",
     reyting: 76,
@@ -13,7 +13,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Kévin Rodrigues",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Portekiz",
     mevki: "SLB",
     reyting: 75,
@@ -24,7 +24,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Badou Ndiaye",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Senegal",
     mevki: "MDO",
     reyting: 74,
@@ -35,7 +35,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Mohamed Bayo",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Gine",
     mevki: "SNT",
     reyting: 73,
@@ -46,7 +46,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Deian Sorescu",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Romanya",
     mevki: "SĞO",
     reyting: 72,
@@ -57,7 +57,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Emmanuel Boateng",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Gana",
     mevki: "SNT",
     reyting: 72,
@@ -68,7 +68,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Kacper Kozłowski",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Polonya",
     mevki: "MO",
     reyting: 70,
@@ -79,7 +79,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Luis Pérez",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 70,
@@ -90,7 +90,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Myenty Abena",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Surinam",
     mevki: "STP",
     reyting: 70,
@@ -101,7 +101,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Juninho Bacuna",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Kurasao",
     mevki: "MDO",
     reyting: 69,
@@ -112,7 +112,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Tayyip Sanuç",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 68,
@@ -123,7 +123,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Nazim Sangaré",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 67,
@@ -134,7 +134,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Salem M'Bakata",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Fransa",
     mevki: "SĞB",
     reyting: 67,
@@ -145,7 +145,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Ogün Özçiçek",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 66,
@@ -156,7 +156,7 @@ export const GAZIANTEP_SQUAD = [
   },
   {
     ad: "Christopher Lungoyi",
-    takim: "Gaziantep",
+    takim: "Antep Falcons",
     uyruk: "İsviçre",
     mevki: "SLO",
     reyting: 66,

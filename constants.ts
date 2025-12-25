@@ -28,214 +28,263 @@ export const NAMES_DB: any = {
 
 // --- REAL WORLD TACTICAL PROFILES ---
 export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
-    "Fenerbahçe": { 
-        formation: TacticType.T_4231, 
-        style: 'HighPress', 
-        aggression: 'Aggressive', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'High', 
-        passingStyle: 'Direct', 
-        marking: 'Zonal' 
+    "Fener Canaries": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Aggressive',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     },
-    "Galatasaray": { 
-        formation: TacticType.T_433, 
-        style: 'Possession', 
-        aggression: 'Normal', 
-        tempo: 'Normal', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Mixed', 
-        marking: 'Zonal' 
+    "Galata Lions": {
+        formation: TacticType.T_433,
+        style: 'Possession',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
     },
-    "Beşiktaş": { 
-        formation: TacticType.T_4231, 
-        style: 'HighPress', 
-        aggression: 'Aggressive', 
-        tempo: 'Normal', 
-        width: 'Balanced', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Direct', 
-        marking: 'Man Mark' 
+    "Besikta Eagles": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Aggressive',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Man Mark'
     },
-    "Trabzonspor": { 
-        formation: TacticType.T_433, 
-        style: 'Counter', 
-        aggression: 'Normal', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Direct', 
-        marking: 'Zonal' 
+    "Trabzon Storm": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     },
-    "Başakşehir": { 
-        formation: TacticType.T_4231, 
-        style: 'Possession', 
-        aggression: 'Safe', 
-        tempo: 'Slow', 
-        width: 'Balanced', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Short', 
-        marking: 'Zonal' 
+    "Basak City": {
+        formation: TacticType.T_4231,
+        style: 'Possession',
+        aggression: 'Safe',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
     },
-    "Konyaspor": { 
-        formation: TacticType.T_442, 
-        style: 'Defensive', 
-        aggression: 'Aggressive', 
-        tempo: 'Slow', 
-        width: 'Narrow', 
-        defensiveLine: 'Deep', 
-        passingStyle: 'Direct', 
-        marking: 'Man Mark' 
+    "Konya Green": {
+        formation: TacticType.T_442,
+        style: 'Defensive',
+        aggression: 'Aggressive',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Man Mark'
     },
-    "Çaykur Rizespor": { 
-        formation: TacticType.T_433, 
-        style: 'Counter', 
-        aggression: 'Normal', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Mixed', 
-        marking: 'Zonal' 
+    "Rize Tea": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
     },
-    "Samsunspor": { 
-        formation: TacticType.T_4231, 
-        style: 'HighPress', 
-        aggression: 'Aggressive', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Direct', 
-        marking: 'Zonal' 
+    "Samsun Red": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Aggressive',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     },
-    "Gaziantep": { 
-        formation: TacticType.T_532, 
-        style: 'ParkTheBus', 
-        aggression: 'Aggressive', 
-        tempo: 'Slow', 
-        width: 'Narrow', 
-        defensiveLine: 'Deep', 
-        passingStyle: 'LongBall', 
-        marking: 'Man Mark' 
+    "Antep Falcons": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Aggressive',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Man Mark'
     },
-    "Alanyaspor": { 
-        formation: TacticType.T_4231, 
-        style: 'Possession', 
-        aggression: 'Normal', 
-        tempo: 'Normal', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Short', 
-        marking: 'Zonal' 
+    "Alanya Sun": {
+        formation: TacticType.T_4231,
+        style: 'Possession',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
     },
-    "Antalyaspor": { 
-        formation: TacticType.T_433, 
-        style: 'Counter', 
-        aggression: 'Normal', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Mixed', 
-        marking: 'Zonal' 
+    "Antalya Scorpions": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
     },
-    "Eyüpspor": { 
-        formation: TacticType.T_4231, 
-        style: 'Possession', 
-        aggression: 'Normal', 
-        tempo: 'Normal', 
-        width: 'Balanced', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Short', 
-        marking: 'Zonal' 
+    "Eyup Violet": {
+        formation: TacticType.T_4231,
+        style: 'Possession',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
     },
-    "Gençlerbirliği": { 
-        formation: TacticType.T_442, 
-        style: 'Balanced', 
-        aggression: 'Normal', 
-        tempo: 'Normal', 
-        width: 'Balanced', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Mixed', 
-        marking: 'Zonal' 
+    "Ankara Youth": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
     },
-    "Göztepe": { 
-        formation: TacticType.T_4231, 
-        style: 'Counter', 
-        aggression: 'Aggressive', 
-        tempo: 'Normal', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Direct', 
-        marking: 'Zonal' 
+    "Goztepe Goz": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Aggressive',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     },
-    "Karagümrük": { 
-        formation: TacticType.T_433, 
-        style: 'Possession', 
-        aggression: 'Normal', 
-        tempo: 'Normal', 
-        width: 'Wide', 
-        defensiveLine: 'High', 
-        passingStyle: 'Short', 
-        marking: 'Zonal' 
+    "Karagumruk Black": {
+        formation: TacticType.T_433,
+        style: 'Possession',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Short',
+        marking: 'Zonal'
     },
-    "Kasımpaşa": { 
-        formation: TacticType.T_4231, 
-        style: 'Counter', 
-        aggression: 'Normal', 
-        tempo: 'Fast', 
-        width: 'Wide', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Direct', 
-        marking: 'Zonal' 
+    "Kasimpasa Navy": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     },
-    "Kayserispor": { 
-        formation: TacticType.T_4231, 
-        style: 'Defensive', 
-        aggression: 'Aggressive', 
-        tempo: 'Normal', 
-        width: 'Narrow', 
-        defensiveLine: 'Balanced', 
-        passingStyle: 'Mixed', 
-        marking: 'Man Mark' 
+    "Kayseri Stars": {
+        formation: TacticType.T_4231,
+        style: 'Defensive',
+        aggression: 'Aggressive',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Man Mark'
     },
-    "Kocaelispor": { 
-        formation: TacticType.T_442, 
-        style: 'ParkTheBus', 
-        aggression: 'Normal', 
-        tempo: 'Slow', 
-        width: 'Narrow', 
-        defensiveLine: 'Deep', 
-        passingStyle: 'LongBall', 
-        marking: 'Zonal' 
+    "Kocaeli Gulf": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
     }
 };
 
 export const LEAGUE_PRESETS = [
-    { 
+    {
         id: 'tr', name: 'Süper Lig', country: 'Turkey', foreignPlayerChance: 0.5, playerNationality: 'Turkey',
         realTeams: [
-            { name: "Galatasaray", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 8000, budget: 50000000 },
-            { name: "Fenerbahçe", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7800, budget: 45000000 },
-            { name: "Beşiktaş", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 7600, budget: 35000000 },
-            { name: "Trabzonspor", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 7000, budget: 25000000 },
-            { name: "Başakşehir", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 6500, budget: 20000000 },
-            { name: "Samsunspor", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 15000000 },
-            { name: "Konyaspor", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 12000000 },
-            { name: "Kasımpaşa", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5800, budget: 10000000 },
-            { name: "Çaykur Rizespor", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 5800, budget: 10000000 },
-            { name: "Gaziantep", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5700, budget: 9000000 },
-            { name: "Antalyaspor", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 11000000 },
-            { name: "Kayserispor", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5700, budget: 9500000 },
-            { name: "Alanyaspor", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 5800, budget: 10000000 },
-            { name: "Göztepe", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5800, budget: 10000000 },
-            { name: "Eyüpspor", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5600, budget: 8500000 },
-            { name: "Karagümrük", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5600, budget: 9000000 },
-            { name: "Kocaelispor", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 },
-            { name: "Gençlerbirliği", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 }
+            { name: "Galata Lions", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 8000, budget: 50000000 },
+            { name: "Fener Canaries", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7800, budget: 45000000 },
+            { name: "Besikta Eagles", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 7600, budget: 35000000 },
+            { name: "Trabzon Storm", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 7000, budget: 25000000 },
+            { name: "Basak City", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 6500, budget: 20000000 },
+            { name: "Samsun Red", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 15000000 },
+            { name: "Konya Green", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 12000000 },
+            { name: "Kasimpasa Navy", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5800, budget: 10000000 },
+            { name: "Rize Tea", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 5800, budget: 10000000 },
+            { name: "Antep Falcons", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5700, budget: 9000000 },
+            { name: "Antalya Scorpions", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 11000000 },
+            { name: "Kayseri Stars", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5700, budget: 9500000 },
+            { name: "Alanya Sun", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 5800, budget: 10000000 },
+            { name: "Goztepe Goz", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5800, budget: 10000000 },
+            { name: "Eyup Violet", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5600, budget: 8500000 },
+            { name: "Karagumruk Black", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5600, budget: 9000000 },
+            { name: "Kocaeli Gulf", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 },
+            { name: "Ankara Youth", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 }
         ]
     },
-    { id: 'en', name: 'Premier League', country: 'England', foreignPlayerChance: 0.7, playerNationality: 'England', realTeams: [] },
-    { id: 'es', name: 'La Liga', country: 'Spain', foreignPlayerChance: 0.6, playerNationality: 'Spain', realTeams: [] }
+    {
+        id: 'en', name: 'English Premier', country: 'England', foreignPlayerChance: 0.7, playerNationality: 'England',
+        realTeams: [
+            { name: "Liverpool Red", city: "Liverpool", primaryColor: "#C8102E", secondaryColor: "#fff", reputation: 8800, budget: 120000000 },
+            { name: "Manchester Blue", city: "Manchester", primaryColor: "#6CABDD", secondaryColor: "#fff", reputation: 9000, budget: 150000000 },
+            { name: "London Blue", city: "London", primaryColor: "#034694", secondaryColor: "#fff", reputation: 8500, budget: 110000000 },
+            { name: "London Red", city: "London", primaryColor: "#EF0107", secondaryColor: "#fff", reputation: 8600, budget: 100000000 },
+            { name: "Manchester Red", city: "Manchester", primaryColor: "#DA291C", secondaryColor: "#000", reputation: 8700, budget: 130000000 },
+            { name: "Newcastle Stripes", city: "Newcastle", primaryColor: "#000", secondaryColor: "#fff", reputation: 8200, budget: 200000000 },
+            { name: "Aston Claret", city: "Birmingham", primaryColor: "#95B6", secondaryColor: "#670E36", reputation: 7800, budget: 80000000 },
+            { name: "Tottenham White", city: "London", primaryColor: "#fff", secondaryColor: "#132257", reputation: 8400, budget: 90000000 }
+        ]
+    },
+    {
+        id: 'es', name: 'Spanish Elite', country: 'Spain', foreignPlayerChance: 0.6, playerNationality: 'Spain',
+        realTeams: [
+            { name: "Royal Madrid", city: "Madrid", primaryColor: "#fff", secondaryColor: "#FEBE10", reputation: 9200, budget: 160000000 },
+            { name: "Catalonia FC", city: "Barcelona", primaryColor: "#A50044", secondaryColor: "#004D98", reputation: 9000, budget: 100000000 },
+            { name: "Madrid Red", city: "Madrid", primaryColor: "#CB3524", secondaryColor: "#fff", reputation: 8700, budget: 90000000 },
+            { name: "Sevilla White", city: "Seville", primaryColor: "#fff", secondaryColor: "#D4001F", reputation: 7900, budget: 50000000 },
+            { name: "Valencia Bats", city: "Valencia", primaryColor: "#fff", secondaryColor: "#000", reputation: 7600, budget: 40000000 }
+        ]
+    },
+    {
+        id: 'it', name: 'Italian Calcio', country: 'Italy', foreignPlayerChance: 0.6, playerNationality: 'Italy',
+        realTeams: [
+            { name: "Turin Zebras", city: "Turin", primaryColor: "#000", secondaryColor: "#fff", reputation: 8600, budget: 80000000 },
+            { name: "Milan Red", city: "Milan", primaryColor: "#FB090B", secondaryColor: "#000", reputation: 8500, budget: 70000000 },
+            { name: "Milan Blue", city: "Milan", primaryColor: "#001185", secondaryColor: "#000", reputation: 8800, budget: 95000000 },
+            { name: "Roma Wolves", city: "Rome", primaryColor: "#8E1F2F", secondaryColor: "#F0BC42", reputation: 7800, budget: 50000000 },
+            { name: "Napoli Blue", city: "Naples", primaryColor: "#003090", secondaryColor: "#fff", reputation: 8400, budget: 60000000 }
+        ]
+    },
+    {
+        id: 'fr', name: 'French Ligue', country: 'France', foreignPlayerChance: 0.7, playerNationality: 'France',
+        realTeams: [
+            { name: "Paris Saint", city: "Paris", primaryColor: "#004170", secondaryColor: "#DA291C", reputation: 9100, budget: 200000000 },
+            { name: "Marseille Blue", city: "Marseille", primaryColor: "#fff", secondaryColor: "#00AEEF", reputation: 7800, budget: 40000000 },
+            { name: "Lyon Kids", city: "Lyon", primaryColor: "#fff", secondaryColor: "#1B4793", reputation: 7600, budget: 35000000 },
+            { name: "Monaco Red", city: "Monaco", primaryColor: "#E70014", secondaryColor: "#fff", reputation: 7700, budget: 50000000 }
+        ]
+    },
+    {
+        id: 'de', name: 'German Top', country: 'Germany', foreignPlayerChance: 0.5, playerNationality: 'Germany',
+        realTeams: [
+            { name: "Munich Reds", city: "Munich", primaryColor: "#DC052D", secondaryColor: "#fff", reputation: 9200, budget: 140000000 },
+            { name: "Dortmund Bees", city: "Dortmund", primaryColor: "#FDE100", secondaryColor: "#000", reputation: 8600, budget: 90000000 },
+            { name: "Leverkusen Factory", city: "Leverkusen", primaryColor: "#E32219", secondaryColor: "#000", reputation: 8400, budget: 70000000 },
+            { name: "Leipzig Bulls", city: "Leipzig", primaryColor: "#fff", secondaryColor: "#DD032F", reputation: 8200, budget: 100000000 }
+        ]
+    }
 ];
 
 export const REAL_PLAYERS: any[] = [

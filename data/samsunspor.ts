@@ -2,7 +2,7 @@
 export const SAMSUNSPOR_SQUAD = [
   {
     ad: "Afonso Sousa",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 74,
@@ -13,7 +13,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Rick van Drongelen",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Hollanda",
     mevki: "STP",
     reyting: 74,
@@ -24,7 +24,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Olivier Ntcham",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Kamerun",
     mevki: "MDO",
     reyting: 73,
@@ -35,7 +35,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Carlo Holse",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Danimarka",
     mevki: "MOO",
     reyting: 73,
@@ -46,7 +46,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Antoine Makoumbou",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Kongo",
     mevki: "MDO",
     reyting: 73,
@@ -57,7 +57,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Emre Kılınç",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 73,
@@ -68,7 +68,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Okan Kocuk",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 73,
@@ -79,7 +79,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Marius Mouandilmadji",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Çad",
     mevki: "SNT",
     reyting: 73,
@@ -90,7 +90,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Toni Borevković",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Hırvatistan",
     mevki: "STP",
     reyting: 73,
@@ -101,7 +101,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Joe Mendes",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "İsveç",
     mevki: "SĞB",
     reyting: 72,
@@ -112,7 +112,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Zeki Yavru",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 71,
@@ -123,7 +123,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Tanguy Coulibaly",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 71,
@@ -134,7 +134,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Anthony Musaba",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Hollanda",
     mevki: "SĞO",
     reyting: 70,
@@ -145,7 +145,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Soner Aydoğdu",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 69,
@@ -156,7 +156,7 @@ export const SAMSUNSPOR_SQUAD = [
   },
   {
     ad: "Logi Tómasson",
-    takim: "Samsunspor",
+    takim: "Samsun Red",
     uyruk: "İzlanda",
     mevki: "SLB",
     reyting: 67,

@@ -1,10 +1,10 @@
 
 export enum Position { GK = 'GK', DEF = 'DEF', MID = 'MID', FWD = 'FWD' }
-export enum TacticType { 
-    T_442 = '4-4-2', 
-    T_433 = '4-3-3', 
-    T_352 = '3-5-2', 
-    T_541 = '5-4-1', 
+export enum TacticType {
+    T_442 = '4-4-2',
+    T_433 = '4-3-3',
+    T_352 = '3-5-2',
+    T_541 = '5-4-1',
     T_451 = '4-5-1',
     T_4231 = '4-2-3-1',
     T_343 = '3-4-3',
@@ -62,7 +62,7 @@ export interface Player {
 
 export interface TeamTactic {
     formation: TacticType; style: string; aggression: string; tempo: string; width: string;
-    defensiveLine: string; passingStyle: string; marking: string; customPositions?: Record<string, {x: number, y: number}>;
+    defensiveLine: string; passingStyle: string; marking: string; customPositions?: Record<string, { x: number, y: number }>;
 }
 
 export interface TeamFacilities {
@@ -95,8 +95,8 @@ export interface TeamStats {
 
 export interface Team {
     id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
-    reputation: number; budget: number; 
-    facilities: TeamFacilities; 
+    reputation: number; budget: number;
+    facilities: TeamFacilities;
     staff: TeamStaff; // NEW
     objectives: BoardObjective[]; // NEW
     tactic: TeamTactic;
@@ -115,17 +115,19 @@ export interface MatchEvent {
 export interface MatchStats {
     homePossession: number; awayPossession: number; homeShots: number; awayShots: number;
     homeOnTarget: number; awayOnTarget: number; homeXG: number; awayXG: number;
+    homeSaves?: number; awaySaves?: number; // NEW: Goalkeeper saves
 }
 
 export interface SimulationState {
-    ball: { 
+    ball: {
         x: number; y: number; z: number; // Z-axis for height
-        vx: number; vy: number; vz: number; 
+        vx: number; vy: number; vz: number;
         curve?: number; // Magnus effect (spin)
-        ownerId: string | null; 
+        ownerId: string | null;
     };
-    players: Record<string, { 
-        x: number; y: number; 
+    players: Record<string, {
+        x: number; y: number;
+        z?: number; // Height (Jump)
         facing: number; // Facing angle in radians
         vx?: number; // X Velocity
         vy?: number; // Y Velocity

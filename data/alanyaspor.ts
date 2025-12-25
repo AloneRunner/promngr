@@ -2,7 +2,7 @@
 export const ALANYASPOR_SQUAD = [
   {
     ad: "Paulo Victor",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 75,
@@ -13,7 +13,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Gaius Makouta",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Kongo",
     mevki: "MDO",
     reyting: 72,
@@ -24,7 +24,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Efecan Karaca",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 72,
@@ -35,7 +35,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Hwang Ui Jo",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Kore Cumhuriyeti",
     mevki: "SNT",
     reyting: 71,
@@ -46,7 +46,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Bruno Viana",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 71,
@@ -57,7 +57,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Güven Yalçın",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Türkiye",
     mevki: "SNT",
     reyting: 70,
@@ -68,7 +68,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Fatih Aksoy",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 68,
@@ -79,7 +79,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Yusuf Özdemir",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 67,
@@ -90,7 +90,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Ümit Akdağ",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Romanya",
     mevki: "STP",
     reyting: 67,
@@ -101,7 +101,7 @@ export const ALANYASPOR_SQUAD = [
   },
   {
     ad: "Nuno Lima",
-    takim: "Alanyaspor",
+    takim: "Alanya Sun",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 67,

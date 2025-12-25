@@ -2,7 +2,7 @@
 export const KAYSERISPOR_SQUAD = [
   {
     ad: "João Mendes",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 73,
@@ -13,7 +13,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Carlos Mané",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Gine-Bissau",
     mevki: "SLO",
     reyting: 73,
@@ -24,7 +24,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Stefano Denswil",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Surinam",
     mevki: "STP",
     reyting: 73,
@@ -35,7 +35,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "László Bénes",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Slovakya",
     mevki: "MO",
     reyting: 72,
@@ -46,7 +46,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Dorukhan Toköz",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 71,
@@ -57,7 +57,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Miguel Cardoso",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Portekiz",
     mevki: "SLO",
     reyting: 70,
@@ -68,7 +68,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Bilal Bayazıt",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 70,
@@ -79,7 +79,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Indrit Tuci",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Arnavutluk",
     mevki: "SNT",
     reyting: 68,
@@ -90,7 +90,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Majid Hosseini",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "İran",
     mevki: "STP",
     reyting: 68,
@@ -101,7 +101,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Ali Karimi",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "İran",
     mevki: "MDO",
     reyting: 67,
@@ -112,7 +112,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Aaron Opoku",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Almanya",
     mevki: "SĞO",
     reyting: 67,
@@ -123,7 +123,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Gideon Jung",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Almanya",
     mevki: "STP",
     reyting: 67,
@@ -134,7 +134,7 @@ export const KAYSERISPOR_SQUAD = [
   },
   {
     ad: "Ramazan Civelek",
-    takim: "Kayserispor",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 66,

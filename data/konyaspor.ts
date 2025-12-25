@@ -2,7 +2,7 @@
 export const KONYASPOR_SQUAD = [
   {
     ad: "Guilherme Sityá",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Brezilya",
     mevki: "SLB",
     reyting: 76,
@@ -13,7 +13,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Riechedly Bazoer",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Hollanda",
     mevki: "STP",
     reyting: 74,
@@ -24,7 +24,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Enis Bardhi",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Kuzey Makedonya",
     mevki: "MOO",
     reyting: 74,
@@ -35,7 +35,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Jackson Muleka",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Congo DR",
     mevki: "SNT",
     reyting: 70,
@@ -46,7 +46,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Umut Nayir",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "SNT",
     reyting: 70,
@@ -57,7 +57,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Adil Demirbağ",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 70,
@@ -68,7 +68,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Alassane Ndao",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Senegal",
     mevki: "SĞO",
     reyting: 68,
@@ -79,7 +79,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Marius Ștefănescu",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Romanya",
     mevki: "SĞK",
     reyting: 67,
@@ -90,7 +90,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Morten Bjørlo",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Norveç",
     mevki: "MO",
     reyting: 67,
@@ -101,7 +101,7 @@ export const KONYASPOR_SQUAD = [
   },
   {
     ad: "Ufuk Akyol",
-    takim: "Konyaspor",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 66,

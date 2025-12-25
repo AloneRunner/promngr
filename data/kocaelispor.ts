@@ -2,7 +2,7 @@
 export const KOCAELISPOR_SQUAD = [
   {
     ad: "Bruno Petković",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Hırvatistan",
     mevki: "SNT",
     reyting: 76,
@@ -13,7 +13,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Massadio Haïdara",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Mali",
     mevki: "SLB",
     reyting: 73,
@@ -24,7 +24,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Karol Linetty",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Polonya",
     mevki: "MDO",
     reyting: 73,
@@ -35,7 +35,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Mateusz Wieteska",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Polonya",
     mevki: "STP",
     reyting: 72,
@@ -46,7 +46,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Hrvoje Smolčić",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Hırvatistan",
     mevki: "STP",
     reyting: 72,
@@ -57,7 +57,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Ahmet Oğuz",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 71,
@@ -68,7 +68,7 @@ export const KOCAELISPOR_SQUAD = [
   },
   {
     ad: "Ryan Mendes",
-    takim: "Kocaelispor",
+    takim: "Kocaeli Gulf",
     uyruk: "Cape Verde Adaları",
     mevki: "SLO",
     reyting: 71,

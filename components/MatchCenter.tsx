@@ -22,15 +22,58 @@ interface MatchCenterProps {
     onPlayerClick: (player: Player) => void;
 }
 
-// Fixed Internal Resolution for crisp rendering (scaled down by CSS)
+// Fixed Internal Resolution
 const CANVAS_W = 1280;
-const CANVAS_H = 800;
-const PITCH_MARGIN = 60;
+const CANVAS_H = 640; // 800 -> 640 for wider ratio
+const PITCH_MARGIN = 40; // 80 -> 40 to maximize space
+
+// 2.5D Perspective - Dengeli ayarlar
+const PERSPECTIVE_RATIO = 0.6; // 0.55 -> 0.6 (Slightly taller pitch)
+const PERSPECTIVE_SCALE = 0.30;
 
 // Colors
 const PITCH_COLOR_1 = '#1a472a'; // Deep Green
 const PITCH_COLOR_2 = '#235c36'; // Lighter Green
-const LINE_COLOR = 'rgba(255, 255, 255, 0.8)';
+const LINE_COLOR = 'rgba(255, 255, 255, 0.85)';
+
+// 2.5D Coordinate Transformation
+const toScreen = (xPct: number, yPct: number, z: number = 0): { x: number, y: number, groundY: number, scale: number } => {
+    const fieldW = CANVAS_W - (PITCH_MARGIN * 2);
+    const fieldH = (CANVAS_H - (PITCH_MARGIN * 2)) * PERSPECTIVE_RATIO;
+
+    // Perspective factor: top is narrower, bottom is wider
+    const yNorm = yPct / 100; // 0 = top (far), 1 = bottom (near)
+    const perspFactor = 1 - (1 - yNorm) * PERSPECTIVE_SCALE;
+
+    // X: Scale from center based on Y position
+    const centerX = CANVAS_W / 2;
+    const rawX = PITCH_MARGIN + (xPct / 100) * fieldW;
+    const screenX = centerX + (rawX - centerX) * perspFactor;
+
+    // Y: Compressed with perspective
+    const screenYRaw = PITCH_MARGIN + yNorm * fieldH;
+
+    // Center Vertically:
+    // fieldHeight on screen is fieldH. Total available height is CANVAS_H - 2*Margin.
+    // Actually we just want to center the content block (fieldH) in the canvas.
+    const contentHeight = fieldH;
+    const verticalCenterOffset = (CANVAS_H - (contentHeight + PITCH_MARGIN * 2)) / 2;
+    // We shift it down slightly less than full center to leave room for goal posts at top
+    const finalScreenY = screenYRaw + verticalCenterOffset + (PITCH_MARGIN / 2);
+
+    // Z: Height offset (goes up)
+    const zOffset = z * 6;
+
+    // Scale based on depth (further = smaller)
+    const depthScale = 0.7 + yNorm * 0.3;
+
+    return {
+        x: screenX,
+        y: finalScreenY - zOffset,
+        groundY: finalScreenY,
+        scale: depthScale
+    };
+};
 
 // Helper: Linear Interpolation
 const lerp = (start: number, end: number, t: number) => {
@@ -57,6 +100,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [speed, setSpeed] = useState<number>(1);
     const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
     const [showTacticsModal, setShowTacticsModal] = useState(false);
+    const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
+    const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -69,6 +114,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const lastTickState = useRef<any>(null);
     const nextTickState = useRef<any>(null);
     const lastTickTime = useRef<number>(0);
+
+    // Ball trail history for visual effect
+    const ballTrail = useRef<Array<{ x: number, y: number, z: number, age: number }>>([]);
 
     // Cache for jersey numbers
     const playerNumbers = useRef<Record<string, number>>({});
@@ -108,7 +156,19 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             nextTickState.current = JSON.parse(JSON.stringify(match.liveData.simulation));
             lastTickTime.current = performance.now();
         }
-    }, [match.liveData, match.currentMinute]); // Update when data changes
+
+        // NEW: Detect goals for flash effect
+        if (match.homeScore > lastGoalCount.current.home) {
+            lastGoalCount.current.home = match.homeScore;
+            setGoalFlash('HOME');
+            setTimeout(() => setGoalFlash(null), 1500);
+        }
+        if (match.awayScore > lastGoalCount.current.away) {
+            lastGoalCount.current.away = match.awayScore;
+            setGoalFlash('AWAY');
+            setTimeout(() => setGoalFlash(null), 1500);
+        }
+    }, [match.liveData, match.currentMinute, match.homeScore, match.awayScore]); // Update when data changes
 
     // 3. Logic Loop (Triggers the onTick)
     useEffect(() => {
@@ -182,6 +242,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 player: p,
                 x: lerp(prevP.x, nextP.x, alpha),
                 y: lerp(prevP.y, nextP.y, alpha),
+                z: nextP.z || 0,
                 facing: lerpAngle(prevP.facing || 0, nextP.facing || 0, alpha),
                 stamina: nextP.stamina || 100,
                 state: nextP.state || 'IDLE'
@@ -197,286 +258,475 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const num = playerNumbers.current[item.player.id] || 0;
             const hasBall = nextState.ball.ownerId === item.player.id;
 
-            drawPlayer(ctx, item.x, item.y, item.facing, primary, secondary, num, hasBall, item.player.lastName, item.stamina, item.state);
+            drawPlayer(ctx, item.x, item.y, item.z || 0, item.facing, primary, secondary, num, hasBall, item.player.lastName, item.stamina, item.state);
         });
 
-        // Draw Ball
+        // Draw Ball with Trail Effect
         const prevBall = prevState.ball;
         const nextBall = nextState.ball;
         if (prevBall && nextBall) {
             const ballX = lerp(prevBall.x, nextBall.x, alpha);
             const ballY = lerp(prevBall.y, nextBall.y, alpha);
             const ballZ = lerp(prevBall.z || 0, nextBall.z || 0, alpha);
+
+            // Update ball trail (only when ball is moving fast)
+            const ballSpeed = Math.sqrt(
+                Math.pow(nextBall.vx || 0, 2) + Math.pow(nextBall.vy || 0, 2)
+            );
+
+            if (ballSpeed > 1.5 && nextBall.ownerId === null) {
+                // Add to trail
+                ballTrail.current.push({ x: ballX, y: ballY, z: ballZ, age: 0 });
+                // Keep only last 8 positions
+                if (ballTrail.current.length > 8) ballTrail.current.shift();
+            } else {
+                // Clear trail when ball is slow or possessed
+                ballTrail.current = [];
+            }
+
+            // Draw trail (fading dots)
+            ballTrail.current.forEach((point, idx) => {
+                point.age++;
+                const fade = 1 - (idx / ballTrail.current.length);
+                const pos = toScreen(point.x, point.y, point.z);
+                const trailRadius = 3 * fade * pos.scale;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.4 * fade})`;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, trailRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
             drawBall(ctx, ballX, ballY, ballZ);
+        }
+
+        // ========== GOAL FLASH EFFECT ==========
+        if (goalFlash) {
+            // Use 2.5D coordinates for goal position
+            const goalPos = toScreen(goalFlash === 'AWAY' ? 0 : 100, 50);
+            const goalX = goalPos.x;
+            const goalY = goalPos.y;
+
+            // Pulsing glow effect
+            const pulse = Math.sin(Date.now() / 100) * 0.3 + 0.7;
+
+            // Radial gradient glow from goal
+            const gradient = ctx.createRadialGradient(goalX, goalY, 10, goalX, goalY, 150);
+            gradient.addColorStop(0, `rgba(255, 215, 0, ${0.8 * pulse})`);
+            gradient.addColorStop(0.3, `rgba(255, 255, 255, ${0.6 * pulse})`);
+            gradient.addColorStop(0.7, `rgba(255, 215, 0, ${0.3 * pulse})`);
+            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+            // Add sparkle particles effect
+            for (let i = 0; i < 12; i++) {
+                const angle = (Date.now() / 500 + i * 0.5) % (Math.PI * 2);
+                const radius = 40 + Math.sin(Date.now() / 200 + i) * 20;
+                const sparkleX = goalX + Math.cos(angle) * radius;
+                const sparkleY = goalY + Math.sin(angle) * radius * 0.6;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * pulse})`;
+                ctx.beginPath();
+                ctx.arc(sparkleX, sparkleY, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
     };
 
     const drawPitch = (ctx: CanvasRenderingContext2D) => {
         // Background
-        ctx.fillStyle = '#111827'; // Dark Slate BG
+        ctx.fillStyle = '#111827';
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        const w = CANVAS_W - (PITCH_MARGIN * 2);
-        const h = CANVAS_H - (PITCH_MARGIN * 2);
-        const x = PITCH_MARGIN;
-        const y = PITCH_MARGIN;
+        // Get corner positions for the trapezoid pitch
+        const topLeft = toScreen(0, 0);
+        const topRight = toScreen(100, 0);
+        const bottomLeft = toScreen(0, 100);
+        const bottomRight = toScreen(100, 100);
 
-        // 1. Draw Grass (Clipped Area)
+        // 1. Draw Grass with perspective stripes
         ctx.save();
-        ctx.beginPath();
-        ctx.rect(x, y, w, h);
-        ctx.clip(); // Clip grass to strict pitch dimensions
 
-        const segments = 15;
-        const segW = w / segments;
-        for (let i = 0; i < segments; i++) {
+        // Create clipping path for the trapezoid
+        ctx.beginPath();
+        ctx.moveTo(topLeft.x, topLeft.y);
+        ctx.lineTo(topRight.x, topRight.y);
+        ctx.lineTo(bottomRight.x, bottomRight.y);
+        ctx.lineTo(bottomLeft.x, bottomLeft.y);
+        ctx.closePath();
+        ctx.clip();
+
+        // Draw striped grass
+        const stripeCount = 12;
+        for (let i = 0; i < stripeCount; i++) {
+            const x1 = (i / stripeCount) * 100;
+            const x2 = ((i + 1) / stripeCount) * 100;
+
+            const tl = toScreen(x1, 0);
+            const tr = toScreen(x2, 0);
+            const bl = toScreen(x1, 100);
+            const br = toScreen(x2, 100);
+
             ctx.fillStyle = i % 2 === 0 ? PITCH_COLOR_1 : PITCH_COLOR_2;
-            ctx.fillRect(x + (i * segW), y, segW + 1, h); // +1 to prevent gaps
+            ctx.beginPath();
+            ctx.moveTo(tl.x, tl.y);
+            ctx.lineTo(tr.x, tr.y);
+            ctx.lineTo(br.x, br.y);
+            ctx.lineTo(bl.x, bl.y);
+            ctx.closePath();
+            ctx.fill();
         }
-        ctx.restore(); // Restore context to remove clip for subsequent drawings
+        ctx.restore();
 
-        // 2. Draw Lines & Goals (Not Clipped, allowing goals to stick out)
-        ctx.save();
+        // 2. Draw pitch lines
         ctx.strokeStyle = LINE_COLOR;
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
 
-        // Outer Boundary
-        ctx.strokeRect(x, y, w, h);
-
-        // Halfway Line
+        // Outer boundary
         ctx.beginPath();
-        ctx.moveTo(x + w / 2, y);
-        ctx.lineTo(x + w / 2, y + h);
+        ctx.moveTo(topLeft.x, topLeft.y);
+        ctx.lineTo(topRight.x, topRight.y);
+        ctx.lineTo(bottomRight.x, bottomRight.y);
+        ctx.lineTo(bottomLeft.x, bottomLeft.y);
+        ctx.closePath();
         ctx.stroke();
 
-        // Center Circle
+        // Halfway line (vertical in game coords = horizontal visually)
+        const halfTop = toScreen(50, 0);
+        const halfBottom = toScreen(50, 100);
         ctx.beginPath();
-        ctx.arc(x + w / 2, y + h / 2, 70, 0, Math.PI * 2);
+        ctx.moveTo(halfTop.x, halfTop.y);
+        ctx.lineTo(halfBottom.x, halfBottom.y);
         ctx.stroke();
 
-        // Center Spot
+        // Center circle (ellipse due to perspective)
+        const center = toScreen(50, 50);
+        const radiusY = 50 * PERSPECTIVE_RATIO * 0.14;
+        const radiusX = 55;
+        ctx.beginPath();
+        ctx.ellipse(center.x, center.y, radiusX, radiusY, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Center spot
         ctx.fillStyle = LINE_COLOR;
         ctx.beginPath();
-        ctx.arc(x + w / 2, y + h / 2, 4, 0, Math.PI * 2);
+        ctx.arc(center.x, center.y, 4, 0, Math.PI * 2);
         ctx.fill();
 
-        // Penalty Areas
-        const drawPenaltyBox = (isLeft: boolean) => {
-            const boxH = 400;
-            const boxW = 160;
-            const boxY = y + (h - boxH) / 2;
-            const boxX = isLeft ? x : x + w - boxW;
+        // Penalty areas (both sides)
+        const drawPenaltyArea = (isLeft: boolean) => {
+            const xBase = isLeft ? 0 : 100;
+            const xPenalty = isLeft ? 16 : 84;
+            const xSmall = isLeft ? 5.5 : 94.5;
+            const xSpot = isLeft ? 11 : 89;
 
-            const smallBoxH = 180;
-            const smallBoxW = 55;
-            const smallBoxY = y + (h - smallBoxH) / 2;
-            const smallBoxX = isLeft ? x : x + w - smallBoxW;
+            // Big box corners
+            const boxTL = toScreen(xBase, 21);
+            const boxTR = toScreen(xPenalty, 21);
+            const boxBL = toScreen(xBase, 79);
+            const boxBR = toScreen(xPenalty, 79);
 
-            const spotX = isLeft ? x + 110 : x + w - 110;
-
-            // Box
-            ctx.strokeRect(boxX, boxY, boxW, boxH);
-            // 6-yard box
-            ctx.strokeRect(smallBoxX, smallBoxY, smallBoxW, smallBoxH);
-
-            // Penalty Spot
             ctx.beginPath();
-            ctx.arc(spotX, y + h / 2, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // D-Arc
-            ctx.beginPath();
-            ctx.arc(spotX, y + h / 2, 70, isLeft ? -0.9 : Math.PI - 0.9, isLeft ? 0.9 : Math.PI + 0.9);
+            ctx.moveTo(boxTL.x, boxTL.y);
+            ctx.lineTo(boxTR.x, boxTR.y);
+            ctx.lineTo(boxBR.x, boxBR.y);
+            ctx.lineTo(boxBL.x, boxBL.y);
             ctx.stroke();
+
+            // Small box
+            const smallTL = toScreen(xBase, 37);
+            const smallTR = toScreen(xSmall, 37);
+            const smallBL = toScreen(xBase, 63);
+            const smallBR = toScreen(xSmall, 63);
+
+            ctx.beginPath();
+            ctx.moveTo(smallTL.x, smallTL.y);
+            ctx.lineTo(smallTR.x, smallTR.y);
+            ctx.lineTo(smallBR.x, smallBR.y);
+            ctx.lineTo(smallBL.x, smallBL.y);
+            ctx.stroke();
+
+            // Penalty spot
+            const spot = toScreen(xSpot, 50);
+            ctx.beginPath();
+            ctx.arc(spot.x, spot.y, 3, 0, Math.PI * 2);
+            ctx.fill();
         };
 
-        drawPenaltyBox(true);
-        drawPenaltyBox(false);
+        drawPenaltyArea(true);
+        drawPenaltyArea(false);
 
-        // Corner Arcs
-        const cornerR = 20;
-        ctx.beginPath(); ctx.arc(x, y, cornerR, 0, Math.PI / 2); ctx.stroke();
-        ctx.beginPath(); ctx.arc(x + w, y, cornerR, Math.PI / 2, Math.PI); ctx.stroke();
-        ctx.beginPath(); ctx.arc(x + w, y + h, cornerR, Math.PI, Math.PI * 1.5); ctx.stroke();
-        ctx.beginPath(); ctx.arc(x, y + h, cornerR, Math.PI * 1.5, 0); ctx.stroke();
+        // 3. Draw 3D Goals
+        const drawGoal3D = (isLeft: boolean) => {
+            const xBase = isLeft ? -2 : 102;
+            const xBack = isLeft ? -6 : 106;
+            const yTop = 44;
+            const yBottom = 56;
+            const goalHeight = 15; // Visual height in pixels
 
-        // --- REALISTIC GOALS (NETS & POSTS) ---
-        const drawGoal = (isLeft: boolean) => {
-            const goalH = 80; // Scaled relative to canvas
-            const goalD = 30; // Depth of goal
-            const goalY = y + (h - goalH) / 2;
-            const postX = isLeft ? x : x + w;
-            const netX = isLeft ? x - goalD : x + w + goalD;
+            // Goal posts (front)
+            const frontTop = toScreen(isLeft ? 0 : 100, yTop);
+            const frontBottom = toScreen(isLeft ? 0 : 100, yBottom);
 
-            // Net Pattern (Grid)
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(255,255,255,0.4)'; // More visible net
+            // Goal posts (back)
+            const backTop = toScreen(xBack, yTop);
+            const backBottom = toScreen(xBack, yBottom);
+
+            // Draw net (back panel)
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
             ctx.lineWidth = 1;
 
-            // Horizontal Net Lines
-            for (let i = 0; i <= goalH; i += 8) {
-                ctx.moveTo(postX, goalY + i);
-                ctx.lineTo(netX, goalY + i);
+            // Horizontal net lines
+            for (let y = yTop; y <= yBottom; y += 2) {
+                const left = toScreen(xBack, y);
+                const right = toScreen(isLeft ? 0 : 100, y);
+                ctx.beginPath();
+                ctx.moveTo(left.x, left.y - goalHeight);
+                ctx.lineTo(right.x, right.y - goalHeight);
+                ctx.stroke();
             }
-            // Vertical Net Lines
-            for (let i = 0; i <= goalD; i += 5) {
-                const lx = isLeft ? x - i : x + w + i;
-                ctx.moveTo(lx, goalY);
-                ctx.lineTo(lx, goalY + goalH);
+
+            // Vertical net lines
+            for (let i = 0; i <= 4; i++) {
+                const x = isLeft ? xBack + (i * 1.5) : xBack - (i * 1.5);
+                const top = toScreen(x, yTop);
+                const bottom = toScreen(x, yBottom);
+                ctx.beginPath();
+                ctx.moveTo(top.x, top.y - goalHeight);
+                ctx.lineTo(bottom.x, bottom.y - goalHeight);
+                ctx.stroke();
             }
-            // Back of Net
-            ctx.moveTo(netX, goalY);
-            ctx.lineTo(netX, goalY + goalH);
+
+            // Side nets
+            ctx.beginPath();
+            ctx.moveTo(frontTop.x, frontTop.y);
+            ctx.lineTo(frontTop.x, frontTop.y - goalHeight);
+            ctx.lineTo(backTop.x, backTop.y - goalHeight);
             ctx.stroke();
 
-            // Posts (Thick White Lines)
+            ctx.beginPath();
+            ctx.moveTo(frontBottom.x, frontBottom.y);
+            ctx.lineTo(frontBottom.x, frontBottom.y - goalHeight);
+            ctx.lineTo(backBottom.x, backBottom.y - goalHeight);
+            ctx.stroke();
+
+            // Goal frame (crossbar and posts)
             ctx.strokeStyle = 'white';
-            ctx.lineWidth = 5;
-            ctx.lineCap = 'round';
+            ctx.lineWidth = 4;
 
-            // Side Posts
+            // Front posts (vertical)
             ctx.beginPath();
-            ctx.moveTo(postX, goalY);
-            ctx.lineTo(netX, goalY); // Top side bar
-            ctx.moveTo(postX, goalY + goalH);
-            ctx.lineTo(netX, goalY + goalH); // Bottom side bar
+            ctx.moveTo(frontTop.x, frontTop.y);
+            ctx.lineTo(frontTop.x, frontTop.y - goalHeight);
             ctx.stroke();
 
-            // Crossbar (The vertical line on 2D top-down view representing the goal mouth)
             ctx.beginPath();
-            ctx.moveTo(postX, goalY - 2);
-            ctx.lineTo(postX, goalY + goalH + 2);
+            ctx.moveTo(frontBottom.x, frontBottom.y);
+            ctx.lineTo(frontBottom.x, frontBottom.y - goalHeight);
+            ctx.stroke();
+
+            // Crossbar
+            ctx.beginPath();
+            ctx.moveTo(frontTop.x, frontTop.y - goalHeight);
+            ctx.lineTo(frontBottom.x, frontBottom.y - goalHeight);
+            ctx.stroke();
+
+            // Ground line of goal mouth
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(frontTop.x, frontTop.y);
+            ctx.lineTo(frontBottom.x, frontBottom.y);
             ctx.stroke();
         };
 
-        drawGoal(true);
-        drawGoal(false);
-
-        ctx.restore();
+        drawGoal3D(true);
+        drawGoal3D(false);
     };
 
     const drawPlayer = (
         ctx: CanvasRenderingContext2D,
-        xPct: number, yPct: number, facing: number,
+        xPct: number, yPct: number, z: number, facing: number,
         primary: string, secondary: string, num: number,
         hasBall: boolean, name: string, stamina: number, state: string
     ) => {
-        // Convert Pct to Pixels
-        const fieldW = CANVAS_W - (PITCH_MARGIN * 2);
-        const fieldH = CANVAS_H - (PITCH_MARGIN * 2);
-        const cx = PITCH_MARGIN + (xPct / 100) * fieldW;
-        const cy = PITCH_MARGIN + (yPct / 100) * fieldH;
-        const radius = 13; // SCALED DOWN: Was 16
+        // 2.5D Coordinate transformation
+        const pos = toScreen(xPct, yPct);
+        const cx = pos.x;
+        const groundY = pos.y; // Shadow always here
+        const scale = pos.scale;
+        const baseRadius = 12;
+        let radius = baseRadius * scale;
+        const playerHeight = 8 * scale; // 3D height effect
+
+        // Calculate Body Y based on Jump Height (Z)
+        // Z usually goes 0 to 2-3 meters. We scale it up for pixels.
+        const jumpOffset = z * 10 * scale;
+        const bodyCenterY = groundY - jumpOffset;
 
         ctx.save();
-        ctx.translate(cx, cy);
 
-        // Sprint Effect
+        // TACKLE EFFECT: Flatten the player
+        let scaleX = 1;
+        let scaleY = 1;
+        if (state === 'TACKLE') {
+            scaleX = 1.3;
+            scaleY = 0.6;
+
+            // Dust effect for sliding
+            if (Math.random() > 0.5) {
+                ctx.fillStyle = 'rgba(200,200,200,0.3)';
+                const dustX = cx - (Math.cos(facing) * radius * 1.5);
+                const dustY = groundY - (Math.sin(facing) * radius * 1.5);
+                ctx.beginPath();
+                ctx.arc(dustX, dustY, radius * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Sprint Effect (glow around player)
         if (state === 'SPRINT') {
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
             ctx.beginPath();
-            ctx.arc(0, 0, radius + 6, 0, Math.PI * 2);
+            ctx.ellipse(cx, groundY, radius + 5, (radius + 5) * 0.6, 0, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        // Vision Cone (Facing)
-        ctx.save();
-        ctx.rotate(facing);
-        const coneGrad = ctx.createLinearGradient(0, 0, 50, 0); // Reduced length
-        coneGrad.addColorStop(0, 'rgba(255,255,255,0.3)');
-        coneGrad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = coneGrad;
+        // Ground Shadow (ellipse, flattened) - ALWAYS ON GROUND
+        ctx.fillStyle = `rgba(0,0,0,${Math.max(0.1, 0.4 - (z * 0.1))})`; // Shadow fades as you jump higher
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, 50, -0.5, 0.5); // Reduced width
-        ctx.fill();
-        ctx.restore();
-
-        // Shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.beginPath();
-        ctx.ellipse(2, 4, radius, radius * 0.6, 0, 0, Math.PI * 2);
+        // Shadow grows slightly smaller as you jump
+        const shadowScale = Math.max(0.5, 1 - (z * 0.2));
+        ctx.ellipse(cx + 2, groundY + 2, radius * 1.1 * shadowScale, radius * 0.5 * shadowScale, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Jersey (Circle)
+        // Player Body (main circle raised up)
+        const bodyY = bodyCenterY - playerHeight;
+
+        // Body gradient for 3D effect
+        const bodyGrad = ctx.createRadialGradient(cx - radius * 0.3, bodyY - radius * 0.3, 0, cx, bodyY, radius);
+        bodyGrad.addColorStop(0, primary);
+        bodyGrad.addColorStop(1, shadeColor(primary, -30));
+
+        ctx.fillStyle = bodyGrad;
         ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, Math.PI * 2);
-        ctx.fillStyle = primary;
+
+        if (state === 'TACKLE') {
+            // Draw flattened body
+            ctx.ellipse(cx, bodyY + (radius * 0.3), radius * scaleX, radius * scaleY, facing, 0, Math.PI * 2);
+        } else {
+            ctx.arc(cx, bodyY, radius, 0, Math.PI * 2);
+        }
         ctx.fill();
+
+        // Body outline
         ctx.strokeStyle = secondary;
-        ctx.lineWidth = 2.5; // Thinner border
+        ctx.lineWidth = 2 * scale;
         ctx.stroke();
 
-        // Number
+        // Head (smaller circle above body)
+        // If tackling, head is lower/offset
+        let headY = bodyY - radius * 0.7;
+        let headX = cx;
+
+        if (state === 'TACKLE') {
+            headY = bodyY; // Head lower
+            headX = cx + (Math.cos(facing) * radius * 0.5); // Head forward
+        }
+
+        const headRadius = radius * 0.4;
+        ctx.fillStyle = '#f5deb3'; // Skin tone
+        ctx.beginPath();
+        ctx.arc(headX, headY, headRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#d4a574';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Jersey Number
         ctx.fillStyle = '#fff';
-        ctx.font = 'bold 12px sans-serif'; // Smaller font
+        ctx.font = `bold ${Math.round(10 * scale)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.shadowColor = 'rgba(0,0,0,0.8)';
         ctx.shadowBlur = 2;
-        ctx.fillText(num.toString(), 0, 1);
+        ctx.fillText(num.toString(), cx, bodyY + 1);
         ctx.shadowBlur = 0;
 
-        // Stamina Ring
+        // Stamina indicator (small arc under player)
         const staminaColor = stamina > 50 ? '#22c55e' : stamina > 25 ? '#eab308' : '#ef4444';
         ctx.strokeStyle = staminaColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
-        ctx.arc(0, 0, radius + 3, -Math.PI / 2, (-Math.PI / 2) + (Math.PI * 2 * (stamina / 100)));
+        ctx.arc(cx, groundY, radius * 0.8, 0, Math.PI * 2 * (stamina / 100));
         ctx.stroke();
 
-        // Name Label
-        if (hasBall || state !== 'IDLE') {
-            ctx.font = 'bold 10px sans-serif'; // Smaller name
+        // Name Label (only if has ball or active)
+        if (hasBall || state === 'SPRINT') {
+            ctx.font = `bold ${Math.round(9 * scale)}px sans-serif`;
             ctx.fillStyle = '#fff';
             ctx.shadowColor = '#000';
-            ctx.shadowBlur = 4;
-            ctx.fillText(name, 0, -radius - 10);
+            ctx.shadowBlur = 3;
+            ctx.fillText(name, cx, headY - headRadius - 6);
+            ctx.shadowBlur = 0;
+        }
+
+        // Ball indicator (if player has ball)
+        if (hasBall) {
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(cx + radius + 4, bodyY, 4 * scale, 0, Math.PI * 2);
+            ctx.fill();
         }
 
         ctx.restore();
     };
 
-    const drawBall = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z: number) => {
-        const fieldW = CANVAS_W - (PITCH_MARGIN * 2);
-        const fieldH = CANVAS_H - (PITCH_MARGIN * 2);
-        const groundX = PITCH_MARGIN + (xPct / 100) * fieldW;
-        const groundY = PITCH_MARGIN + (yPct / 100) * fieldH;
-        const radius = 5; // SCALED DOWN: Was 7
+    // Helper to darken/lighten colors
+    const shadeColor = (color: string, percent: number): string => {
+        const num = parseInt(color.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) + amt;
+        const G = (num >> 8 & 0x00FF) + amt;
+        const B = (num & 0x0000FF) + amt;
+        return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    };
 
-        // 3D Projection: Z moves ball UP on Y axis
-        const visualY = groundY - (z * 6);
+    const drawBall = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z: number) => {
+        // 2.5D Coordinate transformation
+        const pos = toScreen(xPct, yPct, z);
+        const groundPos = toScreen(xPct, yPct, 0);
+        const scale = pos.scale;
+        const baseRadius = 5;
+        const radius = baseRadius * scale;
 
         // Shadow (gets smaller and lighter as ball goes higher)
-        const shadowScale = Math.max(0.4, 1 - (z / 15));
-        const shadowAlpha = Math.max(0.1, 0.5 - (z / 20));
+        const shadowScale = Math.max(0.4, 1 - (z / 10));
+        const shadowAlpha = Math.max(0.1, 0.4 - (z / 15));
 
         ctx.save();
 
-        // Draw Shadow at Ground Position
-        ctx.translate(groundX, groundY);
-        ctx.scale(1, 0.6); // Flatten
+        // Draw Shadow at Ground Position (ellipse for perspective)
         ctx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
         ctx.beginPath();
-        ctx.arc(0, 0, radius * 1.5 * shadowScale, 0, Math.PI * 2);
+        ctx.ellipse(groundPos.x + 2, groundPos.y + 1, radius * 1.3 * shadowScale, radius * 0.6 * shadowScale, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
 
         // Draw Ball at Air Position
-        ctx.save();
-        ctx.translate(groundX, visualY);
-
-        const grad = ctx.createRadialGradient(-1.5, -1.5, 1.5, 0, 0, radius);
+        const grad = ctx.createRadialGradient(pos.x - 1.5, pos.y - 1.5, 1, pos.x, pos.y, radius);
         grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.7, '#e5e5e5');
         grad.addColorStop(1, '#94a3b8');
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
         ctx.fill();
 
         // Outline
-        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -597,26 +847,17 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                     {/* ACTION HUD (Landscape only) */}
                     <div className="hidden landscape:block landscape:md:hidden absolute inset-0 z-40 pointer-events-none">
-                        {/* Floating Scoreboard HUD */}
+                        {/* Floating Scoreboard HUD (Top Center) */}
                         <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                            <div className="bg-black/60 backdrop-blur-md px-4 py-1 rounded-full border border-slate-700 flex items-center gap-3">
-                                <span className="text-white font-mono font-black text-xl">{match.homeScore}</span>
-                                <span className="text-emerald-400 font-mono font-bold text-sm bg-black/40 px-2 rounded-lg">{match.currentMinute}'</span>
-                                <span className="text-white font-mono font-black text-xl">{match.awayScore}</span>
-                            </div>
-                            <div className="mt-1 bg-black/30 backdrop-blur-sm px-3 py-0.5 rounded-full border border-slate-800">
-                                <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">{statusText}</span>
+                            <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
+                                <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
+                                <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
+                                <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
                             </div>
                         </div>
 
-                        {/* Corner Actions HUD */}
-                        <div className="absolute top-2 right-2 pointer-events-auto">
-                            <button onClick={() => onFinish(match.id)} className="p-2 bg-red-900/50 text-white rounded-full border border-red-500/30">
-                                <X size={16} />
-                            </button>
-                        </div>
-
-                        <div className="absolute bottom-2 left-2 flex gap-2 pointer-events-auto">
+                        {/* Top Left: Play Controls (Moved from Bottom) */}
+                        <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
                             <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className="w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center text-white">
                                 {speed === 0 ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
                             </button>
@@ -625,9 +866,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             </button>
                         </div>
 
-                        <div className="absolute bottom-2 right-2 pointer-events-auto">
+                        {/* Top Right: Actions (Exit + Settings) */}
+                        <div className="absolute top-2 right-2 flex gap-2 pointer-events-auto scale-90 origin-top-right">
                             <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
                                 <Settings size={14} />
+                            </button>
+                            <button onClick={() => onFinish(match.id)} className="w-8 h-8 flex items-center justify-center bg-red-900/50 text-white rounded-full border border-red-500/30">
+                                <X size={16} />
                             </button>
                         </div>
                     </div>

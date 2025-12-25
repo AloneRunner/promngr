@@ -2,7 +2,7 @@
 export const TRABZONSPOR_SQUAD = [
   {
     ad: "Edin Višća",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Bosna Hersek",
     mevki: "SĞO",
     reyting: 78,
@@ -19,7 +19,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Oleksandr Zubkov",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Ukrayna",
     mevki: "SĞO",
     reyting: 78,
@@ -36,7 +36,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Stefan Savić",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Karadağ",
     mevki: "STP",
     reyting: 78,
@@ -53,7 +53,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Okay Yokuşlu",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 76,
@@ -67,7 +67,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Ernest Muçi",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Arnavutluk",
     mevki: "SLO",
     reyting: 75,
@@ -81,7 +81,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Anthony Nwakaeme",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Nijerya",
     mevki: "SLO",
     reyting: 74,
@@ -95,7 +95,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Danylo Sikan",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Ukrayna",
     mevki: "SNT",
     reyting: 74,
@@ -109,7 +109,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Paul Onuachu",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Nijerya",
     mevki: "SNT",
     reyting: 74,
@@ -123,7 +123,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Ozan Tufan",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 73,
@@ -137,7 +137,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Arseniy Batagov",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Ukrayna",
     mevki: "STP",
     reyting: 72,
@@ -151,7 +151,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Mustafa Eskihellaç",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 71,
@@ -165,7 +165,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Borna Barišić",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Hırvatistan",
     mevki: "SLB",
     reyting: 71,
@@ -179,7 +179,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Wagner Pina",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Cape Verde Adaları",
     mevki: "SĞO",
     reyting: 71,
@@ -193,7 +193,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Rayyan Baniya",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 71,
@@ -207,7 +207,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Benjamin Bouchouari",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Fas",
     mevki: "MO",
     reyting: 70,
@@ -221,7 +221,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Serdar Saatçı",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 70,
@@ -235,7 +235,7 @@ export const TRABZONSPOR_SQUAD = [
   },
   {
     ad: "Felipe Augusto",
-    takim: "Trabzonspor",
+    takim: "Trabzon Storm",
     uyruk: "Brezilya",
     mevki: "SNT",
     reyting: 67,

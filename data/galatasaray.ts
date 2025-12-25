@@ -2,7 +2,7 @@
 export const GALATASARAY_SQUAD = [
   {
     ad: "Victor Osimhen",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Nijerya",
     mevki: "SNT",
     reyting: 87,
@@ -19,7 +19,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Lucas Torreira",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Uruguay",
     mevki: "MDO",
     reyting: 83,
@@ -36,7 +36,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "İlkay Gündoğan",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Almanya",
     mevki: "MO",
     reyting: 83,
@@ -53,7 +53,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Leroy Sané",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Almanya",
     mevki: "SĞO",
     reyting: 82,
@@ -70,7 +70,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Mauro Icardi",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Arjantin",
     mevki: "SNT",
     reyting: 81,
@@ -87,7 +87,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Barış Alper Yılmaz",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 80,
@@ -104,7 +104,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Gabriel Sara",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 80,
@@ -121,7 +121,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Wilfried Singo",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Fildişi Sahili",
     mevki: "STP",
     reyting: 80,
@@ -138,7 +138,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Uğurcan Çakır",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 80,
@@ -152,7 +152,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Abdülkerim Bardakcı",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 80,
@@ -169,7 +169,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Mario Lemina",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Gabon",
     mevki: "MDO",
     reyting: 79,
@@ -186,7 +186,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Roland Sallai",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Macaristan",
     mevki: "SĞO",
     reyting: 78,
@@ -203,7 +203,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Yunus Akgün",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 78,
@@ -220,7 +220,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Kaan Ayhan",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 76,
@@ -234,7 +234,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Günay Güvenç",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 75,
@@ -248,7 +248,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Ismail Jakobs",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Senegal",
     mevki: "SLB",
     reyting: 75,
@@ -262,7 +262,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Eren Elmalı",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 75,
@@ -276,7 +276,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Berkan Kutlu",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 73,
@@ -290,7 +290,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Ahmed Kutucu",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 69,
@@ -304,7 +304,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Yusuf Demir",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Avusturya",
     mevki: "SĞO",
     reyting: 67,
@@ -318,7 +318,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Kazımcan Karataş",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 66,
@@ -332,7 +332,7 @@ export const GALATASARAY_SQUAD = [
   },
   {
     ad: "Eyüp Aydın",
-    takim: "Galatasaray",
+    takim: "Galata Lions",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 66,
