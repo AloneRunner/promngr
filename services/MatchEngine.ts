@@ -660,6 +660,7 @@ export class MatchEngine {
                 this.sim.players[gk.id].y = 50;
                 this.sim.ball.ownerId = gk.id;
                 this.sim.ball.x = isHome ? 5 : 95;
+                this.sim.ball.y = 50;
             }
         } else if (mode.includes('CORNER')) {
             const isHome = mode.startsWith('CORNER_HOME');
@@ -1994,6 +1995,7 @@ export class MatchEngine {
                         this.traceLog.push("KORNER (Deplasman)");
                     } else {
                         this.resetPositions('GOAL_KICK_HOME');
+                        this.traceLog.push(`Aut Atışı (${this.homeTeam.name})`);
                     }
                 } else {
                     if (!lastTouchWasHome && this.lastTouchTeamId) {
@@ -2002,6 +2004,7 @@ export class MatchEngine {
                         this.traceLog.push("KORNER (Ev Sahibi)");
                     } else {
                         this.resetPositions('GOAL_KICK_AWAY');
+                        this.traceLog.push(`Aut Atışı (${this.awayTeam.name})`);
                     }
                 }
                 return null;

@@ -180,7 +180,16 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (logicTimerRef.current) clearInterval(logicTimerRef.current);
 
         if (speed > 0) {
-            const ms = speed === 2 ? 60 : 120; // 60ms for 2x, 120ms for 1x (SLOWED DOWN)
+            // Speed logic: 
+            // 1x = 120ms (Normal)
+            // 2x = 60ms (Fast)
+            // 0.5x = 240ms (Slow)
+            // 4x = 30ms (Super Fast)
+            let ms = 120;
+            if (speed === 2) ms = 60;
+            else if (speed === 0.5) ms = 240;
+            else if (speed === 4) ms = 30;
+
             logicTimerRef.current = window.setInterval(() => {
                 onTick(match.id);
             }, ms);
@@ -198,7 +207,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (!ctx) return;
 
         const now = performance.now();
-        const tickDuration = speed === 2 ? 60 : 120; // Slowed down
+        const tickDuration = speed === 2 ? 60 : speed === 0.5 ? 240 : speed === 4 ? 30 : 120;
         const elapsed = now - lastTickTime.current;
         // Clamp alpha between 0 and 1 to prevent overshooting
         const alpha = Math.min(1, Math.max(0, elapsed / tickDuration));
@@ -861,8 +870,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className="w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center text-white">
                                 {speed === 0 ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
                             </button>
-                            <button onClick={() => setSpeed(speed === 2 ? 1 : 2)} className={`w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center font-bold text-[10px] ${speed === 2 ? 'text-emerald-400' : 'text-white'}`}>
-                                {speed === 2 ? '2x' : '1x'}
+                            <button onClick={() => setSpeed(speed === 4 ? 1 : speed * 2)} className={`w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center font-bold text-[10px] ${speed > 1 ? 'text-emerald-400' : 'text-white'}`}>
+                                {speed}x
                             </button>
                         </div>
 
@@ -952,8 +961,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                     <div className="h-4 md:h-6 w-[1px] bg-slate-700"></div>
 
+                    <button onClick={() => setSpeed(0.5)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 0.5 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>0.5x</button>
                     <button onClick={() => setSpeed(1)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 1 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>1x</button>
                     <button onClick={() => setSpeed(2)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 2 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>2x</button>
+                    <button onClick={() => setSpeed(4)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 4 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>4x</button>
                 </div>
 
                 <div className="flex gap-1 md:gap-3">
