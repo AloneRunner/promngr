@@ -1,3 +1,24 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gizlilik Politikası — Pocket Football Manager</title>
+    <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css">
+    <style>
+      body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#0f172a; color:#e6eef8; padding:28px}
+      .container{max-width:900px;margin:0 auto;background:#071133;padding:28px;border-radius:10px;box-shadow:0 6px 24px rgba(2,6,23,.6)}
+      h1,h2,h3{color:#fff}
+      a{color:#7dd3fc}
+      pre,code{background:#061028;padding:6px;border-radius:6px}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="content">Loading…</div>
+    </div>
+
+    <script id="source-md" type="text/plain">
 # Gizlilik Politikası
 
 **Son Güncelleme:** 25 Aralık 2025
@@ -56,3 +77,16 @@ Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Herhangi bir değişikli
 Gizlilik Politikamızla ilgili herhangi bir sorunuz veya öneriniz varsa, lütfen bizimle şu adresten iletişime geçin:
 
 **E-posta:** kaanozarik@gmail.com
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      (function(){
+        const src = document.getElementById('source-md').textContent || '';
+        const html = marked.parse(src);
+        document.getElementById('content').innerHTML = html;
+      })();
+    </script>
+  </body>
+</html>
