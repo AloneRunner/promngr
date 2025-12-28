@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pocket Football Manager</string>
+    <string name="title_activity_main">Pocket Football Manager</string>
+    <string name="package_name">com.pocketfootballmanager.game</string>
+    <string name="custom_url_scheme">com.pocketfootballmanager.game</string>
+</resources>

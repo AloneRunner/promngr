@@ -2,7 +2,7 @@
 export const BASAKSEHIR_SQUAD = [
   {
     ad: "Yusuf Sarı",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 75,
@@ -13,7 +13,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Léo Duarte",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 75,
@@ -24,7 +24,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Christopher Operi",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Fildişi Sahili",
     mevki: "SLB",
     reyting: 74,
@@ -35,7 +35,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Eldor Shomurodov",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Özbekistan",
     mevki: "SNT",
     reyting: 74,
@@ -46,7 +46,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Davie Selke",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Almanya",
     mevki: "SNT",
     reyting: 74,
@@ -57,7 +57,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Nuno da Costa",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Cape Verde Adaları",
     mevki: "SNT",
     reyting: 74,
@@ -68,7 +68,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Ousseynou Ba",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Senegal",
     mevki: "STP",
     reyting: 74,
@@ -79,7 +79,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Miguel Crespo",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Portekiz",
     mevki: "MO",
     reyting: 73,
@@ -90,7 +90,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Deniz Türüç",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 73,
@@ -101,7 +101,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Berat Özdemir",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 73,
@@ -112,7 +112,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Olivier Kemen",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Kamerun",
     mevki: "MO",
     reyting: 72,
@@ -123,7 +123,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Jerome Opoku",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Gana",
     mevki: "STP",
     reyting: 72,
@@ -134,7 +134,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Muhammed Şengezer",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 71,
@@ -145,7 +145,7 @@ export const BASAKSEHIR_SQUAD = [
   },
   {
     ad: "Volkan Babacan",
-    takim: "Başakşehir",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 70,

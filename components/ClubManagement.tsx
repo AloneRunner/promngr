@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Team, Translation, Player, TeamStaff } from '../types';
-import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList } from 'lucide-react';
+import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity } from 'lucide-react';
 import { TICKET_PRICE } from '../constants';
 import { PlayerAvatar } from './PlayerAvatar';
 
@@ -11,10 +11,11 @@ interface ClubManagementProps {
     t: Translation;
     onPromoteYouth: (player: Player) => void;
     onResign: () => void;
-    onUpgradeStaff?: (role: keyof TeamStaff) => void; // New prop
+    onUpgradeStaff?: (role: keyof TeamStaff) => void;
+    onUpgradeFacility?: (type: 'stadium' | 'training' | 'academy') => void;
 }
 
-export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff }) => {
+export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff, onUpgradeFacility }) => {
     const [tab, setTab] = useState<'FINANCE' | 'FACILITIES' | 'ACADEMY' | 'STAFF'>('FINANCE');
 
     const totalWages = players.reduce((sum, p) => sum + p.wage, 0);
@@ -171,67 +172,135 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
             {tab === 'FACILITIES' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* ... existing facilities ... */}
                     {/* Stadium Card */}
                     <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                            <Building2 className="text-blue-500" /> {t.stadium}
-                        </h2>
-                        <div className="relative h-32 bg-slate-900 rounded-lg mb-4 overflow-hidden border border-slate-600">
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6a?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                <Building2 className="text-blue-500" /> {t.stadium}
+                            </h2>
+                            <div className="text-right">
+                                <span className="block text-xs uppercase text-slate-500 font-bold">Current Level</span>
+                                <span className="text-2xl font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-lg">/10</span></span>
+                            </div>
+                        </div>
+
+                        <div className="relative h-32 bg-slate-900 rounded-lg mb-6 overflow-hidden border border-slate-600 group">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6a?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
                             <div className="absolute bottom-2 left-4">
                                 <div className="text-white font-bold text-lg">{team.city} Arena</div>
-                                <div className="text-emerald-400 text-sm">{team.facilities.stadiumCapacity.toLocaleString()} Seats</div>
+                                <div className="text-emerald-400 text-sm font-mono">{team.facilities.stadiumCapacity.toLocaleString()} Seats</div>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">{t.condition}</span>
-                                <div className="w-24 bg-slate-700 rounded-full h-2 mt-1.5">
-                                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '85%' }}></div>
+
+                        <div className="space-y-4 mb-6">
+                            <div>
+                                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Upgrade Progress</span>
+                                    <span>{(team.facilities.stadiumLevel / 10 * 100).toFixed(0)}%</span>
+                                </div>
+                                <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                                    <div className="bg-blue-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.stadiumLevel / 10) * 100}%` }}></div>
                                 </div>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">{t.level}</span>
-                                <span className="text-white font-bold">{team.facilities.stadiumLevel}/10</span>
-                            </div>
-                            <div className="mt-4 pt-4 border-t border-slate-700">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs text-slate-500">{t.maintenance}</span>
-                                    <span className="text-red-400 font-mono text-sm">-€{Math.floor(fin.lastWeekExpenses.maintenance).toLocaleString()}</span>
-                                </div>
-                            </div>
+                            <p className="text-slate-400 text-sm italic border-l-2 border-blue-500 pl-3">
+                                Higher stadium level increases capacity and match day income.
+                            </p>
                         </div>
+
+                        <button
+                            onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
+                            disabled={team.facilities.stadiumLevel >= 10 || team.budget < 5000000}
+                            className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                        >
+                            <Hammer size={18} /> Upgrade (€5.0M)
+                        </button>
                     </div>
 
-                    {/* Infrastructure */}
+                    {/* Training Centre */}
                     <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                            <Users className="text-yellow-500" /> {t.infrastructure}
-                        </h2>
-                        <div className="space-y-6">
-                            <div>
-                                <div className="flex justify-between mb-1">
-                                    <span className="text-sm font-medium text-white">{t.training}</span>
-                                    <span className="text-sm text-yellow-500 font-bold">Lvl {team.facilities.trainingLevel}</span>
-                                </div>
-                                <div className="w-full bg-slate-700 rounded-full h-2.5">
-                                    <div className="bg-yellow-500 h-2.5 rounded-full" style={{ width: `${team.facilities.trainingLevel * 10}%` }}></div>
-                                </div>
-                                <p className="text-xs text-slate-500 mt-1">{t.impactDev}</p>
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                <Activity className="text-emerald-500" /> Training Ground
+                            </h2>
+                            <div className="text-right">
+                                <span className="block text-xs uppercase text-slate-500 font-bold">Current Level</span>
+                                <span className="text-2xl font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-lg">/10</span></span>
                             </div>
+                        </div>
+
+                        <div className="relative h-32 bg-slate-900 rounded-lg mb-6 overflow-hidden border border-slate-600 group">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543351611-58f69d7c1781?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
+                            <div className="absolute bottom-2 left-4">
+                                <div className="text-white font-bold text-lg">Performance Center</div>
+                                <div className="text-emerald-400 text-sm font-mono">Level {team.facilities.trainingLevel} Facility</div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 mb-6">
                             <div>
-                                <div className="flex justify-between mb-1">
-                                    <span className="text-sm font-medium text-white">{t.academy}</span>
-                                    <span className="text-sm text-purple-500 font-bold">Lvl {team.facilities.academyLevel}</span>
+                                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Facility Quality</span>
+                                    <span>{(team.facilities.trainingLevel / 10 * 100).toFixed(0)}%</span>
                                 </div>
-                                <div className="w-full bg-slate-700 rounded-full h-2.5">
-                                    <div className="bg-purple-500 h-2.5 rounded-full" style={{ width: `${team.facilities.academyLevel * 10}%` }}></div>
+                                <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                                    <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.trainingLevel / 10) * 100}%` }}></div>
                                 </div>
-                                <div className="flex justify-between mt-1">
-                                    <p className="text-xs text-slate-500">{t.impactAcademy}</p>
-                                    <span className="text-red-400 text-xs font-mono">-€{Math.floor(fin.lastWeekExpenses.academy).toLocaleString()}/wk</span>
+                            </div>
+                            <p className="text-slate-400 text-sm italic border-l-2 border-emerald-500 pl-3">
+                                Better training facilities significantly increase player XP gain and development speed.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={() => onUpgradeFacility && onUpgradeFacility('training')}
+                            disabled={team.facilities.trainingLevel >= 10 || team.budget < 3000000}
+                            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                        >
+                            <Hammer size={18} /> Upgrade (€3.0M)
+                        </button>
+                    </div>
+
+                    {/* Youth Academy */}
+                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl md:col-span-2">
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                <GraduationCap className="text-yellow-500" /> Youth Academy
+                            </h2>
+                            <div className="text-right">
+                                <span className="block text-xs uppercase text-slate-500 font-bold">Academy Tier</span>
+                                <span className="text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/10</span></span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="relative h-full min-h-[140px] bg-slate-900 rounded-lg overflow-hidden border border-slate-600 group">
+                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
+                                <div className="absolute inset-0 flex flex-col justify-end p-4">
+                                    <div className="text-white font-bold text-lg">Next Gen Academy</div>
+                                    <div className="text-yellow-400 text-sm font-mono"> producing {team.facilities.academyLevel * 2}0% better talents</div>
                                 </div>
+                            </div>
+
+                            <div className="flex flex-col justify-center space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-xs text-slate-400 mb-1">
+                                        <span>Scouting Network</span>
+                                        <span>{(team.facilities.academyLevel / 10 * 100).toFixed(0)}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                                        <div className="bg-yellow-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.academyLevel / 10) * 100}%` }}></div>
+                                    </div>
+                                </div>
+                                <p className="text-slate-400 text-sm italic border-l-2 border-yellow-500 pl-3">
+                                    Investing in the academy drastically improves the quality and potential of youth candidates found each season.
+                                </p>
+                                <button
+                                    onClick={() => onUpgradeFacility && onUpgradeFacility('academy')}
+                                    disabled={team.facilities.academyLevel >= 10 || team.budget < 2500000}
+                                    className="w-full py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Hammer size={18} /> Upgrade (€2.5M)
+                                </button>
                             </div>
                         </div>
                     </div>

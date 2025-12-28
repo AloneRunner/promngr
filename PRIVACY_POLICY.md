@@ -18,11 +18,12 @@ Uygulamamız şu anda doğrudan adınız, e-posta adresiniz veya telefon numaran
 
 ## 2. Üçüncü Taraf Hizmetleri ve Reklamlar
 
-Uygulamamız, reklam gösterimi ve analiz amacıyla üçüncü taraf hizmet sağlayıcılarını kullanabilir. Bu sağlayıcılar, size ilgi alanlarınıza dayalı reklamlar sunmak için cihazınızdaki verileri (örneğin Reklam Kimliği - Advertising ID) kullanabilir.
+Uygulamamız şu anda reklam gösterimi için Reklam Kimliği (Advertising ID) veya üçüncü taraf reklam SDK'larını **kullanmamaktadır**. Bir sonraki sürümde banner reklamlar eklemeyi planlıyoruz; reklamlar eklendiğinde uygulama reklam kimliğini kullanabilir ve bu Gizlilik Politikası güncellenecektir.
 
-Kullandığımız üçüncü taraf hizmetleri şunlardır:
-*   **Google AdMob:** Uygulama içinde reklam göstermek için kullanılır. Google'ın verileri nasıl kullandığı hakkında daha fazla bilgi için: [Google Gizlilik Politikası](https://policies.google.com/privacy)
-*   **Google Play Hizmetleri:** Uygulama içi başarılar, liderlik tabloları ve diğer temel işlevler için kullanılır.
+Planlanan veya potansiyel üçüncü taraf sağlayıcılar (örnek):
+*   **Google AdMob:** Reklam gösterimi için sıklıkla kullanılan bir sağlayıcıdır. Eğer AdMob kullanmaya karar verirsek, Google'ın verileri nasıl kullandığı hakkında daha fazla bilgi için: [Google Gizlilik Politikası](https://policies.google.com/privacy)
+
+Not: Mevcut sürümde reklam SDK'ları veya Advertising ID kullanımına dair herhangi bir entegrasyon bulunmamaktadır; bu durum değiştiğinde kullanıcılar bilgilendirilecektir.
 
 ## 3. Uygulama İçi Satın Alımlar
 

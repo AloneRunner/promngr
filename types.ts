@@ -51,10 +51,11 @@ export interface PlayerPersonality {
 export interface Player {
     id: string; firstName: string; lastName: string; age: number; nationality: string; position: Position;
     attributes: PlayerAttributes; hiddenAttributes: { consistency: number; importantMatches: number; injuryProneness: number; };
-    visual: PlayerVisual; stats: PlayerStats; overall: number; potential: number; value: number; wage: number;
+    visual: PlayerVisual; stats: PlayerStats; overall: number; potential: number; value: number; wage: number; salary: number; // yearly salary in euros
     contractYears: number; morale: number; condition: number; form: number; teamId: string;
     isTransferListed: boolean; weeksInjured: number; matchSuspension: number; lineup: LineupStatus;
     lineupIndex: number; // NEW: Explicit ordering in lineup views
+    jerseyNumber?: number;
     playStyles: string[]; details: any; careerHistory?: any[];
     // Runtime generated properties
     personality?: PlayerPersonality;
@@ -96,6 +97,8 @@ export interface TeamStats {
 export interface Team {
     id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number;
+    leagueId: string; // NEW: To separate teams by league
+    wages: number; // Total weekly wage bill
     facilities: TeamFacilities;
     staff: TeamStaff; // NEW
     objectives: BoardObjective[]; // NEW
@@ -152,15 +155,50 @@ export interface Message {
     id: string; week: number; type: MessageType; subject: string; body: string; isRead: boolean; date: string; data?: any;
 }
 
+export interface TransferOffer {
+    id: string;
+    playerId: string;
+    playerName: string;
+    fromTeamId: string;
+    fromTeamName: string;
+    toTeamId: string;
+    offerAmount: number;
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
+    weekCreated: number;
+}
+
 export interface LeagueHistoryEntry {
     season: number; championId: string; championName: string; championColor: string;
     runnerUpName: string; topScorer: string; topAssister: string;
+}
+
+export interface EuropeanCupMatch {
+    id: string;
+    round: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL';
+    homeTeamId: string;
+    awayTeamId: string;
+    homeScore: number;
+    awayScore: number;
+    isPlayed: boolean;
+    winnerId?: string;
+}
+
+export interface EuropeanCup {
+    season: number;
+    isActive: boolean;
+    qualifiedTeamIds: string[];
+    matches: EuropeanCupMatch[];
+    currentRound: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL' | 'COMPLETE';
+    winnerId?: string;
+    _generatedForeignTeams?: any[]; // Temporary storage for foreign teams generated during cup creation
 }
 
 export interface GameState {
     currentWeek: number; currentSeason: number; userTeamId: string; leagueId: string;
     teams: Team[]; players: Player[]; matches: Match[]; isSimulating: boolean;
     messages: Message[]; transferMarket: Player[]; history: LeagueHistoryEntry[];
+    pendingOffers: TransferOffer[];
+    europeanCup?: EuropeanCup;
 }
 
 export interface AssistantAdvice {
@@ -173,4 +211,26 @@ export interface ValidationResult {
 
 export interface Translation {
     [key: string]: string;
+}
+
+export interface GameProfile {
+    id: string;
+    name: string;
+    createdAt: number;
+    lastPlayedAt: number;
+    gameState: GameState | null;
+    thumbnailData?: {
+        teamName: string;
+        leagueName: string;
+        currentWeek: number;
+        currentSeason: number;
+        teamColor: string;
+        budget: number;
+        leaguePosition: number;
+    };
+}
+
+export interface ProfileManagerState {
+    profiles: GameProfile[];
+    activeProfileId: string | null;
 }

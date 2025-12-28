@@ -21,19 +21,19 @@ const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * 
 // --- CONSTANTS ---
 export const TICKS_PER_MINUTE = 17; // 2 seconds per minute at 1x speed (120ms per tick)
 
-const MAX_PLAYER_SPEED = 1.7;
-const MAX_BALL_SPEED = 4.8;
+const MAX_PLAYER_SPEED = 1.2;  // 1.0 → 1.2 (biraz hızlandı, ~37 km/h)
+const MAX_BALL_SPEED = 4.0;    // 3.5 → 4.0 (daha dinamik şutlar/paslar)
 const BALL_FRICTION = 0.96;
 const BALL_AIR_DRAG = 0.98;
-const GRAVITY = 0.20;
-const PLAYER_ACCELERATION = 0.15;
+const GRAVITY = 0.18;          // 0.22 → 0.18 (havadan paslar daha uzun kalır)
+const PLAYER_ACCELERATION = 0.12; // 0.15 → 0.12 (daha yumuşak ivme)
 const PLAYER_TURN_SPEED = 0.25;
 
 // AI Ranges
-const SHOOT_RANGE = 25;  // 30 → 25 uzak şut azaltıldı
+const SHOOT_RANGE = 30;  // 25 → 30 uzak şut artırıldı (daha fazla şut için)
 const PASS_RANGE_VISION = 50;
-const TACKLE_RANGE_BASE = 3.0;  // 2.5 → 3.0 defansa avantaj
-const PRESSING_RANGE = 20;
+const TACKLE_RANGE_BASE = 4.5;  // 3.0 → 4.5 Aggressive Defense!
+const PRESSING_RANGE = 30; // 20 → 30 Earlier Pressing!
 
 // Goal Dimensions - Genişletildi (gol tespiti için)
 const GOAL_Y_TOP = 44.0;    // 46.3 → 44 (daha geniş)
@@ -206,6 +206,15 @@ export class MatchEngine {
     private playerRoles: Record<string, Position> = {};
     private baseOffsets: Record<string, { x: number, y: number }> = {};
 
+    // Helper for cover shadow calculation
+    private distToSegment(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
+        const l2 = dist(x1, y1, x2, y2) ** 2;
+        if (l2 === 0) return dist(px, py, x1, y1);
+        let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+        t = Math.max(0, Math.min(1, t));
+        return dist(px, py, x1 + t * (x2 - x1), y1 + t * (y2 - y1));
+    }
+
     private homeMentality: TeamMentality = TeamMentality.BALANCED;
     private awayMentality: TeamMentality = TeamMentality.BALANCED;
 
@@ -312,6 +321,21 @@ export class MatchEngine {
         });
 
         Object.entries(grouped).forEach(([role, plList]) => {
+            // AI FIX: Sort players to ensure positional correctness (Left -> Right)
+            // This ensures Index 0 is Left, Index 1 Center, Index 2 Right for 3-man lines
+            if (role === Position.FWD || role === Position.MID || role === Position.DEF) {
+                plList.sort((a, b) => {
+                    const scorePos = (p: string) => {
+                        const pos = p.toUpperCase();
+                        if (['SLB', 'LB', 'SLO', 'LM', 'LW', 'LF'].includes(pos)) return 1;
+                        if (['STP', 'CB', 'MDO', 'CDM', 'MO', 'CM', 'CAM', 'SNT', 'ST', 'CF'].includes(pos)) return 2;
+                        if (['SĞB', 'RB', 'SĞO', 'RM', 'RW', 'RF'].includes(pos)) return 3;
+                        return 2;
+                    };
+                    return scorePos(a.position) - scorePos(b.position);
+                });
+            }
+
             plList.forEach((p, idx) => {
                 if (tactic.customPositions && tactic.customPositions[p.id]) {
                     this.baseOffsets[p.id] = tactic.customPositions[p.id];
@@ -370,7 +394,10 @@ export class MatchEngine {
     public substitutePlayer(playerIn: Player, playerOutId: string, isAI: boolean = false) {
         const isHome = this.homeTeam.id === playerIn.teamId;
         const list = isHome ? this.homePlayers : this.awayPlayers;
-        const idx = list.findIndex(p => p.id === playerOutId);
+
+        // Find BOTH players in the list
+        const outIdx = list.findIndex(p => p.id === playerOutId);
+        const inIdx = list.findIndex(p => p.id === playerIn.id);
 
         // Check sub limit
         const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
@@ -379,13 +406,26 @@ export class MatchEngine {
             return;
         }
 
-        if (idx !== -1) {
+        if (outIdx !== -1 && inIdx !== -1) {
+            // --- 1. UPDATE SIMULATION DATA ---
             const oldPos = this.sim.players[playerOutId];
+
+            // Remove outgoing player from simulation
             if (oldPos) delete this.sim.players[playerOutId];
 
+            // Add incoming player to simulation
+            // CRITICAL FIX: Reset velocity to ZERO! Otherwise inherits old player's speed -> "light speed bug"
             const base = this.baseOffsets[playerIn.id] || { x: 50, y: 50 };
-            this.sim.players[playerIn.id] = oldPos ? { ...oldPos } : { x: base.x, y: base.y, facing: 0, vx: 0, vy: 0 };
+            this.sim.players[playerIn.id] = {
+                x: oldPos ? oldPos.x : base.x,
+                y: oldPos ? oldPos.y : base.y,
+                facing: oldPos ? oldPos.facing : 0,
+                vx: 0, // RESET VELOCITY - Prevents "light speed" bug!
+                vy: 0,
+                state: 'IDLE'
+            };
 
+            // Initialize personality if missing
             if (!playerIn.personality) {
                 playerIn.personality = {
                     riskTaking: (playerIn.attributes.aggression / 100) * 0.6 + Math.random() * 0.4,
@@ -394,12 +434,28 @@ export class MatchEngine {
                 };
             }
 
+            // Initialize player state
             this.playerStates[playerIn.id] = {
                 currentStamina: (playerIn.condition !== undefined ? playerIn.condition : 100),
-                decisionTimer: 0, possessionCooldown: 0, actionLock: 0, targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
+                decisionTimer: 0, possessionCooldown: 0, actionLock: 0,
+                targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
             };
 
-            list[idx] = playerIn;
+            // --- 2. CRITICAL: SWAP ARRAY POSITIONS (Fixes duplicate reference bug!) ---
+            // Get references to both player objects
+            const playerOutObj = list[outIdx];
+            const playerInObj = list[inIdx];
+
+            // Update lineup statuses
+            playerOutObj.lineup = 'BENCH';
+            playerInObj.lineup = 'STARTING';
+            playerInObj.lineupIndex = playerOutObj.lineupIndex; // Preserve slot index
+
+            // SWAP positions in array - this prevents the "duplicate reference" bug!
+            list[outIdx] = playerInObj;  // Incoming player to starting spot
+            list[inIdx] = playerOutObj;  // Outgoing player to bench spot
+
+            // --- 3. REINITIALIZE TACTICS ---
             this.initializeTactics(list.filter(p => p.lineup === 'STARTING'), isHome ? this.homeTeam.tactic : this.awayTeam.tactic);
 
             // Increment sub counter
@@ -817,7 +873,7 @@ export class MatchEngine {
                 if (!ballOwner && p.id === this.currentLooseBallChaserId) {
                     const interceptX = this.sim.ball.x + (this.sim.ball.vx * 2);
                     const interceptY = this.sim.ball.y + (this.sim.ball.vy * 2);
-                    this.applySteeringBehavior(p, interceptX, interceptY, MAX_PLAYER_SPEED * 1.15);
+                    this.applySteeringBehavior(p, interceptX, interceptY, MAX_PLAYER_SPEED); // Removed 1.15x - was causing light speed bug!
                     this.sim.players[p.id].state = 'SPRINT';
                     state.isPressing = true;
                 }
@@ -1056,7 +1112,7 @@ export class MatchEngine {
         if (isBallLoose && distToBall < 25 && ((isHome && ballX < 30) || (!isHome && ballX > 70))) {
             const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
             if (ballSpeed > 0.5 || distToBall < 10) {
-                this.applySteeringBehavior(p, ballX + this.sim.ball.vx * 2, ballY + this.sim.ball.vy * 2, MAX_PLAYER_SPEED * 1.1);
+                this.applySteeringBehavior(p, ballX + this.sim.ball.vx * 2, ballY + this.sim.ball.vy * 2, MAX_PLAYER_SPEED); // Removed 1.1x
                 simP.state = 'SPRINT';
                 return;
             }
@@ -1122,16 +1178,19 @@ export class MatchEngine {
         const fatigueFactor = Math.max(0.3, state.currentStamina / 100);
         const dribbleSkill = p.attributes.dribbling || 50;
         let closeControl = 1.0 + ((100 - dribbleSkill) / 100);
-        if (state.currentStamina < 50) closeControl *= 1.6; // Fatigue hurts control more
+        if (state.currentStamina < 50) closeControl *= 1.6;
 
         this.sim.ball.x = simP.x + (Math.cos(simP.facing) * closeControl);
         this.sim.ball.y = simP.y + (Math.sin(simP.facing) * closeControl);
 
+        // --- GOALKEEPER AI (Clearance) ---
         if (this.playerRoles[p.id] === Position.GK) {
             const bestPass = this.findBestPassOption(p, isHome, offsideLineX, goalX);
-            if (bestPass && bestPass.score > 15) {
-                this.actionPass(p, bestPass.player, bestPass.isThroughBall, bestPass.targetX, bestPass.targetY);
+            // GK prefers safe ground passing if available (high score)
+            if (bestPass && bestPass.score > 20) {
+                this.actionPass(p, bestPass.player, bestPass.type, bestPass.targetX, bestPass.targetY);
             } else {
+                // Clear the ball
                 this.sim.ball.ownerId = null;
                 const clearAngle = isHome ? 0 : Math.PI;
                 const power = 3.5 + Math.random();
@@ -1143,32 +1202,49 @@ export class MatchEngine {
             return;
         }
 
+        // --- CORNER KICK AI ---
         const isCorner = (isHome ? simP.x > 95 : simP.x < 5) && (simP.y < 5 || simP.y > 95);
         if (isCorner) {
             const bestPass = this.findBestPassOption(p, isHome, offsideLineX, goalX);
             if (bestPass) {
-                this.actionPass(p, bestPass.player, false, bestPass.targetX, bestPass.targetY);
+                // Corners are usually Aerial unless short option is great
+                const type = bestPass.score > 80 ? 'GROUND' : 'AERIAL';
+                this.actionPass(p, bestPass.player, type, bestPass.targetX, bestPass.targetY);
                 this.traceLog.push(`${p.lastName} korneri kullandı.`);
                 return;
             }
         }
 
+        // --- GENERAL DECISION MAKING ---
         const obstacles = this.detectObstacles(p, simP.x, simP.y);
         const pressure = obstacles.length;
         let isHoldingUp = false;
 
-        if (p.attributes.strength > 75 && pressure > 0 && state.currentStamina > 30) {
+        // Hold up play if strong and under pressure, but no pass
+        // STRENGTH IMPACT - Strong players shield the ball better
+        const strengthBonus = Math.max(0, (p.attributes.strength - 50) / 50); // 0-1 scale
+        if (p.attributes.strength > 65 && pressure > 0 && state.currentStamina > 30) {
             const bestPass = this.findBestPassOption(p, isHome, offsideLineX, goalX);
-            if ((!bestPass || bestPass.score < 20) && state.decisionTimer < 15) {
-                simP.vx *= 0.8;
-                simP.vy *= 0.8;
+            // Strong players can hold longer (extra timer reduction)
+            const holdDuration = 15 + (strengthBonus * 10); // 15-25 ticks based on strength
+            if ((!bestPass || bestPass.score < 20) && state.decisionTimer < holdDuration) {
+                simP.vx *= (0.75 + strengthBonus * 0.1); // Strong players slow down less
+                simP.vy *= (0.75 + strengthBonus * 0.1);
                 state.decisionTimer -= 0.5;
                 isHoldingUp = true;
+
+                // HOLD signal - Tell teammates "I'm holding, find space!"
+                if (Math.random() < 0.15) {
+                    this.emitTeamSignal(p, 'HOLD');
+                }
             }
         }
 
         let decisionSpeed = 8 - ((p.attributes.decisions || 50) / 25);
-        if (state.currentStamina < 50) decisionSpeed *= 2.5; // Tired players decide slower
+        if (tactic.tempo === 'Fast') decisionSpeed *= 0.7; // Faster decisions
+        else if (tactic.tempo === 'Slow') decisionSpeed *= 1.4; // Slower decisions
+
+        if (state.currentStamina < 50) decisionSpeed *= 2.5;
 
         state.decisionTimer++;
 
@@ -1177,133 +1253,198 @@ export class MatchEngine {
 
             const distToGoal = dist(simP.x, simP.y, goalX, 50);
 
+            // 1. EVALUATE SHOOTING
             let shootScore = 0;
-            let passScore = 0;
-            let dribbleScore = 30;
-
             const shotOpenness = this.calculateShotOpening(simP.x, simP.y, goalX, isHome);
 
             if (distToGoal < SHOOT_RANGE) {
-                shootScore = 100 - (distToGoal * 1.5);
+                shootScore = 120 - (distToGoal * 2); // Closer = Better
+
+                // Openness is critical for clean version
+                if (shotOpenness > 0.8) shootScore += 300; // Wide open!
+                else if (shotOpenness > 0.5) shootScore += 100;
+                else if (shotOpenness > 0.3) shootScore += 30; // Semi-blocked but try (NEW)
+                else shootScore -= 80; // Heavily blocked (was -100)
+
+                // FINISHING IMPACT - High finishers are more confident shooting!
+                // Finishing 50 = +30, 70 = +54, 85 = +72, 100 = +90
+                shootScore += (p.attributes.finishing * 1.2) - 30;
+
+                // FORWARD BONUS - Forwards should shoot more!
+                if (this.playerRoles[p.id] === Position.FWD) {
+                    shootScore += 50; // Significant forward bonus
+                }
+
+                // Angle penalty
                 const angle = Math.abs(Math.atan2(50 - simP.y, goalX - simP.x));
+                if (angle > 1.0) shootScore -= 120; // Bad angle (was -150)
 
-                shootScore += (p.attributes.finishing * 0.5);
+                if (p.attributes.decisions < 10) shootScore += 20; // Bad decision maker shoots more randomly
 
-                if (distToGoal < 18) shootScore += 30;
-                if (distToGoal < 10) shootScore += 50;
-
-                // Açı bonusu/cezası - dar açı şutu zorlaştırır
-                if (angle < 0.4) shootScore += 50;      // Çok iyi açı
-                else if (angle < 0.6) shootScore += 30; // İyi açı
-                else if (angle > 1.0) shootScore -= 40; // Kötü açı - ceza
-
-                const visionFactor = Math.max(0.5, p.attributes.vision / 100);
-                if (shotOpenness > 0.6) shootScore += 200 * visionFactor;
-                else if (shotOpenness > 0.3) shootScore += 100 * visionFactor;
-
-                // Yakın mesafe bonusu düşürüldü (600 → 150)
-                if (distToGoal < 7) shootScore += 150;
-
-                // PlayStyle bonuses
-                if (p.playStyles?.includes("Akrobat") && Math.abs(simP.y - 50) > 20) shootScore += 40;
-                if (p.playStyles?.includes("Uzak Şut") && distToGoal > 20) shootScore += 60;
-
-                if (p.personality?.riskTaking! > 0.6) shootScore += 20;
+                // Tactic: Shoot On Sight
+                if (distToGoal < 25 && p.playStyles?.includes("Uzaktan Şut")) shootScore += 40;
             }
 
+            // 2. EVALUATE PASSING
+            let passScore = 0;
             const bestPass = this.findBestPassOption(p, isHome, offsideLineX, goalX);
             if (bestPass) {
                 passScore = bestPass.score;
+                // Bonus if "Playmaker" class
+                if (this.playerRoles[p.id] === Position.MID) passScore += 10;
+            }
 
-                // Takım arkadaşı daha iyi pozisyonda mı kontrol et
-                const tmPos = this.sim.players[bestPass.player.id];
-                if (tmPos) {
-                    const tmShotOpenness = this.calculateShotOpening(tmPos.x, tmPos.y, goalX, isHome);
-                    const tmDistToGoal = dist(tmPos.x, tmPos.y, goalX, 50);
+            // 3. EVALUATE DRIBBLING
+            let dribbleScore = 30; // Base bias
 
-                    // Takım arkadaşının şut açıklığı daha iyiyse pas bonusu
-                    if (tmShotOpenness > shotOpenness + 0.15 && tmDistToGoal < distToGoal) {
-                        passScore += 100; // Ona pas ver bonusu
-                    }
-                    // Takım arkadaşı çok daha yakınsa ve açıksa
-                    if (tmDistToGoal < 12 && tmShotOpenness > 0.5 && distToGoal > 15) {
-                        passScore += 80; // Altın pas fırsatı
+            // Check space ahead
+            const forwardAngle = isHome ? 0 : Math.PI;
+            const checkDist = 10;
+            const checkX = simP.x + Math.cos(forwardAngle) * checkDist;
+            const checkY = simP.y + Math.sin(forwardAngle) * checkDist;
+            const spaceObstacles = this.detectObstacles(p, checkX, checkY);
+
+            if (spaceObstacles.length === 0) dribbleScore += 50; // Open space!
+            else dribbleScore -= (spaceObstacles.length * 25); // Reduced penalty (was 30)
+
+            // IMPROVED DRIBBLING IMPACT - Linear scaling from 60+
+            // 60 dribble = +0, 70 = +15, 80 = +30, 85 = +37.5, 100 = +60
+            if (p.attributes.dribbling > 60) {
+                dribbleScore += ((p.attributes.dribbling - 60) * 1.5);
+            }
+            if (pressure > 0) dribbleScore -= (pressure * 15);
+
+            // POSITION-AWARE BEHAVIOR - Act based on WHERE you are, not WHAT you are!
+            // If any player is in the attacking third, act like a forward
+            const isInAttackingThird = isHome ? (simP.x > 70) : (simP.x < 30);
+            const isInShootingZone = distToGoal < 30;
+
+            if (isInAttackingThird || isInShootingZone) {
+                // I'm high up the pitch - be aggressive like a forward!
+                dribbleScore += 35; // Don't just pass back!
+                if (isInShootingZone) {
+                    shootScore += 30; // Try to shoot if close
+                }
+
+                // Don't immediately pass back after receiving
+                if (state.possessionCooldown > 8) {
+                    passScore -= 40; // Just got the ball - hold it!
+                }
+            }
+
+            // FORWARD AGGRESSION - Forwards dribble into box more!
+            if (this.playerRoles[p.id] === Position.FWD && distToGoal < 35) {
+                dribbleScore += 25; // Extra dribble aggression near goal
+            }
+
+            // SINGLE FORWARD FIX - If I'm the only forward, hold ball more!
+            if (this.playerRoles[p.id] === Position.FWD) {
+                const teamForwards = (isHome ? this.homePlayers : this.awayPlayers)
+                    .filter(tp => this.playerRoles[tp.id] === Position.FWD && tp.lineup === 'STARTING');
+
+                if (teamForwards.length === 1) {
+                    dribbleScore += 40;
+                    passScore -= 25;
+                    if (state.possessionCooldown > 8) {
+                        passScore -= 30;
                     }
                 }
             }
 
-            if (pressure === 0) dribbleScore += 40;
-            else dribbleScore -= (pressure * 10);
-
-            if (pressure > 0 && p.attributes.composure < 70) {
-                dribbleScore -= 20;
-            }
-
-            if (isHoldingUp) dribbleScore -= 50;
             if (p.playStyles.includes("Bencil")) {
-                dribbleScore += 20;  // 30 → 20 dengelendi
-                shootScore += 20;    // 30 → 20 dengelendi
+                passScore -= 30;
+                shootScore += 20;
+                dribbleScore += 20;
             }
 
-            // Stamina affects decisions - Tired players pass more (safely) or shoot desperately
-            if (state.currentStamina < 40) {
-                dribbleScore -= 40;
+            // --- EXECUTE DECISION ---
+            // Hierarchy:
+            // 1. Clear Goal Chance (Shoot) - PRIORITY!
+            // 2. 1v1 with Keeper (Shoot)
+            // 3. Great Through Ball (Pass)
+            // 4. Dribble to Space
+            // 5. Safe Pass
+
+            let decision = 'DRIBBLE';
+
+            // 1v1 DETECTION - If close and open, ALWAYS shoot!
+            const is1v1 = distToGoal < 18 && shotOpenness > 0.4; // More lenient 1v1 detection
+
+            // FORWARD SPECULATIVE SHOT - Forwards try their luck more!
+            const isForward = this.playerRoles[p.id] === Position.FWD;
+            const speculativeShot = isForward && distToGoal < 25 && shotOpenness > 0.3 && Math.random() < 0.25; // 25% chance
+
+            if (shootScore > 200 || is1v1) decision = 'SHOOT'; // Lowered from 280 for more shots
+            else if (shootScore > 120 && distToGoal < 25) decision = 'SHOOT'; // Lowered from 150, expanded range
+            else if (speculativeShot) decision = 'SHOOT'; // Speculative forward shot!
+            else if (bestPass && bestPass.type === 'THROUGH' && bestPass.score > 180) decision = 'PASS';
+            else if (passScore > dribbleScore + 40) decision = 'PASS';
+            else if (dribbleScore > 0) decision = 'DRIBBLE';
+            else decision = 'PASS'; // Fallback
+
+            // Random variation for realism (but not if 1v1!)
+            if (!is1v1 && Math.random() < 0.1) decision = 'DRIBBLE';
+
+            // Ball carrier POINT signal - Tell teammate to run into space!
+            if (decision === 'PASS' && bestPass && bestPass.type === 'THROUGH') {
+                // Signal the target to keep running!
+                if (Math.random() < 0.3) {
+                    this.emitTeamSignal(p, 'POINT', bestPass.player.id);
+                }
             }
-
-            const getWeightedDecision = () => {
-                const sVal = Math.max(0, shootScore);
-                const pVal = Math.max(0, passScore);
-
-                if (sVal > 500) return 'SHOOT';
-
-                if (sVal > 150 && shotOpenness > 0.5) return 'SHOOT';
-
-                if (pVal > 150 && pVal > sVal) return 'PASS';
-
-                if (sVal > 120) return 'SHOOT';
-
-                const total = sVal + pVal + Math.max(0, dribbleScore);
-                if (total === 0) return 'DRIBBLE';
-
-                const r = Math.random() * total;
-                if (r < sVal) return 'SHOOT';
-                if (r < sVal + pVal) return 'PASS';
-                return 'DRIBBLE';
-            };
-
-            const decision = getWeightedDecision();
 
             if (decision === 'SHOOT') {
                 this.actionShoot(p, isHome);
                 return;
-            } else if (decision === 'PASS') {
-                if (bestPass) {
-                    this.actionPass(p, bestPass.player, bestPass.isThroughBall, bestPass.targetX, bestPass.targetY);
-                    return;
-                }
+            } else if (decision === 'PASS' && bestPass) {
+                this.actionPass(p, bestPass.player, bestPass.type, bestPass.targetX, bestPass.targetY);
+                return;
             }
         }
 
+        // --- DRIBBLE EXECUTION ---
         let targetX = goalX;
         let targetY = 50;
-        const nearestEnemy = this.findNearestEnemyInCone(p, isHome);
 
-        if (nearestEnemy) {
-            const enemyY = this.sim.players[nearestEnemy.id].y;
-            let deviation = (simP.y > enemyY) ? 12 : -12;
-            if (simP.y < 5 && deviation < 0) deviation = 15;
-            if (simP.y > 95 && deviation > 0) deviation = -15;
-            targetY = simP.y + deviation;
-            targetX = isHome ? simP.x + 10 : simP.x - 10;
+        // CORNER / GOAL LINE AVOIDANCE (Aut Çizgisi Koruması)
+        // If near end of pitch, steer back in!
+        const distToGoalX = Math.abs(simP.x - goalX);
+        const isNearEndLine = isHome ? (simP.x > 94) : (simP.x < 6); // Stricter (92->94) to allow getting deep
+        const isNearSideLine = simP.y < 4 || simP.y > 96;
+
+        if (isNearEndLine) {
+            // CROSSING ZONE MECHANIC: If deep, try to find angle for cross
+            targetX = goalX;
+            targetY = lerp(simP.y, 50, 0.9); // Turn HARD to center
+            this.sim.players[p.id].vx *= 0.7; // Slow down to turn
+            this.sim.players[p.id].vy *= 0.7;
+        } else if (isNearSideLine) {
+            targetY = 50;
+            targetX = goalX;
+        } else {
+            // Normal evasion logic
+            const nearestEnemy = this.findNearestEnemyInCone(p, isHome);
+            if (nearestEnemy) {
+                const enemyY = this.sim.players[nearestEnemy.id].y;
+                let deviation = (simP.y > enemyY) ? 15 : -15;
+                if (simP.y < 10 && deviation < 0) deviation = 20;
+                if (simP.y > 90 && deviation > 0) deviation = -20;
+                targetY = simP.y + deviation;
+                targetX = isHome ? simP.x + 10 : simP.x - 10;
+            } else {
+                targetX = goalX;
+                if (Math.abs(simP.y - 50) > 30) targetY = lerp(simP.y, 50, 0.15);
+                else targetY = simP.y;
+            }
         }
 
-        this.applySteeringBehavior(p, targetX, targetY, MAX_PLAYER_SPEED * 0.9);
+        this.applySteeringBehavior(p, targetX, targetY, MAX_PLAYER_SPEED * 0.95);
     }
 
-    private findBestPassOption(p: Player, isHome: boolean, offsideLineX: number, goalX: number): { player: Player, score: number, isThroughBall: boolean, targetX: number, targetY: number } | null {
+    private findBestPassOption(p: Player, isHome: boolean, offsideLineX: number, goalX: number): { player: Player, score: number, type: 'GROUND' | 'THROUGH' | 'AERIAL', targetX: number, targetY: number } | null {
         let bestTarget: Player | null = null;
         let maxScore = -9999;
-        let isThrough = false;
+        let bestType: 'GROUND' | 'THROUGH' | 'AERIAL' = 'GROUND';
         let bestTx = 0;
         let bestTy = 0;
 
@@ -1312,148 +1453,204 @@ export class MatchEngine {
         const distToMyGoal = dist(simP.x, simP.y, goalX, 50);
         const tactic = isHome ? this.homeTeam.tactic : this.awayTeam.tactic;
 
-        if (distToMyGoal < 7) return null;
+        // Don't pass from very close to own goal line if possible (Clearance preferred in outer logic)
+        if (distToMyGoal < 7 && this.playerRoles[p.id] !== Position.GK) return null;
 
         teammates.forEach(tm => {
             if (tm.id === p.id) return;
             if (!this.sim.players[tm.id]) return;
             const simTm = this.sim.players[tm.id];
-            const stateTm = this.playerStates[tm.id];
 
             const d = dist(simP.x, simP.y, simTm.x, simTm.y);
-            // PlayStyle: Long ball passers can see further
-            const visionBonus = p.playStyles?.includes("Uzun Topla Pas") ? 20 : 0;
+            const visionStat = p.attributes.vision || 50;
+            const visionBonus = p.playStyles?.includes("Uzun Topla Pas") ? 25 : 0;
+
             if (d > PASS_RANGE_VISION + visionBonus) return;
 
-            // --- SMART PASSING: PREDICTION ---
-            // Estimate time for ball to travel 'd' distance (avg speed approx 2.0)
-            const travelTime = d / 2.2;
-
-            // Predict where teammate will be
-            let predX = simTm.x + (simTm.vx || 0) * travelTime * 1.5; // Lead the pass
-            let predY = simTm.y + (simTm.vy || 0) * travelTime * 1.5;
-
-            // Clamp to field
-            predX = clamp(predX, 0, 100);
-            predY = clamp(predY, 0, 100);
-
-            const distToGoal = dist(predX, predY, goalX, 50);
+            // Base Score: Closer to enemy goal is better
+            const distToGoal = dist(simTm.x, simTm.y, goalX, 50);
             let score = (120 - distToGoal);
 
-            const forwardProgress = isHome ? (predX - simP.x) : (simP.x - predX);
+            // Forward Progress Bonus - INCREASED for more vertical play
+            const forwardProgress = isHome ? (simTm.x - simP.x) : (simP.x - simTm.x);
+            if (forwardProgress > 0) score += (forwardProgress * 3.0);
 
-            if (stateTm && stateTm.outgoingSignal && stateTm.outgoingSignal.type === 'CALL') {
-                score += 90;
-            }
-
-            // --- VISION CHECK (Bakış Açısı) ---
-            const angleToBall = Math.atan2(simP.y - simTm.y, simP.x - simTm.x);
-            let angleDiff = Math.abs(simTm.facing - angleToBall);
-            if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
-
-            // If looking away (> 90 degrees)
-            if (angleDiff > 1.5) {
-                // Checking if running into space (Through Ball scenario)
-                if (forwardProgress > 5 && (simTm.state === 'SPRINT' || simTm.state === 'RUN')) {
-                    score += 20; // Good run into space
-                } else {
-                    score -= 150; // Don't pass to feet if they aren't looking!
+            // VISION IMPACT ON PASS DECISION - High vision sees better options!
+            // Vision 50 = +0, Vision 70 = +20, Vision 85 = +35, Vision 100 = +50
+            if (visionStat > 50) {
+                score += ((visionStat - 50) * 1.0); // DOUBLED: Vision bonus to all passes
+                // Extra bonus for long forward passes (vision helps see them)
+                if (forwardProgress > 20 && d > 25) {
+                    score += ((visionStat - 50) * 0.6); // DOUBLED: Extra for long through balls
                 }
             }
 
-            // --- Tactic Impact: Passing Style ---
-            if (tactic.passingStyle === 'Short') {
-                if (d < 15) score += 40;
-                else score -= (d - 15) * 2;
-            } else if (tactic.passingStyle === 'Direct') {
-                if (forwardProgress > 15) score += 50;
+            // --- SIGNAL SYSTEM INTEGRATION ---
+            // If teammate is calling for the ball, prioritize them!
+            const tmState = this.playerStates[tm.id];
+            if (tmState?.incomingSignal?.type === 'CALL') {
+                score += 50; // Significant bonus for calling teammate
+            }
+            // POINT signal means they want a through/aerial pass to space
+            if (tmState?.outgoingSignal?.type === 'POINT') {
+                if (forwardProgress > 10) score += 40; // They're pointing to space ahead
             }
 
-            if (forwardProgress > 0) score += (forwardProgress * 1.5);
+            // --- CROSSING LOGIC (KANAT ORTASI) ---
+            const isDeep = isHome ? simP.x > 75 : simP.x < 25;
+            const isWide = simP.y < 25 || simP.y > 75;
 
-            const buffer = isHome ? 1 : -1;
-            const isOffside = isHome ? (predX > offsideLineX + buffer) : (predX < offsideLineX + buffer);
-            if (isOffside) score -= 1000;
+            if (isDeep && isWide) {
+                // If I am in Crossing Zone, prioritize players in the box!
+                const isTargetCentral = Math.abs(simTm.y - 50) < 20;
+                const isTargetDeep = isHome ? simTm.x > 80 : simTm.x < 20;
 
-            // --- COVER SHADOW (Gölge Markajı) ---
+                if (isTargetCentral && isTargetDeep) {
+                    score += 500; // MASSIVE BONUS FOR CROSS TARGET
+                }
+            }
+
+            // --- 1. ANALYZE PASS TYPES ---
+
+            // A. GROUND PASS (AYAĞA)
+            const groundTime = d / 2.5;
+            const groundTx = simTm.x + (simTm.vx || 0) * groundTime;
+            const groundTy = simTm.y + (simTm.vy || 0) * groundTime;
+
+            // BOUNDS CHECK 1: Ground Pass (Pass to empty space fix)
+            if (groundTy < 3 || groundTy > 97 || groundTx < 1 || groundTx > 99) return;
+
+            // B. THROUGH BALL (KOŞU YOLUNA)
+            const throughTime = d / 2.0;
+            const runDirX = simTm.vx || 0;
+            const runDirY = simTm.vy || 0;
+            const runSpeed = Math.sqrt(runDirX * runDirX + runDirY * runDirY);
+
+            const isMakingRun = runSpeed > 0.5;
+            let throughTx = simTm.x + runDirX * 15;
+            let throughTy = simTm.y + runDirY * 15;
+
+            // BOUNDS CHECK 2: Through Ball (Strict)
+            if (throughTy < 4 || throughTy > 96) {
+                // If aiming out of bounds, penalize heavily
+                score -= 200;
+            }
+            if (throughTx < 0 || throughTx > 100) throughTx = clamp(throughTx, 1, 99);
+
+            // C. AERIAL PASS (HAVADAN) used as fallback or Cross
+
+            // --- 2. CALCULATE INTERCEPTION RISK FOR GROUND ---
             const enemies = isHome ? this.awayPlayers : this.homePlayers;
-            let interceptionRisk = 0;
+            let groundRisk = 0;
 
             enemies.forEach(e => {
                 if (!this.sim.players[e.id]) return;
                 const simE = this.sim.players[e.id];
 
-                const dx = predX - simP.x;
-                const dy = predY - simP.y;
+                const dx = groundTx - simP.x;
+                const dy = groundTy - simP.y;
                 const l2 = dx * dx + dy * dy;
-
                 if (l2 == 0) return;
 
                 let t = ((simE.x - simP.x) * dx + (simE.y - simP.y) * dy) / l2;
                 t = Math.max(0, Math.min(1, t));
+                const px = simP.x + t * dx;
+                const py = simP.y + t * dy;
 
-                const closestX = simP.x + t * dx;
-                const closestY = simP.y + t * dy;
-                const distToLine = dist(simE.x, simE.y, closestX, closestY);
-
-                const interceptRating = (e.attributes.positioning || 50) / 100;
-                // Defenders with high positioning have a wider "Cover Shadow"
-                const effectiveBlockRadius = 3.5 + (interceptRating * 1.5);
-
-                if (distToLine < effectiveBlockRadius) {
-                    // Risk increases if defender is closer to the passer (easier to block ray)
-                    const proximityFactor = (1.0 - t) + 0.5;
-                    interceptionRisk += 60 * proximityFactor;
+                if (dist(simE.x, simE.y, px, py) < 2.5) { // Reduced from 3.5 for more realistic passing
+                    groundRisk += 100; // Blocked!
                 }
             });
-            score -= interceptionRisk;
 
-            let isThroughBall = false;
-            // More strict through ball definition
-            if (forwardProgress > 8 && d > 12 && interceptionRisk < 20) {
-                const vel = Math.sqrt((simTm.vx || 0) ** 2 + (simTm.vy || 0) ** 2);
-                if (vel > 0.5) {
-                    score += 30; // Boost
-                    isThroughBall = true;
+            // --- 3. EVALUATE OPTIONS ---
+
+            let currentBestScore = -9999;
+            let currentType: 'GROUND' | 'THROUGH' | 'AERIAL' = 'GROUND';
+            let finalTx = groundTx;
+            let finalTy = groundTy;
+
+            // OPTION 1: GROUND PASS
+            let groundScore = score;
+            if (groundRisk > 50) groundScore -= 200;
+
+            if (tactic.passingStyle === 'Short') {
+                if (d < 15) groundScore += 30;
+                else groundScore -= (d - 15);
+            }
+
+            if (groundScore > currentBestScore) {
+                currentBestScore = groundScore;
+                currentType = 'GROUND';
+                finalTx = groundTx;
+                finalTy = groundTy;
+            }
+
+            // OPTION 2: THROUGH BALL
+            if (isMakingRun && forwardProgress > 5) {
+                const boundsCheck = throughTx > 1 && throughTx < 99 && throughTy > 2 && throughTy < 98;
+                const offsideCheck = isHome ? (throughTx < offsideLineX) : (throughTx > offsideLineX);
+
+                if (boundsCheck && offsideCheck) {
+                    let throughRisk = 0;
+                    enemies.forEach(e => {
+                        const simE = this.sim.players[e.id];
+                        if (!simE) return; // Fix crash
+                        const dx = throughTx - simP.x; const dy = throughTy - simP.y;
+                        const l2 = dx * dx + dy * dy;
+                        if (l2 === 0) return;
+                        const t = ((simE.x - simP.x) * dx + (simE.y - simP.y) * dy) / l2;
+                        const px = simP.x + t * dx; const py = simP.y + t * dy;
+                        if (dist(simE.x, simE.y, px, py) < 3.0 && t > 0.1 && t < 0.9) throughRisk += 80;
+                    });
+
+                    let throughScore = score + 40;
+                    if (throughRisk > 50) throughScore -= 200;
+                    if (p.attributes.vision > 70) throughScore += 20;
+
+                    if (throughScore > currentBestScore) {
+                        currentBestScore = throughScore;
+                        currentType = 'THROUGH';
+                        finalTx = throughTx;
+                        finalTy = throughTy;
+                    }
                 }
             }
 
-            const visionFactor = p.attributes.vision / 100;
+            // OPTION 3: AERIAL / CROSS
+            // If Crossing Zone (Deep & Wide), Aerial is often BEST if Ground is risky
+            if ((isDeep && isWide) || (groundRisk > 50 && d > 12 && d < 45)) {
+                let aerialScore = score - 30; // Native penalty
 
-            if (distToGoal < 20 && interceptionRisk < 10) {
-                if (distToGoal < distToMyGoal - 5) {
-                    score += 80 * visionFactor;
+                if (isDeep && isWide) aerialScore += 100; // CROSSING BONUS
+                if (tactic.passingStyle === 'Direct') aerialScore += 20;
+
+                if (aerialScore > currentBestScore) {
+                    currentBestScore = aerialScore;
+                    currentType = 'AERIAL';
+                    finalTx = groundTx;
+                    finalTy = groundTy;
                 }
             }
 
-            if (p.attributes.vision > 80) score += 10;
-
-            // --- CROSSING LOGIC (KANAT ORTASI) ---
-            const isDeep = isHome ? simP.x > 70 : simP.x < 30;
-            const isWide = simP.y < 25 || simP.y > 75;
-
-            if (isDeep && isWide) {
-                const isTargetCentral = Math.abs(predY - 50) < 20;
-                const isTargetDeep = isHome ? predX > 80 : predX < 20;
-
-                if (isTargetCentral && isTargetDeep) {
-                    score += 150;
-                    score += interceptionRisk * 0.5;
-                }
-            }
-
-            if (score > maxScore) {
-                maxScore = score;
+            // --- FINAL ADJUSTMENTS ---
+            if (currentBestScore > maxScore) {
+                maxScore = currentBestScore;
                 bestTarget = tm;
-                isThrough = isThroughBall;
-                bestTx = predX;
-                bestTy = predY;
+                bestType = currentType;
+                bestTx = finalTx;
+                bestTy = finalTy;
             }
         });
 
         if (maxScore < 20) return null;
 
-        return bestTarget ? { player: bestTarget, score: maxScore, isThroughBall: isThrough, targetX: bestTx, targetY: bestTy } : null;
+        return {
+            player: bestTarget!,
+            score: maxScore,
+            type: bestType,
+            targetX: bestTx,
+            targetY: bestTy
+        };
     }
 
     private detectObstacles(p: Player, x: number, y: number): Player[] {
@@ -1503,262 +1700,309 @@ export class MatchEngine {
         const ballY = this.sim.ball.y;
         let speedMod = MAX_PLAYER_SPEED * 0.6;
         let targetX, targetY;
+        const base = this.baseOffsets[p.id];
+
+        // FIX: Substitution Crash - baseOffsets might not be ready
+        if (!base) return;
+
+        const baseY = isHome ? base.y : 100 - base.y;
+        const baseX = isHome ? base.x : 100 - base.x;
 
         if (role === Position.FWD) {
             const offsideBuffer = 1.0;
             const isOnside = isHome ? (simP.x < offsideLineX - offsideBuffer) : (simP.x > offsideLineX + offsideBuffer);
 
             if (!isOnside) {
+                // Return to onsite
                 this.playerStates[p.id].isPressing = false;
                 targetX = isHome ? offsideLineX - 2.5 : offsideLineX + 2.5;
-                targetY = lerp(simP.y, 50, 0.1);
-                speedMod = MAX_PLAYER_SPEED * 0.8;
+                targetY = lerp(simP.y, baseY, 0.2); // Drift to formation Y
+                speedMod = MAX_PLAYER_SPEED * 0.85;
                 simP.state = 'RUN';
-            } else {
-                const base = this.baseOffsets[p.id];
-                const baseY = isHome ? base.y : 100 - base.y;
+            } else if (teamHasBall) {
+                // --- ATTACKING PATTERNS (Hücum Setleri) ---
+                const ballCarrierId = this.sim.ball.ownerId;
+                const isBehindBall = isHome ? (simP.x < ballX) : (simP.x > ballX);
+                const distToBall = dist(simP.x, simP.y, ballX, ballY);
 
-                if (teamHasBall) {
-                    const isAheadOfBall = isHome ? (simP.x > ballX) : (simP.x < ballX);
-                    const shotOpenness = this.calculateShotOpening(simP.x, simP.y, goalX, isHome);
+                if (isBehindBall) {
+                    // Ball is ahead -> Support or Run
+                    // Determine Run Type based on Ball Position
+                    const isBallWide = ballY < 25 || ballY > 75;
+                    const isBallDeep = isHome ? ballX > 65 : ballX < 35;
 
-                    if (dist(simP.x, simP.y, goalX, 50) < 30 && shotOpenness > 0.5) {
-                        this.emitTeamSignal(p, 'CALL');
-                    }
+                    if (isBallWide && isBallDeep) {
+                        // --- CROSSING SCENARIO (Orta Pozisyonu) ---
+                        // Forwards should split: Near Post vs Far Post
+                        const myIndex = p.lineupIndex || 0; // 0 or 1 usually for 2 strikers
+                        const isNearPostRunner = (myIndex % 2 === 0);
 
-                    const ballHolder = this.sim.ball.ownerId ? this.getPlayer(this.sim.ball.ownerId) : null;
-                    let shouldBurst = false;
+                        // Logic: If I am closer to near post relative to my partner, I take near post
+                        const nearPostY = ballY < 50 ? 53 : 47; // Corner of box ish
+                        const farPostY = ballY < 50 ? 60 : 40;  // Further out
 
-                    if (ballHolder && ballHolder.teamId === p.teamId) {
-                        const holderState = this.playerStates[ballHolder.id];
-                        if (this.playerStates[p.id].outgoingSignal?.type === 'CALL') {
-                            shouldBurst = true;
+                        let runY = isNearPostRunner ? (ballY < 50 ? 40 : 60) : (ballY < 50 ? 65 : 35);
+
+                        // Overwrite based on actual position logic if needed, but static assignment is cleaner for 'Clean Version'
+                        // Center Forward Logic:
+                        targetX = isHome ? 95 : 5; // Goal mouth
+                        targetY = runY;
+                        speedMod = MAX_PLAYER_SPEED * 0.95;
+                        simP.state = 'SPRINT';
+
+                        // POINT signal - Indicate "cross it here!"
+                        const pointChance = 0.08 + (p.attributes.positioning / 500);
+                        if (Math.random() < pointChance) {
+                            this.emitTeamSignal(p, 'POINT'); // Point to crossing zone
+                        }
+                    } else {
+                        // --- CENTRAL BUILD UP ---
+                        // Make runs into channels (between defenders)
+                        // POSITIONING IMPACT - High positioning = smarter runs
+                        const positioningBonus = (p.attributes.positioning || 50) / 100; // 0.5 - 1.0
+                        const channelY = simP.y < 50 ? (35 - positioningBonus * 10) : (65 + positioningBonus * 10);
+                        // Better positioning = more aggressive line breaking
+                        const runDepth = 5 + (positioningBonus * 5); // 5-10 based on positioning
+                        targetX = isHome ? offsideLineX + runDepth : offsideLineX - runDepth;
+                        targetY = channelY;
+                        speedMod = MAX_PLAYER_SPEED * (0.85 + positioningBonus * 0.1); // 0.85-0.95
+                        simP.state = 'RUN';
+
+                        // IMPROVED SIGNAL FREQUENCY - Based on vision & leadership
+                        const signalChance = 0.03 + (p.attributes.vision / 400) + (p.attributes.leadership / 800);
+                        if (Math.random() < signalChance) {
+                            this.emitTeamSignal(p, 'CALL');
                         }
                     }
-
-                    if (shouldBurst) {
-                        targetX = isHome ? offsideLineX + 15 : offsideLineX - 15;
-                        targetY = lerp(simP.y, GOAL_Y_CENTER, 0.4);
-                        speedMod = MAX_PLAYER_SPEED * 1.0;
-                        simP.state = 'SPRINT';
-                    } else if (isAheadOfBall && dist(simP.x, simP.y, ballX, ballY) < PASS_RANGE_VISION) {
-                        targetX = isHome ? offsideLineX - offsideBuffer : offsideLineX + offsideBuffer;
-                        targetY = lerp(simP.y, baseY, 0.1);
-                        if (simP.y < 20) targetY += 5;
-                        if (simP.y > 80) targetY -= 5;
-                        speedMod = MAX_PLAYER_SPEED * 0.7;
-                        simP.state = 'RUN';
-                    } else {
-                        targetX = isHome ? base.x : (100 - base.x);
-                        targetY = isHome ? base.y : (100 - base.y);
-                        const xShift = (ballX - 50) * 0.75;
-                        targetX += xShift;
-                        speedMod = MAX_PLAYER_SPEED * 0.6;
-                        simP.state = 'RUN';
-                    }
                 } else {
-                    this.playerStates[p.id].isPressing = false;
-                    targetX = isHome ? offsideLineX - 1.5 : offsideLineX + 1.5;
-                    targetY = lerp(simP.y, baseY, 0.05);
+                    // Ahead of ball -> Hold line or Show feet
+                    const showFeet = distToBall < 30 && (p.attributes.vision > 60);
+
+                    if (showFeet && Math.random() > 0.7) {
+                        // Drop deep to receive
+                        targetX = isHome ? ballX + 10 : ballX - 10;
+                        targetY = lerp(simP.y, ballY, 0.4);
+                        speedMod = MAX_PLAYER_SPEED * 0.8;
+                    } else {
+                        // Stay on shoulder of defender
+                        targetX = isHome ? offsideLineX - offsideBuffer : offsideLineX + offsideBuffer;
+                        targetY = baseY;
+                    }
+                    simP.state = 'RUN';
+                }
+
+                // Loose Ball / Through Ball Chase overrides everything
+                const ballVel = Math.sqrt((this.sim.ball.vx || 0) ** 2 + (this.sim.ball.vy || 0) ** 2);
+                const ballMovingToGoal = isHome ? (this.sim.ball.vx > 0.8) : (this.sim.ball.vx < -0.8);
+
+                // If ball is fast and moving to goal, CHASE IT
+                if (ballVel > 1.2 && ballMovingToGoal) {
+                    targetX = this.sim.ball.x + (this.sim.ball.vx * 15);
+                    targetY = this.sim.ball.y + (this.sim.ball.vy * 15);
+                    speedMod = MAX_PLAYER_SPEED * 1.05;
+                    simP.state = 'SPRINT';
+                }
+            } else {
+                // Defensive Shape - IMPROVED FORWARD DEFENSIVE SUPPORT
+                this.playerStates[p.id].isPressing = false;
+
+                // Check if ball is deep in our own half
+                const isBallDeepInOwnHalf = isHome ? (ballX < 35) : (ballX > 65);
+                const distToBallFromForward = dist(simP.x, simP.y, ballX, ballY);
+
+                if (isBallDeepInOwnHalf) {
+                    // Drop back to help! Don't be lazy at the halfway line
+                    targetX = isHome ? Math.max(40, ballX + 15) : Math.min(60, ballX - 15);
+                    targetY = lerp(simP.y, ballY, 0.3); // Drift towards ball's Y
+                    speedMod = MAX_PLAYER_SPEED * 0.75; // Jog back, not idle
+                    simP.state = 'RUN';
+                } else if (distToBallFromForward < 25 && !ballInPlay) {
+                    // Ball is loose and nearby - chase it!
+                    targetX = ballX;
+                    targetY = ballY;
+                    speedMod = MAX_PLAYER_SPEED * 0.9;
+                    simP.state = 'RUN';
+                } else {
+                    // Normal defensive position
+                    targetX = isHome ? offsideLineX - 2.0 : offsideLineX + 2.0;
+                    targetY = lerp(simP.y, baseY, 0.08);
                     speedMod = MAX_PLAYER_SPEED * 0.5;
                     simP.state = 'IDLE';
                 }
             }
         } else {
-            const base = this.baseOffsets[p.id];
+            // DEF / MID / GK (Field Player logic mostly)
             targetX = isHome ? base.x : (100 - base.x);
             targetY = isHome ? base.y : (100 - base.y);
 
-            const widthOffset = tactic.width === 'Wide' ? 1.2 : tactic.width === 'Narrow' ? 0.7 : 1.0;
+            const widthOffset = tactic.width === 'Wide' ? 1.25 : tactic.width === 'Narrow' ? 0.75 : 1.0;
             targetY = 50 + (targetY - 50) * widthOffset;
 
             if (teamHasBall) {
+                // --- OFFENSIVE SHAPE & SUPPORT PLAY ---
                 this.playerStates[p.id].isPressing = false;
+
+                // 1. Maintain Formation Structure
+                /* ... Mentality and Line Logic simplified ... */
                 const mentality = isHome ? this.homeMentality : this.awayMentality;
                 let lineH = isHome ? Math.min(60, ballX - 20) : Math.max(40, ballX + 20);
 
-                if (tactic.defensiveLine === 'High') {
-                    lineH = isHome ? Math.min(75, ballX - 15) : Math.max(25, ballX + 15);
-                } else if (tactic.defensiveLine === 'Deep') {
-                    lineH = isHome ? Math.min(45, ballX - 25) : Math.max(55, ballX + 25);
-                }
-
-                if (mentality === TeamMentality.ALL_OUT_ATTACK) lineH = isHome ? 75 : 25;
+                if (tactic.defensiveLine === 'High') lineH = isHome ? Math.min(80, ballX - 15) : Math.max(20, ballX + 15);
+                else if (tactic.defensiveLine === 'Deep') lineH = isHome ? Math.min(45, ballX - 25) : Math.max(55, ballX + 25);
 
                 targetX = isHome ? Math.max(targetX, lineH) : Math.min(targetX, lineH);
-                const xShift = (ballX - 50) * 0.75;
-                targetX += xShift;
-                speedMod = MAX_PLAYER_SPEED * 0.6;
+
+                // 2. Support Drift (Boşa Çıkma)
+                const ballCarrierId = this.sim.ball.ownerId;
+                const distToBall = dist(simP.x, simP.y, ballX, ballY);
+
+                // Only support if reasonably close (involved in play)
+                if (distToBall < 35 && role !== Position.GK) {
+                    // Check if I am blocked (Cover Shadow)
+                    let isCovered = false;
+                    const enemies = isHome ? this.awayPlayers : this.homePlayers;
+                    for (const e of enemies) {
+                        const simE = this.sim.players[e.id];
+                        if (!simE) continue;
+                        // Simple line check
+                        const dToLine = this.distToSegment(simE.x, simE.y, ballX, ballY, simP.x, simP.y);
+                        if (dToLine < 3.0) { isCovered = true; break; }
+                    }
+
+                    // HOLD SIGNAL RESPONSE - When ball carrier is holding, actively find space!
+                    const myState = this.playerStates[p.id];
+                    const carrierIsHolding = myState?.incomingSignal?.type === 'HOLD';
+
+                    if (isCovered || Math.random() < 0.05 || carrierIsHolding) {
+                        // DRIFT TO OPEN SPACE (Üçgen Kurma)
+                        // Try to find a spot 5-10m away that is NOT covered
+                        // Simple heuristic: Move perpendicular to ball-me vector
+                        const angleToBall = Math.atan2(ballY - simP.y, ballX - simP.x);
+                        // Shift 30 degrees left or right (alternate based on player index)
+                        const playerHash = p.id.charCodeAt(0) + (p.id.charCodeAt(p.id.length - 1) || 0);
+                        const shiftDir = (playerHash % 2 === 0) ? 0.5 : -0.5;
+                        const supportAngle = angleToBall + shiftDir;
+
+                        // More aggressive drift if carrier is holding
+                        const supportDist = carrierIsHolding ? 12 : 8;
+                        targetX += Math.cos(supportAngle) * supportDist;
+                        targetY += Math.sin(supportAngle) * supportDist;
+
+                        speedMod = carrierIsHolding ? MAX_PLAYER_SPEED * 0.9 : MAX_PLAYER_SPEED * 0.8;
+                    }
+
+                    // IMPROVED SIGNAL FREQUENCY - Based on vision & leadership
+                    // Open players with high vision/leadership call for ball more often
+                    const signalChance = 0.03 + (p.attributes.vision / 500) + (p.attributes.leadership / 600);
+                    if (!isCovered && distToBall < 25 && Math.random() < signalChance) {
+                        this.emitTeamSignal(p, 'CALL');
+                    }
+                } else {
+                    // Drifting with play generally
+                    const xShift = (ballX - 50) * 0.6; // Less aggressive shift for formation integrity
+                    targetX += xShift;
+                }
+
+                // Fullback Overlap Logic
+                if (role === Position.DEF) {
+                    const isWide = simP.y < 25 || simP.y > 75;
+                    const isBallAdvanced = isHome ? ballX > 50 : ballX < 50;
+                    if (isWide && isBallAdvanced) {
+                        // Overlap run
+                        targetX += (isHome ? 20 : -20);
+                        targetY = lerp(targetY, (simP.y < 50 ? 5 : 95), 0.3); // Hug line
+                        speedMod = MAX_PLAYER_SPEED * 0.85; // Faster overlap
+                    }
+                }
+
                 simP.state = 'RUN';
+
             } else {
+                // --- DEFENSIVE SHAPE (IMPROVED - GOAL-SIDE POSITIONING) ---
                 const ballCarrierId = this.sim.ball.ownerId;
                 const distToBall = dist(simP.x, simP.y, ballX, ballY);
                 const myGoalX = isHome ? 0 : 100;
-                const distBallToGoal = Math.abs(ballX - myGoalX);
-                // FIX: Increased Danger Zone back to 40 for earlier pressing (was 25)
-                const isDangerZone = distBallToGoal < 40;
-                const decision = p.attributes.decisions || 60;
-                const positioning = p.attributes.positioning || 60;
+                const isDangerZone = Math.abs(ballX - myGoalX) < 40;
 
-                const isWrongSide = isHome ? (simP.x > ballX + 1) : (simP.x < ballX - 1);
+                // 1. Calculate ideal position based on formation
+                let idealX = isHome ? base.x : (100 - base.x);
+                let idealY = isHome ? base.y : (100 - base.y);
 
-                let shouldPress = false;
+                // Apply width setting
+                const widthOffset = tactic.width === 'Wide' ? 1.25 : tactic.width === 'Narrow' ? 0.75 : 1.0;
+                idealY = 50 + (idealY - 50) * widthOffset;
 
-                // FIX: Lowered decision threshold (70 -> 55) so more defenders press
-                if (decision > 55 && this.isClosestTeammateToBall(p)) {
-                    // FIX: Increased press range (15 -> 20)
-                    const isInPressRange = distToBall < (isDangerZone ? 30 : 20);
-                    let isEmergency = false;
-                    if (ballCarrierId && this.sim.players[ballCarrierId]) {
-                        const carrier = this.sim.players[ballCarrierId];
-                        const carrierVel = Math.sqrt((carrier.vx || 0) ** 2 + (carrier.vy || 0) ** 2);
-                        if (carrierVel > 0.9 && Math.abs(carrier.y - 50) < 20) {
-                            isEmergency = true;
+                // Shift with ball Y position (cover shadow)
+                idealY = lerp(idealY, ballY, 0.25);
+
+                // 2. Calculate defensive line limit
+                let defLineX = isHome ? 25 : 75;
+                if (tactic.defensiveLine === 'High') defLineX = isHome ? 35 : 65;
+                if (tactic.defensiveLine === 'Deep') defLineX = isHome ? 15 : 85;
+
+                // 3. CRITICAL: GOAL-SIDE POSITIONING
+                // Check if ball is BEHIND my ideal position (line is broken!)
+                const isBallBehindMe = isHome ? (ballX < idealX) : (ballX > idealX);
+
+                if (isBallBehindMe) {
+                    // RECOVERY RUN! Get between ball and goal, not chase from behind!
+                    // Target: 6 units closer to goal than the ball
+                    targetX = ballX + (isHome ? -6 : 6);
+
+                    // Cut across to intercept, not chase directly
+                    targetY = lerp(simP.y, ballY, 0.5);
+
+                    // Sprint to recover!
+                    speedMod = MAX_PLAYER_SPEED;
+                    simP.state = 'SPRINT';
+                    this.playerStates[p.id].isPressing = false; // Not pressing, recovering
+
+                } else {
+                    // Ball is in front - maintain position but be ready
+
+                    // --- TUCK IN LOGIC (Fullbacks closing in) ---
+                    if (role === Position.DEF) {
+                        const isWide = Math.abs(targetY - 50) > 20;
+                        const isBallCentral = Math.abs(ballY - 50) < 25;
+
+                        if (isWide && isBallCentral && isDangerZone) {
+                            // Danger! Tuck in to protect goal
+                            targetY = lerp(targetY, 50, 0.6);
+                            targetX = lerp(targetX, myGoalX, 0.15);
                         }
                     }
-                    if ((this.playerStates[p.id].isPressing && distToBall < 12) || (isInPressRange || isEmergency)) {
-                        shouldPress = true;
+
+                    // Pressing Logic
+                    let shouldPress = false;
+                    if (this.isClosestTeammateToBall(p)) {
+                        const pressDist = isDangerZone ? 25 : 18;
+                        if (distToBall < pressDist) shouldPress = true;
                     }
-                }
 
-                if (shouldPress) {
-                    this.playerStates[p.id].isPressing = true;
-
-                    if (isWrongSide && distToBall > 2.0) {
-                        // RECOVERY RUN
-                        const recoveryX = isHome ? Math.max(0, ballX - 8) : Math.min(100, ballX + 8);
-                        const recoveryY = lerp(simP.y, ballY, 0.5);
-                        targetX = recoveryX;
-                        targetY = recoveryY;
-                        speedMod = MAX_PLAYER_SPEED * 1.15;
-                        simP.state = 'SPRINT';
-                    } else {
-                        let interceptX = ballX, interceptY = ballY;
-                        if (ballCarrierId && this.sim.players[ballCarrierId]) {
-                            const bc = this.sim.players[ballCarrierId];
-                            interceptX += bc.vx * 2.5; interceptY += bc.vy * 2.5;
-                        } else {
-                            interceptX += this.sim.ball.vx * 2; interceptY += this.sim.ball.vy * 2;
-                        }
+                    if (shouldPress) {
+                        this.playerStates[p.id].isPressing = true;
+                        const interceptX = ballX + this.sim.ball.vx;
+                        const interceptY = ballY + this.sim.ball.vy;
                         targetX = interceptX;
                         targetY = interceptY;
                         speedMod = MAX_PLAYER_SPEED;
                         simP.state = 'SPRINT';
 
-                        let tackleRange = TACKLE_RANGE_BASE;
-                        if (tactic.aggression === 'Aggressive') tackleRange *= 1.3;
-                        else if (tactic.aggression === 'Safe') tackleRange *= 0.8;
-
-                        if (distToBall < tackleRange && ballCarrierId) {
+                        if (distToBall < TACKLE_RANGE_BASE && ballCarrierId) {
                             this.actionTackle(p, this.getPlayer(ballCarrierId)!);
                         }
-                    }
-                } else {
-                    this.playerStates[p.id].isPressing = false;
-
-                    // --- COVER SHADOW LOGIC (Gölge Markajı) ---
-                    // Defans oyuncusu top ve rakip arasına girmeye çalışmalı
-                    let screeningTarget: { x: number, y: number } | null = null;
-                    const enemies = isHome ? this.awayPlayers : this.homePlayers;
-
-                    // Sadece iyi pozisyon alanlar bunu yapar (>60)
-                    if (positioning > 60) {
-                        let bestScreenScore = -1;
-                        enemies.forEach(e => {
-                            if (!this.sim.players[e.id]) return;
-                            const simE = this.sim.players[e.id];
-
-                            // 1. Rakip benden daha "içerde" olmalı (kaleye daha yakın)
-                            const distToMyGoal = Math.abs(simE.x - myGoalX);
-                            const myDistToGoal = Math.abs(simP.x - myGoalX);
-                            if (distToMyGoal > myDistToGoal) return;
-
-                            // 2. Pas açısı analizi - Sadece tehdit bölgesindekiler
-                            const dBallToEnemy = dist(ballX, ballY, simE.x, simE.y);
-                            if (dBallToEnemy > 45) return;
-
-                            // 3. Ben bu pas hattına yakın mıyım?
-                            const dx = simE.x - ballX;
-                            const dy = simE.y - ballY;
-                            const l2 = dx * dx + dy * dy;
-                            if (l2 === 0) return;
-
-                            let t = ((simP.x - ballX) * dx + (simP.y - ballY) * dy) / l2;
-                            // Sadece top ile rakip arasındaysam (t > 0.1 ve t < 0.9)
-                            if (t > 0.1 && t < 0.9) {
-                                const projX = ballX + t * dx;
-                                const projY = ballY + t * dy;
-                                const distFromLine = dist(simP.x, simP.y, projX, projY);
-
-                                if (distFromLine < 10) {
-                                    // Puanlama: Tehdit (kaleye yakınlık) + Yakınlık
-                                    const score = (100 - distToMyGoal) - distFromLine * 3;
-                                    if (score > bestScreenScore) {
-                                        bestScreenScore = score;
-                                        // Hedef: Pas hattı üzerinde, topa biraz daha yakın bir nokta (Intercept point)
-                                        screeningTarget = { x: projX, y: projY };
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-                    if (screeningTarget) {
-                        // Gölge Markajı Uygula
-                        targetX = screeningTarget.x;
-                        targetY = screeningTarget.y;
-                        speedMod = MAX_PLAYER_SPEED * 0.75; // Kontrollü koşu, depar değil
-                        simP.state = 'RUN';
                     } else {
-                        // Fallback: Eski "Dangerous Attacker" ve alan savunması mantığı
-                        let mostDangerousAttacker: { x: number, y: number } | null = null;
-                        let maxThreat = -1;
+                        this.playerStates[p.id].isPressing = false;
 
-                        enemies.forEach(e => {
-                            if (this.playerRoles[e.id] !== Position.FWD) return;
-                            const simE = this.sim.players[e.id];
-                            if (!simE) return;
-
-                            const distToMyGoal = Math.abs(simE.x - myGoalX);
-                            const threat = (100 - distToMyGoal) + (Math.abs(simE.y - 50) < 30 ? 20 : 0);
-                            if (threat > maxThreat) {
-                                maxThreat = threat;
-                                mostDangerousAttacker = simE;
-                            }
-                        });
-
-                        const positioningFactor = Math.min(1.0, positioning / 90);
-                        let ballTrackY = ballY;
-                        let defensiveLine = isHome ? 18 : 82;
-
-                        if (tactic.defensiveLine === 'High') {
-                            defensiveLine = isHome ? 30 : 70;
-                        } else if (tactic.defensiveLine === 'Deep') {
-                            defensiveLine = isHome ? 10 : 90;
+                        // Jockey position - face the ball when close
+                        if (distToBall < 15) {
+                            simP.facing = Math.atan2(ballY - simP.y, ballX - simP.x);
                         }
 
-                        if (mostDangerousAttacker && positioning > 70) {
-                            ballTrackY = lerp(ballY, mostDangerousAttacker.y, positioningFactor * 0.6);
-                            defensiveLine = isHome ? Math.max(defensiveLine, mostDangerousAttacker.x + 5) : Math.min(defensiveLine, mostDangerousAttacker.x - 5);
-                        }
-
-                        // Wing defense: tuck in when ball is central and dangerous
-                        const isBallCentral = Math.abs(ballY - 50) < 25;
-                        const isWingDefender = Math.abs(targetY - 50) > 20;
-                        if (isBallCentral && isWingDefender && isDangerZone) {
-                            targetY = lerp(targetY, 50, 0.4); // Move towards center
-                        }
-
-                        targetY += (ballTrackY - 50) * 0.45;
-                        targetX = isHome ? Math.max(targetX, defensiveLine) : Math.min(targetX, defensiveLine);
-
-                        if (isWrongSide) {
-                            targetX = isHome ? ballX - 5 : ballX + 5;
-                            speedMod = MAX_PLAYER_SPEED * 0.9;
-                        } else {
-                            targetX += (ballX - 50) * 0.2;
-                        }
-
+                        // Stay on defensive line
+                        targetX = isHome ? Math.max(idealX, defLineX) : Math.min(idealX, defLineX);
+                        targetY = idealY;
+                        speedMod = MAX_PLAYER_SPEED * 0.65;
                         simP.state = 'RUN';
                     }
                 }
@@ -1869,7 +2113,18 @@ export class MatchEngine {
             speedPenalty = 0.80 + (driSkill / 100) * 0.15;
         }
 
-        const physicalLimit = maxSpeed * (p.attributes.speed / 100 + 0.4) * staminaFactor * speedPenalty;
+        // MEANINGFUL SPEED FORMULA - Stats should matter!
+        // Formula: 0.75 + speed/250
+        // Speed 40: 0.75 + 0.16 = 0.91x (slow)
+        // Speed 60: 0.75 + 0.24 = 0.99x (average)
+        // Speed 70: 0.75 + 0.28 = 1.03x (above average)
+        // Speed 80: 0.75 + 0.32 = 1.07x (fast)
+        // Speed 100: 0.75 + 0.40 = 1.15x (elite sprinter)
+        // 61 vs 68 speed: 0.994 vs 1.022 = 2.8% difference (noticeable!)
+        let speedBonus = 0.75 + (p.attributes.speed / 250);
+        // Cap at 1.15x to prevent light-speed bug
+        speedBonus = Math.min(speedBonus, 1.15);
+        const physicalLimit = Math.min(maxSpeed, MAX_PLAYER_SPEED) * speedBonus * staminaFactor * speedPenalty;
 
         if (currentSpeed > 0.8) {
             const movementAngle = Math.atan2(simP.vy, simP.vx);
@@ -1883,6 +2138,15 @@ export class MatchEngine {
         if (currentSpeed > physicalLimit) {
             simP.vx = (simP.vx / currentSpeed) * physicalLimit;
             simP.vy = (simP.vy / currentSpeed) * physicalLimit;
+        }
+
+        // STRICT HARD CAP - No player can EVER exceed MAX_PLAYER_SPEED
+        // This is the absolute final safety check
+        const ABSOLUTE_MAX = MAX_PLAYER_SPEED;
+        const newSpeed = Math.sqrt(simP.vx * simP.vx + simP.vy * simP.vy);
+        if (newSpeed > ABSOLUTE_MAX) {
+            simP.vx = (simP.vx / newSpeed) * ABSOLUTE_MAX;
+            simP.vy = (simP.vy / newSpeed) * ABSOLUTE_MAX;
         }
 
         simP.x = clamp(simP.x + simP.vx, 0, 100);
@@ -2023,7 +2287,7 @@ export class MatchEngine {
         return `${teamName} Topla Oynuyor`;
     }
 
-    private actionPass(carrier: Player, target: Player, throughBall: boolean, targetOverrideX?: number, targetOverrideY?: number) {
+    private actionPass(carrier: Player, target: Player, type: 'GROUND' | 'THROUGH' | 'AERIAL', targetOverrideX?: number, targetOverrideY?: number) {
         const cPos = this.sim.players[carrier.id];
         const tPos = this.sim.players[target.id];
         const state = this.playerStates[carrier.id];
@@ -2034,7 +2298,14 @@ export class MatchEngine {
 
         // Only add extra offset if no override provided (old logic fallback)
         if (targetOverrideX === undefined) {
-            if (throughBall) { tx += tPos.vx * 12; ty += tPos.vy * 12; } else { tx += tPos.vx * 4; ty += tPos.vy * 4; }
+            if (type === 'THROUGH') {
+                // AI FIX: True Through Ball targeting - Lead the runner significantly
+                tx += tPos.vx * 18;
+                ty += tPos.vy * 18;
+            } else {
+                tx += tPos.vx * 4;
+                ty += tPos.vy * 4;
+            }
         }
 
         const dx = tx - cPos.x; const dy = ty - cPos.y;
@@ -2047,32 +2318,14 @@ export class MatchEngine {
         if (staminaFactor < 0.5) errorMargin *= 3;
 
         const finalAngle = angle + (Math.random() * errorMargin - errorMargin / 2);
-        const power = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (distToT * 0.04));  // Pas hızı yavaşlatıldı
 
-        // Lob pas kontrolü - Rakip pas hattında mı?
-        let shouldLob = false;
-        const isHome = carrier.teamId === this.homeTeam.id;
-        const enemies = isHome ? this.awayPlayers : this.homePlayers;
-
-        for (const e of enemies) {
-            if (!this.sim.players[e.id]) continue;
-            const ePos = this.sim.players[e.id];
-
-            // Rakip pas hattına yakın mı kontrol et
-            const l2 = distToT * distToT;
-            if (l2 === 0) continue;
-
-            let t = ((ePos.x - cPos.x) * dx + (ePos.y - cPos.y) * dy) / l2;
-            t = Math.max(0, Math.min(1, t));
-            const projX = cPos.x + t * dx;
-            const projY = cPos.y + t * dy;
-            const distToLine = dist(ePos.x, ePos.y, projX, projY);
-
-            // Rakip pas hattına 4 birimden yakınsa ve orta mesafedeyse
-            if (distToLine < 4 && t > 0.2 && t < 0.8) {
-                shouldLob = true;
-                break;
-            }
+        // FIXED AERIAL PASS POWER - Was overshooting targets!
+        let power: number;
+        if (type === 'AERIAL') {
+            // Softer power for lobs - ball should land AT target, not beyond
+            power = Math.min(MAX_BALL_SPEED * 0.5, 1.0 + (distToT * 0.025)); // Reduced from 0.75/0.04
+        } else {
+            power = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (distToT * 0.04));
         }
 
         this.sim.ball.ownerId = null;
@@ -2081,14 +2334,9 @@ export class MatchEngine {
         this.sim.ball.vx = Math.cos(finalAngle) * power;
         this.sim.ball.vy = Math.sin(finalAngle) * power;
 
-        // Lob pas: Sadece kısa-orta mesafede rakip aradadaysa
-        // Uzun paslarda (>35 birim) havadan atmak mantıksız - yetişemezler
-        const isShortMediumRange = distToT < 35;
-        const shouldDoLob = shouldLob && isShortMediumRange;
-
-        if (shouldDoLob) {
-            // Kısa lob pas - sadece rakibin üzerinden
-            const lobHeight = Math.min(2.0, 0.8 + (distToT * 0.03));
+        if (type === 'AERIAL') {
+            // Calculated Lob - reduced height for more accurate landing
+            const lobHeight = Math.min(2.0, 0.6 + (distToT * 0.025)); // Was 2.5/0.8/0.035
             this.sim.ball.vz = lobHeight;
             this.sim.ball.curve = 0;
             this.traceLog.push(`${carrier.lastName} havadan pas attı!`);
@@ -2098,11 +2346,15 @@ export class MatchEngine {
         }
 
         this.playerStates[carrier.id].possessionCooldown = 12;
+        // SPEED GLITCH FIX: Passer Lockout
+        // Prevent passer from immediately chasing their own ball
+        this.playerStates[carrier.id].actionLock = 20;
+
         this.sim.players[carrier.id].state = 'KICK';
 
         this.lastTouchTeamId = carrier.teamId;
 
-        const typeText = throughBall ? "Ara pası" : (shouldLob ? "Havadan pas" : "Pas");
+        const typeText = type === 'THROUGH' ? "Ara pası" : (type === 'AERIAL' ? "Havadan pas" : "Pas");
         this.traceLog.push(`${carrier.lastName} ${typeText} denedi.`);
     }
 
@@ -2229,8 +2481,9 @@ export class MatchEngine {
             riskFactor = 0.6; // Stays on feet
         }
 
-        const rollD = effectiveDef * (Math.random() + 0.5);
-        const rollA = effectiveDri * Math.random();
+        // BALANCED DUEL: Both get fair random multipliers
+        const rollD = effectiveDef * (Math.random() + 0.5);  // 0.5 - 1.5 range
+        const rollA = effectiveDri * (Math.random() + 0.3);  // 0.3 - 1.3 range (buffed from 0-1)
 
         if (rollD > rollA) {
             if (Math.random() < 0.4) {

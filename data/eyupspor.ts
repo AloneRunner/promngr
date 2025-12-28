@@ -2,7 +2,7 @@
 export const EYUPSPOR_SQUAD = [
   {
     ad: "Mame Thiam",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Senegal",
     mevki: "SNT",
     reyting: 75,
@@ -13,7 +13,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Kerem Demirbay",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Almanya",
     mevki: "MDO",
     reyting: 74,
@@ -24,7 +24,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Samu Sáiz",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "İspanya",
     mevki: "MOO",
     reyting: 74,
@@ -35,7 +35,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Taras Stepanenko",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Ukrayna",
     mevki: "MDO",
     reyting: 73,
@@ -46,7 +46,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Emre Akbaba",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 72,
@@ -57,7 +57,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Denis Drăguș",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Romanya",
     mevki: "SNT",
     reyting: 72,
@@ -68,7 +68,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Serdar Gürler",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 71,
@@ -79,7 +79,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Halil Akbunar",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 71,
@@ -90,7 +90,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Prince Ampem",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Gana",
     mevki: "SLO",
     reyting: 70,
@@ -101,7 +101,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Yalçın Kayan",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 69,
@@ -112,7 +112,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Marcos Felipe",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 67,
@@ -123,7 +123,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Robin Yalçın",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Almanya",
     mevki: "STP",
     reyting: 67,
@@ -134,7 +134,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Umut Meraş",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 67,
@@ -145,7 +145,7 @@ export const EYUPSPOR_SQUAD = [
   },
   {
     ad: "Nihad Mujakić",
-    takim: "Eyüpspor",
+    takim: "Eyup Violet",
     uyruk: "Bosna Hersek",
     mevki: "STP",
     reyting: 67,

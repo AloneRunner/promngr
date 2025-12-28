@@ -2,7 +2,7 @@
 export const GENCLERBIRLIGI_SQUAD = [
   {
     ad: "Sekou Koita",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Mali",
     mevki: "SNT",
     reyting: 74,
@@ -13,7 +13,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Pedro Pereira",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 74,
@@ -24,7 +24,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Henry Onyekuru",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Nijerya",
     mevki: "SLO",
     reyting: 72,
@@ -35,7 +35,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Adama Traoré",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Mali",
     mevki: "SĞO",
     reyting: 72,
@@ -46,7 +46,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Dimitrios Goutas",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Yunanistan",
     mevki: "STP",
     reyting: 72,
@@ -57,7 +57,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Oghenekaro Etebo",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Nijerya",
     mevki: "MDO",
     reyting: 71,
@@ -68,7 +68,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Gökhan Akkan",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 69,
@@ -79,7 +79,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Matěj Hanousek",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SLB",
     reyting: 67,
@@ -90,7 +90,7 @@ export const GENCLERBIRLIGI_SQUAD = [
   },
   {
     ad: "Michał Nalepa",
-    takim: "Gençlerbirliği",
+    takim: "Ankara Youth",
     uyruk: "Polonya",
     mevki: "MO",
     reyting: 66,

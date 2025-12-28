@@ -2,7 +2,7 @@
 export const KARAGUMRUK_SQUAD = [
   {
     ad: "Matías Kranevitter",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 74,
@@ -13,7 +13,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Ricardo Esgaio",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 73,
@@ -24,7 +24,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Camacho",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Portekiz",
     mevki: "SLO",
     reyting: 73,
@@ -35,7 +35,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Ivo Grbić",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Hırvatistan",
     mevki: "KL",
     reyting: 72,
@@ -46,7 +46,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Jure Balkovec",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Slovenya",
     mevki: "SLB",
     reyting: 71,
@@ -57,7 +57,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Andre Gray",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Jamaika",
     mevki: "SNT",
     reyting: 70,
@@ -68,7 +68,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Berkay Özcan",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 69,
@@ -79,7 +79,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Enzo Roco",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Şili",
     mevki: "STP",
     reyting: 68,
@@ -90,7 +90,7 @@ export const KARAGUMRUK_SQUAD = [
   },
   {
     ad: "Serginho",
-    takim: "Karagümrük SK",
+    takim: "Karagumruk Black",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 67,

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupStatus } from '../types';
-import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut } from 'lucide-react';
+import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
 
 interface MatchCenterProps {
@@ -37,7 +37,21 @@ const PITCH_COLOR_2 = '#235c36'; // Lighter Green
 const LINE_COLOR = 'rgba(255, 255, 255, 0.85)';
 
 // 2.5D Coordinate Transformation
-const toScreen = (xPct: number, yPct: number, z: number = 0): { x: number, y: number, groundY: number, scale: number } => {
+const toScreen = (xPct: number, yPct: number, z: number = 0, mode: '2D' | '2.5D' = '2.5D'): { x: number, y: number, groundY: number, scale: number } => {
+    if (mode === '2D') {
+        // Simple Top-Down Match Engine (Classic FM Style)
+        const margin = 20;
+        const w = CANVAS_W - (margin * 2);
+        const h = CANVAS_H - (margin * 2);
+
+        return {
+            x: margin + (xPct / 100) * w,
+            y: margin + (yPct / 100) * h,
+            groundY: margin + (yPct / 100) * h,
+            scale: 1 // No depth scaling in 2D
+        };
+    }
+
     const fieldW = CANVAS_W - (PITCH_MARGIN * 2);
     const fieldH = (CANVAS_H - (PITCH_MARGIN * 2)) * PERSPECTIVE_RATIO;
 
@@ -98,6 +112,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     onTick, onFinish, onInstantFinish, onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, onPlayerClick
 }) => {
     const [speed, setSpeed] = useState<number>(1);
+    const [viewMode, setViewMode] = useState<'2D' | '2.5D'>('2.5D'); // NEW: View Mode Toggle
     const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
     const [showTacticsModal, setShowTacticsModal] = useState(false);
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
@@ -126,8 +141,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         // Assign Jersey Numbers
         let hC = 2, aC = 2;
         [...homePlayers, ...awayPlayers].forEach(p => {
-            if (p.position === 'GK') playerNumbers.current[p.id] = 1;
-            else playerNumbers.current[p.id] = p.teamId === homeTeam.id ? hC++ : aC++;
+            if (p.jerseyNumber) {
+                playerNumbers.current[p.id] = p.jerseyNumber;
+            } else if (p.position === 'GK') {
+                playerNumbers.current[p.id] = 1;
+            } else {
+                playerNumbers.current[p.id] = p.teamId === homeTeam.id ? hC++ : aC++;
+            }
         });
 
         // Initialize State
@@ -141,6 +161,35 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         return () => {
             if (logicTimerRef.current) clearInterval(logicTimerRef.current);
             if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
+        };
+    }, []);
+
+    // SCREEN WAKE LOCK
+    useEffect(() => {
+        let wakeLock: any = null;
+        const requestWakeLock = async () => {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await (navigator as any).wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log('Wake Lock error:', err);
+            }
+        };
+
+        requestWakeLock();
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && !wakeLock) {
+                requestWakeLock();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            if (wakeLock) wakeLock.release();
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, []);
 
@@ -283,13 +332,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 Math.pow(nextBall.vx || 0, 2) + Math.pow(nextBall.vy || 0, 2)
             );
 
-            if (ballSpeed > 1.5 && nextBall.ownerId === null) {
-                // Add to trail
+            if (ballSpeed > 1.5 && nextBall.ownerId === null && viewMode === '2.5D') {
+                // Add to trail (Only in 2.5D)
                 ballTrail.current.push({ x: ballX, y: ballY, z: ballZ, age: 0 });
                 // Keep only last 8 positions
                 if (ballTrail.current.length > 8) ballTrail.current.shift();
             } else {
-                // Clear trail when ball is slow or possessed
+                // Clear trail when ball is slow or possessed or in 2D
                 ballTrail.current = [];
             }
 
@@ -297,7 +346,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             ballTrail.current.forEach((point, idx) => {
                 point.age++;
                 const fade = 1 - (idx / ballTrail.current.length);
-                const pos = toScreen(point.x, point.y, point.z);
+                const pos = toScreen(point.x, point.y, point.z, viewMode);
                 const trailRadius = 3 * fade * pos.scale;
 
                 ctx.fillStyle = `rgba(255, 255, 255, ${0.4 * fade})`;
@@ -311,8 +360,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
         // ========== GOAL FLASH EFFECT ==========
         if (goalFlash) {
-            // Use 2.5D coordinates for goal position
-            const goalPos = toScreen(goalFlash === 'AWAY' ? 0 : 100, 50);
+            // Use coordinate transformation for goal position
+            const goalPos = toScreen(goalFlash === 'AWAY' ? 0 : 100, 50, 0, viewMode);
             const goalX = goalPos.x;
             const goalY = goalPos.y;
 
@@ -349,11 +398,130 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.fillStyle = '#111827';
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
+        // 2D MODE PITCH RENDER
+        if (viewMode === '2D') {
+            const tl = toScreen(0, 0, 0, '2D');
+            const br = toScreen(100, 100, 0, '2D');
+
+            const w = br.x - tl.x;
+            const h = br.y - tl.y;
+
+            // 1. Draw Striped Grass
+            const stripeCount = 12;
+            for (let i = 0; i < stripeCount; i++) {
+                ctx.fillStyle = i % 2 === 0 ? '#1a472a' : '#235c36';
+                const x1 = tl.x + (i / stripeCount) * w;
+                const stripeW = (w / stripeCount) + 0.5;
+                ctx.fillRect(x1, tl.y, stripeW, h);
+            }
+
+            // Lines
+            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+            ctx.lineWidth = 2;
+
+            // Outer boundary
+            ctx.strokeRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
+
+            // Center Line
+            const midX = (tl.x + br.x) / 2;
+            ctx.beginPath();
+            ctx.moveTo(midX, tl.y);
+            ctx.lineTo(midX, br.y);
+            ctx.stroke();
+
+            // Center Circle
+            const midY = (tl.y + br.y) / 2;
+            ctx.beginPath();
+            ctx.arc(midX, midY, 50, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Center Spot
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(midX, midY, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Corner Arcs (2D)
+            const cornerRad = h * 0.02;
+            ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+            // TL
+            ctx.beginPath(); ctx.arc(tl.x, tl.y, cornerRad, 0, Math.PI / 2); ctx.stroke();
+            // TR
+            ctx.beginPath(); ctx.arc(br.x, tl.y, cornerRad, Math.PI / 2, Math.PI); ctx.stroke();
+            // BL
+            ctx.beginPath(); ctx.arc(tl.x, br.y, cornerRad, -Math.PI / 2, 0); ctx.stroke();
+            // BR
+            ctx.beginPath(); ctx.arc(br.x, br.y, cornerRad, Math.PI, -Math.PI / 2); ctx.stroke();
+
+            // Penalty Areas
+            const draw2DPenalty = (isLeft: boolean) => {
+                const xBase = isLeft ? tl.x : br.x;
+
+                // Big Box
+                const boxW = w * 0.16;
+                const boxH = h * 0.6;
+                const boxY = midY - (boxH / 2);
+
+                ctx.strokeRect(isLeft ? xBase : xBase - boxW, boxY, boxW, boxH);
+
+                // Small Box
+                const smallW = w * 0.055;
+                const smallH = h * 0.3;
+                const smallY = midY - (smallH / 2);
+                ctx.strokeRect(isLeft ? xBase : xBase - smallW, smallY, smallW, smallH);
+
+                // Penalty Spot
+                const spotX = isLeft ? tl.x + (w * 0.11) : br.x - (w * 0.11);
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(spotX, midY, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // D-Arc (Penalty Arc) - Corrected intersection angle and radius
+                const dArcAngle = Math.acos(0.60);
+                ctx.beginPath();
+                ctx.arc(spotX, midY, h * 0.134,
+                    isLeft ? -dArcAngle : Math.PI - dArcAngle,
+                    isLeft ? dArcAngle : Math.PI + dArcAngle
+                );
+                ctx.stroke();
+            };
+
+            draw2DPenalty(true);
+            draw2DPenalty(false);
+
+            // Goals (Simple Rects with Net Pattern)
+            const goalH = h * 0.12;
+            const goalY1 = midY - (goalH / 2);
+            const goalDepth = 6;
+
+            const drawGoal = (isLeft: boolean) => {
+                const x = isLeft ? tl.x - goalDepth : br.x;
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.fillRect(x, goalY1, goalDepth, goalH);
+                ctx.strokeStyle = '#fff';
+                ctx.strokeRect(x, goalY1, goalDepth, goalH);
+
+                // Net lines
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 1;
+                for (let i = 1; i < 4; i++) {
+                    const gx = x + (i * goalDepth / 4);
+                    ctx.beginPath(); ctx.moveTo(gx, goalY1); ctx.lineTo(gx, goalY1 + goalH); ctx.stroke();
+                }
+            };
+
+            drawGoal(true);
+            drawGoal(false);
+
+            return;
+        }
+
         // Get corner positions for the trapezoid pitch
-        const topLeft = toScreen(0, 0);
-        const topRight = toScreen(100, 0);
-        const bottomLeft = toScreen(0, 100);
-        const bottomRight = toScreen(100, 100);
+        const topLeft = toScreen(0, 0, 0, '2.5D');
+        const topRight = toScreen(100, 0, 0, '2.5D');
+        const bottomLeft = toScreen(0, 100, 0, '2.5D');
+        const bottomRight = toScreen(100, 100, 0, '2.5D');
 
         // 1. Draw Grass with perspective stripes
         ctx.save();
@@ -373,10 +541,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const x1 = (i / stripeCount) * 100;
             const x2 = ((i + 1) / stripeCount) * 100;
 
-            const tl = toScreen(x1, 0);
-            const tr = toScreen(x2, 0);
-            const bl = toScreen(x1, 100);
-            const br = toScreen(x2, 100);
+            const tl = toScreen(x1, 0, 0, '2.5D');
+            const tr = toScreen(x2, 0, 0, '2.5D');
+            const bl = toScreen(x1, 100, 0, '2.5D');
+            const br = toScreen(x2, 100, 0, '2.5D');
 
             ctx.fillStyle = i % 2 === 0 ? PITCH_COLOR_1 : PITCH_COLOR_2;
             ctx.beginPath();
@@ -403,16 +571,29 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.closePath();
         ctx.stroke();
 
+        // Corner Arcs (2.5D)
+        const drawCornerArc = (x: number, y: number, startAngle: number, endAngle: number) => {
+            const center = toScreen(x, y, 0, '2.5D');
+            const radius = 15;
+            ctx.beginPath();
+            ctx.ellipse(center.x, center.y, radius, radius * PERSPECTIVE_RATIO, 0, startAngle, endAngle);
+            ctx.stroke();
+        };
+        drawCornerArc(0, 0, 0, Math.PI / 2);
+        drawCornerArc(100, 0, Math.PI / 2, Math.PI);
+        drawCornerArc(0, 100, -Math.PI / 2, 0);
+        drawCornerArc(100, 100, Math.PI, -Math.PI / 2);
+
         // Halfway line (vertical in game coords = horizontal visually)
-        const halfTop = toScreen(50, 0);
-        const halfBottom = toScreen(50, 100);
+        const halfTop = toScreen(50, 0, 0, '2.5D');
+        const halfBottom = toScreen(50, 100, 0, '2.5D');
         ctx.beginPath();
         ctx.moveTo(halfTop.x, halfTop.y);
         ctx.lineTo(halfBottom.x, halfBottom.y);
         ctx.stroke();
 
         // Center circle (ellipse due to perspective)
-        const center = toScreen(50, 50);
+        const center = toScreen(50, 50, 0, '2.5D');
         const radiusY = 50 * PERSPECTIVE_RATIO * 0.14;
         const radiusX = 55;
         ctx.beginPath();
@@ -433,10 +614,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const xSpot = isLeft ? 11 : 89;
 
             // Big box corners
-            const boxTL = toScreen(xBase, 21);
-            const boxTR = toScreen(xPenalty, 21);
-            const boxBL = toScreen(xBase, 79);
-            const boxBR = toScreen(xPenalty, 79);
+            const boxTL = toScreen(xBase, 21, 0, '2.5D');
+            const boxTR = toScreen(xPenalty, 21, 0, '2.5D');
+            const boxBL = toScreen(xBase, 79, 0, '2.5D');
+            const boxBR = toScreen(xPenalty, 79, 0, '2.5D');
 
             ctx.beginPath();
             ctx.moveTo(boxTL.x, boxTL.y);
@@ -446,10 +627,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             ctx.stroke();
 
             // Small box
-            const smallTL = toScreen(xBase, 37);
-            const smallTR = toScreen(xSmall, 37);
-            const smallBL = toScreen(xBase, 63);
-            const smallBR = toScreen(xSmall, 63);
+            const smallTL = toScreen(xBase, 37, 0, '2.5D');
+            const smallTR = toScreen(xSmall, 37, 0, '2.5D');
+            const smallBL = toScreen(xBase, 63, 0, '2.5D');
+            const smallBR = toScreen(xSmall, 63, 0, '2.5D');
 
             ctx.beginPath();
             ctx.moveTo(smallTL.x, smallTL.y);
@@ -459,10 +640,21 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             ctx.stroke();
 
             // Penalty spot
-            const spot = toScreen(xSpot, 50);
+            const spot = toScreen(xSpot, 50, 0, '2.5D');
             ctx.beginPath();
             ctx.arc(spot.x, spot.y, 3, 0, Math.PI * 2);
             ctx.fill();
+
+            // D-Arc
+            const dRadX = 55;
+            const dRadY = 50 * PERSPECTIVE_RATIO * 0.14;
+            const dAngle = 0.93; // Math.acos(0.6) approx
+            ctx.beginPath();
+            ctx.ellipse(spot.x, spot.y, dRadX, dRadY, 0,
+                isLeft ? -dAngle : Math.PI - dAngle,
+                isLeft ? dAngle : Math.PI + dAngle
+            );
+            ctx.stroke();
         };
 
         drawPenaltyArea(true);
@@ -477,12 +669,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const goalHeight = 15; // Visual height in pixels
 
             // Goal posts (front)
-            const frontTop = toScreen(isLeft ? 0 : 100, yTop);
-            const frontBottom = toScreen(isLeft ? 0 : 100, yBottom);
+            const frontTop = toScreen(isLeft ? 0 : 100, yTop, 0, '2.5D');
+            const frontBottom = toScreen(isLeft ? 0 : 100, yBottom, 0, '2.5D');
 
             // Goal posts (back)
-            const backTop = toScreen(xBack, yTop);
-            const backBottom = toScreen(xBack, yBottom);
+            const backTop = toScreen(xBack, yTop, 0, '2.5D');
+            const backBottom = toScreen(xBack, yBottom, 0, '2.5D');
 
             // Draw net (back panel)
             ctx.strokeStyle = 'rgba(255,255,255,0.3)';
@@ -490,8 +682,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             // Horizontal net lines
             for (let y = yTop; y <= yBottom; y += 2) {
-                const left = toScreen(xBack, y);
-                const right = toScreen(isLeft ? 0 : 100, y);
+                const left = toScreen(xBack, y, 0, '2.5D');
+                const right = toScreen(isLeft ? 0 : 100, y, 0, '2.5D');
                 ctx.beginPath();
                 ctx.moveTo(left.x, left.y - goalHeight);
                 ctx.lineTo(right.x, right.y - goalHeight);
@@ -501,8 +693,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             // Vertical net lines
             for (let i = 0; i <= 4; i++) {
                 const x = isLeft ? xBack + (i * 1.5) : xBack - (i * 1.5);
-                const top = toScreen(x, yTop);
-                const bottom = toScreen(x, yBottom);
+                const top = toScreen(x, yTop, 0, '2.5D');
+                const bottom = toScreen(x, yBottom, 0, '2.5D');
                 ctx.beginPath();
                 ctx.moveTo(top.x, top.y - goalHeight);
                 ctx.lineTo(bottom.x, bottom.y - goalHeight);
@@ -561,8 +753,43 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         primary: string, secondary: string, num: number,
         hasBall: boolean, name: string, stamina: number, state: string
     ) => {
+        // 2D MODE PLAYER RENDER
+        if (viewMode === '2D') {
+            const pos = toScreen(xPct, yPct, 0, '2D');
+            const radius = 8;
+
+            ctx.save();
+
+            // Player Circle
+            ctx.fillStyle = primary;
+            ctx.strokeStyle = secondary;
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Number
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(num.toString(), pos.x, pos.y);
+
+            // Name Label (Simple)
+            if (hasBall) {
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.fillText(name, pos.x, pos.y - 12);
+            }
+
+            ctx.restore();
+            return;
+        }
+
         // 2.5D Coordinate transformation
-        const pos = toScreen(xPct, yPct);
+        const pos = toScreen(xPct, yPct, 0, '2.5D');
         const cx = pos.x;
         const groundY = pos.y; // Shadow always here
         const scale = pos.scale;
@@ -704,9 +931,24 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     };
 
     const drawBall = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z: number) => {
+        // 2D BALL
+        if (viewMode === '2D') {
+            const pos = toScreen(xPct, yPct, 0, '2D');
+            ctx.save();
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+            return;
+        }
+
         // 2.5D Coordinate transformation
-        const pos = toScreen(xPct, yPct, z);
-        const groundPos = toScreen(xPct, yPct, 0);
+        const pos = toScreen(xPct, yPct, z, '2.5D');
+        const groundPos = toScreen(xPct, yPct, 0, '2.5D');
         const scale = pos.scale;
         const baseRadius = 5;
         const radius = baseRadius * scale;
@@ -877,6 +1119,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                         {/* Top Right: Actions (Exit + Settings) */}
                         <div className="absolute top-2 right-2 flex gap-2 pointer-events-auto scale-90 origin-top-right">
+                            <button onClick={() => setViewMode(viewMode === '2D' ? '2.5D' : '2D')} className="w-8 h-8 rounded-full bg-blue-600/80 border border-blue-400/30 flex items-center justify-center text-white font-bold text-[10px]">
+                                {viewMode}
+                            </button>
                             <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
                                 <Settings size={14} />
                             </button>
@@ -945,44 +1190,107 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             </div>
 
-            {/* FOOTER CONTROLS (Hidden on small landscape) */}
-            <div className="h-16 md:h-20 bg-slate-900 border-t border-slate-800 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex">
+            {/* FOOTER CONTROLS (Optimized for Mobile) */}
+            <div className="h-16 md:h-24 bg-slate-900 border-t border-slate-800 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom">
                 <button
                     onClick={() => onFinish(match.id)}
-                    className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-2 rounded bg-slate-800 hover:bg-red-900/80 text-slate-400 hover:text-white transition-colors border border-slate-700"
+                    className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-slate-800 active:bg-red-900/80 text-slate-400 active:text-white transition-colors border border-slate-700 active:border-red-500"
                 >
-                    <LogOut size={16} /> <span className="font-bold text-[10px] md:text-sm">EXIT</span>
+                    <LogOut size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline font-bold text-[9px] uppercase">Exit</span>
                 </button>
 
-                <div className="flex items-center gap-2 md:gap-4 bg-black/40 p-1.5 md:p-2 rounded-full border border-slate-700 scale-90 md:scale-100">
-                    <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all ${speed === 0 ? 'bg-emerald-500 text-white shadow-lg' : 'bg-slate-700 text-slate-300'}`}>
-                        {speed === 0 ? <Play size={16} fill="currentColor" className="ml-0.5 md:ml-1" /> : <Pause size={16} fill="currentColor" />}
+                <div className="flex items-center gap-1 md:gap-3 bg-black/40 p-1 md:p-2 rounded-xl md:rounded-2xl border border-slate-700 backdrop-blur-md shadow-xl">
+                    <button
+                        onClick={() => setSpeed(speed === 0 ? 1 : 0)}
+                        className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center transition-all active:scale-95 shadow-lg ${speed === 0 ? 'bg-emerald-500 text-white shadow-emerald-900/50' : 'bg-slate-700 text-slate-300'}`}
+                    >
+                        {speed === 0 ? <Play size={18} fill="currentColor" className="ml-0.5 md:ml-1 md:w-6 md:h-6" /> : <Pause size={18} fill="currentColor" className="md:w-6 md:h-6" />}
                     </button>
 
-                    <div className="h-4 md:h-6 w-[1px] bg-slate-700"></div>
+                    <div className="h-6 md:h-8 w-[1px] bg-slate-700 mx-0.5 md:mx-1"></div>
 
-                    <button onClick={() => setSpeed(0.5)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 0.5 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>0.5x</button>
-                    <button onClick={() => setSpeed(1)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 1 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>1x</button>
-                    <button onClick={() => setSpeed(2)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 2 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>2x</button>
-                    <button onClick={() => setSpeed(4)} className={`px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold ${speed === 4 ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>4x</button>
+                    <div className="flex gap-0.5 md:gap-1">
+                        <button onClick={() => setSpeed(0.5)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 0.5 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>0.5</button>
+                        <button onClick={() => setSpeed(1)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 1 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>1x</button>
+                        <button onClick={() => setSpeed(2)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 2 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>2x</button>
+                    </div>
                 </div>
 
-                <div className="flex gap-1 md:gap-3">
+                <div className="flex gap-2 md:gap-3">
+                    <button
+                        onClick={() => setViewMode(viewMode === '2D' ? '2.5D' : '2D')}
+                        className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-blue-600 active:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/30 transition-all active:scale-95 border-b-2 md:border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
+                    >
+                        <Layers size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline text-[9px] uppercase">{viewMode}</span>
+                    </button>
                     <button
                         onClick={() => { setSpeed(0); setShowTacticsModal(true); }}
-                        className="flex items-center gap-1 md:gap-2 px-2 md:px-5 py-2 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-lg transition-all scale-90 md:scale-100"
+                        className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-purple-600 active:bg-purple-500 text-white font-bold shadow-lg shadow-purple-900/30 transition-all active:scale-95 border-b-2 md:border-b-4 border-purple-800 active:border-b-0 active:translate-y-1"
                     >
-                        <Settings size={16} /> <span className="hidden xs:inline text-[10px] md:text-sm">MGMT</span>
-                    </button>
-
-                    <button
-                        onClick={() => onInstantFinish(match.id)}
-                        className="hidden sm:flex items-center gap-1 md:gap-2 px-3 md:px-5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-orange-400 font-bold border border-slate-700 transition-colors"
-                    >
-                        <SkipForward size={16} /> <span className="text-[10px] md:text-sm">SKIP</span>
+                        <Settings size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline text-[9px] uppercase">Mgmt</span>
                     </button>
                 </div>
             </div>
+
+            {/* FULL TIME MODAL */}
+            {match.isPlayed && (
+                <div className="absolute inset-0 z-[100] bg-slate-950/90 backdrop-blur-md flex items-center justify-center animate-fade-in p-4">
+                    <div className="bg-slate-900 border border-slate-700 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden">
+                        {/* Background Effect */}
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
+
+                        <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
+                            FULL TIME
+                        </h2>
+
+                        {/* Score Display */}
+                        <div className="flex items-center justify-center gap-8 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
+                            <div className="flex flex-col items-center gap-2 flex-1">
+                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${homeTeam.primaryColor}` }}>
+                                    {match.homeScore}
+                                </div>
+                                <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                    {homeTeam.name}
+                                </div>
+                            </div>
+
+                            <div className="text-slate-600 text-4xl font-black opacity-50">-</div>
+
+                            <div className="flex flex-col items-center gap-2 flex-1">
+                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${awayTeam.primaryColor}` }}>
+                                    {match.awayScore}
+                                </div>
+                                <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                    {awayTeam.name}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Match Stats Mini Summary */}
+                        <div className="grid grid-cols-3 gap-4 w-full text-center py-2">
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold">Possession</div>
+                                <div className="text-white font-mono">{match.stats.homePossession}% - {match.stats.awayPossession}%</div>
+                            </div>
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold">Shots</div>
+                                <div className="text-white font-mono">{match.stats.homeShots} - {match.stats.awayShots}</div>
+                            </div>
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold">xG</div>
+                                <div className="text-white font-mono">{match.stats.homeXG.toFixed(1)} - {match.stats.awayXG.toFixed(1)}</div>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => onFinish(match.id)}
+                            className="w-full mt-2 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black rounded-xl text-lg shadow-lg shadow-emerald-900/40 hover:shadow-emerald-500/20 transition-all uppercase tracking-widest transform hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

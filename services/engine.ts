@@ -19,7 +19,8 @@ import {
     CoachArchetype,
     AssistantAdvice,
     BoardObjective,
-    TeamStaff
+    TeamStaff,
+    TransferOffer
 } from '../types';
 import { NAMES_DB, LEAGUE_PRESETS, REAL_PLAYERS, TICKET_PRICE, TEAM_TACTICAL_PROFILES } from '../constants';
 import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating } from './MatchEngine';
@@ -227,6 +228,7 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
         potential,
         value: calculatedOverall * 150000 * (1 + (potential - calculatedOverall) / 20),
         wage: calculatedOverall * 750,
+        salary: (calculatedOverall * 150000 * (1 + (potential - calculatedOverall) / 20)) * 0.15, // Approx 15% of value
         contractYears: realData ? 3 : getRandomInt(1, 5),
         morale: 80,
         condition: 100,
@@ -237,6 +239,7 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
         matchSuspension: 0,
         lineup: 'RESERVE',
         lineupIndex: 99,
+        jerseyNumber: realData ? (realData.forma_no || realData.jerseyNumber) : undefined,
         playStyles: realData ? (realData.oyun_tarzlari || []) : [],
         details: details
     };
@@ -534,12 +537,30 @@ export const generateWorld = (leagueId: string): GameState => {
         const team: Team = {
             id: teamId, name: rt.name, city: rt.city, primaryColor: rt.primaryColor, secondaryColor: rt.secondaryColor,
             reputation: rt.reputation, budget: rt.budget,
+            leagueId: leagueId,
             facilities: { stadiumCapacity: Math.floor(rt.reputation * 50), stadiumLevel: Math.floor(rt.reputation / 100), trainingLevel: Math.floor(rt.reputation / 150), academyLevel: Math.floor(rt.reputation / 150) },
             staff: { headCoachLevel: baseStaffLevel, physioLevel: baseStaffLevel, scoutLevel: baseStaffLevel },
             objectives: generateObjectives(rt.reputation),
             tactic: specificTactic,
             coachArchetype: coachType as CoachArchetype, trainingFocus: 'BALANCED', trainingIntensity: 'NORMAL',
-            youthCandidates: [], recentForm: [], stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }
+            youthCandidates: [],
+            recentForm: [],
+            stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 },
+            wages: 0
+        };
+
+        // Facility Balancing based on Reputation
+        // Rep > 85: Level 7-9 (Top Tier)
+        // Rep 75-85: Level 5-7 (High Tier)
+        // Rep < 75: Level 2-4 (Mid Tier)
+        const tier = team.reputation > 85 ? 3 : team.reputation > 75 ? 2 : 1;
+        const baseLevel = tier === 3 ? 7 : tier === 2 ? 5 : 2;
+
+        team.facilities = {
+            stadiumCapacity: team.facilities.stadiumCapacity,
+            stadiumLevel: Math.min(10, baseLevel + getRandomInt(0, 2)),
+            trainingLevel: Math.min(10, baseLevel + getRandomInt(0, 2)),
+            academyLevel: Math.min(10, baseLevel + getRandomInt(0, 2))
         };
 
         // Auto pick lineup adhering to the specific formation
@@ -556,7 +577,7 @@ export const generateWorld = (leagueId: string): GameState => {
     return {
         currentWeek: 1, currentSeason: 2024, userTeamId: teams[0].id, leagueId, teams, players, matches: generateSeasonSchedule(teams),
         isSimulating: false, messages: [{ id: uuid(), week: 1, type: MessageType.BOARD, subject: 'Welcome', body: 'The board expects strong results.', isRead: false, date: new Date().toISOString() }],
-        transferMarket: players.filter(p => p.teamId === 'FREE_AGENT'), history: []
+        transferMarket: players.filter(p => p.teamId === 'FREE_AGENT'), history: [], pendingOffers: []
     };
 };
 
@@ -749,7 +770,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     const intensityLabel = intensity === 'LIGHT' ? t.intensityLight : intensity === 'HEAVY' ? t.intensityHeavy : t.intensityNormal;
     report.push(t.trainingIntensityReport.replace('{intensity}', intensityLabel).replace('{recovery}', recoveryBase.toString()));
 
-    const updatedPlayers = gameState.players.map(p => {
+    let updatedPlayers = gameState.players.map(p => {
         const isUserPlayer = p.teamId === gameState.userTeamId;
         let rec = isUserPlayer ? recoveryBase : 35;
         let newMorale = p.morale;
@@ -803,7 +824,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     // Finance logic from previous version incorporated for localization
     if (userTeam) {
         const teamPlayers = updatedPlayers.filter(p => p.teamId === userTeam.id);
-        const wages = teamPlayers.reduce((sum, p) => sum + p.wage, 0);
+        const totalSalaries = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0);
+        const weeklyWages = totalSalaries / 52;
+
+        userTeam.wages = Math.round(weeklyWages); // Update team stat
+
         // BALANCED: Reduced facility and staff costs (was 25K and 15K per level)
         const maintenance = (userTeam.facilities.stadiumLevel + userTeam.facilities.trainingLevel + userTeam.facilities.academyLevel) * 5000;
         const staffCosts = (userTeam.staff.headCoachLevel + userTeam.staff.scoutLevel + userTeam.staff.physioLevel) * 3000;
@@ -816,13 +841,13 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         const sponsorIncome = userTeam.sponsor ? userTeam.sponsor.weeklyIncome : 150000;
 
         const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
-        const weeklyExpenses = wages + maintenance + staffCosts;
+        const weeklyExpenses = weeklyWages + maintenance + staffCosts;
 
         userTeam.budget += (weeklyIncome - weeklyExpenses);
 
         userTeam.financials = {
             lastWeekIncome: { tickets: ticketIncome, sponsor: sponsorIncome, merchandise, tvRights, transfers: 0 },
-            lastWeekExpenses: { wages, maintenance, academy: maintenance / 3, transfers: 0 } // simple split
+            lastWeekExpenses: { wages: weeklyWages, maintenance, academy: maintenance / 3, transfers: 0 } // simple split
         };
 
         const balance = weeklyIncome - weeklyExpenses;
@@ -854,7 +879,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
 
             const youthPlayer = generatePlayer(userTeam.id, pos, 'Turkey', [16, 17], [potential, potential]);
-
+            youthPlayer.salary = youthPlayer.value * 0.15; // Approx 15% of value as yearly salary
             updatedTeams = gameState.teams.map(t => {
                 if (t.id === userTeam.id) {
                     return { ...t, youthCandidates: [...(t.youthCandidates || []), youthPlayer] };
@@ -874,26 +899,663 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         }
     }
 
+    // ========== AI TEAM DEVELOPMENT SYSTEM ==========
+    // AI teams passively upgrade facilities, develop players, and produce youth
+    updatedTeams = updatedTeams.map(team => {
+        if (team.id === gameState.userTeamId) return team; // Skip user team
+
+        // AI Facility Upgrades (small chance each week based on budget and reputation)
+        const upgradeChance = 0.02 + (team.reputation / 10000); // 2% base + reputation bonus
+
+        if (Math.random() < upgradeChance && team.budget > 5000000) {
+            const facilityTypes = ['stadium', 'training', 'academy'];
+            const targetFacility = facilityTypes[Math.floor(Math.random() * facilityTypes.length)];
+
+            let cost = 0;
+            const newFacilities = { ...team.facilities };
+
+            if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 10) {
+                cost = 3000000;
+                if (team.budget > cost) {
+                    newFacilities.stadiumLevel += 1;
+                    newFacilities.stadiumCapacity += 2000;
+                }
+            } else if (targetFacility === 'training' && newFacilities.trainingLevel < 10) {
+                cost = 2000000;
+                if (team.budget > cost) {
+                    newFacilities.trainingLevel += 1;
+                }
+            } else if (targetFacility === 'academy' && newFacilities.academyLevel < 10) {
+                cost = 1500000;
+                if (team.budget > cost) {
+                    newFacilities.academyLevel += 1;
+                }
+            }
+
+            if (cost > 0 && team.budget > cost) {
+                return { ...team, facilities: newFacilities, budget: team.budget - cost };
+            }
+        }
+
+        return team;
+    });
+
+    // AI Player Development (young players improve based on team training level)
+    updatedPlayers = updatedPlayers.map(player => {
+        if (player.teamId === gameState.userTeamId) return player; // Skip user players
+
+        const playerTeam = updatedTeams.find(t => t.id === player.teamId);
+        if (!playerTeam) return player;
+
+        // Young players develop based on team's training level
+        if (player.age < 26 && player.overall < player.potential) {
+            const trainingLevel = playerTeam.facilities?.trainingLevel || 1;
+            const developmentChance = 0.03 + (trainingLevel * 0.008); // 3% base + 0.8% per level
+
+            if (Math.random() < developmentChance) {
+                const newOverall = Math.min(player.potential, player.overall + 1);
+                return {
+                    ...player,
+                    overall: newOverall,
+                    value: newOverall * 300000 * (1 + (player.potential - newOverall) / 20)
+                };
+            }
+        }
+
+        // Older players may decline
+        if (player.age > 32 && Math.random() < 0.03) {
+            const newOverall = Math.max(50, player.overall - 1);
+            return {
+                ...player,
+                overall: newOverall,
+                value: newOverall * 200000
+            };
+        }
+
+        return player;
+    });
+
+    // AI Youth Production (based on academy level)
+    updatedTeams = updatedTeams.map(team => {
+        if (team.id === gameState.userTeamId) return team;
+
+        const academyLevel = team.facilities?.academyLevel || 1;
+        const youthChance = 0.01 + (academyLevel * 0.005); // 1% base + 0.5% per level
+
+        // AI teams can integrate youth directly into squad (simplified)
+        if (Math.random() < youthChance) {
+            const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
+
+            // Only if team has less than 25 players
+            if (teamPlayers.length < 25) {
+                const positions: Position[] = [Position.GK, Position.DEF, Position.MID, Position.FWD];
+                const pos = positions[Math.floor(Math.random() * positions.length)];
+                const baseOverall = 50 + Math.floor(Math.random() * 10) + academyLevel;
+                const potential = Math.min(95, baseOverall + 15 + Math.floor(Math.random() * 15));
+
+                const youthPlayer = generatePlayer(team.id, pos, 'Europe', [17, 19], [potential, potential]);
+                youthPlayer.overall = baseOverall;
+                youthPlayer.lineup = 'RESERVE';
+                youthPlayer.lineupIndex = 99;
+                youthPlayer.salary = youthPlayer.value * 0.15; // Approx 15% of value as yearly salary
+
+                updatedPlayers.push(youthPlayer);
+            }
+        }
+
+        // Deduct wages for AI Teams too (simplified economy)
+        if (team.id !== gameState.userTeamId) {
+            const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
+            const weeklyWages = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0) / 52;
+            team.wages = Math.round(weeklyWages);
+            team.budget -= weeklyWages;
+        }
+
+        return team;
+    });
+
+    // AI Transfer Offers for User's Listed Players
+    const newOffers: TransferOffer[] = [];
+    const userListedPlayers = updatedPlayers.filter(p => p.teamId === gameState.userTeamId && p.isTransferListed);
+
+    userListedPlayers.forEach(player => {
+        // Each listed player has a chance to receive an offer
+        if (Math.random() < 0.4) { // 40% chance per week
+            // Find AI teams with enough budget
+            const interestedTeams = gameState.teams.filter(team =>
+                team.id !== gameState.userTeamId &&
+                team.budget > player.value * 0.7 &&
+                Math.random() < 0.3 // Only 30% of eligible teams will bid
+            );
+
+            if (interestedTeams.length > 0) {
+                const buyingTeam = interestedTeams[Math.floor(Math.random() * interestedTeams.length)];
+                const offerMultiplier = 0.7 + Math.random() * 0.5; // 70% to 120% of value
+                const offerAmount = Math.floor(player.value * offerMultiplier);
+
+                const offer: TransferOffer = {
+                    id: uuid(),
+                    playerId: player.id,
+                    playerName: `${player.firstName} ${player.lastName}`,
+                    fromTeamId: gameState.userTeamId,
+                    fromTeamName: userTeam?.name || 'Your Team',
+                    toTeamId: buyingTeam.id,
+                    offerAmount,
+                    status: 'PENDING',
+                    weekCreated: gameState.currentWeek
+                };
+
+                newOffers.push(offer);
+
+                // Create message for user
+                newMessages.push({
+                    id: uuid(),
+                    week: gameState.currentWeek,
+                    type: MessageType.TRANSFER_OFFER,
+                    subject: `💰 Transfer Offer: ${player.lastName}`,
+                    body: `${buyingTeam.name} has offered €${(offerAmount / 1000000).toFixed(1)}M for ${player.firstName} ${player.lastName}.`,
+                    isRead: false,
+                    date: new Date().toISOString(),
+                    data: { offerId: offer.id }
+                });
+            }
+        }
+    });
+
+    // AI-to-AI Transfers (Background)
+    // Small chance each week for AI teams to trade
+    if (Math.random() < 0.15) { // 15% chance per week
+        const aiTeams = gameState.teams.filter(t => t.id !== gameState.userTeamId);
+        const sellingTeam = aiTeams[Math.floor(Math.random() * aiTeams.length)];
+        const sellingPlayers = updatedPlayers.filter(p =>
+            p.teamId === sellingTeam.id &&
+            p.overall < 75 && // Only sell lower-rated players
+            Math.random() < 0.3
+        );
+
+        if (sellingPlayers.length > 0) {
+            const playerToSell = sellingPlayers[Math.floor(Math.random() * sellingPlayers.length)];
+            const potentialBuyers = aiTeams.filter(t =>
+                t.id !== sellingTeam.id &&
+                t.budget > playerToSell.value * 0.8
+            );
+
+            if (potentialBuyers.length > 0) {
+                const buyingTeam = potentialBuyers[Math.floor(Math.random() * potentialBuyers.length)];
+                const transferFee = Math.floor(playerToSell.value * (0.8 + Math.random() * 0.3));
+
+                // Execute transfer
+                playerToSell.teamId = buyingTeam.id;
+                playerToSell.lineup = 'RESERVE';
+                playerToSell.lineupIndex = 99;
+
+                // Update team budgets
+                updatedTeams = updatedTeams.map(t => {
+                    if (t.id === sellingTeam.id) return { ...t, budget: t.budget + transferFee };
+                    if (t.id === buyingTeam.id) return { ...t, budget: t.budget - transferFee };
+                    return t;
+                });
+
+                // News about AI transfer
+                newMessages.push({
+                    id: uuid(),
+                    week: gameState.currentWeek,
+                    type: MessageType.INFO,
+                    subject: '📰 Transfer News',
+                    body: `${buyingTeam.name} has signed ${playerToSell.firstName} ${playerToSell.lastName} from ${sellingTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                    isRead: false,
+                    date: new Date().toISOString()
+                });
+            }
+        }
+    }
+
     return {
         updatedTeams,
         updatedPlayers,
         updatedMarket: gameState.transferMarket,
         report,
         transferNews: [],
-        offers: newMessages
+        offers: newMessages,
+        newPendingOffers: newOffers
     };
 }
 
 export const processSeasonEnd = (gameState: GameState) => {
-    const winner = [...gameState.teams].sort((a, b) => b.stats.points - a.stats.points)[0];
+    // 1. Calculate Standings & Awards
+    const sensitiveSortedTeams = [...gameState.teams].sort((a, b) => {
+        if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
+        return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
+    });
+
+    const winner = sensitiveSortedTeams[0];
+    const runnerUp = sensitiveSortedTeams[1];
+
+    // Find Top Scorer & Assister
+    let topScorer = { name: 'N/A', count: 0 };
+    let topAssister = { name: 'N/A', count: 0 };
+
+    gameState.players.forEach(p => {
+        if (p.stats && p.stats.goals > topScorer.count) topScorer = { name: `${p.firstName} ${p.lastName}`, count: p.stats.goals };
+        if (p.stats && p.stats.assists > topAssister.count) topAssister = { name: `${p.firstName} ${p.lastName}`, count: p.stats.assists };
+    });
+
     const historyEntry: LeagueHistoryEntry = {
-        season: gameState.currentSeason, championId: winner.id, championName: winner.name, championColor: winner.primaryColor,
-        runnerUpName: gameState.teams.sort((a, b) => b.stats.points - a.stats.points)[1].name, topScorer: "TBD", topAssister: "TBD"
+        season: gameState.currentSeason,
+        championId: winner.id,
+        championName: winner.name,
+        championColor: winner.primaryColor,
+        runnerUpName: runnerUp ? runnerUp.name : 'N/A',
+        topScorer: `${topScorer.name} (${topScorer.count})`,
+        topAssister: `${topAssister.name} (${topAssister.count})`
     };
+
+    // 2. Economy: Prize Money Distribution
+    const prizeDistribution = [50000000, 25000000, 15000000, 10000000]; // Top 4 Prizes
+
+    let updatedTeams = sensitiveSortedTeams.map((t, index) => {
+        let prize = 1000000; // Base participation prize
+        if (index < 4) prize = prizeDistribution[index];
+        else if (index < 6) prize = 5000000; // Europa League spots
+
+        return {
+            ...t,
+            budget: t.budget + prize,
+            stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }, // Reset Stats
+            recentForm: []
+        };
+    });
+
+    // 3. Player Lifecycle (Aging, Progression, Contracts, Retirement)
+    const retiredPlayerNames: string[] = [];
+    const promotedPlayerNames: string[] = []; // Regens
+
+    let updatedPlayers = gameState.players.map(p => {
+        const age = p.age + 1;
+        let overall = p.overall;
+        let potential = p.potential;
+
+        // Progression Logic
+        if (age < 24) {
+            // Young player growth
+            const growthChance = 0.8;
+            if (Math.random() < growthChance && overall < potential) {
+                overall += getRandomInt(1, 4); // Significant growth
+            }
+        } else if (age > 30) {
+            // Old player decline
+            const declineChance = 0.3 + ((age - 30) * 0.1);
+            if (Math.random() < declineChance) {
+                overall -= getRandomInt(1, 3);
+            }
+        }
+
+        overall = Math.min(99, Math.max(40, overall));
+
+        // Contract Management
+        let contractYears = (p.contractYears || 1) - 1;
+        let teamId = p.teamId;
+
+        if (contractYears <= 0) {
+            if (p.teamId === gameState.userTeamId) {
+                // User's players become free agents if not renewed
+                teamId = 'FREE_AGENT';
+            } else {
+                // AI Logic: Renew key players, release others
+                if (overall > 72) {
+                    contractYears = getRandomInt(1, 3); // Auto renew
+                } else {
+                    teamId = 'FREE_AGENT';
+                }
+            }
+        }
+
+        // Value update based on new overall/age
+        const newValue = overall * 250000 * (1 - (age - 25) * 0.05);
+
+        return {
+            ...p,
+            age,
+            overall,
+            potential: Math.max(overall, potential), // Potential shouldn't drop below current? Or maybe it should. Keep it simple.
+            value: Math.max(100000, newValue),
+            contractYears,
+            teamId,
+            stats: { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0 }, // Reset season stats
+            weeksInjured: 0,
+            matchSuspension: 0,
+            condition: 100,
+            morale: 75 // Reset morale
+        };
+    });
+
+    // Handle Retirements & Regens
+    const finalPlayers: Player[] = [];
+
+    updatedPlayers.forEach(p => {
+        let shouldRetire = false;
+        // Retirement check only for non-free-agents to simulate career end, free agents might just disappear
+        if (p.age >= 39) shouldRetire = true;
+        else if (p.age >= 34 && Math.random() < 0.25) shouldRetire = true;
+
+        if (shouldRetire) {
+            retiredPlayerNames.push(`${p.firstName} ${p.lastName}`);
+
+            // Create Regen
+            // Regen stays in the same team to maintain squad balance
+            if (p.teamId !== 'FREE_AGENT') {
+                const regen = generatePlayer(
+                    p.teamId,
+                    p.position,
+                    p.nationality,
+                    [16, 19], // Age range
+                    [Math.max(70, p.potential - 5), Math.min(99, p.potential + 5)] // Potential range
+                );
+                // Adjust regen starting overall
+                regen.overall = getRandomInt(55, 70);
+                regen.value = regen.overall * 150000;
+
+                promotedPlayerNames.push(`${regen.firstName} ${regen.lastName} (Regen)`);
+                finalPlayers.push(regen);
+            }
+        } else {
+            // Keep player
+            finalPlayers.push(p);
+        }
+    });
+
+    // 4. Update Game State
     const newState = {
-        ...gameState, currentSeason: gameState.currentSeason + 1, currentWeek: 1, history: [...gameState.history, historyEntry],
-        teams: gameState.teams.map(t => ({ ...t, stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }, recentForm: [] })),
-        matches: generateSeasonSchedule(gameState.teams)
+        ...gameState,
+        currentSeason: gameState.currentSeason + 1,
+        currentWeek: 1,
+        history: [...gameState.history, historyEntry],
+        teams: updatedTeams,
+        players: finalPlayers,
+        matches: generateSeasonSchedule(updatedTeams),
+        europeanCup: undefined, // Reset cups
+        // Reset messages? Maybe keep them but clean up old ones? Let's keep for history.
+        messages: [{
+            id: uuid(),
+            week: 1,
+            type: MessageType.BOARD,
+            subject: `Season ${gameState.currentSeason + 1} Begins!`,
+            body: `Welcome to the new season. The board expects another strong performance. Prize money of €${(historyEntry.championId === gameState.userTeamId ? 50 : 1).toFixed(0)}M has been added to the budget.`,
+            isRead: false,
+            date: new Date().toISOString()
+        }, ...gameState.messages]
     };
-    return { newState, retired: [], promoted: [] };
+
+    return { newState, retired: retiredPlayerNames, promoted: promotedPlayerNames };
 }
+
+// ========== LIG KUPASI SYSTEM (Domestic Cup) ==========
+import { EuropeanCup, EuropeanCupMatch } from '../types';
+
+export const generateLeagueCup = (gameState: GameState): EuropeanCup => {
+    // Use top 16 teams by reputation for knockout cup
+    const sortedTeams = [...gameState.teams].sort((a, b) => b.reputation - a.reputation);
+    const qualifiedTeamIds = sortedTeams.slice(0, Math.min(16, sortedTeams.length)).map(t => t.id);
+
+    // Shuffle for randomized draw
+    const shuffled = [...qualifiedTeamIds].sort(() => Math.random() - 0.5);
+
+    // Determine round based on team count
+    const teamCount = shuffled.length;
+    let round: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL' = 'QUARTER';
+    if (teamCount >= 16) round = 'ROUND_16';
+    else if (teamCount >= 8) round = 'QUARTER';
+    else if (teamCount >= 4) round = 'SEMI';
+    else round = 'FINAL';
+
+    // Generate first round matches
+    const firstRoundMatches: EuropeanCupMatch[] = [];
+    const matchCount = Math.floor(teamCount / 2);
+
+    for (let i = 0; i < matchCount; i++) {
+        firstRoundMatches.push({
+            id: uuid(),
+            round: round,
+            homeTeamId: shuffled[i * 2],
+            awayTeamId: shuffled[i * 2 + 1],
+            homeScore: 0,
+            awayScore: 0,
+            isPlayed: false
+        });
+    }
+
+    return {
+        season: gameState.currentSeason,
+        isActive: true,
+        qualifiedTeamIds,
+        matches: firstRoundMatches,
+        currentRound: round
+    };
+};
+
+// Backwards compatible alias for old saves/code
+export const generateEuropeanCup = generateLeagueCup;
+
+// ========== CHAMPIONS LEAGUE (INTERNATIONAL) ==========
+export const generateChampionsLeague = (gameState: GameState): EuropeanCup => {
+    // 1. Get user league's top 4 teams
+    const localTeams = [...gameState.teams]
+        .sort((a, b) => b.stats.points - a.stats.points)
+        .slice(0, 4);
+
+    // 2. Generate foreign powerhouse teams from other leagues
+    // We'll create temporary "Team" objects for them
+    const foreignTeams: Team[] = [];
+
+    // Hardcoded list of top European clubs to simulate
+    const europeanGiants = [
+        { name: 'Real Madrid', primaryColor: '#FFFFFF', secondaryColor: '#000000', reputation: 95 },
+        { name: 'Man City', primaryColor: '#6CABDD', secondaryColor: '#FFFFFF', reputation: 94 },
+        { name: 'Bayern', primaryColor: '#DC052D', secondaryColor: '#FFFFFF', reputation: 92 },
+        { name: 'Liverpool', primaryColor: '#C8102E', secondaryColor: '#00B2A9', reputation: 90 },
+        { name: 'PSG', primaryColor: '#004170', secondaryColor: '#DA291C', reputation: 89 },
+        { name: 'Inter', primaryColor: '#010E80', secondaryColor: '#000000', reputation: 88 },
+        { name: 'Arsenal', primaryColor: '#EF0107', secondaryColor: '#063672', reputation: 88 },
+        { name: 'Barcelona', primaryColor: '#A50044', secondaryColor: '#004D98', reputation: 89 },
+        { name: 'Atlético', primaryColor: '#CB3524', secondaryColor: '#272E61', reputation: 86 },
+        { name: 'Leverkusen', primaryColor: '#E32221', secondaryColor: '#000000', reputation: 85 },
+        { name: 'Milan', primaryColor: '#FB090B', secondaryColor: '#000000', reputation: 84 },
+        { name: 'Juventus', primaryColor: '#000000', secondaryColor: '#FFFFFF', reputation: 84 }
+    ];
+
+    // Select 12 unique foreign teams
+    const selectedGiants = [...europeanGiants]
+        .filter(g => !gameState.teams.some(t => t.name.includes(g.name))) // Avoid duplicates if league is loaded
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 12);
+
+    selectedGiants.forEach(giant => {
+        // Create a dummy team object
+        const dummyTeam: Team = {
+            id: uuid(),
+            name: giant.name,
+            city: 'Europe',
+            primaryColor: giant.primaryColor,
+            secondaryColor: giant.secondaryColor,
+            reputation: giant.reputation,
+            leagueId: 'FOREIGN',
+            budget: 100000000,
+            wages: 2000000,
+            facilities: { stadiumCapacity: 60000, stadiumLevel: 8, trainingLevel: 8, academyLevel: 8 },
+            staff: { headCoachLevel: 8, scoutLevel: 8, physioLevel: 8 },
+            objectives: [],
+            tactic: {
+                formation: TacticType.T_433, style: 'Possession', aggression: 'High', tempo: 'Fast', width: 'Wide',
+                defensiveLine: 'High', passingStyle: 'Short', marking: 'Zonal'
+            },
+            coachArchetype: CoachArchetype.TACTICIAN,
+            trainingFocus: 'BALANCED',
+            trainingIntensity: 'NORMAL',
+            youthCandidates: [],
+            recentForm: [],
+            stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }
+        };
+        foreignTeams.push(dummyTeam);
+    });
+
+    // If we don't have enough foreign teams (e.g. user is playing PL), fill with more local
+    while (foreignTeams.length < 12) {
+        const nextBestLocal = [...gameState.teams]
+            .sort((a, b) => b.stats.points - a.stats.points)
+            .slice(localTeams.length + foreignTeams.length, localTeams.length + foreignTeams.length + 1)[0];
+        if (nextBestLocal) foreignTeams.push(nextBestLocal);
+        else break;
+    }
+
+    const allTeams = [...localTeams, ...foreignTeams];
+    const qualifiedTeamIds = allTeams.map(t => t.id);
+
+    // Shuffle
+    const shuffled = [...qualifiedTeamIds].sort(() => Math.random() - 0.5);
+
+    // Generate Round 16 matches (16 teams total)
+    const matches: EuropeanCupMatch[] = [];
+    for (let i = 0; i < 8; i++) {
+        matches.push({
+            id: uuid(),
+            round: 'ROUND_16',
+            homeTeamId: shuffled[i * 2],
+            awayTeamId: shuffled[i * 2 + 1],
+            homeScore: 0,
+            awayScore: 0,
+            isPlayed: false
+        });
+    }
+
+    // WE MUST return a merged state essentially, but since we can't modify main team array 
+    // to include these fake teams permanently, we will handle them in simulation only?
+    // OR we temporarily add them to gameState.teams? 
+    // BETTER: The UI uses `gameState.teams`. So we SHOULD add them to gameState.teams but marking them as 'FOREIGN'.
+    // However, `generateChampionsLeague` only returns the cup object. 
+    // The CALLER needs to add these teams to state.
+
+    return {
+        season: gameState.currentSeason,
+        isActive: true,
+        qualifiedTeamIds,
+        matches,
+        currentRound: 'ROUND_16',
+        winnerId: undefined,
+        _generatedForeignTeams: foreignTeams
+    };
+};
+export const simulateEuropeanCupMatch = (
+    cup: EuropeanCup,
+    matchId: string,
+    homeTeam: Team,
+    awayTeam: Team,
+    homePlayers: Player[],
+    awayPlayers: Player[]
+): EuropeanCup => {
+    const match = cup.matches.find(m => m.id === matchId);
+    if (!match || match.isPlayed) return cup;
+
+    // Simple simulation based on team strength
+    const homeStrength = homePlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(homePlayers.length, 1);
+    const awayStrength = awayPlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(awayPlayers.length, 1);
+
+    const homeAdvantage = 3;
+    const totalStrength = homeStrength + homeAdvantage + awayStrength;
+
+    const homeWinChance = (homeStrength + homeAdvantage) / totalStrength;
+
+    let homeScore = 0;
+    let awayScore = 0;
+
+    // Generate goals based on strength
+    const totalGoals = Math.floor(Math.random() * 5) + 1; // 1-5 goals per match
+    for (let i = 0; i < totalGoals; i++) {
+        if (Math.random() < homeWinChance) {
+            homeScore++;
+        } else {
+            awayScore++;
+        }
+    }
+
+    // Handle draws with extra time simulation
+    if (homeScore === awayScore) {
+        if (Math.random() < homeWinChance) {
+            homeScore++;
+        } else {
+            awayScore++;
+        }
+    }
+
+    const winnerId = homeScore > awayScore ? match.homeTeamId : match.awayTeamId;
+
+    // Update the match
+    const updatedMatches = cup.matches.map(m =>
+        m.id === matchId
+            ? { ...m, homeScore, awayScore, isPlayed: true, winnerId }
+            : m
+    );
+
+    // Check if round is complete
+    const currentRoundMatches = updatedMatches.filter(m => m.round === cup.currentRound);
+    const allPlayed = currentRoundMatches.every(m => m.isPlayed);
+
+    let newRound = cup.currentRound;
+    let newWinnerId = cup.winnerId;
+
+    if (allPlayed) {
+        const winners = currentRoundMatches.map(m => m.winnerId!);
+
+        if (cup.currentRound === 'QUARTER') {
+            // Generate Semi Finals
+            const semis: EuropeanCupMatch[] = [
+                { id: uuid(), round: 'SEMI', homeTeamId: winners[0], awayTeamId: winners[1], homeScore: 0, awayScore: 0, isPlayed: false },
+                { id: uuid(), round: 'SEMI', homeTeamId: winners[2], awayTeamId: winners[3], homeScore: 0, awayScore: 0, isPlayed: false }
+            ];
+            updatedMatches.push(...semis);
+            newRound = 'SEMI';
+        } else if (cup.currentRound === 'SEMI') {
+            // Generate Final
+            const final: EuropeanCupMatch = {
+                id: uuid(), round: 'FINAL', homeTeamId: winners[0], awayTeamId: winners[1], homeScore: 0, awayScore: 0, isPlayed: false
+            };
+            updatedMatches.push(final);
+            newRound = 'FINAL';
+        } else if (cup.currentRound === 'FINAL') {
+            newRound = 'COMPLETE';
+            newWinnerId = winners[0];
+        }
+    }
+
+    return {
+        ...cup,
+        matches: updatedMatches,
+        currentRound: newRound,
+        winnerId: newWinnerId
+    };
+};
+
+export const simulateAIEuropeanCupMatches = (cup: EuropeanCup, teams: Team[], players: Player[], userTeamId: string): EuropeanCup => {
+    // Simulate all AI vs AI matches in current round
+    let updatedCup = { ...cup };
+
+    const currentRoundMatches = cup.matches.filter(m =>
+        m.round === cup.currentRound &&
+        !m.isPlayed &&
+        m.homeTeamId !== userTeamId &&
+        m.awayTeamId !== userTeamId
+    );
+
+    currentRoundMatches.forEach(match => {
+        const homeTeam = teams.find(t => t.id === match.homeTeamId);
+        const awayTeam = teams.find(t => t.id === match.awayTeamId);
+        if (!homeTeam || !awayTeam) return;
+
+        const homePlayers = players.filter(p => p.teamId === match.homeTeamId);
+        const awayPlayers = players.filter(p => p.teamId === match.awayTeamId);
+
+        updatedCup = simulateEuropeanCupMatch(updatedCup, match.id, homeTeam, awayTeam, homePlayers, awayPlayers);
+    });
+
+    return updatedCup;
+};
+

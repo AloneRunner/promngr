@@ -1,0 +1,240 @@
+RANK	OYUNCU	UYR	TAKIM	POZ	GEN	HIZ	ŞUT	PAS	DRİ	DEF	FİZ
+34	Lautaro Martínez	Arjantin	Lombardia FC	SNT	88	81	88	75	84	51	83
+47	Alessandro Bastoni	İtalya	Lombardia FC	STP	87	74	46	75	76	88	82
+51	Kevin De Bruyne	Belçika	SSC Napoli	MO	87	66	83	92	84	65	72
+58	Yann Sommer	İsviçre	Lombardia FC	KL	87	83	82	85	89	50	87
+70	Mike Maignan	Fransa	Milano FC	KL	87	84	83	85	88	64	84
+77	Nicolò Barella	İtalya	Lombardia FC	MO	87	80	78	84	86	81	76
+87	Paulo Dybala	Arjantin	AS Roma	MOO	86	80	85	84	87	41	64
+93	Hakan Çalhanoğlu	Türkiye	Lombardia FC	MDO	86	71	81	87	82	81	73
+107	Federico Dimarco	İtalya	Lombardia FC	SLB	85	80	78	84	82	79	77
+108	Scott McTominay	İskoçya	SSC Napoli	MO	85	76	82	77	80	80	85
+127	Marcus Thuram	Fransa	Lombardia FC	SNT	85	86	83	76	82	50	80
+133	De Gea	İspanya	Fiorentina	KL	85	85	78	71	87	46	84
+157	Bremer	Brezilya	Juventus	STP	85	82	50	58	66	86	80
+174	Denzel Dumfries	Hollanda	Lombardia FC	SĞB	84	84	70	75	79	79	84
+197	Mattia Zaccagni	İtalya	Latium	SLO	84	88	78	77	87	57	66
+209	Manuel Locatelli	İtalya	Juventus	MDO	84	63	69	80	76	81	78
+210	Christian Pulisic	Amerika Birleşik Devletleri	Milano FC	SĞK	84	88	82	80	86	46	65
+215	Marco Carnesecchi	İtalya	Bergamo Calcio	KL	84	86	83	71	86	30	85
+217	Rafael Leão	Portekiz	Milano FC	SLK	84	93	78	80	86	28	75
+219	Romelu Lukaku	Belçika	SSC Napoli	SNT	84	79	82	75	75	41	84
+224	Ademola Lookman	Nijerya	Bergamo Calcio	SNT	84	86	84	73	88	32	67
+231	Francesco Acerbi	İtalya	Lombardia FC	STP	84	57	50	65	65	87	81
+232	Stefan de Vrij	Hollanda	Lombardia FC	STP	84	62	41	68	69	86	74
+234	Adrien Rabiot	Fransa	Milano FC	MOO	83	81	79	81	80	77	84
+237	Henrikh Mkhitaryan	Ermenistan	Lombardia FC	MO	83	77	78	82	83	72	75
+241	Giovanni Di Lorenzo	İtalya	SSC Napoli	SĞB	83	84	72	73	77	79	80
+267	Stanislav Lobotka	Slovakya	SSC Napoli	MO	83	71	69	80	82	76	71
+273	Luka Modrić	Hırvatistan	Milano FC	MO	83	68	74	86	86	70	62
+283	Loïs Openda	Belçika	Juventus	SNT	83	95	81	69	81	31	80
+295	Artem Dovbyk	Ukrayna	AS Roma	SNT	83	83	84	68	78	34	79
+299	Moise Kean	İtalya	Fiorentina	SNT	83	86	82	58	81	40	74
+309	Gianluca Mancini	İtalya	AS Roma	STP	83	70	50	57	64	85	82
+310	Amir Rrahmani	Kosova	SSC Napoli	STP	83	69	51	60	63	84	78
+323	André-Franck Zambo Anguissa	Kamerun	SSC Napoli	MO	82	75	75	75	79	79	85
+324	Éderson	Brezilya	Bergamo Calcio	MO	82	78	72	77	80	80	81
+334	Mile Svilar	Sırbistan	AS Roma	KL	82	80	80	77	85	58	82
+341	Mattéo Guendouzi	Fransa	Latium	MDO	82	72	73	80	80	77	77
+353	Ivan Provedel	İtalya	Latium	KL	82	83	79	80	84	42	83
+365	Alex Meret	İtalya	SSC Napoli	KL	82	81	79	74	85	44	84
+379	Riccardo Orsolini	İtalya	Bologna	SĞO	82	79	81	79	83	49	67
+385	Charles De Ketelaere	Belçika	Bergamo Calcio	MOO	82	70	79	80	83	56	68
+405	Domenico Berardi	İtalya	Sassuolo	SĞK	82	82	80	79	84	35	68
+408	Manuel Akanji	İsviçre	Lombardia FC	STP	82	74	48	69	73	82	81
+409	Jonathan David	Kanada	Juventus	SNT	82	81	82	71	80	34	78
+420	Dušan Vlahović	Sırbistan	Juventus	SNT	82	78	84	69	77	29	82
+430	Duván Zapata	Kolombiya	Torino	SNT	82	74	81	64	77	35	82
+436	Alessandro Buongiorno	İtalya	SSC Napoli	STP	82	69	45	67	65	84	79
+448	Alessio Romagnoli	İtalya	Latium	STP	82	64	40	55	69	84	80
+450	Khéphren Thuram	Fransa	Juventus	MO	81	78	76	77	80	81	81
+454	Filip Kostić	Sırbistan	Juventus	SLO	81	82	76	81	80	70	77
+459	Davide Frattesi	İtalya	Lombardia FC	MO	81	82	77	78	82	73	72
+461	Michele Di Gregorio	İtalya	Juventus	KL	81	82	78	79	85	56	83
+463	Carlos Augusto	Brezilya	Lombardia FC	SLB	81	78	72	77	79	79	76
+464	Miguel Gutiérrez	İspanya	SSC Napoli	SLB	81	81	71	79	81	76	73
+466	Teun Koopmeiners	Hollanda	Juventus	MOO	81	70	79	83	78	75	75
+482	Marten de Roon	Hollanda	Bergamo Calcio	MO	81	61	74	77	76	83	80
+498	Youssouf Fofana	Fransa	Milano FC	MDO	81	68	68	75	78	79	77
+523	Matteo Darmian	İtalya	Lombardia FC	SĞB	81	71	62	74	76	81	71
+524	Matteo Politano	İtalya	SSC Napoli	SĞK	81	80	78	80	83	59	55
+527	Remo Freuler	İsviçre	Bologna	MDO	81	58	72	76	77	77	74
+540	David Neres	Brezilya	SSC Napoli	SLK	81	86	76	75	86	46	61
+541	Evan Ndicka	Fildişi Sahili	AS Roma	STP	81	74	53	69	69	81	82
+545	Wladimiro Falcone	İtalya	Lecce	KL	81	83	81	75	84	27	76
+548	Morata	İspanya	Como	SNT	81	78	81	74	80	31	78
+557	Christopher Nkunku	Fransa	Milano FC	MOO	81	77	79	80	82	40	59
+567	Fikayo Tomori	İngiltere	Milano FC	STP	81	81	40	60	67	82	78
+571	Edin Džeko	Bosna Hersek	Fiorentina	SNT	81	55	82	74	77	40	72
+579	Ruben Loftus-Cheek	İngiltere	Milano FC	MO	80	81	76	79	80	76	80
+589	Lorenzo Pellegrini	İtalya	AS Roma	MOO	80	75	77	80	80	73	73
+610	Robin Gosens	Almanya	Fiorentina	SLB	80	72	74	73	76	77	77
+615	Mario Pašalić	Hırvatistan	Bergamo Calcio	MO	80	69	78	77	81	67	76
+626	Piotr Zieliński	Polonya	Lombardia FC	MO	80	76	76	80	82	70	59
+638	Bryan Cristante	İtalya	AS Roma	MO	80	52	74	78	75	78	81
+660	Noa Lang	Hollanda	SSC Napoli	SLK	80	80	77	73	84	50	68
+678	Pierre Kalulu	Fransa	Juventus	STP	80	80	53	68	70	81	76
+679	Valentin Castellanos	Arjantin	Latium	SNT	80	75	80	71	81	45	75
+683	Boulaye Dia	Senegal	Latium	SNT	80	84	81	67	78	43	73
+684	Mario Hermoso	İspanya	AS Roma	STP	80	72	49	73	71	80	79
+707	Armand Laurienté	Fransa	Sassuolo	SLK	80	91	77	74	83	36	57
+729	Odilon Kossounou	Fildişi Sahili	Bergamo Calcio	STP	80	80	32	64	67	81	78
+735	Federico Gatti	İtalya	Juventus	STP	80	76	42	53	65	81	80
+752	Kouadio Manu Koné	Fransa	AS Roma	MO	79	74	74	75	81	74	82
+768	Andrea Cambiaso	İtalya	Juventus	SLB	79	78	70	77	79	75	70
+770	Davide Zappacosta	İtalya	Bergamo Calcio	SLO	79	76	73	77	77	76	69
+786	Angeliño	İspanya	AS Roma	SLB	79	69	70	81	80	74	69
+1880	Jhon Lucumí	Kolombiya	Bologna	STP	76	65	38	62	61	77	78
+1892	Thijs Dallinga	Hollanda	Bologna	SNT	76	71	76	65	71	30	61
+1917	Unai Núñez	İspanya	Hellas Verona	STP	76	66	24	51	51	76	77
+1918	Guillermo Maripán	Şili	Torino	STP	76	33	42	58	53	78	78
+1929	Michael Folorunsho	İtalya	Cagliari	MOO	75	73	76	73	74	71	76
+1936	Andy Diouf	Fransa	Lombardia FC	MO	75	77	68	71	78	67	76
+1943	Mitchel Bakker	Hollanda	Bergamo Calcio	SLB	75	79	63	69	72	71	81
+1970	Kristian Thorstvedt	Norveç	Sassuolo	MO	75	61	71	74	73	67	82
+1972	Emanuele Valeri	İtalya	Parma	SLB	75	74	70	73	74	71	66
+1976	Nikola Moro	Hırvatistan	Bologna	MDO	75	66	72	74	73	70	72
+1978	Fabiano Parisi	İtalya	Fiorentina	SLB	75	75	67	70	76	72	67
+1997	Hans Nicolussi Caviglia	İtalya	Fiorentina	MDO	75	66	68	77	75	69	70
+2003	Alberto Moreno	İspanya	Como	SLB	75	75	69	71	74	69	65
+2059	Hernani	Brezilya	Parma	MDO	75	58	70	71	72	73	72
+2070	Lazar Samardžić	Sırbistan	Bergamo Calcio	MO	75	69	72	75	79	60	60
+2082	Jesper Karlström	İsveç	Udinese	MDO	75	64	57	72	71	71	78
+2087	Enrico Delprato	İtalya	Parma	SĞB	75	81	54	63	69	72	74
+2095	Sandi Lovrič	Slovenya	Udinese	MO	75	62	66	75	73	70	66
+2116	Nicolò Casale	İtalya	Bologna	STP	75	73	53	66	67	76	75
+2122	Mërgim Vojvoda	Kosova	Como	SĞB	75	68	54	73	73	73	68
+2146	Antonino Gallo	İtalya	Lecce	SLB	75	78	52	70	70	70	67
+2150	Senny Mayulu	Fransa	PSG	MO	75	75	68	73	78	57	55
+2160	Franco Israel	Uruguay	Torino	KL	75	79	71	71	80	31	74
+2192	Jonathan Rowe	İngiltere	Bologna	SLO	75	84	73	67	77	36	65
+2195	M'Bala Nzola	Angola	Pisa	SNT	75	85	72	62	73	29	80
+2200	Federico Baschirotto	İtalya	Cremonese	STP	75	69	53	60	57	75	86
+2201	Patric	İspanya	Latium	STP	75	63	53	68	70	76	69
+2208	Sebastiano Esposito	İtalya	Cagliari	SNT	75	75	76	74	77	35	62
+2226	Giovanni Simeone	Arjantin	Torino	SNT	75	71	77	63	73	41	72
+2257	Zé Pedro	Portekiz	Cagliari	STP	75	65	52	64	62	75	75
+2259	Vitinha	Portekiz	Genoa	SNT	75	73	75	63	75	32	74
+2271	Josep Martínez	İspanya	Lombardia FC	KL	75	75	71	67	74	26	76
+2282	Tommaso Baldanzi	İtalya	AS Roma	MOO	75	76	71	73	78	41	48
+2289	Patrick Cutrone	İtalya	Parma	SNT	75	73	74	64	76	29	69
+2300	Riccardo Sottil	İtalya	Lecce	SLO	75	88	66	69	77	34	49
+2301	Roberto Piccoli	İtalya	Fiorentina	SNT	75	73	75	55	67	34	79
+2304	Victor Nelsson	Danimarka	Hellas Verona	STP	75	61	43	60	66	75	77
+2348	Andrea Pinamonti	İtalya	Sassuolo	SNT	75	70	76	56	71	27	69
+2354	Nikola Krstović	Karadağ	Bergamo Calcio	SNT	75	66	75	56	69	25	75
+2358	Johan Vásquez	Meksika	Genoa	STP	75	61	33	58	60	76	75
+2371	Abdoulaye Ndiaye	Senegal	Parma	STP	75	67	31	51	51	75	75
+2377	Daniele Rugani	İtalya	Juventus	STP	75	34	40	54	60	78	70
+2379	Yunus Musah	Amerika Birleşik Devletleri	Bergamo Calcio	MO	74	88	69	71	78	70	76
+2381	Tommaso Pobega	İtalya	Bologna	MO	74	74	76	70	75	74	74
+2390	Maxwel Cornet	Fildişi Sahili	Genoa	SLO	74	85	74	70	75	67	65
+2400	Simon Sohm	İsviçre	Fiorentina	MO	74	75	69	70	71	70	80
+2403	Lucas Da Cunha	Fransa	Como	MDO	74	77	71	73	79	71	63
+2408	Adrián Bernabé	İspanya	Parma	MDO	74	77	70	75	79	69	63
+2421	Nadir Zortea	İtalya	Bologna	SĞO	74	77	69	68	74	68	74
+2429	Emil Holm	İsveç	Bologna	SĞB	74	83	61	67	71	67	80
+2433	Adrien Tameze	Fransa	Torino	MDO	74	75	65	66	76	74	71
+2434	Jurgen Ekkelenkamp	Hollanda	Udinese	MO	74	70	69	73	73	67	75
+2449	Michel Aebischer	İsviçre	Pisa	MO	74	66	67	72	75	74	70
+2452	Mattéo Tramoni	Fransa	Pisa	MOO	74	89	70	70	77	53	65
+2459	Albert Grønbæk	Danimarka	Genoa	MOO	74	75	68	72	77	62	69
+2472	Cesare Casadei	İtalya	Torino	MO	74	66	70	74	72	69	71
+2479	Zion Suzuki	Japonya	Parma	KL	74	73	72	71	76	56	73
+2482	Petar Sučić	Hırvatistan	Lombardia FC	MO	74	69	68	72	77	61	74
+2488	Edoardo Bove	İtalya	AS Roma	MO	74	66	69	68	75	76	66
+2498	Fabio Miretti	İtalya	Juventus	MO	74	73	60	75	76	66	68
+2499	Gaetano Oristanio	İtalya	Parma	MOO	74	85	72	69	77	51	64
+2502	Aster Vranckx	Belçika	Sassuolo	MO	74	57	65	71	76	72	76
+2521	Pierluigi Gollini	İtalya	AS Roma	KL	74	74	72	71	76	47	74
+2529	Zakaria Aboukhlal	Fas	Torino	MOO	74	82	72	69	75	41	75
+2536	Lassana Coulibaly	Mali	Lecce	MDO	74	69	58	69	72	72	73
+2559	Giovanni Fabbian	İtalya	Bologna	MO	74	67	72	72	74	67	60
+2572	Gabriele Zappa	İtalya	Cagliari	SĞB	74	75	62	65	69	69	71
+2580	Franco Vázquez	Arjantin	Cremonese	SNT	74	47	77	77	77	56	76
+2611	Kristjan Asllani	Arnavutluk	Torino	MDO	74	65	61	74	74	70	64
+2628	Daniel Boloca	Romanya	Sassuolo	MO	74	59	61	70	74	67	76
+2638	Devyne Rensch	Hollanda	AS Roma	SĞB	74	74	56	67	71	72	66
+2660	Stefano Turati	İtalya	Sassuolo	KL	74	75	71	71	78	35	74
+2661	Tijjani Noslin	Hollanda	Latium	SNT	74	78	73	66	77	43	67
+2721	Aarón Martín	İspanya	Genoa	SLB	74	59	54	76	75	71	64
+2739	Luca Pellegrini	İtalya	Latium	SLB	74	71	54	66	76	72	58
+2741	Daniel Maldini	İtalya	Bergamo Calcio	MOO	74	70	70	75	76	42	64
+2745	Gianluca Gaetano	İtalya	Cagliari	MOO	74	64	72	73	76	51	60
+2755	Billy Gilmour	İskoçya	SSC Napoli	MO	74	60	58	74	76	69	58
+2776	Lloyd Kelly	İngiltere	Juventus	STP	74	67	40	65	67	73	79
+2785	Christos Mandas	Yunanistan	Latium	KL	74	76	71	72	78	23	70
+2790	Maduka Okoye	Nijerya	Udinese	KL	74	73	72	68	78	24	74
+2801	Juan David Cabal	Kolombiya	Juventus	SLB	74	72	38	69	65	74	69
+2841	Jesús Rodríguez	İspanya	Como	SLO	74	80	68	69	77	32	54
+2845	Adam Masina	Fas	Torino	STP	74	62	42	66	68	77	65
+2860	Martin Vitík	Çek Cumhuriyeti	Bologna	STP	74	73	39	56	62	74	75
+2864	David Okereke	Nijerya	Cremonese	SNT	74	83	71	58	75	26	65
+2867	Koni De Winter	Belçika	Milano FC	STP	74	67	40	58	66	75	72
+2896	Gift Orban	Nijerya	Hellas Verona	SNT	74	76	79	62	73	18	62
+2922	Ardian Ismajli	Arnavutluk	Torino	STP	74	67	30	49	62	78	70
+2924	Juan Jesus	Brezilya	SSC Napoli	STP	74	58	33	53	61	77	73
+2932	Marin Pongračić	Hırvatistan	Fiorentina	STP	74	61	26	52	62	74	76
+2934	Kialonda Gaspar	Angola	Lecce	STP	74	64	30	43	54	74	84
+2940	Pablo Marí	İspanya	Fiorentina	STP	74	52	40	49	53	76	74
+2945	Pietro Comuzzo	İtalya	Fiorentina	STP	74	57	27	50	57	77	68
+2953	Fisayo Dele-Bashiru	Nijerya	Latium	MOO	73	85	72	65	76	66	76
+2968	Oliver Sørensen	Danimarka	Parma	MO	73	73	68	69	71	68	80
+2979	Charalampos Lykogiannis	Yunanistan	Bologna	SLB	73	77	68	72	66	69	73
+3006	Mandela Keita	Belçika	Parma	MDO	73	77	56	66	75	71	76
+3019	Kingsley Ehizibue	Nijerya	Udinese	SĞB	73	88	57	65	69	66	74
+3027	Alessio Zerbin	İtalya	Cremonese	SĞO	73	75	67	69	73	69	65
+10286	Mariano Troilo	Arjantin	Parma	STP	66	43	29	43	45	64	76
+10531	Tjaš Begić	Slovenya	Parma	MO	65	79	61	64	69	44	54
+10600	Mathias Løvik	Norveç	Parma	SLB	65	81	39	57	64	60	65
+10696	Laurs Skjellerup	Danimarka	Sassuolo	SNT	65	81	62	56	61	35	66
+10708	Daniele Padelli	İtalya	Udinese	KL	65	62	65	56	62	45	70
+10821	Antonio Vergara	İtalya	SSC Napoli	SĞK	65	66	63	63	66	38	59
+10833	Seydou Fini	İtalya	Genoa	SĞO	65	78	57	56	67	31	65
+10921	Corrie Ndaba	İrlanda Cumhuriyeti	Lecce	SLB	65	70	27	54	58	62	78
+10936	Zachary Athekame	İsviçre	Milano FC	SĞB	65	82	28	50	62	59	68
+10975	Alieu Njie	İsveç	Torino	SNT	65	77	65	55	71	24	54
+11010	Edoardo Corvi	İtalya	Parma	KL	65	66	63	65	68	25	58
+11028	Luca Lipani	İtalya	Sassuolo	MO	65	54	44	63	63	62	58
+11191	David Odogu	Almanya	Milano FC	STP	65	67	32	45	52	65	67
+11198	Francesco Camarda	İtalya	Lecce	SNT	65	67	66	51	66	24	54
+11253	Juan Rodríguez	Uruguay	Cagliari	STP	65	57	39	42	42	67	72
+11293	Jan Ziółkowski	Polonya	AS Roma	STP	65	62	28	44	46	64	67
+11317	Mateus Lusuardi	Brezilya	Pisa	STP	65	52	26	44	50	65	63
+11757	Mauro Vigorito	İtalya	Como	KL	64	63	63	60	65	39	65
+11894	Radoslaw Zelezny	Polonya	AS Roma	KL	64	63	68	60	64	28	64
+12207	Francesco Folino	İtalya	Cremonese	STP	64	61	36	47	44	63	73
+12281	Gennaro Borrelli	İtalya	Cagliari	SNT	64	51	63	45	59	24	69
+12317	Jacobo Ramón	İspanya	Como	STP	64	57	22	45	48	65	62
+12703	Mihai Popa	Romanya	Torino	KL	63	63	62	60	65	41	59
+12707	Emirhan İlkhan	Türkiye	Torino	MO	63	66	58	63	70	50	43
+12956	Buba Sangaré	İspanya	AS Roma	SĞB	63	63	44	56	62	61	51
+13136	Sebastian Otoa	Danimarka	Genoa	STP	63	63	34	48	50	63	64
+13461	Daniel Oyegoke	İngiltere	Hellas Verona	STP	62	76	42	52	60	62	60
+13475	Daniele Sommariva	İtalya	Genoa	KL	62	64	56	62	68	42	59
+13574	Ali Bina Dembélé	Fransa	Torino	SĞB	62	67	42	55	61	60	60
+13626	İsak Vural	Türkiye	Pisa	MO	62	61	57	62	64	47	50
+13667	Noham Kamara	Fransa	PSG	STP	62	63	44	56	58	63	55
+13675	Davide Bartesaghi	İtalya	Milano FC	SLB	62	54	43	56	59	62	65
+13739	Renato Marin	İtalya	PSG	KL	62	63	61	65	61	24	60
+13761	Francesco Rossi	İtalya	Bergamo Calcio	KL	62	63	62	63	62	22	60
+13802	Gioele Zacchi	İtalya	Sassuolo	KL	62	61	62	59	62	24	61
+13817	Vasilije Adžić	Karadağ	Juventus	MOO	62	67	55	54	66	35	51
+13826	Filippo Rinaldi	İtalya	Parma	KL	62	61	62	62	65	22	56
+14061	Coli Saco	Mali	SSC Napoli	MO	61	61	57	60	61	61	68
+14161	Patrizio Masini	İtalya	Genoa	MO	61	68	51	60	63	55	57
+14319	Alessio Furlanetto	İtalya	Latium	KL	61	63	60	58	65	39	55
+14338	Marco Palestra	İtalya	Cagliari	SĞO	61	66	51	57	62	47	56
+14421	Jasper Samooja	Finlandiya	Lecce	KL	61	62	65	61	59	26	60
+14548	Lorenzo Torriani	İtalya	Milano FC	KL	61	59	54	66	62	20	61
+14639	Jeff Ekhator	İtalya	Genoa	SNT	61	67	60	46	64	19	54
+14644	Dario Sits	Letonya	Parma	SNT	61	53	62	48	56	28	63
+14950	Mert Durmush	Bulgaristan	Pisa	SĞK	60	63	68	57	60	29	58
+15159	Lapo Nava	İtalya	Cremonese	KL	60	58	55	65	58	19	63
+15452	Sergiu Perciun	Moldova	Torino	MO	59	68	49	57	61	47	51
+15620	Nicolò Cavuoti	İtalya	Cagliari	MOO	59	68	49	59	64	30	47
+15652	Giuseppe Ciocci	İtalya	Cagliari	KL	59	61	55	53	64	24	57
+16223	Matteo Palma	Almanya	Udinese	STP	58	52	28	40	39	59	57
+16847	Junior Ajayi	Fildişi Sahili	Hellas Verona	SNT	56	66	56	49	58	17	49
+16871	Tommaso Gabellini	İtalya	Torino	SNT	56	57	57	48	56	20	50
+17553	Sascha Britschgi	İsviçre	Parma	SĞB	52	67	27	31	47	49	56

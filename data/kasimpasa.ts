@@ -2,7 +2,7 @@
 export const KASIMPASA_SQUAD = [
   {
     ad: "Haris Hajradinović",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Bosna Hersek",
     mevki: "MO",
     reyting: 76,
@@ -13,7 +13,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Cláudio Winck",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 74,
@@ -24,7 +24,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Mamadou Fall",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Senegal",
     mevki: "SĞO",
     reyting: 73,
@@ -35,7 +35,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Andreas Gianniotis",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Yunanistan",
     mevki: "KL",
     reyting: 73,
@@ -46,7 +46,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Attila Szalai",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Macaristan",
     mevki: "STP",
     reyting: 70,
@@ -57,7 +57,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Godfried Frimpong",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Hollanda",
     mevki: "SLB",
     reyting: 70,
@@ -68,7 +68,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Mortadha Ben Ouanes",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Tunus",
     mevki: "SLB",
     reyting: 69,
@@ -79,7 +79,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Jhon Espinoza",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Ekvador",
     mevki: "SĞB",
     reyting: 67,
@@ -90,7 +90,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Kubilay Kanatsızkuş",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "SNT",
     reyting: 67,
@@ -101,7 +101,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Loret Sadiku",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Arnavutluk",
     mevki: "MDO",
     reyting: 67,
@@ -112,7 +112,7 @@ export const KASIMPASA_SQUAD = [
   },
   {
     ad: "Nicholas Opoku",
-    takim: "Kasımpaşa",
+    takim: "Kasimpasa Navy",
     uyruk: "Gana",
     mevki: "STP",
     reyting: 67,

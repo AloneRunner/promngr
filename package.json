@@ -1,5 +1,5 @@
 {
-  "name": "10",
+  "name": "pocket-football-manager",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,9 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "lucide-react": "^0.556.0",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "lucide-react": "^0.556.0"
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

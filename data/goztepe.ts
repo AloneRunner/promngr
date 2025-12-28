@@ -2,7 +2,7 @@
 export const GOZTEPE_SQUAD = [
   {
     ad: "Mateusz Lis",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Polonya",
     mevki: "KL",
     reyting: 73,
@@ -13,7 +13,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Anthony Dennis",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Nijerya",
     mevki: "MO",
     reyting: 70,
@@ -24,7 +24,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Efkan Bekiroğlu",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 70,
@@ -35,7 +35,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Héliton",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 68,
@@ -46,7 +46,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "İsmail Köybaşı",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 67,
@@ -57,7 +57,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Ahmed Ildız",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 67,
@@ -68,7 +68,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Taha Altıkardeş",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -79,7 +79,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Janderson",
-    takim: "Göztepe",
+    takim: "Goztepe Goz",
     uyruk: "Brezilya",
     mevki: "SNT",
     reyting: 67,

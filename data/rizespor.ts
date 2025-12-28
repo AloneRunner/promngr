@@ -2,7 +2,7 @@
 export const RIZESPOR_SQUAD = [
   {
     ad: "Qazim Laçi",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Arnavutluk",
     mevki: "MO",
     reyting: 74,
@@ -13,7 +13,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Ali Sowe",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Gambiya",
     mevki: "SNT",
     reyting: 74,
@@ -24,7 +24,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Yahia Fofana",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Fildişi Sahili",
     mevki: "KL",
     reyting: 76,
@@ -35,7 +35,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Casper Højer",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Danimarka",
     mevki: "SLB",
     reyting: 73,
@@ -46,7 +46,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Modibo Sagnan",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Mali",
     mevki: "STP",
     reyting: 73,
@@ -57,7 +57,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Valentin Mihăilă",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Romanya",
     mevki: "SLO",
     reyting: 72,
@@ -68,7 +68,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Taha Şahin",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 71,
@@ -79,7 +79,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Václav Jurečka",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SNT",
     reyting: 70,
@@ -90,7 +90,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Ibrahim Olawoyin",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Nijerya",
     mevki: "MOO",
     reyting: 70,
@@ -101,7 +101,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Samet Akaydın",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 70,
@@ -112,7 +112,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Khusniddin Alikulov",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Özbekistan",
     mevki: "STP",
     reyting: 68,
@@ -123,7 +123,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Attila Mocsi",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Macaristan",
     mevki: "STP",
     reyting: 68,
@@ -134,7 +134,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Halil İbrahim Dervişoğlu",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SNT",
     reyting: 67,
@@ -145,7 +145,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Altin Zeqiri",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Kosova",
     mevki: "SLO",
     reyting: 67,
@@ -156,7 +156,7 @@ export const RIZESPOR_SQUAD = [
   },
   {
     ad: "Dal Varešanović",
-    takim: "Çaykur Rizespor",
+    takim: "Rize Tea",
     uyruk: "Bosna Hersek",
     mevki: "MOO",
     reyting: 67,

@@ -1,0 +1,167 @@
+export const PARIS_SAINT_SQUAD = [
+    {
+        ad: "Ousmano Dembele",
+        takim: "Paris Saint",
+        uyruk: "Fransa",
+        mevki: "SNT",
+        reyting: 90,
+        yas: 28,
+        ana_ozellikler: { hiz: 91, sut: 88, pas: 83, dribbling: 93, defans: 50, fizik: 69 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Achraf Hakim",
+        takim: "Paris Saint",
+        uyruk: "Fas",
+        mevki: "SĞB",
+        reyting: 89,
+        yas: 26,
+        ana_ozellikler: { hiz: 92, sut: 79, pas: 82, dribbling: 83, defans: 82, fizik: 79 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Vitor Vitanha",
+        takim: "Paris Saint",
+        uyruk: "Portekiz",
+        mevki: "MO",
+        reyting: 89,
+        yas: 25,
+        ana_ozellikler: { hiz: 72, sut: 80, pas: 86, dribbling: 90, defans: 75, fizik: 70 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Khvicha Kava",
+        takim: "Paris Saint",
+        uyruk: "Gürcistan",
+        mevki: "SLK",
+        reyting: 87,
+        yas: 24,
+        ana_ozellikler: { hiz: 86, sut: 80, pas: 83, dribbling: 88, defans: 58, fizik: 78 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Marco Marquinhos",
+        takim: "Paris Saint",
+        uyruk: "Brezilya",
+        mevki: "STP",
+        reyting: 87,
+        yas: 31,
+        ana_ozellikler: { hiz: 78, sut: 56, pas: 75, dribbling: 74, defans: 89, fizik: 80 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Nuno Mendez",
+        takim: "Paris Saint",
+        uyruk: "Portekiz",
+        mevki: "SLB",
+        reyting: 86,
+        yas: 23,
+        ana_ozellikler: { hiz: 95, sut: 65, pas: 76, dribbling: 82, defans: 80, fizik: 77 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Willian Pacho",
+        takim: "Paris Saint",
+        uyruk: "Ekvador",
+        mevki: "STP",
+        reyting: 86,
+        yas: 23,
+        ana_ozellikler: { hiz: 80, sut: 34, pas: 62, dribbling: 62, defans: 86, fizik: 86 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Joao Nevil",
+        takim: "Paris Saint",
+        uyruk: "Portekiz",
+        mevki: "MO",
+        reyting: 85,
+        yas: 20,
+        ana_ozellikler: { hiz: 74, sut: 69, pas: 80, dribbling: 84, defans: 82, fizik: 83 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Desire Doue",
+        takim: "Paris Saint",
+        uyruk: "Fransa",
+        mevki: "SĞK",
+        reyting: 85,
+        yas: 20,
+        ana_ozellikler: { hiz: 83, sut: 80, pas: 77, dribbling: 90, defans: 55, fizik: 74 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Fabian Ruiz",
+        takim: "Paris Saint",
+        uyruk: "İspanya",
+        mevki: "MO",
+        reyting: 85,
+        yas: 29,
+        ana_ozellikler: { hiz: 61, sut: 77, pas: 80, dribbling: 81, defans: 75, fizik: 72 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Bradley Barc",
+        takim: "Paris Saint",
+        uyruk: "Fransa",
+        mevki: "SLK",
+        reyting: 84,
+        yas: 22,
+        ana_ozellikler: { hiz: 90, sut: 77, pas: 78, dribbling: 84, defans: 39, fizik: 66 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Lucas Cheval",
+        takim: "Paris Saint",
+        uyruk: "Fransa",
+        mevki: "KL",
+        reyting: 83,
+        yas: 23,
+        ana_ozellikler: { hiz: 84, sut: 79, pas: 73, dribbling: 86, defans: 50, fizik: 80 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Lucas Hernandez",
+        takim: "Paris Saint",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 81,
+        yas: 29,
+        ana_ozellikler: { hiz: 71, sut: 54, pas: 72, dribbling: 70, defans: 82, fizik: 77 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Goncalo Ramos",
+        takim: "Paris Saint",
+        uyruk: "Portekiz",
+        mevki: "SNT",
+        reyting: 80,
+        yas: 23,
+        ana_ozellikler: { hiz: 73, sut: 79, pas: 64, dribbling: 77, defans: 48, fizik: 79 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },,
+    {
+        ad: "Illia Zabarnyi",
+        takim: "Paris Saint",
+        uyruk: "Ukrayna",
+        mevki: "STP",
+        reyting: 79,
+        yas: 22,
+        ana_ozellikler: { hiz: 80, sut: 37, pas: 64, dribbling: 64, defans: 80, fizik: 78 },
+        detaylar: {},
+        oyun_tarzlari: []
+    },
+];

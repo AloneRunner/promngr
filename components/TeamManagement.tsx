@@ -61,7 +61,9 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, selectedPlayerId, onSelec
                 }`}
         >
             <div className="flex items-center gap-3 flex-1" onClick={() => onSelect(player)}>
-                <div className="w-8 text-center text-xs font-bold text-slate-500 bg-slate-900 rounded py-1">{player.position}</div>
+                <div className="w-14 text-center text-[10px] font-bold text-slate-500 bg-slate-900 rounded py-1">
+                    <span className="text-emerald-400">{player.jerseyNumber ?? '-'}</span> | {player.position}
+                </div>
                 <PlayerAvatar visual={player.visual} size="sm" />
                 <div>
                     <div className={`font-bold text-sm ${selectedPlayerId === player.id ? 'text-white' : 'text-slate-300'} flex items-center gap-1`}>
@@ -290,22 +292,32 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         )}
 
                         {tacticTab === 'IN_POSSESSION' && (
-                            <div className="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
-                                    <select value={team.tactic.width || 'Balanced'} onChange={(e) => handleTacticChange('width', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
-                                        <option value="Narrow">{t.tacticNarrow}</option>
-                                        <option value="Balanced">Balanced</option>
-                                        <option value="Wide">{t.tacticWide}</option>
-                                    </select>
+                            <div className="space-y-2">
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
+                                        <select value={team.tactic.width || 'Balanced'} onChange={(e) => handleTacticChange('width', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
+                                            <option value="Narrow">{t.tacticNarrow}</option>
+                                            <option value="Balanced">Balanced</option>
+                                            <option value="Wide">{t.tacticWide}</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
+                                        <select value={team.tactic.passingStyle || 'Mixed'} onChange={(e) => handleTacticChange('passingStyle', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
+                                            <option value="Short">{t.tacticShort}</option>
+                                            <option value="Mixed">Mixed</option>
+                                            <option value="Direct">{t.tacticDirect}</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
-                                    <select value={team.tactic.passingStyle || 'Mixed'} onChange={(e) => handleTacticChange('passingStyle', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
-                                        <option value="Short">{t.tacticShort}</option>
-                                        <option value="Mixed">Mixed</option>
-                                        <option value="Direct">{t.tacticDirect}</option>
-                                    </select>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.tempo || 'Tempo'}</label>
+                                    <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
+                                        <button onClick={() => handleTacticChange('tempo', 'Slow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Slow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoSlow || 'Slow'}</button>
+                                        <button onClick={() => handleTacticChange('tempo', 'Normal')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Normal' || !team.tactic.tempo ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>Normal</button>
+                                        <button onClick={() => handleTacticChange('tempo', 'Fast')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Fast' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoFast || 'Fast'}</button>
+                                    </div>
                                 </div>
                             </div>
                         )}
