@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupStatus } from '../types';
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
+import { simulateTick } from '../services/engine';
 
 interface MatchCenterProps {
     match: Match;
@@ -10,7 +10,7 @@ interface MatchCenterProps {
     awayTeam: Team;
     homePlayers: Player[];
     awayPlayers: Player[];
-    onTick: (matchId: string) => void;
+    onSync: (matchId: string, result: any) => void; // REPLACED: onTick -> onSync
     onFinish: (matchId: string) => void;
     onInstantFinish: (matchId: string) => void;
     onSubstitute: (playerInId: string, playerOutId: string) => void;
@@ -109,7 +109,7 @@ const lerpAngle = (start: number, end: number, t: number) => {
 
 export const MatchCenter: React.FC<MatchCenterProps> = ({
     match, homeTeam, awayTeam, homePlayers, awayPlayers,
-    onTick, onFinish, onInstantFinish, onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, onPlayerClick
+    onSync, onFinish, onInstantFinish, onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, onPlayerClick
 }) => {
     const [speed, setSpeed] = useState<number>(1);
     const [viewMode, setViewMode] = useState<'2D' | '2.5D'>('2.5D'); // NEW: View Mode Toggle
@@ -129,6 +129,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const lastTickState = useRef<any>(null);
     const nextTickState = useRef<any>(null);
     const lastTickTime = useRef<number>(0);
+
+    // Offscreen Canvas for Static Pitch (Mobile Optimization)
+    const pitchCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
     // Ball trail history for visual effect
     const ballTrail = useRef<Array<{ x: number, y: number, z: number, age: number }>>([]);
@@ -152,10 +155,21 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
         // Initialize State
         if (match.liveData?.simulation) {
-            const initialState = JSON.parse(JSON.stringify(match.liveData.simulation));
+            // OPTIMIZATION: Removed expensive deep clone
+            // Since we treat simulation state as immutable snapshots from the engine,
+            // we can just reference them or shallow copy if needed.
+            const initialState = match.liveData.simulation;
             lastTickState.current = initialState;
             nextTickState.current = initialState;
             lastTickTime.current = performance.now();
+        }
+
+        // Create Offscreen Canvas
+        if (!pitchCanvasRef.current) {
+            const offscreen = document.createElement('canvas');
+            offscreen.width = CANVAS_W;
+            offscreen.height = CANVAS_H;
+            pitchCanvasRef.current = offscreen;
         }
 
         return () => {
@@ -163,6 +177,16 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
         };
     }, []);
+
+    // Re-draw static pitch when ViewMode changes
+    useEffect(() => {
+        if (pitchCanvasRef.current) {
+            const ctx = pitchCanvasRef.current.getContext('2d');
+            if (ctx) {
+                drawPitch(ctx);
+            }
+        }
+    }, [viewMode]);
 
     // SCREEN WAKE LOCK
     useEffect(() => {
@@ -198,11 +222,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (match.liveData?.simulation) {
             // Push current "next" to "last"
             lastTickState.current = nextTickState.current
-                ? JSON.parse(JSON.stringify(nextTickState.current))
+                ? nextTickState.current // Just move the reference
                 : match.liveData.simulation;
 
-            // Set new "next"
-            nextTickState.current = JSON.parse(JSON.stringify(match.liveData.simulation));
+            // Set new "next" directly from liveData
+            // The simulation engine produces fresh objects, so this is safe.
+            nextTickState.current = match.liveData.simulation;
             lastTickTime.current = performance.now();
         }
 
@@ -219,28 +244,52 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         }
     }, [match.liveData, match.currentMinute, match.homeScore, match.awayScore]); // Update when data changes
 
-    // 3. Logic Loop (Triggers the onTick)
+    // 3. Logic Loop (Decoupled from App.tsx)
     useEffect(() => {
         if (match.isPlayed) {
             setSpeed(0);
             return;
         }
 
-        if (logicTimerRef.current) clearInterval(logicTimerRef.current);
+        if (logicTimerRef.current) window.clearInterval(logicTimerRef.current);
 
         if (speed > 0) {
             // Speed logic: 
-            // 1x = 120ms (Normal)
-            // 2x = 60ms (Fast)
-            // 0.5x = 240ms (Slow)
-            // 4x = 30ms (Super Fast)
-            let ms = 120;
-            if (speed === 2) ms = 60;
-            else if (speed === 0.5) ms = 240;
-            else if (speed === 4) ms = 30;
+            // 1x = 50ms (Matches App.tsx tick rate)
+            // Note: 1x was 120ms purely for visual pace, but engine tick rate matters.
+            // We'll stick to 50ms base tick for consistent physics.
+            let ms = 50;
+            if (speed === 2) ms = 25;
+            else if (speed === 0.5) ms = 100;
+            else if (speed === 4) ms = 12;
 
             logicTimerRef.current = window.setInterval(() => {
-                onTick(match.id);
+                // RUN SIMULATION LOCALLY
+                const result = simulateTick(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
+
+                // Update Local Physics State (No React Render)
+                if (result.simulation) {
+                    // Push current "next" to "last"
+                    lastTickState.current = nextTickState.current
+                        ? nextTickState.current
+                        : result.simulation;
+
+                    nextTickState.current = result.simulation;
+                    lastTickTime.current = performance.now();
+                }
+
+                // SYNC WITH APP ONLY ON CRITICAL EVENTS
+                // 1. Minute changed
+                // 2. Goal Scored (Event type GOAL)
+                // 3. Match ended (90+ min)
+                const shouldSync = result.minuteIncrement ||
+                    (result.event && result.event.type === MatchEventType.GOAL) ||
+                    (match.currentMinute >= 90);
+
+                if (shouldSync) {
+                    onSync(match.id, result);
+                }
+
             }, ms);
         }
     }, [speed, match.isPlayed, match.id]);
@@ -282,8 +331,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         // Clear
         ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
 
-        // Draw Pitch
-        drawPitch(ctx);
+        // Draw Cached Pitch (Fast Copy)
+        if (pitchCanvasRef.current) {
+            ctx.drawImage(pitchCanvasRef.current, 0, 0);
+        } else {
+            // Fallback (should not happen)
+            drawPitch(ctx);
+        }
 
         // Filter Players on Pitch
         const homeStarters = homePlayers.filter(p => p.lineup === 'STARTING');
@@ -886,8 +940,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.font = `bold ${Math.round(10 * scale)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'rgba(0,0,0,0.8)';
-        ctx.shadowBlur = 2;
+        // Removed heavy shadowBlur for performance
+        // ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        // ctx.shadowBlur = 2;
         ctx.fillText(num.toString(), cx, bodyY + 1);
         ctx.shadowBlur = 0;
 
@@ -903,8 +958,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (hasBall || state === 'SPRINT') {
             ctx.font = `bold ${Math.round(9 * scale)}px sans-serif`;
             ctx.fillStyle = '#fff';
-            ctx.shadowColor = '#000';
-            ctx.shadowBlur = 3;
+            // Removed heavy shadowBlur for performance
+            // ctx.shadowColor = '#000';
+            // ctx.shadowBlur = 3; 
+            // interact with text stroke instead for cheaper outline
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.strokeText(name, cx, headY - headRadius - 6);
             ctx.fillText(name, cx, headY - headRadius - 6);
             ctx.shadowBlur = 0;
         }
