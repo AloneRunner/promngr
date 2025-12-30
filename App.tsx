@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup } from './types';
+import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent } from './types';
 import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
@@ -649,7 +649,9 @@ const App: React.FC = () => {
             setPendingMatch(match);
             setShowOpponentPreview(true);
         } else {
-            if (gameState.currentWeek > TOTAL_WEEKS_PER_SEASON) {
+            // Calculate total weeks dynamically from match schedule
+            const maxWeek = Math.max(...gameState.matches.filter(m => !m.isFriendly).map(m => m.week));
+            if (gameState.currentWeek > maxWeek) {
                 prepareSeasonEnd();
             } else {
                 alert(t.noMatches);
@@ -1099,9 +1101,131 @@ const App: React.FC = () => {
         return { ...prevState, matches: newMatches };
     };
 
-    const processMatchTick = useCallback((matchId: string) => {
-        setGameState(prevState => prevState ? executeMatchUpdate(prevState, matchId, false) : null);
-    }, [t]);
+    const handleMatchSync = useCallback((matchId: string, result: any) => {
+        setGameState(prevState => {
+            if (!prevState) return null;
+
+            const matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+            if (matchIndex === -1) return prevState;
+
+            const currentMatch = { ...prevState.matches[matchIndex] };
+
+            // Sync Minute
+            if (result.minuteIncrement) {
+                currentMatch.currentMinute = (currentMatch.currentMinute || 0) + 1;
+            }
+
+            // Sync Stats
+            if (result.stats) {
+                currentMatch.stats = result.stats;
+            }
+
+            // Sync Live Data (Position etc)
+            if (result.simulation) {
+                currentMatch.liveData = {
+                    ballHolderId: result.ballHolderId,
+                    pitchZone: result.pitchZone,
+                    lastActionText: result.actionText,
+                    simulation: result.simulation
+                };
+            }
+
+            // Sync Events (Goals)
+            if (result.event) {
+                result.event.minute = currentMatch.currentMinute;
+                currentMatch.events = [...currentMatch.events, result.event];
+
+                if (result.event.type === MatchEventType.GOAL) {
+                    if (result.event.teamId === currentMatch.homeTeamId) currentMatch.homeScore++;
+                    else currentMatch.awayScore++;
+                }
+            }
+
+            // Handle Full Time (if sync happens at 90+)
+            if (currentMatch.currentMinute >= 90 && !currentMatch.isPlayed) {
+                if (!currentMatch.events.find((e: MatchEvent) => e.type === MatchEventType.FULL_TIME)) {
+                    currentMatch.events.push({ minute: 90, type: MatchEventType.FULL_TIME, description: 'Full Time' });
+                }
+                currentMatch.isPlayed = true;
+
+                // FIX: Update team stats NOW since handleMatchFinish won't call executeMatchUpdate for played matches
+                if (!currentMatch.isFriendly) {
+                    const hScore = currentMatch.homeScore;
+                    const aScore = currentMatch.awayScore;
+                    const ptsHome = hScore > aScore ? 3 : hScore === aScore ? 1 : 0;
+                    const ptsAway = aScore > hScore ? 3 : hScore === aScore ? 1 : 0;
+
+                    // Collect scorer IDs
+                    const scorerIds: string[] = [];
+                    currentMatch.events.forEach((e: MatchEvent) => {
+                        if (e.type === MatchEventType.GOAL && e.playerId) {
+                            scorerIds.push(e.playerId);
+                        }
+                    });
+
+                    // Update players
+                    const updatedPlayers = prevState.players.map(p => {
+                        const goalsScored = scorerIds.filter(id => id === p.id).length;
+                        if (goalsScored > 0) {
+                            return {
+                                ...p,
+                                stats: {
+                                    ...(p.stats || { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0 }),
+                                    goals: (p.stats?.goals || 0) + goalsScored
+                                }
+                            };
+                        }
+                        return p;
+                    });
+
+                    // Update teams
+                    const updatedTeams = prevState.teams.map(team => {
+                        if (team.id === currentMatch.homeTeamId) {
+                            return {
+                                ...team,
+                                stats: {
+                                    ...team.stats,
+                                    played: team.stats.played + 1,
+                                    won: team.stats.won + (ptsHome === 3 ? 1 : 0),
+                                    drawn: team.stats.drawn + (ptsHome === 1 ? 1 : 0),
+                                    lost: team.stats.lost + (ptsHome === 0 ? 1 : 0),
+                                    gf: team.stats.gf + hScore,
+                                    ga: team.stats.ga + aScore,
+                                    points: team.stats.points + ptsHome
+                                },
+                                recentForm: [...(team.recentForm || []), hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
+                            };
+                        }
+                        if (team.id === currentMatch.awayTeamId) {
+                            return {
+                                ...team,
+                                stats: {
+                                    ...team.stats,
+                                    played: team.stats.played + 1,
+                                    won: team.stats.won + (ptsAway === 3 ? 1 : 0),
+                                    drawn: team.stats.drawn + (ptsAway === 1 ? 1 : 0),
+                                    lost: team.stats.lost + (ptsAway === 0 ? 1 : 0),
+                                    gf: team.stats.gf + aScore,
+                                    ga: team.stats.ga + hScore,
+                                    points: team.stats.points + ptsAway
+                                },
+                                recentForm: [...(team.recentForm || []), aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
+                            };
+                        }
+                        return team;
+                    });
+
+                    const newMatches = [...prevState.matches];
+                    newMatches[matchIndex] = currentMatch;
+                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: updatedTeams };
+                }
+            }
+
+            const newMatches = [...prevState.matches];
+            newMatches[matchIndex] = currentMatch;
+            return { ...prevState, matches: newMatches };
+        });
+    }, []);
 
     const handleInstantFinish = useCallback((matchId: string) => {
         setGameState(prevState => prevState ? executeMatchUpdate(prevState, matchId, true) : null);
@@ -1443,7 +1567,7 @@ const App: React.FC = () => {
                         match={activeMatch} homeTeam={activeHome} awayTeam={activeAway}
                         homePlayers={gameState.players.filter(p => p.teamId === activeHome.id)}
                         awayPlayers={gameState.players.filter(p => p.teamId === activeAway.id)}
-                        onTick={processMatchTick} onFinish={handleMatchFinish} onInstantFinish={handleInstantFinish}
+                        onSync={handleMatchSync} onFinish={handleMatchFinish} onInstantFinish={handleInstantFinish}
                         onSubstitute={handleSubstitution} onUpdateTactic={handleUpdateTactic} onAutoFix={handleAutoFix}
                         userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
                     />

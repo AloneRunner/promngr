@@ -14,12 +14,13 @@ import {
 } from '../types';
 
 // --- UTILS ---
-const dist = (x1: number, y1: number, x2: number, y2: number) => Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+const dist = (x1: number, y1: number, x2: number, y2: number) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+const distSq = (x1: number, y1: number, x2: number, y2: number) => (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
 // --- CONSTANTS ---
-export const TICKS_PER_MINUTE = 17; // 2 seconds per minute at 1x speed (120ms per tick)
+export const TICKS_PER_MINUTE = 60; // ~3 seconds per minute at 1x speed (50ms per tick)
 
 const MAX_PLAYER_SPEED = 1.2;  // 1.0 → 1.2 (biraz hızlandı, ~37 km/h)
 const MAX_BALL_SPEED = 4.0;    // 3.5 → 4.0 (daha dinamik şutlar/paslar)
@@ -200,6 +201,7 @@ export class MatchEngine {
     public awayTeam: Team;
     public homePlayers: Player[];
     public awayPlayers: Player[];
+    private allPlayers: Player[] = [];
 
     private sim: SimulationState;
     private traceLog: string[] = [];
@@ -208,7 +210,7 @@ export class MatchEngine {
 
     // Helper for cover shadow calculation
     private distToSegment(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
-        const l2 = dist(x1, y1, x2, y2) ** 2;
+        const l2 = distSq(x1, y1, x2, y2);
         if (l2 === 0) return dist(px, py, x1, y1);
         let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
         t = Math.max(0, Math.min(1, t));
@@ -254,6 +256,7 @@ export class MatchEngine {
         // Keep all players (STARTING + BENCH) so substitutions can work
         this.homePlayers = homePlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
         this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+        this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
         this.userTeamId = userTeamId || null;
 
         this.internalMinute = match.currentMinute;
@@ -455,6 +458,8 @@ export class MatchEngine {
             list[outIdx] = playerInObj;  // Incoming player to starting spot
             list[inIdx] = playerOutObj;  // Outgoing player to bench spot
 
+            this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
+
             // --- 3. REINITIALIZE TACTICS ---
             this.initializeTactics(list.filter(p => p.lineup === 'STARTING'), isHome ? this.homeTeam.tactic : this.awayTeam.tactic);
 
@@ -548,6 +553,7 @@ export class MatchEngine {
         // 1. Update lists (keep Bench for subs)
         this.homePlayers = homePlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
         this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
+        this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
 
         // 2. Re-initialize tactics/offsets
         this.initializeTactics(this.homePlayers.filter(p => p.lineup === 'STARTING'), this.homeTeam.tactic);
@@ -804,7 +810,7 @@ export class MatchEngine {
         const homeDefLine = this.calculateDefensiveLine(true);
         const awayDefLine = this.calculateDefensiveLine(false);
 
-        const allPlayers = [...this.homePlayers, ...this.awayPlayers];
+        const allPlayers = this.allPlayers;
 
         if (!ballOwner) {
             let bestChaserId: string | null = null;
@@ -1656,7 +1662,7 @@ export class MatchEngine {
     private detectObstacles(p: Player, x: number, y: number): Player[] {
         const obstacles: Player[] = [];
         const searchDist = 6;
-        [...this.homePlayers, ...this.awayPlayers]
+        this.allPlayers
             .filter(other => other.lineup === 'STARTING')
             .forEach(other => {
                 if (other.id === p.id || other.teamId === p.teamId) return;
@@ -1673,7 +1679,7 @@ export class MatchEngine {
         let minD = 10;
         const simP = this.sim.players[p.id];
         const forwardAngle = isHome ? 0 : Math.PI;
-        [...this.homePlayers, ...this.awayPlayers]
+        this.allPlayers
             .filter(other => other.lineup === 'STARTING')
             .forEach(other => {
                 if (other.teamId === p.teamId) return;
@@ -2076,7 +2082,7 @@ export class MatchEngine {
 
         const separateRadius = 2.0;
         let sepVx = 0, sepVy = 0;
-        [...this.homePlayers, ...this.awayPlayers].forEach(other => {
+        this.allPlayers.forEach(other => {
             if (other.id !== p.id && this.sim.players[other.id]) {
                 const otherPos = this.sim.players[other.id];
                 const d = dist(simP.x, simP.y, otherPos.x, otherPos.y);
@@ -2187,7 +2193,7 @@ export class MatchEngine {
     }
 
     private resolveCollisions() {
-        const players = [...this.homePlayers, ...this.awayPlayers];
+        const players = this.allPlayers;
         for (let i = 0; i < players.length; i++) {
             for (let j = i + 1; j < players.length; j++) {
                 const p1 = this.sim.players[players[i].id];
