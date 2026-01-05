@@ -269,14 +269,14 @@ export const ProfileSelector: React.FC<ProfileSelectorProps> = ({
 
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="bg-slate-900/30 backdrop-blur border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-6 md:p-12 transition-all duration-300 hover:scale-105 shadow-xl flex flex-col items-center justify-center gap-4 min-h-[250px] md:min-h-[400px] group"
+                    className="bg-slate-900/30 backdrop-blur border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-4 md:p-8 transition-all duration-300 hover:scale-105 shadow-xl flex flex-col items-center justify-center gap-2 min-h-[120px] md:min-h-[300px] group"
                 >
-                    <div className="w-20 h-20 rounded-full bg-slate-800 group-hover:bg-emerald-600 flex items-center justify-center transition-all duration-300">
-                        <Plus size={40} className="text-slate-400 group-hover:text-white transition-colors" />
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-slate-800 group-hover:bg-emerald-600 flex items-center justify-center transition-all duration-300">
+                        <Plus size={24} className="text-slate-400 group-hover:text-white transition-colors md:w-8 md:h-8" />
                     </div>
                     <div className="text-center">
-                        <h3 className="text-xl font-bold text-white mb-2">{t.newProfile}</h3>
-                        <p className="text-slate-400">{profiles.length === 0 ? t.createFirst : ''}</p>
+                        <h3 className="text-base md:text-xl font-bold text-white mb-1">{t.newProfile}</h3>
+                        <p className="text-slate-400 text-xs md:text-sm">{profiles.length === 0 ? t.createFirst : ''}</p>
                     </div>
                 </button>
             </div>

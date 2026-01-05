@@ -533,7 +533,49 @@ export const TRANSLATIONS: Record<string, any> = {
         gameGuide: "Game Guide",
         fixtures: "Fixtures",
         prevWeek: "Previous Week",
-        nextWeek: "Next Week"
+        nextWeek: "Next Week",
+        saveAndExit: "Save & Exit",
+        // Stats & Scout
+        attrPace: "Pace", attrShoot: "Shoot", attrPass: "Pass", attrDribble: "Dribble", attrDefense: "Defense", attrPhys: "Physical",
+        consistency: "Consistency", bigMatches: "Big Games", injuryRisk: "Injury Risk",
+        veryConsistent: "Very Consistent", inconsistent: "Inconsistent", average: "Average",
+        lovesBigGames: "Loves Big Games", nervous: "Nervous", stable: "Stable",
+        injuryProne: "Injury Prone", resilient: "Resilient", normal: "Normal",
+        simulateMatch: "Simulate Match", simulating: "Simulating...", quickSimResult: "Match Result",
+        managerOverview: "Manager Overview",
+        // Negotiation
+        negotiationOpen: "We are open to selling {name}. His market value is {value}. What is your offer?",
+        negotiationUnlisted: [
+            "{name} is NOT for sale. It would take a massive offer to change our mind.",
+            "We have no intention of selling {name}. He is key to our plans.",
+            "The player is happy here. We will only listen to exceptional offers."
+        ],
+        negotiationAccept: "We accept your offer. It's a fair price.",
+        negotiationAcceptUnlisted: "This offer is too good to refuse. We accept.",
+        negotiationCounter: "That is too low. We want {amount}.",
+        negotiationReject: [
+            "As I said, he is not for sale.",
+            "This is a waste of time.",
+            "Nowhere near enough."
+        ],
+        negotiationRejectUnlisted: [
+            "That offer is insulting.",
+            "You need to do much better.",
+            "Is that a joke?"
+        ],
+        negotiationWalkout: "We are done talking. The negotiation is over.",
+        negotiationInsistSuccess: "Fine. Since you are persistent, we will accept this price.",
+        negotiationInsistFail: "Your persistence is annoying. We are ending negotiations immediately!",
+        makeOffer: "Make Offer",
+        insist: "Insist",
+        confirmTransfer: "Confirm Transfer",
+        dealAgreed: "Deal Agreed!",
+        negotiationFailed: "Negotiation Failed",
+        negotiationFailedDesc: "The club has withdrawn from talks.",
+        insufficientFunds: "Insufficient Funds",
+        currentValue: "Current Value",
+        patience: "Patience",
+        insistHelp: "Pressure the club (High Risk)"
     },
     tr: {
         dashboard: "Panel", news: "Haberler", squad: "Kadro", training: "Antrenman", market: "Pazar", club: "Kulüp", standings: "Puan Durumu", matchDay: "Maç Günü",
@@ -593,6 +635,49 @@ export const TRANSLATIONS: Record<string, any> = {
         gameGuide: "Oyun Rehberi",
         fixtures: "Fikstür",
         prevWeek: "Önceki Hafta",
-        nextWeek: "Sonraki Hafta"
+        nextWeek: "Sonraki Hafta",
+        saveAndExit: "Kaydet ve Çık",
+        // Stats & Scout
+        attrPace: "Hız", attrShoot: "Şut", attrPass: "Pas", attrDribble: "Drib", attrDefense: "Defans", attrPhys: "Fizik",
+        consistency: "İstikrar", bigMatches: "Büyük Maçlar", injuryRisk: "Sakatlık Riski",
+        veryConsistent: "Çok İstikrarlı", inconsistent: "İstikrarsız", average: "Ortalama",
+        lovesBigGames: "Büyük Maç Sever", nervous: "Gergin", stable: "Dengeli",
+        injuryProne: "Sakatlığa Yatkın", resilient: "Dayanıklı", normal: "Normal",
+        playstyles: "Oyun Stilleri",
+        simulateMatch: "Maçı Simüle Et", simulating: "Hesaplanıyor...", quickSimResult: "Maç Sonucu",
+        managerOverview: "Teknik Direktör Paneli",
+        // Negotiation
+        negotiationOpen: "{name} için tekliflere açığız. Piyasa değeri {value}. Teklifiniz nedir?",
+        negotiationUnlisted: [
+            "{name} satılık DEĞİL. Fikrimizi değiştirmek için çok büyük bir teklif gerekir.",
+            "{name} takım planlarımız için kilit bir oyuncu. Satmayı düşünmüyoruz.",
+            "Oyuncu burada mutlu. Sadece reddedilemeyecek teklifleri dinleriz."
+        ],
+        negotiationAccept: "Teklifinizi kabul ediyoruz. Adil bir fiyat.",
+        negotiationAcceptUnlisted: "Bu teklif reddedilemeyecek kadar iyi. Kabul ediyoruz.",
+        negotiationCounter: "Bu çok düşük. İsteğimiz {amount}.",
+        negotiationReject: [
+            "Dediğim gibi, satılık değil.",
+            "Zamanımızı harcıyorsun.",
+            "Yeterli olmaya yakın bile değil."
+        ],
+        negotiationRejectUnlisted: [
+            "Bu teklif hakaret gibi.",
+            "Çok daha iyisini yapmalısın.",
+            "Şaka mı yapıyorsun?"
+        ],
+        negotiationWalkout: "Konuşacak bir şey kalmadı. Görüşme bitti.",
+        negotiationInsistSuccess: "Pekala. Madem bu kadar ısrarcısın, kabul ediyoruz.",
+        negotiationInsistFail: "Israrın can sıkmaya başladı. Görüşmeleri derhal sonlandırıyoruz!",
+        makeOffer: "Teklif Yap",
+        insist: "Israr Et",
+        confirmTransfer: "Transferi Onayla",
+        dealAgreed: "Anlaşma Sağlandı!",
+        negotiationFailed: "Görüşme Başarısız",
+        negotiationFailedDesc: "Kulüp masadan kalktı.",
+        insufficientFunds: "Yetersiz Bakiye",
+        currentValue: "Piyasa Değeri",
+        patience: "Sabır",
+        insistHelp: "Kulübü zorla (Yüksek Risk)"
     }
 };

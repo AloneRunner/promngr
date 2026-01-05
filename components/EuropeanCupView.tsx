@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { EuropeanCup, Team, Translation } from '../types';
+import { EuropeanCup, EuropeanCupMatch, Team, Translation } from '../types';
 import { Trophy, Star, Crown, ChevronRight } from 'lucide-react';
 
 interface EuropeanCupViewProps {
@@ -8,7 +8,7 @@ interface EuropeanCupViewProps {
     teams: Team[];
     userTeamId: string;
     t: Translation;
-    onPlayMatch: (matchId: string) => void;
+    onPlayMatch: (match: EuropeanCupMatch) => void;
     onClose: () => void;
 }
 
@@ -39,7 +39,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
         }
     };
 
-    const renderMatch = (match: typeof cup.matches[0], showPlay: boolean = false) => {
+    const renderMatch = (match: EuropeanCupMatch, showPlay: boolean = false) => {
         const home = getTeam(match.homeTeamId);
         const away = getTeam(match.awayTeamId);
         if (!home || !away) return null;
@@ -93,7 +93,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
 
                 {canPlay && (
                     <button
-                        onClick={() => onPlayMatch(match.id)}
+                        onClick={() => onPlayMatch(match)}
                         className={`w-full mt-2 py-2 bg-gradient-to-r ${isChampionsLeague ? 'from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400' : 'from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400'} text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-1`}
                     >
                         <Trophy size={14} /> Maçı Oyna

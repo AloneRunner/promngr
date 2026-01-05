@@ -40,6 +40,7 @@ export interface PlayerVisual {
 
 export interface PlayerStats {
     goals: number; assists: number; yellowCards: number; redCards: number; appearances: number;
+    averageRating: number; // NEW: Track average match rating (0-10)
 }
 
 export interface PlayerPersonality {
@@ -199,6 +200,7 @@ export interface GameState {
     messages: Message[]; transferMarket: Player[]; history: LeagueHistoryEntry[];
     pendingOffers: TransferOffer[];
     europeanCup?: EuropeanCup;
+    europaLeague?: EuropeanCup; // NEW: UEFA Europa League support
 }
 
 export interface AssistantAdvice {

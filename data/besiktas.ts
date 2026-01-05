@@ -1,6 +1,21 @@
 
 export const BESIKTAS_SQUAD = [
   {
+    ad: "Kaan Özarık",
+    takim: "Besikta Eagles",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 86,
+    yas: 21,
+    ana_ozellikler: { hiz: 86, sut: 86, pas: 86, dribbling: 84, defans: 83, fizik: 85 },
+    detaylar: {
+      ucma: 70, top_kontrol: 86, vurus: 84, pozisyon: 82, refleks: 70,
+      hizlanma: 85, sprint: 84, reaksiyon: 85, sogukkanlilik: 84, ziplama: 82, guc: 85,
+      top_kesme: 83, defansif_farkindalik: 83, ayakta_mudahale: 83, kayarak_mudahale: 82
+    },
+    oyun_tarzlari: ["Engel+", "Güçlü+", "Hava Hakimi+", "Kayarak Müdahale+", "Sezgili+", "Top Kesici+", "Yakın Markaj+"]
+  },
+  {
     ad: "Orkun Kökçü",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",

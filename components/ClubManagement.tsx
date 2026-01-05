@@ -96,53 +96,63 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
             </div>
 
             {tab === 'FINANCE' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* ... existing finance content ... */}
-                    {/* Main Budget Card */}
-                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                            <Wallet className="text-emerald-500" /> {t.finances}
-                        </h2>
-
-                        <div className="mb-8 text-center p-6 bg-slate-900/50 rounded-xl border border-slate-600">
-                            <div className="text-slate-400 text-sm mb-1">{t.clubBudget}</div>
-                            <div className="text-3xl md:text-4xl font-bold text-emerald-400 tracking-tight">€{(team.budget / 1000000).toFixed(2)}M</div>
-                        </div>
-
-                        <div className="space-y-6">
+                <div className="flex flex-col gap-4 animate-fade-in pb-10">
+                    {/* Main Budget Panel */}
+                    <div className="fm-panel rounded-xl p-4 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-emerald-600/20 p-2 rounded-lg border border-emerald-500/30">
+                                <Wallet className="text-emerald-400" size={24} />
+                            </div>
                             <div>
-                                <h3 className="text-xs uppercase text-slate-500 font-bold mb-3">{t.projectedWeekly}</h3>
-                                <div className="space-y-2 bg-slate-900/30 p-4 rounded-lg">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-slate-400 flex items-center gap-1"><TrendingDown size={14} className="text-red-400" /> {t.weeklyWage}</span>
-                                        <span className="text-red-400 font-mono">-€{totalWages.toLocaleString()}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-slate-400 flex items-center gap-1"><TrendingUp size={14} className="text-green-400" /> {t.estMatchIncome}</span>
-                                        <span className="text-green-400 font-mono">+€{estimatedTicketIncome.toLocaleString()}</span>
-                                    </div>
-                                </div>
+                                <h2 className="text-xl font-bold text-white tracking-tight">{t.finances}</h2>
+                                <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t.clubBudget}</div>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-2xl font-mono text-emerald-400 font-bold tracking-tight">€{(team.budget / 1000000).toFixed(2)}M</div>
+                        </div>
+                    </div>
+
+                    {/* Projections */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="fm-card p-3 flex flex-col justify-between">
+                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.weeklyWage}</div>
+                            <div className="flex items-end justify-between">
+                                <span className="text-lg font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}</span>
+                                <TrendingDown size={16} className="text-red-500 mb-1" />
+                            </div>
+                        </div>
+                        <div className="fm-card p-3 flex flex-col justify-between">
+                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.estMatchIncome}</div>
+                            <div className="flex items-end justify-between">
+                                <span className="text-lg font-mono text-emerald-400 font-bold">+€{estimatedTicketIncome.toLocaleString()}</span>
+                                <TrendingUp size={16} className="text-emerald-500 mb-1" />
                             </div>
                         </div>
                     </div>
 
-                    {/* Detailed Breakdown */}
-                    <div className="space-y-6">
-                        {/* Last Week Report */}
-                        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                            <h2 className="text-lg font-bold text-white mb-4">{t.lastWeekReport}</h2>
+                    {/* Weekly Report Table */}
+                    <div className="fm-panel rounded-xl overflow-hidden">
+                        <div className="bg-slate-900/50 p-2 border-b border-white/10 flex justify-between items-center">
+                            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t.lastWeekReport}</h2>
+                        </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="bg-emerald-900/10 p-4 rounded-lg border border-emerald-900/20">
-                                    <h4 className="text-emerald-500 font-bold text-xs uppercase mb-3">{t.income}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                            {/* Income Column */}
+                            <div className="p-3">
+                                <h4 className="text-[10px] uppercase text-emerald-500 font-bold mb-2 flex items-center gap-1"><TrendingUp size={10} /> {t.income}</h4>
+                                <div className="space-y-1">
                                     <FinanceRow icon={Briefcase} label="Sponsor" value={team.sponsor?.weeklyIncome || 0} type="income" />
                                     <FinanceRow icon={ShoppingBag} label={t.merchandise} value={Math.floor(fin.lastWeekIncome.merchandise)} type="income" />
                                     <FinanceRow icon={Tv} label={t.tvRights} value={fin.lastWeekIncome.tvRights} type="income" />
                                     {fin.lastWeekIncome.transfers > 0 && <FinanceRow icon={Users} label={t.playerSales} value={fin.lastWeekIncome.transfers} type="income" />}
                                 </div>
+                            </div>
 
-                                <div className="bg-red-900/10 p-4 rounded-lg border border-red-900/20">
-                                    <h4 className="text-red-500 font-bold text-xs uppercase mb-3">{t.expenses}</h4>
+                            {/* Expense Column */}
+                            <div className="p-3">
+                                <h4 className="text-[10px] uppercase text-red-500 font-bold mb-2 flex items-center gap-1"><TrendingDown size={10} /> {t.expenses}</h4>
+                                <div className="space-y-1">
                                     <FinanceRow icon={Users} label={t.wages} value={fin.lastWeekExpenses.wages} type="expense" />
                                     <FinanceRow icon={Hammer} label={t.maintenance} value={fin.lastWeekExpenses.maintenance} type="expense" />
                                     <FinanceRow icon={GraduationCap} label={t.academy} value={fin.lastWeekExpenses.academy} type="expense" />
@@ -150,113 +160,101 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </div>
                             </div>
                         </div>
-
-                        {team.sponsor && (
-                            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                                <h2 className="text-lg font-bold text-white mb-4">{t.activeSponsor}</h2>
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <div className="text-2xl font-bold text-white">{team.sponsor.name}</div>
-                                        <div className="text-slate-500">{team.sponsor.description}</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-sm text-slate-400">{t.winBonus}</div>
-                                        <div className="text-emerald-400 font-bold font-mono">€{(team.sponsor.winBonus.toLocaleString())}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </div>
+
+                    {team.sponsor && (
+                        <div className="fm-panel rounded-xl p-4 flex items-center justify-between">
+                            <div>
+                                <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.activeSponsor}</div>
+                                <div className="text-lg font-bold text-white leading-tight">{team.sponsor.name}</div>
+                                <div className="text-xs text-slate-400">{team.sponsor.description}</div>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.winBonus}</div>
+                                <div className="text-lg font-mono text-emerald-400 font-bold">€{team.sponsor.winBonus.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
             {tab === 'FACILITIES' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
                     {/* Stadium Card */}
-                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <div className="flex justify-between items-start mb-4">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Building2 className="text-blue-500" /> {t.stadium}
+                    <div className="bg-slate-800 rounded-lg p-3 md:p-4 border border-slate-700 shadow-xl">
+                        <div className="flex justify-between items-center mb-2">
+                            <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+                                <Building2 className="text-blue-500" size={18} /> {t.stadium}
                             </h2>
                             <div className="text-right">
-                                <span className="block text-xs uppercase text-slate-500 font-bold">Current Level</span>
-                                <span className="text-2xl font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-lg">/10</span></span>
+                                <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
+                                <span className="text-lg font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-sm">/10</span></span>
                             </div>
                         </div>
 
-                        <div className="relative h-32 bg-slate-900 rounded-lg mb-6 overflow-hidden border border-slate-600 group">
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6a?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
-                            <div className="absolute bottom-2 left-4">
-                                <div className="text-white font-bold text-lg">{team.city} Arena</div>
-                                <div className="text-emerald-400 text-sm font-mono">{team.facilities.stadiumCapacity.toLocaleString()} Seats</div>
+                        <div className="relative h-16 md:h-20 bg-slate-900 rounded-lg mb-2 overflow-hidden border border-slate-600">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487466365202-1afdb86c764e?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
+                            <div className="absolute bottom-1 left-2">
+                                <div className="text-white font-bold text-sm">{team.city} Arena</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">{team.facilities.stadiumCapacity.toLocaleString()} Seats</div>
                             </div>
                         </div>
 
-                        <div className="space-y-4 mb-6">
-                            <div>
-                                <div className="flex justify-between text-xs text-slate-400 mb-1">
-                                    <span>Upgrade Progress</span>
-                                    <span>{(team.facilities.stadiumLevel / 10 * 100).toFixed(0)}%</span>
-                                </div>
-                                <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
-                                    <div className="bg-blue-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.stadiumLevel / 10) * 100}%` }}></div>
-                                </div>
+                        <div className="mb-2">
+                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                                <span>Progress</span>
+                                <span>{(team.facilities.stadiumLevel / 10 * 100).toFixed(0)}%</span>
                             </div>
-                            <p className="text-slate-400 text-sm italic border-l-2 border-blue-500 pl-3">
-                                Higher stadium level increases capacity and match day income.
-                            </p>
+                            <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 10) * 100}%` }}></div>
+                            </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
                             disabled={team.facilities.stadiumLevel >= 10 || team.budget < 5000000}
-                            className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                            className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={18} /> Upgrade (€5.0M)
+                            <Hammer size={14} /> Upgrade (€5.0M)
                         </button>
                     </div>
 
                     {/* Training Centre */}
-                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <div className="flex justify-between items-start mb-4">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Activity className="text-emerald-500" /> Training Ground
+                    <div className="bg-slate-800 rounded-lg p-3 md:p-4 border border-slate-700 shadow-xl">
+                        <div className="flex justify-between items-center mb-2">
+                            <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+                                <Activity className="text-emerald-500" size={18} /> Training Ground
                             </h2>
                             <div className="text-right">
-                                <span className="block text-xs uppercase text-slate-500 font-bold">Current Level</span>
-                                <span className="text-2xl font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-lg">/10</span></span>
+                                <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
+                                <span className="text-lg font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-sm">/10</span></span>
                             </div>
                         </div>
 
-                        <div className="relative h-32 bg-slate-900 rounded-lg mb-6 overflow-hidden border border-slate-600 group">
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543351611-58f69d7c1781?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
-                            <div className="absolute bottom-2 left-4">
-                                <div className="text-white font-bold text-lg">Performance Center</div>
-                                <div className="text-emerald-400 text-sm font-mono">Level {team.facilities.trainingLevel} Facility</div>
+                        <div className="relative h-16 md:h-20 bg-slate-900 rounded-lg mb-2 overflow-hidden border border-slate-600">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543351611-58f69d7c1781?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
+                            <div className="absolute bottom-1 left-2">
+                                <div className="text-white font-bold text-sm">Performance Center</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">Level {team.facilities.trainingLevel}</div>
                             </div>
                         </div>
 
-                        <div className="space-y-4 mb-6">
-                            <div>
-                                <div className="flex justify-between text-xs text-slate-400 mb-1">
-                                    <span>Facility Quality</span>
-                                    <span>{(team.facilities.trainingLevel / 10 * 100).toFixed(0)}%</span>
-                                </div>
-                                <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
-                                    <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.trainingLevel / 10) * 100}%` }}></div>
-                                </div>
+                        <div className="mb-2">
+                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                                <span>Quality</span>
+                                <span>{(team.facilities.trainingLevel / 10 * 100).toFixed(0)}%</span>
                             </div>
-                            <p className="text-slate-400 text-sm italic border-l-2 border-emerald-500 pl-3">
-                                Better training facilities significantly increase player XP gain and development speed.
-                            </p>
+                            <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${(team.facilities.trainingLevel / 10) * 100}%` }}></div>
+                            </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('training')}
                             disabled={team.facilities.trainingLevel >= 10 || team.budget < 3000000}
-                            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                            className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={18} /> Upgrade (€3.0M)
+                            <Hammer size={14} /> Upgrade (€3.0M)
                         </button>
                     </div>
 
@@ -305,156 +303,161 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         </div>
                     </div>
                 </div>
-            )}
+            )
+            }
 
-            {tab === 'ACADEMY' && (
-                <div className="space-y-6">
-                    {/* ... existing academy ... */}
-                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                    <GraduationCap className="text-purple-500" /> {t.youthAcademy}
-                                </h2>
-                                <p className="text-slate-400 text-sm mt-1">{t.scoutReport}</p>
+            {
+                tab === 'ACADEMY' && (
+                    <div className="space-y-6">
+                        {/* ... existing academy ... */}
+                        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                        <GraduationCap className="text-purple-500" /> {t.youthAcademy}
+                                    </h2>
+                                    <p className="text-slate-400 text-sm mt-1">{t.scoutReport}</p>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xs text-slate-500">{t.level}</div>
+                                    <div className="text-xl font-bold text-purple-400">{team.facilities.academyLevel}</div>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <div className="text-xs text-slate-500">{t.level}</div>
-                                <div className="text-xl font-bold text-purple-400">{team.facilities.academyLevel}</div>
-                            </div>
+
+                            {youthCandidates.length === 0 ? (
+                                <div className="text-center py-10 bg-slate-900/50 rounded-lg border border-slate-700 border-dashed">
+                                    <Users className="mx-auto text-slate-600 mb-2" size={32} />
+                                    <p className="text-slate-500">{t.academyEmpty}</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {youthCandidates.map(player => {
+                                        const potentialGrade = getPotentialGrade(player.potential);
+                                        return (
+                                            <div key={player.id} className="bg-slate-900/50 p-4 rounded-lg border border-slate-700 flex justify-between items-center group hover:border-purple-500 transition-colors">
+                                                <div className="flex items-center gap-3">
+                                                    <PlayerAvatar visual={player.visual} size="md" />
+                                                    <div>
+                                                        <div className="font-bold text-white">{player.firstName} {player.lastName}</div>
+                                                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                                                            <span className="bg-slate-800 px-1 rounded">{player.position}</span>
+                                                            <span>{player.age} {t.age}</span>
+                                                            <span>• {player.nationality}</span>
+                                                        </div>
+                                                        <div className="mt-1 flex items-center gap-1 text-xs">
+                                                            <span className="text-slate-500">{t.current}:</span>
+                                                            <span className="text-slate-300 font-bold">{player.overall}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-col items-end gap-2">
+                                                    <div className="text-center">
+                                                        <div className="text-[10px] text-slate-500 uppercase">{t.potential}</div>
+                                                        <div className={`text-2xl ${getGradeColor(potentialGrade)} flex items-center justify-end gap-1`}>
+                                                            {potentialGrade} <Star size={14} fill="currentColor" className="opacity-50" />
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => onPromoteYouth(player)}
+                                                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-lg shadow-purple-900/20"
+                                                    >
+                                                        {t.promotePlayer} (-€{(player.value / 1000).toFixed(0)}k)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )}
                         </div>
-
-                        {youthCandidates.length === 0 ? (
-                            <div className="text-center py-10 bg-slate-900/50 rounded-lg border border-slate-700 border-dashed">
-                                <Users className="mx-auto text-slate-600 mb-2" size={32} />
-                                <p className="text-slate-500">{t.academyEmpty}</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {youthCandidates.map(player => {
-                                    const potentialGrade = getPotentialGrade(player.potential);
-                                    return (
-                                        <div key={player.id} className="bg-slate-900/50 p-4 rounded-lg border border-slate-700 flex justify-between items-center group hover:border-purple-500 transition-colors">
-                                            <div className="flex items-center gap-3">
-                                                <PlayerAvatar visual={player.visual} size="md" />
-                                                <div>
-                                                    <div className="font-bold text-white">{player.firstName} {player.lastName}</div>
-                                                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                                                        <span className="bg-slate-800 px-1 rounded">{player.position}</span>
-                                                        <span>{player.age} {t.age}</span>
-                                                        <span>• {player.nationality}</span>
-                                                    </div>
-                                                    <div className="mt-1 flex items-center gap-1 text-xs">
-                                                        <span className="text-slate-500">{t.current}:</span>
-                                                        <span className="text-slate-300 font-bold">{player.overall}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col items-end gap-2">
-                                                <div className="text-center">
-                                                    <div className="text-[10px] text-slate-500 uppercase">{t.potential}</div>
-                                                    <div className={`text-2xl ${getGradeColor(potentialGrade)} flex items-center justify-end gap-1`}>
-                                                        {potentialGrade} <Star size={14} fill="currentColor" className="opacity-50" />
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    onClick={() => onPromoteYouth(player)}
-                                                    className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-lg shadow-purple-900/20"
-                                                >
-                                                    {t.promotePlayer} (-€{(player.value / 1000).toFixed(0)}k)
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        )}
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* NEW STAFF TAB */}
-            {tab === 'STAFF' && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {
+                tab === 'STAFF' && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    {/* Head Coach */}
-                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-10"><ClipboardList size={100} /></div>
-                        <div className="relative z-10">
-                            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                <ClipboardList size={32} />
+                        {/* Head Coach */}
+                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><ClipboardList size={100} /></div>
+                            <div className="relative z-10">
+                                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
+                                    <ClipboardList size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-white">Assistant Coach</h3>
+                                <p className="text-sm text-slate-400 mb-4">Improves training efficiency and tactical familiarity.</p>
+
+                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
+                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
+                                    <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}</span>
+                                </div>
+
+                                <button
+                                    onClick={() => onUpgradeStaff && onUpgradeStaff('headCoachLevel')}
+                                    disabled={staff.headCoachLevel >= 10}
+                                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                >
+                                    {staff.headCoachLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.headCoachLevel * 100).toLocaleString()}k)`}
+                                </button>
                             </div>
-                            <h3 className="text-xl font-bold text-white">Assistant Coach</h3>
-                            <p className="text-sm text-slate-400 mb-4">Improves training efficiency and tactical familiarity.</p>
-
-                            <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}</span>
-                            </div>
-
-                            <button
-                                onClick={() => onUpgradeStaff && onUpgradeStaff('headCoachLevel')}
-                                disabled={staff.headCoachLevel >= 10}
-                                className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
-                            >
-                                {staff.headCoachLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.headCoachLevel * 100).toLocaleString()}k)`}
-                            </button>
                         </div>
-                    </div>
 
-                    {/* Head Scout */}
-                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-10"><Microscope size={100} /></div>
-                        <div className="relative z-10">
-                            <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                <Microscope size={32} />
+                        {/* Head Scout */}
+                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><Microscope size={100} /></div>
+                            <div className="relative z-10">
+                                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
+                                    <Microscope size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-white">Chief Scout</h3>
+                                <p className="text-sm text-slate-400 mb-4">Finds better youth prospects and reveals hidden stats.</p>
+
+                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
+                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
+                                    <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}</span>
+                                </div>
+
+                                <button
+                                    onClick={() => onUpgradeStaff && onUpgradeStaff('scoutLevel')}
+                                    disabled={staff.scoutLevel >= 10}
+                                    className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                >
+                                    {staff.scoutLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.scoutLevel * 100).toLocaleString()}k)`}
+                                </button>
                             </div>
-                            <h3 className="text-xl font-bold text-white">Chief Scout</h3>
-                            <p className="text-sm text-slate-400 mb-4">Finds better youth prospects and reveals hidden stats.</p>
-
-                            <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}</span>
-                            </div>
-
-                            <button
-                                onClick={() => onUpgradeStaff && onUpgradeStaff('scoutLevel')}
-                                disabled={staff.scoutLevel >= 10}
-                                className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
-                            >
-                                {staff.scoutLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.scoutLevel * 100).toLocaleString()}k)`}
-                            </button>
                         </div>
-                    </div>
 
-                    {/* Head Physio */}
-                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-10"><Stethoscope size={100} /></div>
-                        <div className="relative z-10">
-                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                <Stethoscope size={32} />
+                        {/* Head Physio */}
+                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><Stethoscope size={100} /></div>
+                            <div className="relative z-10">
+                                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
+                                    <Stethoscope size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-white">Head Physio</h3>
+                                <p className="text-sm text-slate-400 mb-4">Speeds up injury recovery and reduces fatigue accumulation.</p>
+
+                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
+                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
+                                    <span className="text-red-400 font-bold text-xl">{staff.physioLevel}</span>
+                                </div>
+
+                                <button
+                                    onClick={() => onUpgradeStaff && onUpgradeStaff('physioLevel')}
+                                    disabled={staff.physioLevel >= 10}
+                                    className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                >
+                                    {staff.physioLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.physioLevel * 100).toLocaleString()}k)`}
+                                </button>
                             </div>
-                            <h3 className="text-xl font-bold text-white">Head Physio</h3>
-                            <p className="text-sm text-slate-400 mb-4">Speeds up injury recovery and reduces fatigue accumulation.</p>
-
-                            <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                <span className="text-red-400 font-bold text-xl">{staff.physioLevel}</span>
-                            </div>
-
-                            <button
-                                onClick={() => onUpgradeStaff && onUpgradeStaff('physioLevel')}
-                                disabled={staff.physioLevel >= 10}
-                                className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
-                            >
-                                {staff.physioLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.physioLevel * 100).toLocaleString()}k)`}
-                            </button>
                         </div>
-                    </div>
 
-                </div>
-            )}
-        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 };

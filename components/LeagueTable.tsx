@@ -6,14 +6,22 @@ import { Trophy, Target, Award, Crown, History, Eye } from 'lucide-react';
 
 interface LeagueTableProps {
     teams: Team[];
+    allTeams?: Team[]; // For global lookup
     players?: Player[];
     t: Translation;
     history?: LeagueHistoryEntry[];
-    onInspectTeam: (teamId: string) => void; // New prop
+    onInspectTeam: (teamId: string) => void;
+    currentLeagueId: string;
+    onSelectLeague: (leagueId: string) => void;
 }
 
-export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, history = [], onInspectTeam }) => {
-    const [tab, setTab] = useState<'TABLE' | 'GOALS' | 'ASSISTS' | 'TOP_RATED' | 'YOUNG_TALENTS' | 'HISTORY'>('TABLE');
+export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, players, t, history = [], onInspectTeam, currentLeagueId, onSelectLeague }) => {
+    const [tab, setTab] = useState<'TABLE' | 'GOALS' | 'ASSISTS' | 'TOP_RATED' | 'RATING' | 'HISTORY'>('TABLE');
+    const lookupTeams = allTeams || teams;
+
+    // Filter players by current league teams for Top Scorers lists
+    const leagueTeamIds = new Set(teams.map(t => t.id));
+    const leaguePlayers = players ? players.filter(p => leagueTeamIds.has(p.teamId)) : [];
 
     // Sort by points, then GD, then GF
     const sortedTeams = [...teams].sort((a, b) => {
@@ -24,47 +32,36 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, his
         return b.stats.gf - a.stats.gf;
     });
 
-    // Top Scorers logic
-    const topScorers = players
-        ? [...players]
-            .filter(p => p.stats.goals > 0 && p.teamId !== 'FREE_AGENT')
-            .sort((a, b) => b.stats.goals - a.stats.goals)
-            .slice(0, 10)
-        : [];
+    // Top Scorers logic (League specific)
+    const topScorers = [...leaguePlayers]
+        .filter(p => p.stats.goals > 0)
+        .sort((a, b) => b.stats.goals - a.stats.goals)
+        .slice(0, 10);
 
-    // Top Assists logic
-    const topAssists = players
-        ? [...players]
-            .filter(p => p.stats.assists > 0 && p.teamId !== 'FREE_AGENT')
-            .sort((a, b) => b.stats.assists - a.stats.assists)
-            .slice(0, 10)
-        : [];
+    // Top Assists logic (League specific)
+    const topAssists = [...leaguePlayers]
+        .filter(p => p.stats.assists > 0)
+        .sort((a, b) => b.stats.assists - a.stats.assists)
+        .slice(0, 10);
 
-    // Best Performers this Season (by goals + assists + appearances)
-    const seasonPerformers = players
-        ? [...players]
-            .filter(p => p.teamId !== 'FREE_AGENT' && (p.stats.goals > 0 || p.stats.assists > 0 || p.stats.appearances > 0))
-            .map(p => ({
-                ...p,
-                seasonScore: (p.stats.goals * 3) + (p.stats.assists * 2) + (p.stats.appearances * 0.5)
-            }))
-            .sort((a, b) => b.seasonScore - a.seasonScore)
-            .slice(0, 15)
-        : [];
+    // Best Performers this Season (League specific)
+    const seasonPerformers = [...leaguePlayers]
+        .filter(p => (p.stats.goals > 0 || p.stats.assists > 0 || p.stats.appearances > 0))
+        .map(p => ({
+            ...p,
+            seasonScore: (p.stats.goals * 3) + (p.stats.assists * 2) + (p.stats.appearances * 0.5)
+        }))
+        .sort((a, b) => b.seasonScore - a.seasonScore)
+        .slice(0, 15);
 
-    // Young Talents with best season performance (under 23)
-    const youngTalents = players
-        ? [...players]
-            .filter(p => p.age <= 23 && p.teamId !== 'FREE_AGENT' && (p.stats.goals > 0 || p.stats.assists > 0 || p.stats.appearances > 0))
-            .map(p => ({
-                ...p,
-                seasonScore: (p.stats.goals * 3) + (p.stats.assists * 2) + (p.stats.appearances * 0.5)
-            }))
-            .sort((a, b) => b.seasonScore - a.seasonScore)
-            .slice(0, 15)
-        : [];
+    // ... young talents similarly ...
+    // Top Rated Players (Average Rating)
+    const topRatedPlayers = [...leaguePlayers]
+        .filter(p => (p.stats.appearances || 0) >= 3 || (teams[0].stats.played < 3 && (p.stats.appearances || 0) > 0)) // Min 3 apps unless early season
+        .sort((a, b) => (b.stats.averageRating || 0) - (a.stats.averageRating || 0))
+        .slice(0, 15);
 
-    const getTeam = (teamId: string) => teams.find(t => t.id === teamId);
+    const getTeam = (teamId: string) => lookupTeams.find(t => t.id === teamId);
 
     const getRowClass = (index: number, total: number) => {
         if (index === 0) return 'bg-yellow-900/10 border-l-4 border-l-yellow-500';
@@ -80,47 +77,74 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, his
         return 'bg-slate-700 text-slate-400';
     }
 
+    const leagues = [
+        { id: 'tr', name: '🇹🇷 Süper Lig' },
+        { id: 'en', name: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League' },
+        { id: 'es', name: '🇪🇸 La Liga' },
+        { id: 'it', name: '🇮🇹 Serie A' },
+        { id: 'fr', name: '🇫🇷 Ligue 1' },
+        { id: 'de', name: '🇩🇪 Bundesliga' },
+    ];
+
     return (
         <div className="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700 animate-fade-in min-h-[500px]">
 
+            {/* League Selector Header */}
+            <div className="bg-slate-950 p-3 border-b border-slate-700 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <Trophy className="text-yellow-500" size={20} />
+                    <span className="font-bold text-lg text-white">{leagues.find(l => l.id === currentLeagueId)?.name || 'League Table'}</span>
+                </div>
+                <select
+                    value={currentLeagueId}
+                    onChange={(e) => onSelectLeague(e.target.value)}
+                    className="bg-slate-800 text-white text-sm border border-slate-600 rounded px-2 py-1 outline-none focus:border-emerald-500"
+                >
+                    {leagues.map(l => (
+                        <option key={l.id} value={l.id}>{l.name}</option>
+                    ))}
+                </select>
+            </div>
+
             {/* Header Tabs */}
-            <div className="bg-slate-900 p-2 flex justify-between items-center border-b border-slate-700 sticky top-0 z-10 overflow-x-auto">
-                <div className="flex gap-2">
+
+            <div className="bg-slate-900 p-2 flex justify-between items-center border-b border-slate-700 sticky top-0 z-10 overflow-x-auto no-scrollbar">
+                <div className="flex gap-1">
                     <button
                         onClick={() => setTab('TABLE')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'TABLE' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'TABLE' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <Trophy size={16} /> {t.leagueTable}
+                        <Trophy size={14} /> <span className="hidden sm:inline">{t.leagueTable}</span><span className="sm:hidden">Tablo</span>
                     </button>
                     <button
                         onClick={() => setTab('GOALS')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'GOALS' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'GOALS' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <Target size={16} /> {t.topScorers}
+                        <Target size={14} /> <span className="hidden sm:inline">{t.topScorers}</span><span className="sm:hidden">Gol</span>
                     </button>
                     <button
                         onClick={() => setTab('ASSISTS')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'ASSISTS' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'ASSISTS' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <Award size={16} /> {t.topAssists}
+                        <Award size={14} /> <span className="hidden sm:inline">{t.topAssists}</span><span className="sm:hidden">Asist</span>
                     </button>
                     <button
                         onClick={() => setTab('TOP_RATED')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'TOP_RATED' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'TOP_RATED' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <Crown size={16} /> En İyiler
+                        <Crown size={14} /> <span className="hidden sm:inline">En İyiler</span><span className="sm:hidden">⭐</span>
                     </button>
                     <button
-                        onClick={() => setTab('YOUNG_TALENTS')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'YOUNG_TALENTS' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        onClick={() => setTab('RATING')}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'RATING' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        ⭐ Genç Yetenekler
+                        ⭐ <span className="hidden sm:inline">Rating</span><span className="sm:hidden">Puan</span>
                     </button>
                     <button
                         onClick={() => setTab('HISTORY')}
-                        className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${tab === 'HISTORY' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                        className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'HISTORY' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <History size={16} /> History
+                        <History size={14} /> <span className="hidden sm:inline">History</span>
                     </button>
                 </div>
             </div>
@@ -262,8 +286,8 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, his
                     </table>
                 )}
 
-                {/* Young Talents Tab */}
-                {tab === 'YOUNG_TALENTS' && (
+                {/* Rating Tab */}
+                {tab === 'RATING' && (
                     <table className="w-full text-sm text-left text-slate-300">
                         <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
                             <tr>
@@ -271,14 +295,14 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, his
                                 <th className="px-4 py-3">Oyuncu</th>
                                 <th className="px-4 py-3">{t.team}</th>
                                 <th className="px-4 py-3 text-center">{t.pos}</th>
-                                <th className="px-4 py-3 text-center">{t.age}</th>
+                                <th className="px-4 py-3 text-center">Rating</th>
                                 <th className="px-4 py-3 text-center">⚽</th>
                                 <th className="px-4 py-3 text-center">🅰️</th>
                                 <th className="px-4 py-3 text-center hidden md:table-cell">Maç</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-700">
-                            {youngTalents.map((player, index) => {
+                            {topRatedPlayers.map((player, index) => {
                                 const team = getTeam(player.teamId);
                                 return (
                                     <tr key={player.id} className="hover:bg-slate-700/30">
@@ -293,15 +317,22 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, players, t, his
                                         <td className="px-4 py-3 text-center">
                                             <span className="bg-slate-700 text-white text-xs font-bold px-2 py-1 rounded">{player.position}</span>
                                         </td>
-                                        <td className="px-4 py-3 text-center text-slate-400">{player.age}</td>
+                                        <td className="px-4 py-3 text-center">
+                                            <span className={`font-bold px-2 py-1 rounded ${(player.stats.averageRating || 0) >= 7.5 ? 'bg-emerald-500 text-white' :
+                                                    (player.stats.averageRating || 0) >= 7.0 ? 'bg-blue-500 text-white' :
+                                                        'text-slate-300'
+                                                }`}>
+                                                {player.stats.averageRating?.toFixed(1) || '-'}
+                                            </span>
+                                        </td>
                                         <td className="px-4 py-3 text-center font-bold text-emerald-400">{player.stats.goals}</td>
                                         <td className="px-4 py-3 text-center font-bold text-blue-400">{player.stats.assists}</td>
                                         <td className="px-4 py-3 text-center text-slate-400 hidden md:table-cell">{player.stats.appearances}</td>
                                     </tr>
                                 );
                             })}
-                            {youngTalents.length === 0 && (
-                                <tr><td colSpan={8} className="text-center py-10 text-slate-500">Henüz genç yetenek istatistiği yok.</td></tr>
+                            {topRatedPlayers.length === 0 && (
+                                <tr><td colSpan={8} className="text-center py-10 text-slate-500">Henüz yeterli maç oynanmadı.</td></tr>
                             )}
                         </tbody>
                     </table>

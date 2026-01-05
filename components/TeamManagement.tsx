@@ -33,82 +33,81 @@ interface PlayerRowProps {
     isFirst?: boolean;
     isLast?: boolean;
     assignedRole?: Position;
+    key?: React.Key;
 }
 
-const PlayerRow: React.FC<PlayerRowProps> = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole }) => {
 
-    let warning = null;
-    // Calculate live effective rating considering current condition (stamina)
-    let effectiveRating = calculateEffectiveRating(player, assignedRole || normalizePos(player), player.condition);
+const getAttributeClass = (val: number) => {
+    if (val >= 90) return 'attr-box attr-elite'; // 90-99
+    if (val >= 80) return 'attr-box attr-high';  // 80-89
+    if (val >= 70) return 'attr-box attr-med';   // 70-79
+    return 'attr-box attr-low';                  // < 70
+};
 
-    if (assignedRole) {
-        // Base rating for comparison (100% condition)
-        const baseRating = calculateEffectiveRating(player, assignedRole, 100);
-
-        if (effectiveRating < baseRating * 0.8) warning = 'red';
-        else if (effectiveRating < baseRating) warning = 'yellow';
-    } else {
-        // For players without assigned role (bench/reserves), compare to their normal overall
-        if (effectiveRating < player.overall * 0.8) warning = 'red';
-        else if (effectiveRating < player.overall) warning = 'yellow';
-    }
+const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole }: PlayerRowProps) => {
+    const isSelected = selectedPlayerId === player.id;
+    const effectiveRating = assignedRole ? calculateEffectiveRating(player, assignedRole, player.condition) : player.overall;
 
     return (
         <div
-            className={`flex items-center justify-between p-3 rounded cursor-pointer border mb-1 transition-all active:scale-[0.98] ${selectedPlayerId === player.id
-                ? 'bg-emerald-900/50 border-emerald-500'
-                : 'bg-slate-800/50 border-slate-700 hover:bg-slate-700'
-                }`}
+            onClick={() => onSelect(player)}
+            className={`grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_2fr_repeat(5,1fr)_auto] gap-2 items-center p-2 border-b border-white/5 text-sm cursor-pointer transition-colors ${isSelected ? 'bg-emerald-900/40' : 'hover:bg-white/5'}`}
         >
-            <div className="flex items-center gap-3 flex-1" onClick={() => onSelect(player)}>
-                <div className="w-14 text-center text-[10px] font-bold text-slate-500 bg-slate-900 rounded py-1">
-                    <span className="text-emerald-400">{player.jerseyNumber ?? '-'}</span> | {player.position}
-                </div>
-                <PlayerAvatar visual={player.visual} size="sm" />
-                <div>
-                    <div className={`font-bold text-sm ${selectedPlayerId === player.id ? 'text-white' : 'text-slate-300'} flex items-center gap-1`}>
-                        {player.firstName.substring(0, 1)}. {player.lastName}
-                        {player.weeksInjured > 0 && <span className="text-red-500 ml-1">(!)</span>}
-                        {player.matchSuspension > 0 && <span className="text-yellow-500 ml-1">(!)</span>}
-                        {warning === 'red' && <AlertTriangle size={12} className="text-red-500" />}
-                        {warning === 'yellow' && <AlertTriangle size={12} className="text-yellow-500" />}
+            {/* Pos & Name */}
+            <div className="flex items-center gap-2">
+                <span className={`w-6 h-6 flex items-center justify-center rounded text-[10px] font-bold ${player.position === 'GK' ? 'bg-yellow-600/20 text-yellow-400 border border-yellow-600/50' :
+                    player.position === 'DEF' ? 'bg-blue-600/20 text-blue-400 border border-blue-600/50' :
+                        player.position === 'MID' ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/50' :
+                            'bg-red-600/20 text-red-400 border border-red-600/50'
+                    }`}>{player.position}</span>
+            </div>
+
+            <div className="min-w-0">
+                <div className="font-bold text-white truncate text-xs md:text-sm">{player.firstName} {player.lastName}</div>
+                {assignedRole && assignedRole !== normalizePos(player) && (
+                    <div className="text-[9px] text-amber-500 flex items-center gap-1">
+                        <AlertTriangle size={8} /> OOP: {assignedRole}
                     </div>
-                    <div className="text-[10px] text-slate-500 flex gap-2">
-                        <span className={player.condition < 60 ? 'text-red-400 font-bold' : ''}>Cond: {player.condition}%</span>
-                        <span className={player.morale < 50 ? 'text-red-400 font-bold' : ''}>Mor: {player.morale}%</span>
+                )}
+            </div>
+
+            {/* Hidden on Mobile - Attributes */}
+            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.speed)}>{player.attributes.speed}</span></div>
+            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.finishing)}>{player.attributes.finishing}</span></div>
+            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></div>
+            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></div>
+            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
+
+            {/* Status Bars (Mobile friendly) */}
+            <div className="flex flex-col gap-1 w-16 md:w-24">
+                <div className="flex items-center gap-1">
+                    <span className="text-[9px] font-mono text-slate-500 w-3">CON</span>
+                    <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
+                        <div className="h-full bg-emerald-500" style={{ width: `${player.condition}%` }}></div>
+                    </div>
+                </div>
+                <div className="flex items-center gap-1">
+                    <span className="text-[9px] font-mono text-slate-500 w-3">MOR</span>
+                    <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
+                        <div className={`h-full ${player.morale > 80 ? 'bg-emerald-400' : player.morale > 50 ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${player.morale}%` }}></div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex items-center gap-3">
-                {onMove && (
-                    <div className="flex flex-col gap-0.5">
-                        <button
-                            disabled={isFirst}
-                            onClick={(e) => { e.stopPropagation(); onMove(player.id, 'UP'); }}
-                            className={`p-1.5 rounded ${isFirst ? 'text-slate-700' : 'text-slate-500 hover:text-white hover:bg-slate-600'}`}
-                        >
-                            <ChevronUp size={16} />
-                        </button>
-                        <button
-                            disabled={isLast}
-                            onClick={(e) => { e.stopPropagation(); onMove(player.id, 'DOWN'); }}
-                            className={`p-1.5 rounded ${isLast ? 'text-slate-700' : 'text-slate-500 hover:text-white hover:bg-slate-600'}`}
-                        >
-                            <ChevronDown size={16} />
-                        </button>
-                    </div>
-                )}
-                <button
-                    onClick={(e) => { e.stopPropagation(); onInteractStart(player); }}
-                    className="text-slate-500 hover:text-white transition-colors p-2"
-                    title="Talk to Player"
-                >
-                    <MessageSquare size={18} />
+            {/* Actions & Rating */}
+            <div className="flex items-center gap-2 pl-2 border-l border-white/10">
+                <button onClick={(e) => { e.stopPropagation(); onInteractStart(player); }} className="p-1.5 hover:bg-white/10 rounded text-slate-400 hover:text-white">
+                    <MessageSquare size={14} />
                 </button>
-                <div className={`font-bold w-6 text-right ${assignedRole ? getOverallColor(effectiveRating) : getOverallColor(player.overall)}`}>
+                <div className={`font-black text-sm w-7 text-center rounded bg-slate-900 border border-white/10 ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : 'text-slate-300'}`}>
                     {effectiveRating}
                 </div>
+                {onMove && (
+                    <div className="flex flex-col gap-0.5">
+                        {!isFirst && <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'UP'); }} className="text-slate-500 hover:text-emerald-400"><ChevronUp size={10} /></button>}
+                        {!isLast && <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'DOWN'); }} className="text-slate-500 hover:text-emerald-400"><ChevronDown size={10} /></button>}
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -427,7 +426,18 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             <span className="hidden xs:inline">{t.completeSquad}</span>
                         </button>
                     </h3>
-                    <div className="bg-slate-900/50 p-2 rounded border border-emerald-900/30">
+                    <div className="fm-panel rounded-lg overflow-hidden">
+                        <div className="grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_2fr_repeat(5,1fr)_auto] gap-2 p-2 bg-slate-900 border-b border-white/10 text-[9px] uppercase font-bold text-slate-500">
+                            <div className="w-6">Pos</div>
+                            <div>Name</div>
+                            <div className="hidden md:flex justify-center">Spd</div>
+                            <div className="hidden md:flex justify-center">Sht</div>
+                            <div className="hidden md:flex justify-center">Pas</div>
+                            <div className="hidden md:flex justify-center">Dri</div>
+                            <div className="hidden md:flex justify-center">Def</div>
+                            <div className="w-16 md:w-24">Status</div>
+                            <div className="pl-2 w-16 text-center">OVR</div>
+                        </div>
                         {starters.map((p, idx) => (
                             <PlayerRow
                                 key={p.id}
@@ -469,7 +479,18 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     <h3 className="text-slate-500 font-bold mb-2 uppercase text-sm tracking-widest">
                         {t.reserves}
                     </h3>
-                    <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
+                    <div className="fm-panel rounded-lg overflow-hidden">
+                        <div className="grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_2fr_repeat(5,1fr)_auto] gap-2 p-2 bg-slate-900 border-b border-white/10 text-[9px] uppercase font-bold text-slate-500">
+                            <div className="w-6">Pos</div>
+                            <div>Name</div>
+                            <div className="hidden md:flex justify-center">Spd</div>
+                            <div className="hidden md:flex justify-center">Sht</div>
+                            <div className="hidden md:flex justify-center">Pas</div>
+                            <div className="hidden md:flex justify-center">Dri</div>
+                            <div className="hidden md:flex justify-center">Def</div>
+                            <div className="w-16 md:w-24">Status</div>
+                            <div className="pl-2 w-16 text-center">OVR</div>
+                        </div>
                         {reserves.map(p => (
                             <PlayerRow
                                 key={p.id}

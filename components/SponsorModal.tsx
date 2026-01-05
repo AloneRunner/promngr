@@ -22,35 +22,33 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                     <p className="text-slate-400 text-sm md:text-base">{t.sponsorSelect}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+                <div className="grid grid-cols-1 gap-2 md:gap-4 mb-4 md:mb-8 max-h-[60vh] overflow-y-auto">
                     {offers.map((offer) => (
                         <div
                             key={offer.id}
                             onClick={() => setSelectedId(offer.id)}
-                            className={`cursor-pointer rounded-xl p-4 md:p-6 border-2 transition-all relative overflow-hidden group ${selectedId === offer.id
-                                    ? 'bg-emerald-900/20 border-emerald-500 scale-100 md:scale-105 shadow-xl shadow-emerald-900/20'
-                                    : 'bg-slate-800 border-slate-700 hover:border-slate-500'
+                            className={`cursor-pointer rounded-lg p-3 border-2 transition-all relative ${selectedId === offer.id
+                                ? 'bg-emerald-900/20 border-emerald-500'
+                                : 'bg-slate-800 border-slate-700 hover:border-slate-500'
                                 }`}
                         >
-                            {selectedId === offer.id && (
-                                <div className="absolute top-2 right-2 text-emerald-500">
-                                    <CheckCircle2 />
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-sm font-bold text-white truncate">{offer.name}</h3>
+                                    <p className="text-[10px] text-slate-500 truncate">{offer.description}</p>
                                 </div>
-                            )}
-
-                            <div className="mb-2 md:mb-4">
-                                <h3 className="text-base md:text-xl font-bold text-white">{offer.name}</h3>
-                                <p className="text-xs md:text-sm text-slate-500">{offer.description}</p>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="bg-slate-900/50 p-3 rounded">
-                                    <div className="text-xs text-slate-500 uppercase">{t.weeklyIncome}</div>
-                                    <div className="text-lg font-mono text-emerald-400 font-bold">€{(offer.weeklyIncome / 1000).toFixed(0)}k</div>
-                                </div>
-                                <div className="bg-slate-900/50 p-3 rounded">
-                                    <div className="text-xs text-slate-500 uppercase">{t.winBonus}</div>
-                                    <div className="text-lg font-mono text-blue-400 font-bold">€{(offer.winBonus / 1000).toFixed(0)}k</div>
+                                <div className="flex gap-3 items-center ml-3">
+                                    <div className="text-right">
+                                        <div className="text-[9px] text-slate-500 uppercase">Haftalık</div>
+                                        <div className="text-sm font-mono text-emerald-400 font-bold">€{(offer.weeklyIncome / 1000).toFixed(0)}k</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-[9px] text-slate-500 uppercase">Galibiyet</div>
+                                        <div className="text-sm font-mono text-blue-400 font-bold">€{(offer.winBonus / 1000).toFixed(0)}k</div>
+                                    </div>
+                                    {selectedId === offer.id && (
+                                        <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -64,8 +62,8 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                         if (sponsor) onSelect(sponsor);
                     }}
                     className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${selectedId
-                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg'
-                            : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg'
+                        : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                         }`}
                 >
                     {t.signContract}

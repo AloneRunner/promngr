@@ -1,0 +1,192 @@
+/* Football Manager Theme - Global Styles */
+
+/* Base reset */
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+:root {
+  --fm-bg-dark: #020617;
+  --fm-bg-panel: rgba(15, 23, 42, 0.85);
+  --fm-border: rgba(255, 255, 255, 0.1);
+  --fm-primary: #10b981;
+  /* Emerald 500 */
+  --fm-accent: #f59e0b;
+  /* Amber 500 */
+  --fm-text-muted: #94a3b8;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--fm-bg-dark);
+  background-image:
+    radial-gradient(circle at 50% 0%, #1e293b 0%, transparent 70%),
+    linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  color: #e2e8f0;
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Scrollbar Styling - FM Style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Utility Classes */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism Panels */
+.fm-panel {
+  background: var(--fm-bg-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--fm-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.fm-card {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid var(--fm-border);
+  border-radius: 8px;
+}
+
+/* Data Tables - High Density */
+.fm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.fm-table th {
+  background: rgba(2, 6, 23, 0.8);
+  color: var(--fm-text-muted);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 6px;
+  text-align: left;
+  border-bottom: 2px solid var(--fm-border);
+}
+
+.fm-table td {
+  padding: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+}
+
+.fm-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Attribute Boxes */
+.attr-box {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.attr-elite {
+  background: #064e3b;
+  color: #34d399;
+  border: 1px solid #059669;
+}
+
+/* 16-20 */
+.attr-high {
+  background: #14532d;
+  color: #86efac;
+  border: 1px solid #22c55e;
+}
+
+/* 11-15 */
+.attr-med {
+  background: #3f6212;
+  color: #d9f99d;
+  border: 1px solid #84cc16;
+}
+
+/* 6-10 */
+.attr-low {
+  background: #451a03;
+  color: #fdba74;
+  border: 1px solid #f97316;
+}
+
+/* 1-5 */
+
+/* Navigation Active State */
+.nav-item-active {
+  background: rgba(16, 185, 129, 0.15);
+  border-top: 2px solid var(--fm-primary);
+  color: #fff;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* Compact Grids */
+.grid-dense {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+/* Status Indicators */
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px currentColor;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: slideUp 0.3s ease-out forwards;
+}

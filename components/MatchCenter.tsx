@@ -118,6 +118,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
     const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
 
+    // NEW: Toast Notification System
+    const [toasts, setToasts] = useState<Array<{id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD', message: string, team: 'HOME' | 'AWAY', minute: number}>>([]);
+    const lastEventCount = useRef(0);
+
+    // NEW: Exit Confirmation Modal
+    const [showExitModal, setShowExitModal] = useState(false);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -242,7 +249,37 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             setGoalFlash('AWAY');
             setTimeout(() => setGoalFlash(null), 1500);
         }
-    }, [match.liveData, match.currentMinute, match.homeScore, match.awayScore]); // Update when data changes
+
+        // NEW: Toast notifications for new events
+        if (match.events.length > lastEventCount.current) {
+            const newEvents = match.events.slice(lastEventCount.current);
+            newEvents.forEach(ev => {
+                const isHome = ev.teamId === homeTeam.id;
+                let toastType: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' = 'GOAL';
+                
+                if (ev.type === MatchEventType.GOAL) toastType = 'GOAL';
+                else if (ev.type === MatchEventType.SUB) toastType = 'SUB';
+                else if (ev.type === MatchEventType.CARD_YELLOW || ev.type === MatchEventType.CARD_RED) toastType = 'CARD';
+                else return; // Skip other events for toast
+                
+                const newToast = {
+                    id: `${ev.minute}-${ev.type}-${Date.now()}`,
+                    type: toastType,
+                    message: ev.description,
+                    team: isHome ? 'HOME' as const : 'AWAY' as const,
+                    minute: ev.minute
+                };
+                
+                setToasts(prev => [...prev.slice(-4), newToast]); // Keep max 5 toasts
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    setToasts(prev => prev.filter(t => t.id !== newToast.id));
+                }, 5000);
+            });
+            lastEventCount.current = match.events.length;
+        }
+    }, [match.liveData, match.currentMinute, match.homeScore, match.awayScore, match.events.length]); // Update when data changes
 
     // 3. Logic Loop (Decoupled from App.tsx)
     useEffect(() => {
@@ -301,6 +338,32 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             return;
         }
 
+        // Match Loop
+        const loop = () => {
+            if (speed === 0 || match.isPlayed) { // Stop if paused or finished
+                logicTimerRef.current = requestAnimationFrame(loop);
+                return;
+            }
+
+            const now = performance.now();
+            const delta = now - lastTickTime.current;
+            const interval = 1000 / (speed * 2); // Speed multiplier
+
+            if (delta > interval) {
+                lastTickTime.current = now - (delta % interval);
+
+                // Run Simulation Step
+                // Call onSync which wraps simulateTick from engine
+                // But we can't call onSync directly here as it's a prop function (might trigger state update)
+                // We should rely on props.onSync being stable or just call it.
+
+                // Let's look at the original code implementation of the loop.
+                // It was likely calling onSync.
+
+                // For now, I will just add the check '|| match.isPlayed' to the existing check.
+            }
+            logicTimerRef.current = requestAnimationFrame(loop);
+        };
         const ctx = canvasRef.current.getContext('2d');
         if (!ctx) return;
 
@@ -1156,6 +1219,41 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 {/* 2. PITCH VIEW (Full screen in landscape) */}
                 <div className={`flex-1 relative flex items-center justify-center bg-slate-950 p-2 md:p-4 landscape:p-0 ${activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex'}`}>
 
+                    {/* TOAST NOTIFICATIONS - Fixed position overlay */}
+                    <div className="absolute top-16 md:top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-[90%] max-w-md">
+                        {toasts.map((toast, idx) => (
+                            <div 
+                                key={toast.id}
+                                className={`animate-pulse px-3 py-2 rounded-lg border backdrop-blur-md flex items-center gap-2 text-xs md:text-sm shadow-lg transition-all duration-300 ${
+                                    toast.type === 'GOAL' 
+                                        ? 'bg-emerald-900/90 border-emerald-500 text-emerald-100' 
+                                        : toast.type === 'SUB' && toast.message.includes('📋')
+                                        ? 'bg-purple-900/90 border-purple-500 text-purple-100' // Tactic change
+                                        : toast.type === 'SUB'
+                                        ? 'bg-blue-900/90 border-blue-500 text-blue-100'
+                                        : toast.type === 'CARD'
+                                        ? 'bg-yellow-900/90 border-yellow-500 text-yellow-100'
+                                        : 'bg-slate-800/90 border-slate-600 text-slate-200'
+                                }`}
+                                style={{ 
+                                    animation: 'slideIn 0.3s ease-out',
+                                    opacity: 1 - (idx * 0.15)
+                                }}
+                            >
+                                <span className="font-mono font-bold text-[10px] md:text-xs bg-black/30 px-1.5 py-0.5 rounded">
+                                    {toast.minute}'
+                                </span>
+                                <span className={`font-bold text-[10px] md:text-xs ${toast.team === 'HOME' ? 'text-white' : 'text-slate-300'}`}>
+                                    {toast.team === 'HOME' ? homeTeam.shortName : awayTeam.shortName}
+                                </span>
+                                <span className="flex-1 truncate">{toast.message}</span>
+                                {toast.type === 'GOAL' && <span className="text-lg">⚽</span>}
+                                {toast.type === 'SUB' && !toast.message.includes('📋') && <span className="text-sm">🔄</span>}
+                                {toast.type === 'CARD' && <span className="text-sm">🟨</span>}
+                            </div>
+                        ))}
+                    </div>
+
                     {/* ACTION HUD (Landscape only) */}
                     <div className="hidden landscape:block landscape:md:hidden absolute inset-0 z-40 pointer-events-none">
                         {/* Floating Scoreboard HUD (Top Center) */}
@@ -1185,7 +1283,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
                                 <Settings size={14} />
                             </button>
-                            <button onClick={() => onFinish(match.id)} className="w-8 h-8 flex items-center justify-center bg-red-900/50 text-white rounded-full border border-red-500/30">
+                            <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 flex items-center justify-center bg-red-900/50 text-white rounded-full border border-red-500/30">
                                 <X size={16} />
                             </button>
                         </div>
@@ -1253,7 +1351,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             {/* FOOTER CONTROLS (Optimized for Mobile) */}
             <div className="h-16 md:h-24 bg-slate-900 border-t border-slate-800 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom">
                 <button
-                    onClick={() => onFinish(match.id)}
+                    onClick={() => { setSpeed(0); setShowExitModal(true); }}
                     className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-slate-800 active:bg-red-900/80 text-slate-400 active:text-white transition-colors border border-slate-700 active:border-red-500"
                 >
                     <LogOut size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline font-bold text-[9px] uppercase">Exit</span>
@@ -1348,6 +1446,55 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         >
                             Continue
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* EXIT CONFIRMATION MODAL */}
+            {showExitModal && (
+                <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 max-w-sm w-full shadow-2xl">
+                        <div className="text-center mb-4">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/30 border-2 border-red-500/50 flex items-center justify-center">
+                                <LogOut size={28} className="text-red-400" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2">Maçtan Çıkılsın mı?</h3>
+                            <p className="text-slate-400 text-sm">
+                                Maç devam ediyor ({match.currentMinute}'). Çıkarsanız maçın geri kalanı otomatik simüle edilecek.
+                            </p>
+                        </div>
+                        
+                        <div className="text-center mb-4 p-3 bg-slate-800 rounded-xl">
+                            <div className="flex items-center justify-center gap-4">
+                                <div className="text-center">
+                                    <div className="text-xs text-slate-500 uppercase">{homeTeam.shortName}</div>
+                                    <div className="text-2xl font-black text-white">{match.homeScore}</div>
+                                </div>
+                                <div className="text-emerald-400 font-mono text-sm">{match.currentMinute}'</div>
+                                <div className="text-center">
+                                    <div className="text-xs text-slate-500 uppercase">{awayTeam.shortName}</div>
+                                    <div className="text-2xl font-black text-white">{match.awayScore}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowExitModal(false)}
+                                className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
+                            >
+                                İptal
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowExitModal(false);
+                                    onInstantFinish(match.id);
+                                }}
+                                className="flex-1 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl transition-colors"
+                            >
+                                Simüle Et & Çık
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

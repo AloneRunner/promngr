@@ -1,6 +1,23 @@
 
 export const FENERBAHCE_SQUAD = [
   {
+    ad: "Ahmet Candemir",
+    takim: "Fener Canaries",
+    uyruk: "Türkiye",
+    mevki: "SĞK",
+    reyting: 86,
+    yas: 21,
+    ana_ozellikler: { hiz: 86, sut: 86, pas: 86, dribbling: 86, defans: 80, fizik: 86 },
+    detaylar: {
+      hizlanma: 86, sprint: 86, pozisyon: 85, bitiricilik: 86, sut_gucu: 86,
+      uzaktan_sut: 85, vizyon: 84, orta_acma: 84, kisa_pas: 85, uzun_pas: 84,
+      ceviklik: 86, denge: 86, reaksiyon: 85, top_kontrol: 86, dribbling: 86,
+      sogukkanlilik: 85, top_kesme: 80, defansif_farkindalik: 80, ayakta_mudahale: 80,
+      kayarak_mudahale: 80, ziplama: 86, dayaniklilik: 86, guc: 86, agresiflik: 85
+    },
+    oyun_tarzlari: ["Amansız+", "Çabuk Adım+", "Ezber Bozan+", "Keskin Pas+", "Kuvvetli Şut+", "Plase Şut+", "Seri+", "Teknik+", "Yaratıcı+"]
+  },
+  {
     ad: "Ederson",
     takim: "Fener Canaries",
     uyruk: "Brezilya",
