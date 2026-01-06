@@ -359,12 +359,7 @@ export const autoPickLineup = (
         for (let i = 0; i < structure.FWD; i++) slotRequirements.push(Position.FWD);
     }
 
-    console.log('[AutoPick Debug]', {
-        formation,
-        structure,
-        slotRequirements,
-        slotCount: slotRequirements.length
-    });
+    // Debug log removed for production
 
     // Reset all players first
     players.forEach(p => {
@@ -548,7 +543,7 @@ export const generateWorld = (leagueId: string): GameState => {
             }
 
             const coachType = getRandomItem(Object.values(CoachArchetype));
-            const baseStaffLevel = Math.max(1, Math.floor(rt.reputation / 1500));
+            const baseStaffLevel = Math.max(1, Math.floor(rt.reputation / 2500)); // LOWERED: was /1500, now /2500
 
             const team: Team = {
                 id: teamId, name: rt.name, city: rt.city, primaryColor: rt.primaryColor, secondaryColor: rt.secondaryColor,
@@ -568,15 +563,16 @@ export const generateWorld = (leagueId: string): GameState => {
             // Objectives are only needed for the user's team, but we can generate basic ones for all
             team.objectives = generateObjectives(rt.reputation);
 
-            // Facility Balancing based on Reputation
+            // Facility Balancing based on Reputation - MAX 25 LEVELS
+            // Lowered starting levels for progression feeling
             const tier = team.reputation > 85 ? 3 : team.reputation > 75 ? 2 : 1;
-            const baseLevel = tier === 3 ? 7 : tier === 2 ? 5 : 2;
+            const baseLevel = tier === 3 ? 5 : tier === 2 ? 3 : 1; // LOWERED: was 7/5/2, now 5/3/1
 
             team.facilities = {
                 stadiumCapacity: team.facilities.stadiumCapacity,
-                stadiumLevel: Math.min(10, baseLevel + getRandomInt(0, 2)),
-                trainingLevel: Math.min(10, baseLevel + getRandomInt(0, 2)),
-                academyLevel: Math.min(10, baseLevel + getRandomInt(0, 2))
+                stadiumLevel: Math.min(25, baseLevel + getRandomInt(0, 2)),
+                trainingLevel: Math.min(25, baseLevel + getRandomInt(0, 2)),
+                academyLevel: Math.min(25, baseLevel + getRandomInt(0, 2))
             };
 
             // Auto pick lineup adhering to the specific formation
@@ -653,6 +649,11 @@ export const getLivePlayerStamina = (playerId: string): number | undefined => {
 }
 
 export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[]): Match => {
+    // ⚽ ADIL SİMÜLASYON - Kullanıcı takımına torpil YOK!
+    // Sonuçlar SADECE takımın gerçek gücüne göre belirlenir:
+    // - Real Madrid (82-91 OVR) > Karagümrük (54-74 OVR) = RM favorit
+    // - Galatasaray (70-82 OVR) vs Fenerbahçe (70-82 OVR) = Dengeli maç
+    
     // 1. TACTICAL ADVANTAGE (Rock Paper Scissors)
     const tacticsRockPaperScissors: Record<string, string> = {
         'Possession': 'HighPress',
@@ -661,8 +662,19 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
         'HighPress': 'Counter'
     };
 
-    // Base Home Advantage
-    let homeAdvantage = 1.08; // Slight home advantage
+    // === TARAFTAR DESTEĞİ & EV SAHİBİ AVANTAJI ===
+    // Reputation (itibar) yüksek takımların daha coşkulu taraftarları var
+    const homeReputation = homeTeam.reputation || 5000;
+    const fanBoost = Math.min(0.06, (homeReputation / 100000)); // Max +6% bonus (10000 rep = +6%)
+    
+    // Temel ev sahibi avantajı + taraftar desteği
+    let homeAdvantage = 1.08 + fanBoost; // 1.08 + 0.00-0.06 = 1.08-1.14
+    
+    // === ŞANS FAKTÖRÜ ===
+    // Her maçta %5-15 arası rastgele varyasyon (underdog upset olabilir!)
+    const luckFactor = 0.85 + (Math.random() * 0.30); // 0.85 - 1.15 arası
+    const homeLuck = luckFactor;
+    const awayLuck = 2 - luckFactor; // Birinin şansı yüksekse diğerinin düşük
 
     // Tactical Check
     if (tacticsRockPaperScissors[homeTeam.tactic.style] === awayTeam.tactic.style) homeAdvantage += 0.05;
@@ -749,9 +761,9 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
         const homeMomentum = 0.9 + (Math.random() * 0.2 * (1 - homeConsistency)) + (homeConsistency * 0.1);
         const awayMomentum = 0.9 + (Math.random() * 0.2 * (1 - awayConsistency)) + (awayConsistency * 0.1);
 
-        // Attack vs Defense calculation
-        const hAttackStrength = homePower.attack * homeAdvantage * homeMomentum;
-        const aAttackStrength = awayPower.attack * awayMomentum;
+        // Attack vs Defense calculation - includes LUCK FACTOR & HOME ADVANTAGE
+        const hAttackStrength = homePower.attack * homeAdvantage * homeMomentum * homeLuck;
+        const aAttackStrength = awayPower.attack * awayMomentum * awayLuck;
 
         const hDefenseStrength = homePower.defense * homeAdvantage;
         const aDefenseStrength = awayPower.defense;
@@ -800,6 +812,7 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             autoPickLineup(homePlayers, home.tactic.formation);
             autoPickLineup(awayPlayers, away.tactic.formation);
 
+            // ADIL SİMÜLASYON - Sadece takım gücüne göre (torpil yok!)
             simulateFullMatch(m, home, away, homePlayers, awayPlayers);
             const hScore = m.homeScore; const aScore = m.awayScore;
             const ptsHome = hScore > aScore ? 3 : hScore === aScore ? 1 : 0;
@@ -870,24 +883,24 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             updatePlayerRatings(homePlayers, home.id, true);
             updatePlayerRatings(awayPlayers, away.id, false);
 
-            // REPUTATION SYSTEM - Changes based on match results
+            // REPUTATION SYSTEM - ENHANCED: More dynamic changes!
             const updateReputation = (team: Team, opponentRep: number, won: boolean, drew: boolean) => {
                 const repDiff = opponentRep - team.reputation;
                 let change = 0;
                 
                 if (won) {
-                    // Win against stronger opponent = big boost
-                    if (repDiff > 500) change = Math.floor(repDiff / 100) + 5; // +10-15 for beating much stronger
-                    else if (repDiff > 0) change = 3 + Math.floor(repDiff / 200); // +3-5
-                    else change = 1; // +1 for beating weaker
+                    // Win against stronger opponent = BIG boost (increased 2x)
+                    if (repDiff > 500) change = Math.floor(repDiff / 50) + 10; // +20-30 for beating much stronger
+                    else if (repDiff > 0) change = 6 + Math.floor(repDiff / 100); // +6-10
+                    else change = 3; // +3 for beating weaker (was +1)
                 } else if (drew) {
-                    if (repDiff > 500) change = 2; // Draw against stronger = small gain
-                    else if (repDiff < -500) change = -2; // Draw against weaker = small loss
+                    if (repDiff > 500) change = 5; // Draw against stronger = gain (was +2)
+                    else if (repDiff < -500) change = -5; // Draw against weaker = loss (was -2)
                 } else {
-                    // Loss
-                    if (repDiff < -500) change = -Math.floor(Math.abs(repDiff) / 150) - 3; // -5 to -10 for losing to much weaker
-                    else if (repDiff < 0) change = -2; // -2 for losing to weaker
-                    else change = -1; // -1 for losing to stronger (expected)
+                    // Loss - HARSHER penalties
+                    if (repDiff < -500) change = -Math.floor(Math.abs(repDiff) / 75) - 8; // -15 to -25 for losing to much weaker
+                    else if (repDiff < 0) change = -5; // -5 for losing to weaker (was -2)
+                    else change = -2; // -2 for losing to stronger (was -1)
                 }
                 
                 team.reputation = Math.max(1000, Math.min(10000, team.reputation + change));
@@ -1036,14 +1049,26 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 newOverall = Math.min(p.potential, p.overall + 1);
                 
                 // Apply focused attribute boost for user players
+                let boostedAttr = '';
                 if (isUserPlayer && trainingBoost.length > 0 && Math.random() < 0.5) {
                     const attrToBoost = trainingBoost[Math.floor(Math.random() * trainingBoost.length)];
                     newAttributes[attrToBoost] = Math.min(99, (newAttributes[attrToBoost] || 50) + 1);
+                    // Turkish attribute names
+                    const attrNames: Record<string, string> = {
+                        finishing: 'Bitiricilik', dribbling: 'Dripling', positioning: 'Pozisyon',
+                        tackling: 'Top Kapma', strength: 'Güç', speed: 'Hız',
+                        stamina: 'Dayanıklılık', passing: 'Pas', vision: 'Vizyon'
+                    };
+                    boostedAttr = attrNames[attrToBoost] || attrToBoost;
                 }
                 
                 if (isUserPlayer && newOverall > p.overall) {
                     const focusLabel = userTeam?.trainingFocus !== 'BALANCED' ? ` (${userTeam?.trainingFocus})` : '';
-                    report.push(`⬆️ ${p.firstName} ${p.lastName} +1 OVR (${p.overall} → ${newOverall})${focusLabel}`);
+                    if (boostedAttr) {
+                        report.push(`⬆️ ${p.firstName} ${p.lastName}: ${boostedAttr} +1${focusLabel}`);
+                    } else {
+                        report.push(`⬆️ ${p.firstName} ${p.lastName}: Genel Gelişim${focusLabel}`);
+                    }
                 }
             }
         }
@@ -1184,18 +1209,18 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             let cost = 0;
             const newFacilities = { ...team.facilities };
 
-            if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 10) {
+            if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 25) {
                 cost = 3000000;
                 if (team.budget > cost) {
                     newFacilities.stadiumLevel += 1;
                     newFacilities.stadiumCapacity += 2000;
                 }
-            } else if (targetFacility === 'training' && newFacilities.trainingLevel < 10) {
+            } else if (targetFacility === 'training' && newFacilities.trainingLevel < 25) {
                 cost = 2000000;
                 if (team.budget > cost) {
                     newFacilities.trainingLevel += 1;
                 }
-            } else if (targetFacility === 'academy' && newFacilities.academyLevel < 10) {
+            } else if (targetFacility === 'academy' && newFacilities.academyLevel < 25) {
                 cost = 1500000;
                 if (team.budget > cost) {
                     newFacilities.academyLevel += 1;

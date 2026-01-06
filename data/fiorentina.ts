@@ -493,5 +493,49 @@ export const FLORENCE_VIOLA_SQUAD = [
         oyun_tarzlari: [
             "Kuvvetli Şut"
         ]
-    }
+    },
+  {
+    ad: "Diego Garcia",
+    takim: "Fiorentina",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 74,
+    yas: 20,
+    ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
+    detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Martinez",
+    takim: "Fiorentina",
+    uyruk: "Arjantin",
+    mevki: "STP",
+    reyting: 73,
+    yas: 21,
+    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Garcia",
+    takim: "Fiorentina",
+    uyruk: "İspanya",
+    mevki: "SĞB",
+    reyting: 72,
+    yas: 22,
+    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Martinez",
+    takim: "Fiorentina",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 71,
+    yas: 23,
+    ana_ozellikler: { hiz: 56, sut: 51, pas: 66, dribbling: 63, defans: 71, fizik: 66 },
+    detaylar: { top_kesme: 71, ayakta_mudahale: 66, dayaniklilik: 68, kisa_pas: 63 },
+    oyun_tarzlari: []
+  }
 ];

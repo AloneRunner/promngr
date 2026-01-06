@@ -542,5 +542,49 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
             agresiflik: 76
         },
         oyun_tarzlari: []
-    }
+    },
+  {
+    ad: "Diego Perez",
+    takim: "Juventus",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 81,
+    yas: 20,
+    ana_ozellikler: { hiz: 71, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 71, refleks: 81, vurus: 76, pozisyon: 73, top_kontrol: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Santos",
+    takim: "Juventus",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 80,
+    yas: 21,
+    ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Perez",
+    takim: "Juventus",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 79,
+    yas: 22,
+    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+    detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Perez",
+    takim: "Juventus",
+    uyruk: "Fransa",
+    mevki: "SĞB",
+    reyting: 78,
+    yas: 23,
+    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+    oyun_tarzlari: []
+  }
 ];

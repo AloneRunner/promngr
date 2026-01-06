@@ -456,5 +456,49 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: [
             "Geleceğin Yıldızı"
         ]
-    }
+    },
+  {
+    ad: "Carlos Costa",
+    takim: "Lecce",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Garcia",
+    takim: "Lecce",
+    uyruk: "Arjantin",
+    mevki: "STP",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Santos",
+    takim: "Lecce",
+    uyruk: "İspanya",
+    mevki: "SĞB",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Costa",
+    takim: "Lecce",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 68,
+    yas: 23,
+    ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
+    detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
+    oyun_tarzlari: []
+  }
 ];

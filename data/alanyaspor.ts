@@ -109,5 +109,148 @@ export const ALANYASPOR_SQUAD = [
     ana_ozellikler: { hiz: 64, sut: 31, pas: 41, dribbling: 43, defans: 68, fizik: 68 },
     detaylar: { ziplama: 73, guc: 71, ayakta_mudahale: 71, kayarak_mudahale: 69 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Arda Demir",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 69,
+    yas: 20,
+    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Emre Kurt",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 67,
+    yas: 21,
+    ana_ozellikler: { hiz: 57, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 67 },
+    detaylar: { ucma: 57, refleks: 67, vurus: 62, pozisyon: 59, top_kontrol: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "İbrahim Doğan",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 66,
+    yas: 22,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Serkan Eren",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 65,
+    yas: 23,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Yunus Özdemir",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 64,
+    yas: 24,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Burak Arslan",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 63,
+    yas: 25,
+    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ahmet Arslan",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 62,
+    yas: 26,
+    ana_ozellikler: { hiz: 47, sut: 42, pas: 57, dribbling: 54, defans: 62, fizik: 57 },
+    detaylar: { top_kesme: 62, ayakta_mudahale: 57, dayaniklilik: 59, kisa_pas: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Silva",
+    takim: "Alanyaspor",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 61,
+    yas: 27,
+    ana_ozellikler: { hiz: 46, sut: 41, pas: 56, dribbling: 53, defans: 61, fizik: 56 },
+    detaylar: { top_kesme: 61, ayakta_mudahale: 56, dayaniklilik: 58, kisa_pas: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Martinez",
+    takim: "Alanyaspor",
+    uyruk: "Portekiz",
+    mevki: "MO",
+    reyting: 60,
+    yas: 28,
+    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Martinez",
+    takim: "Alanyaspor",
+    uyruk: "Brezilya",
+    mevki: "MO",
+    reyting: 59,
+    yas: 29,
+    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Murat Yavuz",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 58,
+    yas: 30,
+    ana_ozellikler: { hiz: 46, sut: 48, pas: 58, dribbling: 53, defans: 43, fizik: 48 },
+    detaylar: { vizyon: 53, kisa_pas: 58, top_kontrol: 50, dayaniklilik: 46 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Oğuz Yılmaz",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "MOO",
+    reyting: 63,
+    yas: 31,
+    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+    detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Aslan",
+    takim: "Alanyaspor",
+    uyruk: "Türkiye",
+    mevki: "SĞO",
+    reyting: 62,
+    yas: 32,
+    ana_ozellikler: { hiz: 67, sut: 57, pas: 54, dribbling: 64, defans: 35, fizik: 47 },
+    detaylar: { dribbling: 62, ceviklik: 65, orta_acma: 52, sprint: 67 },
+    oyun_tarzlari: []
   }
 ];

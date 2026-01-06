@@ -175,5 +175,82 @@ export const BASAKSEHIR_SQUAD = [
     ana_ozellikler: { hiz: 53, sut: 63, pas: 63, dribbling: 63, defans: 66, fizik: 72 },
     detaylar: { penalti: 77, guc: 73, ziplama: 72, dayaniklilik: 72 },
     oyun_tarzlari: ["Hava Hakimi"]
+  },
+  {
+    ad: "Serkan Demir",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 76,
+    yas: 20,
+    ana_ozellikler: { hiz: 66, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 76 },
+    detaylar: { ucma: 66, refleks: 76, vurus: 71, pozisyon: 68, top_kontrol: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Eren Türk",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 74,
+    yas: 21,
+    ana_ozellikler: { hiz: 64, sut: 49, pas: 66, dribbling: 64, defans: 74, fizik: 69 },
+    detaylar: { ayakta_mudahale: 74, top_kesme: 69, kafa_isabeti: 64, guc: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Furkan Aydın",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 73,
+    yas: 22,
+    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "İbrahim Tekin",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 72,
+    yas: 23,
+    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Kerem Çelik",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 71,
+    yas: 24,
+    ana_ozellikler: { hiz: 61, sut: 46, pas: 63, dribbling: 61, defans: 71, fizik: 66 },
+    detaylar: { ayakta_mudahale: 71, top_kesme: 66, kafa_isabeti: 61, guc: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ozan Öztürk",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 70,
+    yas: 25,
+    ana_ozellikler: { hiz: 55, sut: 50, pas: 65, dribbling: 62, defans: 70, fizik: 65 },
+    detaylar: { top_kesme: 70, ayakta_mudahale: 65, dayaniklilik: 67, kisa_pas: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ali Kılıç",
+    takim: "Basaksehir",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 69,
+    yas: 26,
+    ana_ozellikler: { hiz: 57, sut: 59, pas: 69, dribbling: 64, defans: 54, fizik: 59 },
+    detaylar: { vizyon: 64, kisa_pas: 69, top_kontrol: 61, dayaniklilik: 57 },
+    oyun_tarzlari: []
   }
 ];

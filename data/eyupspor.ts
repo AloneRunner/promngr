@@ -153,5 +153,104 @@ export const EYUPSPOR_SQUAD = [
     ana_ozellikler: { hiz: 70, sut: 28, pas: 42, dribbling: 47, defans: 66, fizik: 77 },
     detaylar: { guc: 79, agresiflik: 78, ziplama: 77, sprint: 75 },
     oyun_tarzlari: ["Engel", "Sezgili"]
+  },
+  {
+    ad: "Mahmut Özgür",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 67,
+    yas: 20,
+    ana_ozellikler: { hiz: 57, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 67 },
+    detaylar: { ucma: 57, refleks: 67, vurus: 62, pozisyon: 59, top_kontrol: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Deniz Polat",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 65,
+    yas: 21,
+    ana_ozellikler: { hiz: 55, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 65 },
+    detaylar: { ucma: 55, refleks: 65, vurus: 60, pozisyon: 57, top_kontrol: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Yunus Kaya",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 64,
+    yas: 22,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Tolga Yılmaz",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 63,
+    yas: 23,
+    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Demir",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 62,
+    yas: 24,
+    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Emre Arslan",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 61,
+    yas: 25,
+    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ahmet Özer",
+    takim: "Eyupspor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 59,
+    yas: 26,
+    ana_ozellikler: { hiz: 49, sut: 34, pas: 51, dribbling: 49, defans: 59, fizik: 54 },
+    detaylar: { ayakta_mudahale: 59, top_kesme: 54, kafa_isabeti: 49, guc: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Eyupspor",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 58,
+    yas: 27,
+    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
+    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Silva",
+    takim: "Eyupspor",
+    uyruk: "Portekiz",
+    mevki: "MO",
+    reyting: 57,
+    yas: 28,
+    ana_ozellikler: { hiz: 45, sut: 47, pas: 57, dribbling: 52, defans: 42, fizik: 47 },
+    detaylar: { vizyon: 52, kisa_pas: 57, top_kontrol: 49, dayaniklilik: 45 },
+    oyun_tarzlari: []
   }
 ];

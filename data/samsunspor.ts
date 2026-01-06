@@ -164,5 +164,93 @@ export const SAMSUNSPOR_SQUAD = [
     ana_ozellikler: { hiz: 80, sut: 58, pas: 62, dribbling: 65, defans: 60, fizik: 71 },
     detaylar: { hizlanma: 81, sprint: 79, ziplama: 81, dayaniklilik: 78 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Ozan Öztürk",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 75,
+    yas: 20,
+    ana_ozellikler: { hiz: 65, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 75 },
+    detaylar: { ucma: 65, refleks: 75, vurus: 70, pozisyon: 67, top_kontrol: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Kaya",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 73,
+    yas: 21,
+    ana_ozellikler: { hiz: 63, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 73 },
+    detaylar: { ucma: 63, refleks: 73, vurus: 68, pozisyon: 65, top_kontrol: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Eren Şen",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 72,
+    yas: 22,
+    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Kerem Özer",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 71,
+    yas: 23,
+    ana_ozellikler: { hiz: 61, sut: 46, pas: 63, dribbling: 61, defans: 71, fizik: 66 },
+    detaylar: { ayakta_mudahale: 71, top_kesme: 66, kafa_isabeti: 61, guc: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Hasan Eren",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 70,
+    yas: 24,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Emre Arslan",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 69,
+    yas: 25,
+    ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
+    detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Arda Karataş",
+    takim: "Samsunspor",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 68,
+    yas: 26,
+    ana_ozellikler: { hiz: 56, sut: 58, pas: 68, dribbling: 63, defans: 53, fizik: 58 },
+    detaylar: { vizyon: 63, kisa_pas: 68, top_kontrol: 60, dayaniklilik: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Samsunspor",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 67,
+    yas: 27,
+    ana_ozellikler: { hiz: 55, sut: 57, pas: 67, dribbling: 62, defans: 52, fizik: 57 },
+    detaylar: { vizyon: 62, kisa_pas: 67, top_kontrol: 59, dayaniklilik: 55 },
+    oyun_tarzlari: []
   }
 ];

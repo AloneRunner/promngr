@@ -247,6 +247,50 @@ export const MADRID_BLANCOS_RESERVES = [
         ana_ozellikler: { hiz: 60, sut: 35, pas: 60, dribbling: 62, defans: 75, fizik: 70 },
         detaylar: { top_kesme: 76, markaj: 75 },
         oyun_tarzlari: []
-    }
+    },
+  {
+    ad: "Diego Silva",
+    takim: "Real Madrid",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 91,
+    yas: 20,
+    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 81, refleks: 91, vurus: 86, pozisyon: 83, top_kontrol: 79 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Martinez",
+    takim: "Real Madrid",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 90,
+    yas: 21,
+    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 80, refleks: 90, vurus: 85, pozisyon: 82, top_kontrol: 78 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Garcia",
+    takim: "Real Madrid",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 89,
+    yas: 22,
+    ana_ozellikler: { hiz: 79, sut: 64, pas: 81, dribbling: 79, defans: 89, fizik: 84 },
+    detaylar: { ayakta_mudahale: 89, top_kesme: 84, kafa_isabeti: 79, guc: 81 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Silva",
+    takim: "Real Madrid",
+    uyruk: "Fransa",
+    mevki: "SLB",
+    reyting: 88,
+    yas: 23,
+    ana_ozellikler: { hiz: 78, sut: 63, pas: 80, dribbling: 78, defans: 88, fizik: 83 },
+    detaylar: { ayakta_mudahale: 88, top_kesme: 83, kafa_isabeti: 78, guc: 80 },
+    oyun_tarzlari: []
+  }
 ];
 

@@ -500,5 +500,38 @@ export const GENOA_GRIFFINS_SQUAD = [
             "Genç Yetenek",
             "Yaratıcı"
         ]
-    }
+    },
+  {
+    ad: "Carlos Lopez",
+    takim: "Genoa",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Perez",
+    takim: "Genoa",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Lopez",
+    takim: "Genoa",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  }
 ];

@@ -413,5 +413,93 @@ export const ROMA_GLADIATORS_SQUAD = [
         oyun_tarzlari: [
             "Refleks"
         ]
-    }
+    },
+  {
+    ad: "Marco Santos",
+    takim: "Roma",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 79,
+    yas: 20,
+    ana_ozellikler: { hiz: 69, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 79 },
+    detaylar: { ucma: 69, refleks: 79, vurus: 74, pozisyon: 71, top_kontrol: 67 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Garcia",
+    takim: "Roma",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 78,
+    yas: 21,
+    ana_ozellikler: { hiz: 68, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 78 },
+    detaylar: { ucma: 68, refleks: 78, vurus: 73, pozisyon: 70, top_kontrol: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Perez",
+    takim: "Roma",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 77,
+    yas: 22,
+    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+    detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Martinez",
+    takim: "Roma",
+    uyruk: "Fransa",
+    mevki: "SĞB",
+    reyting: 76,
+    yas: 23,
+    ana_ozellikler: { hiz: 66, sut: 51, pas: 68, dribbling: 66, defans: 76, fizik: 71 },
+    detaylar: { ayakta_mudahale: 76, top_kesme: 71, kafa_isabeti: 66, guc: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Santos",
+    takim: "Roma",
+    uyruk: "İtalya",
+    mevki: "SLB",
+    reyting: 75,
+    yas: 24,
+    ana_ozellikler: { hiz: 65, sut: 50, pas: 67, dribbling: 65, defans: 75, fizik: 70 },
+    detaylar: { ayakta_mudahale: 75, top_kesme: 70, kafa_isabeti: 65, guc: 67 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Santos",
+    takim: "Roma",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 74,
+    yas: 25,
+    ana_ozellikler: { hiz: 59, sut: 54, pas: 69, dribbling: 66, defans: 74, fizik: 69 },
+    detaylar: { top_kesme: 74, ayakta_mudahale: 69, dayaniklilik: 71, kisa_pas: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Roma",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 73,
+    yas: 26,
+    ana_ozellikler: { hiz: 58, sut: 53, pas: 68, dribbling: 65, defans: 73, fizik: 68 },
+    detaylar: { top_kesme: 73, ayakta_mudahale: 68, dayaniklilik: 70, kisa_pas: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Martinez",
+    takim: "Roma",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 72,
+    yas: 27,
+    ana_ozellikler: { hiz: 57, sut: 52, pas: 67, dribbling: 64, defans: 72, fizik: 67 },
+    detaylar: { top_kesme: 72, ayakta_mudahale: 67, dayaniklilik: 69, kisa_pas: 64 },
+    oyun_tarzlari: []
+  }
 ];

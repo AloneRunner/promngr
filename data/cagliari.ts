@@ -482,5 +482,38 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
             pozisyon: 74
         },
         oyun_tarzlari: []
-    }
+    },
+  {
+    ad: "Carlos Silva",
+    takim: "Cagliari",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Silva",
+    takim: "Cagliari",
+    uyruk: "Arjantin",
+    mevki: "SLB",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Rodriguez",
+    takim: "Cagliari",
+    uyruk: "İspanya",
+    mevki: "MDO",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
+    detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
+    oyun_tarzlari: []
+  }
 ];

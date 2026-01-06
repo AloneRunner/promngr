@@ -18,8 +18,8 @@ export const AssistantReport: React.FC<AssistantReportProps> = ({ advice, onAuto
   const hasCritical = critical.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
-        <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/90 backdrop-blur-sm p-4 pt-16 animate-fade-in overflow-y-auto">
+        <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden my-auto">
             <div className="bg-slate-950 p-4 border-b border-slate-800 flex justify-between items-center">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                     <ShieldAlert size={20} className={hasCritical ? 'text-red-500' : 'text-emerald-500'} /> 

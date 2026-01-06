@@ -18,12 +18,23 @@ Uygulamamız şu anda doğrudan adınız, e-posta adresiniz veya telefon numaran
 
 ## 2. Üçüncü Taraf Hizmetleri ve Reklamlar
 
-Uygulamamız şu anda reklam gösterimi için Reklam Kimliği (Advertising ID) veya üçüncü taraf reklam SDK'larını **kullanmamaktadır**. Bir sonraki sürümde banner reklamlar eklemeyi planlıyoruz; reklamlar eklendiğinde uygulama reklam kimliğini kullanabilir ve bu Gizlilik Politikası güncellenecektir.
+**Güncellenme Tarihi:** 5 Ocak 2026
 
-Planlanan veya potansiyel üçüncü taraf sağlayıcılar (örnek):
-*   **Google AdMob:** Reklam gösterimi için sıklıkla kullanılan bir sağlayıcıdır. Eğer AdMob kullanmaya karar verirsek, Google'ın verileri nasıl kullandığı hakkında daha fazla bilgi için: [Google Gizlilik Politikası](https://policies.google.com/privacy)
+Uygulamamız, reklam gösterimi için **Google AdMob** kullanmaktadır. AdMob, uygulama içinde banner reklamları gösterir ve bu süreçte şu bilgileri toplayabilir:
 
-Not: Mevcut sürümde reklam SDK'ları veya Advertising ID kullanımına dair herhangi bir entegrasyon bulunmamaktadır; bu durum değiştiğinde kullanıcılar bilgilendirilecektir.
+*   **Reklam Kimliği (Advertising ID):** Cihazınıza özel, anonim bir tanımlayıcıdır. İlgi alanlarınıza uygun reklamlar göstermek için kullanılır.
+*   **Cihaz Bilgileri:** Cihaz modeli, işletim sistemi sürümü, ekran boyutu gibi teknik bilgiler.
+*   **Kullanım Verileri:** Hangi reklamları gördüğünüz ve hangi reklamlara tıkladığınız gibi etkileşim verileri.
+*   **Konum Bilgileri (Opsiyonel):** Konum tabanlı reklamlar için yaklaşık konum (hassas konum değil).
+
+### Kullanılan Üçüncü Taraf Sağlayıcı:
+*   **Google AdMob:** Reklam gösterimi için kullanılmaktadır. Google'ın verileri nasıl kullandığı hakkında daha fazla bilgi için: [Google Gizlilik Politikası](https://policies.google.com/privacy) ve [Google Reklamlar Gizlilik Bilgileri](https://policies.google.com/technologies/ads)
+
+### Reklam Kişiselleştirme:
+Kişiselleştirilmiş reklamları istemiyorsanız:
+*   **Android:** Ayarlar > Google > Reklamlar > "Reklam Kişiselleştirmeyi Devre Dışı Bırak"
+
+Not: Reklamları tamamen kaldırmak mümkün değildir, ancak kişiselleştirme devre dışı bırakılabilir.
 
 ## 3. Uygulama İçi Satın Alımlar
 

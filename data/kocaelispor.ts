@@ -76,4 +76,181 @@ export const KOCAELISPOR_SQUAD = [
     ana_ozellikler: { hiz: 74, sut: 67, pas: 69, dribbling: 74, defans: 28, fizik: 54 },
     detaylar: { ceviklik: 77, denge: 77, hizlanma: 76, dribbling: 76 },
     oyun_tarzlari: []
-  }];
+  },
+  {
+    ad: "Yunus Demirci",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 66,
+    yas: 20,
+    ana_ozellikler: { hiz: 56, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 66 },
+    detaylar: { ucma: 56, refleks: 66, vurus: 61, pozisyon: 58, top_kontrol: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Mustafa Şen",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 64,
+    yas: 21,
+    ana_ozellikler: { hiz: 54, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 64 },
+    detaylar: { ucma: 54, refleks: 64, vurus: 59, pozisyon: 56, top_kontrol: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Yunus Koç",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 63,
+    yas: 22,
+    ana_ozellikler: { hiz: 53, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 63 },
+    detaylar: { ucma: 53, refleks: 63, vurus: 58, pozisyon: 55, top_kontrol: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Alper Yıldız",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 62,
+    yas: 23,
+    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Volkan Özgür",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 61,
+    yas: 24,
+    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Kerem Özdemir",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 60,
+    yas: 25,
+    ana_ozellikler: { hiz: 50, sut: 35, pas: 52, dribbling: 50, defans: 60, fizik: 55 },
+    detaylar: { ayakta_mudahale: 60, top_kesme: 55, kafa_isabeti: 50, guc: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Burak Şahin",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 59,
+    yas: 26,
+    ana_ozellikler: { hiz: 49, sut: 34, pas: 51, dribbling: 49, defans: 59, fizik: 54 },
+    detaylar: { ayakta_mudahale: 59, top_kesme: 54, kafa_isabeti: 49, guc: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Perez",
+    takim: "Kocaelispor",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 58,
+    yas: 27,
+    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
+    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Costa",
+    takim: "Kocaelispor",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 57,
+    yas: 28,
+    ana_ozellikler: { hiz: 42, sut: 37, pas: 52, dribbling: 49, defans: 57, fizik: 52 },
+    detaylar: { top_kesme: 57, ayakta_mudahale: 52, dayaniklilik: 54, kisa_pas: 49 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Kocaelispor",
+    uyruk: "Brezilya",
+    mevki: "MO",
+    reyting: 56,
+    yas: 29,
+    ana_ozellikler: { hiz: 44, sut: 46, pas: 56, dribbling: 51, defans: 41, fizik: 46 },
+    detaylar: { vizyon: 51, kisa_pas: 56, top_kontrol: 48, dayaniklilik: 44 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Furkan Şen",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 55,
+    yas: 30,
+    ana_ozellikler: { hiz: 43, sut: 45, pas: 55, dribbling: 50, defans: 40, fizik: 45 },
+    detaylar: { vizyon: 50, kisa_pas: 55, top_kontrol: 47, dayaniklilik: 43 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ahmet Erdoğan",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 60,
+    yas: 31,
+    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Barış Şahin",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "MOO",
+    reyting: 59,
+    yas: 32,
+    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Barış Doğan",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "MOO",
+    reyting: 59,
+    yas: 33,
+    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Eren Güler",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "SĞO",
+    reyting: 58,
+    yas: 34,
+    ana_ozellikler: { hiz: 63, sut: 53, pas: 50, dribbling: 60, defans: 35, fizik: 43 },
+    detaylar: { dribbling: 58, ceviklik: 61, orta_acma: 48, sprint: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Eren Polat",
+    takim: "Kocaelispor",
+    uyruk: "Türkiye",
+    mevki: "SĞO",
+    reyting: 58,
+    yas: 20,
+    ana_ozellikler: { hiz: 63, sut: 53, pas: 50, dribbling: 60, defans: 35, fizik: 43 },
+    detaylar: { dribbling: 58, ceviklik: 61, orta_acma: 48, sprint: 63 },
+    oyun_tarzlari: []
+  }
+];

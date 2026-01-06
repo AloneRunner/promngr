@@ -253,6 +253,39 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         ana_ozellikler: { hiz: 57, sut: 64, pas: 72, dribbling: 80, defans: 77, fizik: 62 },
         detaylar: { kisa_pas: 80, top_kontrol: 78, dayaniklilik: 82 },
         oyun_tarzlari: ["Pasör"]
-    }
+    },
+  {
+    ad: "João Martinez",
+    takim: "Barcelona",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 88,
+    yas: 20,
+    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 78, refleks: 88, vurus: 83, pozisyon: 80, top_kontrol: 76 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Silva",
+    takim: "Barcelona",
+    uyruk: "Arjantin",
+    mevki: "SĞB",
+    reyting: 86,
+    yas: 21,
+    ana_ozellikler: { hiz: 76, sut: 61, pas: 78, dribbling: 76, defans: 86, fizik: 81 },
+    detaylar: { ayakta_mudahale: 86, top_kesme: 81, kafa_isabeti: 76, guc: 78 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Lopez",
+    takim: "Barcelona",
+    uyruk: "İspanya",
+    mevki: "SLB",
+    reyting: 85,
+    yas: 22,
+    ana_ozellikler: { hiz: 75, sut: 60, pas: 77, dribbling: 75, defans: 85, fizik: 80 },
+    detaylar: { ayakta_mudahale: 85, top_kesme: 80, kafa_isabeti: 75, guc: 77 },
+    oyun_tarzlari: []
+  }
 ];
 

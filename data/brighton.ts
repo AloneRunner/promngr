@@ -109,5 +109,148 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
         ana_ozellikler: { hiz: 60, sut: 78, pas: 74, dribbling: 77, defans: 45, fizik: 77 },
         detaylar: { pozisyon: 82, kafa_isabeti: 78, guc: 79 },
         oyun_tarzlari: ["Tecrübeli"]
-    }
+    },
+  {
+    ad: "David Lopez",
+    takim: "Brighton",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 70,
+    yas: 20,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Costa",
+    takim: "Brighton",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 69,
+    yas: 21,
+    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "Brighton",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 68,
+    yas: 22,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Perez",
+    takim: "Brighton",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 67,
+    yas: 23,
+    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Garcia",
+    takim: "Brighton",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    reyting: 66,
+    yas: 24,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Rodriguez",
+    takim: "Brighton",
+    uyruk: "Portekiz",
+    mevki: "SLB",
+    reyting: 65,
+    yas: 25,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Santos",
+    takim: "Brighton",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 64,
+    yas: 26,
+    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
+    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Costa",
+    takim: "Brighton",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 63,
+    yas: 27,
+    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
+    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Rodriguez",
+    takim: "Brighton",
+    uyruk: "İspanya",
+    mevki: "MO",
+    reyting: 62,
+    yas: 28,
+    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Silva",
+    takim: "Brighton",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 61,
+    yas: 29,
+    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Lopez",
+    takim: "Brighton",
+    uyruk: "İtalya",
+    mevki: "MO",
+    reyting: 60,
+    yas: 30,
+    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Santos",
+    takim: "Brighton",
+    uyruk: "Portekiz",
+    mevki: "MOO",
+    reyting: 65,
+    yas: 31,
+    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Silva",
+    takim: "Brighton",
+    uyruk: "Brezilya",
+    mevki: "SĞO",
+    reyting: 64,
+    yas: 32,
+    ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
+    detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
+    oyun_tarzlari: []
+  }
 ];

@@ -160,6 +160,116 @@ export const SAN_SEBASTIAN_RESERVES = [
         ana_ozellikler: { hiz: 62, sut: 39, pas: 63, dribbling: 60, defans: 76, fizik: 76 },
         detaylar: { liderlik: 80, markaj: 78 },
         oyun_tarzlari: ["Lider"]
-    }
+    },
+  {
+    ad: "Carlos Martinez",
+    takim: "San Sebastian",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Perez",
+    takim: "San Sebastian",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Lopez",
+    takim: "San Sebastian",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "San Sebastian",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 68,
+    yas: 23,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Costa",
+    takim: "San Sebastian",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    reyting: 67,
+    yas: 24,
+    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Rodriguez",
+    takim: "San Sebastian",
+    uyruk: "Portekiz",
+    mevki: "SLB",
+    reyting: 66,
+    yas: 25,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Santos",
+    takim: "San Sebastian",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 65,
+    yas: 26,
+    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Silva",
+    takim: "San Sebastian",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 64,
+    yas: 27,
+    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
+    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Perez",
+    takim: "San Sebastian",
+    uyruk: "İspanya",
+    mevki: "MDO",
+    reyting: 63,
+    yas: 28,
+    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
+    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Perez",
+    takim: "San Sebastian",
+    uyruk: "Fransa",
+    mevki: "MOO",
+    reyting: 62,
+    yas: 29,
+    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
+    oyun_tarzlari: []
+  }
 ];
 

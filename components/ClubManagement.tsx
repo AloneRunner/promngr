@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Team, Translation, Player, TeamStaff } from '../types';
-import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity } from 'lucide-react';
+import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye } from 'lucide-react';
 import { TICKET_PRICE } from '../constants';
 import { PlayerAvatar } from './PlayerAvatar';
 
@@ -13,9 +13,10 @@ interface ClubManagementProps {
     onResign: () => void;
     onUpgradeStaff?: (role: keyof TeamStaff) => void;
     onUpgradeFacility?: (type: 'stadium' | 'training' | 'academy') => void;
+    onPlayerClick?: (player: Player) => void;
 }
 
-export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff, onUpgradeFacility }) => {
+export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff, onUpgradeFacility, onPlayerClick }) => {
     const [tab, setTab] = useState<'FINANCE' | 'FACILITIES' | 'ACADEMY' | 'STAFF'>('FINANCE');
 
     const totalWages = players.reduce((sum, p) => sum + p.wage, 0);
@@ -188,7 +189,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
-                                <span className="text-lg font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-sm">/10</span></span>
+                                <span className="text-lg font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-sm">/25</span></span>
                             </div>
                         </div>
 
@@ -203,16 +204,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
                                 <span>Progress</span>
-                                <span>{(team.facilities.stadiumLevel / 10 * 100).toFixed(0)}%</span>
+                                <span>{(team.facilities.stadiumLevel / 25 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 10) * 100}%` }}></div>
+                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 25) * 100}%` }}></div>
                             </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
-                            disabled={team.facilities.stadiumLevel >= 10 || team.budget < 5000000}
+                            disabled={team.facilities.stadiumLevel >= 25 || team.budget < 5000000}
                             className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
                             <Hammer size={14} /> Upgrade (€5.0M)
@@ -227,7 +228,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
-                                <span className="text-lg font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-sm">/10</span></span>
+                                <span className="text-lg font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-sm">/25</span></span>
                             </div>
                         </div>
 
@@ -242,16 +243,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
                                 <span>Quality</span>
-                                <span>{(team.facilities.trainingLevel / 10 * 100).toFixed(0)}%</span>
+                                <span>{(team.facilities.trainingLevel / 25 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${(team.facilities.trainingLevel / 10) * 100}%` }}></div>
+                                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${(team.facilities.trainingLevel / 25) * 100}%` }}></div>
                             </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('training')}
-                            disabled={team.facilities.trainingLevel >= 10 || team.budget < 3000000}
+                            disabled={team.facilities.trainingLevel >= 25 || team.budget < 3000000}
                             className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
                             <Hammer size={14} /> Upgrade (€3.0M)
@@ -266,7 +267,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-xs uppercase text-slate-500 font-bold">Academy Tier</span>
-                                <span className="text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/10</span></span>
+                                <span className="text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/25</span></span>
                             </div>
                         </div>
 
@@ -283,10 +284,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div>
                                     <div className="flex justify-between text-xs text-slate-400 mb-1">
                                         <span>Scouting Network</span>
-                                        <span>{(team.facilities.academyLevel / 10 * 100).toFixed(0)}%</span>
+                                        <span>{(team.facilities.academyLevel / 25 * 100).toFixed(0)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
-                                        <div className="bg-yellow-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.academyLevel / 10) * 100}%` }}></div>
+                                        <div className="bg-yellow-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.academyLevel / 25) * 100}%` }}></div>
                                     </div>
                                 </div>
                                 <p className="text-slate-400 text-sm italic border-l-2 border-yellow-500 pl-3">
@@ -294,7 +295,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </p>
                                 <button
                                     onClick={() => onUpgradeFacility && onUpgradeFacility('academy')}
-                                    disabled={team.facilities.academyLevel >= 10 || team.budget < 2500000}
+                                    disabled={team.facilities.academyLevel >= 25 || team.budget < 2500000}
                                     className="w-full py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
                                 >
                                     <Hammer size={18} /> Upgrade (€2.5M)
@@ -358,12 +359,23 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                                             {potentialGrade} <Star size={14} fill="currentColor" className="opacity-50" />
                                                         </div>
                                                     </div>
-                                                    <button
-                                                        onClick={() => onPromoteYouth(player)}
-                                                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-lg shadow-purple-900/20"
-                                                    >
-                                                        {t.promotePlayer} (-€{(player.value / 1000).toFixed(0)}k)
-                                                    </button>
+                                                    <div className="flex gap-2">
+                                                        {onPlayerClick && (
+                                                            <button
+                                                                onClick={() => onPlayerClick(player)}
+                                                                className="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-2 py-1.5 rounded transition-all flex items-center gap-1"
+                                                                title="Detayları Gör"
+                                                            >
+                                                                <Eye size={14} />
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() => onPromoteYouth(player)}
+                                                            className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-lg shadow-purple-900/20"
+                                                        >
+                                                            {t.promotePlayer} (-€{(player.value / 1000).toFixed(0)}k)
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )

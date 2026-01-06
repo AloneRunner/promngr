@@ -164,4 +164,93 @@ export const PARIS_SAINT_SQUAD = [
         detaylar: {},
         oyun_tarzlari: []
     },
+
+  {
+    ad: "Diego Costa",
+    takim: "PSG",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 90,
+    yas: 20,
+    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 80, refleks: 90, vurus: 85, pozisyon: 82, top_kontrol: 78 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Santos",
+    takim: "PSG",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 89,
+    yas: 21,
+    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 79, refleks: 89, vurus: 84, pozisyon: 81, top_kontrol: 77 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Garcia",
+    takim: "PSG",
+    uyruk: "İspanya",
+    mevki: "SĞB",
+    reyting: 88,
+    yas: 22,
+    ana_ozellikler: { hiz: 78, sut: 63, pas: 80, dribbling: 78, defans: 88, fizik: 83 },
+    detaylar: { ayakta_mudahale: 88, top_kesme: 83, kafa_isabeti: 78, guc: 80 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Costa",
+    takim: "PSG",
+    uyruk: "Fransa",
+    mevki: "SLB",
+    reyting: 87,
+    yas: 23,
+    ana_ozellikler: { hiz: 77, sut: 62, pas: 79, dribbling: 77, defans: 87, fizik: 82 },
+    detaylar: { ayakta_mudahale: 87, top_kesme: 82, kafa_isabeti: 77, guc: 79 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Costa",
+    takim: "PSG",
+    uyruk: "İtalya",
+    mevki: "MDO",
+    reyting: 86,
+    yas: 24,
+    ana_ozellikler: { hiz: 71, sut: 66, pas: 81, dribbling: 78, defans: 86, fizik: 81 },
+    detaylar: { top_kesme: 86, ayakta_mudahale: 81, dayaniklilik: 83, kisa_pas: 78 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Rodriguez",
+    takim: "PSG",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 85,
+    yas: 25,
+    ana_ozellikler: { hiz: 70, sut: 65, pas: 80, dribbling: 77, defans: 85, fizik: 80 },
+    detaylar: { top_kesme: 85, ayakta_mudahale: 80, dayaniklilik: 82, kisa_pas: 77 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Santos",
+    takim: "PSG",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 84,
+    yas: 26,
+    ana_ozellikler: { hiz: 69, sut: 64, pas: 79, dribbling: 76, defans: 84, fizik: 79 },
+    detaylar: { top_kesme: 84, ayakta_mudahale: 79, dayaniklilik: 81, kisa_pas: 76 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "PSG",
+    uyruk: "Arjantin",
+    mevki: "MOO",
+    reyting: 83,
+    yas: 27,
+    ana_ozellikler: { hiz: 71, sut: 73, pas: 83, dribbling: 78, defans: 68, fizik: 73 },
+    detaylar: { vizyon: 78, kisa_pas: 83, top_kontrol: 75, dayaniklilik: 71 },
+    oyun_tarzlari: []
+  }
 ];

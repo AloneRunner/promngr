@@ -43,4 +43,214 @@ export const DORTMUND_FC_SQUAD = [
         detaylar: {},
         oyun_tarzlari: []
     },
+
+  {
+    ad: "Diego Perez",
+    takim: "Dortmund",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 83,
+    yas: 20,
+    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Costa",
+    takim: "Dortmund",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 82,
+    yas: 21,
+    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Dortmund",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 81,
+    yas: 22,
+    ana_ozellikler: { hiz: 71, sut: 56, pas: 73, dribbling: 71, defans: 81, fizik: 76 },
+    detaylar: { ayakta_mudahale: 81, top_kesme: 76, kafa_isabeti: 71, guc: 73 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Perez",
+    takim: "Dortmund",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 80,
+    yas: 23,
+    ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 80, fizik: 75 },
+    detaylar: { ayakta_mudahale: 80, top_kesme: 75, kafa_isabeti: 70, guc: 72 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Costa",
+    takim: "Dortmund",
+    uyruk: "İtalya",
+    mevki: "STP",
+    reyting: 79,
+    yas: 24,
+    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+    detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Silva",
+    takim: "Dortmund",
+    uyruk: "Portekiz",
+    mevki: "SĞB",
+    reyting: 78,
+    yas: 25,
+    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Silva",
+    takim: "Dortmund",
+    uyruk: "Brezilya",
+    mevki: "SĞB",
+    reyting: 77,
+    yas: 26,
+    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+    detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Perez",
+    takim: "Dortmund",
+    uyruk: "Arjantin",
+    mevki: "SLB",
+    reyting: 76,
+    yas: 27,
+    ana_ozellikler: { hiz: 66, sut: 51, pas: 68, dribbling: 66, defans: 76, fizik: 71 },
+    detaylar: { ayakta_mudahale: 76, top_kesme: 71, kafa_isabeti: 66, guc: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Martinez",
+    takim: "Dortmund",
+    uyruk: "İspanya",
+    mevki: "SLB",
+    reyting: 75,
+    yas: 28,
+    ana_ozellikler: { hiz: 65, sut: 50, pas: 67, dribbling: 65, defans: 75, fizik: 70 },
+    detaylar: { ayakta_mudahale: 75, top_kesme: 70, kafa_isabeti: 65, guc: 67 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Martinez",
+    takim: "Dortmund",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 74,
+    yas: 29,
+    ana_ozellikler: { hiz: 59, sut: 54, pas: 69, dribbling: 66, defans: 74, fizik: 69 },
+    detaylar: { top_kesme: 74, ayakta_mudahale: 69, dayaniklilik: 71, kisa_pas: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Rodriguez",
+    takim: "Dortmund",
+    uyruk: "İtalya",
+    mevki: "MDO",
+    reyting: 73,
+    yas: 30,
+    ana_ozellikler: { hiz: 58, sut: 53, pas: 68, dribbling: 65, defans: 73, fizik: 68 },
+    detaylar: { top_kesme: 73, ayakta_mudahale: 68, dayaniklilik: 70, kisa_pas: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Dortmund",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 78,
+    yas: 31,
+    ana_ozellikler: { hiz: 63, sut: 58, pas: 73, dribbling: 70, defans: 78, fizik: 73 },
+    detaylar: { top_kesme: 78, ayakta_mudahale: 73, dayaniklilik: 75, kisa_pas: 70 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Lopez",
+    takim: "Dortmund",
+    uyruk: "Brezilya",
+    mevki: "MO",
+    reyting: 77,
+    yas: 32,
+    ana_ozellikler: { hiz: 65, sut: 67, pas: 77, dribbling: 72, defans: 62, fizik: 67 },
+    detaylar: { vizyon: 72, kisa_pas: 77, top_kontrol: 69, dayaniklilik: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Garcia",
+    takim: "Dortmund",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 77,
+    yas: 33,
+    ana_ozellikler: { hiz: 65, sut: 67, pas: 77, dribbling: 72, defans: 62, fizik: 67 },
+    detaylar: { vizyon: 72, kisa_pas: 77, top_kontrol: 69, dayaniklilik: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Rodriguez",
+    takim: "Dortmund",
+    uyruk: "İspanya",
+    mevki: "MOO",
+    reyting: 76,
+    yas: 34,
+    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Perez",
+    takim: "Dortmund",
+    uyruk: "Fransa",
+    mevki: "MOO",
+    reyting: 76,
+    yas: 20,
+    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Costa",
+    takim: "Dortmund",
+    uyruk: "İtalya",
+    mevki: "SĞO",
+    reyting: 76,
+    yas: 21,
+    ana_ozellikler: { hiz: 81, sut: 71, pas: 68, dribbling: 78, defans: 35, fizik: 61 },
+    detaylar: { dribbling: 76, ceviklik: 79, orta_acma: 66, sprint: 81 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Dortmund",
+    uyruk: "Portekiz",
+    mevki: "SĞO",
+    reyting: 75,
+    yas: 22,
+    ana_ozellikler: { hiz: 80, sut: 70, pas: 67, dribbling: 77, defans: 35, fizik: 60 },
+    detaylar: { dribbling: 75, ceviklik: 78, orta_acma: 65, sprint: 80 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Perez",
+    takim: "Dortmund",
+    uyruk: "Brezilya",
+    mevki: "SLO",
+    reyting: 75,
+    yas: 23,
+    ana_ozellikler: { hiz: 80, sut: 70, pas: 67, dribbling: 77, defans: 35, fizik: 60 },
+    detaylar: { dribbling: 75, ceviklik: 78, orta_acma: 65, sprint: 80 },
+    oyun_tarzlari: []
+  }
 ];

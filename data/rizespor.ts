@@ -164,5 +164,93 @@ export const RIZESPOR_SQUAD = [
     ana_ozellikler: { hiz: 65, sut: 62, pas: 65, dribbling: 70, defans: 40, fizik: 54 },
     detaylar: { dribbling: 71, falso: 71, vizyon: 70, denge: 70 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Arda Kılıç",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 73,
+    yas: 20,
+    ana_ozellikler: { hiz: 63, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 73 },
+    detaylar: { ucma: 63, refleks: 73, vurus: 68, pozisyon: 65, top_kontrol: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Serkan Şen",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 71,
+    yas: 21,
+    ana_ozellikler: { hiz: 61, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 71 },
+    detaylar: { ucma: 61, refleks: 71, vurus: 66, pozisyon: 63, top_kontrol: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Yunus Demirci",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 70,
+    yas: 22,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Kerem Özgür",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 69,
+    yas: 23,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Volkan Polat",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 68,
+    yas: 24,
+    ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
+    detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Barış Doğan",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 67,
+    yas: 25,
+    ana_ozellikler: { hiz: 52, sut: 47, pas: 62, dribbling: 59, defans: 67, fizik: 62 },
+    detaylar: { top_kesme: 67, ayakta_mudahale: 62, dayaniklilik: 64, kisa_pas: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Emre Eren",
+    takim: "Rizespor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 65,
+    yas: 26,
+    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Garcia",
+    takim: "Rizespor",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 64,
+    yas: 27,
+    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+    oyun_tarzlari: []
   }
 ];

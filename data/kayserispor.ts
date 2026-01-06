@@ -142,5 +142,115 @@ export const KAYSERISPOR_SQUAD = [
     ana_ozellikler: { hiz: 74, sut: 57, pas: 64, dribbling: 66, defans: 62, fizik: 61 },
     detaylar: { denge: 80, ceviklik: 75, hizlanma: 75, defansif_farkindalik: 68 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Oğuz Bulut",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 69,
+    yas: 20,
+    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Kaya",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 67,
+    yas: 21,
+    ana_ozellikler: { hiz: 57, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 67 },
+    detaylar: { ucma: 57, refleks: 67, vurus: 62, pozisyon: 59, top_kontrol: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Çağlar Kaya",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 66,
+    yas: 22,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Hüseyin Kurt",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 65,
+    yas: 23,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Deniz Demir",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 64,
+    yas: 24,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Cem Karataş",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 63,
+    yas: 25,
+    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ali Özgür",
+    takim: "Kayserispor",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 62,
+    yas: 26,
+    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Silva",
+    takim: "Kayserispor",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 61,
+    yas: 27,
+    ana_ozellikler: { hiz: 46, sut: 41, pas: 56, dribbling: 53, defans: 61, fizik: 56 },
+    detaylar: { top_kesme: 61, ayakta_mudahale: 56, dayaniklilik: 58, kisa_pas: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Lopez",
+    takim: "Kayserispor",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 60,
+    yas: 28,
+    ana_ozellikler: { hiz: 45, sut: 40, pas: 55, dribbling: 52, defans: 60, fizik: 55 },
+    detaylar: { top_kesme: 60, ayakta_mudahale: 55, dayaniklilik: 57, kisa_pas: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Lopez",
+    takim: "Kayserispor",
+    uyruk: "Brezilya",
+    mevki: "MO",
+    reyting: 59,
+    yas: 29,
+    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
+    oyun_tarzlari: []
   }
 ];

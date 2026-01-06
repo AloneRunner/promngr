@@ -23,6 +23,7 @@ import { ProfileSelector } from './components/ProfileSelector';
 import { TransferNegotiationModal } from './components/TransferNegotiationModal';
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu } from 'lucide-react';
+import { adMobService } from './services/adMobService';
 
 const TOTAL_WEEKS_PER_SEASON = 38;
 const uuid = () => Math.random().toString(36).substring(2, 15);
@@ -69,6 +70,32 @@ const App: React.FC = () => {
     const [negotiatingPlayer, setNegotiatingPlayer] = useState<Player | null>(null);
 
     const t = TRANSLATIONS[lang];
+
+    // 📱 Initialize AdMob on mount
+    useEffect(() => {
+        const initAds = async () => {
+            // Enable test mode during development
+            // Comment out this line for production build
+            // adMobService.enableTestMode();
+            
+            await adMobService.initialize();
+        };
+        initAds();
+    }, []);
+
+    // 📱 Control banner visibility based on view
+    useEffect(() => {
+        const handleBannerVisibility = async () => {
+            // Hide banner during match, show on other views
+            if (view === 'match') {
+                await adMobService.hideBanner();
+            } else if (gameState && !showProfileSelector && !showLeagueSelect && !showTeamSelect) {
+                // Show banner on main game screens
+                await adMobService.showBanner();
+            }
+        };
+        handleBannerVisibility();
+    }, [view, gameState, showProfileSelector, showLeagueSelect, showTeamSelect]);
 
     // Initialize profiles on mount
     useEffect(() => {
@@ -547,7 +574,7 @@ const App: React.FC = () => {
             type === 'training' ? userTeam.facilities.trainingLevel :
                 userTeam.facilities.academyLevel;
 
-        if (currentLevel >= 10) {
+        if (currentLevel >= 25) {
             alert('Maximum level reached!');
             return;
         }
@@ -597,9 +624,17 @@ const App: React.FC = () => {
             return t;
         });
 
-        const updatedOffers = gameState.pendingOffers?.map(o =>
-            o.id === offerId ? { ...o, status: 'ACCEPTED' as const } : o
-        ) || [];
+        // Mark accepted offer as ACCEPTED and all other offers for same player as REJECTED
+        const updatedOffers = gameState.pendingOffers?.map(o => {
+            if (o.id === offerId) {
+                return { ...o, status: 'ACCEPTED' as const };
+            }
+            // Reject all other pending offers for the same player
+            if (o.playerId === offer.playerId && o.status === 'PENDING') {
+                return { ...o, status: 'REJECTED' as const };
+            }
+            return o;
+        }) || [];
 
         // Add confirmation message
         const newMessage = {
@@ -809,16 +844,30 @@ const App: React.FC = () => {
             return;
         }
 
-        const updatedPlayers = gameState.players.concat([{
-            ...player,
-            teamId: userTeam.id,
-            isTransferListed: false,
-            lineup: 'RESERVE',
-            lineupIndex: 99,
-            contractYears: 3
-        }]);
+        // Find the seller team to update their budget
+        const sellerTeamId = player.teamId;
+
+        // Update existing player's team instead of creating duplicate
+        const updatedPlayers = gameState.players.map(p => {
+            if (p.id === player.id) {
+                return {
+                    ...p,
+                    teamId: userTeam.id,
+                    isTransferListed: false,
+                    lineup: 'RESERVE' as const,
+                    lineupIndex: 99,
+                    contractYears: 3
+                };
+            }
+            return p;
+        });
         const updatedMarket = gameState.transferMarket.filter(p => p.id !== player.id);
-        const updatedTeams = gameState.teams.map(t => t.id === userTeam.id ? { ...t, budget: t.budget - finalPrice } : t);
+        // Update budgets: subtract from buyer, add to seller
+        const updatedTeams = gameState.teams.map(t => {
+            if (t.id === userTeam.id) return { ...t, budget: t.budget - finalPrice };
+            if (t.id === sellerTeamId && sellerTeamId !== 'FREE_AGENT') return { ...t, budget: t.budget + finalPrice };
+            return t;
+        });
 
         setGameState(prev => prev ? { ...prev, players: updatedPlayers, transferMarket: updatedMarket, teams: updatedTeams } : null);
         setNegotiatingPlayer(null); // Close modal
@@ -946,19 +995,62 @@ const App: React.FC = () => {
             return p;
         });
 
-        setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
-
         // FIX: Sync engine lineups to prevent ghost player bug
         let currentMatch: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
         if (!currentMatch && gameState.europeanCup) currentMatch = gameState.europeanCup.matches.find(m => m.id === activeMatchId);
         if (!currentMatch && gameState.europaLeague) currentMatch = gameState.europaLeague.matches.find(m => m.id === activeMatchId);
 
-        const homeP = updatedPlayers.filter(p => p.teamId === (currentMatch?.homeTeamId || ''));
-        const awayP = updatedPlayers.filter(p => p.teamId === (currentMatch?.awayTeamId || ''));
-        if (homeP.length > 0 && awayP.length > 0) {
-            syncEngineLineups(homeP, awayP);
+        // ADD SUB EVENT DIRECTLY TO MATCH for immediate notification
+        // This ensures toast shows even when match is paused
+        if (currentMatch) {
+            const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+            const subEvent: MatchEvent = {
+                minute: currentMatch.currentMinute,
+                type: MatchEventType.SUB,
+                description: `🔄 ${playerOut.lastName} ⬇️ ${playerIn.lastName} ⬆️`,
+                teamId: userTeam?.id || '',
+                playerId: playerIn.id
+            };
+            
+            // Update match with new event
+            const updateMatchEvents = (matches: Match[]): Match[] => {
+                return matches.map(m => {
+                    if (m.id === currentMatch!.id) {
+                        return { ...m, events: [...m.events, subEvent] };
+                    }
+                    return m;
+                });
+            };
+
+            setGameState(prev => {
+                if (!prev) return null;
+                let newState = { ...prev, players: updatedPlayers };
+                
+                // Update in league matches
+                newState.matches = updateMatchEvents(newState.matches);
+                
+                // Update in European Cup matches if applicable
+                if (newState.europeanCup) {
+                    newState.europeanCup = {
+                        ...newState.europeanCup,
+                        matches: updateMatchEvents(newState.europeanCup.matches) as any
+                    };
+                }
+                if (newState.europaLeague) {
+                    newState.europaLeague = {
+                        ...newState.europaLeague,
+                        matches: updateMatchEvents(newState.europaLeague.matches) as any
+                    };
+                }
+                
+                return newState;
+            });
+        } else {
+            setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
         }
 
+        // FIX: Only call performSubstitution - it handles all engine state updates
+        // syncEngineLineups was causing race conditions and overwriting performSubstitution's work
         if (activeMatchId) performSubstitution(activeMatchId, { ...playerIn, lineup: 'STARTING' }, playerOut.id);
     };
 
@@ -977,6 +1069,7 @@ const App: React.FC = () => {
         let finalEvents = [...currentMatch.events];
 
         if (simulateToEnd) {
+            // Adil simülasyon - sadece takım gücüne göre (torpil yok!)
             const simulated = simulateFullMatch(currentMatch, homeTeam, awayTeam, homePlayers, awayPlayers);
             simulated.isPlayed = true;
             simulated.currentMinute = 90;
@@ -2058,6 +2151,25 @@ const App: React.FC = () => {
             {/* Mobile Bottom Navigation - Glassmorphism (5 Items) */}
             {view !== 'match' && (
                 <div className="md:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom">
+                    {/* AdMob Control Bar (Just above navigation) */}
+                    {adMobService.isNative() && (
+                        <div className="mx-2 mb-1 px-2 py-1.5 rounded-lg bg-blue-900/40 border border-blue-500/30 flex items-center justify-between">
+                            <span className="text-[10px] text-blue-400 font-bold">{lang === 'tr' ? '📺 Test Reklamı' : '📺 Test Ad'}</span>
+                            <button 
+                                onClick={() => {
+                                    if (adMobService.isBannerVisible()) {
+                                        adMobService.hideBanner();
+                                    } else {
+                                        adMobService.showBanner();
+                                    }
+                                }}
+                                className="text-blue-400 hover:text-blue-300 transition-colors active:scale-95"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                    )}
+                    
                     <div className="mx-2 mb-2 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[rgba(15,23,42,0.95)] backdrop-blur-xl flex justify-between items-stretch px-1">
                         <button onClick={() => setView('dashboard')} className={`flex flex-col items-center justify-center py-3 flex-1 min-w-[56px] transition-all active:scale-95 ${view === 'dashboard' ? 'text-emerald-400 relative' : 'text-slate-500 hover:text-slate-300'}`}>
                             {view === 'dashboard' && <div className="absolute top-0 inset-x-4 h-0.5 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] rounded-b-full"></div>}
@@ -2193,6 +2305,26 @@ const App: React.FC = () => {
                                             <button onClick={() => setLang('en')} className={`flex-1 py-1 rounded text-[10px] font-bold transition-colors border ${lang === 'en' ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}>EN</button>
                                         </div>
                                     </div>
+
+                                    {/* AdMob Control (Test/Beta) */}
+                                    <button 
+                                        onClick={() => {
+                                            if (adMobService.isBannerVisible()) {
+                                                adMobService.hideBanner();
+                                            } else {
+                                                adMobService.showBanner();
+                                            }
+                                        }}
+                                        className="fm-card p-4 flex flex-col items-center justify-center gap-2 aspect-square hover:bg-slate-700/50 transition-colors"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
+                                            <DollarSign className="text-blue-400" size={20} />
+                                        </div>
+                                        <div className="text-center">
+                                            <span className="font-bold text-slate-200 block text-xs">{lang === 'tr' ? 'Reklamlar' : 'Ads'}</span>
+                                            <span className="text-[9px] text-slate-500">{lang === 'tr' ? 'Aç/Kapat' : 'On/Off'}</span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -2375,7 +2507,7 @@ const App: React.FC = () => {
                             />
                         )}
                         {view === 'squad' && <TeamManagement team={userTeam} players={userPlayers} onUpdateTactic={handleUpdateTactic} onPlayerClick={setSelectedPlayer} onUpdateLineup={handleUpdateLineup} onSwapPlayers={handleSwapPlayers} onMovePlayer={handleMovePlayer} onAutoFix={handleAutoFix} t={t} />}
-                        {view === 'training' && <TrainingCenter team={userTeam} onSetFocus={handleSetTrainingFocus} onSetIntensity={handleSetTrainingIntensity} t={t} />}
+                        {view === 'training' && <TrainingCenter team={userTeam} players={userPlayers} onSetFocus={handleSetTrainingFocus} onSetIntensity={handleSetTrainingIntensity} t={t} />}
                         {view === 'transfers' && <TransferMarket marketPlayers={gameState.players} userTeam={userTeam} onBuyPlayer={handleBuyPlayer} onPlayerClick={setSelectedPlayer} t={t} />}
                         {view === 'club' && (
                             <ClubManagement
@@ -2386,6 +2518,7 @@ const App: React.FC = () => {
                                 onResign={handleResign}
                                 onUpgradeStaff={handleUpgradeStaff}
                                 onUpgradeFacility={handleUpgradeFacility}
+                                onPlayerClick={setSelectedPlayer}
                             />
                         )}
                         {view === 'league' && (

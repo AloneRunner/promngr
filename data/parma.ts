@@ -546,5 +546,16 @@ export const PARMA_CRUSADERS_SQUAD = [
             "Kule",
             "Hava Hakimi"
         ]
-    }
+    },
+  {
+    ad: "Carlos Costa",
+    takim: "Parma",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  }
 ];

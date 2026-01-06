@@ -153,5 +153,104 @@ export const ANTALYASPOR_SQUAD = [
     ana_ozellikler: { hiz: 68, sut: 54, pas: 63, dribbling: 64, defans: 63, fizik: 69 },
     detaylar: { sprint: 73, dayaniklilik: 73, ceviklik: 72, guc: 70 },
     oyun_tarzlari: ["Hava Hakimi"]
+  },
+  {
+    ad: "Berkay Şahin",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Mustafa Aktaş",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Çağlar Güneş",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Kılıç",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 68,
+    yas: 23,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Tekin",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 67,
+    yas: 24,
+    ana_ozellikler: { hiz: 52, sut: 47, pas: 62, dribbling: 59, defans: 67, fizik: 62 },
+    detaylar: { top_kesme: 67, ayakta_mudahale: 62, dayaniklilik: 64, kisa_pas: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Hasan Polat",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 66,
+    yas: 25,
+    ana_ozellikler: { hiz: 51, sut: 46, pas: 61, dribbling: 58, defans: 66, fizik: 61 },
+    detaylar: { top_kesme: 66, ayakta_mudahale: 61, dayaniklilik: 63, kisa_pas: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Serkan Demirci",
+    takim: "Antalyaspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 65,
+    yas: 26,
+    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Garcia",
+    takim: "Antalyaspor",
+    uyruk: "Arjantin",
+    mevki: "MOO",
+    reyting: 64,
+    yas: 27,
+    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Perez",
+    takim: "Antalyaspor",
+    uyruk: "Portekiz",
+    mevki: "SĞO",
+    reyting: 63,
+    yas: 28,
+    ana_ozellikler: { hiz: 68, sut: 58, pas: 55, dribbling: 65, defans: 35, fizik: 48 },
+    detaylar: { dribbling: 63, ceviklik: 66, orta_acma: 53, sprint: 68 },
+    oyun_tarzlari: []
   }
 ];

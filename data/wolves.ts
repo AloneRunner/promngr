@@ -139,5 +139,148 @@ export const WEST_MIDLANDS_WOLVES_SQUAD = [
             hizlanma: 80, dribbling: 76, ceviklik: 78
         },
         oyun_tarzlari: ["Genç Yetenek"]
-    }
+    },
+  {
+    ad: "David Silva",
+    takim: "Wolves",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 70,
+    yas: 20,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Lopez",
+    takim: "Wolves",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 69,
+    yas: 21,
+    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Martinez",
+    takim: "Wolves",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 68,
+    yas: 22,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Rodriguez",
+    takim: "Wolves",
+    uyruk: "Fransa",
+    mevki: "SĞB",
+    reyting: 67,
+    yas: 23,
+    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Santos",
+    takim: "Wolves",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    reyting: 66,
+    yas: 24,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Garcia",
+    takim: "Wolves",
+    uyruk: "Portekiz",
+    mevki: "SLB",
+    reyting: 65,
+    yas: 25,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Martinez",
+    takim: "Wolves",
+    uyruk: "Brezilya",
+    mevki: "SLB",
+    reyting: 64,
+    yas: 26,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Perez",
+    takim: "Wolves",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 63,
+    yas: 27,
+    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
+    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Perez",
+    takim: "Wolves",
+    uyruk: "İspanya",
+    mevki: "MO",
+    reyting: 62,
+    yas: 28,
+    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Garcia",
+    takim: "Wolves",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 61,
+    yas: 29,
+    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Silva",
+    takim: "Wolves",
+    uyruk: "İtalya",
+    mevki: "MO",
+    reyting: 60,
+    yas: 30,
+    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Costa",
+    takim: "Wolves",
+    uyruk: "Portekiz",
+    mevki: "MOO",
+    reyting: 65,
+    yas: 31,
+    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Silva",
+    takim: "Wolves",
+    uyruk: "Brezilya",
+    mevki: "MOO",
+    reyting: 64,
+    yas: 32,
+    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+    oyun_tarzlari: []
+  }
 ];

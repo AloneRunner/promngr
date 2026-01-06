@@ -587,5 +587,16 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
             "Hava Hakimi",
             "Güçlü"
         ]
-    }
+    },
+  {
+    ad: "Diego Costa",
+    takim: "Aston Villa",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 74,
+    yas: 20,
+    ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
+    detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
+    oyun_tarzlari: []
+  }
 ];

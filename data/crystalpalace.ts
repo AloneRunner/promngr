@@ -109,5 +109,148 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
         ana_ozellikler: { hiz: 71, sut: 53, pas: 77, dribbling: 73, defans: 67, fizik: 70 },
         detaylar: { orta_acma: 84, falso: 82 },
         oyun_tarzlari: ["Orta Uzmanı"]
-    }
+    },
+  {
+    ad: "Carlos Perez",
+    takim: "Crystalpalace",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Garcia",
+    takim: "Crystalpalace",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Lopez",
+    takim: "Crystalpalace",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Silva",
+    takim: "Crystalpalace",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 68,
+    yas: 23,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Rodriguez",
+    takim: "Crystalpalace",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    reyting: 67,
+    yas: 24,
+    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Costa",
+    takim: "Crystalpalace",
+    uyruk: "Portekiz",
+    mevki: "SLB",
+    reyting: 66,
+    yas: 25,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Perez",
+    takim: "Crystalpalace",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 65,
+    yas: 26,
+    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Silva",
+    takim: "Crystalpalace",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 64,
+    yas: 27,
+    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Crystalpalace",
+    uyruk: "İspanya",
+    mevki: "MO",
+    reyting: 63,
+    yas: 28,
+    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+    detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Santos",
+    takim: "Crystalpalace",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 62,
+    yas: 29,
+    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Garcia",
+    takim: "Crystalpalace",
+    uyruk: "İtalya",
+    mevki: "MOO",
+    reyting: 61,
+    yas: 30,
+    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Silva",
+    takim: "Crystalpalace",
+    uyruk: "Portekiz",
+    mevki: "SĞO",
+    reyting: 66,
+    yas: 31,
+    ana_ozellikler: { hiz: 71, sut: 61, pas: 58, dribbling: 68, defans: 35, fizik: 51 },
+    detaylar: { dribbling: 66, ceviklik: 69, orta_acma: 56, sprint: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "Crystalpalace",
+    uyruk: "Brezilya",
+    mevki: "SĞO",
+    reyting: 65,
+    yas: 32,
+    ana_ozellikler: { hiz: 70, sut: 60, pas: 57, dribbling: 67, defans: 35, fizik: 50 },
+    detaylar: { dribbling: 65, ceviklik: 68, orta_acma: 55, sprint: 70 },
+    oyun_tarzlari: []
+  }
 ];

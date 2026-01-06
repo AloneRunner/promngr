@@ -87,5 +87,170 @@ export const GOZTEPE_SQUAD = [
     ana_ozellikler: { hiz: 63, sut: 68, pas: 49, dribbling: 62, defans: 25, fizik: 73 },
     detaylar: { guc: 88, ziplama: 85, kafa_isabeti: 75, bitiricilik: 72 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Serkan Polat",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 68,
+    yas: 20,
+    ana_ozellikler: { hiz: 58, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 68 },
+    detaylar: { ucma: 58, refleks: 68, vurus: 63, pozisyon: 60, top_kontrol: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Yusuf Yılmaz",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 66,
+    yas: 21,
+    ana_ozellikler: { hiz: 56, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 66 },
+    detaylar: { ucma: 56, refleks: 66, vurus: 61, pozisyon: 58, top_kontrol: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Onur Demirci",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 65,
+    yas: 22,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Burak Kurt",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 64,
+    yas: 23,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Mustafa Yavuz",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 63,
+    yas: 24,
+    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Emre Demirci",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 62,
+    yas: 25,
+    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ahmet Karataş",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 61,
+    yas: 26,
+    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Santos",
+    takim: "Goztepe",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 60,
+    yas: 27,
+    ana_ozellikler: { hiz: 45, sut: 40, pas: 55, dribbling: 52, defans: 60, fizik: 55 },
+    detaylar: { top_kesme: 60, ayakta_mudahale: 55, dayaniklilik: 57, kisa_pas: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Martinez",
+    takim: "Goztepe",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 59,
+    yas: 28,
+    ana_ozellikler: { hiz: 44, sut: 39, pas: 54, dribbling: 51, defans: 59, fizik: 54 },
+    detaylar: { top_kesme: 59, ayakta_mudahale: 54, dayaniklilik: 56, kisa_pas: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Silva",
+    takim: "Goztepe",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 58,
+    yas: 29,
+    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
+    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Murat Kaya",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "MO",
+    reyting: 57,
+    yas: 30,
+    ana_ozellikler: { hiz: 45, sut: 47, pas: 57, dribbling: 52, defans: 42, fizik: 47 },
+    detaylar: { vizyon: 52, kisa_pas: 57, top_kontrol: 49, dayaniklilik: 45 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Hüseyin Polat",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "MOO",
+    reyting: 62,
+    yas: 31,
+    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Oğuz Demirci",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SĞO",
+    reyting: 61,
+    yas: 32,
+    ana_ozellikler: { hiz: 66, sut: 56, pas: 53, dribbling: 63, defans: 35, fizik: 46 },
+    detaylar: { dribbling: 61, ceviklik: 64, orta_acma: 51, sprint: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Oğuz Aktaş",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SĞO",
+    reyting: 61,
+    yas: 33,
+    ana_ozellikler: { hiz: 66, sut: 56, pas: 53, dribbling: 63, defans: 35, fizik: 46 },
+    detaylar: { dribbling: 61, ceviklik: 64, orta_acma: 51, sprint: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ozan Özer",
+    takim: "Goztepe",
+    uyruk: "Türkiye",
+    mevki: "SLO",
+    reyting: 60,
+    yas: 34,
+    ana_ozellikler: { hiz: 65, sut: 55, pas: 52, dribbling: 62, defans: 35, fizik: 45 },
+    detaylar: { dribbling: 60, ceviklik: 63, orta_acma: 50, sprint: 65 },
+    oyun_tarzlari: []
   }
 ];

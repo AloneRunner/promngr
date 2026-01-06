@@ -164,5 +164,93 @@ export const GAZIANTEP_SQUAD = [
     ana_ozellikler: { hiz: 86, sut: 62, pas: 57, dribbling: 69, defans: 32, fizik: 64 },
     detaylar: { hizlanma: 89, ceviklik: 85, sprint: 84, denge: 77 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Volkan Eren",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 67,
+    yas: 20,
+    ana_ozellikler: { hiz: 57, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 67 },
+    detaylar: { ucma: 57, refleks: 67, vurus: 62, pozisyon: 59, top_kontrol: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Furkan Yavuz",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 65,
+    yas: 21,
+    ana_ozellikler: { hiz: 55, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 65 },
+    detaylar: { ucma: 55, refleks: 65, vurus: 60, pozisyon: 57, top_kontrol: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Berkay Demirci",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 64,
+    yas: 22,
+    ana_ozellikler: { hiz: 54, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 64 },
+    detaylar: { ucma: 54, refleks: 64, vurus: 59, pozisyon: 56, top_kontrol: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Batuhan Özer",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 63,
+    yas: 23,
+    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Deniz Aktaş",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 62,
+    yas: 24,
+    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Furkan Yavuz",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "SLB",
+    reyting: 61,
+    yas: 25,
+    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ali Özer",
+    takim: "Gaziantep",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 59,
+    yas: 26,
+    ana_ozellikler: { hiz: 44, sut: 39, pas: 54, dribbling: 51, defans: 59, fizik: 54 },
+    detaylar: { top_kesme: 59, ayakta_mudahale: 54, dayaniklilik: 56, kisa_pas: 51 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Perez",
+    takim: "Gaziantep",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 58,
+    yas: 27,
+    ana_ozellikler: { hiz: 46, sut: 48, pas: 58, dribbling: 53, defans: 43, fizik: 48 },
+    detaylar: { vizyon: 53, kisa_pas: 58, top_kontrol: 50, dayaniklilik: 46 },
+    oyun_tarzlari: []
   }
 ];

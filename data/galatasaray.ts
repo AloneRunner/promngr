@@ -343,5 +343,16 @@ export const GALATASARAY_SQUAD = [
         kisa_pas: 68, vizyon: 66, top_kontrol: 68 
     },
     oyun_tarzlari: ["Uzun Topla Pas"]
+  },
+  {
+    ad: "Batuhan Yavuz",
+    takim: "Galatasaray",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 82,
+    yas: 20,
+    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
+    oyun_tarzlari: []
   }
 ];

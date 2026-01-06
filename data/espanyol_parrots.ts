@@ -76,6 +76,193 @@ export const ESPANYOL_PARROTS_SQUAD = [
             kafa_isabeti: 75, pozisyon: 74
         },
         oyun_tarzlari: []
-    }
+    },
+  {
+    ad: "Carlos Costa",
+    takim: "Espanyol Parrots",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Lopez",
+    takim: "Espanyol Parrots",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Rodriguez",
+    takim: "Espanyol Parrots",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Garcia",
+    takim: "Espanyol Parrots",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 68,
+    yas: 23,
+    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Silva",
+    takim: "Espanyol Parrots",
+    uyruk: "İtalya",
+    mevki: "STP",
+    reyting: 67,
+    yas: 24,
+    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Lopez",
+    takim: "Espanyol Parrots",
+    uyruk: "Portekiz",
+    mevki: "SĞB",
+    reyting: 66,
+    yas: 25,
+    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Martinez",
+    takim: "Espanyol Parrots",
+    uyruk: "Brezilya",
+    mevki: "SLB",
+    reyting: 65,
+    yas: 26,
+    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Santos",
+    takim: "Espanyol Parrots",
+    uyruk: "Arjantin",
+    mevki: "SLB",
+    reyting: 64,
+    yas: 27,
+    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Silva",
+    takim: "Espanyol Parrots",
+    uyruk: "İspanya",
+    mevki: "MDO",
+    reyting: 63,
+    yas: 28,
+    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
+    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Espanyol Parrots",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 62,
+    yas: 29,
+    ana_ozellikler: { hiz: 47, sut: 42, pas: 57, dribbling: 54, defans: 62, fizik: 57 },
+    detaylar: { top_kesme: 62, ayakta_mudahale: 57, dayaniklilik: 59, kisa_pas: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Perez",
+    takim: "Espanyol Parrots",
+    uyruk: "İtalya",
+    mevki: "MDO",
+    reyting: 61,
+    yas: 30,
+    ana_ozellikler: { hiz: 46, sut: 41, pas: 56, dribbling: 53, defans: 61, fizik: 56 },
+    detaylar: { top_kesme: 61, ayakta_mudahale: 56, dayaniklilik: 58, kisa_pas: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Espanyol Parrots",
+    uyruk: "Portekiz",
+    mevki: "MO",
+    reyting: 66,
+    yas: 31,
+    ana_ozellikler: { hiz: 54, sut: 56, pas: 66, dribbling: 61, defans: 51, fizik: 56 },
+    detaylar: { vizyon: 61, kisa_pas: 66, top_kontrol: 58, dayaniklilik: 54 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Silva",
+    takim: "Espanyol Parrots",
+    uyruk: "Brezilya",
+    mevki: "MO",
+    reyting: 65,
+    yas: 32,
+    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Lopez",
+    takim: "Espanyol Parrots",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 65,
+    yas: 33,
+    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Rodriguez",
+    takim: "Espanyol Parrots",
+    uyruk: "İspanya",
+    mevki: "MOO",
+    reyting: 64,
+    yas: 34,
+    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Costa",
+    takim: "Espanyol Parrots",
+    uyruk: "Fransa",
+    mevki: "SĞO",
+    reyting: 64,
+    yas: 20,
+    ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
+    detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Lopez",
+    takim: "Espanyol Parrots",
+    uyruk: "İtalya",
+    mevki: "SĞO",
+    reyting: 63,
+    yas: 21,
+    ana_ozellikler: { hiz: 68, sut: 58, pas: 55, dribbling: 65, defans: 35, fizik: 48 },
+    detaylar: { dribbling: 63, ceviklik: 66, orta_acma: 53, sprint: 68 },
+    oyun_tarzlari: []
+  }
 ];
 

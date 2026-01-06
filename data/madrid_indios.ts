@@ -233,6 +233,50 @@ export const MADRID_INDIOS_RESERVES = [
         ana_ozellikler: { hiz: 78, sut: 56, pas: 75, dribbling: 79, defans: 77, fizik: 73 },
         detaylar: { orta_acma: 78, top_kapma: 79, dribbling: 80 },
         oyun_tarzlari: ["Dengeli Bek"]
-    }
+    },
+  {
+    ad: "Carlos Lopez",
+    takim: "Atletico",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 84,
+    yas: 20,
+    ana_ozellikler: { hiz: 74, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 74, refleks: 84, vurus: 79, pozisyon: 76, top_kontrol: 72 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Silva",
+    takim: "Atletico",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 83,
+    yas: 21,
+    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Rodriguez",
+    takim: "Atletico",
+    uyruk: "İspanya",
+    mevki: "SLB",
+    reyting: 82,
+    yas: 22,
+    ana_ozellikler: { hiz: 72, sut: 57, pas: 74, dribbling: 72, defans: 82, fizik: 77 },
+    detaylar: { ayakta_mudahale: 82, top_kesme: 77, kafa_isabeti: 72, guc: 74 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Perez",
+    takim: "Atletico",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 81,
+    yas: 23,
+    ana_ozellikler: { hiz: 66, sut: 61, pas: 76, dribbling: 73, defans: 81, fizik: 76 },
+    detaylar: { top_kesme: 81, ayakta_mudahale: 76, dayaniklilik: 78, kisa_pas: 73 },
+    oyun_tarzlari: []
+  }
 ];
 

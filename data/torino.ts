@@ -524,5 +524,27 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: [
             "Genç Yetenek"
         ]
-    }
+    },
+  {
+    ad: "Carlos Santos",
+    takim: "Torino",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Martinez",
+    takim: "Torino",
+    uyruk: "Arjantin",
+    mevki: "STP",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  }
 ];

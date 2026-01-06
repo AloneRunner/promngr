@@ -246,5 +246,71 @@ export const TRABZONSPOR_SQUAD = [
         sprint: 72
     },
     oyun_tarzlari: []
+  },
+  {
+    ad: "Barış Koç",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 78,
+    yas: 20,
+    ana_ozellikler: { hiz: 68, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 78 },
+    detaylar: { ucma: 68, refleks: 78, vurus: 73, pozisyon: 70, top_kontrol: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Deniz Türk",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 76,
+    yas: 21,
+    ana_ozellikler: { hiz: 66, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 76 },
+    detaylar: { ucma: 66, refleks: 76, vurus: 71, pozisyon: 68, top_kontrol: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Murat Koç",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 75,
+    yas: 22,
+    ana_ozellikler: { hiz: 65, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 75 },
+    detaylar: { ucma: 65, refleks: 75, vurus: 70, pozisyon: 67, top_kontrol: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Alper Demir",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 74,
+    yas: 23,
+    ana_ozellikler: { hiz: 64, sut: 49, pas: 66, dribbling: 64, defans: 74, fizik: 69 },
+    detaylar: { ayakta_mudahale: 74, top_kesme: 69, kafa_isabeti: 64, guc: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Onur Güler",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "SĞB",
+    reyting: 73,
+    yas: 24,
+    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Ali Şahin",
+    takim: "Trabzonspor",
+    uyruk: "Türkiye",
+    mevki: "MDO",
+    reyting: 72,
+    yas: 25,
+    ana_ozellikler: { hiz: 57, sut: 52, pas: 67, dribbling: 64, defans: 72, fizik: 67 },
+    detaylar: { top_kesme: 72, ayakta_mudahale: 67, dayaniklilik: 69, kisa_pas: 64 },
+    oyun_tarzlari: []
   }
 ];

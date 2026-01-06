@@ -336,5 +336,126 @@ export const BERGAMO_UNITED_SQUAD = [
             "Teknik",
             "Duran Top"
         ]
-    }
+    },
+  {
+    ad: "João Garcia",
+    takim: "Atalanta",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 76,
+    yas: 20,
+    ana_ozellikler: { hiz: 66, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 76 },
+    detaylar: { ucma: 66, refleks: 76, vurus: 71, pozisyon: 68, top_kontrol: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Rodriguez",
+    takim: "Atalanta",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 75,
+    yas: 21,
+    ana_ozellikler: { hiz: 65, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 75 },
+    detaylar: { ucma: 65, refleks: 75, vurus: 70, pozisyon: 67, top_kontrol: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Costa",
+    takim: "Atalanta",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 74,
+    yas: 22,
+    ana_ozellikler: { hiz: 64, sut: 49, pas: 66, dribbling: 64, defans: 74, fizik: 69 },
+    detaylar: { ayakta_mudahale: 74, top_kesme: 69, kafa_isabeti: 64, guc: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Perez",
+    takim: "Atalanta",
+    uyruk: "Fransa",
+    mevki: "SĞB",
+    reyting: 73,
+    yas: 23,
+    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Costa",
+    takim: "Atalanta",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    reyting: 72,
+    yas: 24,
+    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Lopez",
+    takim: "Atalanta",
+    uyruk: "Portekiz",
+    mevki: "SLB",
+    reyting: 71,
+    yas: 25,
+    ana_ozellikler: { hiz: 61, sut: 46, pas: 63, dribbling: 61, defans: 71, fizik: 66 },
+    detaylar: { ayakta_mudahale: 71, top_kesme: 66, kafa_isabeti: 61, guc: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Lopez",
+    takim: "Atalanta",
+    uyruk: "Brezilya",
+    mevki: "SLB",
+    reyting: 70,
+    yas: 26,
+    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Rodriguez",
+    takim: "Atalanta",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 69,
+    yas: 27,
+    ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
+    detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Garcia",
+    takim: "Atalanta",
+    uyruk: "İspanya",
+    mevki: "MDO",
+    reyting: 68,
+    yas: 28,
+    ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
+    detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Martinez",
+    takim: "Atalanta",
+    uyruk: "Fransa",
+    mevki: "MDO",
+    reyting: 67,
+    yas: 29,
+    ana_ozellikler: { hiz: 52, sut: 47, pas: 62, dribbling: 59, defans: 67, fizik: 62 },
+    detaylar: { top_kesme: 67, ayakta_mudahale: 62, dayaniklilik: 64, kisa_pas: 59 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Andre Garcia",
+    takim: "Atalanta",
+    uyruk: "İtalya",
+    mevki: "MOO",
+    reyting: 66,
+    yas: 30,
+    ana_ozellikler: { hiz: 54, sut: 56, pas: 66, dribbling: 61, defans: 51, fizik: 56 },
+    detaylar: { vizyon: 61, kisa_pas: 66, top_kontrol: 58, dayaniklilik: 54 },
+    oyun_tarzlari: []
+  }
 ];

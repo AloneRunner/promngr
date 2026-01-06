@@ -3,6 +3,7 @@ import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupSta
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
 import { simulateTick } from '../services/engine';
+import { soundManager } from '../services/soundManager';
 
 interface MatchCenterProps {
     match: Match;
@@ -125,6 +126,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // NEW: Exit Confirmation Modal
     const [showExitModal, setShowExitModal] = useState(false);
 
+    // NEW: Half-Time Modal
+    const [showHalfTime, setShowHalfTime] = useState(false);
+    const halfTimeShown = useRef(false);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -179,9 +184,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             pitchCanvasRef.current = offscreen;
         }
 
+        // 🔊 Start ambience sound when match starts
+        if (!match.isPlayed) {
+            soundManager.startAmbience();
+            soundManager.play('whistle_start');
+        }
+
         return () => {
             if (logicTimerRef.current) clearInterval(logicTimerRef.current);
             if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
+            
+            // 🔊 Stop all sounds on unmount
+            soundManager.stopAll();
         };
     }, []);
 
@@ -279,16 +293,32 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             });
             lastEventCount.current = match.events.length;
         }
+
+        // NEW: Half-Time detection (show at 45')
+        if (match.currentMinute >= 45 && match.currentMinute < 46 && !halfTimeShown.current && !match.isPlayed) {
+            halfTimeShown.current = true;
+            setShowHalfTime(true);
+            setSpeed(0); // Pause during half-time
+        }
     }, [match.liveData, match.currentMinute, match.homeScore, match.awayScore, match.events.length]); // Update when data changes
 
     // 3. Logic Loop (Decoupled from App.tsx)
     useEffect(() => {
         if (match.isPlayed) {
             setSpeed(0);
+            soundManager.stopAll(); // 🔊 Stop sounds when match ends
+            soundManager.play('whistle_end');
             return;
         }
 
         if (logicTimerRef.current) window.clearInterval(logicTimerRef.current);
+
+        // 🔊 Control sounds based on speed
+        if (speed === 0) {
+            soundManager.pause(); // Pause all sounds
+        } else {
+            soundManager.resume(); // Resume all sounds
+        }
 
         if (speed > 0) {
             // Speed logic: 
@@ -313,6 +343,31 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                     nextTickState.current = result.simulation;
                     lastTickTime.current = performance.now();
+                }
+
+                // 🔊 Play event sounds
+                if (result.event) {
+                    switch (result.event.type) {
+                        case MatchEventType.GOAL:
+                            soundManager.play('goal');
+                            soundManager.play('cheer');
+                            break;
+                        case MatchEventType.CARD_YELLOW:
+                            soundManager.play('yellow_card');
+                            break;
+                        case MatchEventType.CARD_RED:
+                            soundManager.play('red_card');
+                            break;
+                        case MatchEventType.SUB:
+                            soundManager.play('substitution');
+                            break;
+                        case MatchEventType.PENALTY:
+                            soundManager.play('penalty');
+                            break;
+                        case MatchEventType.CORNER:
+                            soundManager.play('corner');
+                            break;
+                    }
                 }
 
                 // SYNC WITH APP ONLY ON CRITICAL EVENTS
@@ -1450,6 +1505,94 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 </div>
             )}
 
+            {/* HALF-TIME MODAL */}
+            {showHalfTime && (
+                <div className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-600 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden">
+                        {/* Decorative Lines */}
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+                        <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+
+                        {/* Half Time Badge */}
+                        <div className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest shadow-lg">
+                            Devre Arası
+                        </div>
+
+                        <h2 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter">
+                            HALF TIME
+                        </h2>
+
+                        {/* Score Display */}
+                        <div className="flex items-center justify-center gap-6 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                            <div className="flex flex-col items-center gap-1 flex-1">
+                                <div className="text-4xl md:text-5xl font-black text-white leading-none">
+                                    {match.homeScore}
+                                </div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                    {homeTeam.shortName}
+                                </div>
+                            </div>
+
+                            <div className="text-slate-600 text-3xl font-black">-</div>
+
+                            <div className="flex flex-col items-center gap-1 flex-1">
+                                <div className="text-4xl md:text-5xl font-black text-white leading-none">
+                                    {match.awayScore}
+                                </div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                    {awayTeam.shortName}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* First Half Stats */}
+                        <div className="w-full space-y-3 bg-slate-800/50 rounded-xl p-4">
+                            <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">İlk Yarı İstatistikleri</div>
+                            
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-white w-8 text-right">{match.stats.homePossession}%</span>
+                                <span className="text-slate-500 text-xs">Topa Sahiplik</span>
+                                <span className="font-bold text-white w-8">{match.stats.awayPossession}%</span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-white w-8 text-right">{match.stats.homeShots}</span>
+                                <span className="text-slate-500 text-xs">Şutlar</span>
+                                <span className="font-bold text-white w-8">{match.stats.awayShots}</span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-emerald-400 w-8 text-right">{match.stats.homeOnTarget}</span>
+                                <span className="text-slate-500 text-xs">İsabetli</span>
+                                <span className="font-bold text-emerald-400 w-8">{match.stats.awayOnTarget}</span>
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={() => {
+                                    setShowHalfTime(false);
+                                    setShowTacticsModal(true);
+                                }}
+                                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors text-sm"
+                            >
+                                ⚙️ Taktik Değiştir
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowHalfTime(false);
+                                    setSpeed(1);
+                                }}
+                                className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"
+                            >
+                                ▶️ 2. Yarı Başlat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* EXIT CONFIRMATION MODAL */}
             {showExitModal && (
                 <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1488,6 +1631,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <button
                                 onClick={() => {
                                     setShowExitModal(false);
+                                    soundManager.stopAll(); // 🔊 Stop sounds before instant finish
                                     onInstantFinish(match.id);
                                 }}
                                 className="flex-1 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl transition-colors"

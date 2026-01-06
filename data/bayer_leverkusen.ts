@@ -32,4 +32,225 @@ export const BAYER_LEVERKUSEN_SQUAD = [
         detaylar: {},
         oyun_tarzlari: []
     },
+
+  {
+    ad: "João Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 82,
+    yas: 20,
+    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "Arjantin",
+    mevki: "KL",
+    reyting: 81,
+    yas: 21,
+    ana_ozellikler: { hiz: 71, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 71, refleks: 81, vurus: 76, pozisyon: 73, top_kontrol: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Garcia",
+    takim: "Leverkusen",
+    uyruk: "İspanya",
+    mevki: "KL",
+    reyting: 80,
+    yas: 22,
+    ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+    detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Santos",
+    takim: "Leverkusen",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 79,
+    yas: 23,
+    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+    detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "İtalya",
+    mevki: "STP",
+    reyting: 78,
+    yas: 24,
+    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Martinez",
+    takim: "Leverkusen",
+    uyruk: "Portekiz",
+    mevki: "STP",
+    reyting: 77,
+    yas: 25,
+    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+    detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Garcia",
+    takim: "Leverkusen",
+    uyruk: "Brezilya",
+    mevki: "STP",
+    reyting: 76,
+    yas: 26,
+    ana_ozellikler: { hiz: 66, sut: 51, pas: 68, dribbling: 66, defans: 76, fizik: 71 },
+    detaylar: { ayakta_mudahale: 76, top_kesme: 71, kafa_isabeti: 66, guc: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "Leverkusen",
+    uyruk: "Arjantin",
+    mevki: "SĞB",
+    reyting: 75,
+    yas: 27,
+    ana_ozellikler: { hiz: 65, sut: 50, pas: 67, dribbling: 65, defans: 75, fizik: 70 },
+    detaylar: { ayakta_mudahale: 75, top_kesme: 70, kafa_isabeti: 65, guc: 67 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "David Silva",
+    takim: "Leverkusen",
+    uyruk: "İspanya",
+    mevki: "SĞB",
+    reyting: 74,
+    yas: 28,
+    ana_ozellikler: { hiz: 64, sut: 49, pas: 66, dribbling: 64, defans: 74, fizik: 69 },
+    detaylar: { ayakta_mudahale: 74, top_kesme: 69, kafa_isabeti: 64, guc: 66 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Diego Costa",
+    takim: "Leverkusen",
+    uyruk: "Fransa",
+    mevki: "SLB",
+    reyting: 73,
+    yas: 29,
+    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Lopez",
+    takim: "Leverkusen",
+    uyruk: "İtalya",
+    mevki: "SLB",
+    reyting: 72,
+    yas: 30,
+    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "João Santos",
+    takim: "Leverkusen",
+    uyruk: "Portekiz",
+    mevki: "MDO",
+    reyting: 77,
+    yas: 31,
+    ana_ozellikler: { hiz: 62, sut: 57, pas: 72, dribbling: 69, defans: 77, fizik: 72 },
+    detaylar: { top_kesme: 77, ayakta_mudahale: 72, dayaniklilik: 74, kisa_pas: 69 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Perez",
+    takim: "Leverkusen",
+    uyruk: "Brezilya",
+    mevki: "MDO",
+    reyting: 76,
+    yas: 32,
+    ana_ozellikler: { hiz: 61, sut: 56, pas: 71, dribbling: 68, defans: 76, fizik: 71 },
+    detaylar: { top_kesme: 76, ayakta_mudahale: 71, dayaniklilik: 73, kisa_pas: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Carlos Costa",
+    takim: "Leverkusen",
+    uyruk: "Arjantin",
+    mevki: "MDO",
+    reyting: 76,
+    yas: 33,
+    ana_ozellikler: { hiz: 61, sut: 56, pas: 71, dribbling: 68, defans: 76, fizik: 71 },
+    detaylar: { top_kesme: 76, ayakta_mudahale: 71, dayaniklilik: 73, kisa_pas: 68 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Lopez",
+    takim: "Leverkusen",
+    uyruk: "İspanya",
+    mevki: "MO",
+    reyting: 75,
+    yas: 34,
+    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 75,
+    yas: 20,
+    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Pedro Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "İtalya",
+    mevki: "MOO",
+    reyting: 75,
+    yas: 21,
+    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Garcia",
+    takim: "Leverkusen",
+    uyruk: "Portekiz",
+    mevki: "MOO",
+    reyting: 74,
+    yas: 22,
+    ana_ozellikler: { hiz: 62, sut: 64, pas: 74, dribbling: 69, defans: 59, fizik: 64 },
+    detaylar: { vizyon: 69, kisa_pas: 74, top_kontrol: 66, dayaniklilik: 62 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Lucas Santos",
+    takim: "Leverkusen",
+    uyruk: "Brezilya",
+    mevki: "SĞO",
+    reyting: 74,
+    yas: 23,
+    ana_ozellikler: { hiz: 79, sut: 69, pas: 66, dribbling: 76, defans: 35, fizik: 59 },
+    detaylar: { dribbling: 74, ceviklik: 77, orta_acma: 64, sprint: 79 },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Marco Rodriguez",
+    takim: "Leverkusen",
+    uyruk: "Arjantin",
+    mevki: "SĞO",
+    reyting: 73,
+    yas: 24,
+    ana_ozellikler: { hiz: 78, sut: 68, pas: 65, dribbling: 75, defans: 35, fizik: 58 },
+    detaylar: { dribbling: 73, ceviklik: 76, orta_acma: 63, sprint: 78 },
+    oyun_tarzlari: []
+  }
 ];
