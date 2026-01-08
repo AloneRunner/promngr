@@ -1,7 +1,7 @@
 
 export const TYNESIDE_MAGPIES_SQUAD = [
     {
-        ad: "Bruno Guimar",
+        ad: "B. Guimarans",
         takim: "Tyneside Magpies",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -34,7 +34,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Alex Isak",
+        ad: "A. Isakke",
         takim: "Tyneside Magpies",
         uyruk: "İsveç",
         mevki: "SNT",
@@ -66,7 +66,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Anthony Gord",
+        ad: "A. Gordan",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -95,7 +95,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Nick Pop",
+        ad: "N. Poppe",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "KL",
@@ -122,7 +122,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Joelint",
+        ad: "J. Lynton",
         takim: "Tyneside Magpies",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -151,7 +151,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Sandro Tona",
+        ad: "S. Tonally",
         takim: "Tyneside Magpies",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -181,7 +181,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Sven Botm",
+        ad: "S. Bottman",
         takim: "Tyneside Magpies",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -209,7 +209,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Tino Livra",
+        ad: "T. Livramen",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -235,7 +235,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Harvey Barn",
+        ad: "H. Barness",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -261,7 +261,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Fabian Sch",
+        ad: "F. Shaer",
         takim: "Tyneside Magpies",
         uyruk: "İsviçre",
         mevki: "STP",
@@ -288,7 +288,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Lewis Hall",
+        ad: "L. Halle",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SLB",
@@ -313,7 +313,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Dan Bur",
+        ad: "D. Burnne",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -335,7 +335,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Kieran Tripp",
+        ad: "K. Trippy",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -363,7 +363,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Callum Wils",
+        ad: "C. Wilsonn",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -387,7 +387,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Joe Willo",
+        ad: "J. Willokk",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -409,7 +409,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Sean Long",
+        ad: "S. Longstaf",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -432,7 +432,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Bruno Guimara",
+        ad: "B. Guimarans",
         takim: "Tyneside Magpies",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -464,7 +464,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Tony Flash",
+        ad: "A. Gordan",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -493,7 +493,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Joe Linton",
+        ad: "J. Lynton",
         takim: "Tyneside Magpies",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -522,7 +522,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Fabian Shar",
+        ad: "F. Shaer",
         takim: "Tyneside Magpies",
         uyruk: "İsviçre",
         mevki: "STP",
@@ -549,7 +549,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Yoane Wizz",
+        ad: "Y. Wizzy",
         takim: "Tyneside Magpies",
         uyruk: "Kongo DC",
         mevki: "SNT",
@@ -575,7 +575,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Sven Bot",
+        ad: "S. Bottman",
         takim: "Tyneside Magpies",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -602,7 +602,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Anthony Elan",
+        ad: "A. Elangah",
         takim: "Tyneside Magpies",
         uyruk: "İsveç",
         mevki: "SĞK",
@@ -629,7 +629,7 @@ export const TYNESIDE_MAGPIES_SQUAD = [
         ]
     },
     {
-        ad: "Kieran Trip",
+        ad: "K. Trippy",
         takim: "Tyneside Magpies",
         uyruk: "İngiltere",
         mevki: "SĞB",

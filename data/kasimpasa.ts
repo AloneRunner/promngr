@@ -1,7 +1,7 @@
 
 export const KASIMPASA_SQUAD = [
   {
-    ad: "Haris Hajradinović",
+    ad: "H. Hajradinov",
     takim: "Kasimpasa Navy",
     uyruk: "Bosna Hersek",
     mevki: "MO",
@@ -12,7 +12,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Kesme Pas", "Plase Şut", "Uzun Topla Pas", "Yakın Markaj"]
   },
   {
-    ad: "Cláudio Winck",
+    ad: "C. Winckerr",
     takim: "Kasimpasa Navy",
     uyruk: "Brezilya",
     mevki: "SĞB",
@@ -23,7 +23,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi"]
   },
   {
-    ad: "Mamadou Fall",
+    ad: "M. Fallo",
     takim: "Kasimpasa Navy",
     uyruk: "Senegal",
     mevki: "SĞO",
@@ -34,7 +34,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Seri"]
   },
   {
-    ad: "Andreas Gianniotis",
+    ad: "A. Giannyoti",
     takim: "Kasimpasa Navy",
     uyruk: "Yunanistan",
     mevki: "KL",
@@ -45,7 +45,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Ayak Hakimiyeti", "Ortaya Çıkan"]
   },
   {
-    ad: "Attila Szalai",
+    ad: "A. Szalay",
     takim: "Kasimpasa Navy",
     uyruk: "Macaristan",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Güçlü"]
   },
   {
-    ad: "Godfried Frimpong",
+    ad: "G. Frimpon",
     takim: "Kasimpasa Navy",
     uyruk: "Hollanda",
     mevki: "SLB",
@@ -67,7 +67,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Kesme Pas", "Top Kesici"]
   },
   {
-    ad: "Mortadha Ben Ouanes",
+    ad: "M. Ben Ouann",
     takim: "Kasimpasa Navy",
     uyruk: "Tunus",
     mevki: "SLB",
@@ -78,7 +78,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Jhon Espinoza",
+    ad: "J. Espinozza",
     takim: "Kasimpasa Navy",
     uyruk: "Ekvador",
     mevki: "SĞB",
@@ -89,7 +89,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kubilay Kanatsızkuş",
+    ad: "K. Kanatsizz",
     takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "SNT",
@@ -100,7 +100,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Karşı Koyan"]
   },
   {
-    ad: "Loret Sadiku",
+    ad: "L. Sadikku",
     takim: "Kasimpasa Navy",
     uyruk: "Arnavutluk",
     mevki: "MDO",
@@ -111,7 +111,7 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Nicholas Opoku",
+    ad: "N. Opokku",
     takim: "Kasimpasa Navy",
     uyruk: "Gana",
     mevki: "STP",
@@ -122,8 +122,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mehmet Kaya",
-    takim: "Kasimpasa",
+    ad: "M. Kayya",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 70,
@@ -133,8 +133,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Onur Özdemir",
-    takim: "Kasimpasa",
+    ad: "O. Ozderri",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 68,
@@ -144,8 +144,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Murat Aktaş",
-    takim: "Kasimpasa",
+    ad: "M. Aktash",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -155,8 +155,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Murat Akın",
-    takim: "Kasimpasa",
+    ad: "M. Akinn",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 66,
@@ -166,8 +166,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Onur Karataş",
-    takim: "Kasimpasa",
+    ad: "O. Karatash",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 65,
@@ -177,8 +177,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Oğuz Çelik",
-    takim: "Kasimpasa",
+    ad: "O. Celikk",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Erdoğan",
-    takim: "Kasimpasa",
+    ad: "S. Erdogann",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Kasimpasa",
+    ad: "D. Santoz",
+    takim: "Kasimpasa Navy",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 62,
@@ -210,8 +210,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Costa",
-    takim: "Kasimpasa",
+    ad: "A. Costas",
+    takim: "Kasimpasa Navy",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 61,
@@ -221,8 +221,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Kasimpasa",
+    ad: "C. Rodrigz",
+    takim: "Kasimpasa Navy",
     uyruk: "Brezilya",
     mevki: "MOO",
     reyting: 60,
@@ -232,8 +232,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Onur Kılıç",
-    takim: "Kasimpasa",
+    ad: "O. Kilicc",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 59,
@@ -243,8 +243,8 @@ export const KASIMPASA_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Yıldız",
-    takim: "Kasimpasa",
+    ad: "S. Yildizz",
+    takim: "Kasimpasa Navy",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 64,

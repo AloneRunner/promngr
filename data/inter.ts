@@ -1,7 +1,7 @@
 
 export const INTER_LOMBARDIA_SQUAD = [
     {
-        ad: "Lauro Martin",
+        ad: "L. Martines",
         takim: "Inter Lombardia",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -42,7 +42,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Alessio Bastion",
+        ad: "A. Bastonny",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "STP",
@@ -78,7 +78,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Yann Summer",
+        ad: "Y. Sommerr",
         takim: "Inter Lombardia",
         uyruk: "İsviçre",
         mevki: "KL",
@@ -110,7 +110,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Nico Barrell",
+        ad: "N. Barella",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "MO",
@@ -146,7 +146,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Hakan Calhan",
+        ad: "H. Calhano",
         takim: "Inter Lombardia",
         uyruk: "Türkiye",
         mevki: "MDO",
@@ -181,7 +181,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Fedor Marco",
+        ad: "F. Dimarko",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -212,7 +212,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Marcus Thor",
+        ad: "M. Thurammo",
         takim: "Inter Lombardia",
         uyruk: "Fransa",
         mevki: "SNT",
@@ -243,7 +243,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Dan Dumfree",
+        ad: "D. Dumfries",
         takim: "Inter Lombardia",
         uyruk: "Hollanda",
         mevki: "SĞB",
@@ -273,7 +273,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Frank Acer",
+        ad: "F. Acerby",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "STP",
@@ -301,7 +301,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Steve Fry",
+        ad: "S. de Vrij",
         takim: "Inter Lombardia",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -328,7 +328,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Henry Mickey",
+        ad: "H. Mkhitary",
         takim: "Inter Lombardia",
         uyruk: "Ermenistan",
         mevki: "MO",
@@ -357,7 +357,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Manuel Akan",
+        ad: "M. Akanjy",
         takim: "Inter Lombardia",
         uyruk: "İsviçre",
         mevki: "STP",
@@ -385,7 +385,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "David Frat",
+        ad: "D. Frattesy",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "MO",
@@ -413,7 +413,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Carlo August",
+        ad: "C. Augusto",
         takim: "Inter Lombardia",
         uyruk: "Brezilya",
         mevki: "SLB",
@@ -437,7 +437,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Matt Darman",
+        ad: "M. Darmian",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -463,7 +463,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Peter Ziel",
+        ad: "P. Zielinsky",
         takim: "Inter Lombardia",
         uyruk: "Polonya",
         mevki: "MO",
@@ -491,7 +491,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Luis Henrique",
+        ad: "L. Henrique",
         takim: "Inter Lombardia",
         uyruk: "Brezilya",
         mevki: "SĞO",
@@ -518,7 +518,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Yann Bisque",
+        ad: "Y. Bissecko",
         takim: "Inter Lombardia",
         uyruk: "Almanya",
         mevki: "STP",
@@ -545,7 +545,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Joe Martin",
+        ad: "J. Martines",
         takim: "Inter Lombardia",
         uyruk: "İspanya",
         mevki: "KL",
@@ -571,7 +571,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         ]
     },
     {
-        ad: "Andy Dio",
+        ad: "A. Diou",
         takim: "Inter Lombardia",
         uyruk: "Fransa",
         mevki: "MO",
@@ -595,7 +595,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Pete Sucic",
+        ad: "L. Sucic",
         takim: "Inter Lombardia",
         uyruk: "Hırvatistan",
         mevki: "MO",
@@ -618,7 +618,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Frank Espo",
+        ad: "F. Esposito",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -641,7 +641,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Raf Gennar",
+        ad: "R. Gennaro",
         takim: "Inter Lombardia",
         uyruk: "İtalya",
         mevki: "KL",
@@ -664,7 +664,7 @@ export const INTER_LOMBARDIA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Tom Palace",
+        ad: "T. Palacio",
         takim: "Inter Lombardia",
         uyruk: "Arjantin",
         mevki: "STP",

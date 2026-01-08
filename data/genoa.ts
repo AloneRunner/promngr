@@ -1,7 +1,7 @@
 
 export const GENOA_GRIFFINS_SQUAD = [
     {
-        ad: "Andrea Pinam",
+        ad: "A. Pinamo",
         takim: "Genoa Griffins",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -27,7 +27,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Morten Frend",
+        ad: "M. Frendru",
         takim: "Genoa Griffins",
         uyruk: "Danimarka",
         mevki: "MO",
@@ -54,7 +54,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Ruslan Malin",
+        ad: "R. Malino",
         takim: "Genoa Griffins",
         uyruk: "Ukrayna",
         mevki: "MOO",
@@ -82,7 +82,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Junior Mess",
+        ad: "J. Messia",
         takim: "Genoa Griffins",
         uyruk: "Brezilya",
         mevki: "MOO",
@@ -108,7 +108,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Viti",
+        ad: "Vitin",
         takim: "Genoa Griffins",
         uyruk: "Portekiz",
         mevki: "SNT",
@@ -130,7 +130,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Pier Golli",
+        ad: "P. Golini",
         takim: "Genoa Griffins",
         uyruk: "İtalya",
         mevki: "KL",
@@ -152,7 +152,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Johan Vasq",
+        ad: "J. Vazquez",
         takim: "Genoa Griffins",
         uyruk: "Meksika",
         mevki: "STP",
@@ -174,7 +174,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Aaron Mart",
+        ad: "A. Marto",
         takim: "Genoa Griffins",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -196,7 +196,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Koni De Win",
+        ad: "K. De Winte",
         takim: "Genoa Griffins",
         uyruk: "Belçika",
         mevki: "STP",
@@ -218,7 +218,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Milan Bad",
+        ad: "M. Badel",
         takim: "Genoa Griffins",
         uyruk: "Hırvatistan",
         mevki: "MO",
@@ -242,7 +242,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Stef Sabel",
+        ad: "S. Sabelly",
         takim: "Genoa Griffins",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -263,7 +263,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Caleb Eku",
+        ad: "C. Ekubann",
         takim: "Genoa Griffins",
         uyruk: "Gana",
         mevki: "SNT",
@@ -286,7 +286,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Ruslan Mali",
+        ad: "R. Malino",
         takim: "Genoa Griffins",
         uyruk: "Ukrayna",
         mevki: "MO",
@@ -317,7 +317,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Vitor Viti",
+        ad: "Vitin",
         takim: "Genoa Griffins",
         uyruk: "Portekiz",
         mevki: "SNT",
@@ -344,7 +344,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Albert Gron",
+        ad: "A. Gronn",
         takim: "Genoa Griffins",
         uyruk: "Danimarka",
         mevki: "MOO",
@@ -370,7 +370,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Nico Stan",
+        ad: "N. Stany",
         takim: "Genoa Griffins",
         uyruk: "Romanya",
         mevki: "MO",
@@ -397,7 +397,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Junior Messi",
+        ad: "J. Messia",
         takim: "Genoa Griffins",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -423,7 +423,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Leo Ostig",
+        ad: "L. Ostig",
         takim: "Genoa Griffins",
         uyruk: "Norveç",
         mevki: "STP",
@@ -449,7 +449,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Max Cornet",
+        ad: "M. Cornett",
         takim: "Genoa Griffins",
         uyruk: "Fildişi Sahili",
         mevki: "SLO",
@@ -475,7 +475,7 @@ export const GENOA_GRIFFINS_SQUAD = [
         ]
     },
     {
-        ad: "Valentin Carb",
+        ad: "V. Carbo",
         takim: "Genoa Griffins",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -501,37 +501,37 @@ export const GENOA_GRIFFINS_SQUAD = [
             "Yaratıcı"
         ]
     },
-  {
-    ad: "Carlos Lopez",
-    takim: "Genoa",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Perez",
-    takim: "Genoa",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Lopez",
-    takim: "Genoa",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
-    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Lopeze",
+        takim: "Genoa Griffins",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Pereze",
+        takim: "Genoa Griffins",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+        detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Lopeze",
+        takim: "Genoa Griffins",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+        detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+        oyun_tarzlari: []
+    }
 ];

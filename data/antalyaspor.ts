@@ -1,7 +1,7 @@
 
 export const ANTALYASPOR_SQUAD = [
   {
-    ad: "Nikola Storm",
+    ad: "N. Sturmen",
     takim: "Antalya Scorpions",
     uyruk: "Belçika",
     mevki: "SLO",
@@ -12,7 +12,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Plase Şut"]
   },
   {
-    ad: "Georgiy Dzhikiya",
+    ad: "G. Dazari",
     takim: "Antalya Scorpions",
     uyruk: "Rusya",
     mevki: "STP",
@@ -23,7 +23,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale", "Uzun Topla Pas"]
   },
   {
-    ad: "Abdülkadir Ömür",
+    ad: "A. Onal",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -34,7 +34,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Plase Şut", "Teknik"]
   },
   {
-    ad: "Tomáš Čvančara",
+    ad: "T. Cevan",
     takim: "Antalya Scorpions",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SNT",
@@ -45,7 +45,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lautaro Giannetti",
+    ad: "L. Giane",
     takim: "Antalya Scorpions",
     uyruk: "Arjantin",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Güray Vural",
+    ad: "G. Vural",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SLB",
@@ -67,7 +67,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Kesme Pas"]
   },
   {
-    ad: "Ramzi Safuri",
+    ad: "R. Safra",
     takim: "Antalya Scorpions",
     uyruk: "İsrail",
     mevki: "MOO",
@@ -78,7 +78,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kenneth Paal",
+    ad: "K. Paal",
     takim: "Antalya Scorpions",
     uyruk: "Surinam",
     mevki: "SLB",
@@ -89,7 +89,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Top Kesici"]
   },
   {
-    ad: "Soner Dikmen",
+    ad: "S. Dikce",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -100,7 +100,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Dario Šarić",
+    ad: "D. Saric",
     takim: "Antalya Scorpions",
     uyruk: "Bosna Hersek",
     mevki: "MO",
@@ -111,7 +111,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Teknik"]
   },
   {
-    ad: "Hüseyin Türkmen",
+    ad: "H. Turka",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -122,7 +122,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Veysel Sarı",
+    ad: "V. Saru",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -133,7 +133,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Kayarak Müdahale", "Top Kesici"]
   },
   {
-    ad: "Erdoğan Yeşilyurt",
+    ad: "E. Yesil",
     takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -144,7 +144,7 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Kesme Pas"]
   },
   {
-    ad: "Jesper Ceesay",
+    ad: "J. Ceel",
     takim: "Antalya Scorpions",
     uyruk: "Gambiya",
     mevki: "MO",
@@ -155,8 +155,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi"]
   },
   {
-    ad: "Berkay Şahin",
-    takim: "Antalyaspor",
+    ad: "B. Sahin",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 72,
@@ -166,8 +166,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mustafa Aktaş",
-    takim: "Antalyaspor",
+    ad: "M. Aktas",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 70,
@@ -177,8 +177,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Çağlar Güneş",
-    takim: "Antalyaspor",
+    ad: "C. Gunes",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 69,
@@ -188,8 +188,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Kılıç",
-    takim: "Antalyaspor",
+    ad: "B. Kilic",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 68,
@@ -199,8 +199,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Tekin",
-    takim: "Antalyaspor",
+    ad: "B. Tekin",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 67,
@@ -210,8 +210,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hasan Polat",
-    takim: "Antalyaspor",
+    ad: "H. Polat",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 66,
@@ -221,8 +221,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Demirci",
-    takim: "Antalyaspor",
+    ad: "S. Demir",
+    takim: "Antalya Scorpions",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 65,
@@ -232,8 +232,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Antalyaspor",
+    ad: "P. Garcy",
+    takim: "Antalya Scorpions",
     uyruk: "Arjantin",
     mevki: "MOO",
     reyting: 64,
@@ -243,8 +243,8 @@ export const ANTALYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Perez",
-    takim: "Antalyaspor",
+    ad: "M. Perz",
+    takim: "Antalya Scorpions",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 63,

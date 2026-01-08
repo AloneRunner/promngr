@@ -1,6 +1,6 @@
 export const VALENCIA_BATS_SQUAD = [
     {
-        ad: "Jose Gay",
+        ad: "J. Gayah",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -13,7 +13,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Orta Uzmanı", "Lider", "İstikrarlı"]
     },
     {
-        ad: "Stole Dimitri",
+        ad: "S. Dimitry",
         takim: "Valencia Bats",
         uyruk: "Kuzey Makedonya",
         mevki: "KL",
@@ -26,7 +26,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Refleks"]
     },
     {
-        ad: "Luis Rioj",
+        ad: "L. Riojah",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SĞO",
@@ -39,7 +39,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Teknik"]
     },
     {
-        ad: "Hugo Dur",
+        ad: "H. Durro",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SNT",
@@ -52,7 +52,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Fırsatçı", "Amansız"]
     },
     {
-        ad: "Pepe Lu",
+        ad: "P. Luy",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "MO",
@@ -65,7 +65,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Pasör", "Duran Top"]
     },
     {
-        ad: "Javi Guer",
+        ad: "J. Guerrer",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "MO",
@@ -78,7 +78,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Genç Yetenek", "Kutu Kutu"]
     },
     {
-        ad: "Andre Almei",
+        ad: "A. Almeyda",
         takim: "Valencia Bats",
         uyruk: "Portekiz",
         mevki: "MOO",
@@ -91,7 +91,7 @@ export const VALENCIA_BATS_SQUAD = [
         oyun_tarzlari: ["Teknik"]
     },
     {
-        ad: "Thierry Cor",
+        ad: "T. Correya",
         takim: "Valencia Bats",
         uyruk: "Portekiz",
         mevki: "SĞB",
@@ -109,7 +109,7 @@ export const VALENCIA_BATS_SQUAD = [
 
 export const VALENCIA_BATS_RESERVES = [
     {
-        ad: "Jose Gaya",
+        ad: "J. Gayah",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -120,7 +120,7 @@ export const VALENCIA_BATS_RESERVES = [
         oyun_tarzlari: ["Kaptan"]
     },
     {
-        ad: "Jesus Vazq",
+        ad: "J. Vazqueze",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -131,7 +131,7 @@ export const VALENCIA_BATS_RESERVES = [
         oyun_tarzlari: []
     },
     {
-        ad: "Rafa Mir",
+        ad: "R. Mirry",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "SNT",
@@ -142,7 +142,7 @@ export const VALENCIA_BATS_RESERVES = [
         oyun_tarzlari: ["Hava Hakimi"]
     },
     {
-        ad: "Dimitri Foul",
+        ad: "D. Foulquyer",
         takim: "Valencia Bats",
         uyruk: "Fransa",
         mevki: "SĞB",
@@ -153,7 +153,7 @@ export const VALENCIA_BATS_RESERVES = [
         oyun_tarzlari: ["Savaşçı"]
     },
     {
-        ad: "Enzo Barrene",
+        ad: "E. Barrenney",
         takim: "Valencia Bats",
         uyruk: "Arjantin",
         mevki: "MDO",
@@ -164,7 +164,7 @@ export const VALENCIA_BATS_RESERVES = [
         oyun_tarzlari: []
     },
     {
-        ad: "Cristhian Mosq",
+        ad: "C. Mosquer",
         takim: "Valencia Bats",
         uyruk: "İspanya",
         mevki: "STP",
@@ -174,104 +174,104 @@ export const VALENCIA_BATS_RESERVES = [
         detaylar: { sprint: 78, guc: 80, potansiyel: 86 },
         oyun_tarzlari: ["Genç Yetenek", "Hızlı Stoper"]
     },
-  {
-    ad: "Carlos Santos",
-    takim: "Valencia Bats",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Rodriguez",
-    takim: "Valencia Bats",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Santos",
-    takim: "Valencia Bats",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
-    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Silva",
-    takim: "Valencia Bats",
-    uyruk: "Fransa",
-    mevki: "STP",
-    reyting: 68,
-    yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
-    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Lopez",
-    takim: "Valencia Bats",
-    uyruk: "İtalya",
-    mevki: "STP",
-    reyting: 67,
-    yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
-    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Lopez",
-    takim: "Valencia Bats",
-    uyruk: "Portekiz",
-    mevki: "MDO",
-    reyting: 66,
-    yas: 25,
-    ana_ozellikler: { hiz: 51, sut: 46, pas: 61, dribbling: 58, defans: 66, fizik: 61 },
-    detaylar: { top_kesme: 66, ayakta_mudahale: 61, dayaniklilik: 63, kisa_pas: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Santos",
-    takim: "Valencia Bats",
-    uyruk: "Brezilya",
-    mevki: "MDO",
-    reyting: 65,
-    yas: 26,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Perez",
-    takim: "Valencia Bats",
-    uyruk: "Arjantin",
-    mevki: "MO",
-    reyting: 64,
-    yas: 27,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
-    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Santos",
-    takim: "Valencia Bats",
-    uyruk: "İspanya",
-    mevki: "MOO",
-    reyting: 63,
-    yas: 28,
-    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
-    detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Santozz",
+        takim: "Valencia Bats",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Rodrigz",
+        takim: "Valencia Bats",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+        detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Santozz",
+        takim: "Valencia Bats",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+        detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Sylva",
+        takim: "Valencia Bats",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 68,
+        yas: 23,
+        ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+        detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Lopeze",
+        takim: "Valencia Bats",
+        uyruk: "İtalya",
+        mevki: "STP",
+        reyting: 67,
+        yas: 24,
+        ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+        detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Lopeze",
+        takim: "Valencia Bats",
+        uyruk: "Portekiz",
+        mevki: "MDO",
+        reyting: 66,
+        yas: 25,
+        ana_ozellikler: { hiz: 51, sut: 46, pas: 61, dribbling: 58, defans: 66, fizik: 61 },
+        detaylar: { top_kesme: 66, ayakta_mudahale: 61, dayaniklilik: 63, kisa_pas: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Santozz",
+        takim: "Valencia Bats",
+        uyruk: "Brezilya",
+        mevki: "MDO",
+        reyting: 65,
+        yas: 26,
+        ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+        detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Pereze",
+        takim: "Valencia Bats",
+        uyruk: "Arjantin",
+        mevki: "MO",
+        reyting: 64,
+        yas: 27,
+        ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+        detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Santozz",
+        takim: "Valencia Bats",
+        uyruk: "İspanya",
+        mevki: "MOO",
+        reyting: 63,
+        yas: 28,
+        ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+        detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
+        oyun_tarzlari: []
+    }
 ];
 

@@ -1,6 +1,6 @@
 export const MADRID_BLANCOS_SQUAD = [
     {
-        ad: "Kylian Mappe",
+        ad: "K. Mbappey",
         takim: "Madrid Blancos",
         uyruk: "Fransa",
         mevki: "SNT",
@@ -14,7 +14,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Roket", "Seri", "Plase Şut", "Top Cambazı", "Fırsatçı"]
     },
     {
-        ad: "Jude Bell",
+        ad: "J. Bellin",
         takim: "Madrid Blancos",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -28,7 +28,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Amansız", "Teknik", "Kutu Kutu", "Lider", "Kuvvetli Şut"]
     },
     {
-        ad: "Vini Junior",
+        ad: "V. Juniorr",
         takim: "Madrid Blancos",
         uyruk: "Brezilya",
         mevki: "SLK",
@@ -42,7 +42,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Top Cambazı", "Seri", "Akrobatik", "Trivela"]
     },
     {
-        ad: "Fede Valver",
+        ad: "F. Valverdy",
         takim: "Madrid Blancos",
         uyruk: "Uruguay",
         mevki: "MO",
@@ -56,7 +56,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Kuvvetli Şut", "Motor", "Uzun Topla Pas"]
     },
     {
-        ad: "Tibo Courto",
+        ad: "T. Courtow",
         takim: "Madrid Blancos",
         uyruk: "Belçika",
         mevki: "KL",
@@ -69,7 +69,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Dev", "Kedi Refleks"]
     },
     {
-        ad: "Toni Rudi",
+        ad: "T. Rudigerr",
         takim: "Madrid Blancos",
         uyruk: "Almanya",
         mevki: "STP",
@@ -82,7 +82,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Savaşçı", "Hava Hakimi", "Sert Müdahale"]
     },
     {
-        ad: "Trent Alex",
+        ad: "T. Alexandery",
         takim: "Madrid Blancos",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -95,7 +95,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Orta Uzmanı", "Uzun Topla Pas", "Oyun Kurucu"]
     },
     {
-        ad: "Rodry",
+        ad: "Rodrygoa",
         takim: "Madrid Blancos",
         uyruk: "Brezilya",
         mevki: "SĞK",
@@ -108,7 +108,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Teknik", "Seri"]
     },
     {
-        ad: "Dani Carva",
+        ad: "D. Carvajall",
         takim: "Madrid Blancos",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -121,7 +121,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Savaşçı", "İstikrarlı"]
     },
     {
-        ad: "Aurelian Tchou",
+        ad: "A. Tchouameny",
         takim: "Madrid Blancos",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -134,7 +134,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Çapa", "Hava Hakimi"]
     },
     {
-        ad: "Eder Milita",
+        ad: "E. Militao",
         takim: "Madrid Blancos",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -147,7 +147,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Hızlı Stoper", "Jokey"]
     },
     {
-        ad: "Edu Cama",
+        ad: "E. Camavingy",
         takim: "Madrid Blancos",
         uyruk: "Fransa",
         mevki: "MO",
@@ -160,7 +160,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Teknik", "Kutu Kutu"]
     },
     {
-        ad: "Brahim Di",
+        ad: "B. Diaze",
         takim: "Madrid Blancos",
         uyruk: "Fas",
         mevki: "SĞO",
@@ -173,7 +173,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Top Cambazı", "Teknik"]
     },
     {
-        ad: "Arda Gule",
+        ad: "A. Gulerre",
         takim: "Madrid Blancos",
         uyruk: "Türkiye",
         mevki: "SĞO",
@@ -187,7 +187,7 @@ export const MADRID_BLANCOS_SQUAD = [
         oyun_tarzlari: ["Duran Top Uzmanı", "İnce Pas", "Teknik", "Geleceğin Yıldızı"]
     },
     {
-        ad: "Endri",
+        ad: "Endrikky",
         takim: "Madrid Blancos",
         uyruk: "Brezilya",
         mevki: "SNT",
@@ -205,7 +205,7 @@ export const MADRID_BLANCOS_SQUAD = [
 
 export const MADRID_BLANCOS_RESERVES = [
     {
-        ad: "Lucas Vazq",
+        ad: "L. Vazqueze",
         takim: "Madrid Blancos",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -216,7 +216,7 @@ export const MADRID_BLANCOS_RESERVES = [
         oyun_tarzlari: ["Çalışkan Kanat", "Lider"]
     },
     {
-        ad: "Fran Garci",
+        ad: "F. Garcy",
         takim: "Madrid Blancos",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -227,7 +227,7 @@ export const MADRID_BLANCOS_RESERVES = [
         oyun_tarzlari: ["Hızlı Bek"]
     },
     {
-        ad: "Dani Ceba",
+        ad: "D. Ceballos",
         takim: "Madrid Blancos",
         uyruk: "İspanya",
         mevki: "MO",
@@ -238,7 +238,7 @@ export const MADRID_BLANCOS_RESERVES = [
         oyun_tarzlari: ["Teknik"]
     },
     {
-        ad: "Jesus Vall",
+        ad: "J. Vallejoh",
         takim: "Madrid Blancos",
         uyruk: "İspanya",
         mevki: "STP",
@@ -248,49 +248,49 @@ export const MADRID_BLANCOS_RESERVES = [
         detaylar: { top_kesme: 76, markaj: 75 },
         oyun_tarzlari: []
     },
-  {
-    ad: "Diego Silva",
-    takim: "Real Madrid",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 91,
-    yas: 20,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 81, refleks: 91, vurus: 86, pozisyon: 83, top_kontrol: 79 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Martinez",
-    takim: "Real Madrid",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 90,
-    yas: 21,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 80, refleks: 90, vurus: 85, pozisyon: 82, top_kontrol: 78 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Garcia",
-    takim: "Real Madrid",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 89,
-    yas: 22,
-    ana_ozellikler: { hiz: 79, sut: 64, pas: 81, dribbling: 79, defans: 89, fizik: 84 },
-    detaylar: { ayakta_mudahale: 89, top_kesme: 84, kafa_isabeti: 79, guc: 81 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Silva",
-    takim: "Real Madrid",
-    uyruk: "Fransa",
-    mevki: "SLB",
-    reyting: 88,
-    yas: 23,
-    ana_ozellikler: { hiz: 78, sut: 63, pas: 80, dribbling: 78, defans: 88, fizik: 83 },
-    detaylar: { ayakta_mudahale: 88, top_kesme: 83, kafa_isabeti: 78, guc: 80 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "D. Sylva",
+        takim: "Madrid Blancos",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 91,
+        yas: 20,
+        ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 81, refleks: 91, vurus: 86, pozisyon: 83, top_kontrol: 79 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Madrid Blancos",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 90,
+        yas: 21,
+        ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 80, refleks: 90, vurus: 85, pozisyon: 82, top_kontrol: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Garcy",
+        takim: "Madrid Blancos",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 89,
+        yas: 22,
+        ana_ozellikler: { hiz: 79, sut: 64, pas: 81, dribbling: 79, defans: 89, fizik: 84 },
+        detaylar: { ayakta_mudahale: 89, top_kesme: 84, kafa_isabeti: 79, guc: 81 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Sylva",
+        takim: "Madrid Blancos",
+        uyruk: "Fransa",
+        mevki: "SLB",
+        reyting: 88,
+        yas: 23,
+        ana_ozellikler: { hiz: 78, sut: 63, pas: 80, dribbling: 78, defans: 88, fizik: 83 },
+        detaylar: { ayakta_mudahale: 88, top_kesme: 83, kafa_isabeti: 78, guc: 80 },
+        oyun_tarzlari: []
+    }
 ];
 

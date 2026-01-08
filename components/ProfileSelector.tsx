@@ -133,7 +133,7 @@ export const ProfileSelector: React.FC<ProfileSelectorProps> = ({
     const sortedProfiles = [...profiles].sort((a, b) => b.lastPlayedAt - a.lastPlayedAt);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col items-center justify-center p-4 md:p-8">
+        <div className="w-full min-h-full flex flex-col items-center justify-center p-4 md:p-8 animate-fade-in">
             {/* Header */}
             <div className="text-center mb-6 md:mb-8 animate-fade-in">
                 <div className="text-emerald-500 font-bold text-3xl md:text-5xl tracking-tighter mb-2 md:mb-4">

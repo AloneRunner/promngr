@@ -1,7 +1,7 @@
 
 export const PARMA_CRUSADERS_SQUAD = [
     {
-        ad: "Adri Bernabe",
+        ad: "A. Bernabbey",
         takim: "Parma Crusaders",
         uyruk: "İspanya",
         mevki: "MOO",
@@ -31,7 +31,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Dennis Man",
+        ad: "D. Mann",
         takim: "Parma Crusaders",
         uyruk: "Romanya",
         mevki: "SĞO",
@@ -58,7 +58,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Val Mihaila",
+        ad: "V. Mihailah",
         takim: "Parma Crusaders",
         uyruk: "Romanya",
         mevki: "SLO",
@@ -83,7 +83,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Zion Suzuki",
+        ad: "Z. Suzukky",
         takim: "Parma Crusaders",
         uyruk: "Japonya",
         mevki: "KL",
@@ -107,7 +107,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Ange Bony",
+        ad: "A. Bonny",
         takim: "Parma Crusaders",
         uyruk: "Fransa",
         mevki: "SNT",
@@ -131,7 +131,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Hernani Jr",
+        ad: "Hernanny",
         takim: "Parma Crusaders",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -155,7 +155,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Simon Sohm",
+        ad: "S. Sohmm",
         takim: "Parma Crusaders",
         uyruk: "İsviçre",
         mevki: "MDO",
@@ -177,7 +177,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Botond Balo",
+        ad: "B. Baloggh",
         takim: "Parma Crusaders",
         uyruk: "Macaristan",
         mevki: "STP",
@@ -199,7 +199,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Enrico Prato",
+        ad: "E. Pratoh",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -220,7 +220,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Eman Valeri",
+        ad: "E. Valery",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -241,7 +241,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Matteo Can",
+        ad: "M. Cancell",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "SĞO",
@@ -262,7 +262,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Yordan Osor",
+        ad: "Y. Osorryo",
         takim: "Parma Crusaders",
         uyruk: "Venezuela",
         mevki: "STP",
@@ -283,7 +283,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Adri Berna",
+        ad: "A. Bernabbey",
         takim: "Parma Crusaders",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -313,7 +313,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Pat Cutro",
+        ad: "P. Cutronne",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -340,7 +340,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Eric Prato",
+        ad: "E. Pratoh",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -366,7 +366,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Mandy Kay",
+        ad: "M. Keitah",
         takim: "Parma Crusaders",
         uyruk: "Belçika",
         mevki: "MDO",
@@ -392,7 +392,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Adri Bene",
+        ad: "A. Benedy",
         takim: "Parma Crusaders",
         uyruk: "Polonya",
         mevki: "SLO",
@@ -418,7 +418,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Gae Orista",
+        ad: "G. Oristanny",
         takim: "Parma Crusaders",
         uyruk: "İtalya",
         mevki: "MOO",
@@ -445,7 +445,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Alex Circle",
+        ad: "A. Circaty",
         takim: "Parma Crusaders",
         uyruk: "Avustralya",
         mevki: "STP",
@@ -470,7 +470,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Zion Suzu",
+        ad: "Z. Suzukky",
         takim: "Parma Crusaders",
         uyruk: "Japonya",
         mevki: "KL",
@@ -496,7 +496,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Benny Crema",
+        ad: "B. Cremaschy",
         takim: "Parma Crusaders",
         uyruk: "ABD",
         mevki: "MO",
@@ -521,7 +521,7 @@ export const PARMA_CRUSADERS_SQUAD = [
         ]
     },
     {
-        ad: "Milan Djur",
+        ad: "M. Djuryc",
         takim: "Parma Crusaders",
         uyruk: "Bosna Hersek",
         mevki: "SNT",
@@ -547,15 +547,15 @@ export const PARMA_CRUSADERS_SQUAD = [
             "Hava Hakimi"
         ]
     },
-  {
-    ad: "Carlos Costa",
-    takim: "Parma",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Costas",
+        takim: "Parma Crusaders",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    }
 ];

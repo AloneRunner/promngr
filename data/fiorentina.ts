@@ -1,7 +1,7 @@
 
 export const FLORENCE_VIOLA_SQUAD = [
     {
-        ad: "David De Gea",
+        ad: "D. De Geya",
         takim: "Florence Viola",
         uyruk: "İspanya",
         mevki: "KL",
@@ -28,7 +28,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Moise Kea",
+        ad: "M. Keano",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -55,7 +55,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Albert Gudmund",
+        ad: "A. Gudmunden",
         takim: "Florence Viola",
         uyruk: "İzlanda",
         mevki: "SNT",
@@ -81,7 +81,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Beltra",
+        ad: "L. Beltrano",
         takim: "Florence Viola",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -106,7 +106,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Edo Bove",
+        ad: "E. Bovvey",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "MO",
@@ -133,7 +133,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Danilo Cata",
+        ad: "D. Cataldy",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "MO",
@@ -158,7 +158,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Andrea Colpa",
+        ad: "A. Colpany",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "SĞK",
@@ -183,7 +183,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Robin Gosen",
+        ad: "R. Gosenz",
         takim: "Florence Viola",
         uyruk: "Almanya",
         mevki: "SLB",
@@ -209,7 +209,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Yacine Adli",
+        ad: "Y. Adly",
         takim: "Florence Viola",
         uyruk: "Fransa",
         mevki: "MO",
@@ -236,7 +236,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Marti",
+        ad: "L. Martines",
         takim: "Florence Viola",
         uyruk: "Arjantin",
         mevki: "STP",
@@ -262,7 +262,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Dodo",
+        ad: "Dodou",
         takim: "Florence Viola",
         uyruk: "Brezilya",
         mevki: "SĞB",
@@ -288,7 +288,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Marin Ponga",
+        ad: "M. Pongra",
         takim: "Florence Viola",
         uyruk: "Hırvatistan",
         mevki: "STP",
@@ -310,7 +310,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Chris Kouam",
+        ad: "C. Kouamy",
         takim: "Florence Viola",
         uyruk: "Fildişi Sahili",
         mevki: "SNT",
@@ -334,7 +334,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Dave Gea",
+        ad: "D. De Geya",
         takim: "Florence Viola",
         uyruk: "İspanya",
         mevki: "KL",
@@ -362,7 +362,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Moise K.",
+        ad: "M. Keano",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -392,7 +392,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Rob Gosen",
+        ad: "R. Gosenz",
         takim: "Florence Viola",
         uyruk: "Almanya",
         mevki: "SLB",
@@ -420,7 +420,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Al Gudmund",
+        ad: "A. Gudmunden",
         takim: "Florence Viola",
         uyruk: "İzlanda",
         mevki: "SNT",
@@ -447,7 +447,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Ranieri",
+        ad: "L. Ranyeri",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "STP",
@@ -470,7 +470,7 @@ export const FLORENCE_VIOLA_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Rolando Mandra",
+        ad: "R. Mandrag",
         takim: "Florence Viola",
         uyruk: "İtalya",
         mevki: "MO",
@@ -494,48 +494,48 @@ export const FLORENCE_VIOLA_SQUAD = [
             "Kuvvetli Şut"
         ]
     },
-  {
-    ad: "Diego Garcia",
-    takim: "Fiorentina",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 74,
-    yas: 20,
-    ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
-    detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Martinez",
-    takim: "Fiorentina",
-    uyruk: "Arjantin",
-    mevki: "STP",
-    reyting: 73,
-    yas: 21,
-    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
-    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Garcia",
-    takim: "Fiorentina",
-    uyruk: "İspanya",
-    mevki: "SĞB",
-    reyting: 72,
-    yas: 22,
-    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
-    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Martinez",
-    takim: "Fiorentina",
-    uyruk: "Fransa",
-    mevki: "MDO",
-    reyting: 71,
-    yas: 23,
-    ana_ozellikler: { hiz: 56, sut: 51, pas: 66, dribbling: 63, defans: 71, fizik: 66 },
-    detaylar: { top_kesme: 71, ayakta_mudahale: 66, dayaniklilik: 68, kisa_pas: 63 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "D. Garcy",
+        takim: "Florence Viola",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 74,
+        yas: 20,
+        ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
+        detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Florence Viola",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 73,
+        yas: 21,
+        ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+        detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Garcy",
+        takim: "Florence Viola",
+        uyruk: "İspanya",
+        mevki: "SĞB",
+        reyting: 72,
+        yas: 22,
+        ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+        detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Florence Viola",
+        uyruk: "Fransa",
+        mevki: "MDO",
+        reyting: 71,
+        yas: 23,
+        ana_ozellikler: { hiz: 56, sut: 51, pas: 66, dribbling: 63, defans: 71, fizik: 66 },
+        detaylar: { top_kesme: 71, ayakta_mudahale: 66, dayaniklilik: 68, kisa_pas: 63 },
+        oyun_tarzlari: []
+    }
 ];

@@ -1,19 +1,19 @@
 export const UNION_BERLIN_FC_SQUAD = [
-    {
-        ad: "Robert Skov",
-        takim: "Union Berlin FC",
-        uyruk: "Danimarka",
-        mevki: "SLB",
-        reyting: 74,
-        yas: 28,
-        ana_ozellikler: { hiz: 75, sut: 77, pas: 77, dribbling: 75, defans: 67, fizik: 69 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "R. Skovv",
+    takim: "Berlin Iron",
+    uyruk: "Danimarka",
+    mevki: "SLB",
+    reyting: 74,
+    yas: 28,
+    ana_ozellikler: { hiz: 75, sut: 77, pas: 77, dribbling: 75, defans: 67, fizik: 69 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Rodriguez",
-    takim: "Union Berlin Fc",
+    ad: "C. Rodrigz",
+    takim: "Berlin Iron",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Union Berlin Fc",
+    ad: "D. Santozz",
+    takim: "Berlin Iron",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Silva",
-    takim: "Union Berlin Fc",
+    ad: "A. Sylva",
+    takim: "Berlin Iron",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Union Berlin Fc",
+    ad: "L. Pereze",
+    takim: "Berlin Iron",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Union Berlin Fc",
+    ad: "C. Santozz",
+    takim: "Berlin Iron",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Santos",
-    takim: "Union Berlin Fc",
+    ad: "D. Santozz",
+    takim: "Berlin Iron",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Union Berlin Fc",
+    ad: "D. Rodrigz",
+    takim: "Berlin Iron",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -89,8 +89,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Union Berlin Fc",
+    ad: "P. Garcy",
+    takim: "Berlin Iron",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Union Berlin Fc",
+    ad: "D. Sylva",
+    takim: "Berlin Iron",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Perez",
-    takim: "Union Berlin Fc",
+    ad: "D. Pereze",
+    takim: "Berlin Iron",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Union Berlin Fc",
+    ad: "C. Costas",
+    takim: "Berlin Iron",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Martinez",
-    takim: "Union Berlin Fc",
+    ad: "M. Martines",
+    takim: "Berlin Iron",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
-    takim: "Union Berlin Fc",
+    ad: "J. Pereze",
+    takim: "Berlin Iron",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Costa",
-    takim: "Union Berlin Fc",
+    ad: "D. Costas",
+    takim: "Berlin Iron",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Union Berlin Fc",
+    ad: "J. Lopeze",
+    takim: "Berlin Iron",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Union Berlin Fc",
+    ad: "J. Rodrigz",
+    takim: "Berlin Iron",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Union Berlin Fc",
+    ad: "P. Santozz",
+    takim: "Berlin Iron",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Union Berlin Fc",
+    ad: "P. Sylva",
+    takim: "Berlin Iron",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Union Berlin Fc",
+    ad: "L. Pereze",
+    takim: "Berlin Iron",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Union Berlin Fc",
+    ad: "L. Santozz",
+    takim: "Berlin Iron",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Union Berlin Fc",
+    ad: "C. Santozz",
+    takim: "Berlin Iron",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const UNION_BERLIN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Union Berlin Fc",
+    ad: "C. Rodrigz",
+    takim: "Berlin Iron",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

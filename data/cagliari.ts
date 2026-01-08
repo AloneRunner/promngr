@@ -1,7 +1,7 @@
 
 export const CAGLIARI_ISLANDERS_SQUAD = [
     {
-        ad: "Gian Gaeta",
+        ad: "G. Gaeta",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "MOO",
@@ -27,7 +27,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Yerry Min",
+        ad: "Y. Mina",
         takim: "Cagliari Islanders",
         uyruk: "Kolombiya",
         mevki: "STP",
@@ -53,7 +53,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Zito Luvum",
+        ad: "Z. Luvum",
         takim: "Cagliari Islanders",
         uyruk: "Angola",
         mevki: "SNT",
@@ -78,7 +78,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Simone Scuff",
+        ad: "S. Scuff",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "KL",
@@ -99,7 +99,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Razvi Mar",
+        ad: "R. Marin",
         takim: "Cagliari Islanders",
         uyruk: "Romanya",
         mevki: "MO",
@@ -123,7 +123,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Tom Augu",
+        ad: "T. Augu",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -144,7 +144,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Mateo Prati",
+        ad: "M. Prati",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -167,7 +167,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Seb Luper",
+        ad: "S. Luper",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "STP",
@@ -188,7 +188,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Nadir Zor",
+        ad: "N. Zortea",
         takim: "Cagliari Islanders",
         uyruk: "Cezayir",
         mevki: "SĞB",
@@ -209,7 +209,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Rob Piccoli",
+        ad: "R. Piccoli",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -230,7 +230,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Adam Obert",
+        ad: "A. Obert",
         takim: "Cagliari Islanders",
         uyruk: "Slovakya",
         mevki: "STP",
@@ -251,7 +251,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "G. Lapadula",
+        ad: "G. Lapad",
         takim: "Cagliari Islanders",
         uyruk: "Peru",
         mevki: "SNT",
@@ -272,7 +272,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Andy Bell",
+        ad: "A. Bell",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -302,7 +302,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Jerry Mine",
+        ad: "J. Mine",
         takim: "Cagliari Islanders",
         uyruk: "Kolombiya",
         mevki: "STP",
@@ -332,7 +332,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Mike Folor",
+        ad: "M. Folor",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "MOO",
@@ -358,7 +358,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Seb Espo",
+        ad: "S. Espo",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -385,7 +385,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Gabby Zappa",
+        ad: "G. Zappa",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -408,7 +408,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Zito Luvu",
+        ad: "Z. Luvu",
         takim: "Cagliari Islanders",
         uyruk: "Angola",
         mevki: "SNT",
@@ -434,7 +434,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Semih Kilic",
+        ad: "S. Kilic",
         takim: "Cagliari Islanders",
         uyruk: "Türkiye",
         mevki: "SNT",
@@ -461,7 +461,7 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         ]
     },
     {
-        ad: "Elia Capr",
+        ad: "E. Capr",
         takim: "Cagliari Islanders",
         uyruk: "İtalya",
         mevki: "KL",
@@ -483,37 +483,37 @@ export const CAGLIARI_ISLANDERS_SQUAD = [
         },
         oyun_tarzlari: []
     },
-  {
-    ad: "Carlos Silva",
-    takim: "Cagliari",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Silva",
-    takim: "Cagliari",
-    uyruk: "Arjantin",
-    mevki: "SLB",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Rodriguez",
-    takim: "Cagliari",
-    uyruk: "İspanya",
-    mevki: "MDO",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
-    detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Silva",
+        takim: "Cagliari Islanders",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Silva",
+        takim: "Cagliari Islanders",
+        uyruk: "Arjantin",
+        mevki: "SLB",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Rodrig",
+        takim: "Cagliari Islanders",
+        uyruk: "İspanya",
+        mevki: "MDO",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
+        detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
+        oyun_tarzlari: []
+    }
 ];

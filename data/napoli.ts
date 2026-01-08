@@ -1,7 +1,7 @@
 
 export const NAPOLI_BLUES_SQUAD = [
     {
-        ad: "Kevin De Brown",
+        ad: "K. De Bruynne",
         takim: "Napoli Blues",
         uyruk: "Belçika",
         mevki: "MO",
@@ -36,7 +36,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Scott McTom",
+        ad: "S. McTomynay",
         takim: "Napoli Blues",
         uyruk: "İskoçya",
         mevki: "MO",
@@ -68,7 +68,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Romano Luca",
+        ad: "R. Lukakku",
         takim: "Napoli Blues",
         uyruk: "Belçika",
         mevki: "SNT",
@@ -99,7 +99,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Gio Di Loren",
+        ad: "G. Di Lorenzzo",
         takim: "Napoli Blues",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -129,7 +129,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Stan Lobot",
+        ad: "S. Lobotkkah",
         takim: "Napoli Blues",
         uyruk: "Slovakya",
         mevki: "MO",
@@ -157,7 +157,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Amir Rahmani",
+        ad: "A. Rrahmanii",
         takim: "Napoli Blues",
         uyruk: "Kosova",
         mevki: "STP",
@@ -183,7 +183,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Frank Zambo",
+        ad: "F. Anguissah",
         takim: "Napoli Blues",
         uyruk: "Kamerun",
         mevki: "MO",
@@ -211,7 +211,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Alex Meret",
+        ad: "A. Merett",
         takim: "Napoli Blues",
         uyruk: "İtalya",
         mevki: "KL",
@@ -237,7 +237,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Ale Buonogiorno",
+        ad: "A. Buongiorn",
         takim: "Napoli Blues",
         uyruk: "İtalya",
         mevki: "STP",
@@ -263,7 +263,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Miguel Guti",
+        ad: "M. Gutierrezz",
         takim: "Napoli Blues",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -290,7 +290,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "David Neres",
+        ad: "D. Neress",
         takim: "Napoli Blues",
         uyruk: "Brezilya",
         mevki: "SLK",
@@ -318,7 +318,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Noa Lang",
+        ad: "N. Lanng",
         takim: "Napoli Blues",
         uyruk: "Hollanda",
         mevki: "SLK",
@@ -345,7 +345,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Rasmus Hojlund",
+        ad: "R. Hojlunnd",
         takim: "Napoli Blues",
         uyruk: "Danimarka",
         mevki: "SNT",
@@ -372,7 +372,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Billy Gilmour",
+        ad: "B. Gilmourr",
         takim: "Napoli Blues",
         uyruk: "İskoçya",
         mevki: "MO",
@@ -398,7 +398,7 @@ export const NAPOLI_BLUES_SQUAD = [
         ]
     },
     {
-        ad: "Juan Jesus",
+        ad: "J. Jesuss",
         takim: "Napoli Blues",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -421,7 +421,7 @@ export const NAPOLI_BLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Leo Spinazzola",
+        ad: "L. Spinazzol",
         takim: "Napoli Blues",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -446,81 +446,81 @@ export const NAPOLI_BLUES_SQUAD = [
             "Hızlı Kanat"
         ]
     },
-  {
-    ad: "João Martinez",
-    takim: "Napoli",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 80,
-    yas: 20,
-    ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Lopez",
-    takim: "Napoli",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 79,
-    yas: 21,
-    ana_ozellikler: { hiz: 69, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 79 },
-    detaylar: { ucma: 69, refleks: 79, vurus: 74, pozisyon: 71, top_kontrol: 67 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Costa",
-    takim: "Napoli",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 78,
-    yas: 22,
-    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
-    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Martinez",
-    takim: "Napoli",
-    uyruk: "Fransa",
-    mevki: "SĞB",
-    reyting: 77,
-    yas: 23,
-    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
-    detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Perez",
-    takim: "Napoli",
-    uyruk: "İtalya",
-    mevki: "MDO",
-    reyting: 76,
-    yas: 24,
-    ana_ozellikler: { hiz: 61, sut: 56, pas: 71, dribbling: 68, defans: 76, fizik: 71 },
-    detaylar: { top_kesme: 76, ayakta_mudahale: 71, dayaniklilik: 73, kisa_pas: 68 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Costa",
-    takim: "Napoli",
-    uyruk: "Portekiz",
-    mevki: "MDO",
-    reyting: 75,
-    yas: 25,
-    ana_ozellikler: { hiz: 60, sut: 55, pas: 70, dribbling: 67, defans: 75, fizik: 70 },
-    detaylar: { top_kesme: 75, ayakta_mudahale: 70, dayaniklilik: 72, kisa_pas: 67 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Costa",
-    takim: "Napoli",
-    uyruk: "Brezilya",
-    mevki: "MDO",
-    reyting: 74,
-    yas: 26,
-    ana_ozellikler: { hiz: 59, sut: 54, pas: 69, dribbling: 66, defans: 74, fizik: 69 },
-    detaylar: { top_kesme: 74, ayakta_mudahale: 69, dayaniklilik: 71, kisa_pas: 66 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "J. Martines",
+        takim: "Napoli Blues",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 80,
+        yas: 20,
+        ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Lopeze",
+        takim: "Napoli Blues",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 79,
+        yas: 21,
+        ana_ozellikler: { hiz: 69, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 79 },
+        detaylar: { ucma: 69, refleks: 79, vurus: 74, pozisyon: 71, top_kontrol: 67 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Costas",
+        takim: "Napoli Blues",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 78,
+        yas: 22,
+        ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+        detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Martines",
+        takim: "Napoli Blues",
+        uyruk: "Fransa",
+        mevki: "SĞB",
+        reyting: 77,
+        yas: 23,
+        ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+        detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Pereze",
+        takim: "Napoli Blues",
+        uyruk: "İtalya",
+        mevki: "MDO",
+        reyting: 76,
+        yas: 24,
+        ana_ozellikler: { hiz: 61, sut: 56, pas: 71, dribbling: 68, defans: 76, fizik: 71 },
+        detaylar: { top_kesme: 76, ayakta_mudahale: 71, dayaniklilik: 73, kisa_pas: 68 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Costas",
+        takim: "Napoli Blues",
+        uyruk: "Portekiz",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 25,
+        ana_ozellikler: { hiz: 60, sut: 55, pas: 70, dribbling: 67, defans: 75, fizik: 70 },
+        detaylar: { top_kesme: 75, ayakta_mudahale: 70, dayaniklilik: 72, kisa_pas: 67 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Costas",
+        takim: "Napoli Blues",
+        uyruk: "Brezilya",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 26,
+        ana_ozellikler: { hiz: 59, sut: 54, pas: 69, dribbling: 66, defans: 74, fizik: 69 },
+        detaylar: { top_kesme: 74, ayakta_mudahale: 69, dayaniklilik: 71, kisa_pas: 66 },
+        oyun_tarzlari: []
+    }
 ];

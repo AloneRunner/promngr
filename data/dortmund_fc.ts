@@ -1,52 +1,52 @@
-export const DORTMUND_FC_SQUAD = [
-    {
-        ad: "Serhou Guirassy",
-        takim: "Dortmund FC",
-        uyruk: "Gine",
-        mevki: "SNT",
-        reyting: 87,
-        yas: 29,
-        ana_ozellikler: { hiz: 72, sut: 88, pas: 76, dribbling: 83, defans: 45, fizik: 83 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Gregor Kobell",
-        takim: "Dortmund FC",
-        uyruk: "İsviçre",
-        mevki: "KL",
-        reyting: 86,
-        yas: 27,
-        ana_ozellikler: { hiz: 87, sut: 83, pas: 64, dribbling: 87, defans: 44, fizik: 86 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Nico Schlotter",
-        takim: "Dortmund FC",
-        uyruk: "Almanya",
-        mevki: "STP",
-        reyting: 85,
-        yas: 25,
-        ana_ozellikler: { hiz: 74, sut: 60, pas: 75, dribbling: 73, defans: 85, fizik: 82 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Jobe Bellford",
-        takim: "Dortmund FC",
-        uyruk: "İngiltere",
-        mevki: "MO",
-        reyting: 74,
-        yas: 19,
-        ana_ozellikler: { hiz: 70, sut: 68, pas: 71, dribbling: 74, defans: 72, fizik: 78 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+export const WESTPHALIA_YELLOWS_SQUAD = [
+  {
+    ad: "S. Guirassy",
+    takim: "Westphalia Yellows",
+    uyruk: "Gine",
+    mevki: "SNT",
+    reyting: 87,
+    yas: 29,
+    ana_ozellikler: { hiz: 72, sut: 88, pas: 76, dribbling: 83, defans: 45, fizik: 83 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "G. Kobell",
+    takim: "Westphalia Yellows",
+    uyruk: "İsviçre",
+    mevki: "KL",
+    reyting: 86,
+    yas: 27,
+    ana_ozellikler: { hiz: 87, sut: 83, pas: 64, dribbling: 87, defans: 44, fizik: 86 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "N. Schlotter",
+    takim: "Westphalia Yellows",
+    uyruk: "Almanya",
+    mevki: "STP",
+    reyting: 85,
+    yas: 25,
+    ana_ozellikler: { hiz: 74, sut: 60, pas: 75, dribbling: 73, defans: 85, fizik: 82 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "J. Bellford",
+    takim: "Westphalia Yellows",
+    uyruk: "İngiltere",
+    mevki: "MO",
+    reyting: 74,
+    yas: 19,
+    ana_ozellikler: { hiz: 70, sut: 68, pas: 71, dribbling: 74, defans: 72, fizik: 78 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
     ad: "Diego Perez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 83,
@@ -57,7 +57,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "João Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 82,
@@ -68,7 +68,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Marco Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 81,
@@ -79,7 +79,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "João Perez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 80,
@@ -90,7 +90,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "David Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 79,
@@ -101,7 +101,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Marco Silva",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 78,
@@ -112,7 +112,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Carlos Silva",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 77,
@@ -123,7 +123,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Diego Perez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 76,
@@ -134,7 +134,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Andre Martinez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 75,
@@ -145,7 +145,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Andre Martinez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Fransa",
     mevki: "MDO",
     reyting: 74,
@@ -156,7 +156,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Pedro Rodriguez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 73,
@@ -167,7 +167,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Pedro Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 78,
@@ -178,7 +178,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Diego Lopez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 77,
@@ -189,7 +189,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Diego Garcia",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 77,
@@ -200,7 +200,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Andre Rodriguez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İspanya",
     mevki: "MOO",
     reyting: 76,
@@ -211,7 +211,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Andre Perez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Fransa",
     mevki: "MOO",
     reyting: 76,
@@ -222,7 +222,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Carlos Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "İtalya",
     mevki: "SĞO",
     reyting: 76,
@@ -233,7 +233,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Marco Costa",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 75,
@@ -244,7 +244,7 @@ export const DORTMUND_FC_SQUAD = [
   },
   {
     ad: "Carlos Perez",
-    takim: "Dortmund",
+    takim: "Westphalia Yellows",
     uyruk: "Brezilya",
     mevki: "SLO",
     reyting: 75,

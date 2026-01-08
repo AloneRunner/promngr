@@ -1,7 +1,7 @@
 
 export const RIZESPOR_SQUAD = [
   {
-    ad: "Qazim Laçi",
+    ad: "Q. Lachy",
     takim: "Rize Tea",
     uyruk: "Arnavutluk",
     mevki: "MO",
@@ -12,7 +12,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Amansız", "Güçlü", "Keskin Pas"]
   },
   {
-    ad: "Ali Sowe",
+    ad: "A. Sowey",
     takim: "Rize Tea",
     uyruk: "Gambiya",
     mevki: "SNT",
@@ -23,7 +23,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Karşı Koyan"]
   },
   {
-    ad: "Yahia Fofana",
+    ad: "Y. Fofann",
     takim: "Rize Tea",
     uyruk: "Fildişi Sahili",
     mevki: "KL",
@@ -34,7 +34,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Ayak Hakimiyeti", "Ortaya Çıkan"]
   },
   {
-    ad: "Casper Højer",
+    ad: "C. Hojerr",
     takim: "Rize Tea",
     uyruk: "Danimarka",
     mevki: "SLB",
@@ -45,7 +45,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Kuvvetli Şut"]
   },
   {
-    ad: "Modibo Sagnan",
+    ad: "M. Sagnann",
     takim: "Rize Tea",
     uyruk: "Mali",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Yakın Markaj"]
   },
   {
-    ad: "Valentin Mihăilă",
+    ad: "V. Mihailah",
     takim: "Rize Tea",
     uyruk: "Romanya",
     mevki: "SLO",
@@ -67,7 +67,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Seri"]
   },
   {
-    ad: "Taha Şahin",
+    ad: "T. Shahinn",
     takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -78,7 +78,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Kesme Pas", "Top Kesici"]
   },
   {
-    ad: "Václav Jurečka",
+    ad: "V. Jurecka",
     takim: "Rize Tea",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SNT",
@@ -89,7 +89,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ibrahim Olawoyin",
+    ad: "I. Olawayo",
     takim: "Rize Tea",
     uyruk: "Nijerya",
     mevki: "MOO",
@@ -100,7 +100,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Hava Hakimi", "Teknik", "Top Kesici"]
   },
   {
-    ad: "Samet Akaydın",
+    ad: "S. Akaydinn",
     takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -111,7 +111,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi"]
   },
   {
-    ad: "Khusniddin Alikulov",
+    ad: "K. Alikulov",
     takim: "Rize Tea",
     uyruk: "Özbekistan",
     mevki: "STP",
@@ -122,7 +122,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Hava Hakimi"]
   },
   {
-    ad: "Attila Mocsi",
+    ad: "A. Mocsik",
     takim: "Rize Tea",
     uyruk: "Macaristan",
     mevki: "STP",
@@ -133,7 +133,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Sezgili"]
   },
   {
-    ad: "Halil İbrahim Dervişoğlu",
+    ad: "H. Dervish",
     takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SNT",
@@ -144,7 +144,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Baskıya Dayanıklı"]
   },
   {
-    ad: "Altin Zeqiri",
+    ad: "A. Zeqiry",
     takim: "Rize Tea",
     uyruk: "Kosova",
     mevki: "SLO",
@@ -155,7 +155,7 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut"]
   },
   {
-    ad: "Dal Varešanović",
+    ad: "D. Varesan",
     takim: "Rize Tea",
     uyruk: "Bosna Hersek",
     mevki: "MOO",
@@ -166,8 +166,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Arda Kılıç",
-    takim: "Rizespor",
+    ad: "A. Kilicc",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 73,
@@ -177,8 +177,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Şen",
-    takim: "Rizespor",
+    ad: "S. Shenn",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 71,
@@ -188,8 +188,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yunus Demirci",
-    takim: "Rizespor",
+    ad: "Y. Demirky",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 70,
@@ -199,8 +199,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kerem Özgür",
-    takim: "Rizespor",
+    ad: "K. Ozgurr",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 69,
@@ -210,8 +210,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Volkan Polat",
-    takim: "Rizespor",
+    ad: "V. Polatt",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 68,
@@ -221,8 +221,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Barış Doğan",
-    takim: "Rizespor",
+    ad: "B. Dogann",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 67,
@@ -232,8 +232,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emre Eren",
-    takim: "Rizespor",
+    ad: "E. Erenn",
+    takim: "Rize Tea",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 65,
@@ -243,8 +243,8 @@ export const RIZESPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Rizespor",
+    ad: "J. Garcy",
+    takim: "Rize Tea",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 64,

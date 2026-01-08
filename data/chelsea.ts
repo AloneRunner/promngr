@@ -1,7 +1,7 @@
 
 export const LONDON_BLUE_LIONS_SQUAD = [
     {
-        ad: "Cole Palm",
+        ad: "C. Palm",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -34,7 +34,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Chris Nkun",
+        ad: "C. Nkun",
         takim: "London Blue Lions",
         uyruk: "Fransa",
         mevki: "MOO",
@@ -63,7 +63,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Reece Jame",
+        ad: "R. Jame",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -90,7 +90,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Moises Caice",
+        ad: "M. Caicedo",
         takim: "London Blue Lions",
         uyruk: "Ekvador",
         mevki: "MDO",
@@ -117,7 +117,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Enzo Ferna",
+        ad: "E. Ferna",
         takim: "London Blue Lions",
         uyruk: "Arjantin",
         mevki: "MO",
@@ -145,7 +145,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Marc Cucure",
+        ad: "M. Cucure",
         takim: "London Blue Lions",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -171,7 +171,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Levi Colwi",
+        ad: "L. Colwi",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -196,7 +196,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Wesley Fofa",
+        ad: "W. Fofa",
         takim: "London Blue Lions",
         uyruk: "Fransa",
         mevki: "STP",
@@ -221,7 +221,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Pedro Net",
+        ad: "P. Neto",
         takim: "London Blue Lions",
         uyruk: "Portekiz",
         mevki: "SĞK",
@@ -249,7 +249,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Noni Madu",
+        ad: "N. Madu",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -276,7 +276,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Nicolas Jack",
+        ad: "N. Jack",
         takim: "London Blue Lions",
         uyruk: "Senegal",
         mevki: "SNT",
@@ -302,7 +302,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Romeo Lavi",
+        ad: "R. Lavia",
         takim: "London Blue Lions",
         uyruk: "Belçika",
         mevki: "MDO",
@@ -327,7 +327,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Jadon Sanc",
+        ad: "J. Sanc",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -354,7 +354,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Joao Fel",
+        ad: "J. Fel",
         takim: "London Blue Lions",
         uyruk: "Portekiz",
         mevki: "MOO",
@@ -382,7 +382,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Malo Gus",
+        ad: "M. Gus",
         takim: "London Blue Lions",
         uyruk: "Fransa",
         mevki: "SĞB",
@@ -407,7 +407,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Robert Sanc",
+        ad: "R. Sanc",
         takim: "London Blue Lions",
         uyruk: "İspanya",
         mevki: "KL",
@@ -429,7 +429,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Kiernan Dews",
+        ad: "K. Dews",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -451,7 +451,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Tosin Adara",
+        ad: "T. Adara",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -473,7 +473,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Colin Palm",
+        ad: "C. Palm",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -505,7 +505,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Mois Caicedo",
+        ad: "M. Caicedo",
         takim: "London Blue Lions",
         uyruk: "Ekvador",
         mevki: "MDO",
@@ -534,7 +534,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Marc Cucu",
+        ad: "M. Cucure",
         takim: "London Blue Lions",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -561,7 +561,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Levi Colw",
+        ad: "L. Colwi",
         takim: "London Blue Lions",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -587,7 +587,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Joao Ped",
+        ad: "J. Ped",
         takim: "London Blue Lions",
         uyruk: "Brezilya",
         mevki: "SNT",
@@ -614,7 +614,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Rob Sanchez",
+        ad: "R. Sanc",
         takim: "London Blue Lions",
         uyruk: "İspanya",
         mevki: "KL",
@@ -638,7 +638,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Alejandro Garna",
+        ad: "A. Garna",
         takim: "London Blue Lions",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -667,7 +667,7 @@ export const LONDON_BLUE_LIONS_SQUAD = [
         ]
     },
     {
-        ad: "Romeo Lav",
+        ad: "R. Lavia",
         takim: "London Blue Lions",
         uyruk: "Belçika",
         mevki: "MDO",

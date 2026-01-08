@@ -1,7 +1,7 @@
 
 export const MANCHESTER_DEVILS_SQUAD = [
     {
-        ad: "Bruno Ferna",
+        ad: "B. Fernann",
         takim: "Manchester Devils",
         uyruk: "Portekiz",
         mevki: "MOO",
@@ -35,7 +35,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Lisandro Marti",
+        ad: "L. Martines",
         takim: "Manchester Devils",
         uyruk: "Arjantin",
         mevki: "STP",
@@ -65,7 +65,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Marcus Rash",
+        ad: "M. Rashfo",
         takim: "Manchester Devils",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -92,7 +92,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Andre Ona",
+        ad: "A. Onann",
         takim: "Manchester Devils",
         uyruk: "Kamerun",
         mevki: "KL",
@@ -119,7 +119,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Matthijs De Li",
+        ad: "M. de Ligtto",
         takim: "Manchester Devils",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -147,7 +147,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Kobbie Main",
+        ad: "K. Mayno",
         takim: "Manchester Devils",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -176,7 +176,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Ale Garnac",
+        ad: "A. Garnacho",
         takim: "Manchester Devils",
         uyruk: "Arjantin",
         mevki: "SLK",
@@ -205,7 +205,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Diogo Dal",
+        ad: "D. Dalotto",
         takim: "Manchester Devils",
         uyruk: "Portekiz",
         mevki: "SĞB",
@@ -231,7 +231,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Nouss Mazra",
+        ad: "N. Mazraou",
         takim: "Manchester Devils",
         uyruk: "Fas",
         mevki: "SĞB",
@@ -257,7 +257,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Rasmus Hoj",
+        ad: "R. Hojlun",
         takim: "Manchester Devils",
         uyruk: "Danimarka",
         mevki: "SNT",
@@ -283,7 +283,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Joshua Zirk",
+        ad: "J. Zirkee",
         takim: "Manchester Devils",
         uyruk: "Hollanda",
         mevki: "SNT",
@@ -310,7 +310,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Luke Sha",
+        ad: "L. Shawy",
         takim: "Manchester Devils",
         uyruk: "İngiltere",
         mevki: "SLB",
@@ -333,7 +333,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Harry Magu",
+        ad: "H. Maguirey",
         takim: "Manchester Devils",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -359,7 +359,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Casemiro",
+        ad: "Casemyro",
         takim: "Manchester Devils",
         uyruk: "Brezilya",
         mevki: "MDO",
@@ -387,7 +387,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Manuel Ugar",
+        ad: "M. Ugartte",
         takim: "Manchester Devils",
         uyruk: "Uruguay",
         mevki: "MDO",
@@ -413,7 +413,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Amad Diall",
+        ad: "A. Diallo",
         takim: "Manchester Devils",
         uyruk: "Fildişi Sahili",
         mevki: "SĞK",
@@ -438,7 +438,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Bruno Ferno",
+        ad: "B. Fernann",
         takim: "Manchester Devils",
         uyruk: "Portekiz",
         mevki: "MOO",
@@ -470,7 +470,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Bryan Bumo",
+        ad: "B. Mbuemo",
         takim: "Manchester Devils",
         uyruk: "Kamerun",
         mevki: "SĞK",
@@ -498,7 +498,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Matheus Cun",
+        ad: "M. Cunnah",
         takim: "Manchester Devils",
         uyruk: "Brezilya",
         mevki: "MOO",
@@ -526,7 +526,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Matt Ligt",
+        ad: "M. de Ligtto",
         takim: "Manchester Devils",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -554,7 +554,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Licha Marti",
+        ad: "L. Martines",
         takim: "Manchester Devils",
         uyruk: "Arjantin",
         mevki: "STP",
@@ -582,7 +582,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Andre Nana",
+        ad: "A. Onann",
         takim: "Manchester Devils",
         uyruk: "Kamerun",
         mevki: "KL",
@@ -609,7 +609,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Ben Sesko",
+        ad: "B. Seskoh",
         takim: "Manchester Devils",
         uyruk: "Slovenya",
         mevki: "SNT",
@@ -638,7 +638,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Casemir",
+        ad: "Casemyro",
         takim: "Manchester Devils",
         uyruk: "Brezilya",
         mevki: "MDO",
@@ -665,7 +665,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Nous Mazrau",
+        ad: "N. Mazraou",
         takim: "Manchester Devils",
         uyruk: "Fas",
         mevki: "SĞB",
@@ -690,7 +690,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Manu Ugarte",
+        ad: "M. Ugartte",
         takim: "Manchester Devils",
         uyruk: "Uruguay",
         mevki: "MDO",
@@ -716,7 +716,7 @@ export const MANCHESTER_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Leny Yor",
+        ad: "L. Yoroh",
         takim: "Manchester Devils",
         uyruk: "Fransa",
         mevki: "STP",

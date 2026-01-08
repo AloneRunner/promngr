@@ -1,30 +1,30 @@
 export const NICE_EAGLES_SQUAD = [
-    {
-        ad: "Jonathan Clauss",
-        takim: "Nice Eagles",
-        uyruk: "Fransa",
-        mevki: "SĞB",
-        reyting: 80,
-        yas: 32,
-        ana_ozellikler: { hiz: 85, sut: 69, pas: 76, dribbling: 78, defans: 73, fizik: 69 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Dante",
-        takim: "Nice Eagles",
-        uyruk: "Brezilya",
-        mevki: "STP",
-        reyting: 78,
-        yas: 41,
-        ana_ozellikler: { hiz: 32, sut: 52, pas: 69, dribbling: 65, defans: 80, fizik: 75 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "J. Clayss",
+    takim: "Riviera Eagles",
+    uyruk: "Fransa",
+    mevki: "SĞB",
+    reyting: 80,
+    yas: 32,
+    ana_ozellikler: { hiz: 85, sut: 69, pas: 76, dribbling: 78, defans: 73, fizik: 69 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Dantte",
+    takim: "Riviera Eagles",
+    uyruk: "Brezilya",
+    mevki: "STP",
+    reyting: 78,
+    yas: 41,
+    ana_ozellikler: { hiz: 32, sut: 52, pas: 69, dribbling: 65, defans: 80, fizik: 75 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
-    takim: "Nice Eagles",
+    ad: "C. Lopeze",
+    takim: "Riviera Eagles",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -34,8 +34,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Nice Eagles",
+    ad: "D. Martines",
+    takim: "Riviera Eagles",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -45,8 +45,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Santos",
-    takim: "Nice Eagles",
+    ad: "A. Santozz",
+    takim: "Riviera Eagles",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -56,8 +56,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Nice Eagles",
+    ad: "L. Rodrigz",
+    takim: "Riviera Eagles",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -67,8 +67,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Nice Eagles",
+    ad: "C. Garcy",
+    takim: "Riviera Eagles",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -78,8 +78,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Perez",
-    takim: "Nice Eagles",
+    ad: "D. Pereze",
+    takim: "Riviera Eagles",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -89,8 +89,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Nice Eagles",
+    ad: "J. Rodrigz",
+    takim: "Riviera Eagles",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -100,8 +100,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
-    takim: "Nice Eagles",
+    ad: "L. Lopeze",
+    takim: "Riviera Eagles",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 64,
@@ -111,8 +111,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Garcia",
-    takim: "Nice Eagles",
+    ad: "D. Garcy",
+    takim: "Riviera Eagles",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -122,8 +122,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Martinez",
-    takim: "Nice Eagles",
+    ad: "M. Martines",
+    takim: "Riviera Eagles",
     uyruk: "Fransa",
     mevki: "MDO",
     reyting: 62,
@@ -133,8 +133,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Nice Eagles",
+    ad: "C. Lopeze",
+    takim: "Riviera Eagles",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -144,8 +144,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Santos",
-    takim: "Nice Eagles",
+    ad: "M. Santozz",
+    takim: "Riviera Eagles",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -155,8 +155,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Nice Eagles",
+    ad: "D. Lopeze",
+    takim: "Riviera Eagles",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Nice Eagles",
+    ad: "D. Martines",
+    takim: "Riviera Eagles",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -177,8 +177,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
-    takim: "Nice Eagles",
+    ad: "J. Martines",
+    takim: "Riviera Eagles",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Nice Eagles",
+    ad: "P. Lopeze",
+    takim: "Riviera Eagles",
     uyruk: "Fransa",
     mevki: "MOO",
     reyting: 64,
@@ -199,8 +199,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Nice Eagles",
+    ad: "P. Martines",
+    takim: "Riviera Eagles",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Santos",
-    takim: "Nice Eagles",
+    ad: "M. Santozz",
+    takim: "Riviera Eagles",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 63,
@@ -221,8 +221,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Nice Eagles",
+    ad: "L. Rodrigz",
+    takim: "Riviera Eagles",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Nice Eagles",
+    ad: "L. Garcy",
+    takim: "Riviera Eagles",
     uyruk: "Arjantin",
     mevki: "SLO",
     reyting: 62,
@@ -243,8 +243,8 @@ export const NICE_EAGLES_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Perez",
-    takim: "Nice Eagles",
+    ad: "C. Pereze",
+    takim: "Riviera Eagles",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,

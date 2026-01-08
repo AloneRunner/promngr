@@ -37,6 +37,8 @@ import { SASSUOLO_GREENBLACKS_SQUAD } from './data/sassuolo';
 import { LECCE_WOLVES_SQUAD } from './data/lecce';
 import { CAGLIARI_ISLANDERS_SQUAD } from './data/cagliari';
 import { VERONA_MASTIFFS_SQUAD } from './data/verona';
+import { MONZA_SPEED_SQUAD } from './data/monza';
+import { VENICE_GONDOLIERS_SQUAD } from './data/venezia';
 import { MERSEYSIDE_REDS_SQUAD } from './data/liverpool';
 import { MANCHESTER_SKYBLUES_SQUAD } from './data/mancity';
 import { LONDON_CANNONS_SQUAD } from './data/arsenal';
@@ -63,6 +65,8 @@ import { GETAFE_BLUES_SQUAD } from './data/getafe_blues';
 import { VITORIA_FOXES_SQUAD } from './data/vitoria_foxes';
 import { ESPANYOL_PARROTS_SQUAD } from './data/espanyol_parrots';
 import { CHALLENGERS_UNITED_SQUAD } from './data/challengers_united';
+import { CANARY_YELLOWS_SQUAD } from './data/laspalmas';
+import { CASTILLA_VIOLET_SQUAD } from './data/valladolid';
 
 import { EAST_LONDON_HAMMERS_SQUAD } from './data/westham';
 import { BRIGHTON_SEAGULLS_SQUAD } from './data/brighton';
@@ -89,9 +93,15 @@ import { PARIS_FC_SQUAD } from './data/paris_fc';
 import { NANTES_FC_SQUAD } from './data/nantes_fc';
 import { STRASBOURG_FC_SQUAD } from './data/strasbourg_fc';
 import { AUXERRE_AJ_SQUAD } from './data/auxerre_aj';
+import { TOULOUSE_VIOLETS_SQUAD } from './data/toulouse';
+import { REIMS_ROYALS_SQUAD } from './data/reims';
+import { MONTPELLIER_ORANGE_SQUAD } from './data/montpellier';
+import { BREST_PIRATES_SQUAD } from './data/brest';
+import { SAINT_GREEN_SQUAD } from './data/saintetienne';
+import { ANGERS_BLACKWHITES_SQUAD } from './data/angers';
 
 import { BAYERN_MUNICH_SQUAD } from './data/bayern_munich';
-import { DORTMUND_FC_SQUAD } from './data/dortmund_fc';
+import { WESTPHALIA_YELLOWS_SQUAD } from './data/dortmund_fc';
 import { BAYER_LEVERKUSEN_SQUAD } from './data/bayer_leverkusen';
 import { LEIPZIG_BULLS_SQUAD } from './data/leipzig_bulls';
 import { STUTTGART_FC_SQUAD } from './data/stuttgart_fc';
@@ -101,10 +111,61 @@ import { HOFFENHEIM_FC_SQUAD } from './data/hoffenheim_fc';
 import { UNION_BERLIN_FC_SQUAD } from './data/union_berlin_fc';
 import { AUGSBURG_FC_SQUAD } from './data/augsburg_fc';
 import { KOLN_FC_SQUAD } from './data/koln_fc';
+import { FRANKFURT_EAGLES_SQUAD } from './data/frankfurt';
+import { GLADBACH_FOALS_SQUAD } from './data/gladbach';
+import { BREMEN_RIVER_SQUAD } from './data/bremen';
+import { MAINZ_CARNIVAL_SQUAD } from './data/mainz';
+import { HAMBURG_PIRATES_SQUAD } from './data/stpauli';
+import { HEIDENHEIM_REDBLUE_SQUAD } from './data/heidenheim';
+import { BOCHUM_BLUE_SQUAD } from './data/bochum';
 
 import { TeamTactic, TacticType } from './types';
 
-export const TICKET_PRICE = 50;
+export const TICKET_PRICE = 50; // Base price, adjusted by league
+
+// Realistic ticket prices by league (in EUR) - Average prices
+export const LEAGUE_TICKET_PRICES: Record<string, number> = {
+    'tr': 18,     // Turkey average €18 (range €10-30)
+    'en': 55,     // England average €55 (range €40-100)
+    'es': 45,     // Spain average €45 (range €30-80)
+    'it': 40,     // Italy average €40 (range €25-70)
+    'de': 35,     // Germany average €35 (range €20-60)
+    'fr': 40,     // France average €40 (range €25-70)
+    'default': 25
+};
+
+// Attendance rates by league (base rates, can go to 100% for derbies/big games)
+export const LEAGUE_ATTENDANCE_RATES: Record<string, { min: number; max: number }> = {
+    'tr': { min: 0.50, max: 0.95 },   // Turkey: 50-95% (100% for derbies)
+    'en': { min: 0.85, max: 1.00 },   // England: 85-100%
+    'es': { min: 0.65, max: 0.95 },   // Spain: 65-95%
+    'it': { min: 0.60, max: 0.90 },   // Italy: 60-90%
+    'de': { min: 0.88, max: 1.00 },   // Germany: 88-100%
+    'fr': { min: 0.70, max: 0.95 },   // France: 70-95%
+    'default': { min: 0.50, max: 0.80 }
+};
+
+// Derby rivals for 100% attendance matches
+export const DERBY_RIVALS: Record<string, string[]> = {
+    'Galata Lions': ['Istanbul Yellows', 'Besikta Eagles', 'Trabzon Storm'],
+    'Istanbul Yellows': ['Galata Lions', 'Besikta Eagles', 'Trabzon Storm'],
+    'Besikta Eagles': ['Galata Lions', 'Istanbul Yellows', 'Trabzon Storm'],
+    'Trabzon Storm': ['Galata Lions', 'Istanbul Yellows', 'Besikta Eagles'],
+    'Merseyside Reds': ['Merseyside Blues', 'Manchester Devils', 'Manchester Skyblues'],
+    'Manchester Devils': ['Manchester Skyblues', 'Merseyside Reds', 'Yorkshire Whites'],
+    'Manchester Skyblues': ['Manchester Devils', 'Merseyside Reds'],
+    'London Cannons': ['North London Whites', 'London Blue Lions'],
+    'North London Whites': ['London Cannons', 'London Blue Lions'],
+    'London Blue Lions': ['London Cannons', 'North London Whites'],
+    'Madrid Blancos': ['Madrid Indios', 'Catalonia Blau'],
+    'Catalonia Blau': ['Madrid Blancos', 'Espanyol Parrots'],
+    'Madrid Indios': ['Madrid Blancos'],
+    'Inter Lombardia': ['Milano Devils', 'Piemonte Zebras'],
+    'Milano Devils': ['Inter Lombardia', 'Piemonte Zebras'],
+    'Piemonte Zebras': ['Inter Lombardia', 'Milano Devils'],
+    'Roma Gladiators': ['Latium Eagles'],
+    'Latium Eagles': ['Roma Gladiators']
+};
 
 export const NAMES_DB: any = {
     'World': { first: ['John', 'David', 'Michael'], last: ['Smith', 'Johnson', 'Brown'] },
@@ -113,7 +174,7 @@ export const NAMES_DB: any = {
 
 // --- REAL WORLD TACTICAL PROFILES ---
 export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
-    "Fener Canaries": {
+    "Istanbul Yellows": {
         formation: TacticType.T_4231,
         style: 'HighPress',
         aggression: 'Aggressive',
@@ -299,146 +360,145 @@ export const LEAGUE_PRESETS = [
     {
         id: 'tr', name: 'Süper Lig', country: 'Turkey', foreignPlayerChance: 0.5, playerNationality: 'Turkey',
         realTeams: [
-            { name: "Galata Lions", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 8000, budget: 50000000 },
-            { name: "Fener Canaries", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7800, budget: 45000000 },
-            { name: "Besikta Eagles", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 7600, budget: 35000000 },
-            { name: "Trabzon Storm", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 7000, budget: 25000000 },
-            { name: "Basak City", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 6500, budget: 20000000 },
-            { name: "Samsun Red", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 15000000 },
-            { name: "Konya Green", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 12000000 },
-            { name: "Kasimpasa Navy", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5800, budget: 10000000 },
-            { name: "Rize Tea", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 5800, budget: 10000000 },
-            { name: "Antep Falcons", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5700, budget: 9000000 },
-            { name: "Antalya Scorpions", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 11000000 },
-            { name: "Kayseri Stars", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5700, budget: 9500000 },
-            { name: "Alanya Sun", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 5800, budget: 10000000 },
-            { name: "Goztepe Goz", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5800, budget: 10000000 },
-            { name: "Eyup Violet", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5600, budget: 8500000 },
-            { name: "Karagumruk Black", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5600, budget: 9000000 },
-            { name: "Kocaeli Gulf", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 },
-            { name: "Ankara Youth", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5500, budget: 8000000 }
+            { name: "Galata Lions", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 8000, budget: 50000000, stadiumCapacity: 52000 },
+            { name: "Istanbul Yellows", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7800, budget: 45000000, stadiumCapacity: 47000 },
+            { name: "Besikta Eagles", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 7600, budget: 35000000, stadiumCapacity: 42000 },
+            { name: "Trabzon Storm", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 7000, budget: 25000000, stadiumCapacity: 41000 },
+            { name: "Basak City", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 6500, budget: 20000000, stadiumCapacity: 17000 },
+            { name: "Samsun Red", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 15000000, stadiumCapacity: 33000 },
+            { name: "Konya Green", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 12000000, stadiumCapacity: 42000 },
+            { name: "Kasimpasa Navy", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5800, budget: 10000000, stadiumCapacity: 14000 },
+            { name: "Rize Tea", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 5800, budget: 10000000, stadiumCapacity: 15000 },
+            { name: "Antep Falcons", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5700, budget: 9000000, stadiumCapacity: 35000 },
+            { name: "Antalya Scorpions", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 11000000, stadiumCapacity: 33000 },
+            { name: "Kayseri Stars", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5700, budget: 9500000, stadiumCapacity: 32000 },
+            { name: "Alanya Sun", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 5800, budget: 10000000, stadiumCapacity: 10000 },
+            { name: "Izmir Göz", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5800, budget: 10000000, stadiumCapacity: 20000 },
+            { name: "Eyup Violet", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5600, budget: 8500000, stadiumCapacity: 5000 },
+            { name: "Karagumruk Black", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5600, budget: 9000000, stadiumCapacity: 15000 },
+            { name: "Kocaeli Gulf", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 5500, budget: 8000000, stadiumCapacity: 34000 },
+            { name: "Ankara Youth", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5500, budget: 8000000, stadiumCapacity: 19000 }
         ]
     },
     {
         id: 'en', name: 'Premier League', country: 'England', foreignPlayerChance: 0.7, playerNationality: 'England',
         realTeams: [
-            { name: "Liverpool FC", city: "Liverpool", primaryColor: "#C8102E", secondaryColor: "#F6EB61", reputation: 9000, budget: 150000000 },
-            { name: "Manchester City FC", city: "Manchester", primaryColor: "#6CABDD", secondaryColor: "#1C2C5B", reputation: 9200, budget: 180000000 },
-            { name: "Arsenal FC", city: "London", primaryColor: "#EF0107", secondaryColor: "#063672", reputation: 8900, budget: 130000000 },
-            { name: "Chelsea FC", city: "London", primaryColor: "#034694", secondaryColor: "#DBA111", reputation: 8700, budget: 120000000 },
-            { name: "Manchester United FC", city: "Manchester", primaryColor: "#DA291C", secondaryColor: "#FBE122", reputation: 8800, budget: 140000000 },
-            { name: "Tottenham FC", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#132257", reputation: 8500, budget: 90000000 },
-            { name: "Newcastle FC", city: "Newcastle", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 8400, budget: 110000000 },
-            { name: "Aston FC", city: "Birmingham", primaryColor: "#670E36", secondaryColor: "#95B600", reputation: 8000, budget: 70000000 },
-            { name: "West Ham FC", city: "London", primaryColor: "#7A263A", secondaryColor: "#1BB1E7", reputation: 7800, budget: 60000000 },
-            { name: "Brighton FC", city: "Brighton", primaryColor: "#0057B8", secondaryColor: "#FFFFFF", reputation: 7700, budget: 55000000 },
-            { name: "Wolverhampton FC", city: "Wolverhampton", primaryColor: "#FDB913", secondaryColor: "#000000", reputation: 7600, budget: 50000000 },
-            { name: "Everton FC", city: "Liverpool", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 7600, budget: 45000000 },
-            { name: "Fulham FC", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 40000000 },
-            { name: "Brentford FC", city: "London", primaryColor: "#E30613", secondaryColor: "#FFFFFF", reputation: 7400, budget: 35000000 },
-            { name: "Crystal FC", city: "London", primaryColor: "#1B458F", secondaryColor: "#C4122E", reputation: 7400, budget: 35000000 },
-            { name: "Nottingham FC", city: "Nottingham", primaryColor: "#DD0000", secondaryColor: "#FFFFFF", reputation: 7300, budget: 30000000 },
-            { name: "Bournemouth FC", city: "Bournemouth", primaryColor: "#DA291C", secondaryColor: "#000000", reputation: 7200, budget: 28000000 },
-            { name: "Leicester FC", city: "Leicester", primaryColor: "#0053A0", secondaryColor: "#FFFFFF", reputation: 7500, budget: 40000000 },
-            { name: "Southampton FC", city: "Southampton", primaryColor: "#D71920", secondaryColor: "#FFFFFF", reputation: 7200, budget: 25000000 },
-            { name: "Ipswich FC", city: "Ipswich", primaryColor: "#0054A6", secondaryColor: "#FFFFFF", reputation: 7000, budget: 20000000 }
+            { name: "Merseyside Reds", city: "Liverpool", primaryColor: "#C8102E", secondaryColor: "#F6EB61", reputation: 9000, budget: 150000000, stadiumCapacity: 61000 },
+            { name: "Manchester Skyblues", city: "Manchester", primaryColor: "#6CABDD", secondaryColor: "#1C2C5B", reputation: 9200, budget: 180000000, stadiumCapacity: 53000 },
+            { name: "London Cannons", city: "London", primaryColor: "#EF0107", secondaryColor: "#063672", reputation: 8900, budget: 130000000, stadiumCapacity: 60000 },
+            { name: "London Blue Lions", city: "London", primaryColor: "#034694", secondaryColor: "#DBA111", reputation: 8700, budget: 120000000, stadiumCapacity: 40000 },
+            { name: "Manchester Devils", city: "Manchester", primaryColor: "#DA291C", secondaryColor: "#FBE122", reputation: 8800, budget: 140000000, stadiumCapacity: 75000 },
+            { name: "North London Whites", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#132257", reputation: 8500, budget: 90000000, stadiumCapacity: 62000 },
+            { name: "Tyneside Magpies", city: "Newcastle", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 8400, budget: 110000000, stadiumCapacity: 52000 },
+            { name: "Birmingham Villans", city: "Birmingham", primaryColor: "#670E36", secondaryColor: "#95B600", reputation: 8000, budget: 70000000, stadiumCapacity: 42000 },
+            { name: "East London Hammers", city: "London", primaryColor: "#7A263A", secondaryColor: "#1BB1E7", reputation: 7800, budget: 60000000, stadiumCapacity: 62000 },
+            { name: "Brighton Seagulls", city: "Brighton", primaryColor: "#0057B8", secondaryColor: "#FFFFFF", reputation: 7700, budget: 55000000, stadiumCapacity: 32000 },
+            { name: "West Midlands Wolves", city: "Wolverhampton", primaryColor: "#FDB913", secondaryColor: "#000000", reputation: 7600, budget: 50000000, stadiumCapacity: 32000 },
+            { name: "Merseyside Blues", city: "Liverpool", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 7600, budget: 45000000, stadiumCapacity: 40000 },
+            { name: "West London Whites", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 40000000, stadiumCapacity: 25000 },
+            { name: "West London Bees", city: "London", primaryColor: "#E30613", secondaryColor: "#FFFFFF", reputation: 7400, budget: 35000000, stadiumCapacity: 17000 },
+            { name: "Crystal Glaziers", city: "London", primaryColor: "#1B458F", secondaryColor: "#C4122E", reputation: 7400, budget: 35000000, stadiumCapacity: 26000 },
+            { name: "Forest Archers", city: "Nottingham", primaryColor: "#DD0000", secondaryColor: "#FFFFFF", reputation: 7300, budget: 30000000, stadiumCapacity: 30000 },
+            { name: "South Coast Cherries", city: "Bournemouth", primaryColor: "#DA291C", secondaryColor: "#000000", reputation: 7200, budget: 28000000, stadiumCapacity: 11000 },
+            { name: "Wearside Black Cats", city: "Sunderland", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 7100, budget: 25000000, stadiumCapacity: 49000 },
+            { name: "Yorkshire Whites", city: "Leeds", primaryColor: "#FFFFFF", secondaryColor: "#003399", reputation: 7200, budget: 30000000, stadiumCapacity: 37000 },
+            { name: "Lancashire Clarets", city: "Burnley", primaryColor: "#6C1D45", secondaryColor: "#99D6EA", reputation: 7000, budget: 22000000, stadiumCapacity: 22000 }
         ]
     },
     {
         id: 'es', name: 'La Liga', country: 'Spain', foreignPlayerChance: 0.6, playerNationality: 'Spain',
         realTeams: [
             { name: "Madrid Blancos", city: "Madrid", primaryColor: "#FFFFFF", secondaryColor: "#FEBE10", reputation: 9300, budget: 170000000 },
-            { name: "Catalonia Blaugrana", city: "Barcelona", primaryColor: "#A50044", secondaryColor: "#004D98", reputation: 9100, budget: 110000000 },
+            { name: "Catalonia Blau", city: "Barcelona", primaryColor: "#A50044", secondaryColor: "#004D98", reputation: 9100, budget: 110000000 },
             { name: "Madrid Indios", city: "Madrid", primaryColor: "#CB3524", secondaryColor: "#1D2855", reputation: 8800, budget: 90000000 },
-            { name: "Sevilla Nervion", city: "Seville", primaryColor: "#FFFFFF", secondaryColor: "#D4001F", reputation: 8200, budget: 60000000 },
+            { name: "Nervion Red-Whites", city: "Seville", primaryColor: "#FFFFFF", secondaryColor: "#D4001F", reputation: 8200, budget: 60000000 },
             { name: "Valencia Bats", city: "Valencia", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 8000, budget: 50000000 },
             { name: "Mallorca Islanders", city: "Palma", primaryColor: "#E20613", secondaryColor: "#000000", reputation: 7500, budget: 30000000 },
             { name: "Girona Reds", city: "Girona", primaryColor: "#CE1126", secondaryColor: "#FFFFFF", reputation: 7800, budget: 40000000 },
             { name: "Vallecano Lightning", city: "Madrid", primaryColor: "#FFFFFF", secondaryColor: "#CE1126", reputation: 7400, budget: 25000000 },
-            { name: "Elche GreenStripes", city: "Elche", primaryColor: "#009540", secondaryColor: "#FFFFFF", reputation: 7200, budget: 20000000 },
-            { name: "Levante Frogs", city: "Valencia", primaryColor: "#003A70", secondaryColor: "#AB192D", reputation: 7300, budget: 22000000 },
             { name: "Vitoria Foxes", city: "Vitoria-Gasteiz", primaryColor: "#005EB8", secondaryColor: "#FFFFFF", reputation: 7300, budget: 22000000 },
-            { name: "Oviedo Blues", city: "Oviedo", primaryColor: "#003A70", secondaryColor: "#FFFFFF", reputation: 7100, budget: 18000000 },
-            { name: "San Sebastian", city: "San Sebastian", primaryColor: "#0067B1", secondaryColor: "#FFFFFF", reputation: 8300, budget: 65000000 },
+            { name: "San Sebastian Blue", city: "San Sebastian", primaryColor: "#0067B1", secondaryColor: "#FFFFFF", reputation: 8300, budget: 65000000 },
             { name: "Bilbao Lions", city: "Bilbao", primaryColor: "#EE2523", secondaryColor: "#FFFFFF", reputation: 8400, budget: 70000000 },
             { name: "Seville GreenWhites", city: "Seville", primaryColor: "#0BB363", secondaryColor: "#FFFFFF", reputation: 8100, budget: 55000000 },
             { name: "Yellow Submarines", city: "Villarreal", primaryColor: "#F5E216", secondaryColor: "#005187", reputation: 8200, budget: 60000000 },
             { name: "Vigo Sky Blues", city: "Vigo", primaryColor: "#8AC3EE", secondaryColor: "#FFFFFF", reputation: 7600, budget: 35000000 },
             { name: "Pamplona Bulls", city: "Pamplona", primaryColor: "#DA291C", secondaryColor: "#16315C", reputation: 7500, budget: 30000000 },
-            { name: "Getafe Blues", city: "Getafe", primaryColor: "#005999", secondaryColor: "#FFFFFF", reputation: 7400, budget: 28000000 },
+            { name: "South Madrid Blues", city: "Getafe", primaryColor: "#005999", secondaryColor: "#FFFFFF", reputation: 7400, budget: 28000000 },
             { name: "Espanyol Parrots", city: "Barcelona", primaryColor: "#007FC8", secondaryColor: "#FFFFFF", reputation: 7500, budget: 32000000 },
-            { name: "Challengers United", city: "Spain", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000 }
+            { name: "Challengers United", city: "Spain", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000 },
+            { name: "Canary Yellows", city: "Las Palmas", primaryColor: "#FFE400", secondaryColor: "#005BAC", reputation: 7200, budget: 18000000 },
+            { name: "Castilla Violet", city: "Valladolid", primaryColor: "#6A0DAD", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000 }
         ]
     },
     {
         id: 'it', name: 'Italian Calcio', country: 'Italy', foreignPlayerChance: 0.6, playerNationality: 'Italy',
         realTeams: [
-            { name: "Inter Blue", city: "Milan", primaryColor: "#001EA6", secondaryColor: "#000000", reputation: 9000, budget: 95000000 },
-            { name: "Milan Red", city: "Milan", primaryColor: "#FB090B", secondaryColor: "#000000", reputation: 8800, budget: 70000000 },
-            { name: "Turin Zebras", city: "Turin", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 9100, budget: 110000000 },
-            { name: "Napoli Blue", city: "Naples", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 8600, budget: 60000000 },
-            { name: "Roma Wolves", city: "Rome", primaryColor: "#8E1F2F", secondaryColor: "#F0BC42", reputation: 8400, budget: 55000000 },
-            { name: "Lazio Eagles", city: "Rome", primaryColor: "#87D8F7", secondaryColor: "#FFFFFF", reputation: 8200, budget: 50000000 },
-            { name: "Bergamo Blue", city: "Bergamo", primaryColor: "#000000", secondaryColor: "#005CAB", reputation: 8300, budget: 45000000 },
-            { name: "Florence Violet", city: "Florence", primaryColor: "#482E92", secondaryColor: "#FFFFFF", reputation: 8000, budget: 40000000 },
-            { name: "Bologna FC", city: "Bologna", primaryColor: "#A21C26", secondaryColor: "#1A2F48", reputation: 7800, budget: 30000000 },
-            { name: "Turin Bulls", city: "Turin", primaryColor: "#8A1E03", secondaryColor: "#FFFFFF", reputation: 7600, budget: 25000000 },
-            { name: "Sassuolo Green", city: "Sassuolo", primaryColor: "#00A752", secondaryColor: "#000000", reputation: 7400, budget: 20000000 },
-            { name: "Udine White", city: "Udine", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7200, budget: 18000000 },
-            { name: "Genoa RedBlue", city: "Genoa", primaryColor: "#A21C26", secondaryColor: "#001A4C", reputation: 7400, budget: 22000000 },
-            { name: "Lecce Yellow", city: "Lecce", primaryColor: "#FFF200", secondaryColor: "#DA291C", reputation: 7000, budget: 15000000 },
-            { name: "Verona Blue", city: "Verona", primaryColor: "#003399", secondaryColor: "#FDB913", reputation: 7100, budget: 16000000 },
+            { name: "Inter Lombardia", city: "Milan", primaryColor: "#001EA6", secondaryColor: "#000000", reputation: 9000, budget: 95000000 },
+            { name: "Milano Devils", city: "Milan", primaryColor: "#FB090B", secondaryColor: "#000000", reputation: 8800, budget: 70000000 },
+            { name: "Piemonte Zebras", city: "Turin", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 9100, budget: 110000000 },
+            { name: "Napoli Blues", city: "Naples", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 8600, budget: 60000000 },
+            { name: "Roma Gladiators", city: "Rome", primaryColor: "#8E1F2F", secondaryColor: "#F0BC42", reputation: 8400, budget: 55000000 },
+            { name: "Latium Eagles", city: "Rome", primaryColor: "#87D8F7", secondaryColor: "#FFFFFF", reputation: 8200, budget: 50000000 },
+            { name: "Bergamo United", city: "Bergamo", primaryColor: "#000000", secondaryColor: "#005CAB", reputation: 8300, budget: 45000000 },
+            { name: "Florence Viola", city: "Florence", primaryColor: "#482E92", secondaryColor: "#FFFFFF", reputation: 8000, budget: 40000000 },
+            { name: "Bologna Redblues", city: "Bologna", primaryColor: "#A21C26", secondaryColor: "#1A2F48", reputation: 7800, budget: 30000000 },
+            { name: "Torino Bulls", city: "Turin", primaryColor: "#8A1E03", secondaryColor: "#FFFFFF", reputation: 7600, budget: 25000000 },
+            { name: "Sassuolo Greenblacks", city: "Sassuolo", primaryColor: "#00A752", secondaryColor: "#000000", reputation: 7400, budget: 20000000 },
+            { name: "Udine Friuli", city: "Udine", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7200, budget: 18000000 },
+            { name: "Genoa Griffins", city: "Genoa", primaryColor: "#A21C26", secondaryColor: "#001A4C", reputation: 7400, budget: 22000000 },
+            { name: "Lecce Wolves", city: "Lecce", primaryColor: "#FFF200", secondaryColor: "#DA291C", reputation: 7000, budget: 15000000 },
+            { name: "Verona Mastiffs", city: "Verona", primaryColor: "#003399", secondaryColor: "#FDB913", reputation: 7100, budget: 16000000 },
             { name: "Parma Crusaders", city: "Parma", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 25000000 },
-            { name: "Cagliari RedBlue", city: "Cagliari", primaryColor: "#001A4C", secondaryColor: "#A21C26", reputation: 7100, budget: 18000000 },
-            { name: "Como Blue", city: "Como", primaryColor: "#003B7E", secondaryColor: "#FFFFFF", reputation: 7200, budget: 22000000 },
-            { name: "Pisa Tower", city: "Pisa", primaryColor: "#0057B8", secondaryColor: "#000000", reputation: 6800, budget: 12000000 },
-            { name: "Cremosa Red", city: "Cremona", primaryColor: "#D00827", secondaryColor: "#A3A3A3", reputation: 6900, budget: 14000000 }
+            { name: "Cagliari Islanders", city: "Cagliari", primaryColor: "#001A4C", secondaryColor: "#A21C26", reputation: 7100, budget: 18000000 },
+            { name: "Como Lakers", city: "Como", primaryColor: "#003B7E", secondaryColor: "#FFFFFF", reputation: 7200, budget: 22000000 },
+            { name: "Monza Speed", city: "Monza", primaryColor: "#F0F0F0", secondaryColor: "#E31837", reputation: 7000, budget: 16000000 },
+            { name: "Venice Gondoliers", city: "Venice", primaryColor: "#FF6600", secondaryColor: "#006633", reputation: 6800, budget: 12000000 }
         ]
     },
     {
         id: 'fr', name: 'Ligue 1', country: 'France', foreignPlayerChance: 0.7, playerNationality: 'France',
         realTeams: [
-            { name: "Paris Saint", city: "Paris", primaryColor: "#004170", secondaryColor: "#DA291C", reputation: 9100, budget: 200000000 },
+            { name: "Paris Red-Blue", city: "Paris", primaryColor: "#004170", secondaryColor: "#DA291C", reputation: 9100, budget: 200000000 },
             { name: "Marseille Blue", city: "Marseille", primaryColor: "#FFFFFF", secondaryColor: "#00AEEF", reputation: 8500, budget: 60000000 },
             { name: "Lyon Kids", city: "Lyon", primaryColor: "#FFFFFF", secondaryColor: "#1B4793", reputation: 8300, budget: 55000000 },
-            { name: "Monaco Red", city: "Monaco", primaryColor: "#E70014", secondaryColor: "#FFFFFF", reputation: 8400, budget: 70000000 },
+            { name: "Principality Red", city: "Monaco", primaryColor: "#E70014", secondaryColor: "#FFFFFF", reputation: 8400, budget: 70000000 },
             { name: "Lille Dogs", city: "Lille", primaryColor: "#E01E13", secondaryColor: "#2D292A", reputation: 8200, budget: 50000000 },
-            { name: "Rennes Red", city: "Rennes", primaryColor: "#E51A25", secondaryColor: "#000000", reputation: 7900, budget: 40000000 },
-            { name: "Nice Eagles", city: "Nice", primaryColor: "#DD0000", secondaryColor: "#000000", reputation: 7800, budget: 45000000 },
+            { name: "Brittany Red", city: "Rennes", primaryColor: "#E51A25", secondaryColor: "#000000", reputation: 7900, budget: 40000000 },
+            { name: "Riviera Eagles", city: "Nice", primaryColor: "#DD0000", secondaryColor: "#000000", reputation: 7800, budget: 45000000 },
             { name: "Lens Gold", city: "Lens", primaryColor: "#FDE100", secondaryColor: "#DA291C", reputation: 7800, budget: 35000000 },
-            { name: "Paris FC", city: "Paris", primaryColor: "#1E3159", secondaryColor: "#FFFFFF", reputation: 7400, budget: 20000000 },
-            { name: "Nantes FC", city: "Nantes", primaryColor: "#FFF200", secondaryColor: "#00A650", reputation: 7500, budget: 25000000 },
-            { name: "Strasbourg FC", city: "Strasbourg", primaryColor: "#0093E9", secondaryColor: "#FFFFFF", reputation: 7400, budget: 22000000 },
-            { name: "Toulouse FC", city: "Toulouse", primaryColor: "#8D4396", secondaryColor: "#FFFFFF", reputation: 7300, budget: 20000000 },
-            { name: "Reims FC", city: "Reims", primaryColor: "#EF1B23", secondaryColor: "#FFFFFF", reputation: 7300, budget: 20000000 },
-            { name: "Montpellier FC", city: "Montpellier", primaryColor: "#17385E", secondaryColor: "#F58113", reputation: 7400, budget: 24000000 },
-            { name: "Brest FC", city: "Brest", primaryColor: "#ED1C24", secondaryColor: "#FFFFFF", reputation: 7200, budget: 18000000 },
-            { name: "Le Havre FC", city: "Le Havre", primaryColor: "#87C0E7", secondaryColor: "#17335C", reputation: 7100, budget: 15000000 },
-            { name: "Auxerre AJ", city: "Auxerre", primaryColor: "#FFFFFF", secondaryColor: "#0055A4", reputation: 7000, budget: 15000000 },
-            { name: "Angers SCO", city: "Angers", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000 }
+            { name: "Paris Blue", city: "Paris", primaryColor: "#1E3159", secondaryColor: "#FFFFFF", reputation: 7400, budget: 20000000 },
+            { name: "Nantes Yellows", city: "Nantes", primaryColor: "#FFF200", secondaryColor: "#00A650", reputation: 7500, budget: 25000000 },
+            { name: "Alsace Blue", city: "Strasbourg", primaryColor: "#0093E9", secondaryColor: "#FFFFFF", reputation: 7400, budget: 22000000 },
+            { name: "AJ Burgundy", city: "Auxerre", primaryColor: "#FFFFFF", secondaryColor: "#0055A4", reputation: 7000, budget: 15000000 },
+            { name: "Toulouse Violets", city: "Toulouse", primaryColor: "#7B3F9E", secondaryColor: "#FFFFFF", reputation: 7300, budget: 20000000 },
+            { name: "Reims Royals", city: "Reims", primaryColor: "#ED1C24", secondaryColor: "#FFFFFF", reputation: 7400, budget: 22000000 },
+            { name: "Montpellier Orange", city: "Montpellier", primaryColor: "#FF6600", secondaryColor: "#003366", reputation: 7300, budget: 18000000 },
+            { name: "Brest Pirates", city: "Brest", primaryColor: "#E2001A", secondaryColor: "#FFFFFF", reputation: 7800, budget: 40000000 },
+            { name: "Saint-Green", city: "Saint-Etienne", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 7200, budget: 16000000 },
+            { name: "Angers Black-Whites", city: "Angers", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 7000, budget: 14000000 }
         ]
     },
     {
         id: 'de', name: 'Bundesliga', country: 'Germany', foreignPlayerChance: 0.5, playerNationality: 'Germany',
         realTeams: [
-            { name: "Bayern Munich", city: "Munich", primaryColor: "#DC052D", secondaryColor: "#FFFFFF", reputation: 9100, budget: 130000000 },
-            { name: "Dortmund FC", city: "Dortmund", primaryColor: "#FDE100", secondaryColor: "#000000", reputation: 8600, budget: 85000000 },
-            { name: "Bayer Leverkusen", city: "Leverkusen", primaryColor: "#E32219", secondaryColor: "#000000", reputation: 8500, budget: 75000000 },
+            { name: "Munich Red", city: "Munich", primaryColor: "#DC052D", secondaryColor: "#FFFFFF", reputation: 9100, budget: 130000000 },
+            { name: "Westphalia Yellows", city: "Dortmund", primaryColor: "#FDE100", secondaryColor: "#000000", reputation: 8600, budget: 85000000 },
+            { name: "Leverkusen Red", city: "Leverkusen", primaryColor: "#E32219", secondaryColor: "#000000", reputation: 8500, budget: 75000000 },
             { name: "Leipzig Bulls", city: "Leipzig", primaryColor: "#FFFFFF", secondaryColor: "#DD032F", reputation: 8300, budget: 90000000 },
-            { name: "Stuttgart FC", city: "Stuttgart", primaryColor: "#FFFFFF", secondaryColor: "#E32219", reputation: 7900, budget: 45000000 },
-            { name: "Frankfurt FC", city: "Frankfurt", primaryColor: "#E1000F", secondaryColor: "#000000", reputation: 7800, budget: 40000000 },
-            { name: "Wolfsburg FC", city: "Wolfsburg", primaryColor: "#65B32E", secondaryColor: "#FFFFFF", reputation: 7600, budget: 50000000 },
-            { name: "Freiburg FC", city: "Freiburg", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 35000000 },
-            { name: "Hoffenheim FC", city: "Sinsheim", primaryColor: "#005CAB", secondaryColor: "#FFFFFF", reputation: 7400, budget: 38000000 },
-            { name: "Werder Bremen", city: "Bremen", primaryColor: "#1D9053", secondaryColor: "#FFFFFF", reputation: 7400, budget: 30000000 },
-            { name: "Union Berlin FC", city: "Berlin", primaryColor: "#D4011D", secondaryColor: "#FDE100", reputation: 7300, budget: 28000000 },
-            { name: "Mainz FC", city: "Mainz", primaryColor: "#C3141F", secondaryColor: "#FFFFFF", reputation: 7200, budget: 25000000 },
-            { name: "Augsburg FC", city: "Augsburg", primaryColor: "#FFFFFF", secondaryColor: "#005D47", reputation: 7100, budget: 22000000 },
-            { name: "M'gladbach FC", city: "Monchengladbach", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 32000000 },
-            { name: "Koln FC", city: "Cologne", primaryColor: "#FFFFFF", secondaryColor: "#D60019", reputation: 7300, budget: 30000000 },
-            { name: "Hamburg SV", city: "Hamburg", primaryColor: "#FFFFFF", secondaryColor: "#0047AB", reputation: 7200, budget: 28000000 },
-            { name: "Heidenheim FC", city: "Heidenheim", primaryColor: "#E30613", secondaryColor: "#003E7E", reputation: 7000, budget: 18000000 },
-            { name: "St. Pauli FC", city: "Hamburg", primaryColor: "#522C1B", secondaryColor: "#FFFFFF", reputation: 7000, budget: 18000000 }
+            { name: "Stuttgart White-Reds", city: "Stuttgart", primaryColor: "#FFFFFF", secondaryColor: "#E32219", reputation: 7900, budget: 45000000 },
+            { name: "Wolfsburg Green", city: "Wolfsburg", primaryColor: "#65B32E", secondaryColor: "#FFFFFF", reputation: 7600, budget: 50000000 },
+            { name: "Freiburg Forest", city: "Freiburg", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 35000000 },
+            { name: "Hoffen Blue", city: "Sinsheim", primaryColor: "#005CAB", secondaryColor: "#FFFFFF", reputation: 7400, budget: 38000000 },
+            { name: "Berlin Iron", city: "Berlin", primaryColor: "#D4011D", secondaryColor: "#FDE100", reputation: 7300, budget: 28000000 },
+            { name: "Augsburg Falcons", city: "Augsburg", primaryColor: "#FFFFFF", secondaryColor: "#005D47", reputation: 7100, budget: 22000000 },
+            { name: "Cathedral City", city: "Cologne", primaryColor: "#FFFFFF", secondaryColor: "#D60019", reputation: 7300, budget: 30000000 },
+            { name: "Frankfurt Eagles", city: "Frankfurt", primaryColor: "#E1000F", secondaryColor: "#000000", reputation: 7800, budget: 45000000 },
+            { name: "Gladbach Foals", city: "Mönchengladbach", primaryColor: "#FFFFFF", secondaryColor: "#00603C", reputation: 7600, budget: 38000000 },
+            { name: "Bremen River", city: "Bremen", primaryColor: "#00A86B", secondaryColor: "#FFFFFF", reputation: 7500, budget: 32000000 },
+            { name: "Mainz Carnival", city: "Mainz", primaryColor: "#C3002F", secondaryColor: "#FFFFFF", reputation: 7300, budget: 28000000 },
+            { name: "Hamburg Pirates", city: "Hamburg", primaryColor: "#8B4513", secondaryColor: "#FFFFFF", reputation: 7200, budget: 25000000 },
+            { name: "Heidenheim Red-Blue", city: "Heidenheim", primaryColor: "#E30613", secondaryColor: "#0055A4", reputation: 6800, budget: 15000000 },
+            { name: "Bochum Blue", city: "Bochum", primaryColor: "#005BAC", secondaryColor: "#FFFFFF", reputation: 6700, budget: 12000000 }
         ]
     }
 ];
@@ -455,6 +515,7 @@ const ALL_SQUADS = [
     BERGAMO_UNITED_SQUAD, LATIUM_EAGLES_SQUAD, FLORENCE_VIOLA_SQUAD, BOLOGNA_REDBLUES_SQUAD,
     TORINO_BULLS_SQUAD, COMO_LAKERS_SQUAD, GENOA_GRIFFINS_SQUAD, UDINE_FRIULI_SQUAD, PARMA_CRUSADERS_SQUAD,
     SASSUOLO_GREENBLACKS_SQUAD, LECCE_WOLVES_SQUAD, CAGLIARI_ISLANDERS_SQUAD, VERONA_MASTIFFS_SQUAD,
+    MONZA_SPEED_SQUAD, VENICE_GONDOLIERS_SQUAD,
     MERSEYSIDE_REDS_SQUAD, MANCHESTER_SKYBLUES_SQUAD, LONDON_CANNONS_SQUAD,
     LONDON_BLUE_LIONS_SQUAD, MANCHESTER_DEVILS_SQUAD, NORTH_LONDON_WHITES_SQUAD, BIRMINGHAM_VILLANS_SQUAD,
     TYNESIDE_MAGPIES_SQUAD, EAST_LONDON_HAMMERS_SQUAD, BRIGHTON_SEAGULLS_SQUAD, FOREST_ARCHERS_SQUAD,
@@ -464,12 +525,17 @@ const ALL_SQUADS = [
     MADRID_BLANCOS_SQUAD, CATALONIA_BLAUGRANA_SQUAD, MADRID_INDIOS_SQUAD, BILBAO_LIONS_SQUAD,
     SAN_SEBASTIAN_SQUAD, YELLOW_SUBMARINES_SQUAD, SEVILLE_GREENWHITES_SQUAD, GIRONA_REDS_SQUAD,
     SEVILLA_NERVION_SQUAD, VALENCIA_BATS_SQUAD, VIGO_SKY_BLUES_SQUAD, VALLECANO_LIGHTNING_SQUAD,
+    CANARY_YELLOWS_SQUAD, CASTILLA_VIOLET_SQUAD,
     PARIS_SAINT_SQUAD, MARSEILLE_BLUE_SQUAD, LYON_KIDS_SQUAD, MONACO_RED_SQUAD,
     LILLE_DOGS_SQUAD, RENNES_RED_SQUAD, NICE_EAGLES_SQUAD, LENS_GOLD_SQUAD,
     PARIS_FC_SQUAD, NANTES_FC_SQUAD, STRASBOURG_FC_SQUAD, AUXERRE_AJ_SQUAD,
-    BAYERN_MUNICH_SQUAD, DORTMUND_FC_SQUAD, BAYER_LEVERKUSEN_SQUAD, LEIPZIG_BULLS_SQUAD,
+    TOULOUSE_VIOLETS_SQUAD, REIMS_ROYALS_SQUAD, MONTPELLIER_ORANGE_SQUAD, BREST_PIRATES_SQUAD,
+    SAINT_GREEN_SQUAD, ANGERS_BLACKWHITES_SQUAD,
+    BAYERN_MUNICH_SQUAD, WESTPHALIA_YELLOWS_SQUAD, BAYER_LEVERKUSEN_SQUAD, LEIPZIG_BULLS_SQUAD,
     STUTTGART_FC_SQUAD, WOLFSBURG_FC_SQUAD, FREIBURG_FC_SQUAD, HOFFENHEIM_FC_SQUAD,
-    UNION_BERLIN_FC_SQUAD, AUGSBURG_FC_SQUAD, KOLN_FC_SQUAD
+    UNION_BERLIN_FC_SQUAD, AUGSBURG_FC_SQUAD, KOLN_FC_SQUAD,
+    FRANKFURT_EAGLES_SQUAD, GLADBACH_FOALS_SQUAD, BREMEN_RIVER_SQUAD, MAINZ_CARNIVAL_SQUAD,
+    HAMBURG_PIRATES_SQUAD, HEIDENHEIM_REDBLUE_SQUAD, BOCHUM_BLUE_SQUAD
 ];
 
 export const REAL_PLAYERS: any[] = ALL_SQUADS.flat();

@@ -1,7 +1,7 @@
 
 export const BASAKSEHIR_SQUAD = [
   {
-    ad: "Yusuf Sarı",
+    ad: "J. Saru",
     takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -12,7 +12,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Plase Şut", "Seri"]
   },
   {
-    ad: "Léo Duarte",
+    ad: "L. Duardo",
     takim: "Basak City",
     uyruk: "Brezilya",
     mevki: "STP",
@@ -23,7 +23,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Engel", "Hava Hakimi", "Kayarak Müdahale", "Yakın Markaj"]
   },
   {
-    ad: "Christopher Operi",
+    ad: "C. Opera",
     takim: "Basak City",
     uyruk: "Fildişi Sahili",
     mevki: "SLB",
@@ -34,7 +34,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Kesme Pas"]
   },
   {
-    ad: "Eldor Shomurodov",
+    ad: "E. Shomar",
     takim: "Basak City",
     uyruk: "Özbekistan",
     mevki: "SNT",
@@ -45,7 +45,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Aşırtma Şut", "Karşı Koyan"]
   },
   {
-    ad: "Davie Selke",
+    ad: "D. Selkin",
     takim: "Basak City",
     uyruk: "Almanya",
     mevki: "SNT",
@@ -56,7 +56,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Karşı Koyan"]
   },
   {
-    ad: "Nuno da Costa",
+    ad: "N. Costas",
     takim: "Basak City",
     uyruk: "Cape Verde Adaları",
     mevki: "SNT",
@@ -67,7 +67,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Hassas Kafa Vuruşu", "Teknik"]
   },
   {
-    ad: "Ousseynou Ba",
+    ad: "O. Bah",
     takim: "Basak City",
     uyruk: "Senegal",
     mevki: "STP",
@@ -78,7 +78,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Hava Hakimi", "Sezgili"]
   },
   {
-    ad: "Miguel Crespo",
+    ad: "M. Crisp",
     takim: "Basak City",
     uyruk: "Portekiz",
     mevki: "MO",
@@ -89,7 +89,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Amansız", "Kayarak Müdahale"]
   },
   {
-    ad: "Deniz Türüç",
+    ad: "D. Turku",
     takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -100,7 +100,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Keskin Pas", "Kesme Pas", "Kuvvetli Şut"]
   },
   {
-    ad: "Berat Özdemir",
+    ad: "B. Ozman",
     takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -111,7 +111,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Sezgili", "Top Kesici", "Uzun Topla Pas", "Yakın Markaj"]
   },
   {
-    ad: "Olivier Kemen",
+    ad: "O. Keman",
     takim: "Basak City",
     uyruk: "Kamerun",
     mevki: "MO",
@@ -122,7 +122,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale", "Keskin Pas", "Seri"]
   },
   {
-    ad: "Jerome Opoku",
+    ad: "J. Opok",
     takim: "Basak City",
     uyruk: "Gana",
     mevki: "STP",
@@ -133,7 +133,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Sezgili"]
   },
   {
-    ad: "Muhammed Şengezer",
+    ad: "M. Senger",
     takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -144,7 +144,7 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Ortaya Çıkan"]
   },
   {
-    ad: "Volkan Babacan",
+    ad: "V. Baba",
     takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -155,8 +155,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Deflector"]
   },
   {
-    ad: "Festy Ebosele",
-    takim: "Başakşehir",
+    ad: "F. Ebo",
+    takim: "Basak City",
     uyruk: "İrlanda Cumhuriyeti",
     mevki: "SĞO",
     reyting: 69,
@@ -166,8 +166,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Onur Ergün",
-    takim: "Başakşehir",
+    ad: "O. Ergan",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 67,
@@ -177,8 +177,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi"]
   },
   {
-    ad: "Serkan Demir",
-    takim: "Basaksehir",
+    ad: "S. Demiro",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 76,
@@ -188,8 +188,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Türk",
-    takim: "Basaksehir",
+    ad: "E. Turan",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 74,
@@ -199,8 +199,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Furkan Aydın",
-    takim: "Basaksehir",
+    ad: "F. Ayden",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 73,
@@ -210,8 +210,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "İbrahim Tekin",
-    takim: "Basaksehir",
+    ad: "I. Tekino",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 72,
@@ -221,8 +221,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kerem Çelik",
-    takim: "Basaksehir",
+    ad: "K. Celik",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 71,
@@ -232,8 +232,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ozan Öztürk",
-    takim: "Basaksehir",
+    ad: "O. Oztekin",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 70,
@@ -243,8 +243,8 @@ export const BASAKSEHIR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ali Kılıç",
-    takim: "Basaksehir",
+    ad: "A. Kilic",
+    takim: "Basak City",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 69,

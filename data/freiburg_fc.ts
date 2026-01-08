@@ -1,19 +1,19 @@
 export const FREIBURG_FC_SQUAD = [
-    {
-        ad: "Bruno Ogbus",
-        takim: "Freiburg FC",
-        uyruk: "İsviçre",
-        mevki: "STP",
-        reyting: 59,
-        yas: 19,
-        ana_ozellikler: { hiz: 65, sut: 27, pas: 41, dribbling: 49, defans: 59, fizik: 59 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "B. Ogbu",
+    takim: "Freiburg Forest",
+    uyruk: "İsviçre",
+    mevki: "STP",
+    reyting: 59,
+    yas: 19,
+    ana_ozellikler: { hiz: 65, sut: 27, pas: 41, dribbling: 49, defans: 59, fizik: 59 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
-    takim: "Freiburg Fc",
+    ad: "C. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Freiburg Fc",
+    ad: "D. Martines",
+    takim: "Freiburg Forest",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Garcia",
-    takim: "Freiburg Fc",
+    ad: "A. Garcy",
+    takim: "Freiburg Forest",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -46,7 +46,7 @@ export const FREIBURG_FC_SQUAD = [
   },
   {
     ad: "Lucas Perez",
-    takim: "Freiburg Fc",
+    takim: "Freiburg Forest",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Freiburg Fc",
+    ad: "C. Garcy",
+    takim: "Freiburg Forest",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Rodriguez",
-    takim: "Freiburg Fc",
+    ad: "D. Rodrig",
+    takim: "Freiburg Forest",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -79,7 +79,7 @@ export const FREIBURG_FC_SQUAD = [
   },
   {
     ad: "João Santos",
-    takim: "Freiburg Fc",
+    takim: "Freiburg Forest",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -89,8 +89,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Freiburg Fc",
+    ad: "P. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Freiburg Fc",
+    ad: "D. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Freiburg Fc",
+    ad: "D. Garcy",
+    takim: "Freiburg Forest",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Freiburg Fc",
+    ad: "C. Martines",
+    takim: "Freiburg Forest",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Lopez",
-    takim: "Freiburg Fc",
+    ad: "M. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -145,7 +145,7 @@ export const FREIBURG_FC_SQUAD = [
   },
   {
     ad: "João Santos",
-    takim: "Freiburg Fc",
+    takim: "Freiburg Forest",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Freiburg Fc",
+    ad: "D. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
-    takim: "Freiburg Fc",
+    ad: "J. Martines",
+    takim: "Freiburg Forest",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Freiburg Fc",
+    ad: "J. Lopeze",
+    takim: "Freiburg Forest",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Freiburg Fc",
+    ad: "P. Martines",
+    takim: "Freiburg Forest",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Freiburg Fc",
+    ad: "P. Garcy",
+    takim: "Freiburg Forest",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -211,7 +211,7 @@ export const FREIBURG_FC_SQUAD = [
   },
   {
     ad: "Lucas Perez",
-    takim: "Freiburg Fc",
+    takim: "Freiburg Forest",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Freiburg Fc",
+    ad: "L. Garcy",
+    takim: "Freiburg Forest",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Freiburg Fc",
+    ad: "C. Rodrig",
+    takim: "Freiburg Forest",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const FREIBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Freiburg Fc",
+    ad: "C. Santoz",
+    takim: "Freiburg Forest",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

@@ -58,41 +58,41 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
 
   return (
     <div className="space-y-4 animate-fade-in pb-20">
-      {/* Header & Budget - FM Style */}
-      <div className="fm-panel rounded-xl p-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <div className="bg-emerald-600/20 p-2 rounded-lg border border-emerald-500/30">
-            <ShoppingCart className="text-emerald-400" size={24} />
+      {/* Header & Budget - Premium Glassmorphism */}
+      <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 backdrop-blur-xl rounded-2xl p-5 flex items-center justify-between gap-4 border border-white/10 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-emerald-600/30 to-emerald-800/20 p-3 rounded-xl border border-emerald-500/30 shadow-lg">
+            <ShoppingCart className="text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" size={26} />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">{t.market}</h2>
-            <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Transfer Window Open</div>
+            <h2 className="text-xl font-bold text-white tracking-tight drop-shadow-lg">{t.market}</h2>
+            <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">Transfer Window Open</div>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-0.5">{t.clubBudget}</div>
-          <div className="text-xl font-mono text-emerald-400 font-bold tracking-tight">€{(userTeam.budget / 1000000).toFixed(2)}M</div>
-          <div className="text-[9px] text-slate-600 font-mono mt-1 text-right">DB: {marketPlayers.length} Players</div>
+          <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Kulüp Bütçesi</div>
+          <div className="text-xl font-mono text-emerald-400 font-bold tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€{(userTeam.budget / 1000000).toFixed(2)}M</div>
+          <div className="text-[9px] text-slate-500 font-mono mt-1 text-right">DB: {marketPlayers.length} Players</div>
         </div>
       </div>
 
-      {/* Filters - FM Style Tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-2 no-scrollbar px-1">
+      {/* Filters - Premium Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar px-1">
         {['ALL', ...Object.values(Position)].map(pos => (
           <button
             key={pos}
             onClick={() => setFilterPos(pos)}
-            className={`px-3 py-1.5 rounded text-xs font-bold transition-all whitespace-nowrap border ${filterPos === pos
-              ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-900/50'
-              : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200'}`}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap border active:scale-95 ${filterPos === pos
+              ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-emerald-400/50 shadow-lg shadow-emerald-900/50'
+              : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200 hover:border-slate-600'}`}
           >
             {pos}
           </button>
         ))}
       </div>
 
-      {/* List - FM Spreadsheet Style */}
-      <div className="fm-panel rounded-xl overflow-hidden shadow-2xl">
+      {/* List - Premium Table */}
+      <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl border border-white/10">
         <div className="overflow-x-auto">
           <table className="fm-table w-full text-left text-sm">
             <thead>
@@ -146,8 +146,8 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                         onClick={() => onBuyPlayer(player)}
                         disabled={!canAfford(player.value)}
                         className={`p-1.5 rounded transition-transform active:scale-95 shadow-lg ${isBuyable(player)
-                            ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20 text-white"
-                            : "bg-slate-700 hover:bg-slate-600 shadow-slate-900/20 text-slate-300 border border-slate-600"
+                          ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20 text-white"
+                          : "bg-slate-700 hover:bg-slate-600 shadow-slate-900/20 text-slate-300 border border-slate-600"
                           }`}
                         title={isBuyable(player) ? t.buy : "Make Offer (Unlisted)"}
                       >
@@ -167,21 +167,21 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
         </div>
 
         {/* Pagination Controls */}
-        <div className="p-4 border-t border-white/10 flex items-center justify-between bg-slate-900/50">
+        <div className="p-4 border-t border-white/10 flex items-center justify-between bg-slate-900/50 backdrop-blur">
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 rounded bg-slate-800 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700 transition font-bold text-xs"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-700 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:from-slate-700 hover:to-slate-600 transition font-bold text-xs border border-white/10 active:scale-95"
           >
             ← {t.previous || 'Prev'}
           </button>
-          <span className="text-slate-400 text-xs font-mono font-bold">
+          <span className="text-slate-400 text-xs font-mono font-bold bg-slate-800/50 px-3 py-1.5 rounded-lg border border-white/5">
             Page {currentPage} / {totalPages}
           </span>
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 rounded bg-slate-800 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700 transition font-bold text-xs"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-700 text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:from-slate-700 hover:to-slate-600 transition font-bold text-xs border border-white/10 active:scale-95"
           >
             {t.next || 'Next'} →
           </button>

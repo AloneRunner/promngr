@@ -1,7 +1,7 @@
 export const CATALONIA_BLAUGRANA_SQUAD = [
     {
-        ad: "Rapha",
-        takim: "Catalonia Blaugrana",
+        ad: "Raphin",
+        takim: "Catalonia Blau",
         uyruk: "Brezilya",
         mevki: "SLO",
         reyting: 89,
@@ -14,8 +14,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Keskin Şut", "Orta Uzmanı", "Motor", "Teknik"]
     },
     {
-        ad: "Yamal Lam",
-        takim: "Catalonia Blaugrana",
+        ad: "L. Yamal",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "SĞO",
         reyting: 89,
@@ -28,8 +28,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Top Cambazı", "İnce Pas", "Plase Şut", "Geleceğin Yıldızı"]
     },
     {
-        ad: "Pedro G.",
-        takim: "Catalonia Blaugrana",
+        ad: "P. Gonzalez",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "MO",
         reyting: 89,
@@ -42,8 +42,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Maestro", "İnce Pas", "Teknik"]
     },
     {
-        ad: "Robert Lewa",
-        takim: "Catalonia Blaugrana",
+        ad: "R. Lewan",
+        takim: "Catalonia Blau",
         uyruk: "Polonya",
         mevki: "SNT",
         reyting: 88,
@@ -56,8 +56,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Keskin Şut", "Hava Hakimi", "Fırsatçı"]
     },
     {
-        ad: "Frenkie Jong",
-        takim: "Catalonia Blaugrana",
+        ad: "F. Jong",
+        takim: "Catalonia Blau",
         uyruk: "Hollanda",
         mevki: "MO",
         reyting: 87,
@@ -69,8 +69,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Top Süren", "Oyun Kurucu", "Trivela"]
     },
     {
-        ad: "Jules Kound",
-        takim: "Catalonia Blaugrana",
+        ad: "J. Kounde",
+        takim: "Catalonia Blau",
         uyruk: "Fransa",
         mevki: "SĞB",
         reyting: 87,
@@ -82,8 +82,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Jokey", "Savaşçı"]
     },
     {
-        ad: "Marc Stegen",
-        takim: "Catalonia Blaugrana",
+        ad: "M. Stegen",
+        takim: "Catalonia Blau",
         uyruk: "Almanya",
         mevki: "KL",
         reyting: 86,
@@ -95,8 +95,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Ayak Hakimiyeti", "Lider"]
     },
     {
-        ad: "Dani Olm",
-        takim: "Catalonia Blaugrana",
+        ad: "D. Olmo",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "MOO",
         reyting: 85,
@@ -108,8 +108,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Teknik", "İnce Pas"]
     },
     {
-        ad: "Wojciech Sze",
-        takim: "Catalonia Blaugrana",
+        ad: "W. Szczes",
+        takim: "Catalonia Blau",
         uyruk: "Polonya",
         mevki: "KL",
         reyting: 84,
@@ -121,8 +121,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Tecrübeli"]
     },
     {
-        ad: "Gavi",
-        takim: "Catalonia Blaugrana",
+        ad: "Gavy",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "MO",
         reyting: 83,
@@ -134,8 +134,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Savaşçı", "Amansız"]
     },
     {
-        ad: "Ron Arauj",
-        takim: "Catalonia Blaugrana",
+        ad: "R. Araujo",
+        takim: "Catalonia Blau",
         uyruk: "Uruguay",
         mevki: "STP",
         reyting: 83,
@@ -147,8 +147,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Güçlü", "Hızlı Stoper", "Kayarak Müdahale"]
     },
     {
-        ad: "Marcus Rash",
-        takim: "Catalonia Blaugrana",
+        ad: "M. Rash",
+        takim: "Catalonia Blau",
         uyruk: "İngiltere",
         mevki: "SLO",
         reyting: 80,
@@ -160,8 +160,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
         oyun_tarzlari: ["Kuvvetli Şut", "Seri"]
     },
     {
-        ad: "Pau Cubar",
-        takim: "Catalonia Blaugrana",
+        ad: "P. Cubar",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "STP",
         reyting: 82,
@@ -178,8 +178,8 @@ export const CATALONIA_BLAUGRANA_SQUAD = [
 
 export const CATALONIA_BLAUGRANA_RESERVES = [
     {
-        ad: "Andreas Chris",
-        takim: "Catalonia Blaugrana",
+        ad: "A. Chris",
+        takim: "Catalonia Blau",
         uyruk: "Danimarka",
         mevki: "STP",
         reyting: 80,
@@ -189,8 +189,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["Temiz Müdahale"]
     },
     {
-        ad: "Ferran Tor",
-        takim: "Catalonia Blaugrana",
+        ad: "F. Tor",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "SLK",
         reyting: 83,
@@ -200,8 +200,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["İçe Kat Eden"]
     },
     {
-        ad: "Alejandro Bal",
-        takim: "Catalonia Blaugrana",
+        ad: "A. Balde",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "SLB",
         reyting: 83,
@@ -211,8 +211,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["Roket"]
     },
     {
-        ad: "Fermin Lop",
-        takim: "Catalonia Blaugrana",
+        ad: "F. Lop",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "MOO",
         reyting: 80,
@@ -222,8 +222,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["Genç Yetenek", "Enerjik"]
     },
     {
-        ad: "Eric Garc",
-        takim: "Catalonia Blaugrana",
+        ad: "E. Garc",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "STP",
         reyting: 79,
@@ -233,8 +233,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["Oyun Kurucu Stoper"]
     },
     {
-        ad: "Inigo Marti",
-        takim: "Catalonia Blaugrana",
+        ad: "I. Marti",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "STP",
         reyting: 81,
@@ -244,8 +244,8 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         oyun_tarzlari: ["Lider", "Sert Müdahale"]
     },
     {
-        ad: "Marc Casad",
-        takim: "Catalonia Blaugrana",
+        ad: "M. Casad",
+        takim: "Catalonia Blau",
         uyruk: "İspanya",
         mevki: "MDO",
         reyting: 79,
@@ -254,38 +254,38 @@ export const CATALONIA_BLAUGRANA_RESERVES = [
         detaylar: { kisa_pas: 80, top_kontrol: 78, dayaniklilik: 82 },
         oyun_tarzlari: ["Pasör"]
     },
-  {
-    ad: "João Martinez",
-    takim: "Barcelona",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 88,
-    yas: 20,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 78, refleks: 88, vurus: 83, pozisyon: 80, top_kontrol: 76 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Silva",
-    takim: "Barcelona",
-    uyruk: "Arjantin",
-    mevki: "SĞB",
-    reyting: 86,
-    yas: 21,
-    ana_ozellikler: { hiz: 76, sut: 61, pas: 78, dribbling: 76, defans: 86, fizik: 81 },
-    detaylar: { ayakta_mudahale: 86, top_kesme: 81, kafa_isabeti: 76, guc: 78 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Lopez",
-    takim: "Barcelona",
-    uyruk: "İspanya",
-    mevki: "SLB",
-    reyting: 85,
-    yas: 22,
-    ana_ozellikler: { hiz: 75, sut: 60, pas: 77, dribbling: 75, defans: 85, fizik: 80 },
-    detaylar: { ayakta_mudahale: 85, top_kesme: 80, kafa_isabeti: 75, guc: 77 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "J. Martin",
+        takim: "Catalonia Blau",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 88,
+        yas: 20,
+        ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 78, refleks: 88, vurus: 83, pozisyon: 80, top_kontrol: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Silva",
+        takim: "Catalonia Blau",
+        uyruk: "Arjantin",
+        mevki: "SĞB",
+        reyting: 86,
+        yas: 21,
+        ana_ozellikler: { hiz: 76, sut: 61, pas: 78, dribbling: 76, defans: 86, fizik: 81 },
+        detaylar: { ayakta_mudahale: 86, top_kesme: 81, kafa_isabeti: 76, guc: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Lopez",
+        takim: "Catalonia Blau",
+        uyruk: "İspanya",
+        mevki: "SLB",
+        reyting: 85,
+        yas: 22,
+        ana_ozellikler: { hiz: 75, sut: 60, pas: 77, dribbling: 75, defans: 85, fizik: 80 },
+        detaylar: { ayakta_mudahale: 85, top_kesme: 80, kafa_isabeti: 75, guc: 77 },
+        oyun_tarzlari: []
+    }
 ];
 

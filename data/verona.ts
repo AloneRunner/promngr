@@ -1,7 +1,7 @@
 
 export const VERONA_MASTIFFS_SQUAD = [
     {
-        ad: "Ondrej Dud",
+        ad: "O. Dudda",
         takim: "Verona Mastiffs",
         uyruk: "Slovakya",
         mevki: "MOO",
@@ -28,7 +28,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Darko Lazo",
+        ad: "D. Lazovyc",
         takim: "Verona Mastiffs",
         uyruk: "Sırbistan",
         mevki: "SLO",
@@ -53,7 +53,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Michael Folorun",
+        ad: "M. Foloryn",
         takim: "Verona Mastiffs",
         uyruk: "İtalya",
         mevki: "MOO",
@@ -80,7 +80,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Lorenzo Monti",
+        ad: "L. Montipoh",
         takim: "Verona Mastiffs",
         uyruk: "İtalya",
         mevki: "KL",
@@ -102,7 +102,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Jackson Tchat",
+        ad: "J. Tchatchu",
         takim: "Verona Mastiffs",
         uyruk: "Kamerun",
         mevki: "MDO",
@@ -127,7 +127,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Pawel Dawid",
+        ad: "P. Dawidovyc",
         takim: "Verona Mastiffs",
         uyruk: "Polonya",
         mevki: "STP",
@@ -149,7 +149,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Casper Teng",
+        ad: "C. Tengsted",
         takim: "Verona Mastiffs",
         uyruk: "Danimarka",
         mevki: "SNT",
@@ -172,7 +172,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Suat Serdar",
+        ad: "S. Serdarr",
         takim: "Verona Mastiffs",
         uyruk: "Almanya",
         mevki: "MO",
@@ -193,7 +193,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Diego Copp",
+        ad: "D. Coppol",
         takim: "Verona Mastiffs",
         uyruk: "İtalya",
         mevki: "STP",
@@ -214,7 +214,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Domagoj Bra",
+        ad: "D. Bradaryc",
         takim: "Verona Mastiffs",
         uyruk: "Hırvatistan",
         mevki: "SLB",
@@ -235,7 +235,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Tomas Susl",
+        ad: "T. Suslovv",
         takim: "Verona Mastiffs",
         uyruk: "Slovakya",
         mevki: "SĞO",
@@ -257,7 +257,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Grigoris Kast",
+        ad: "G. Kastan",
         takim: "Verona Mastiffs",
         uyruk: "Kıbrıs Rum Kesimi",
         mevki: "SĞK",
@@ -278,7 +278,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Ali Musrat",
+        ad: "A. Musratty",
         takim: "Verona Mastiffs",
         uyruk: "Libya",
         mevki: "MDO",
@@ -306,7 +306,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Larry Monti",
+        ad: "L. Montipoh",
         takim: "Verona Mastiffs",
         uyruk: "İtalya",
         mevki: "KL",
@@ -332,7 +332,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Suat Serd",
+        ad: "S. Serdarr",
         takim: "Verona Mastiffs",
         uyruk: "Almanya",
         mevki: "MO",
@@ -358,7 +358,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Victor Nels",
+        ad: "V. Nelsson",
         takim: "Verona Mastiffs",
         uyruk: "Danimarka",
         mevki: "STP",
@@ -384,7 +384,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Tom Suslo",
+        ad: "T. Suslovv",
         takim: "Verona Mastiffs",
         uyruk: "Slovakya",
         mevki: "MOO",
@@ -410,7 +410,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         ]
     },
     {
-        ad: "Dom Bradar",
+        ad: "D. Bradaryc",
         takim: "Verona Mastiffs",
         uyruk: "Hırvatistan",
         mevki: "SLB",
@@ -433,7 +433,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Abdu Harru",
+        ad: "A. Harrouy",
         takim: "Verona Mastiffs",
         uyruk: "Fas",
         mevki: "MO",
@@ -456,7 +456,7 @@ export const VERONA_MASTIFFS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Dan Mosque",
+        ad: "D. Mosquer",
         takim: "Verona Mastiffs",
         uyruk: "Kolombiya",
         mevki: "SNT",
@@ -478,37 +478,37 @@ export const VERONA_MASTIFFS_SQUAD = [
         },
         oyun_tarzlari: []
     },
-  {
-    ad: "Carlos Martinez",
-    takim: "Verona",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Martinez",
-    takim: "Verona",
-    uyruk: "Arjantin",
-    mevki: "STP",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Garcia",
-    takim: "Verona",
-    uyruk: "İspanya",
-    mevki: "SĞB",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
-    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Martines",
+        takim: "Verona",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Martines",
+        takim: "Verona",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Garcy",
+        takim: "Verona",
+        uyruk: "İspanya",
+        mevki: "SĞB",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+        detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+        oyun_tarzlari: []
+    }
 ];

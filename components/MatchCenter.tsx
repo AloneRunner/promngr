@@ -120,7 +120,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
 
     // NEW: Toast Notification System
-    const [toasts, setToasts] = useState<Array<{id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD', message: string, team: 'HOME' | 'AWAY', minute: number}>>([]);
+    const [toasts, setToasts] = useState<Array<{ id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD', message: string, team: 'HOME' | 'AWAY', minute: number }>>([]);
     const lastEventCount = useRef(0);
 
     // NEW: Exit Confirmation Modal
@@ -193,7 +193,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         return () => {
             if (logicTimerRef.current) clearInterval(logicTimerRef.current);
             if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
-            
+
             // 🔊 Stop all sounds on unmount
             soundManager.stopAll();
         };
@@ -270,12 +270,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             newEvents.forEach(ev => {
                 const isHome = ev.teamId === homeTeam.id;
                 let toastType: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' = 'GOAL';
-                
+
                 if (ev.type === MatchEventType.GOAL) toastType = 'GOAL';
                 else if (ev.type === MatchEventType.SUB) toastType = 'SUB';
                 else if (ev.type === MatchEventType.CARD_YELLOW || ev.type === MatchEventType.CARD_RED) toastType = 'CARD';
                 else return; // Skip other events for toast
-                
+
                 const newToast = {
                     id: `${ev.minute}-${ev.type}-${Date.now()}`,
                     type: toastType,
@@ -283,9 +283,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     team: isHome ? 'HOME' as const : 'AWAY' as const,
                     minute: ev.minute
                 };
-                
+
                 setToasts(prev => [...prev.slice(-4), newToast]); // Keep max 5 toasts
-                
+
                 // Auto-remove after 5 seconds
                 setTimeout(() => {
                     setToasts(prev => prev.filter(t => t.id !== newToast.id));
@@ -1208,7 +1208,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             )}
 
             {/* TOP BAR: SCOREBOARD (Hidden on small landscape) */}
-            <div className="h-16 md:h-24 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl landscape:max-h-[50px] landscape:md:max-h-none portrait:flex landscape:hidden landscape:md:flex">
+            <div className="h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl landscape:max-h-[50px] landscape:md:max-h-none portrait:flex landscape:hidden landscape:md:flex">
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
                     <div className="text-lg md:text-4xl font-black text-slate-800 bg-white w-10 h-10 md:w-16 md:h-16 rounded flex items-center justify-center border-2 md:border-4 border-slate-300" style={{ color: homeTeam.primaryColor, borderColor: homeTeam.secondaryColor }}>
@@ -1277,20 +1277,19 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     {/* TOAST NOTIFICATIONS - Fixed position overlay */}
                     <div className="absolute top-16 md:top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-[90%] max-w-md">
                         {toasts.map((toast, idx) => (
-                            <div 
+                            <div
                                 key={toast.id}
-                                className={`animate-pulse px-3 py-2 rounded-lg border backdrop-blur-md flex items-center gap-2 text-xs md:text-sm shadow-lg transition-all duration-300 ${
-                                    toast.type === 'GOAL' 
-                                        ? 'bg-emerald-900/90 border-emerald-500 text-emerald-100' 
+                                className={`animate-pulse px-3 py-2 rounded-lg border backdrop-blur-md flex items-center gap-2 text-xs md:text-sm shadow-lg transition-all duration-300 ${toast.type === 'GOAL'
+                                        ? 'bg-emerald-900/90 border-emerald-500 text-emerald-100'
                                         : toast.type === 'SUB' && toast.message.includes('📋')
-                                        ? 'bg-purple-900/90 border-purple-500 text-purple-100' // Tactic change
-                                        : toast.type === 'SUB'
-                                        ? 'bg-blue-900/90 border-blue-500 text-blue-100'
-                                        : toast.type === 'CARD'
-                                        ? 'bg-yellow-900/90 border-yellow-500 text-yellow-100'
-                                        : 'bg-slate-800/90 border-slate-600 text-slate-200'
-                                }`}
-                                style={{ 
+                                            ? 'bg-purple-900/90 border-purple-500 text-purple-100' // Tactic change
+                                            : toast.type === 'SUB'
+                                                ? 'bg-blue-900/90 border-blue-500 text-blue-100'
+                                                : toast.type === 'CARD'
+                                                    ? 'bg-yellow-900/90 border-yellow-500 text-yellow-100'
+                                                    : 'bg-slate-800/90 border-slate-600 text-slate-200'
+                                    }`}
+                                style={{
                                     animation: 'slideIn 0.3s ease-out',
                                     opacity: 1 - (idx * 0.15)
                                 }}
@@ -1404,7 +1403,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </div>
 
             {/* FOOTER CONTROLS (Optimized for Mobile) */}
-            <div className="h-16 md:h-24 bg-slate-900 border-t border-slate-800 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom">
+            <div className="h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-t border-white/10 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom">
                 <button
                     onClick={() => { setSpeed(0); setShowExitModal(true); }}
                     className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-slate-800 active:bg-red-900/80 text-slate-400 active:text-white transition-colors border border-slate-700 active:border-red-500"
@@ -1447,8 +1446,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             {/* FULL TIME MODAL */}
             {match.isPlayed && (
-                <div className="absolute inset-0 z-[100] bg-slate-950/90 backdrop-blur-md flex items-center justify-center animate-fade-in p-4">
-                    <div className="bg-slate-900 border border-slate-700 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden">
+                <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center animate-fade-in p-4">
+                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden backdrop-blur-md">
                         {/* Background Effect */}
                         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
 
@@ -1507,8 +1506,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             {/* HALF-TIME MODAL */}
             {showHalfTime && (
-                <div className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-                    <div className="bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-600 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden">
+                <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
                         {/* Decorative Lines */}
                         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                         <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
@@ -1548,19 +1547,19 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         {/* First Half Stats */}
                         <div className="w-full space-y-3 bg-slate-800/50 rounded-xl p-4">
                             <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">İlk Yarı İstatistikleri</div>
-                            
+
                             <div className="flex items-center justify-between text-sm">
                                 <span className="font-bold text-white w-8 text-right">{match.stats.homePossession}%</span>
                                 <span className="text-slate-500 text-xs">Topa Sahiplik</span>
                                 <span className="font-bold text-white w-8">{match.stats.awayPossession}%</span>
                             </div>
-                            
+
                             <div className="flex items-center justify-between text-sm">
                                 <span className="font-bold text-white w-8 text-right">{match.stats.homeShots}</span>
                                 <span className="text-slate-500 text-xs">Şutlar</span>
                                 <span className="font-bold text-white w-8">{match.stats.awayShots}</span>
                             </div>
-                            
+
                             <div className="flex items-center justify-between text-sm">
                                 <span className="font-bold text-emerald-400 w-8 text-right">{match.stats.homeOnTarget}</span>
                                 <span className="text-slate-500 text-xs">İsabetli</span>
@@ -1595,8 +1594,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             {/* EXIT CONFIRMATION MODAL */}
             {showExitModal && (
-                <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 max-w-sm w-full shadow-2xl">
+                <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4">
+                    <div className="bg-slate-900/90 rounded-2xl border border-white/10 p-6 max-w-sm w-full shadow-2xl backdrop-blur-md">
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/30 border-2 border-red-500/50 flex items-center justify-center">
                                 <LogOut size={28} className="text-red-400" />
@@ -1606,7 +1605,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                 Maç devam ediyor ({match.currentMinute}'). Çıkarsanız maçın geri kalanı otomatik simüle edilecek.
                             </p>
                         </div>
-                        
+
                         <div className="text-center mb-4 p-3 bg-slate-800 rounded-xl">
                             <div className="flex items-center justify-center gap-4">
                                 <div className="text-center">

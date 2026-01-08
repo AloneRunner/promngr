@@ -1,19 +1,19 @@
 export const PARIS_FC_SQUAD = [
-    {
-        ad: "Kevin Trapp",
-        takim: "Paris FC",
-        uyruk: "Almanya",
-        mevki: "KL",
-        reyting: 81,
-        yas: 34,
-        ana_ozellikler: { hiz: 82, sut: 80, pas: 74, dribbling: 84, defans: 46, fizik: 76 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "K. Trappe",
+    takim: "Paris Blue",
+    uyruk: "Almanya",
+    mevki: "KL",
+    reyting: 81,
+    yas: 34,
+    ana_ozellikler: { hiz: 82, sut: 80, pas: 74, dribbling: 84, defans: 46, fizik: 76 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
-    takim: "Paris Fc",
+    ad: "C. Lopeze",
+    takim: "Paris Blue",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Paris Fc",
+    ad: "D. Garcy",
+    takim: "Paris Blue",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Paris Fc",
+    ad: "D. Rodrigz",
+    takim: "Paris Blue",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 69,
@@ -45,8 +45,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Paris Fc",
+    ad: "L. Costas",
+    takim: "Paris Blue",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Paris Fc",
+    ad: "C. Costas",
+    takim: "Paris Blue",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Garcia",
-    takim: "Paris Fc",
+    ad: "D. Garcy",
+    takim: "Paris Blue",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Paris Fc",
+    ad: "J. Costas",
+    takim: "Paris Blue",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -89,8 +89,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Perez",
-    takim: "Paris Fc",
+    ad: "P. Pereze",
+    takim: "Paris Blue",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Garcia",
-    takim: "Paris Fc",
+    ad: "D. Garcy",
+    takim: "Paris Blue",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Paris Fc",
+    ad: "D. Lopeze",
+    takim: "Paris Blue",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Paris Fc",
+    ad: "C. Rodrigz",
+    takim: "Paris Blue",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Santos",
-    takim: "Paris Fc",
+    ad: "M. Santoz",
+    takim: "Paris Blue",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Paris Fc",
+    ad: "J. Rodrigz",
+    takim: "Paris Blue",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Paris Fc",
+    ad: "D. Martines",
+    takim: "Paris Blue",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
-    takim: "Paris Fc",
+    ad: "J. Pereze",
+    takim: "Paris Blue",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Paris Fc",
+    ad: "J. Lopeze",
+    takim: "Paris Blue",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Paris Fc",
+    ad: "P. Garcy",
+    takim: "Paris Blue",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Paris Fc",
+    ad: "P. Rodrigz",
+    takim: "Paris Blue",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Paris Fc",
+    ad: "L. Costas",
+    takim: "Paris Blue",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Paris Fc",
+    ad: "L. Costas",
+    takim: "Paris Blue",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Paris Fc",
+    ad: "C. Garcy",
+    takim: "Paris Blue",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const PARIS_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Paris Fc",
+    ad: "C. Costas",
+    takim: "Paris Blue",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

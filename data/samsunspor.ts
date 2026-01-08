@@ -1,7 +1,7 @@
 
 export const SAMSUNSPOR_SQUAD = [
   {
-    ad: "Afonso Sousa",
+    ad: "A. Soussah",
     takim: "Samsun Red",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -12,7 +12,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "İlk Dokunuş", "Teknik", "Yaratıcı"]
   },
   {
-    ad: "Rick van Drongelen",
+    ad: "R. van Dronger",
     takim: "Samsun Red",
     uyruk: "Hollanda",
     mevki: "STP",
@@ -23,7 +23,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Engel", "Hassas Kafa Vuruşu", "Hava Hakimi", "Kayarak Müdahale"]
   },
   {
-    ad: "Olivier Ntcham",
+    ad: "O. Ntchamme",
     takim: "Samsun Red",
     uyruk: "Kamerun",
     mevki: "MDO",
@@ -34,7 +34,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Keskin Pas", "Teknik"]
   },
   {
-    ad: "Carlo Holse",
+    ad: "C. Holsey",
     takim: "Samsun Red",
     uyruk: "Danimarka",
     mevki: "MOO",
@@ -45,7 +45,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Kesme Pas", "Teknik", "Yaratıcı"]
   },
   {
-    ad: "Antoine Makoumbou",
+    ad: "A. Makoum",
     takim: "Samsun Red",
     uyruk: "Kongo",
     mevki: "MDO",
@@ -56,7 +56,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Yaratıcı"]
   },
   {
-    ad: "Emre Kılınç",
+    ad: "E. Kilincc",
     takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "SLO",
@@ -67,7 +67,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Okan Kocuk",
+    ad: "O. Kocukk",
     takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -78,7 +78,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Ayak Hakimiyeti"]
   },
   {
-    ad: "Marius Mouandilmadji",
+    ad: "M. Mouandil",
     takim: "Samsun Red",
     uyruk: "Çad",
     mevki: "SNT",
@@ -89,7 +89,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Karşı Koyan"]
   },
   {
-    ad: "Toni Borevković",
+    ad: "T. Borevkov",
     takim: "Samsun Red",
     uyruk: "Hırvatistan",
     mevki: "STP",
@@ -100,7 +100,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Top Kesici", "Uzun Topla Pas"]
   },
   {
-    ad: "Joe Mendes",
+    ad: "J. Mendess",
     takim: "Samsun Red",
     uyruk: "İsveç",
     mevki: "SĞB",
@@ -111,7 +111,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Zeki Yavru",
+    ad: "Z. Yavruu",
     takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -122,7 +122,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Tanguy Coulibaly",
+    ad: "T. Coulbaly",
     takim: "Samsun Red",
     uyruk: "Fransa",
     mevki: "SLO",
@@ -133,7 +133,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "Teknik"]
   },
   {
-    ad: "Anthony Musaba",
+    ad: "A. Musabah",
     takim: "Samsun Red",
     uyruk: "Hollanda",
     mevki: "SĞO",
@@ -144,7 +144,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Soner Aydoğdu",
+    ad: "S. Aydogdu",
     takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -155,7 +155,7 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Uzun Topla Pas"]
   },
   {
-    ad: "Logi Tómasson",
+    ad: "L. Tomasson",
     takim: "Samsun Red",
     uyruk: "İzlanda",
     mevki: "SLB",
@@ -166,8 +166,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ozan Öztürk",
-    takim: "Samsunspor",
+    ad: "O. Ozturkk",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 75,
@@ -177,8 +177,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Kaya",
-    takim: "Samsunspor",
+    ad: "B. Kayya",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 73,
@@ -188,8 +188,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Şen",
-    takim: "Samsunspor",
+    ad: "E. Shenn",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 72,
@@ -199,8 +199,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kerem Özer",
-    takim: "Samsunspor",
+    ad: "K. Ozerr",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 71,
@@ -210,8 +210,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hasan Eren",
-    takim: "Samsunspor",
+    ad: "H. Erenn",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 70,
@@ -221,8 +221,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emre Arslan",
-    takim: "Samsunspor",
+    ad: "E. Arslann",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 69,
@@ -232,8 +232,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Arda Karataş",
-    takim: "Samsunspor",
+    ad: "A. Karatash",
+    takim: "Samsun Red",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 68,
@@ -243,8 +243,8 @@ export const SAMSUNSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
-    takim: "Samsunspor",
+    ad: "P. Costas",
+    takim: "Samsun Red",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 67,

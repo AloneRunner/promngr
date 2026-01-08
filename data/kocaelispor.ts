@@ -1,7 +1,7 @@
 
 export const KOCAELISPOR_SQUAD = [
   {
-    ad: "Bruno Petković",
+    ad: "B. Petkovick",
     takim: "Kocaeli Gulf",
     uyruk: "Hırvatistan",
     mevki: "SNT",
@@ -12,7 +12,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "İlk Dokunuş", "Teknik"]
   },
   {
-    ad: "Massadio Haïdara",
+    ad: "M. Haidarra",
     takim: "Kocaeli Gulf",
     uyruk: "Mali",
     mevki: "SLB",
@@ -23,7 +23,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale"]
   },
   {
-    ad: "Karol Linetty",
+    ad: "K. Linettyy",
     takim: "Kocaeli Gulf",
     uyruk: "Polonya",
     mevki: "MDO",
@@ -34,7 +34,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mateusz Wieteska",
+    ad: "M. Wietesky",
     takim: "Kocaeli Gulf",
     uyruk: "Polonya",
     mevki: "STP",
@@ -45,7 +45,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: ["Engel"]
   },
   {
-    ad: "Hrvoje Smolčić",
+    ad: "H. Smolchyc",
     takim: "Kocaeli Gulf",
     uyruk: "Hırvatistan",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu"]
   },
   {
-    ad: "Ahmet Oğuz",
+    ad: "A. Oguzz",
     takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -67,7 +67,7 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: ["Engel", "Güçlü", "Top Kesici", "Uzun Taç", "Yakın Markaj"]
   },
   {
-    ad: "Ryan Mendes",
+    ad: "R. Mendess",
     takim: "Kocaeli Gulf",
     uyruk: "Cape Verde Adaları",
     mevki: "SLO",
@@ -78,8 +78,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yunus Demirci",
-    takim: "Kocaelispor",
+    ad: "Y. Demirky",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 66,
@@ -89,8 +89,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mustafa Şen",
-    takim: "Kocaelispor",
+    ad: "M. Shenn",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 64,
@@ -100,8 +100,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yunus Koç",
-    takim: "Kocaelispor",
+    ad: "Y. Kocc",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 63,
@@ -111,8 +111,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Alper Yıldız",
-    takim: "Kocaelispor",
+    ad: "A. Yildizz",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 62,
@@ -122,8 +122,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Volkan Özgür",
-    takim: "Kocaelispor",
+    ad: "V. Ozgurr",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 61,
@@ -133,8 +133,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kerem Özdemir",
-    takim: "Kocaelispor",
+    ad: "K. Ozdemirr",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 60,
@@ -144,8 +144,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Burak Şahin",
-    takim: "Kocaelispor",
+    ad: "B. Sahinn",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 59,
@@ -155,8 +155,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Perez",
-    takim: "Kocaelispor",
+    ad: "P. Pereze",
+    takim: "Kocaeli Gulf",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 58,
@@ -166,8 +166,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Costa",
-    takim: "Kocaelispor",
+    ad: "D. Costas",
+    takim: "Kocaeli Gulf",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 57,
@@ -177,8 +177,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Costa",
-    takim: "Kocaelispor",
+    ad: "M. Costas",
+    takim: "Kocaeli Gulf",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 56,
@@ -188,8 +188,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Furkan Şen",
-    takim: "Kocaelispor",
+    ad: "F. Shenn",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 55,
@@ -199,8 +199,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmet Erdoğan",
-    takim: "Kocaelispor",
+    ad: "A. Erdogann",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 60,
@@ -210,8 +210,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Barış Şahin",
-    takim: "Kocaelispor",
+    ad: "B. Sahinn",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 59,
@@ -221,8 +221,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Barış Doğan",
-    takim: "Kocaelispor",
+    ad: "B. Dogann",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 59,
@@ -232,8 +232,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Güler",
-    takim: "Kocaelispor",
+    ad: "E. Gulerr",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 58,
@@ -243,8 +243,8 @@ export const KOCAELISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Polat",
-    takim: "Kocaelispor",
+    ad: "E. Polatt",
+    takim: "Kocaeli Gulf",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 58,

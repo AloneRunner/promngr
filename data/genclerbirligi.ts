@@ -1,7 +1,7 @@
 
 export const GENCLERBIRLIGI_SQUAD = [
   {
-    ad: "Sekou Koita",
+    ad: "S. Koytta",
     takim: "Ankara Youth",
     uyruk: "Mali",
     mevki: "SNT",
@@ -12,7 +12,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Aşırtma Şut", "Çabuk Adım", "Seri"]
   },
   {
-    ad: "Pedro Pereira",
+    ad: "P. Pereyra",
     takim: "Ankara Youth",
     uyruk: "Portekiz",
     mevki: "SĞB",
@@ -23,7 +23,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Sezgili"]
   },
   {
-    ad: "Henry Onyekuru",
+    ad: "H. Onyekura",
     takim: "Ankara Youth",
     uyruk: "Nijerya",
     mevki: "SLO",
@@ -34,7 +34,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Seri"]
   },
   {
-    ad: "Adama Traoré",
+    ad: "A. Traorey",
     takim: "Ankara Youth",
     uyruk: "Mali",
     mevki: "SĞO",
@@ -45,7 +45,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Plase Şut", "Seri"]
   },
   {
-    ad: "Dimitrios Goutas",
+    ad: "D. Goutass",
     takim: "Ankara Youth",
     uyruk: "Yunanistan",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Top Kesici", "Uzun Topla Pas"]
   },
   {
-    ad: "Oghenekaro Etebo",
+    ad: "O. Eteboh",
     takim: "Ankara Youth",
     uyruk: "Nijerya",
     mevki: "MDO",
@@ -67,7 +67,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Gökhan Akkan",
+    ad: "G. Akkann",
     takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -78,7 +78,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Kaleden Çıkma"]
   },
   {
-    ad: "Matěj Hanousek",
+    ad: "M. Hanousk",
     takim: "Ankara Youth",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SLB",
@@ -89,7 +89,7 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: ["Engel", "Güçlü"]
   },
   {
-    ad: "Michał Nalepa",
+    ad: "M. Nalepka",
     takim: "Ankara Youth",
     uyruk: "Polonya",
     mevki: "MO",
@@ -100,8 +100,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmet Doğan",
-    takim: "Genclerbirligi",
+    ad: "A. Dogann",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 66,
@@ -111,8 +111,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Cem Bulut",
-    takim: "Genclerbirligi",
+    ad: "C. Bulutt",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 64,
@@ -122,8 +122,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "İbrahim Polat",
-    takim: "Genclerbirligi",
+    ad: "I. Polatt",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 63,
@@ -133,8 +133,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ozan Karataş",
-    takim: "Genclerbirligi",
+    ad: "O. Karatash",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 62,
@@ -144,8 +144,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmet Yıldız",
-    takim: "Genclerbirligi",
+    ad: "A. Yildizz",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 61,
@@ -155,8 +155,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mehmet Doğan",
-    takim: "Genclerbirligi",
+    ad: "M. Dogann",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 60,
@@ -166,8 +166,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Volkan Polat",
-    takim: "Genclerbirligi",
+    ad: "V. Polatt",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 59,
@@ -177,8 +177,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Genclerbirligi",
+    ad: "P. Garcy",
+    takim: "Ankara Youth",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 58,
@@ -188,8 +188,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Genclerbirligi",
+    ad: "D. Rodrig",
+    takim: "Ankara Youth",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 57,
@@ -199,8 +199,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Costa",
-    takim: "Genclerbirligi",
+    ad: "M. Costas",
+    takim: "Ankara Youth",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 56,
@@ -210,8 +210,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "İbrahim Akın",
-    takim: "Genclerbirligi",
+    ad: "I. Akinn",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 55,
@@ -221,8 +221,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Burak Çelik",
-    takim: "Genclerbirligi",
+    ad: "B. Celikk",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 60,
@@ -232,8 +232,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ozan Kaya",
-    takim: "Genclerbirligi",
+    ad: "O. Kayya",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 59,
@@ -243,8 +243,8 @@ export const GENCLERBIRLIGI_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Berkay Çetin",
-    takim: "Genclerbirligi",
+    ad: "B. Cetinn",
+    takim: "Ankara Youth",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 59,

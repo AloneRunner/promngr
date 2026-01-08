@@ -1,7 +1,7 @@
 
 export const LONDON_CANNONS_SQUAD = [
     {
-        ad: "Bukayo Sak",
+        ad: "B. Sakoah",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -35,7 +35,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Martin Odeg",
+        ad: "M. Odehavn",
         takim: "London Cannons",
         uyruk: "Norveç",
         mevki: "MO",
@@ -68,7 +68,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "William Salib",
+        ad: "W. Salvar",
         takim: "London Cannons",
         uyruk: "Fransa",
         mevki: "STP",
@@ -99,7 +99,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Declan Ric",
+        ad: "D. Rysell",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "MDO",
@@ -131,7 +131,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gabriel Maha",
+        ad: "G. Magales",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -160,7 +160,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "David Ray",
+        ad: "D. Rayo",
         takim: "London Cannons",
         uyruk: "İspanya",
         mevki: "KL",
@@ -190,7 +190,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Kai Havert",
+        ad: "K. Haverman",
         takim: "London Cannons",
         uyruk: "Almanya",
         mevki: "SNT",
@@ -220,7 +220,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Ben Whit",
+        ad: "B. Whitford",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -248,7 +248,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gab Martinel",
+        ad: "G. Martell",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "SLK",
@@ -276,7 +276,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Jurrien Timb",
+        ad: "J. Timmar",
         takim: "London Cannons",
         uyruk: "Hollanda",
         mevki: "SLB",
@@ -304,7 +304,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Leandro Tros",
+        ad: "L. Tressar",
         takim: "London Cannons",
         uyruk: "Belçika",
         mevki: "SLK",
@@ -333,7 +333,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Thomas Part",
+        ad: "T. Partin",
         takim: "London Cannons",
         uyruk: "Gana",
         mevki: "MDO",
@@ -360,7 +360,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gabriel Jes",
+        ad: "Gabriel Jesso",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "SNT",
@@ -387,7 +387,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Ric Calafi",
+        ad: "R. Calafi",
         takim: "London Cannons",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -414,7 +414,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Mikel Meri",
+        ad: "M. Merano",
         takim: "London Cannons",
         uyruk: "İspanya",
         mevki: "MO",
@@ -441,7 +441,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Take Tomiyas",
+        ad: "T. Tomi",
         takim: "London Cannons",
         uyruk: "Japonya",
         mevki: "SLB",
@@ -467,7 +467,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Raheem Ster",
+        ad: "R. Stelar",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -493,7 +493,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Buka Sako",
+        ad: "B. Sakoah",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -524,7 +524,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gabi Magal",
+        ad: "G. Magales",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -552,7 +552,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Declan Ryce",
+        ad: "D. Rysell",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "MDO",
@@ -582,7 +582,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Wilo Saliba",
+        ad: "W. Salvar",
         takim: "London Cannons",
         uyruk: "Fransa",
         mevki: "STP",
@@ -610,7 +610,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Martin Odega",
+        ad: "M. Odehavn",
         takim: "London Cannons",
         uyruk: "Norveç",
         mevki: "MO",
@@ -640,7 +640,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Viktor Gyo",
+        ad: "V. Gyorsen",
         takim: "London Cannons",
         uyruk: "İsveç",
         mevki: "SNT",
@@ -672,7 +672,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Mikel Merin",
+        ad: "M. Merano",
         takim: "London Cannons",
         uyruk: "İspanya",
         mevki: "MO",
@@ -699,7 +699,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Martin Zubi",
+        ad: "M. Zubera",
         takim: "London Cannons",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -726,7 +726,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Piero Hinca",
+        ad: "P. Hinzalo",
         takim: "London Cannons",
         uyruk: "Ekvador",
         mevki: "STP",
@@ -753,7 +753,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Leo Tross",
+        ad: "L. Tressar",
         takim: "London Cannons",
         uyruk: "Belçika",
         mevki: "SLK",
@@ -780,7 +780,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Ben White",
+        ad: "B. Whitford",
         takim: "London Cannons",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -806,7 +806,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Kai Hav",
+        ad: "Kai Havermann",
         takim: "London Cannons",
         uyruk: "Almanya",
         mevki: "SNT",
@@ -832,7 +832,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Jurrien Tim",
+        ad: "Jurren Timar",
         takim: "London Cannons",
         uyruk: "Hollanda",
         mevki: "SĞB",
@@ -857,7 +857,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gabi Martin",
+        ad: "Gabo Martel",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "SLK",
@@ -884,7 +884,7 @@ export const LONDON_CANNONS_SQUAD = [
         ]
     },
     {
-        ad: "Gabriel Jay",
+        ad: "G. Jesso",
         takim: "London Cannons",
         uyruk: "Brezilya",
         mevki: "SNT",

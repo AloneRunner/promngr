@@ -1,30 +1,30 @@
 export const LEIPZIG_BULLS_SQUAD = [
-    {
-        ad: "Peter Gulacsi",
-        takim: "Leipzig Bulls",
-        uyruk: "Macaristan",
-        mevki: "KL",
-        reyting: 85,
-        yas: 34,
-        ana_ozellikler: { hiz: 83, sut: 83, pas: 74, dribbling: 84, defans: 43, fizik: 87 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "El Chadaille Bitshiabu",
-        takim: "Leipzig Bulls",
-        uyruk: "Fransa",
-        mevki: "STP",
-        reyting: 75,
-        yas: 19,
-        ana_ozellikler: { hiz: 72, sut: 36, pas: 60, dribbling: 56, defans: 74, fizik: 79 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "P. Gulacsy",
+    takim: "Leipzig Bulls",
+    uyruk: "Macaristan",
+    mevki: "KL",
+    reyting: 85,
+    yas: 34,
+    ana_ozellikler: { hiz: 83, sut: 83, pas: 74, dribbling: 84, defans: 43, fizik: 87 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "E. Bitshiab",
+    takim: "Leipzig Bulls",
+    uyruk: "Fransa",
+    mevki: "STP",
+    reyting: 75,
+    yas: 19,
+    ana_ozellikler: { hiz: 72, sut: 36, pas: 60, dribbling: 56, defans: 74, fizik: 79 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "João Perez",
-    takim: "Leipzig",
+    ad: "J. Pereze",
+    takim: "Leipzig Bulls",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 82,
@@ -34,8 +34,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Rodriguez",
-    takim: "Leipzig",
+    ad: "D. Rodrigz",
+    takim: "Leipzig Bulls",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 81,
@@ -45,8 +45,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Leipzig",
+    ad: "J. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 80,
@@ -56,8 +56,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Perez",
-    takim: "Leipzig",
+    ad: "D. Pereze",
+    takim: "Leipzig Bulls",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 79,
@@ -67,8 +67,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Leipzig",
+    ad: "L. Martines",
+    takim: "Leipzig Bulls",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 78,
@@ -78,8 +78,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Leipzig",
+    ad: "C. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 77,
@@ -89,8 +89,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Leipzig",
+    ad: "J. Santoz",
+    takim: "Leipzig Bulls",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 76,
@@ -100,8 +100,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Garcia",
-    takim: "Leipzig",
+    ad: "A. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 75,
@@ -111,8 +111,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Leipzig",
+    ad: "D. Rodrigz",
+    takim: "Leipzig Bulls",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 74,
@@ -122,8 +122,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Leipzig",
+    ad: "P. Sylva",
+    takim: "Leipzig Bulls",
     uyruk: "Fransa",
     mevki: "MDO",
     reyting: 73,
@@ -133,8 +133,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
-    takim: "Leipzig",
+    ad: "C. Sylva",
+    takim: "Leipzig Bulls",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 72,
@@ -144,8 +144,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
-    takim: "Leipzig",
+    ad: "J. Sylva",
+    takim: "Leipzig Bulls",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 77,
@@ -155,8 +155,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Leipzig",
+    ad: "D. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 76,
@@ -166,8 +166,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Leipzig",
+    ad: "D. Rodrigz",
+    takim: "Leipzig Bulls",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 76,
@@ -177,8 +177,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Leipzig",
+    ad: "L. Pereze",
+    takim: "Leipzig Bulls",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 75,
@@ -188,8 +188,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Perez",
-    takim: "Leipzig",
+    ad: "P. Pereze",
+    takim: "Leipzig Bulls",
     uyruk: "Fransa",
     mevki: "MOO",
     reyting: 75,
@@ -199,8 +199,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Leipzig",
+    ad: "P. Rodrigz",
+    takim: "Leipzig Bulls",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 75,
@@ -210,8 +210,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Leipzig",
+    ad: "L. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 74,
@@ -221,8 +221,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Leipzig",
+    ad: "L. Pereze",
+    takim: "Leipzig Bulls",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 74,
@@ -232,8 +232,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Leipzig",
+    ad: "P. Martines",
+    takim: "Leipzig Bulls",
     uyruk: "Arjantin",
     mevki: "SLO",
     reyting: 73,
@@ -243,8 +243,8 @@ export const LEIPZIG_BULLS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Leipzig",
+    ad: "P. Garcy",
+    takim: "Leipzig Bulls",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 73,

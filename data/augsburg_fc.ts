@@ -1,19 +1,19 @@
 export const AUGSBURG_FC_SQUAD = [
-    {
-        ad: "Phillip Tietz",
-        takim: "Augsburg FC",
-        uyruk: "Almanya",
-        mevki: "SNT",
-        reyting: 75,
-        yas: 27,
-        ana_ozellikler: { hiz: 59, sut: 75, pas: 57, dribbling: 68, defans: 34, fizik: 81 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "P. Tietz",
+    takim: "Augsburg Falcons",
+    uyruk: "Almanya",
+    mevki: "SNT",
+    reyting: 75,
+    yas: 27,
+    ana_ozellikler: { hiz: 59, sut: 75, pas: 57, dribbling: 68, defans: 34, fizik: 81 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Garcia",
-    takim: "Augsburg Fc",
+    ad: "C. Gero",
+    takim: "Augsburg Falcons",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Augsburg Fc",
+    ad: "D. Silven",
+    takim: "Augsburg Falcons",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Costa",
-    takim: "Augsburg Fc",
+    ad: "A. Costen",
+    takim: "Augsburg Falcons",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Augsburg Fc",
+    ad: "L. Santer",
+    takim: "Augsburg Falcons",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Augsburg Fc",
+    ad: "C. Costen",
+    takim: "Augsburg Falcons",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Martinez",
-    takim: "Augsburg Fc",
+    ad: "D. Martenz",
+    takim: "Augsburg Falcons",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Augsburg Fc",
+    ad: "D. Lopens",
+    takim: "Augsburg Falcons",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -89,8 +89,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Augsburg Fc",
+    ad: "P. Marten",
+    takim: "Augsburg Falcons",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Augsburg Fc",
+    ad: "D. Rodri",
+    takim: "Augsburg Falcons",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Augsburg Fc",
+    ad: "D. Marten",
+    takim: "Augsburg Falcons",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Perez",
-    takim: "Augsburg Fc",
+    ad: "C. Perren",
+    takim: "Augsburg Falcons",
     uyruk: "İtalya",
     mevki: "SLB",
     reyting: 61,
@@ -133,8 +133,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Silva",
-    takim: "Augsburg Fc",
+    ad: "M. Silven",
+    takim: "Augsburg Falcons",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Augsburg Fc",
+    ad: "J. Costal",
+    takim: "Augsburg Falcons",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
-    takim: "Augsburg Fc",
+    ad: "J. Silven",
+    takim: "Augsburg Falcons",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Augsburg Fc",
+    ad: "J. Garcher",
+    takim: "Augsburg Falcons",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Augsburg Fc",
+    ad: "J. Garcher",
+    takim: "Augsburg Falcons",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Augsburg Fc",
+    ad: "P. Silven",
+    takim: "Augsburg Falcons",
     uyruk: "İtalya",
     mevki: "MO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
-    takim: "Augsburg Fc",
+    ad: "P. Costen",
+    takim: "Augsburg Falcons",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Augsburg Fc",
+    ad: "P. Santer",
+    takim: "Augsburg Falcons",
     uyruk: "Brezilya",
     mevki: "MOO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Augsburg Fc",
+    ad: "L. Coster",
+    takim: "Augsburg Falcons",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Augsburg Fc",
+    ad: "C. Marten",
+    takim: "Augsburg Falcons",
     uyruk: "İspanya",
     mevki: "SĞO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const AUGSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Augsburg Fc",
+    ad: "C. Lopenz",
+    takim: "Augsburg Falcons",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

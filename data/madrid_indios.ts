@@ -1,6 +1,6 @@
 export const MADRID_INDIOS_SQUAD = [
     {
-        ad: "Jan Obl",
+        ad: "J. Oblakk",
         takim: "Madrid Indios",
         uyruk: "Slovenya",
         mevki: "KL",
@@ -13,7 +13,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Kedi Refleks", "Lider"]
     },
     {
-        ad: "Julian Alva",
+        ad: "J. Alvareze",
         takim: "Madrid Indios",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -27,7 +27,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Amansız", "Keskin Şut", "Pres Yapan Forvet"]
     },
     {
-        ad: "Anto Griez",
+        ad: "A. Grizman",
         takim: "Madrid Indios",
         uyruk: "Fransa",
         mevki: "SNT",
@@ -40,7 +40,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Plase Şut", "Teknik", "Yaratıcı"]
     },
     {
-        ad: "Marcos Llore",
+        ad: "M. Lloren",
         takim: "Madrid Indios",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -53,7 +53,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Motor", "Hızlı Kanat"]
     },
     {
-        ad: "Alex Sorl",
+        ad: "A. Sorloth",
         takim: "Madrid Indios",
         uyruk: "Norveç",
         mevki: "SNT",
@@ -66,7 +66,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Kule", "Hedef Adam"]
     },
     {
-        ad: "David Hanck",
+        ad: "D. Hanckow",
         takim: "Madrid Indios",
         uyruk: "Slovakya",
         mevki: "STP",
@@ -79,7 +79,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Sert Müdahale"]
     },
     {
-        ad: "Robin Le Nor",
+        ad: "R. Le Norman",
         takim: "Madrid Indios",
         uyruk: "İspanya",
         mevki: "STP",
@@ -92,7 +92,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Hava Hakimi"]
     },
     {
-        ad: "Conor Galla",
+        ad: "C. Gallaguer",
         takim: "Madrid Indios",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -105,7 +105,7 @@ export const MADRID_INDIOS_SQUAD = [
         oyun_tarzlari: ["Amansız", "Motor", "Kutu Kutu"]
     },
     {
-        ad: "Koke",
+        ad: "Kokey",
         takim: "Madrid Indios",
         uyruk: "İspanya",
         mevki: "MO",
@@ -136,7 +136,7 @@ export const MADRID_INDIOS_SQUAD = [
 
 export const MADRID_INDIOS_RESERVES = [
     {
-        ad: "Angel Corr",
+        ad: "A. Correy",
         takim: "Madrid Indios",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -158,7 +158,7 @@ export const MADRID_INDIOS_RESERVES = [
         oyun_tarzlari: ["Çalışkan Kanat"]
     },
     {
-        ad: "Jose Gime",
+        ad: "J. Gimeze",
         takim: "Madrid Indios",
         uyruk: "Uruguay",
         mevki: "STP",
@@ -234,49 +234,49 @@ export const MADRID_INDIOS_RESERVES = [
         detaylar: { orta_acma: 78, top_kapma: 79, dribbling: 80 },
         oyun_tarzlari: ["Dengeli Bek"]
     },
-  {
-    ad: "Carlos Lopez",
-    takim: "Atletico",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 84,
-    yas: 20,
-    ana_ozellikler: { hiz: 74, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 74, refleks: 84, vurus: 79, pozisyon: 76, top_kontrol: 72 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Silva",
-    takim: "Atletico",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 83,
-    yas: 21,
-    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Rodriguez",
-    takim: "Atletico",
-    uyruk: "İspanya",
-    mevki: "SLB",
-    reyting: 82,
-    yas: 22,
-    ana_ozellikler: { hiz: 72, sut: 57, pas: 74, dribbling: 72, defans: 82, fizik: 77 },
-    detaylar: { ayakta_mudahale: 82, top_kesme: 77, kafa_isabeti: 72, guc: 74 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Perez",
-    takim: "Atletico",
-    uyruk: "Fransa",
-    mevki: "MDO",
-    reyting: 81,
-    yas: 23,
-    ana_ozellikler: { hiz: 66, sut: 61, pas: 76, dribbling: 73, defans: 81, fizik: 76 },
-    detaylar: { top_kesme: 81, ayakta_mudahale: 76, dayaniklilik: 78, kisa_pas: 73 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "Carlos Lopez",
+        takim: "Madrid Indios",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 84,
+        yas: 20,
+        ana_ozellikler: { hiz: 74, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 74, refleks: 84, vurus: 79, pozisyon: 76, top_kontrol: 72 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "Diego Silva",
+        takim: "Madrid Indios",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 83,
+        yas: 21,
+        ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "Andre Rodriguez",
+        takim: "Madrid Indios",
+        uyruk: "İspanya",
+        mevki: "SLB",
+        reyting: 82,
+        yas: 22,
+        ana_ozellikler: { hiz: 72, sut: 57, pas: 74, dribbling: 72, defans: 82, fizik: 77 },
+        detaylar: { ayakta_mudahale: 82, top_kesme: 77, kafa_isabeti: 72, guc: 74 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "Marco Perez",
+        takim: "Madrid Indios",
+        uyruk: "Fransa",
+        mevki: "MDO",
+        reyting: 81,
+        yas: 23,
+        ana_ozellikler: { hiz: 66, sut: 61, pas: 76, dribbling: 73, defans: 81, fizik: 76 },
+        detaylar: { top_kesme: 81, ayakta_mudahale: 76, dayaniklilik: 78, kisa_pas: 73 },
+        oyun_tarzlari: []
+    }
 ];
 

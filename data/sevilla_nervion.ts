@@ -1,111 +1,111 @@
 export const SEVILLA_NERVION_SQUAD = [
-    {
-        ad: "Chidi Eju",
-        takim: "Sevilla Nervion",
-        uyruk: "Nijerya",
-        mevki: "SLO",
-        reyting: 78,
-        yas: 27,
-        ana_ozellikler: { hiz: 90, sut: 69, pas: 71, dribbling: 82, defans: 37, fizik: 63 },
-        detaylar: {
-            hizlanma: 91, sprint: 89, dribbling: 85, ceviklik: 86, calim: 88
-        },
-        oyun_tarzlari: ["Top Cambazı", "Seri", "Roket"]
-    },
-    {
-        ad: "Nema Gudel",
-        takim: "Sevilla Nervion",
-        uyruk: "Sırbistan",
-        mevki: "STP",
-        reyting: 77,
-        yas: 33,
-        ana_ozellikler: { hiz: 46, sut: 73, pas: 78, dribbling: 69, defans: 76, fizik: 84 },
-        detaylar: {
-            sut_gucu: 85, uzaktan_sut: 82, guc: 86, agresiflik: 85, top_kesme: 78
-        },
-        oyun_tarzlari: ["Kuvvetli Şut", "Savaşçı"]
-    },
-    {
-        ad: "Djib Sow",
-        takim: "Sevilla Nervion",
-        uyruk: "İsviçre",
-        mevki: "MO",
-        reyting: 76,
-        yas: 28,
-        ana_ozellikler: { hiz: 78, sut: 69, pas: 73, dribbling: 76, defans: 74, fizik: 78 },
-        detaylar: {
-            dayaniklilik: 84, kisa_pas: 76, top_kontrol: 77, box_to_box: 80
-        },
-        oyun_tarzlari: ["Motor", "Kutu Kutu"]
-    },
-    {
-        ad: "Alex Sanches",
-        takim: "Sevilla Nervion",
-        uyruk: "Şili",
-        mevki: "SNT",
-        reyting: 76,
-        yas: 36,
-        ana_ozellikler: { hiz: 68, sut: 78, pas: 78, dribbling: 81, defans: 48, fizik: 59 },
-        detaylar: {
-            teknik: 84, denge: 85, vizyon: 80, frikik: 78, bitiricilik: 77
-        },
-        oyun_tarzlari: ["Tecrübeli", "Teknik"]
-    },
-    {
-        ad: "Orjan Nyl",
-        takim: "Sevilla Nervion",
-        uyruk: "Norveç",
-        mevki: "KL",
-        reyting: 76,
-        yas: 34,
-        ana_ozellikler: { hiz: 47, sut: 76, pas: 75, dribbling: 77, defans: 47, fizik: 74 },
-        detaylar: {
-            refleks: 78, ucma: 76, pozisyon: 77
-        },
-        oyun_tarzlari: []
-    },
-    {
-        ad: "Isaac Romer",
-        takim: "Sevilla Nervion",
-        uyruk: "İspanya",
-        mevki: "SNT",
-        reyting: 74,
-        yas: 24,
-        ana_ozellikler: { hiz: 78, sut: 72, pas: 68, dribbling: 73, defans: 23, fizik: 71 },
-        detaylar: {
-            hizlanma: 80, bitiricilik: 75, guc: 74
-        },
-        oyun_tarzlari: ["Genç Yetenek"]
-    },
-    {
-        ad: "Joan Jord",
-        takim: "Sevilla Nervion",
-        uyruk: "İspanya",
-        mevki: "MO",
-        reyting: 76,
-        yas: 30,
-        ana_ozellikler: { hiz: 48, sut: 74, pas: 77, dribbling: 74, defans: 68, fizik: 75 },
-        detaylar: {
-            uzun_pas: 80, vizyon: 78, kisa_pas: 79
-        },
-        oyun_tarzlari: ["Pasör"]
-    },
-    {
-        ad: "Ruben Varg",
-        takim: "Sevilla Nervion",
-        uyruk: "İsviçre",
-        mevki: "SLO",
-        reyting: 75,
-        yas: 26,
-        ana_ozellikler: { hiz: 84, sut: 70, pas: 69, dribbling: 78, defans: 54, fizik: 64 },
-        detaylar: {
-            hizlanma: 85, dribbling: 79, ceviklik: 80
-        },
-        oyun_tarzlari: ["Seri"]
-    },
   {
-    ad: "Carlos Perez",
-    takim: "Sevilla Nervion",
+    ad: "C. Ejukey",
+    takim: "Nervion Red-Whites",
+    uyruk: "Nijerya",
+    mevki: "SLO",
+    reyting: 78,
+    yas: 27,
+    ana_ozellikler: { hiz: 90, sut: 69, pas: 71, dribbling: 82, defans: 37, fizik: 63 },
+    detaylar: {
+      hizlanma: 91, sprint: 89, dribbling: 85, ceviklik: 86, calim: 88
+    },
+    oyun_tarzlari: ["Top Cambazı", "Seri", "Roket"]
+  },
+  {
+    ad: "N. Gudelji",
+    takim: "Nervion Red-Whites",
+    uyruk: "Sırbistan",
+    mevki: "STP",
+    reyting: 77,
+    yas: 33,
+    ana_ozellikler: { hiz: 46, sut: 73, pas: 78, dribbling: 69, defans: 76, fizik: 84 },
+    detaylar: {
+      sut_gucu: 85, uzaktan_sut: 82, guc: 86, agresiflik: 85, top_kesme: 78
+    },
+    oyun_tarzlari: ["Kuvvetli Şut", "Savaşçı"]
+  },
+  {
+    ad: "D. Sowwy",
+    takim: "Nervion Red-Whites",
+    uyruk: "İsviçre",
+    mevki: "MO",
+    reyting: 76,
+    yas: 28,
+    ana_ozellikler: { hiz: 78, sut: 69, pas: 73, dribbling: 76, defans: 74, fizik: 78 },
+    detaylar: {
+      dayaniklilik: 84, kisa_pas: 76, top_kontrol: 77, box_to_box: 80
+    },
+    oyun_tarzlari: ["Motor", "Kutu Kutu"]
+  },
+  {
+    ad: "A. Sancheze",
+    takim: "Nervion Red-Whites",
+    uyruk: "Şili",
+    mevki: "SNT",
+    reyting: 76,
+    yas: 36,
+    ana_ozellikler: { hiz: 68, sut: 78, pas: 78, dribbling: 81, defans: 48, fizik: 59 },
+    detaylar: {
+      teknik: 84, denge: 85, vizyon: 80, frikik: 78, bitiricilik: 77
+    },
+    oyun_tarzlari: ["Tecrübeli", "Teknik"]
+  },
+  {
+    ad: "O. Nylanddh",
+    takim: "Nervion Red-Whites",
+    uyruk: "Norveç",
+    mevki: "KL",
+    reyting: 76,
+    yas: 34,
+    ana_ozellikler: { hiz: 47, sut: 76, pas: 75, dribbling: 77, defans: 47, fizik: 74 },
+    detaylar: {
+      refleks: 78, ucma: 76, pozisyon: 77
+    },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "I. Romerroh",
+    takim: "Nervion Red-Whites",
+    uyruk: "İspanya",
+    mevki: "SNT",
+    reyting: 74,
+    yas: 24,
+    ana_ozellikler: { hiz: 78, sut: 72, pas: 68, dribbling: 73, defans: 23, fizik: 71 },
+    detaylar: {
+      hizlanma: 80, bitiricilik: 75, guc: 74
+    },
+    oyun_tarzlari: ["Genç Yetenek"]
+  },
+  {
+    ad: "J. Jordann",
+    takim: "Nervion Red-Whites",
+    uyruk: "İspanya",
+    mevki: "MO",
+    reyting: 76,
+    yas: 30,
+    ana_ozellikler: { hiz: 48, sut: 74, pas: 77, dribbling: 74, defans: 68, fizik: 75 },
+    detaylar: {
+      uzun_pas: 80, vizyon: 78, kisa_pas: 79
+    },
+    oyun_tarzlari: ["Pasör"]
+  },
+  {
+    ad: "R. Vargazz",
+    takim: "Nervion Red-Whites",
+    uyruk: "İsviçre",
+    mevki: "SLO",
+    reyting: 75,
+    yas: 26,
+    ana_ozellikler: { hiz: 84, sut: 70, pas: 69, dribbling: 78, defans: 54, fizik: 64 },
+    detaylar: {
+      hizlanma: 85, dribbling: 79, ceviklik: 80
+    },
+    oyun_tarzlari: ["Seri"]
+  },
+  {
+    ad: "C. Pereze",
+    takim: "Nervion Red-Whites",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -115,8 +115,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Sevilla Nervion",
+    ad: "D. Rodrigz",
+    takim: "Nervion Red-Whites",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -126,8 +126,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Sevilla Nervion",
+    ad: "D. Sylva",
+    takim: "Nervion Red-Whites",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 69,
@@ -137,8 +137,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Sevilla Nervion",
+    ad: "L. Pereze",
+    takim: "Nervion Red-Whites",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -148,8 +148,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Sevilla Nervion",
+    ad: "C. Garcy",
+    takim: "Nervion Red-Whites",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -159,8 +159,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
-    takim: "Sevilla Nervion",
+    ad: "J. Pereze",
+    takim: "Nervion Red-Whites",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 66,
@@ -170,8 +170,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Sevilla Nervion",
+    ad: "J. Garcy",
+    takim: "Nervion Red-Whites",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -181,8 +181,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Sevilla Nervion",
+    ad: "L. Garcy",
+    takim: "Nervion Red-Whites",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 64,
@@ -192,8 +192,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Silva",
-    takim: "Sevilla Nervion",
+    ad: "D. Sylva",
+    takim: "Nervion Red-Whites",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -203,8 +203,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Martinez",
-    takim: "Sevilla Nervion",
+    ad: "M. Martines",
+    takim: "Nervion Red-Whites",
     uyruk: "Fransa",
     mevki: "MDO",
     reyting: 62,
@@ -214,8 +214,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Sevilla Nervion",
+    ad: "C. Lopeze",
+    takim: "Nervion Red-Whites",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -225,8 +225,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Santos",
-    takim: "Sevilla Nervion",
+    ad: "M. Santozz",
+    takim: "Nervion Red-Whites",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -236,8 +236,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Sevilla Nervion",
+    ad: "D. Sylva",
+    takim: "Nervion Red-Whites",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 65,
@@ -247,8 +247,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Garcia",
-    takim: "Sevilla Nervion",
+    ad: "A. Garcy",
+    takim: "Nervion Red-Whites",
     uyruk: "Arjantin",
     mevki: "MOO",
     reyting: 65,
@@ -258,8 +258,8 @@ export const SEVILLA_NERVION_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
-    takim: "Sevilla Nervion",
+    ad: "P. Costas",
+    takim: "Nervion Red-Whites",
     uyruk: "İspanya",
     mevki: "MOO",
     reyting: 64,

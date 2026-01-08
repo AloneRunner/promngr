@@ -1,17 +1,17 @@
 export const KOLN_FC_SQUAD = [
-    {
-        ad: "Emin Kujovic",
-        takim: "Koln FC",
-        uyruk: "Karadağ",
-        mevki: "MO",
-        reyting: 58,
-        yas: 20,
-        ana_ozellikler: { hiz: 57, sut: 51, pas: 60, dribbling: 60, defans: 51, fizik: 64 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
   {
-    ad: "Carlos Martinez",
+    ad: "E. Kujovyc",
+    takim: "Cathedral City",
+    uyruk: "Karadağ",
+    mevki: "MO",
+    reyting: 58,
+    yas: 20,
+    ana_ozellikler: { hiz: 57, sut: 51, pas: 60, dribbling: 60, defans: 51, fizik: 64 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "C. Martines",
     takim: "Koln Fc",
     uyruk: "Brezilya",
     mevki: "KL",
@@ -33,7 +33,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Lopez",
+    ad: "A. Lopeze",
     takim: "Koln Fc",
     uyruk: "İspanya",
     mevki: "KL",
@@ -55,7 +55,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
+    ad: "C. Lopeze",
     takim: "Koln Fc",
     uyruk: "İtalya",
     mevki: "STP",
@@ -66,7 +66,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Garcia",
+    ad: "D. Garcy",
     takim: "Koln Fc",
     uyruk: "Portekiz",
     mevki: "STP",
@@ -88,7 +88,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
+    ad: "P. Costas",
     takim: "Koln Fc",
     uyruk: "Arjantin",
     mevki: "SĞB",
@@ -99,7 +99,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
+    ad: "D. Martines",
     takim: "Koln Fc",
     uyruk: "İspanya",
     mevki: "SĞB",
@@ -110,7 +110,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
+    ad: "D. Sylva",
     takim: "Koln Fc",
     uyruk: "Fransa",
     mevki: "SLB",
@@ -121,7 +121,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
+    ad: "C. Costas",
     takim: "Koln Fc",
     uyruk: "İtalya",
     mevki: "SLB",
@@ -132,7 +132,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
+    ad: "M. Rodrigz",
     takim: "Koln Fc",
     uyruk: "Portekiz",
     mevki: "MDO",
@@ -143,7 +143,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
+    ad: "J. Santoz",
     takim: "Koln Fc",
     uyruk: "Brezilya",
     mevki: "MDO",
@@ -154,7 +154,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
+    ad: "J. Lopeze",
     takim: "Koln Fc",
     uyruk: "Arjantin",
     mevki: "MDO",
@@ -165,7 +165,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
+    ad: "J. Pereze",
     takim: "Koln Fc",
     uyruk: "İspanya",
     mevki: "MO",
@@ -176,7 +176,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
+    ad: "J. Martines",
     takim: "Koln Fc",
     uyruk: "Fransa",
     mevki: "MO",
@@ -187,7 +187,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
+    ad: "P. Garcy",
     takim: "Koln Fc",
     uyruk: "İtalya",
     mevki: "MOO",
@@ -198,7 +198,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
+    ad: "P. Lopeze",
     takim: "Koln Fc",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -220,7 +220,7 @@ export const KOLN_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
+    ad: "L. Lopeze",
     takim: "Koln Fc",
     uyruk: "Arjantin",
     mevki: "SĞO",

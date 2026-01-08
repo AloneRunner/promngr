@@ -1,8 +1,8 @@
 
 export const GOZTEPE_SQUAD = [
   {
-    ad: "Mateusz Lis",
-    takim: "Goztepe Goz",
+    ad: "M. Lise",
+    takim: "Izmir Göz",
     uyruk: "Polonya",
     mevki: "KL",
     reyting: 73,
@@ -12,8 +12,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: ["Ayak Hakimiyeti"]
   },
   {
-    ad: "Anthony Dennis",
-    takim: "Goztepe Goz",
+    ad: "A. Dennise",
+    takim: "Izmir Göz",
     uyruk: "Nijerya",
     mevki: "MO",
     reyting: 70,
@@ -23,8 +23,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Efkan Bekiroğlu",
-    takim: "Goztepe Goz",
+    ad: "E. Bekiroglu",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 70,
@@ -34,8 +34,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: ["Keskin Pas", "Teknik"]
   },
   {
-    ad: "Héliton",
-    takim: "Goztepe Goz",
+    ad: "Helitonn",
+    takim: "Izmir Göz",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 68,
@@ -45,8 +45,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Sezgili"]
   },
   {
-    ad: "İsmail Köybaşı",
-    takim: "Goztepe Goz",
+    ad: "I. Koybashy",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 67,
@@ -56,8 +56,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmed Ildız",
-    takim: "Goztepe Goz",
+    ad: "A. Ildyze",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 67,
@@ -67,8 +67,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Taha Altıkardeş",
-    takim: "Goztepe Goz",
+    ad: "T. Altikardes",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -78,8 +78,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Janderson",
-    takim: "Goztepe Goz",
+    ad: "Jandersun",
+    takim: "Izmir Göz",
     uyruk: "Brezilya",
     mevki: "SNT",
     reyting: 67,
@@ -89,8 +89,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Polat",
-    takim: "Goztepe",
+    ad: "S. Polatt",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 68,
@@ -100,8 +100,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yusuf Yılmaz",
-    takim: "Goztepe",
+    ad: "Y. Yilmi",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 66,
@@ -111,8 +111,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Onur Demirci",
-    takim: "Goztepe",
+    ad: "O. Demirky",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 65,
@@ -122,8 +122,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Burak Kurt",
-    takim: "Goztepe",
+    ad: "B. Kurtt",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 64,
@@ -133,8 +133,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mustafa Yavuz",
-    takim: "Goztepe",
+    ad: "M. Yavuze",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 63,
@@ -144,8 +144,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emre Demirci",
-    takim: "Goztepe",
+    ad: "E. Demirky",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 62,
@@ -155,8 +155,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmet Karataş",
-    takim: "Goztepe",
+    ad: "A. Karatash",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 61,
@@ -166,8 +166,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Santos",
-    takim: "Goztepe",
+    ad: "A. Santoz",
+    takim: "Izmir Göz",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 60,
@@ -177,8 +177,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Goztepe",
+    ad: "L. Martines",
+    takim: "Izmir Göz",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 59,
@@ -188,8 +188,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Goztepe",
+    ad: "P. Sylva",
+    takim: "Izmir Göz",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 58,
@@ -199,8 +199,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Murat Kaya",
-    takim: "Goztepe",
+    ad: "M. Kayya",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 57,
@@ -210,8 +210,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hüseyin Polat",
-    takim: "Goztepe",
+    ad: "H. Polatt",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Oğuz Demirci",
-    takim: "Goztepe",
+    ad: "O. Demirky",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 61,
@@ -232,8 +232,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Oğuz Aktaş",
-    takim: "Goztepe",
+    ad: "O. Aktash",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const GOZTEPE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ozan Özer",
-    takim: "Goztepe",
+    ad: "O. Ozere",
+    takim: "Izmir Göz",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 60,

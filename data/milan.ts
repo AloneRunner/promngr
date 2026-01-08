@@ -1,7 +1,7 @@
 
 export const MILANO_DEVILS_SQUAD = [
     {
-        ad: "Mike Magnan",
+        ad: "M. Magnanoh",
         takim: "Milano Devils",
         uyruk: "Fransa",
         mevki: "KL",
@@ -34,7 +34,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Chris Pulse",
+        ad: "C. Pulisecc",
         takim: "Milano Devils",
         uyruk: "Amerika Birleşik Devletleri",
         mevki: "SĞK",
@@ -68,7 +68,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Rafa Lion",
+        ad: "R. Leanno",
         takim: "Milano Devils",
         uyruk: "Portekiz",
         mevki: "SLK",
@@ -104,7 +104,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Adrien Rabbit",
+        ad: "A. Rabbio",
         takim: "Milano Devils",
         uyruk: "Fransa",
         mevki: "MOO",
@@ -136,7 +136,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Luka Modro",
+        ad: "L. Modrycc",
         takim: "Milano Devils",
         uyruk: "Hırvatistan",
         mevki: "MO",
@@ -171,7 +171,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Chris Nuku",
+        ad: "C. Nukunku",
         takim: "Milano Devils",
         uyruk: "Fransa",
         mevki: "MOO",
@@ -201,7 +201,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Fikayo Tomo",
+        ad: "F. Tomory",
         takim: "Milano Devils",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -232,7 +232,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Yusuf Fofa",
+        ad: "Y. Fofann",
         takim: "Milano Devils",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -260,7 +260,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Ruben Loft",
+        ad: "R. Loftus",
         takim: "Milano Devils",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -288,7 +288,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Pervis Estupa",
+        ad: "P. Estupinan",
         takim: "Milano Devils",
         uyruk: "Ekvador",
         mevki: "SLB",
@@ -314,7 +314,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Alex Salem",
+        ad: "A. Salemake",
         takim: "Milano Devils",
         uyruk: "Belçika",
         mevki: "SĞO",
@@ -340,7 +340,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Santi Gimenez",
+        ad: "S. Gimenne",
         takim: "Milano Devils",
         uyruk: "Meksika",
         mevki: "SNT",
@@ -366,7 +366,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Yasin Adli",
+        ad: "Y. Adly",
         takim: "Milano Devils",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -392,7 +392,7 @@ export const MILANO_DEVILS_SQUAD = [
         ]
     },
     {
-        ad: "Samuel Rich",
+        ad: "S. Riccy",
         takim: "Milano Devils",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -416,7 +416,7 @@ export const MILANO_DEVILS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Matteo Gaba",
+        ad: "M. Gabbiah",
         takim: "Milano Devils",
         uyruk: "İtalya",
         mevki: "STP",
@@ -441,92 +441,92 @@ export const MILANO_DEVILS_SQUAD = [
             "Hava Hakimi"
         ]
     },
-  {
-    ad: "Diego Rodriguez",
-    takim: "Milan",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 83,
-    yas: 20,
-    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Silva",
-    takim: "Milan",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 82,
-    yas: 21,
-    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Santos",
-    takim: "Milan",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 81,
-    yas: 22,
-    ana_ozellikler: { hiz: 71, sut: 56, pas: 73, dribbling: 71, defans: 81, fizik: 76 },
-    detaylar: { ayakta_mudahale: 81, top_kesme: 76, kafa_isabeti: 71, guc: 73 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Santos",
-    takim: "Milan",
-    uyruk: "Fransa",
-    mevki: "STP",
-    reyting: 80,
-    yas: 23,
-    ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 80, fizik: 75 },
-    detaylar: { ayakta_mudahale: 80, top_kesme: 75, kafa_isabeti: 70, guc: 72 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Santos",
-    takim: "Milan",
-    uyruk: "İtalya",
-    mevki: "SĞB",
-    reyting: 79,
-    yas: 24,
-    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
-    detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Costa",
-    takim: "Milan",
-    uyruk: "Portekiz",
-    mevki: "SĞB",
-    reyting: 78,
-    yas: 25,
-    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
-    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Martinez",
-    takim: "Milan",
-    uyruk: "Brezilya",
-    mevki: "SLB",
-    reyting: 77,
-    yas: 26,
-    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
-    detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Lopez",
-    takim: "Milan",
-    uyruk: "Arjantin",
-    mevki: "MO",
-    reyting: 76,
-    yas: 27,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
-    detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "D. Rodrigz",
+        takim: "Milano Devils",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 83,
+        yas: 20,
+        ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Sylva",
+        takim: "Milano Devils",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 82,
+        yas: 21,
+        ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Santoz",
+        takim: "Milano Devils",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 81,
+        yas: 22,
+        ana_ozellikler: { hiz: 71, sut: 56, pas: 73, dribbling: 71, defans: 81, fizik: 76 },
+        detaylar: { ayakta_mudahale: 81, top_kesme: 76, kafa_isabeti: 71, guc: 73 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Santoz",
+        takim: "Milano Devils",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 80,
+        yas: 23,
+        ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 80, fizik: 75 },
+        detaylar: { ayakta_mudahale: 80, top_kesme: 75, kafa_isabeti: 70, guc: 72 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Santoz",
+        takim: "Milano Devils",
+        uyruk: "İtalya",
+        mevki: "SĞB",
+        reyting: 79,
+        yas: 24,
+        ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+        detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Costas",
+        takim: "Milano Devils",
+        uyruk: "Portekiz",
+        mevki: "SĞB",
+        reyting: 78,
+        yas: 25,
+        ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+        detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Milano Devils",
+        uyruk: "Brezilya",
+        mevki: "SLB",
+        reyting: 77,
+        yas: 26,
+        ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+        detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Lopeze",
+        takim: "Milano Devils",
+        uyruk: "Arjantin",
+        mevki: "MO",
+        reyting: 76,
+        yas: 27,
+        ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+        detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
+        oyun_tarzlari: []
+    }
 ];

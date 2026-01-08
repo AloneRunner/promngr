@@ -1,19 +1,19 @@
 export const STRASBOURG_FC_SQUAD = [
-    {
-        ad: "Ben Chilwell",
-        takim: "Strasbourg FC",
-        uyruk: "İngiltere",
-        mevki: "SLB",
-        reyting: 77,
-        yas: 28,
-        ana_ozellikler: { hiz: 70, sut: 60, pas: 77, dribbling: 75, defans: 76, fizik: 68 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "B. Chilwelli",
+    takim: "Alsace Blue",
+    uyruk: "İngiltere",
+    mevki: "SLB",
+    reyting: 77,
+    yas: 28,
+    ana_ozellikler: { hiz: 70, sut: 60, pas: 77, dribbling: 75, defans: 76, fizik: 68 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
-    takim: "Strasbourg Fc",
+    ad: "C. Lopeze",
+    takim: "Alsace Blue",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Perez",
-    takim: "Strasbourg Fc",
+    ad: "D. Pereze",
+    takim: "Alsace Blue",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Martinez",
-    takim: "Strasbourg Fc",
+    ad: "A. Martines",
+    takim: "Alsace Blue",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Silva",
-    takim: "Strasbourg Fc",
+    ad: "L. Sylva",
+    takim: "Alsace Blue",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Strasbourg Fc",
+    ad: "C. Martines",
+    takim: "Alsace Blue",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Rodriguez",
-    takim: "Strasbourg Fc",
+    ad: "D. Rodrigz",
+    takim: "Alsace Blue",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Strasbourg Fc",
+    ad: "D. Martines",
+    takim: "Alsace Blue",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -89,8 +89,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Strasbourg Fc",
+    ad: "P. Martines",
+    takim: "Alsace Blue",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Strasbourg Fc",
+    ad: "D. Rodrigz",
+    takim: "Alsace Blue",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Strasbourg Fc",
+    ad: "D. Lopeze",
+    takim: "Alsace Blue",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
-    takim: "Strasbourg Fc",
+    ad: "C. Sylva",
+    takim: "Alsace Blue",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Perez",
-    takim: "Strasbourg Fc",
+    ad: "M. Pereze",
+    takim: "Alsace Blue",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Strasbourg Fc",
+    ad: "J. Rodrigz",
+    takim: "Alsace Blue",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Strasbourg Fc",
+    ad: "D. Martines",
+    takim: "Alsace Blue",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
-    takim: "Strasbourg Fc",
+    ad: "J. Pereze",
+    takim: "Alsace Blue",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Strasbourg Fc",
+    ad: "J. Lopeze",
+    takim: "Alsace Blue",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Perez",
-    takim: "Strasbourg Fc",
+    ad: "P. Pereze",
+    takim: "Alsace Blue",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Strasbourg Fc",
+    ad: "P. Martines",
+    takim: "Alsace Blue",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Silva",
-    takim: "Strasbourg Fc",
+    ad: "L. Sylva",
+    takim: "Alsace Blue",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Strasbourg Fc",
+    ad: "L. Martines",
+    takim: "Alsace Blue",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Strasbourg Fc",
+    ad: "C. Rodrigz",
+    takim: "Alsace Blue",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const STRASBOURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Strasbourg Fc",
+    ad: "C. Martines",
+    takim: "Alsace Blue",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

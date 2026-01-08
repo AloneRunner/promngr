@@ -22,14 +22,14 @@ import {
     TeamStaff,
     TransferOffer
 } from '../types';
-import { NAMES_DB, LEAGUE_PRESETS, REAL_PLAYERS, TICKET_PRICE, TEAM_TACTICAL_PROFILES } from '../constants';
+import { NAMES_DB, LEAGUE_PRESETS, REAL_PLAYERS, TICKET_PRICE, TEAM_TACTICAL_PROFILES, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES, DERBY_RIVALS } from '../constants';
 import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating } from './MatchEngine';
 
 // Economic Power Scaling relative to Turkish Super Lig (Base 1.0)
-// BALANCED: Reduced gap between leagues for fairer gameplay
-const LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
+// These are BASE values - can increase with European success!
+const BASE_LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
     'tr': 1.0,
-    'en': 4.0,  // Premier League (was 8.0, too dominant)
+    'en': 3.5,  // Premier League (reduced from 4.0 for balance)
     'es': 2.5,  // La Liga
     'de': 2.2,  // Bundesliga
     'it': 2.0,  // Serie A
@@ -37,10 +37,91 @@ const LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
     'default': 1.0
 };
 
+// Dynamic league multiplier storage (increases with European success)
+// Format: { leagueId: bonusMultiplier } - starts at 0, can grow up to +1.0
+let LEAGUE_EUROPEAN_BONUS: Record<string, number> = {
+    'tr': 0,
+    'en': 0,
+    'es': 0,
+    'de': 0,
+    'it': 0,
+    'fr': 0
+};
+
+// Get current league multiplier (base + European bonus)
+const getLeagueMultiplier = (leagueId: string): number => {
+    const base = BASE_LEAGUE_ECON_MULTIPLIERS[leagueId] || BASE_LEAGUE_ECON_MULTIPLIERS['default'];
+    const bonus = LEAGUE_EUROPEAN_BONUS[leagueId] || 0;
+    return base + bonus;
+};
+
+// Award European success bonus to league
+export const awardEuropeanBonus = (leagueId: string, achievement: 'group_win' | 'knockout' | 'semifinal' | 'final' | 'winner') => {
+    const bonusAmounts: Record<string, number> = {
+        'group_win': 0.02,    // +0.02 for group stage win
+        'knockout': 0.05,     // +0.05 for reaching knockouts
+        'semifinal': 0.10,    // +0.10 for reaching semifinals
+        'final': 0.15,        // +0.15 for reaching final
+        'winner': 0.25        // +0.25 for winning!
+    };
+    const bonus = bonusAmounts[achievement] || 0;
+    LEAGUE_EUROPEAN_BONUS[leagueId] = Math.min(1.0, (LEAGUE_EUROPEAN_BONUS[leagueId] || 0) + bonus);
+};
+
+// Get league bonus for display
+export const getLeagueBonus = (leagueId: string): number => LEAGUE_EUROPEAN_BONUS[leagueId] || 0;
+
 const uuid = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+// Takım oyuncularına benzersiz forma numarası ata
+const assignTeamJerseyNumbers = (teamPlayers: Player[]) => {
+    const usedNumbers = new Set<number>();
+
+    // Pozisyonlara göre sırala: GK, DEF, MID, FWD - ve overall'a göre
+    const sorted = [...teamPlayers].sort((a, b) => {
+        const posOrder: Record<string, number> = { 'GK': 0, 'DEF': 1, 'MID': 2, 'FWD': 3 };
+        const orderDiff = (posOrder[a.position] || 4) - (posOrder[b.position] || 4);
+        if (orderDiff !== 0) return orderDiff;
+        return b.overall - a.overall; // En iyi oyuncu önce
+    });
+
+    // Popüler numaralar pozisyona göre
+    const preferredNumbers: Record<string, number[]> = {
+        'GK': [1, 12, 13, 25],
+        'DEF': [2, 3, 4, 5, 6, 15, 23, 24],
+        'MID': [6, 7, 8, 10, 14, 16, 17, 18, 20, 22],
+        'FWD': [7, 9, 10, 11, 19, 21]
+    };
+
+    sorted.forEach(player => {
+        // Önce tercih edilen numaralardan dene
+        const preferred = preferredNumbers[player.position] || [];
+        let assigned = false;
+
+        for (const num of preferred) {
+            if (!usedNumbers.has(num)) {
+                player.jerseyNumber = num;
+                usedNumbers.add(num);
+                assigned = true;
+                break;
+            }
+        }
+
+        // Tercih edilen numara yoksa, boş olan ilk numarayı bul
+        if (!assigned) {
+            for (let num = 2; num <= 99; num++) {
+                if (!usedNumbers.has(num)) {
+                    player.jerseyNumber = num;
+                    usedNumbers.add(num);
+                    break;
+                }
+            }
+        }
+    });
+};
 
 const getName = (nationality: string) => {
     // @ts-ignore
@@ -238,9 +319,13 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
         stats: { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0, averageRating: 0 },
         overall: calculatedOverall,
         potential,
-        value: (Math.pow(1.15, calculatedOverall - 40) * 12500) * (1 + (potential - calculatedOverall) / 15),
-        wage: (Math.pow(1.15, calculatedOverall - 40) * 12500) * 0.02,
-        salary: ((Math.pow(1.15, calculatedOverall - 40) * 12500) * 0.02) * 52, // Yearly salary derived from weekly wage
+        // VALUE: Using 1.12 instead of 1.15 for smoother progression
+        // This means value doubles every ~6 OVR instead of every ~5 OVR
+        value: (Math.pow(1.12, calculatedOverall - 40) * 15000) * (1 + (potential - calculatedOverall) / 15),
+        // WAGE: 0.008 instead of 0.02 - yearly salary = ~40% of transfer value (realistic!)
+        // Real world: yearly salary is typically 20-40% of transfer fee
+        wage: (Math.pow(1.12, calculatedOverall - 40) * 15000) * 0.008,
+        salary: ((Math.pow(1.12, calculatedOverall - 40) * 15000) * 0.008) * 52, // Yearly salary
         contractYears: realData ? 3 : getRandomInt(1, 5),
         morale: 80,
         condition: 100,
@@ -410,12 +495,15 @@ export const autoPickLineup = (
 };
 
 export const generateSponsors = (): Sponsor[] => {
+    // Realistic sponsor values (weekly income in EUR)
+    // Turkey big clubs: ~€100-200k/week from main sponsor
+    // England big clubs: ~€500k-1M/week from main sponsor
     return [
-        { id: uuid(), name: "FlyEmirates", description: "Global Airline", weeklyIncome: 500000, winBonus: 200000, duration: 1 },
-        { id: uuid(), name: "QatarAirways", description: "Premium Airline", weeklyIncome: 450000, winBonus: 250000, duration: 1 },
-        { id: uuid(), name: "Spotify", description: "Music Streaming", weeklyIncome: 400000, winBonus: 100000, duration: 1 },
-        { id: uuid(), name: "TeamViewer", description: "Tech Solutions", weeklyIncome: 300000, winBonus: 50000, duration: 1 },
-        { id: uuid(), name: "RedBull", description: "Energy Drink", weeklyIncome: 350000, winBonus: 150000, duration: 1 },
+        { id: uuid(), name: "FlyEmirates", description: "Global Airline - Premium", weeklyIncome: 180000, winBonus: 50000, duration: 1 },
+        { id: uuid(), name: "QatarAirways", description: "Premium Airline", weeklyIncome: 160000, winBonus: 60000, duration: 1 },
+        { id: uuid(), name: "Spotify", description: "Music Streaming", weeklyIncome: 140000, winBonus: 30000, duration: 1 },
+        { id: uuid(), name: "TeamViewer", description: "Tech Solutions", weeklyIncome: 100000, winBonus: 20000, duration: 1 },
+        { id: uuid(), name: "RedBull", description: "Energy Drink", weeklyIncome: 120000, winBonus: 40000, duration: 1 },
     ];
 };
 
@@ -545,11 +633,14 @@ export const generateWorld = (leagueId: string): GameState => {
             const coachType = getRandomItem(Object.values(CoachArchetype));
             const baseStaffLevel = Math.max(1, Math.floor(rt.reputation / 2500)); // LOWERED: was /1500, now /2500
 
+            // Use realistic stadium capacity from preset, or calculate based on reputation
+            const baseStadiumCapacity = (rt as any).stadiumCapacity || Math.floor(rt.reputation * 4); // Fallback to smaller calculation
+
             const team: Team = {
                 id: teamId, name: rt.name, city: rt.city, primaryColor: rt.primaryColor, secondaryColor: rt.secondaryColor,
                 reputation: rt.reputation, budget: rt.budget,
                 leagueId: preset.id, // Assign correct league ID
-                facilities: { stadiumCapacity: Math.floor(rt.reputation * 50), stadiumLevel: Math.floor(rt.reputation / 100), trainingLevel: Math.floor(rt.reputation / 150), academyLevel: Math.floor(rt.reputation / 150) },
+                facilities: { stadiumCapacity: baseStadiumCapacity, stadiumLevel: Math.floor(rt.reputation / 100), trainingLevel: Math.floor(rt.reputation / 150), academyLevel: Math.floor(rt.reputation / 150) },
                 staff: { headCoachLevel: baseStaffLevel, physioLevel: baseStaffLevel, scoutLevel: baseStaffLevel },
                 objectives: [],
                 tactic: specificTactic,
@@ -563,21 +654,38 @@ export const generateWorld = (leagueId: string): GameState => {
             // Objectives are only needed for the user's team, but we can generate basic ones for all
             team.objectives = generateObjectives(rt.reputation);
 
-            // Facility Balancing based on Reputation - MAX 25 LEVELS
-            // Lowered starting levels for progression feeling
-            const tier = team.reputation > 85 ? 3 : team.reputation > 75 ? 2 : 1;
-            const baseLevel = tier === 3 ? 5 : tier === 2 ? 3 : 1; // LOWERED: was 7/5/2, now 5/3/1
+            // =====================================================
+            // STADIUM LEVEL SYSTEM - Fair for all teams worldwide
+            // Level 1 = 5,000 seats, Level 25 = 150,000 seats
+            // Each level = +6,000 seats
+            // Starting level calculated from real stadium capacity
+            // =====================================================
+            const MIN_STADIUM = 5000;
+            const MAX_STADIUM = 150000;
+            const CAPACITY_PER_LEVEL = (MAX_STADIUM - MIN_STADIUM) / 24; // ~6,042
+            
+            // Calculate starting stadium level based on real capacity
+            const realCapacity = team.facilities.stadiumCapacity;
+            const calculatedLevel = Math.round((realCapacity - MIN_STADIUM) / CAPACITY_PER_LEVEL) + 1;
+            const stadiumStartLevel = Math.max(1, Math.min(25, calculatedLevel));
+
+            // Training & Academy based on reputation tier
+            const tier = team.reputation > 8500 ? 3 : team.reputation > 7500 ? 2 : 1;
+            const trainingBaseLevel = tier === 3 ? 5 : tier === 2 ? 3 : 1;
 
             team.facilities = {
-                stadiumCapacity: team.facilities.stadiumCapacity,
-                stadiumLevel: Math.min(25, baseLevel + getRandomInt(0, 2)),
-                trainingLevel: Math.min(25, baseLevel + getRandomInt(0, 2)),
-                academyLevel: Math.min(25, baseLevel + getRandomInt(0, 2))
+                stadiumCapacity: realCapacity, // Keep original for reference
+                stadiumLevel: stadiumStartLevel, // Calculated from real capacity
+                trainingLevel: Math.min(25, trainingBaseLevel + getRandomInt(0, 2)),
+                academyLevel: Math.min(25, trainingBaseLevel + getRandomInt(0, 2))
             };
 
             // Auto pick lineup adhering to the specific formation
             const { formation } = autoPickLineup(teamPlayers, specificTactic.formation, coachType as CoachArchetype);
             team.tactic.formation = formation;
+
+            // Forma numaralarını ata
+            assignTeamJerseyNumbers(teamPlayers);
 
             leagueTeams.push(team);
             teams.push(team);
@@ -592,6 +700,8 @@ export const generateWorld = (leagueId: string): GameState => {
 
     for (let i = 0; i < 50; i++) { // Increased free agents
         const p = generatePlayer('FREE_AGENT', getRandomItem(Object.values(Position)), 'World', [18, 35], [60, 85]);
+        // Free agent'lara rastgele numara ata (takıma katılınca değişecek)
+        p.jerseyNumber = getRandomInt(2, 50);
         players.push(p);
     }
 
@@ -627,7 +737,8 @@ export const simulateTick = (match: Match, homeTeam: Team, awayTeam: Team, homeP
         pitchZone: result.liveData.pitchZone,
         actionText: result.liveData.lastActionText,
         simulation: result.liveData.simulation,
-        stats: result.stats
+        stats: result.stats,
+        additionalEvents: result.additionalEvents
     };
 }
 
@@ -653,7 +764,7 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
     // Sonuçlar SADECE takımın gerçek gücüne göre belirlenir:
     // - Real Madrid (82-91 OVR) > Karagümrük (54-74 OVR) = RM favorit
     // - Galatasaray (70-82 OVR) vs Fenerbahçe (70-82 OVR) = Dengeli maç
-    
+
     // 1. TACTICAL ADVANTAGE (Rock Paper Scissors)
     const tacticsRockPaperScissors: Record<string, string> = {
         'Possession': 'HighPress',
@@ -666,10 +777,10 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
     // Reputation (itibar) yüksek takımların daha coşkulu taraftarları var
     const homeReputation = homeTeam.reputation || 5000;
     const fanBoost = Math.min(0.06, (homeReputation / 100000)); // Max +6% bonus (10000 rep = +6%)
-    
+
     // Temel ev sahibi avantajı + taraftar desteği
     let homeAdvantage = 1.08 + fanBoost; // 1.08 + 0.00-0.06 = 1.08-1.14
-    
+
     // === ŞANS FAKTÖRÜ ===
     // Her maçta %5-15 arası rastgele varyasyon (underdog upset olabilir!)
     const luckFactor = 0.85 + (Math.random() * 0.30); // 0.85 - 1.15 arası
@@ -688,13 +799,13 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
             const sorted = [...players].sort((a, b) => b.overall - a.overall);
             starters.push(...sorted.slice(0, 11));
         }
-        
+
         let attack = 0, defense = 0, overall = 0;
         starters.forEach(p => {
             const pos = mapTurkishPosition(p.position);
             const rating = calculateEffectiveRating(p, pos);
             overall += rating;
-            
+
             if (pos === Position.FWD) {
                 attack += rating * 1.2;
                 defense += rating * 0.2;
@@ -708,7 +819,7 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
                 defense += rating * 1.5;
             }
         });
-        
+
         return { attack, defense, overall: overall / Math.max(1, starters.length) };
     };
 
@@ -750,14 +861,14 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
     // Calculate power ratio - this heavily favors stronger teams
     const powerRatio = homePower.overall / Math.max(40, awayPower.overall);
     const awayRatio = awayPower.overall / Math.max(40, homePower.overall);
-    
+
     for (let min = Math.floor(startMinute / 10) * 10; min < 90; min += 10) {
         if (min < startMinute) continue;
 
         // Less random momentum - stronger teams are more consistent
         const homeConsistency = Math.min(1.0, homePower.overall / 80); // 80+ OVR = max consistency
         const awayConsistency = Math.min(1.0, awayPower.overall / 80);
-        
+
         const homeMomentum = 0.9 + (Math.random() * 0.2 * (1 - homeConsistency)) + (homeConsistency * 0.1);
         const awayMomentum = 0.9 + (Math.random() * 0.2 * (1 - awayConsistency)) + (awayConsistency * 0.1);
 
@@ -887,7 +998,7 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             const updateReputation = (team: Team, opponentRep: number, won: boolean, drew: boolean) => {
                 const repDiff = opponentRep - team.reputation;
                 let change = 0;
-                
+
                 if (won) {
                     // Win against stronger opponent = BIG boost (increased 2x)
                     if (repDiff > 500) change = Math.floor(repDiff / 50) + 10; // +20-30 for beating much stronger
@@ -902,10 +1013,10 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     else if (repDiff < 0) change = -5; // -5 for losing to weaker (was -2)
                     else change = -2; // -2 for losing to stronger (was -1)
                 }
-                
+
                 team.reputation = Math.max(1000, Math.min(10000, team.reputation + change));
             };
-            
+
             updateReputation(home, away.reputation, hScore > aScore, hScore === aScore);
             updateReputation(away, home.reputation, aScore > hScore, hScore === aScore);
         }
@@ -932,13 +1043,13 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     const intensity = userTeam?.trainingIntensity || 'NORMAL';
     const physioLevel = userTeam?.staff?.physioLevel || 1;
     const headCoachLevel = userTeam?.staff?.headCoachLevel || 1;
-    
+
     // Enhanced physio effect on recovery
     const physioBonus = physioLevel * 4; // Increased from 3 to 4 per level
     let recoveryBase = 30 + physioBonus;
     if (intensity === 'LIGHT') recoveryBase = 45 + physioBonus;
     if (intensity === 'HEAVY') recoveryBase = 15 + physioBonus;
-    
+
     // Injury risk calculation based on intensity and physio
     const baseInjuryRisk = intensity === 'HEAVY' ? 0.08 : intensity === 'NORMAL' ? 0.02 : 0.005;
     const injuryRiskReduction = physioLevel * 0.008; // Each physio level reduces injury risk by 0.8%
@@ -961,12 +1072,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         let rec = isUserPlayer ? recoveryBase : 35; // Default recovery for AI
         let newMorale = p.morale;
         let newWeeksInjured = Math.max(0, p.weeksInjured - 1);
-        
+
         // INJURY SYSTEM for user players during training
         if (isUserPlayer && p.weeksInjured === 0) {
             const injuryProneness = p.hiddenAttributes?.injuryProneness || 10;
             const personalRisk = finalInjuryRisk * (1 + (injuryProneness - 10) * 0.05);
-            
+
             if (Math.random() < personalRisk) {
                 const severityRoll = Math.random();
                 if (severityRoll < 0.6) {
@@ -976,10 +1087,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 } else {
                     newWeeksInjured = 6 + Math.floor(Math.random() * 6); // 6-11 weeks (severe)
                 }
-                
+
                 // Physio reduces injury duration
                 newWeeksInjured = Math.max(1, newWeeksInjured - Math.floor(physioLevel / 3));
-                
+
                 newMessages.push({
                     id: uuid(),
                     week: gameState.currentWeek,
@@ -1018,7 +1129,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         // DEVELOPMENT LOGIC (Global) with Training Focus
         let newOverall = p.overall;
         let newAttributes = { ...p.attributes };
-        
+
         // Young players develop based on team's training level or general potential curve
         if (p.age < 28 && p.overall < p.potential) {
             let developmentChance = 0.03; // Base chance
@@ -1028,7 +1139,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 const headCoachLevel = userTeam.staff?.headCoachLevel || 1;
                 const trainingLevel = userTeam.facilities?.trainingLevel || 1;
                 developmentChance = 0.04 + (headCoachLevel * 0.015) + (trainingLevel * 0.01);
-                
+
                 // Training Focus affects which attributes improve
                 const focus = userTeam.trainingFocus || 'BALANCED';
                 if (focus === 'ATTACK') {
@@ -1047,7 +1158,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
             if (Math.random() < developmentChance) {
                 newOverall = Math.min(p.potential, p.overall + 1);
-                
+
                 // Apply focused attribute boost for user players
                 let boostedAttr = '';
                 if (isUserPlayer && trainingBoost.length > 0 && Math.random() < 0.5) {
@@ -1061,7 +1172,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     };
                     boostedAttr = attrNames[attrToBoost] || attrToBoost;
                 }
-                
+
                 if (isUserPlayer && newOverall > p.overall) {
                     const focusLabel = userTeam?.trainingFocus !== 'BALANCED' ? ` (${userTeam?.trainingFocus})` : '';
                     if (boostedAttr) {
@@ -1084,7 +1195,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             ...p,
             attributes: newAttributes,
             overall: newOverall,
-            value: (Math.pow(1.15, newOverall - 40) * 12500) * (1 + (p.potential - newOverall) / 15), // Update value exponential
+            // Updated value formula with 1.12 multiplier
+            value: (Math.pow(1.12, newOverall - 40) * 15000) * (1 + (p.potential - newOverall) / 15),
             condition: Math.min(100, p.condition + rec),
             weeksInjured: newWeeksInjured,
             morale: newMorale
@@ -1099,15 +1211,16 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
         userTeam.wages = Math.round(weeklyWages); // Update team stat
 
-        // League Multiplier
-        const leagueMult = LEAGUE_ECON_MULTIPLIERS[userTeam.leagueId || 'tr'] || LEAGUE_ECON_MULTIPLIERS['default'];
+        // League Multiplier (includes European success bonus!)
+        const leagueMult = getLeagueMultiplier(userTeam.leagueId || 'tr');
 
         // BALANCED: Facility costs scale with level exponentially (higher levels = more expensive)
-        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.5) * 3000;
-        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.5) * 2500;
-        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.5) * 2000;
+        // Using 1.8 exponent instead of 1.5 for more meaningful end-game costs
+        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.8) * 4000;
+        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.8) * 3500;
+        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.8) * 3000;
         const maintenance = (stadiumMaint + trainingMaint + academyMaint) * (0.8 + (leagueMult * 0.2));
-        
+
         // Staff costs also scale with level
         const staffCosts = (
             Math.pow(userTeam.staff.headCoachLevel, 1.3) * 5000 +
@@ -1115,25 +1228,88 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             Math.pow(userTeam.staff.physioLevel, 1.3) * 4000
         ) * (0.8 + (leagueMult * 0.2));
 
-        const isHomeWeek = gameState.matches.some(m => m.week === gameState.currentWeek && m.homeTeamId === userTeam.id);
+        // Find current week's match to check if it's a derby
+        const currentMatch = gameState.matches.find(m => 
+            m.week === gameState.currentWeek && 
+            (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id)
+        );
+        const isHomeWeek = currentMatch?.homeTeamId === userTeam.id;
+        
+        // Check if this is a derby match (100% attendance!)
+        let isDerby = false;
+        if (currentMatch) {
+            const opponentId = isHomeWeek ? currentMatch.awayTeamId : currentMatch.homeTeamId;
+            const opponent = gameState.teams.find(t => t.id === opponentId);
+            if (opponent) {
+                const rivals = DERBY_RIVALS[userTeam.name] || [];
+                isDerby = rivals.includes(opponent.name);
+            }
+        }
 
-        // Income Scaling - BALANCED for profitability
-        const leagueTicketPrice = TICKET_PRICE * (0.6 + (leagueMult * 0.4));
-        const ticketIncome = isHomeWeek ? (userTeam.facilities.stadiumCapacity * leagueTicketPrice * (0.65 + Math.random() * 0.35)) : 0;
+        // =====================================================
+        // REALISTIC INCOME SYSTEM - Based on real football data
+        // =====================================================
 
-        // Merchandise scales with reputation and star players
-        const starPlayerBonus = teamPlayers.filter(p => p.overall > 85).length * 30000;
-        const merchandise = ((userTeam.reputation * 12) + starPlayerBonus) * (0.7 + (leagueMult * 0.3));
+        // Get league-specific ticket price (Turkey €18, England €55, etc.)
+        const leagueTicketPrice = LEAGUE_TICKET_PRICES[userTeam.leagueId] || LEAGUE_TICKET_PRICES['default'];
+        
+        // Get league-specific attendance rates
+        const attendanceRates = LEAGUE_ATTENDANCE_RATES[userTeam.leagueId] || LEAGUE_ATTENDANCE_RATES['default'];
+        
+        // Calculate attendance based on reputation (higher rep = higher attendance within league limits)
+        const repFactor = Math.min(1, (userTeam.reputation - 5000) / 5000); // 0-1 scale
+        const baseAttendance = attendanceRates.min + (attendanceRates.max - attendanceRates.min) * repFactor;
+        const randomVariance = (Math.random() * 0.10) - 0.05; // ±5% variance
+        
+        // DERBY BONUS: 100% attendance for derbies!
+        const attendance = isDerby 
+            ? 1.0 // Full house for derbies
+            : Math.max(attendanceRates.min, Math.min(attendanceRates.max, baseAttendance + randomVariance));
+        
+        // =====================================================
+        // STADIUM CAPACITY FROM LEVEL - Same formula worldwide
+        // Level 1 = 5,000 | Level 25 = 150,000
+        // Each level = +6,000 seats
+        // =====================================================
+        const STADIUM_MIN = 5000;
+        const STADIUM_CAPACITY_PER_LEVEL = 6000; // ~6,042 rounded
+        const effectiveCapacity = STADIUM_MIN + (userTeam.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
+        
+        // Ticket income: Only when home, with realistic prices and attendance
+        const ticketIncome = isHomeWeek 
+            ? Math.floor(effectiveCapacity * leagueTicketPrice * attendance)
+            : 0;
 
-        // TV Rights - main income source, scales with league and position
+        // Merchandise: Scaled down significantly, based on reputation
+        const starPlayerBonus = teamPlayers.filter(p => p.overall > 85).length * 5000;
+        const merchandise = Math.floor(((userTeam.reputation * 2) + starPlayerBonus) * (0.7 + (leagueMult * 0.3)));
+
+        // TV Rights - REALISTIC: Based on real data
+        // Turkey: ~€200k/week for big clubs, England: ~€2M/week for big clubs
         const leaguePosition = gameState.teams
             .filter(t => t.leagueId === userTeam.leagueId)
             .sort((a, b) => b.stats.points - a.stats.points)
             .findIndex(t => t.id === userTeam.id) + 1;
-        const positionBonus = Math.max(0, (10 - leaguePosition) * 20000); // Top teams get more TV money
-        const tvRights = (300000 * leagueMult) + (userTeam.reputation * 8) + positionBonus;
+        
+        // Base TV rights by league (weekly)
+        const baseTvRights: Record<string, number> = {
+            'tr': 180000,   // Turkey: €180k base (increased)
+            'en': 1500000,  // England: €1.5M base
+            'es': 800000,   // Spain: €800k base
+            'it': 600000,   // Italy: €600k base
+            'de': 700000,   // Germany: €700k base
+            'fr': 500000,   // France: €500k base
+            'default': 200000
+        };
+        const tvBase = baseTvRights[userTeam.leagueId] || baseTvRights['default'];
+        
+        // Position bonus: Top teams get more TV money (merit-based distribution)
+        const positionMultiplier = Math.max(0.5, 1.5 - ((leaguePosition - 1) * 0.05)); // 1.5x for 1st, down to 0.5x for last
+        const repMultiplier = 0.8 + ((userTeam.reputation - 5000) / 10000) * 0.4; // 0.8x to 1.2x based on rep
+        const tvRights = Math.floor(tvBase * positionMultiplier * repMultiplier);
 
-        const sponsorIncome = userTeam.sponsor ? userTeam.sponsor.weeklyIncome : (120000 * Math.sqrt(leagueMult));
+        // Sponsor income (or default smaller amount if no sponsor)
+        const sponsorIncome = userTeam.sponsor ? userTeam.sponsor.weeklyIncome : Math.floor(50000 * Math.sqrt(leagueMult));
 
         const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
         const weeklyExpenses = weeklyWages + maintenance + staffCosts;
@@ -1427,8 +1603,8 @@ export const processSeasonEnd = (gameState: GameState) => {
     // 2. Economy: Prize Money Distribution (BALANCED - reduced from previous)
     // League prize money scales with league economy multiplier
     const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
-    const leagueMult = LEAGUE_ECON_MULTIPLIERS[userTeam?.leagueId || 'tr'] || 1.0;
-    
+    const leagueMult = getLeagueMultiplier(userTeam?.leagueId || 'tr');
+
     // Base prizes for Turkish league, scaled for others
     const basePrizes = [15000000, 8000000, 5000000, 3000000]; // Top 4 (was 50M, 25M, 15M, 10M)
     const prizeDistribution = basePrizes.map(p => Math.floor(p * leagueMult));

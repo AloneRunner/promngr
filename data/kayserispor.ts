@@ -1,7 +1,7 @@
 
 export const KAYSERISPOR_SQUAD = [
   {
-    ad: "João Mendes",
+    ad: "J. Mendess",
     takim: "Kayseri Stars",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -12,7 +12,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Mané",
+    ad: "C. Maney",
     takim: "Kayseri Stars",
     uyruk: "Gine-Bissau",
     mevki: "SLO",
@@ -23,7 +23,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Stefano Denswil",
+    ad: "S. Denswill",
     takim: "Kayseri Stars",
     uyruk: "Surinam",
     mevki: "STP",
@@ -34,7 +34,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Kayarak Müdahale", "Uzun Taç"]
   },
   {
-    ad: "László Bénes",
+    ad: "L. Beness",
     takim: "Kayseri Stars",
     uyruk: "Slovakya",
     mevki: "MO",
@@ -45,7 +45,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Ezber Bozan", "İnce Pas", "Keskin Pas", "Kuvvetli Şut"]
   },
   {
-    ad: "Dorukhan Toköz",
+    ad: "D. Tokozz",
     takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -56,7 +56,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Miguel Cardoso",
+    ad: "M. Cardozzo",
     takim: "Kayseri Stars",
     uyruk: "Portekiz",
     mevki: "SLO",
@@ -67,7 +67,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Hava Hakimi", "Kesme Pas", "Kuvvetli Şut"]
   },
   {
-    ad: "Bilal Bayazıt",
+    ad: "B. Bayazitt",
     takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -78,7 +78,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Uzağa Erişme", "Uzun Topla Pas"]
   },
   {
-    ad: "Indrit Tuci",
+    ad: "I. Tucci",
     takim: "Kayseri Stars",
     uyruk: "Arnavutluk",
     mevki: "SNT",
@@ -89,7 +89,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Majid Hosseini",
+    ad: "M. Hosseiny",
     takim: "Kayseri Stars",
     uyruk: "İran",
     mevki: "STP",
@@ -100,7 +100,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Engel", "Uzun Topla Pas"]
   },
   {
-    ad: "Ali Karimi",
+    ad: "A. Karimmy",
     takim: "Kayseri Stars",
     uyruk: "İran",
     mevki: "MDO",
@@ -111,7 +111,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Sezgili"]
   },
   {
-    ad: "Aaron Opoku",
+    ad: "A. Opokku",
     takim: "Kayseri Stars",
     uyruk: "Almanya",
     mevki: "SĞO",
@@ -122,7 +122,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Seri", "Top Cambazı"]
   },
   {
-    ad: "Gideon Jung",
+    ad: "G. Junng",
     takim: "Kayseri Stars",
     uyruk: "Almanya",
     mevki: "STP",
@@ -133,7 +133,7 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale"]
   },
   {
-    ad: "Ramazan Civelek",
+    ad: "R. Civelekk",
     takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -144,8 +144,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Oğuz Bulut",
-    takim: "Kayserispor",
+    ad: "O. Bulutt",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 69,
@@ -155,8 +155,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Kaya",
-    takim: "Kayserispor",
+    ad: "B. Kayya",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 67,
@@ -166,8 +166,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Çağlar Kaya",
-    takim: "Kayserispor",
+    ad: "C. Kayya",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 66,
@@ -177,8 +177,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hüseyin Kurt",
-    takim: "Kayserispor",
+    ad: "H. Kurtt",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 65,
@@ -188,8 +188,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Deniz Demir",
-    takim: "Kayserispor",
+    ad: "D. Demirr",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 64,
@@ -199,8 +199,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Cem Karataş",
-    takim: "Kayserispor",
+    ad: "C. Karatash",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 63,
@@ -210,8 +210,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ali Özgür",
-    takim: "Kayserispor",
+    ad: "A. Ozgurr",
+    takim: "Kayseri Stars",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 62,
@@ -221,8 +221,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
-    takim: "Kayserispor",
+    ad: "C. Sylva",
+    takim: "Kayseri Stars",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 61,
@@ -232,8 +232,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Lopez",
-    takim: "Kayserispor",
+    ad: "A. Lopeze",
+    takim: "Kayseri Stars",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 60,
@@ -243,8 +243,8 @@ export const KAYSERISPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Kayserispor",
+    ad: "P. Lopeze",
+    takim: "Kayseri Stars",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 59,

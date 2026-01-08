@@ -1,19 +1,19 @@
 export const STUTTGART_FC_SQUAD = [
-    {
-        ad: "Silas",
-        takim: "Stuttgart FC",
-        uyruk: "Kongo",
-        mevki: "SĞO",
-        reyting: 74,
-        yas: 26,
-        ana_ozellikler: { hiz: 90, sut: 69, pas: 61, dribbling: 79, defans: 52, fizik: 71 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "Silasso",
+    takim: "Stuttgart White-Reds",
+    uyruk: "Kongo",
+    mevki: "SĞO",
+    reyting: 74,
+    yas: 26,
+    ana_ozellikler: { hiz: 90, sut: 69, pas: 61, dribbling: 79, defans: 52, fizik: 71 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Martinez",
-    takim: "Stuttgart Fc",
+    ad: "C. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Stuttgart Fc",
+    ad: "D. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Silva",
-    takim: "Stuttgart Fc",
+    ad: "A. Sylva",
+    takim: "Stuttgart White-Reds",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Stuttgart Fc",
+    ad: "L. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Stuttgart Fc",
+    ad: "C. Lopeze",
+    takim: "Stuttgart White-Reds",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Martinez",
-    takim: "Stuttgart Fc",
+    ad: "D. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Stuttgart Fc",
+    ad: "D. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -89,8 +89,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Stuttgart Fc",
+    ad: "P. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Stuttgart Fc",
+    ad: "D. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Stuttgart Fc",
+    ad: "D. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Stuttgart Fc",
+    ad: "C. Rodrigz",
+    takim: "Stuttgart White-Reds",
     uyruk: "İtalya",
     mevki: "SLB",
     reyting: 61,
@@ -133,8 +133,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Lopez",
-    takim: "Stuttgart Fc",
+    ad: "M. Lopeze",
+    takim: "Stuttgart White-Reds",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Stuttgart Fc",
+    ad: "J. Costas",
+    takim: "Stuttgart White-Reds",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Stuttgart Fc",
+    ad: "J. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
-    takim: "Stuttgart Fc",
+    ad: "J. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
-    takim: "Stuttgart Fc",
+    ad: "J. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Stuttgart Fc",
+    ad: "P. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "İtalya",
     mevki: "MO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Stuttgart Fc",
+    ad: "P. Sylva",
+    takim: "Stuttgart White-Reds",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Stuttgart Fc",
+    ad: "P. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Brezilya",
     mevki: "MOO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
-    takim: "Stuttgart Fc",
+    ad: "L. Lopeze",
+    takim: "Stuttgart White-Reds",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Stuttgart Fc",
+    ad: "C. Martines",
+    takim: "Stuttgart White-Reds",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const STUTTGART_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Stuttgart Fc",
+    ad: "C. Santozz",
+    takim: "Stuttgart White-Reds",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

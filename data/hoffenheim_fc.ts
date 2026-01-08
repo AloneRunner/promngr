@@ -1,19 +1,19 @@
 export const HOFFENHEIM_FC_SQUAD = [
-    {
-        ad: "Ozan Kabak",
-        takim: "Hoffenheim FC",
-        uyruk: "Türkiye",
-        mevki: "STP",
-        reyting: 75,
-        yas: 24,
-        ana_ozellikler: { hiz: 60, sut: 37, pas: 59, dribbling: 66, defans: 74, fizik: 79 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "O. Kabakk",
+    takim: "Hoffen Blue",
+    uyruk: "Türkiye",
+    mevki: "STP",
+    reyting: 75,
+    yas: 24,
+    ana_ozellikler: { hiz: 60, sut: 37, pas: 59, dribbling: 66, defans: 74, fizik: 79 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Garcia",
-    takim: "Hoffenheim Fc",
+    ad: "C. Garcy",
+    takim: "Hoffen Blue",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Hoffenheim Fc",
+    ad: "D. Sylva",
+    takim: "Hoffen Blue",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Silva",
-    takim: "Hoffenheim Fc",
+    ad: "A. Sylva",
+    takim: "Hoffen Blue",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Hoffenheim Fc",
+    ad: "L. Costas",
+    takim: "Hoffen Blue",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Hoffenheim Fc",
+    ad: "C. Costas",
+    takim: "Hoffen Blue",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Hoffenheim Fc",
+    ad: "D. Lopeze",
+    takim: "Hoffen Blue",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Hoffenheim Fc",
+    ad: "J. Costas",
+    takim: "Hoffen Blue",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -89,8 +89,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Martinez",
-    takim: "Hoffenheim Fc",
+    ad: "P. Martines",
+    takim: "Hoffen Blue",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Martinez",
-    takim: "Hoffenheim Fc",
+    ad: "D. Martines",
+    takim: "Hoffen Blue",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Hoffenheim Fc",
+    ad: "D. Garcy",
+    takim: "Hoffen Blue",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Garcia",
-    takim: "Hoffenheim Fc",
+    ad: "C. Garcy",
+    takim: "Hoffen Blue",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
-    takim: "Hoffenheim Fc",
+    ad: "M. Rodrigz",
+    takim: "Hoffen Blue",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Hoffenheim Fc",
+    ad: "J. Garcy",
+    takim: "Hoffen Blue",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Hoffenheim Fc",
+    ad: "D. Martines",
+    takim: "Hoffen Blue",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Hoffenheim Fc",
+    ad: "J. Santoz",
+    takim: "Hoffen Blue",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Hoffenheim Fc",
+    ad: "J. Garcy",
+    takim: "Hoffen Blue",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Hoffenheim Fc",
+    ad: "P. Sylva",
+    takim: "Hoffen Blue",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Hoffenheim Fc",
+    ad: "P. Sylva",
+    takim: "Hoffen Blue",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Hoffenheim Fc",
+    ad: "L. Costas",
+    takim: "Hoffen Blue",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
-    takim: "Hoffenheim Fc",
+    ad: "L. Costas",
+    takim: "Hoffen Blue",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Hoffenheim Fc",
+    ad: "C. Lopeze",
+    takim: "Hoffen Blue",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const HOFFENHEIM_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Hoffenheim Fc",
+    ad: "C. Costas",
+    takim: "Hoffen Blue",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

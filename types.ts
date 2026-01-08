@@ -13,7 +13,7 @@ export enum TacticType {
     T_41212 = '4-1-2-1-2 (Diamond)',
     T_4321 = '4-3-2-1 (Xmas Tree)'
 }
-export enum MatchEventType { GOAL = 'GOAL', CARD_YELLOW = 'CARD_YELLOW', CARD_RED = 'CARD_RED', SUB = 'SUB', INJURY = 'INJURY', FULL_TIME = 'FULL_TIME', HALF_TIME = 'HALF_TIME' }
+export enum MatchEventType { GOAL = 'GOAL', CARD_YELLOW = 'CARD_YELLOW', CARD_RED = 'CARD_RED', SUB = 'SUB', INJURY = 'INJURY', FULL_TIME = 'FULL_TIME', HALF_TIME = 'HALF_TIME', PENALTY = 'PENALTY', CORNER = 'CORNER' }
 export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING' }
 export type LineupStatus = 'STARTING' | 'BENCH' | 'RESERVE';
 export enum CoachArchetype { TACTICIAN = 'TACTICIAN', MOTIVATOR = 'MOTIVATOR', DEVELOPER = 'DEVELOPER' }

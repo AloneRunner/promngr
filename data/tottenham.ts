@@ -1,7 +1,7 @@
 
 export const NORTH_LONDON_WHITES_SQUAD = [
     {
-        ad: "Heung Min So",
+        ad: "H. Min Sonne",
         takim: "North London Whites",
         uyruk: "Kore Cumhuriyeti",
         mevki: "SLK",
@@ -34,7 +34,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "James Maddi",
+        ad: "J. Maddisun",
         takim: "North London Whites",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -66,7 +66,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Micky Van De",
+        ad: "M. van de Venn",
         takim: "North London Whites",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -94,7 +94,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Cristian Rome",
+        ad: "C. Romeroo",
         takim: "North London Whites",
         uyruk: "Arjantin",
         mevki: "STP",
@@ -122,7 +122,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Pedro Porr",
+        ad: "P. Porroh",
         takim: "North London Whites",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -150,7 +150,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Gugli Vicar",
+        ad: "G. Vicarrio",
         takim: "North London Whites",
         uyruk: "İtalya",
         mevki: "KL",
@@ -177,7 +177,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Destiny Udo",
+        ad: "D. Udogye",
         takim: "North London Whites",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -205,7 +205,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Rodrigo Benta",
+        ad: "R. Bentancu",
         takim: "North London Whites",
         uyruk: "Uruguay",
         mevki: "MO",
@@ -231,7 +231,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Dominic Solan",
+        ad: "D. Solankey",
         takim: "North London Whites",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -257,7 +257,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Brennan John",
+        ad: "B. Johnsun",
         takim: "North London Whites",
         uyruk: "Galler",
         mevki: "SĞK",
@@ -283,7 +283,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Dejan Kuluse",
+        ad: "D. Kulusev",
         takim: "North London Whites",
         uyruk: "İsveç",
         mevki: "SĞK",
@@ -311,7 +311,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Yves Bisso",
+        ad: "Y. Bissouma",
         takim: "North London Whites",
         uyruk: "Mali",
         mevki: "MDO",
@@ -337,7 +337,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Pape Sarr",
+        ad: "P. Sarre",
         takim: "North London Whites",
         uyruk: "Senegal",
         mevki: "MO",
@@ -362,7 +362,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Berg",
+        ad: "L. Bergvall",
         takim: "North London Whites",
         uyruk: "İsveç",
         mevki: "MOO",
@@ -388,7 +388,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Archie Gr",
+        ad: "A. Grayy",
         takim: "North London Whites",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -412,7 +412,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Richarlis",
+        ad: "Richarlisun",
         takim: "North London Whites",
         uyruk: "Brezilya",
         mevki: "SNT",
@@ -439,7 +439,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Radu Dragus",
+        ad: "R. Dragusynn",
         takim: "North London Whites",
         uyruk: "Romanya",
         mevki: "STP",
@@ -463,7 +463,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Timo Wern",
+        ad: "T. Wernerr",
         takim: "North London Whites",
         uyruk: "Almanya",
         mevki: "SLK",
@@ -487,7 +487,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Xavi Simon",
+        ad: "X. Simonns",
         takim: "North London Whites",
         uyruk: "Hollanda",
         mevki: "MOO",
@@ -516,7 +516,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "James Maddy",
+        ad: "J. Maddisun",
         takim: "North London Whites",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -546,7 +546,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Dejan Kulu",
+        ad: "D. Kulusev",
         takim: "North London Whites",
         uyruk: "İsveç",
         mevki: "MO",
@@ -575,7 +575,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Jo Palhin",
+        ad: "J. Palhinhah",
         takim: "North London Whites",
         uyruk: "Portekiz",
         mevki: "MDO",
@@ -604,7 +604,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Gugli Vica",
+        ad: "G. Vicarrio",
         takim: "North London Whites",
         uyruk: "İtalya",
         mevki: "KL",
@@ -630,7 +630,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Micky Ven",
+        ad: "M. van de Venn",
         takim: "North London Whites",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -658,7 +658,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Cris Rome",
+        ad: "C. Romeroo",
         takim: "North London Whites",
         uyruk: "Arjantin",
         mevki: "STP",
@@ -686,7 +686,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Randal Kolo",
+        ad: "R. Kolo Muany",
         takim: "North London Whites",
         uyruk: "Fransa",
         mevki: "SNT",
@@ -713,7 +713,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Dom Solan",
+        ad: "D. Solankey",
         takim: "North London Whites",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -740,7 +740,7 @@ export const NORTH_LONDON_WHITES_SQUAD = [
         ]
     },
     {
-        ad: "Mo Kudu",
+        ad: "M. Kuduss",
         takim: "North London Whites",
         uyruk: "Gana",
         mevki: "SĞK",

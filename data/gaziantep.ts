@@ -1,7 +1,7 @@
 
 export const GAZIANTEP_SQUAD = [
   {
-    ad: "Alexandru Maxim",
+    ad: "A. Maximm",
     takim: "Antep Falcons",
     uyruk: "Romanya",
     mevki: "MOO",
@@ -12,7 +12,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Plase Şut", "Teknik", "Uzun Topla Pas", "Yaratıcı"]
   },
   {
-    ad: "Kévin Rodrigues",
+    ad: "K. Rodrigz",
     takim: "Antep Falcons",
     uyruk: "Portekiz",
     mevki: "SLB",
@@ -23,7 +23,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Kesme Pas"]
   },
   {
-    ad: "Badou Ndiaye",
+    ad: "B. Ndyaye",
     takim: "Antep Falcons",
     uyruk: "Senegal",
     mevki: "MDO",
@@ -34,7 +34,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale", "Seri", "Sezgili"]
   },
   {
-    ad: "Mohamed Bayo",
+    ad: "M. Bayoo",
     takim: "Antep Falcons",
     uyruk: "Gine",
     mevki: "SNT",
@@ -45,7 +45,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Plase Şut"]
   },
   {
-    ad: "Deian Sorescu",
+    ad: "D. Sorezku",
     takim: "Antep Falcons",
     uyruk: "Romanya",
     mevki: "SĞO",
@@ -56,7 +56,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Emmanuel Boateng",
+    ad: "E. Boatenng",
     takim: "Antep Falcons",
     uyruk: "Gana",
     mevki: "SNT",
@@ -67,7 +67,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Hava Hakimi", "Seri"]
   },
   {
-    ad: "Kacper Kozłowski",
+    ad: "K. Kozlow",
     takim: "Antep Falcons",
     uyruk: "Polonya",
     mevki: "MO",
@@ -78,7 +78,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Teknik", "Yaratıcı"]
   },
   {
-    ad: "Luis Pérez",
+    ad: "L. Pereze",
     takim: "Antep Falcons",
     uyruk: "İspanya",
     mevki: "SĞB",
@@ -89,7 +89,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Amansız", "Çabuk Adım", "Seri", "Sezgili", "Uzun Topla Pas"]
   },
   {
-    ad: "Myenty Abena",
+    ad: "M. Abenna",
     takim: "Antep Falcons",
     uyruk: "Surinam",
     mevki: "STP",
@@ -100,7 +100,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Juninho Bacuna",
+    ad: "J. Bakunna",
     takim: "Antep Falcons",
     uyruk: "Kurasao",
     mevki: "MDO",
@@ -111,7 +111,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Uzun Topla Pas"]
   },
   {
-    ad: "Tayyip Sanuç",
+    ad: "T. Sanukk",
     takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -122,7 +122,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Hassas Kafa Vuruşu"]
   },
   {
-    ad: "Nazim Sangaré",
+    ad: "N. Sangaree",
     takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -133,7 +133,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Uzun Taç"]
   },
   {
-    ad: "Salem M'Bakata",
+    ad: "S. Mbakatta",
     takim: "Antep Falcons",
     uyruk: "Fransa",
     mevki: "SĞB",
@@ -144,7 +144,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ogün Özçiçek",
+    ad: "O. Ozcicekk",
     takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -155,7 +155,7 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: ["Teknik"]
   },
   {
-    ad: "Christopher Lungoyi",
+    ad: "C. Lungoy",
     takim: "Antep Falcons",
     uyruk: "İsviçre",
     mevki: "SLO",
@@ -166,8 +166,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Volkan Eren",
-    takim: "Gaziantep",
+    ad: "V. Erenn",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 67,
@@ -177,8 +177,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Furkan Yavuz",
-    takim: "Gaziantep",
+    ad: "F. Yavuzzo",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 65,
@@ -188,8 +188,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Berkay Demirci",
-    takim: "Gaziantep",
+    ad: "B. Demirky",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 64,
@@ -199,8 +199,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Özer",
-    takim: "Gaziantep",
+    ad: "B. Ozerre",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 63,
@@ -210,8 +210,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Deniz Aktaş",
-    takim: "Gaziantep",
+    ad: "D. Aktash",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 62,
@@ -221,8 +221,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Furkan Yavuz",
-    takim: "Gaziantep",
+    ad: "F. Yavuzzo",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 61,
@@ -232,8 +232,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ali Özer",
-    takim: "Gaziantep",
+    ad: "A. Ozerre",
+    takim: "Antep Falcons",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 59,
@@ -243,8 +243,8 @@ export const GAZIANTEP_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Perez",
-    takim: "Gaziantep",
+    ad: "D. Pereze",
+    takim: "Antep Falcons",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 58,

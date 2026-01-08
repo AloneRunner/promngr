@@ -1,7 +1,7 @@
 
 export const KARAGUMRUK_SQUAD = [
   {
-    ad: "Matías Kranevik",
+    ad: "M. Kranevikk",
     takim: "Karagumruk Black",
     uyruk: "Arjantin",
     mevki: "MDO",
@@ -12,7 +12,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ricardo Esgar",
+    ad: "R. Esgaro",
     takim: "Karagumruk Black",
     uyruk: "Portekiz",
     mevki: "SĞB",
@@ -23,7 +23,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: ["Sezgili"]
   },
   {
-    ad: "João Camacho",
+    ad: "J. Camachoh",
     takim: "Karagumruk Black",
     uyruk: "Portekiz",
     mevki: "SLO",
@@ -34,7 +34,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ivo Grbec",
+    ad: "I. Grbecc",
     takim: "Karagumruk Black",
     uyruk: "Hırvatistan",
     mevki: "KL",
@@ -45,7 +45,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Jure Balkov",
+    ad: "J. Balkovv",
     takim: "Karagumruk Black",
     uyruk: "Slovenya",
     mevki: "SLB",
@@ -56,7 +56,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: ["Kuvvetli Şut", "Uzun Topla Pas"]
   },
   {
-    ad: "Andre Grayson",
+    ad: "A. Graysonn",
     takim: "Karagumruk Black",
     uyruk: "Jamaika",
     mevki: "SNT",
@@ -67,7 +67,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Berkay Özgür",
+    ad: "B. Ozgurr",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -78,7 +78,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: ["Teknik"]
   },
   {
-    ad: "Enzo Rocco",
+    ad: "E. Rocco",
     takim: "Karagumruk Black",
     uyruk: "Şili",
     mevki: "STP",
@@ -89,7 +89,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi"]
   },
   {
-    ad: "Sergino",
+    ad: "Serginno",
     takim: "Karagumruk Black",
     uyruk: "Brezilya",
     mevki: "SĞO",
@@ -100,7 +100,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: ["Teknik"]
   },
   {
-    ad: "Emre Yılmaz",
+    ad: "E. Yilmy",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -111,7 +111,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Mehmet Çetin",
+    ad: "M. Cetinn",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MOO",
@@ -122,7 +122,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Alper Demir",
+    ad: "A. Demirr",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SĞB",
@@ -133,7 +133,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Furkan Arslan",
+    ad: "F. Arslann",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SNT",
@@ -144,7 +144,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Murat Aydın",
+    ad: "M. Aydinn",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -155,7 +155,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Burak Kaya",
+    ad: "B. Kayya",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SLB",
@@ -166,7 +166,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Deniz Öztürk",
+    ad: "D. Ozturkk",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -177,7 +177,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kerem Yavuz",
+    ad: "K. Yavuzzo",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -188,7 +188,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Onur Şahin",
+    ad: "O. Sahinn",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -199,7 +199,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Serkan Polat",
+    ad: "S. Polatt",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -210,7 +210,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yunus Eren",
+    ad: "Y. Erenn",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SNT",
@@ -221,7 +221,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "İsmail Koç",
+    ad: "I. Kocc",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -232,7 +232,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Cem Yıldız",
+    ad: "C. Yildizz",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "SLO",
@@ -243,7 +243,7 @@ export const KARAGUMRUK_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emir Aslan",
+    ad: "E. Aslann",
     takim: "Karagumruk Black",
     uyruk: "Türkiye",
     mevki: "KL",

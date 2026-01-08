@@ -1,97 +1,97 @@
 export const MALLORCA_ISLANDERS_SQUAD = [
-    {
-        ad: "Vedat Pirate", // Muriqi
-        takim: "Mallorca Islanders",
-        uyruk: "Kosova",
-        mevki: "SNT",
-        reyting: 79,
-        yas: 31,
-        ana_ozellikler: { hiz: 50, sut: 81, pas: 63, dribbling: 71, defans: 29, fizik: 82 },
-        detaylar: {
-            kafa_isabeti: 90, guc: 88, bitiricilik: 82, ziplama: 85, pozisyon: 80
-        },
-        oyun_tarzlari: ["Hava Hakimi", "Kule", "Güçlü"]
-    },
-    {
-        ad: "Sergi Dard",
-        takim: "Mallorca Islanders",
-        uyruk: "İspanya",
-        mevki: "SLO",
-        reyting: 81,
-        yas: 31,
-        ana_ozellikler: { hiz: 77, sut: 76, pas: 81, dribbling: 80, defans: 73, fizik: 77 },
-        detaylar: {
-            vizyon: 84, uzun_pas: 83, kisa_pas: 82, top_kontrol: 81, uzaktan_sut: 79
-        },
-        oyun_tarzlari: ["Oyun Kurucu", "Uzun Topla Pas"]
-    },
-    {
-        ad: "Pablo Maff",
-        takim: "Mallorca Islanders",
-        uyruk: "Arjantin",
-        mevki: "SĞB",
-        reyting: 78,
-        yas: 28,
-        ana_ozellikler: { hiz: 81, sut: 52, pas: 70, dribbling: 78, defans: 76, fizik: 70 },
-        detaylar: {
-            agresiflik: 86, ayakta_mudahale: 78, dayaniklilik: 82
-        },
-        oyun_tarzlari: ["Savaşçı", "Kayarak Müdahale"]
-    },
-    {
-        ad: "Johan Moji",
-        takim: "Mallorca Islanders",
-        uyruk: "Kolombiya",
-        mevki: "SLB",
-        reyting: 78,
-        yas: 33,
-        ana_ozellikler: { hiz: 88, sut: 65, pas: 73, dribbling: 73, defans: 74, fizik: 70 },
-        detaylar: {
-            sprint: 90, hizlanma: 87, orta_acma: 76
-        },
-        oyun_tarzlari: ["Hızlı Bek"]
-    },
-    {
-        ad: "Antonio Rail",
-        takim: "Mallorca Islanders",
-        uyruk: "İspanya",
-        mevki: "STP",
-        reyting: 81,
-        yas: 34,
-        ana_ozellikler: { hiz: 41, sut: 36, pas: 59, dribbling: 62, defans: 83, fizik: 84 },
-        detaylar: {
-            liderlik: 88, top_kesme: 84, guc: 85, markaj: 83
-        },
-        oyun_tarzlari: ["Lider", "Sert Müdahale"]
-    },
-    {
-        ad: "Leo Roma",
-        takim: "Mallorca Islanders",
-        uyruk: "İspanya",
-        mevki: "KL",
-        reyting: 77,
-        yas: 25,
-        ana_ozellikler: { hiz: 49, sut: 76, pas: 75, dribbling: 72, defans: 78, fizik: 75 },
-        detaylar: {
-            refleks: 80, ucma: 78, pozisyon: 77
-        },
-        oyun_tarzlari: []
-    },
-    {
-        ad: "Takuma Asa",
-        takim: "Mallorca Islanders",
-        uyruk: "Japonya",
-        mevki: "SĞO",
-        reyting: 75,
-        yas: 30,
-        ana_ozellikler: { hiz: 84, sut: 69, pas: 64, dribbling: 79, defans: 33, fizik: 69 },
-        detaylar: {
-            hizlanma: 86, ceviklik: 85, dribbling: 80
-        },
-        oyun_tarzlari: ["Seri"]
-    },
   {
-    ad: "Carlos Lopez",
+    ad: "V. Piratte", // Muriqi
+    takim: "Mallorca Islanders",
+    uyruk: "Kosova",
+    mevki: "SNT",
+    reyting: 79,
+    yas: 31,
+    ana_ozellikler: { hiz: 50, sut: 81, pas: 63, dribbling: 71, defans: 29, fizik: 82 },
+    detaylar: {
+      kafa_isabeti: 90, guc: 88, bitiricilik: 82, ziplama: 85, pozisyon: 80
+    },
+    oyun_tarzlari: ["Hava Hakimi", "Kule", "Güçlü"]
+  },
+  {
+    ad: "S. Darderr",
+    takim: "Mallorca Islanders",
+    uyruk: "İspanya",
+    mevki: "SLO",
+    reyting: 81,
+    yas: 31,
+    ana_ozellikler: { hiz: 77, sut: 76, pas: 81, dribbling: 80, defans: 73, fizik: 77 },
+    detaylar: {
+      vizyon: 84, uzun_pas: 83, kisa_pas: 82, top_kontrol: 81, uzaktan_sut: 79
+    },
+    oyun_tarzlari: ["Oyun Kurucu", "Uzun Topla Pas"]
+  },
+  {
+    ad: "P. Maffeoh",
+    takim: "Mallorca Islanders",
+    uyruk: "Arjantin",
+    mevki: "SĞB",
+    reyting: 78,
+    yas: 28,
+    ana_ozellikler: { hiz: 81, sut: 52, pas: 70, dribbling: 78, defans: 76, fizik: 70 },
+    detaylar: {
+      agresiflik: 86, ayakta_mudahale: 78, dayaniklilik: 82
+    },
+    oyun_tarzlari: ["Savaşçı", "Kayarak Müdahale"]
+  },
+  {
+    ad: "J. Mojicah",
+    takim: "Mallorca Islanders",
+    uyruk: "Kolombiya",
+    mevki: "SLB",
+    reyting: 78,
+    yas: 33,
+    ana_ozellikler: { hiz: 88, sut: 65, pas: 73, dribbling: 73, defans: 74, fizik: 70 },
+    detaylar: {
+      sprint: 90, hizlanma: 87, orta_acma: 76
+    },
+    oyun_tarzlari: ["Hızlı Bek"]
+  },
+  {
+    ad: "A. Railloh",
+    takim: "Mallorca Islanders",
+    uyruk: "İspanya",
+    mevki: "STP",
+    reyting: 81,
+    yas: 34,
+    ana_ozellikler: { hiz: 41, sut: 36, pas: 59, dribbling: 62, defans: 83, fizik: 84 },
+    detaylar: {
+      liderlik: 88, top_kesme: 84, guc: 85, markaj: 83
+    },
+    oyun_tarzlari: ["Lider", "Sert Müdahale"]
+  },
+  {
+    ad: "L. Romann",
+    takim: "Mallorca Islanders",
+    uyruk: "İspanya",
+    mevki: "KL",
+    reyting: 77,
+    yas: 25,
+    ana_ozellikler: { hiz: 49, sut: 76, pas: 75, dribbling: 72, defans: 78, fizik: 75 },
+    detaylar: {
+      refleks: 80, ucma: 78, pozisyon: 77
+    },
+    oyun_tarzlari: []
+  },
+  {
+    ad: "T. Asanoh",
+    takim: "Mallorca Islanders",
+    uyruk: "Japonya",
+    mevki: "SĞO",
+    reyting: 75,
+    yas: 30,
+    ana_ozellikler: { hiz: 84, sut: 69, pas: 64, dribbling: 79, defans: 33, fizik: 69 },
+    detaylar: {
+      hizlanma: 86, ceviklik: 85, dribbling: 80
+    },
+    oyun_tarzlari: ["Seri"]
+  },
+  {
+    ad: "C. Lopeze",
     takim: "Mallorca Islanders",
     uyruk: "Brezilya",
     mevki: "KL",
@@ -102,7 +102,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
+    ad: "D. Lopeze",
     takim: "Mallorca Islanders",
     uyruk: "Arjantin",
     mevki: "KL",
@@ -113,7 +113,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
+    ad: "D. Rodrigz",
     takim: "Mallorca Islanders",
     uyruk: "İspanya",
     mevki: "STP",
@@ -124,7 +124,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
+    ad: "L. Lopeze",
     takim: "Mallorca Islanders",
     uyruk: "Fransa",
     mevki: "STP",
@@ -135,7 +135,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
+    ad: "C. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "İtalya",
     mevki: "STP",
@@ -146,7 +146,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
+    ad: "J. Martines",
     takim: "Mallorca Islanders",
     uyruk: "Portekiz",
     mevki: "SĞB",
@@ -157,7 +157,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
+    ad: "P. Rodrigz",
     takim: "Mallorca Islanders",
     uyruk: "Brezilya",
     mevki: "SLB",
@@ -168,7 +168,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Martinez",
+    ad: "M. Martines",
     takim: "Mallorca Islanders",
     uyruk: "Arjantin",
     mevki: "MDO",
@@ -179,7 +179,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Silva",
+    ad: "D. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "İspanya",
     mevki: "MDO",
@@ -190,7 +190,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Silva",
+    ad: "M. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "Fransa",
     mevki: "MDO",
@@ -201,7 +201,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Costa",
+    ad: "A. Costas",
     takim: "Mallorca Islanders",
     uyruk: "İtalya",
     mevki: "MO",
@@ -212,7 +212,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Silva",
+    ad: "M. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "Portekiz",
     mevki: "MO",
@@ -223,7 +223,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
+    ad: "D. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "Brezilya",
     mevki: "MO",
@@ -234,7 +234,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Martinez",
+    ad: "A. Martines",
     takim: "Mallorca Islanders",
     uyruk: "Arjantin",
     mevki: "MOO",
@@ -245,7 +245,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
+    ad: "P. Sylva",
     takim: "Mallorca Islanders",
     uyruk: "İspanya",
     mevki: "MOO",
@@ -256,7 +256,7 @@ export const MALLORCA_ISLANDERS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Lopez",
+    ad: "A. Lopeze",
     takim: "Mallorca Islanders",
     uyruk: "Fransa",
     mevki: "SĞO",

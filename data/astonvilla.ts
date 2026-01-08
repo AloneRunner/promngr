@@ -1,7 +1,7 @@
 
 export const BIRMINGHAM_VILLANS_SQUAD = [
     {
-        ad: "Emi Martin",
+        ad: "E. Martano",
         takim: "Birmingham Villans",
         uyruk: "Arjantin",
         mevki: "KL",
@@ -33,7 +33,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Ollie Watk",
+        ad: "O. Watford",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -62,7 +62,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Youri Tielem",
+        ad: "Y. Tielmar",
         takim: "Birmingham Villans",
         uyruk: "Belçika",
         mevki: "MO",
@@ -90,7 +90,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Pau Torr",
+        ad: "P. Torren",
         takim: "Birmingham Villans",
         uyruk: "İspanya",
         mevki: "STP",
@@ -118,7 +118,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "John McGin",
+        ad: "J. McGarron",
         takim: "Birmingham Villans",
         uyruk: "İskoçya",
         mevki: "MO",
@@ -147,7 +147,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Ezri Kon",
+        ad: "E. Kone",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -173,7 +173,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Leon Bail",
+        ad: "L. Bailett",
         takim: "Birmingham Villans",
         uyruk: "Jamaika",
         mevki: "SĞO",
@@ -201,7 +201,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Morgan Rog",
+        ad: "M. Rogden",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -228,7 +228,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Amadou Onan",
+        ad: "A. Onaro",
         takim: "Birmingham Villans",
         uyruk: "Belçika",
         mevki: "MDO",
@@ -256,7 +256,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Dign",
+        ad: "L. Dignoir",
         takim: "Birmingham Villans",
         uyruk: "Fransa",
         mevki: "SLB",
@@ -282,7 +282,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Matty Cas",
+        ad: "M. Caslav",
         takim: "Birmingham Villans",
         uyruk: "Polonya",
         mevki: "SĞB",
@@ -306,7 +306,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Jhon Dura",
+        ad: "J. Durado",
         takim: "Birmingham Villans",
         uyruk: "Kolombiya",
         mevki: "SNT",
@@ -333,7 +333,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Jacob Rams",
+        ad: "J. Ramley",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -357,7 +357,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Boubacar Kam",
+        ad: "B. Kamaris",
         takim: "Birmingham Villans",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -379,7 +379,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Diego Carl",
+        ad: "D. Carvalo",
         takim: "Birmingham Villans",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -403,7 +403,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Ian Maats",
+        ad: "I. Maatsel",
         takim: "Birmingham Villans",
         uyruk: "Hollanda",
         mevki: "SLB",
@@ -427,7 +427,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Emil Buend",
+        ad: "E. Buendano",
         takim: "Birmingham Villans",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -451,7 +451,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Youri Tiele",
+        ad: "Y. Tielmar",
         takim: "Birmingham Villans",
         uyruk: "Belçika",
         mevki: "MO",
@@ -480,7 +480,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Ollie Wat",
+        ad: "O. Watford",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -507,7 +507,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Bouba Kama",
+        ad: "B. Kamaris",
         takim: "Birmingham Villans",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -534,7 +534,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Jadon Sanch",
+        ad: "J. Sanchoa",
         takim: "Birmingham Villans",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -562,7 +562,7 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
         ]
     },
     {
-        ad: "Amadou Ona",
+        ad: "A. Onaro",
         takim: "Birmingham Villans",
         uyruk: "Belçika",
         mevki: "MDO",
@@ -588,15 +588,15 @@ export const BIRMINGHAM_VILLANS_SQUAD = [
             "Güçlü"
         ]
     },
-  {
-    ad: "Diego Costa",
-    takim: "Aston Villa",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 74,
-    yas: 20,
-    ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
-    detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "D. Costero",
+        takim: "Birmingham Villans",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 74,
+        yas: 20,
+        ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
+        detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
+        oyun_tarzlari: []
+    }
 ];

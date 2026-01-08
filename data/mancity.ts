@@ -1,7 +1,7 @@
 
 export const MANCHESTER_SKYBLUES_SQUAD = [
     {
-        ad: "Rodri",
+        ad: "R. Rodry",
         takim: "Manchester Skyblues",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -38,7 +38,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Erling Haal",
+        ad: "E. Holland",
         takim: "Manchester Skyblues",
         uyruk: "Norveç",
         mevki: "SNT",
@@ -74,7 +74,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Kevin De Bru",
+        ad: "K. De Bruyn",
         takim: "Manchester Skyblues",
         uyruk: "Belçika",
         mevki: "MO",
@@ -110,7 +110,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Phil Fod",
+        ad: "P. Fodey",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -144,7 +144,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Ruben Dia",
+        ad: "R. Diaze",
         takim: "Manchester Skyblues",
         uyruk: "Portekiz",
         mevki: "STP",
@@ -176,7 +176,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Bernardo Sil",
+        ad: "B. Sylva",
         takim: "Manchester Skyblues",
         uyruk: "Portekiz",
         mevki: "MO",
@@ -210,7 +210,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Ederso",
+        ad: "E. Edersun",
         takim: "Manchester Skyblues",
         uyruk: "Brezilya",
         mevki: "KL",
@@ -238,7 +238,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Ilkay Gundo",
+        ad: "I. Gundogann",
         takim: "Manchester Skyblues",
         uyruk: "Almanya",
         mevki: "MO",
@@ -268,7 +268,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Josko Gvard",
+        ad: "J. Gvardy",
         takim: "Manchester Skyblues",
         uyruk: "Hırvatistan",
         mevki: "STP",
@@ -298,7 +298,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Manuel Akan",
+        ad: "M. Akanjy",
         takim: "Manchester Skyblues",
         uyruk: "İsviçre",
         mevki: "STP",
@@ -326,7 +326,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Nathan Ak",
+        ad: "N. Akke",
         takim: "Manchester Skyblues",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -351,7 +351,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "John Ston",
+        ad: "J. Stonnes",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -379,7 +379,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Kyle Walk",
+        ad: "K. Walken",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -407,7 +407,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Jack Greal",
+        ad: "J. Grelish",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -437,7 +437,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Jeremy Dok",
+        ad: "J. Dokku",
         takim: "Manchester Skyblues",
         uyruk: "Belçika",
         mevki: "SLK",
@@ -466,7 +466,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Savinho",
+        ad: "Savinno",
         takim: "Manchester Skyblues",
         uyruk: "Brezilya",
         mevki: "SĞK",
@@ -493,7 +493,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Matheus Nune",
+        ad: "M. Nuness",
         takim: "Manchester Skyblues",
         uyruk: "Portekiz",
         mevki: "MO",
@@ -517,7 +517,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Rico Lew",
+        ad: "R. Lewiss",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -543,7 +543,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "James McAte",
+        ad: "J. McAteey",
         takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -567,8 +567,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Rodrigo",
-        takim: "Manchester Sky Blues",
+        ad: "R. Rodry",
+        takim: "Manchester Skyblues",
         uyruk: "İspanya",
         mevki: "MDO",
         forma_no: 16,
@@ -602,8 +602,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Eric Holland",
-        takim: "Manchester Sky Blues",
+        ad: "E. Holland",
+        takim: "Manchester Skyblues",
         uyruk: "Norveç",
         mevki: "SNT",
         forma_no: 9,
@@ -635,8 +635,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Gigi Donna",
-        takim: "Manchester Sky Blues",
+        ad: "G. Donnarum",
+        takim: "Manchester Skyblues",
         uyruk: "İtalya",
         mevki: "KL",
         forma_no: 99,
@@ -663,8 +663,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Ruben Diaz",
-        takim: "Manchester Sky Blues",
+        ad: "R. Diaze",
+        takim: "Manchester Skyblues",
         uyruk: "Portekiz",
         mevki: "STP",
         forma_no: 3,
@@ -693,8 +693,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Tij Reijnders",
-        takim: "Manchester Sky Blues",
+        ad: "T. Reijnderr",
+        takim: "Manchester Skyblues",
         uyruk: "Hollanda",
         mevki: "MO",
         forma_no: 14,
@@ -721,8 +721,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Phil Fode",
-        takim: "Manchester Sky Blues",
+        ad: "P. Fodey",
+        takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "SĞK",
         forma_no: 47,
@@ -751,8 +751,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Josko Gvardi",
-        takim: "Manchester Sky Blues",
+        ad: "J. Gvardy",
+        takim: "Manchester Skyblues",
         uyruk: "Hırvatistan",
         mevki: "SLB",
         forma_no: 24,
@@ -780,8 +780,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Bernie Silva",
-        takim: "Manchester Sky Blues",
+        ad: "B. Sylva",
+        takim: "Manchester Skyblues",
         uyruk: "Portekiz",
         mevki: "MO",
         forma_no: 20,
@@ -811,7 +811,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
     },
     {
         ad: "Omar Marmo",
-        takim: "Manchester Sky Blues",
+        takim: "Manchester Skyblues",
         uyruk: "Mısır",
         mevki: "SNT",
         forma_no: 7,
@@ -840,8 +840,8 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Matt Kovac",
-        takim: "Manchester Sky Blues",
+        ad: "M. Kovacky",
+        takim: "Manchester Skyblues",
         uyruk: "Hırvatistan",
         mevki: "MO",
         forma_no: 8,
@@ -868,7 +868,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
     },
     {
         ad: "Nate Ake",
-        takim: "Manchester Sky Blues",
+        takim: "Manchester Skyblues",
         uyruk: "Hollanda",
         mevki: "STP",
         forma_no: 6,
@@ -893,7 +893,7 @@ export const MANCHESTER_SKYBLUES_SQUAD = [
     },
     {
         ad: "John Stones",
-        takim: "Manchester Sky Blues",
+        takim: "Manchester Skyblues",
         uyruk: "İngiltere",
         mevki: "STP",
         forma_no: 5,

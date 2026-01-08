@@ -1,19 +1,19 @@
 export const AUXERRE_AJ_SQUAD = [
-    {
-        ad: "Sekou Mara",
-        takim: "Auxerre AJ",
-        uyruk: "Fransa",
-        mevki: "SNT",
-        reyting: 70,
-        yas: 22,
-        ana_ozellikler: { hiz: 76, sut: 68, pas: 53, dribbling: 68, defans: 26, fizik: 67 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "S. Mara",
+    takim: "AJ Burgundy",
+    uyruk: "Fransa",
+    mevki: "SNT",
+    reyting: 70,
+    yas: 22,
+    ana_ozellikler: { hiz: 76, sut: 68, pas: 53, dribbling: 68, defans: 26, fizik: 67 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Silva",
-    takim: "Auxerre Aj",
+    ad: "C. Silvestre",
+    takim: "AJ Burgundy",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Auxerre Aj",
+    ad: "D. Silvain",
+    takim: "AJ Burgundy",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Rodriguez",
-    takim: "Auxerre Aj",
+    ad: "A. Rodier",
+    takim: "AJ Burgundy",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -45,8 +45,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Auxerre Aj",
+    ad: "L. Garcenot",
+    takim: "AJ Burgundy",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Auxerre Aj",
+    ad: "C. Santon",
+    takim: "AJ Burgundy",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Auxerre Aj",
+    ad: "D. Lope",
+    takim: "AJ Burgundy",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Auxerre Aj",
+    ad: "D. Silvetre",
+    takim: "AJ Burgundy",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -89,8 +89,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Perez",
-    takim: "Auxerre Aj",
+    ad: "P. Perrier",
+    takim: "AJ Burgundy",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Costa",
-    takim: "Auxerre Aj",
+    ad: "D. Coste",
+    takim: "AJ Burgundy",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Auxerre Aj",
+    ad: "D. Lopin",
+    takim: "AJ Burgundy",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Auxerre Aj",
+    ad: "C. Rodrigue",
+    takim: "AJ Burgundy",
     uyruk: "İtalya",
     mevki: "SLB",
     reyting: 61,
@@ -133,8 +133,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Perez",
-    takim: "Auxerre Aj",
+    ad: "M. Perret",
+    takim: "AJ Burgundy",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Auxerre Aj",
+    ad: "J. Santon",
+    takim: "AJ Burgundy",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Auxerre Aj",
+    ad: "J. Lopinet",
+    takim: "AJ Burgundy",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Auxerre Aj",
+    ad: "J. Lopiz",
+    takim: "AJ Burgundy",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
-    takim: "Auxerre Aj",
+    ad: "J. Silvestre",
+    takim: "AJ Burgundy",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Auxerre Aj",
+    ad: "P. Silvestre",
+    takim: "AJ Burgundy",
     uyruk: "İtalya",
     mevki: "MO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Auxerre Aj",
+    ad: "P. Rodrigue",
+    takim: "AJ Burgundy",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Auxerre Aj",
+    ad: "P. Garcenot",
+    takim: "AJ Burgundy",
     uyruk: "Brezilya",
     mevki: "MOO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Auxerre Aj",
+    ad: "L. Santon",
+    takim: "AJ Burgundy",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Auxerre Aj",
+    ad: "C. Lopin",
+    takim: "AJ Burgundy",
     uyruk: "İspanya",
     mevki: "SĞO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const AUXERRE_AJ_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
-    takim: "Auxerre Aj",
+    ad: "C. Silvair",
+    takim: "AJ Burgundy",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

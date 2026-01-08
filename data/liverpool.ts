@@ -1,7 +1,7 @@
 
 export const MERSEYSIDE_REDS_SQUAD = [
     {
-        ad: "Mo Salah",
+        ad: "M. Sallah",
         takim: "Merseyside Reds",
         uyruk: "Mısır",
         mevki: "SĞK",
@@ -36,7 +36,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Virgil Van Dyk",
+        ad: "V. Dijkk",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -70,7 +70,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Alisson Beck",
+        ad: "A. Beckery",
         takim: "Merseyside Reds",
         uyruk: "Brezilya",
         mevki: "KL",
@@ -101,7 +101,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Trent Alex",
+        ad: "T. Alexandery",
         takim: "Merseyside Reds",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -135,7 +135,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Alexis Mac All",
+        ad: "A. Mac Allistery",
         takim: "Merseyside Reds",
         uyruk: "Arjantin",
         mevki: "MO",
@@ -167,7 +167,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Luis Diaz",
+        ad: "L. Diaze",
         takim: "Merseyside Reds",
         uyruk: "Kolombiya",
         mevki: "SLK",
@@ -199,7 +199,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Diogo Jot",
+        ad: "D. Jotta",
         takim: "Merseyside Reds",
         uyruk: "Portekiz",
         mevki: "SNT",
@@ -229,7 +229,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Andy Rober",
+        ad: "A. Robertson",
         takim: "Merseyside Reds",
         uyruk: "İskoçya",
         mevki: "SLB",
@@ -259,7 +259,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Dominic Szobo",
+        ad: "D. Szoboslay",
         takim: "Merseyside Reds",
         uyruk: "Macaristan",
         mevki: "MOO",
@@ -289,7 +289,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Ibu Konat",
+        ad: "I. Konatte",
         takim: "Merseyside Reds",
         uyruk: "Fransa",
         mevki: "STP",
@@ -318,7 +318,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Cody Gak",
+        ad: "C. Gakppo",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "SLK",
@@ -347,7 +347,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Darwin Nun",
+        ad: "D. Nuneze",
         takim: "Merseyside Reds",
         uyruk: "Uruguay",
         mevki: "SNT",
@@ -379,7 +379,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Ryan Grave",
+        ad: "R. Graven",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "MO",
@@ -406,7 +406,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Curtis Jone",
+        ad: "C. Jonesy",
         takim: "Merseyside Reds",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -433,7 +433,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Harvey Elli",
+        ad: "H. Ellioty",
         takim: "Merseyside Reds",
         uyruk: "İngiltere",
         mevki: "MOO",
@@ -460,7 +460,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Jarell Quan",
+        ad: "J. Quansah",
         takim: "Merseyside Reds",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -486,7 +486,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Kosta Tsimi",
+        ad: "K. Tsimikass",
         takim: "Merseyside Reds",
         uyruk: "Yunanistan",
         mevki: "SLB",
@@ -510,7 +510,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Caoimhin Kell",
+        ad: "C. Kellehery",
         takim: "Merseyside Reds",
         uyruk: "İrlanda",
         mevki: "KL",
@@ -534,7 +534,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Mo Sala",
+        ad: "M. Sallah",
         takim: "Merseyside Reds",
         uyruk: "Mısır",
         mevki: "SĞO",
@@ -570,7 +570,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Virgil Dijk",
+        ad: "V. Dijkk",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -603,7 +603,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Flo Virtz",
+        ad: "F. Virtzy",
         takim: "Merseyside Reds",
         uyruk: "Almanya",
         mevki: "MOO",
@@ -635,7 +635,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Alex Isak",
+        ad: "A. Isake",
         takim: "Merseyside Reds",
         uyruk: "İsveç",
         mevki: "SNT",
@@ -666,7 +666,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Alex Mac Allis",
+        ad: "A. Mac Allistery",
         takim: "Merseyside Reds",
         uyruk: "Arjantin",
         mevki: "MO",
@@ -696,7 +696,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Ibou Konat",
+        ad: "I. Konatte",
         takim: "Merseyside Reds",
         uyruk: "Fransa",
         mevki: "STP",
@@ -724,7 +724,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Ryan Grav",
+        ad: "R. Graven",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "MDO",
@@ -752,7 +752,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Giorgi Mama",
+        ad: "G. Mamardash",
         takim: "Merseyside Reds",
         uyruk: "Gürcistan",
         mevki: "KL",
@@ -778,7 +778,7 @@ export const MERSEYSIDE_REDS_SQUAD = [
         ]
     },
     {
-        ad: "Jerry Frimp",
+        ad: "J. Frimponn",
         takim: "Merseyside Reds",
         uyruk: "Hollanda",
         mevki: "SĞB",

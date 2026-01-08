@@ -1,7 +1,7 @@
 
 export const PIEMONTE_ZEBRAS_SQUAD = [
     {
-        ad: "Gleison Brem",
+        ad: "G. Bremery",
         takim: "Piemonte Zebras",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -34,7 +34,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Manuel Loca",
+        ad: "M. Locatelly",
         takim: "Piemonte Zebras",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -65,7 +65,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Louis Open",
+        ad: "L. Opendo",
         takim: "Piemonte Zebras",
         uyruk: "Belçika",
         mevki: "SNT",
@@ -96,7 +96,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Jonathan Dave",
+        ad: "J. Davido",
         takim: "Piemonte Zebras",
         uyruk: "Kanada",
         mevki: "SNT",
@@ -124,7 +124,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Dushan Vlago",
+        ad: "D. Vlagovic",
         takim: "Piemonte Zebras",
         uyruk: "Sırbistan",
         mevki: "SNT",
@@ -155,7 +155,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Kephren Thor",
+        ad: "K. Thurammo",
         takim: "Piemonte Zebras",
         uyruk: "Fransa",
         mevki: "MO",
@@ -184,7 +184,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Filip Kosta",
+        ad: "F. Kostyc",
         takim: "Piemonte Zebras",
         uyruk: "Sırbistan",
         mevki: "SLO",
@@ -213,7 +213,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Teun Koop",
+        ad: "T. Koopman",
         takim: "Piemonte Zebras",
         uyruk: "Hollanda",
         mevki: "MOO",
@@ -243,7 +243,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Mike Gregor",
+        ad: "M. Gregorrio",
         takim: "Piemonte Zebras",
         uyruk: "İtalya",
         mevki: "KL",
@@ -271,7 +271,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Pierre Kal",
+        ad: "P. Kaluluo",
         takim: "Piemonte Zebras",
         uyruk: "Fransa",
         mevki: "STP",
@@ -299,7 +299,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Fedo Gat",
+        ad: "F. Gatty",
         takim: "Piemonte Zebras",
         uyruk: "İtalya",
         mevki: "STP",
@@ -327,7 +327,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Andre Cambi",
+        ad: "A. Cambyaso",
         takim: "Piemonte Zebras",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -355,7 +355,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Kenan Star",
+        ad: "K. Starr",
         takim: "Piemonte Zebras",
         uyruk: "Türkiye",
         mevki: "MOO",
@@ -386,7 +386,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Edon Zhegro",
+        ad: "E. Zhegrovo",
         takim: "Piemonte Zebras",
         uyruk: "Kosova",
         mevki: "SĞO",
@@ -414,7 +414,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Chico Concei",
+        ad: "C. Conceycao",
         takim: "Piemonte Zebras",
         uyruk: "Portekiz",
         mevki: "SĞO",
@@ -442,7 +442,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Arkadiusz Mil",
+        ad: "A. Milikk",
         takim: "Piemonte Zebras",
         uyruk: "Polonya",
         mevki: "SNT",
@@ -469,7 +469,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Weston Mack",
+        ad: "W. Mackenny",
         takim: "Piemonte Zebras",
         uyruk: "Amerika Birleşik Devletleri",
         mevki: "MO",
@@ -497,7 +497,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         ]
     },
     {
-        ad: "Fabio Mir",
+        ad: "F. Miretty",
         takim: "Piemonte Zebras",
         uyruk: "İtalya",
         mevki: "MO",
@@ -521,7 +521,7 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Juan Cabal",
+        ad: "J. Caballo",
         takim: "Piemonte Zebras",
         uyruk: "Kolombiya",
         mevki: "SLB",
@@ -543,48 +543,48 @@ export const PIEMONTE_ZEBRAS_SQUAD = [
         },
         oyun_tarzlari: []
     },
-  {
-    ad: "Diego Perez",
-    takim: "Juventus",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 81,
-    yas: 20,
-    ana_ozellikler: { hiz: 71, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 71, refleks: 81, vurus: 76, pozisyon: 73, top_kontrol: 69 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Santos",
-    takim: "Juventus",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 80,
-    yas: 21,
-    ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Perez",
-    takim: "Juventus",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 79,
-    yas: 22,
-    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
-    detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Perez",
-    takim: "Juventus",
-    uyruk: "Fransa",
-    mevki: "SĞB",
-    reyting: 78,
-    yas: 23,
-    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
-    detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "D. Pereze",
+        takim: "Piemonte Zebras",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 81,
+        yas: 20,
+        ana_ozellikler: { hiz: 71, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 71, refleks: 81, vurus: 76, pozisyon: 73, top_kontrol: 69 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Santoz",
+        takim: "Piemonte Zebras",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 80,
+        yas: 21,
+        ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
+        detaylar: { ucma: 70, refleks: 80, vurus: 75, pozisyon: 72, top_kontrol: 68 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Pereze",
+        takim: "Piemonte Zebras",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 79,
+        yas: 22,
+        ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+        detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Pereze",
+        takim: "Piemonte Zebras",
+        uyruk: "Fransa",
+        mevki: "SĞB",
+        reyting: 78,
+        yas: 23,
+        ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+        detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
+        oyun_tarzlari: []
+    }
 ];

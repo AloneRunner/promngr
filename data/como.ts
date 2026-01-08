@@ -1,7 +1,7 @@
 
 export const COMO_LAKERS_SQUAD = [
     {
-        ad: "Sergi Robe",
+        ad: "S. Rober",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "MO",
@@ -29,7 +29,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Nico Paz",
+        ad: "N. Pazz",
         takim: "Como Lakers",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -56,7 +56,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Andr Belot",
+        ad: "A. Belott",
         takim: "Como Lakers",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -82,7 +82,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Patrick Cuatro",
+        ad: "P. Cuatro",
         takim: "Como Lakers",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -106,7 +106,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Pepe Rein",
+        ad: "P. Reina",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "KL",
@@ -131,7 +131,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Luke Mazzit",
+        ad: "L. Mazzit",
         takim: "Como Lakers",
         uyruk: "İtalya",
         mevki: "MO",
@@ -152,7 +152,7 @@ export const COMO_LAKERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Gabriel Stref",
+        ad: "G. Strefe",
         takim: "Como Lakers",
         uyruk: "Brezilya",
         mevki: "SĞK",
@@ -173,7 +173,7 @@ export const COMO_LAKERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Alb Doossen",
+        ad: "A. Dossen",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "STP",
@@ -195,7 +195,7 @@ export const COMO_LAKERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Alb Moren",
+        ad: "A. Moren",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -216,7 +216,7 @@ export const COMO_LAKERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Emi Auder",
+        ad: "E. Auder",
         takim: "Como Lakers",
         uyruk: "İtalya",
         mevki: "KL",
@@ -239,7 +239,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Mark Kemp",
+        ad: "M. Kempff",
         takim: "Como Lakers",
         uyruk: "Almanya",
         mevki: "STP",
@@ -260,7 +260,7 @@ export const COMO_LAKERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Max Perro",
+        ad: "M. Perro",
         takim: "Como Lakers",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -283,7 +283,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Ali Fadera",
+        ad: "A. Fadera",
         takim: "Como Lakers",
         uyruk: "Gambiya",
         mevki: "SLK",
@@ -307,7 +307,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Alvaro Mora",
+        ad: "A. Morat",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "SNT",
@@ -337,7 +337,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Nico Peace",
+        ad: "N. Pazz",
         takim: "Como Lakers",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -367,7 +367,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Stefan Posh",
+        ad: "S. Posh",
         takim: "Como Lakers",
         uyruk: "Avusturya",
         mevki: "SĞB",
@@ -393,7 +393,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Diego Carl",
+        ad: "D. Carl",
         takim: "Como Lakers",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -420,7 +420,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Martin Batu",
+        ad: "M. Batu",
         takim: "Como Lakers",
         uyruk: "Hırvatistan",
         mevki: "MOO",
@@ -447,7 +447,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Nico Kuhn",
+        ad: "N. Kuhn",
         takim: "Como Lakers",
         uyruk: "Almanya",
         mevki: "SĞK",
@@ -475,7 +475,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Max Caqret",
+        ad: "M. Caqret",
         takim: "Como Lakers",
         uyruk: "Fransa",
         mevki: "MO",
@@ -503,7 +503,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Sergio Bert",
+        ad: "S. Rober",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -530,7 +530,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Jean Butz",
+        ad: "J. Butz",
         takim: "Como Lakers",
         uyruk: "Fransa",
         mevki: "KL",
@@ -555,7 +555,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Alberto Moro",
+        ad: "A. Moren",
         takim: "Como Lakers",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -580,7 +580,7 @@ export const COMO_LAKERS_SQUAD = [
         ]
     },
     {
-        ad: "Assane Dia",
+        ad: "A. Diao",
         takim: "Como Lakers",
         uyruk: "Senegal",
         mevki: "SLO",

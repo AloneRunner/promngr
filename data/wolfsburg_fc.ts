@@ -1,19 +1,19 @@
 export const WOLFSBURG_FC_SQUAD = [
-    {
-        ad: "Jakub Zielinski",
-        takim: "Wolfsburg FC",
-        uyruk: "Polonya",
-        mevki: "KL",
-        reyting: 59,
-        yas: 19,
-        ana_ozellikler: { hiz: 60, sut: 53, pas: 60, dribbling: 60, defans: 20, fizik: 59 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "J. Zielinskoh",
+    takim: "Wolfsburg Green",
+    uyruk: "Polonya",
+    mevki: "KL",
+    reyting: 59,
+    yas: 19,
+    ana_ozellikler: { hiz: 60, sut: 53, pas: 60, dribbling: 60, defans: 20, fizik: 59 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Garcia",
-    takim: "Wolfsburg Fc",
+    ad: "C. Garcy",
+    takim: "Wolfsburg Green",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -23,8 +23,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Wolfsburg Fc",
+    ad: "D. Garcy",
+    takim: "Wolfsburg Green",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -34,8 +34,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Wolfsburg Fc",
+    ad: "D. Santozz",
+    takim: "Wolfsburg Green",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 69,
@@ -45,8 +45,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Wolfsburg Fc",
+    ad: "L. Martines",
+    takim: "Wolfsburg Green",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -56,8 +56,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Wolfsburg Fc",
+    ad: "C. Martines",
+    takim: "Wolfsburg Green",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -67,8 +67,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Wolfsburg Fc",
+    ad: "D. Lopeze",
+    takim: "Wolfsburg Green",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -78,8 +78,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Wolfsburg Fc",
+    ad: "J. Rodrigz",
+    takim: "Wolfsburg Green",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -89,8 +89,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Wolfsburg Fc",
+    ad: "P. Rodrigz",
+    takim: "Wolfsburg Green",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -100,8 +100,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Silva",
-    takim: "Wolfsburg Fc",
+    ad: "D. Sylva",
+    takim: "Wolfsburg Green",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -111,8 +111,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Wolfsburg Fc",
+    ad: "D. Sylva",
+    takim: "Wolfsburg Green",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -122,8 +122,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Wolfsburg Fc",
+    ad: "C. Rodrigz",
+    takim: "Wolfsburg Green",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -133,8 +133,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Garcia",
-    takim: "Wolfsburg Fc",
+    ad: "M. Garcy",
+    takim: "Wolfsburg Green",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -144,8 +144,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
-    takim: "Wolfsburg Fc",
+    ad: "J. Sylva",
+    takim: "Wolfsburg Green",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -155,8 +155,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Wolfsburg Fc",
+    ad: "D. Santozz",
+    takim: "Wolfsburg Green",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -166,8 +166,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
-    takim: "Wolfsburg Fc",
+    ad: "J. Sylva",
+    takim: "Wolfsburg Green",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -177,8 +177,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Wolfsburg Fc",
+    ad: "J. Garcy",
+    takim: "Wolfsburg Green",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -188,8 +188,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Wolfsburg Fc",
+    ad: "P. Garcy",
+    takim: "Wolfsburg Green",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -199,8 +199,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Wolfsburg Fc",
+    ad: "P. Santozz",
+    takim: "Wolfsburg Green",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -210,8 +210,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Wolfsburg Fc",
+    ad: "L. Martines",
+    takim: "Wolfsburg Green",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -221,8 +221,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
-    takim: "Wolfsburg Fc",
+    ad: "L. Martines",
+    takim: "Wolfsburg Green",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,
@@ -232,8 +232,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Wolfsburg Fc",
+    ad: "C. Lopeze",
+    takim: "Wolfsburg Green",
     uyruk: "İspanya",
     mevki: "SLO",
     reyting: 61,
@@ -243,8 +243,8 @@ export const WOLFSBURG_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Wolfsburg Fc",
+    ad: "C. Rodrigz",
+    takim: "Wolfsburg Green",
     uyruk: "Fransa",
     mevki: "SLO",
     reyting: 61,

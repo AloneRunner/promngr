@@ -1,7 +1,7 @@
 
 export const LATIUM_EAGLES_SQUAD = [
     {
-        ad: "Matty Zacca",
+        ad: "M. Zaccanny",
         takim: "Latium Eagles",
         uyruk: "İtalya",
         mevki: "SLO",
@@ -33,7 +33,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Ivan Provel",
+        ad: "I. Provedell",
         takim: "Latium Eagles",
         uyruk: "İtalya",
         mevki: "KL",
@@ -60,7 +60,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Matt Guendo",
+        ad: "M. Guendozi",
         takim: "Latium Eagles",
         uyruk: "Fransa",
         mevki: "MDO",
@@ -90,7 +90,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Alex Roman",
+        ad: "A. Romagnol",
         takim: "Latium Eagles",
         uyruk: "İtalya",
         mevki: "STP",
@@ -118,7 +118,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Boulaye D.",
+        ad: "B. Diay",
         takim: "Latium Eagles",
         uyruk: "Senegal",
         mevki: "SNT",
@@ -146,7 +146,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Tino Castello",
+        ad: "T. Castelli",
         takim: "Latium Eagles",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -172,7 +172,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Nico Rove",
+        ad: "N. Rovelly",
         takim: "Latium Eagles",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -198,7 +198,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Manuel Lazz",
+        ad: "M. Lazzary",
         takim: "Latium Eagles",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -224,7 +224,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Nuno Tav",
+        ad: "N. Tavarez",
         takim: "Latium Eagles",
         uyruk: "Portekiz",
         mevki: "SLB",
@@ -251,7 +251,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Mario Gil",
+        ad: "M. Gilas",
         takim: "Latium Eagles",
         uyruk: "İspanya",
         mevki: "STP",
@@ -276,7 +276,7 @@ export const LATIUM_EAGLES_SQUAD = [
         ]
     },
     {
-        ad: "Gus Isaac",
+        ad: "G. Isaksenn",
         takim: "Latium Eagles",
         uyruk: "Danimarka",
         mevki: "SĞO",
@@ -300,136 +300,136 @@ export const LATIUM_EAGLES_SQUAD = [
             "Seri"
         ]
     },
-  {
-    ad: "Lucas Rodriguez",
-    takim: "Lazio",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 75,
-    yas: 20,
-    ana_ozellikler: { hiz: 65, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 75 },
-    detaylar: { ucma: 65, refleks: 75, vurus: 70, pozisyon: 67, top_kontrol: 63 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Martinez",
-    takim: "Lazio",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 74,
-    yas: 21,
-    ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
-    detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Costa",
-    takim: "Lazio",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 73,
-    yas: 22,
-    ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
-    detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Rodriguez",
-    takim: "Lazio",
-    uyruk: "Fransa",
-    mevki: "STP",
-    reyting: 72,
-    yas: 23,
-    ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
-    detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Martinez",
-    takim: "Lazio",
-    uyruk: "İtalya",
-    mevki: "SĞB",
-    reyting: 71,
-    yas: 24,
-    ana_ozellikler: { hiz: 61, sut: 46, pas: 63, dribbling: 61, defans: 71, fizik: 66 },
-    detaylar: { ayakta_mudahale: 71, top_kesme: 66, kafa_isabeti: 61, guc: 63 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Perez",
-    takim: "Lazio",
-    uyruk: "Portekiz",
-    mevki: "SLB",
-    reyting: 70,
-    yas: 25,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Costa",
-    takim: "Lazio",
-    uyruk: "Brezilya",
-    mevki: "MDO",
-    reyting: 69,
-    yas: 26,
-    ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
-    detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Garcia",
-    takim: "Lazio",
-    uyruk: "Arjantin",
-    mevki: "MO",
-    reyting: 68,
-    yas: 27,
-    ana_ozellikler: { hiz: 56, sut: 58, pas: 68, dribbling: 63, defans: 53, fizik: 58 },
-    detaylar: { vizyon: 63, kisa_pas: 68, top_kontrol: 60, dayaniklilik: 56 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Silva",
-    takim: "Lazio",
-    uyruk: "İspanya",
-    mevki: "MO",
-    reyting: 67,
-    yas: 28,
-    ana_ozellikler: { hiz: 55, sut: 57, pas: 67, dribbling: 62, defans: 52, fizik: 57 },
-    detaylar: { vizyon: 62, kisa_pas: 67, top_kontrol: 59, dayaniklilik: 55 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Lopez",
-    takim: "Lazio",
-    uyruk: "Fransa",
-    mevki: "MO",
-    reyting: 66,
-    yas: 29,
-    ana_ozellikler: { hiz: 54, sut: 56, pas: 66, dribbling: 61, defans: 51, fizik: 56 },
-    detaylar: { vizyon: 61, kisa_pas: 66, top_kontrol: 58, dayaniklilik: 54 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Garcia",
-    takim: "Lazio",
-    uyruk: "İtalya",
-    mevki: "MOO",
-    reyting: 65,
-    yas: 30,
-    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
-    detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Lopez",
-    takim: "Lazio",
-    uyruk: "Portekiz",
-    mevki: "MOO",
-    reyting: 69,
-    yas: 31,
-    ana_ozellikler: { hiz: 57, sut: 59, pas: 69, dribbling: 64, defans: 54, fizik: 59 },
-    detaylar: { vizyon: 64, kisa_pas: 69, top_kontrol: 61, dayaniklilik: 57 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "L. Rodrigz",
+        takim: "Latium Eagles",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 75,
+        yas: 20,
+        ana_ozellikler: { hiz: 65, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 75 },
+        detaylar: { ucma: 65, refleks: 75, vurus: 70, pozisyon: 67, top_kontrol: 63 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Latium Eagles",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 74,
+        yas: 21,
+        ana_ozellikler: { hiz: 64, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 74 },
+        detaylar: { ucma: 64, refleks: 74, vurus: 69, pozisyon: 66, top_kontrol: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Costas",
+        takim: "Latium Eagles",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 73,
+        yas: 22,
+        ana_ozellikler: { hiz: 63, sut: 48, pas: 65, dribbling: 63, defans: 73, fizik: 68 },
+        detaylar: { ayakta_mudahale: 73, top_kesme: 68, kafa_isabeti: 63, guc: 65 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Rodrigz",
+        takim: "Latium Eagles",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 62, sut: 47, pas: 64, dribbling: 62, defans: 72, fizik: 67 },
+        detaylar: { ayakta_mudahale: 72, top_kesme: 67, kafa_isabeti: 62, guc: 64 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Martines",
+        takim: "Latium Eagles",
+        uyruk: "İtalya",
+        mevki: "SĞB",
+        reyting: 71,
+        yas: 24,
+        ana_ozellikler: { hiz: 61, sut: 46, pas: 63, dribbling: 61, defans: 71, fizik: 66 },
+        detaylar: { ayakta_mudahale: 71, top_kesme: 66, kafa_isabeti: 61, guc: 63 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Pereze",
+        takim: "Latium Eagles",
+        uyruk: "Portekiz",
+        mevki: "SLB",
+        reyting: 70,
+        yas: 25,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Costas",
+        takim: "Latium Eagles",
+        uyruk: "Brezilya",
+        mevki: "MDO",
+        reyting: 69,
+        yas: 26,
+        ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
+        detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Garcy",
+        takim: "Latium Eagles",
+        uyruk: "Arjantin",
+        mevki: "MO",
+        reyting: 68,
+        yas: 27,
+        ana_ozellikler: { hiz: 56, sut: 58, pas: 68, dribbling: 63, defans: 53, fizik: 58 },
+        detaylar: { vizyon: 63, kisa_pas: 68, top_kontrol: 60, dayaniklilik: 56 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Sylva",
+        takim: "Latium Eagles",
+        uyruk: "İspanya",
+        mevki: "MO",
+        reyting: 67,
+        yas: 28,
+        ana_ozellikler: { hiz: 55, sut: 57, pas: 67, dribbling: 62, defans: 52, fizik: 57 },
+        detaylar: { vizyon: 62, kisa_pas: 67, top_kontrol: 59, dayaniklilik: 55 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Lopeze",
+        takim: "Latium Eagles",
+        uyruk: "Fransa",
+        mevki: "MO",
+        reyting: 66,
+        yas: 29,
+        ana_ozellikler: { hiz: 54, sut: 56, pas: 66, dribbling: 61, defans: 51, fizik: 56 },
+        detaylar: { vizyon: 61, kisa_pas: 66, top_kontrol: 58, dayaniklilik: 54 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Garcy",
+        takim: "Latium Eagles",
+        uyruk: "İtalya",
+        mevki: "MOO",
+        reyting: 65,
+        yas: 30,
+        ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+        detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Lopeze",
+        takim: "Latium Eagles",
+        uyruk: "Portekiz",
+        mevki: "MOO",
+        reyting: 69,
+        yas: 31,
+        ana_ozellikler: { hiz: 57, sut: 59, pas: 69, dribbling: 64, defans: 54, fizik: 59 },
+        detaylar: { vizyon: 64, kisa_pas: 69, top_kontrol: 61, dayaniklilik: 57 },
+        oyun_tarzlari: []
+    }
 ];

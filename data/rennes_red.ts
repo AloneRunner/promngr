@@ -1,40 +1,40 @@
 export const RENNES_RED_SQUAD = [
-    {
-        ad: "Brice Simba",
-        takim: "Rennes Red",
-        uyruk: "Fransa",
-        mevki: "KL",
-        reyting: 80,
-        yas: 31,
-        ana_ozellikler: { hiz: 78, sut: 80, pas: 80, dribbling: 80, defans: 53, fizik: 80 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Breel Embolo",
-        takim: "Rennes Red",
-        uyruk: "İsviçre",
-        mevki: "SNT",
-        reyting: 77,
-        yas: 28,
-        ana_ozellikler: { hiz: 78, sut: 75, pas: 70, dribbling: 75, defans: 51, fizik: 80 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Doğan Alemdar",
-        takim: "Rennes Red",
-        uyruk: "Türkiye",
-        mevki: "KL",
-        reyting: 70,
-        yas: 22,
-        ana_ozellikler: { hiz: 70, sut: 69, pas: 69, dribbling: 69, defans: 38, fizik: 71 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
   {
-    ad: "Carlos Santos",
-    takim: "Rennes Red",
+    ad: "B. Sambah",
+    takim: "Brittany Red",
+    uyruk: "Fransa",
+    mevki: "KL",
+    reyting: 80,
+    yas: 31,
+    ana_ozellikler: { hiz: 78, sut: 80, pas: 80, dribbling: 80, defans: 53, fizik: 80 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "B. Embolloh",
+    takim: "Brittany Red",
+    uyruk: "İsviçre",
+    mevki: "SNT",
+    reyting: 77,
+    yas: 28,
+    ana_ozellikler: { hiz: 78, sut: 75, pas: 70, dribbling: 75, defans: 51, fizik: 80 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "D. Alemdarr",
+    takim: "Brittany Red",
+    uyruk: "Türkiye",
+    mevki: "KL",
+    reyting: 70,
+    yas: 22,
+    ana_ozellikler: { hiz: 70, sut: 69, pas: 69, dribbling: 69, defans: 38, fizik: 71 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "C. Santozz",
+    takim: "Brittany Red",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -44,8 +44,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Rennes Red",
+    ad: "L. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "Arjantin",
     mevki: "STP",
     reyting: 70,
@@ -55,8 +55,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Rennes Red",
+    ad: "D. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 69,
@@ -66,8 +66,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Rennes Red",
+    ad: "L. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -77,8 +77,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
-    takim: "Rennes Red",
+    ad: "C. Santozz",
+    takim: "Brittany Red",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -88,8 +88,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
-    takim: "Rennes Red",
+    ad: "J. Pereze",
+    takim: "Brittany Red",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 66,
@@ -99,8 +99,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Rennes Red",
+    ad: "J. Costas",
+    takim: "Brittany Red",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -110,8 +110,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Garcia",
-    takim: "Rennes Red",
+    ad: "L. Garcy",
+    takim: "Brittany Red",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 64,
@@ -121,8 +121,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Silva",
-    takim: "Rennes Red",
+    ad: "D. Sylva",
+    takim: "Brittany Red",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -132,8 +132,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
-    takim: "Rennes Red",
+    ad: "M. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "Fransa",
     mevki: "MDO",
     reyting: 62,
@@ -143,8 +143,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Rennes Red",
+    ad: "C. Martines",
+    takim: "Brittany Red",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -154,8 +154,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Silva",
-    takim: "Rennes Red",
+    ad: "M. Sylva",
+    takim: "Brittany Red",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -165,8 +165,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Rennes Red",
+    ad: "D. Martines",
+    takim: "Brittany Red",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 65,
@@ -176,8 +176,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Rennes Red",
+    ad: "D. Garcy",
+    takim: "Brittany Red",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -187,8 +187,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
-    takim: "Rennes Red",
+    ad: "J. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -198,8 +198,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Rennes Red",
+    ad: "P. Santozz",
+    takim: "Brittany Red",
     uyruk: "Fransa",
     mevki: "MOO",
     reyting: 64,
@@ -209,8 +209,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Rennes Red",
+    ad: "P. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -220,8 +220,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
-    takim: "Rennes Red",
+    ad: "M. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 63,
@@ -231,8 +231,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Rennes Red",
+    ad: "L. Rodrigz",
+    takim: "Brittany Red",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -242,8 +242,8 @@ export const RENNES_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Rennes Red",
+    ad: "L. Santozz",
+    takim: "Brittany Red",
     uyruk: "Arjantin",
     mevki: "SLO",
     reyting: 62,

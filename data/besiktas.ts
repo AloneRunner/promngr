@@ -16,7 +16,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Engel+", "Güçlü+", "Hava Hakimi+", "Kayarak Müdahale+", "Sezgili+", "Top Kesici+", "Yakın Markaj+"]
   },
   {
-    ad: "Orkun Kökçü",
+    ad: "O. Kokcu",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -33,7 +33,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Keskin Pas", "Kuvvetli Şut", "Plase Şut"]
   },
   {
-    ad: "Rafa",
+    ad: "R. Sylva",
     takim: "Besikta Eagles",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -50,7 +50,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Akrobatik", "Çabuk Adım", "İlk Dokunuş", "Seri", "Yaratıcı"]
   },
   {
-    ad: "Mert Günok",
+    ad: "M. Gunok",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -64,7 +64,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Ayak Hakimiyeti", "Ortaya Çıkan", "Uzağa Fırlatma"]
   },
   {
-    ad: "João Mário",
+    ad: "J. Mario",
     takim: "Besikta Eagles",
     uyruk: "Portekiz",
     mevki: "SLO",
@@ -81,7 +81,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["İlk Dokunuş", "Keskin Pas", "Teknik"]
   },
   {
-    ad: "Václav Černý",
+    ad: "V. Cerny",
     takim: "Besikta Eagles",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SĞO",
@@ -95,7 +95,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Alçak Sert Şut", "Plase Şut", "Seri"]
   },
   {
-    ad: "Tammy Abraham",
+    ad: "T. Abrah",
     takim: "Besikta Eagles",
     uyruk: "İngiltere",
     mevki: "SNT",
@@ -109,7 +109,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı", "Karşı Koyan"]
   },
   {
-    ad: "Gabriel Paulista",
+    ad: "G. Paulis",
     takim: "Besikta Eagles",
     uyruk: "Brezilya",
     mevki: "STP",
@@ -123,7 +123,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale", "Top Kesici"]
   },
   {
-    ad: "Milot Rashica",
+    ad: "M. Rashyc",
     takim: "Besikta Eagles",
     uyruk: "Kosova",
     mevki: "SĞO",
@@ -137,7 +137,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "Kuvvetli Şut", "Seri"]
   },
   {
-    ad: "Wilfred Ndidi",
+    ad: "W. Ndidy",
     takim: "Besikta Eagles",
     uyruk: "Nijerya",
     mevki: "MDO",
@@ -151,7 +151,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Engel"]
   },
   {
-    ad: "Cengiz Ünder",
+    ad: "C. Under",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "SĞK",
@@ -165,7 +165,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Kesme Pas", "Seri"]
   },
   {
-    ad: "Felix Uduokhai",
+    ad: "F. Uduokh",
     takim: "Besikta Eagles",
     uyruk: "Almanya",
     mevki: "STP",
@@ -178,7 +178,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Engel"]
   },
   {
-    ad: "Jonas Svensson",
+    ad: "J. Svenso",
     takim: "Besikta Eagles",
     uyruk: "Norveç",
     mevki: "SĞB",
@@ -192,7 +192,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale"]
   },
   {
-    ad: "Tiago Djaló",
+    ad: "T. Djalo",
     takim: "Besikta Eagles",
     uyruk: "Portekiz",
     mevki: "STP",
@@ -206,7 +206,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Güçlü"]
   },
   {
-    ad: "David Jurásek",
+    ad: "D. Jurasek",
     takim: "Besikta Eagles",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SLB",
@@ -220,7 +220,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı", "İnce Pas", "Kesme Pas", "Uzun Topla Pas"]
   },
   {
-    ad: "Rıdvan Yılmaz",
+    ad: "R. Yilmy",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "SLB",
@@ -234,7 +234,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Kesme Pas", "Seri"]
   },
   {
-    ad: "Emirhan Topçu",
+    ad: "E. Topcu",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -248,7 +248,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Hassas Kafa Vuruşu", "Top Kesici"]
   },
   {
-    ad: "El Bilal Touré",
+    ad: "E. Toure",
     takim: "Besikta Eagles",
     uyruk: "Mali",
     mevki: "SNT",
@@ -262,7 +262,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Demir Ege Tıknaz",
+    ad: "D. Tiknaz",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -276,7 +276,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Salih Uçan",
+    ad: "S. Ucan",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -290,7 +290,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı"]
   },
   {
-    ad: "Ersin Destanoğlu",
+    ad: "E. Destan",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "KL",
@@ -304,7 +304,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Ortaya Çıkan"]
   },
   {
-    ad: "Kartal Yılmaz",
+    ad: "K. Yilmy",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -318,7 +318,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: ["Top Kesici", "Uzun Topla Pas"]
   },
   {
-    ad: "Necip Uysal",
+    ad: "N. Uysal",
     takim: "Besikta Eagles",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -332,7 +332,7 @@ export const BESIKTAS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Taylan Bulut",
+    ad: "T. Bulutt",
     takim: "Besikta Eagles",
     uyruk: "Almanya",
     mevki: "SĞB",

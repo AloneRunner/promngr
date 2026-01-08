@@ -1,7 +1,7 @@
 
 export const SASSUOLO_GREENBLACKS_SQUAD = [
     {
-        ad: "Domenic Berardi",
+        ad: "D. Berardy",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "SĞO",
@@ -35,7 +35,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Armand Laurien",
+        ad: "A. Laurenty",
         takim: "Sassuolo Greenblacks",
         uyruk: "Fransa",
         mevki: "SLO",
@@ -66,7 +66,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Kristian Thors",
+        ad: "K. Thorstvy",
         takim: "Sassuolo Greenblacks",
         uyruk: "Norveç",
         mevki: "MO",
@@ -93,7 +93,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Josh Doig",
+        ad: "J. Doigg",
         takim: "Sassuolo Greenblacks",
         uyruk: "İskoçya",
         mevki: "SLB",
@@ -118,7 +118,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Pedro Obiang",
+        ad: "P. Obiann",
         takim: "Sassuolo Greenblacks",
         uyruk: "Ekvator Ginesi",
         mevki: "MDO",
@@ -139,7 +139,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Daniel Bulo",
+        ad: "D. Bolokan",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "MO",
@@ -160,7 +160,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Sam Mulat",
+        ad: "S. Mulatty",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -181,7 +181,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Jeremy Tol",
+        ad: "J. Toljann",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "SĞB",
@@ -202,7 +202,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Horatiu Mold",
+        ad: "H. Moldovann",
         takim: "Sassuolo Greenblacks",
         uyruk: "Romanya",
         mevki: "KL",
@@ -223,7 +223,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Fillipo Rom",
+        ad: "F. Romagnah",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "STP",
@@ -244,7 +244,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "C. Volpato",
+        ad: "C. Volpatto",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "MOO",
@@ -265,7 +265,7 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Luca Lipani",
+        ad: "L. Lipany",
         takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -286,8 +286,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Dome Berar",
-        takim: "Sassuolo GreenBlacks",
+        ad: "D. Berardy",
+        takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "SĞK",
         forma_no: 10,
@@ -319,8 +319,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Armand Lauro",
-        takim: "Sassuolo GreenBlacks",
+        ad: "A. Laurenty",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Fransa",
         mevki: "SLK",
         forma_no: 45,
@@ -351,8 +351,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Neman Matic",
-        takim: "Sassuolo GreenBlacks",
+        ad: "N. Matick",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Sırbistan",
         mevki: "MDO",
         forma_no: 31,
@@ -381,8 +381,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Chris Thor",
-        takim: "Sassuolo GreenBlacks",
+        ad: "K. Thorstvy",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Norveç",
         mevki: "MO",
         forma_no: 42,
@@ -409,8 +409,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Steve Turat",
-        takim: "Sassuolo GreenBlacks",
+        ad: "S. Turatty",
+        takim: "Sassuolo Greenblacks",
         uyruk: "İtalya",
         mevki: "KL",
         forma_no: 1,
@@ -435,8 +435,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Daniel Bolo",
-        takim: "Sassuolo GreenBlacks",
+        ad: "D. Bolokan",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Romanya",
         mevki: "MO",
         forma_no: 6,
@@ -458,8 +458,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Ismael Kone",
-        takim: "Sassuolo GreenBlacks",
+        ad: "I. Konne",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Kanada",
         mevki: "MO",
         forma_no: 20,
@@ -483,8 +483,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         ]
     },
     {
-        ad: "Jay Idzes",
-        takim: "Sassuolo GreenBlacks",
+        ad: "J. Idzess",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Endonezya",
         mevki: "STP",
         forma_no: 4,
@@ -506,8 +506,8 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Walid Ched",
-        takim: "Sassuolo GreenBlacks",
+        ad: "W. Cheddy",
+        takim: "Sassuolo Greenblacks",
         uyruk: "Fas",
         mevki: "SNT",
         forma_no: 9,
@@ -528,26 +528,26 @@ export const SASSUOLO_GREENBLACKS_SQUAD = [
         },
         oyun_tarzlari: []
     },
-  {
-    ad: "Carlos Perez",
-    takim: "Sassuolo",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Perez",
-    takim: "Sassuolo",
-    uyruk: "Arjantin",
-    mevki: "STP",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Pereze",
+        takim: "Sassuolo Greenblacks",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Pereze",
+        takim: "Sassuolo Greenblacks",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    }
 ];

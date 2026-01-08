@@ -1,63 +1,63 @@
 export const MONACO_RED_SQUAD = [
-    {
-        ad: "Denis Zakaria",
-        takim: "Monaco Red",
-        uyruk: "İsviçre",
-        mevki: "MDO",
-        reyting: 82,
-        yas: 28,
-        ana_ozellikler: { hiz: 80, sut: 67, pas: 74, dribbling: 77, defans: 80, fizik: 85 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Paul Pogba",
-        takim: "Monaco Red",
-        uyruk: "Fransa",
-        mevki: "MO",
-        reyting: 79,
-        yas: 32,
-        ana_ozellikler: { hiz: 64, sut: 76, pas: 81, dribbling: 83, defans: 60, fizik: 78 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Alexandr Golovin",
-        takim: "Monaco Red",
-        uyruk: "Rusya",
-        mevki: "SLO",
-        reyting: 79,
-        yas: 28,
-        ana_ozellikler: { hiz: 73, sut: 76, pas: 79, dribbling: 82, defans: 61, fizik: 66 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Takumi Minamino",
-        takim: "Monaco Red",
-        uyruk: "Japonya",
-        mevki: "SLO",
-        reyting: 78,
-        yas: 30,
-        ana_ozellikler: { hiz: 77, sut: 74, pas: 75, dribbling: 81, defans: 40, fizik: 64 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Folarin Balogun",
-        takim: "Monaco Red",
-        uyruk: "Amerika Birleşik Devletleri",
-        mevki: "SNT",
-        reyting: 77,
-        yas: 23,
-        ana_ozellikler: { hiz: 84, sut: 77, pas: 62, dribbling: 77, defans: 23, fizik: 68 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "D. Zakarya",
+    takim: "Principality Red",
+    uyruk: "İsviçre",
+    mevki: "MDO",
+    reyting: 82,
+    yas: 28,
+    ana_ozellikler: { hiz: 80, sut: 67, pas: 74, dribbling: 77, defans: 80, fizik: 85 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "P. Pogbah",
+    takim: "Principality Red",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 79,
+    yas: 32,
+    ana_ozellikler: { hiz: 64, sut: 76, pas: 81, dribbling: 83, defans: 60, fizik: 78 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "A. Golovynn",
+    takim: "Principality Red",
+    uyruk: "Rusya",
+    mevki: "SLO",
+    reyting: 79,
+    yas: 28,
+    ana_ozellikler: { hiz: 73, sut: 76, pas: 79, dribbling: 82, defans: 61, fizik: 66 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "T. Minamyno",
+    takim: "Principality Red",
+    uyruk: "Japonya",
+    mevki: "SLO",
+    reyting: 78,
+    yas: 30,
+    ana_ozellikler: { hiz: 77, sut: 74, pas: 75, dribbling: 81, defans: 40, fizik: 64 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "F. Balogunn",
+    takim: "Principality Red",
+    uyruk: "Amerika Birleşik Devletleri",
+    mevki: "SNT",
+    reyting: 77,
+    yas: 23,
+    ana_ozellikler: { hiz: 84, sut: 77, pas: 62, dribbling: 77, defans: 23, fizik: 68 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
-    takim: "Monaco Red",
+    ad: "C. Lopeze",
+    takim: "Principality Red",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -67,8 +67,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Monaco Red",
+    ad: "D. Lopeze",
+    takim: "Principality Red",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -78,8 +78,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Martinez",
-    takim: "Monaco Red",
+    ad: "A. Martines",
+    takim: "Principality Red",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 69,
@@ -89,8 +89,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Monaco Red",
+    ad: "L. Pereze",
+    takim: "Principality Red",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -100,8 +100,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
-    takim: "Monaco Red",
+    ad: "C. Rodrigz",
+    takim: "Principality Red",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -111,8 +111,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Monaco Red",
+    ad: "D. Lopeze",
+    takim: "Principality Red",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -122,8 +122,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
-    takim: "Monaco Red",
+    ad: "D. Lopeze",
+    takim: "Principality Red",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 65,
@@ -133,8 +133,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
-    takim: "Monaco Red",
+    ad: "P. Santoz",
+    takim: "Principality Red",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -144,8 +144,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Monaco Red",
+    ad: "D. Martines",
+    takim: "Principality Red",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 63,
@@ -155,8 +155,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Perez",
-    takim: "Monaco Red",
+    ad: "D. Pereze",
+    takim: "Principality Red",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -166,8 +166,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Lopez",
-    takim: "Monaco Red",
+    ad: "C. Lopeze",
+    takim: "Principality Red",
     uyruk: "İtalya",
     mevki: "SLB",
     reyting: 61,
@@ -177,8 +177,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
-    takim: "Monaco Red",
+    ad: "M. Rodrigz",
+    takim: "Principality Red",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -188,8 +188,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Monaco Red",
+    ad: "J. Santoz",
+    takim: "Principality Red",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -199,8 +199,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
-    takim: "Monaco Red",
+    ad: "D. Rodrigz",
+    takim: "Principality Red",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -210,8 +210,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Monaco Red",
+    ad: "J. Garcy",
+    takim: "Principality Red",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -221,8 +221,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Monaco Red",
+    ad: "P. Lopeze",
+    takim: "Principality Red",
     uyruk: "Fransa",
     mevki: "MOO",
     reyting: 64,
@@ -232,8 +232,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Monaco Red",
+    ad: "P. Lopeze",
+    takim: "Principality Red",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -243,8 +243,8 @@ export const MONACO_RED_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Martinez",
-    takim: "Monaco Red",
+    ad: "M. Martines",
+    takim: "Principality Red",
     uyruk: "Portekiz",
     mevki: "SĞO",
     reyting: 63,

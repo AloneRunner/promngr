@@ -51,6 +51,11 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2">
                                 <h2 className="text-lg font-bold text-white truncate">{player.firstName} {player.lastName}</h2>
+                                {player.jerseyNumber && (
+                                    <div className="text-sm font-bold px-2 py-0.5 rounded bg-slate-800 border border-slate-600 text-white">
+                                        #{player.jerseyNumber}
+                                    </div>
+                                )}
                                 <div className={`text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 ${getAttrColor(player.overall)}`}>
                                     {player.overall}
                                 </div>

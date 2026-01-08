@@ -1,6 +1,6 @@
 export const GIRONA_REDS_SQUAD = [
     {
-        ad: "Dominik Liva",
+        ad: "D. Livakovy",
         takim: "Girona Reds",
         uyruk: "Hırvatistan",
         mevki: "KL",
@@ -13,7 +13,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Birebir", "Refleks"]
     },
     {
-        ad: "Viktor Tsigan",
+        ad: "V. Tsyganko",
         takim: "Girona Reds",
         uyruk: "Ukrayna",
         mevki: "SĞO",
@@ -26,7 +26,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Teknik", "İçe Kat Eden"]
     },
     {
-        ad: "Dale Blind",
+        ad: "D. Blindo",
         takim: "Girona Reds",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -39,7 +39,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Oyun Kurucu Stoper", "Uzun Topla Pas", "Maestro"]
     },
     {
-        ad: "Tom Lemar",
+        ad: "T. Lemarro",
         takim: "Girona Reds",
         uyruk: "Fransa",
         mevki: "MO",
@@ -52,7 +52,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Teknik"]
     },
     {
-        ad: "Yaser Aspri",
+        ad: "Y. Asprilly",
         takim: "Girona Reds",
         uyruk: "Kolombiya",
         mevki: "SĞO",
@@ -65,7 +65,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Genç Yetenek"]
     },
     {
-        ad: "Donny Beek",
+        ad: "D. van de Beeko",
         takim: "Girona Reds",
         uyruk: "Hollanda",
         mevki: "MOO",
@@ -78,7 +78,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Gizli Forvet"]
     },
     {
-        ad: "Abel Ruz",
+        ad: "A. Ruize",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "SNT",
@@ -91,7 +91,7 @@ export const GIRONA_REDS_SQUAD = [
         oyun_tarzlari: ["Fırsatçı"]
     },
     {
-        ad: "Bryan Gi",
+        ad: "B. Gilo",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "SLO",
@@ -109,7 +109,7 @@ export const GIRONA_REDS_SQUAD = [
 
 export const GIRONA_REDS_RESERVES = [
     {
-        ad: "Cristhian Stua",
+        ad: "C. Stuanic",
         takim: "Girona Reds",
         uyruk: "Uruguay",
         mevki: "SNT",
@@ -120,7 +120,7 @@ export const GIRONA_REDS_RESERVES = [
         oyun_tarzlari: ["Efsane", "Hava Hakimi", "Penaltı Uzmanı"]
     },
     {
-        ad: "Ivan Mart",
+        ad: "I. Martinn",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "MO",
@@ -131,7 +131,7 @@ export const GIRONA_REDS_RESERVES = [
         oyun_tarzlari: ["Motor"]
     },
     {
-        ad: "Arnau Marti",
+        ad: "A. Martines",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -142,7 +142,7 @@ export const GIRONA_REDS_RESERVES = [
         oyun_tarzlari: ["Oyun Kurucu Bek", "Genç Yetenek"]
     },
     {
-        ad: "Miguel Gut",
+        ad: "M. Gutierre",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "SLB",
@@ -153,7 +153,7 @@ export const GIRONA_REDS_RESERVES = [
         oyun_tarzlari: ["Teknik Bek", "Orta Uzmanı"]
     },
     {
-        ad: "Portu",
+        ad: "Portuo",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "SĞO",
@@ -164,7 +164,7 @@ export const GIRONA_REDS_RESERVES = [
         oyun_tarzlari: ["Savaşçı Kanat"]
     },
     {
-        ad: "Oriol Rom",
+        ad: "O. Romeuy",
         takim: "Girona Reds",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -174,103 +174,103 @@ export const GIRONA_REDS_RESERVES = [
         detaylar: { guc: 85, top_kesme: 80, pozisyon: 82 },
         oyun_tarzlari: ["Çapa", "Güçlü"]
     },
-  {
-    ad: "Carlos Costa",
-    takim: "Girona Reds",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Rodriguez",
-    takim: "Girona Reds",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Rodriguez",
-    takim: "Girona Reds",
-    uyruk: "İspanya",
-    mevki: "STP",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
-    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Santos",
-    takim: "Girona Reds",
-    uyruk: "Fransa",
-    mevki: "STP",
-    reyting: 68,
-    yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
-    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Martinez",
-    takim: "Girona Reds",
-    uyruk: "İtalya",
-    mevki: "STP",
-    reyting: 67,
-    yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
-    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Silva",
-    takim: "Girona Reds",
-    uyruk: "Portekiz",
-    mevki: "SĞB",
-    reyting: 66,
-    yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
-    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Garcia",
-    takim: "Girona Reds",
-    uyruk: "Brezilya",
-    mevki: "SLB",
-    reyting: 65,
-    yas: 26,
-    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
-    detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Perez",
-    takim: "Girona Reds",
-    uyruk: "Arjantin",
-    mevki: "MDO",
-    reyting: 64,
-    yas: 27,
-    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
-    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Rodriguez",
-    takim: "Girona Reds",
-    uyruk: "İspanya",
-    mevki: "MDO",
-    reyting: 63,
-    yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
-    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Costas",
+        takim: "Girona Reds",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Rodrigz",
+        takim: "Girona Reds",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+        detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Rodrigz",
+        takim: "Girona Reds",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+        detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Santoz",
+        takim: "Girona Reds",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 68,
+        yas: 23,
+        ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+        detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Martines",
+        takim: "Girona Reds",
+        uyruk: "İtalya",
+        mevki: "STP",
+        reyting: 67,
+        yas: 24,
+        ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+        detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Sylva",
+        takim: "Girona Reds",
+        uyruk: "Portekiz",
+        mevki: "SĞB",
+        reyting: 66,
+        yas: 25,
+        ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+        detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Garcy",
+        takim: "Girona Reds",
+        uyruk: "Brezilya",
+        mevki: "SLB",
+        reyting: 65,
+        yas: 26,
+        ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+        detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Pereze",
+        takim: "Girona Reds",
+        uyruk: "Arjantin",
+        mevki: "MDO",
+        reyting: 64,
+        yas: 27,
+        ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
+        detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Rodrigz",
+        takim: "Girona Reds",
+        uyruk: "İspanya",
+        mevki: "MDO",
+        reyting: 63,
+        yas: 28,
+        ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
+        detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
+        oyun_tarzlari: []
+    }
 ];

@@ -1,7 +1,7 @@
 
 export const EYUPSPOR_SQUAD = [
   {
-    ad: "Mame Thiam",
+    ad: "M. Thiam",
     takim: "Eyup Violet",
     uyruk: "Senegal",
     mevki: "SNT",
@@ -12,7 +12,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Kesme Pas", "Plase Şut"]
   },
   {
-    ad: "Kerem Demirbay",
+    ad: "K. Demir",
     takim: "Eyup Violet",
     uyruk: "Almanya",
     mevki: "MDO",
@@ -23,7 +23,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı", "Duran Top", "Kesme Pas", "Yaratıcı"]
   },
   {
-    ad: "Samu Sáiz",
+    ad: "S. Saiz",
     takim: "Eyup Violet",
     uyruk: "İspanya",
     mevki: "MOO",
@@ -34,7 +34,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "Teknik"]
   },
   {
-    ad: "Taras Stepanenko",
+    ad: "T. Stepan",
     takim: "Eyup Violet",
     uyruk: "Ukrayna",
     mevki: "MDO",
@@ -45,7 +45,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Kayarak Müdahale"]
   },
   {
-    ad: "Emre Akbaba",
+    ad: "E. Akbaba",
     takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "MOO",
@@ -56,7 +56,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu"]
   },
   {
-    ad: "Denis Drăguș",
+    ad: "D. Dragus",
     takim: "Eyup Violet",
     uyruk: "Romanya",
     mevki: "SNT",
@@ -67,7 +67,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı", "Ezber Bozan"]
   },
   {
-    ad: "Serdar Gürler",
+    ad: "S. Gurler",
     takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SLO",
@@ -78,7 +78,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Halil Akbunar",
+    ad: "H. Akbunar",
     takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SĞO",
@@ -89,7 +89,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Amansız", "Seri"]
   },
   {
-    ad: "Prince Ampem",
+    ad: "P. Ampem",
     takim: "Eyup Violet",
     uyruk: "Gana",
     mevki: "SLO",
@@ -100,7 +100,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım", "Teknik"]
   },
   {
-    ad: "Yalçın Kayan",
+    ad: "Y. Kayan",
     takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "MO",
@@ -111,7 +111,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Uzun Topla Pas"]
   },
   {
-    ad: "Marcos Felipe",
+    ad: "M. Felipe",
     takim: "Eyup Violet",
     uyruk: "Brezilya",
     mevki: "KL",
@@ -122,7 +122,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Robin Yalçın",
+    ad: "R. Yalcin",
     takim: "Eyup Violet",
     uyruk: "Almanya",
     mevki: "STP",
@@ -133,7 +133,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Uzun Topla Pas"]
   },
   {
-    ad: "Umut Meraş",
+    ad: "U. Meras",
     takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SLB",
@@ -144,7 +144,7 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Uzun Taç"]
   },
   {
-    ad: "Nihad Mujakić",
+    ad: "N. Mujakic",
     takim: "Eyup Violet",
     uyruk: "Bosna Hersek",
     mevki: "STP",
@@ -155,8 +155,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: ["Engel", "Sezgili"]
   },
   {
-    ad: "Mahmut Özgür",
-    takim: "Eyupspor",
+    ad: "M. Ozgur",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 67,
@@ -166,8 +166,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Deniz Polat",
-    takim: "Eyupspor",
+    ad: "D. Polat",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 65,
@@ -177,8 +177,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Yunus Kaya",
-    takim: "Eyupspor",
+    ad: "Y. Kaya",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 64,
@@ -188,8 +188,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Tolga Yılmaz",
-    takim: "Eyupspor",
+    ad: "T. Yilmaz",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 63,
@@ -199,8 +199,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Batuhan Demir",
-    takim: "Eyupspor",
+    ad: "B. Demir",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 62,
@@ -210,8 +210,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emre Arslan",
-    takim: "Eyupspor",
+    ad: "E. Arslan",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 61,
@@ -221,8 +221,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ahmet Özer",
-    takim: "Eyupspor",
+    ad: "A. Ozer",
+    takim: "Eyup Violet",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 59,
@@ -232,8 +232,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
-    takim: "Eyupspor",
+    ad: "P. Costa",
+    takim: "Eyup Violet",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 58,
@@ -243,8 +243,8 @@ export const EYUPSPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Eyupspor",
+    ad: "D. Silva",
+    takim: "Eyup Violet",
     uyruk: "Portekiz",
     mevki: "MO",
     reyting: 57,

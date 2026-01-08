@@ -1,7 +1,7 @@
 
 export const TORINO_BULLS_SQUAD = [
     {
-        ad: "Duvan Zapa",
+        ad: "D. Zapattah",
         takim: "Torino Bulls",
         uyruk: "Kolombiya",
         mevki: "SNT",
@@ -29,7 +29,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Ivan Ilic",
+        ad: "I. Ilychy",
         takim: "Torino Bulls",
         uyruk: "Sırbistan",
         mevki: "MO",
@@ -55,7 +55,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Che Adams",
+        ad: "C. Adamms",
         takim: "Torino Bulls",
         uyruk: "İskoçya",
         mevki: "SNT",
@@ -80,7 +80,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Sam Ricci",
+        ad: "S. Riccy",
         takim: "Torino Bulls",
         uyruk: "İtalya",
         mevki: "MDO",
@@ -105,7 +105,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Antonio Sana",
+        ad: "A. Sanabry",
         takim: "Torino Bulls",
         uyruk: "Paraguay",
         mevki: "SNT",
@@ -127,7 +127,7 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Vanya Milinko",
+        ad: "V. Milinkovy",
         takim: "Torino Bulls",
         uyruk: "Sırbistan",
         mevki: "KL",
@@ -152,7 +152,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Perr Schuurs",
+        ad: "P. Schuurse",
         takim: "Torino Bulls",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -177,7 +177,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Niko Vlasic",
+        ad: "N. Vlasycc",
         takim: "Torino Bulls",
         uyruk: "Hırvatistan",
         mevki: "MOO",
@@ -202,7 +202,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Borna Sosa",
+        ad: "B. Sosah",
         takim: "Torino Bulls",
         uyruk: "Hırvatistan",
         mevki: "SLB",
@@ -226,7 +226,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Karol Linet",
+        ad: "K. Linetty",
         takim: "Torino Bulls",
         uyruk: "Polonya",
         mevki: "MO",
@@ -247,7 +247,7 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Marcus Pede",
+        ad: "M. Pedersun",
         takim: "Torino Bulls",
         uyruk: "Norveç",
         mevki: "SĞB",
@@ -271,7 +271,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Saul Coco",
+        ad: "S. Cocoh",
         takim: "Torino Bulls",
         uyruk: "Ekvator Ginesi",
         mevki: "STP",
@@ -295,7 +295,7 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Valentino Laza",
+        ad: "V. Lazaro",
         takim: "Torino Bulls",
         uyruk: "Avusturya",
         mevki: "SĞB",
@@ -319,7 +319,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Duval Zapa",
+        ad: "D. Zapattah",
         takim: "Torino Bulls",
         uyruk: "Kolombiya",
         mevki: "SNT",
@@ -349,7 +349,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Nick Vlass",
+        ad: "N. Vlasycc",
         takim: "Torino Bulls",
         uyruk: "Hırvatistan",
         mevki: "MOO",
@@ -377,7 +377,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Che Adam",
+        ad: "C. Adamms",
         takim: "Torino Bulls",
         uyruk: "İskoçya",
         mevki: "SNT",
@@ -403,7 +403,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Perry Schuur",
+        ad: "P. Schuurse",
         takim: "Torino Bulls",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -429,7 +429,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Ivan Ilich",
+        ad: "I. Ilychy",
         takim: "Torino Bulls",
         uyruk: "Sırbistan",
         mevki: "MO",
@@ -455,7 +455,7 @@ export const TORINO_BULLS_SQUAD = [
         ]
     },
     {
-        ad: "Franco Israel",
+        ad: "F. Israell",
         takim: "Torino Bulls",
         uyruk: "Uruguay",
         mevki: "KL",
@@ -478,7 +478,7 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Cyril Nonge",
+        ad: "C. Nongge",
         takim: "Torino Bulls",
         uyruk: "Belçika",
         mevki: "SĞO",
@@ -502,7 +502,7 @@ export const TORINO_BULLS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Gvidas Giney",
+        ad: "G. Gineyts",
         takim: "Torino Bulls",
         uyruk: "Litvanya",
         mevki: "MO",
@@ -525,26 +525,26 @@ export const TORINO_BULLS_SQUAD = [
             "Genç Yetenek"
         ]
     },
-  {
-    ad: "Carlos Santos",
-    takim: "Torino",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Martinez",
-    takim: "Torino",
-    uyruk: "Arjantin",
-    mevki: "STP",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Santozz",
+        takim: "Torino Bulls",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Martines",
+        takim: "Torino Bulls",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    }
 ];

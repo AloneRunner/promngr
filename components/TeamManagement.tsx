@@ -60,6 +60,11 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                         player.position === 'MID' ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/50' :
                             'bg-red-600/20 text-red-400 border border-red-600/50'
                     }`}>{player.position}</span>
+                {player.jerseyNumber && (
+                    <span className="w-5 h-5 flex items-center justify-center rounded bg-slate-700 text-[10px] font-bold text-slate-300 border border-slate-600">
+                        {player.jerseyNumber}
+                    </span>
+                )}
             </div>
 
             <div className="min-w-0">
@@ -384,6 +389,10 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         const borderClass = isSevereError ? 'border-red-500 border-2 animate-pulse bg-red-900 text-red-200' : 'border-slate-900';
                         const isDragging = draggingId === p.id;
 
+                        // Forma numarası - visuals dizisindeki global index'e göre ata
+                        const globalIndex = visuals.indexOf(item);
+                        const jerseyNumber = p.jerseyNumber || (activeRole === Position.GK ? 1 : globalIndex + 1);
+
                         return (
                             <div
                                 key={p.id}
@@ -391,9 +400,9 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 onTouchStart={(e) => handleDragStart(e, p.id)}
                                 className={`absolute w-8 h-8 rounded-full border-2 ${borderClass} shadow-xl flex items-center justify-center text-[10px] font-bold text-white z-10 transition-transform touch-none ${isDragging ? 'scale-125 cursor-grabbing z-50' : 'hover:scale-110 cursor-grab'} ${bgClass}`}
                                 style={{ top: `${top}%`, left: `${left}%`, transform: 'translate(-50%, -50%)', transition: isDragging ? 'none' : 'all 0.2s ease-out' }}
-                                title={`${p.firstName} ${p.lastName} (${p.position}) - Playing as ${activeRole}`}
+                                title={`${p.firstName} ${p.lastName} (${p.position}) - ${jerseyNumber} | OVR: ${effectiveRating}`}
                             >
-                                {effectiveRating}
+                                {jerseyNumber}
                             </div>
                         )
                     })}

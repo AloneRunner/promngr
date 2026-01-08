@@ -1,41 +1,41 @@
 export const NANTES_FC_SQUAD = [
-    {
-        ad: "Anthony Lopes",
-        takim: "Nantes FC",
-        uyruk: "Portekiz",
-        mevki: "KL",
-        reyting: 76,
-        yas: 34,
-        ana_ozellikler: { hiz: 78, sut: 72, pas: 65, dribbling: 79, defans: 65, fizik: 75 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Mostafa Mohamed",
-        takim: "Nantes FC",
-        uyruk: "Mısır",
-        mevki: "SNT",
-        reyting: 73,
-        yas: 27,
-        ana_ozellikler: { hiz: 70, sut: 74, pas: 58, dribbling: 67, defans: 37, fizik: 78 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Youssef El Arabi",
-        takim: "Nantes FC",
-        uyruk: "Fas",
-        mevki: "SNT",
-        reyting: 73,
-        yas: 38,
-        ana_ozellikler: { hiz: 59, sut: 76, pas: 65, dribbling: 72, defans: 37, fizik: 64 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "A. Lopess",
+    takim: "Nantes Yellows",
+    uyruk: "Portekiz",
+    mevki: "KL",
+    reyting: 76,
+    yas: 34,
+    ana_ozellikler: { hiz: 78, sut: 72, pas: 65, dribbling: 79, defans: 65, fizik: 75 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "M. Mohamedy",
+    takim: "Nantes Yellows",
+    uyruk: "Mısır",
+    mevki: "SNT",
+    reyting: 73,
+    yas: 27,
+    ana_ozellikler: { hiz: 70, sut: 74, pas: 58, dribbling: 67, defans: 37, fizik: 78 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
+  {
+    ad: "Y. El Araby",
+    takim: "Nantes Yellows",
+    uyruk: "Fas",
+    mevki: "SNT",
+    reyting: 73,
+    yas: 38,
+    ana_ozellikler: { hiz: 59, sut: 76, pas: 65, dribbling: 72, defans: 37, fizik: 64 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Costa",
-    takim: "Nantes Fc",
+    ad: "C. Costas",
+    takim: "Nantes Yellows",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 72,
@@ -45,8 +45,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Costa",
-    takim: "Nantes Fc",
+    ad: "D. Costas",
+    takim: "Nantes Yellows",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 70,
@@ -56,8 +56,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Nantes Fc",
+    ad: "D. Garcy",
+    takim: "Nantes Yellows",
     uyruk: "İspanya",
     mevki: "STP",
     reyting: 69,
@@ -67,8 +67,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Nantes Fc",
+    ad: "L. Pereze",
+    takim: "Nantes Yellows",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 68,
@@ -78,8 +78,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
-    takim: "Nantes Fc",
+    ad: "C. Sylva",
+    takim: "Nantes Yellows",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 67,
@@ -89,8 +89,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Costa",
-    takim: "Nantes Fc",
+    ad: "D. Costas",
+    takim: "Nantes Yellows",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 66,
@@ -100,8 +100,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Nantes Fc",
+    ad: "J. Lopeze",
+    takim: "Nantes Yellows",
     uyruk: "Brezilya",
     mevki: "SĞB",
     reyting: 65,
@@ -111,8 +111,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
-    takim: "Nantes Fc",
+    ad: "P. Sylva",
+    takim: "Nantes Yellows",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 64,
@@ -122,8 +122,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Lopez",
-    takim: "Nantes Fc",
+    ad: "D. Lopeze",
+    takim: "Nantes Yellows",
     uyruk: "İspanya",
     mevki: "SLB",
     reyting: 63,
@@ -133,8 +133,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
-    takim: "Nantes Fc",
+    ad: "D. Martines",
+    takim: "Nantes Yellows",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 62,
@@ -144,8 +144,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Nantes Fc",
+    ad: "C. Costas",
+    takim: "Nantes Yellows",
     uyruk: "İtalya",
     mevki: "MDO",
     reyting: 61,
@@ -155,8 +155,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Costa",
-    takim: "Nantes Fc",
+    ad: "M. Costas",
+    takim: "Nantes Yellows",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 66,
@@ -166,8 +166,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
-    takim: "Nantes Fc",
+    ad: "J. Lopeze",
+    takim: "Nantes Yellows",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 65,
@@ -177,8 +177,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Nantes Fc",
+    ad: "D. Garcy",
+    takim: "Nantes Yellows",
     uyruk: "Arjantin",
     mevki: "MO",
     reyting: 65,
@@ -188,8 +188,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Nantes Fc",
+    ad: "J. Garcy",
+    takim: "Nantes Yellows",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 64,
@@ -199,8 +199,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
-    takim: "Nantes Fc",
+    ad: "J. Costas",
+    takim: "Nantes Yellows",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 64,
@@ -210,8 +210,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Costa",
-    takim: "Nantes Fc",
+    ad: "P. Costas",
+    takim: "Nantes Yellows",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 63,
@@ -221,8 +221,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Nantes Fc",
+    ad: "P. Garcy",
+    takim: "Nantes Yellows",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 63,
@@ -232,8 +232,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Perez",
-    takim: "Nantes Fc",
+    ad: "L. Pereze",
+    takim: "Nantes Yellows",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 62,
@@ -243,8 +243,8 @@ export const NANTES_FC_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Silva",
-    takim: "Nantes Fc",
+    ad: "L. Sylva",
+    takim: "Nantes Yellows",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 62,

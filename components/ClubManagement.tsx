@@ -61,36 +61,44 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
     return (
         <div className="animate-fade-in relative">
-            {/* Navigation */}
-            <div className="flex gap-2 overflow-x-auto pb-4 mb-2">
+            {/* Navigation - Premium Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
                 <button
                     onClick={() => setTab('FINANCE')}
-                    className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all ${tab === 'FINANCE' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                    className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 border ${tab === 'FINANCE'
+                        ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-emerald-400/50 shadow-lg shadow-emerald-900/50'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200'}`}
                 >
-                    <Wallet size={18} /> {t.finances}
+                    <Wallet size={18} className={tab === 'FINANCE' ? 'drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : ''} /> {t.finances}
                 </button>
                 <button
                     onClick={() => setTab('FACILITIES')}
-                    className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all ${tab === 'FACILITIES' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                    className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 border ${tab === 'FACILITIES'
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white border-blue-400/50 shadow-lg shadow-blue-900/50'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200'}`}
                 >
-                    <Building2 size={18} /> {t.facilities}
+                    <Building2 size={18} className={tab === 'FACILITIES' ? 'drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]' : ''} /> {t.facilities}
                 </button>
                 <button
                     onClick={() => setTab('ACADEMY')}
-                    className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all ${tab === 'ACADEMY' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                    className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 border ${tab === 'ACADEMY'
+                        ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white border-purple-400/50 shadow-lg shadow-purple-900/50'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200'}`}
                 >
-                    <GraduationCap size={18} /> {t.youthAcademy}
+                    <GraduationCap size={18} className={tab === 'ACADEMY' ? 'drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]' : ''} /> {t.youthAcademy}
                 </button>
                 <button
                     onClick={() => setTab('STAFF')}
-                    className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all ${tab === 'STAFF' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                    className={`px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 border ${tab === 'STAFF'
+                        ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white border-cyan-400/50 shadow-lg shadow-cyan-900/50'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200'}`}
                 >
-                    <UserCog size={18} /> Staff
+                    <UserCog size={18} className={tab === 'STAFF' ? 'drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]' : ''} /> Staff
                 </button>
 
                 <button
                     onClick={onResign}
-                    className="px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all bg-red-900/50 text-red-300 hover:bg-red-800 hover:text-white ml-auto"
+                    className="px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 bg-gradient-to-r from-red-900/50 to-red-800/30 text-red-300 hover:from-red-800/60 hover:to-red-700/40 hover:text-white ml-auto border border-red-700/50"
                 >
                     <DoorOpen size={18} /> {t.resign}
                 </button>
@@ -99,35 +107,35 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
             {tab === 'FINANCE' && (
                 <div className="flex flex-col gap-4 animate-fade-in pb-10">
                     {/* Main Budget Panel */}
-                    <div className="fm-panel rounded-xl p-4 flex items-center justify-between gap-4">
+                    <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 backdrop-blur-xl rounded-2xl p-5 flex items-center justify-between gap-4 border border-white/10 shadow-xl">
                         <div className="flex items-center gap-3">
-                            <div className="bg-emerald-600/20 p-2 rounded-lg border border-emerald-500/30">
-                                <Wallet className="text-emerald-400" size={24} />
+                            <div className="bg-gradient-to-br from-emerald-600/30 to-emerald-800/20 p-3 rounded-xl border border-emerald-500/30 shadow-lg">
+                                <Wallet className="text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" size={26} />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-white tracking-tight">{t.finances}</h2>
-                                <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t.clubBudget}</div>
+                                <h2 className="text-xl font-bold text-white tracking-tight drop-shadow-lg">{t.finances}</h2>
+                                <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">Kulüp Bütçesi</div>
                             </div>
                         </div>
                         <div className="text-right">
-                            <div className="text-2xl font-mono text-emerald-400 font-bold tracking-tight">€{(team.budget / 1000000).toFixed(2)}M</div>
+                            <div className="text-2xl font-mono text-emerald-400 font-bold tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€{(team.budget / 1000000).toFixed(2)}M</div>
                         </div>
                     </div>
 
                     {/* Projections */}
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="fm-card p-3 flex flex-col justify-between">
-                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.weeklyWage}</div>
+                        <div className="bg-gradient-to-br from-red-900/30 to-slate-900/80 backdrop-blur p-4 rounded-2xl flex flex-col justify-between border border-red-500/20 shadow-lg">
+                            <div className="text-[10px] uppercase text-red-400/70 font-bold mb-1 tracking-wider">{t.weeklyWage}</div>
                             <div className="flex items-end justify-between">
-                                <span className="text-lg font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}</span>
-                                <TrendingDown size={16} className="text-red-500 mb-1" />
+                                <span className="text-lg font-mono text-red-400 font-bold drop-shadow-[0_0_6px_rgba(248,113,113,0.4)]">-€{totalWages.toLocaleString()}</span>
+                                <TrendingDown size={18} className="text-red-400 mb-1 drop-shadow-[0_0_6px_rgba(248,113,113,0.5)]" />
                             </div>
                         </div>
-                        <div className="fm-card p-3 flex flex-col justify-between">
-                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1">{t.estMatchIncome}</div>
+                        <div className="bg-gradient-to-br from-emerald-900/30 to-slate-900/80 backdrop-blur p-4 rounded-2xl flex flex-col justify-between border border-emerald-500/20 shadow-lg">
+                            <div className="text-[10px] uppercase text-emerald-400/70 font-bold mb-1 tracking-wider">{t.estMatchIncome}</div>
                             <div className="flex items-end justify-between">
-                                <span className="text-lg font-mono text-emerald-400 font-bold">+€{estimatedTicketIncome.toLocaleString()}</span>
-                                <TrendingUp size={16} className="text-emerald-500 mb-1" />
+                                <span className="text-lg font-mono text-emerald-400 font-bold drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]">+€{estimatedTicketIncome.toLocaleString()}</span>
+                                <TrendingUp size={18} className="text-emerald-400 mb-1 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
                             </div>
                         </div>
                     </div>

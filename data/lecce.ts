@@ -1,7 +1,7 @@
 
 export const LECCE_WOLVES_SQUAD = [
     {
-        ad: "Nikola Krst",
+        ad: "N. Krstovyc",
         takim: "Lecce Wolves",
         uyruk: "Karadağ",
         mevki: "SNT",
@@ -28,7 +28,7 @@ export const LECCE_WOLVES_SQUAD = [
         ]
     },
     {
-        ad: "Wladi Falcon",
+        ad: "W. Falconny",
         takim: "Lecce Wolves",
         uyruk: "İtalya",
         mevki: "KL",
@@ -50,7 +50,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Lameck Band",
+        ad: "L. Banday",
         takim: "Lecce Wolves",
         uyruk: "Zambiya",
         mevki: "SLO",
@@ -76,7 +76,7 @@ export const LECCE_WOLVES_SQUAD = [
         ]
     },
     {
-        ad: "Patric Dorg",
+        ad: "P. Dorgu",
         takim: "Lecce Wolves",
         uyruk: "Danimarka",
         mevki: "SĞK",
@@ -99,7 +99,7 @@ export const LECCE_WOLVES_SQUAD = [
         ]
     },
     {
-        ad: "Fede Baschi",
+        ad: "F. Baschiro",
         takim: "Lecce Wolves",
         uyruk: "İtalya",
         mevki: "STP",
@@ -121,7 +121,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Ylber Rama",
+        ad: "Y. Ramadany",
         takim: "Lecce Wolves",
         uyruk: "Arnavutluk",
         mevki: "MDO",
@@ -144,7 +144,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Ante Rebic",
+        ad: "A. Rebicc",
         takim: "Lecce Wolves",
         uyruk: "Hırvatistan",
         mevki: "SNT",
@@ -168,7 +168,7 @@ export const LECCE_WOLVES_SQUAD = [
         ]
     },
     {
-        ad: "Anton Gallo",
+        ad: "A. Gallon",
         takim: "Lecce Wolves",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -189,7 +189,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Fred Guilber",
+        ad: "F. Guilberr",
         takim: "Lecce Wolves",
         uyruk: "Fransa",
         mevki: "SĞB",
@@ -210,7 +210,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Remi Oud",
+        ad: "R. Oudinn",
         takim: "Lecce Wolves",
         uyruk: "Fransa",
         mevki: "MOO",
@@ -328,7 +328,7 @@ export const LECCE_WOLVES_SQUAD = [
         ]
     },
     {
-        ad: "Ricky Sottil",
+        ad: "R. Sottill",
         takim: "Lecce Wolves",
         uyruk: "İtalya",
         mevki: "SLO",
@@ -433,7 +433,7 @@ export const LECCE_WOLVES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Frank Camarda",
+        ad: "F. Camardda",
         takim: "Lecce Wolves",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -457,48 +457,48 @@ export const LECCE_WOLVES_SQUAD = [
             "Geleceğin Yıldızı"
         ]
     },
-  {
-    ad: "Carlos Costa",
-    takim: "Lecce",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Garcia",
-    takim: "Lecce",
-    uyruk: "Arjantin",
-    mevki: "STP",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Marco Santos",
-    takim: "Lecce",
-    uyruk: "İspanya",
-    mevki: "SĞB",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
-    detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Costa",
-    takim: "Lecce",
-    uyruk: "Fransa",
-    mevki: "MDO",
-    reyting: 68,
-    yas: 23,
-    ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
-    detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Costas",
+        takim: "Lecce Wolves",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Garcy",
+        takim: "Lecce Wolves",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Santoz",
+        takim: "Lecce Wolves",
+        uyruk: "İspanya",
+        mevki: "SĞB",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+        detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Costas",
+        takim: "Lecce Wolves",
+        uyruk: "Fransa",
+        mevki: "MDO",
+        reyting: 68,
+        yas: 23,
+        ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
+        detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
+        oyun_tarzlari: []
+    }
 ];

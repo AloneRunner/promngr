@@ -1,41 +1,41 @@
 export const BAYER_LEVERKUSEN_SQUAD = [
-    {
-        ad: "Patrik Schicker",
-        takim: "Bayer Leverkusen",
-        uyruk: "Çek Cumhuriyeti",
-        mevki: "SNT",
-        reyting: 85,
-        yas: 28,
-        ana_ozellikler: { hiz: 72, sut: 83, pas: 71, dribbling: 81, defans: 38, fizik: 77 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Alejandro Grimaldo",
-        takim: "Bayer Leverkusen",
-        uyruk: "İspanya",
-        mevki: "SLO",
-        reyting: 84,
-        yas: 29,
-        ana_ozellikler: { hiz: 72, sut: 73, pas: 87, dribbling: 85, defans: 74, fizik: 67 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },,
-    {
-        ad: "Ezequiel Palacios",
-        takim: "Bayer Leverkusen",
-        uyruk: "Arjantin",
-        mevki: "MO",
-        reyting: 84,
-        yas: 26,
-        ana_ozellikler: { hiz: 62, sut: 76, pas: 80, dribbling: 82, defans: 81, fizik: 71 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "P. Schicker",
+    takim: "Leverkusen Red",
+    uyruk: "Çek Cumhuriyeti",
+    mevki: "SNT",
+    reyting: 85,
+    yas: 28,
+    ana_ozellikler: { hiz: 72, sut: 83, pas: 71, dribbling: 81, defans: 38, fizik: 77 },
+    detaylar: {},
+    oyun_tarzlari: []
+  }, ,
+  {
+    ad: "A. Grimald",
+    takim: "Leverkusen Red",
+    uyruk: "İspanya",
+    mevki: "SLO",
+    reyting: 84,
+    yas: 29,
+    ana_ozellikler: { hiz: 72, sut: 73, pas: 87, dribbling: 85, defans: 74, fizik: 67 },
+    detaylar: {},
+    oyun_tarzlari: []
+  }, ,
+  {
+    ad: "E. Palacy",
+    takim: "Leverkusen Red",
+    uyruk: "Arjantin",
+    mevki: "MO",
+    reyting: 84,
+    yas: 26,
+    ana_ozellikler: { hiz: 62, sut: 76, pas: 80, dribbling: 82, defans: 81, fizik: 71 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "João Rodriguez",
-    takim: "Leverkusen",
+    ad: "J. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 82,
@@ -45,8 +45,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Rodriguez",
-    takim: "Leverkusen",
+    ad: "D. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "Arjantin",
     mevki: "KL",
     reyting: 81,
@@ -56,8 +56,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
-    takim: "Leverkusen",
+    ad: "J. Garcia",
+    takim: "Leverkusen Red",
     uyruk: "İspanya",
     mevki: "KL",
     reyting: 80,
@@ -67,8 +67,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
-    takim: "Leverkusen",
+    ad: "D. Santos",
+    takim: "Leverkusen Red",
     uyruk: "Fransa",
     mevki: "STP",
     reyting: 79,
@@ -78,8 +78,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Leverkusen",
+    ad: "L. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "İtalya",
     mevki: "STP",
     reyting: 78,
@@ -89,8 +89,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
-    takim: "Leverkusen",
+    ad: "J. Martin",
+    takim: "Leverkusen Red",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 77,
@@ -100,8 +100,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Garcia",
-    takim: "Leverkusen",
+    ad: "P. Garcia",
+    takim: "Leverkusen Red",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 76,
@@ -111,8 +111,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
-    takim: "Leverkusen",
+    ad: "L. Lopez",
+    takim: "Leverkusen Red",
     uyruk: "Arjantin",
     mevki: "SĞB",
     reyting: 75,
@@ -122,8 +122,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
-    takim: "Leverkusen",
+    ad: "D. Silva",
+    takim: "Leverkusen Red",
     uyruk: "İspanya",
     mevki: "SĞB",
     reyting: 74,
@@ -133,8 +133,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Costa",
-    takim: "Leverkusen",
+    ad: "D. Costa",
+    takim: "Leverkusen Red",
     uyruk: "Fransa",
     mevki: "SLB",
     reyting: 73,
@@ -144,8 +144,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
-    takim: "Leverkusen",
+    ad: "P. Lopez",
+    takim: "Leverkusen Red",
     uyruk: "İtalya",
     mevki: "SLB",
     reyting: 72,
@@ -155,8 +155,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Santos",
-    takim: "Leverkusen",
+    ad: "J. Santos",
+    takim: "Leverkusen Red",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 77,
@@ -166,8 +166,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Perez",
-    takim: "Leverkusen",
+    ad: "C. Perez",
+    takim: "Leverkusen Red",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 76,
@@ -177,8 +177,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Costa",
-    takim: "Leverkusen",
+    ad: "C. Costa",
+    takim: "Leverkusen Red",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 76,
@@ -188,8 +188,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
-    takim: "Leverkusen",
+    ad: "L. Lopez",
+    takim: "Leverkusen Red",
     uyruk: "İspanya",
     mevki: "MO",
     reyting: 75,
@@ -199,8 +199,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Rodriguez",
-    takim: "Leverkusen",
+    ad: "L. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "Fransa",
     mevki: "MO",
     reyting: 75,
@@ -210,8 +210,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
-    takim: "Leverkusen",
+    ad: "P. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "İtalya",
     mevki: "MOO",
     reyting: 75,
@@ -221,8 +221,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Garcia",
-    takim: "Leverkusen",
+    ad: "M. Garcia",
+    takim: "Leverkusen Red",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 74,
@@ -232,8 +232,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Santos",
-    takim: "Leverkusen",
+    ad: "L. Santos",
+    takim: "Leverkusen Red",
     uyruk: "Brezilya",
     mevki: "SĞO",
     reyting: 74,
@@ -243,8 +243,8 @@ export const BAYER_LEVERKUSEN_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
-    takim: "Leverkusen",
+    ad: "M. Rodrig",
+    takim: "Leverkusen Red",
     uyruk: "Arjantin",
     mevki: "SĞO",
     reyting: 73,

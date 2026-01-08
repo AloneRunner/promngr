@@ -1,7 +1,7 @@
 
 export const BOLOGNA_REDBLUES_SQUAD = [
     {
-        ad: "Rick Orsol",
+        ad: "R. Orsol",
         takim: "Bologna Redblues",
         uyruk: "İtalya",
         mevki: "SĞK",
@@ -29,7 +29,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Lew Ferg",
+        ad: "L. Fergie",
         takim: "Bologna Redblues",
         uyruk: "İskoçya",
         mevki: "MO",
@@ -54,7 +54,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Dan Ndoy",
+        ad: "D. Ndoy",
         takim: "Bologna Redblues",
         uyruk: "İsviçre",
         mevki: "SĞK",
@@ -79,7 +79,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Remo Freu",
+        ad: "R. Freul",
         takim: "Bologna Redblues",
         uyruk: "İsviçre",
         mevki: "MO",
@@ -105,7 +105,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Sam Beuke",
+        ad: "S. Beuke",
         takim: "Bologna Redblues",
         uyruk: "Hollanda",
         mevki: "STP",
@@ -128,7 +128,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Jhon Lucum",
+        ad: "J. Lucu",
         takim: "Bologna Redblues",
         uyruk: "Kolombiya",
         mevki: "STP",
@@ -153,7 +153,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Luk Skorup",
+        ad: "L. Skorp",
         takim: "Bologna Redblues",
         uyruk: "Polonya",
         mevki: "KL",
@@ -176,7 +176,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Stefan Posh",
+        ad: "S. Posh",
         takim: "Bologna Redblues",
         uyruk: "Avusturya",
         mevki: "SĞB",
@@ -199,7 +199,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Michel Aebi",
+        ad: "M. Aebi",
         takim: "Bologna Redblues",
         uyruk: "İsviçre",
         mevki: "MO",
@@ -221,7 +221,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Santiago Cas",
+        ad: "S. Castro",
         takim: "Bologna Redblues",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -245,7 +245,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Thijs Dall",
+        ad: "T. Dall",
         takim: "Bologna Redblues",
         uyruk: "Hollanda",
         mevki: "SNT",
@@ -267,7 +267,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Sam Iling",
+        ad: "S. Iling",
         takim: "Bologna Redblues",
         uyruk: "İngiltere",
         mevki: "SLK",
@@ -291,7 +291,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Nicolo Cambia",
+        ad: "N. Cambia",
         takim: "Bologna Redblues",
         uyruk: "İtalya",
         mevki: "SNT",
@@ -312,7 +312,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Rick Orso",
+        ad: "R. Orsol",
         takim: "Bologna RedBlues",
         uyruk: "İtalya",
         mevki: "SĞO",
@@ -341,7 +341,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Remy Freul",
+        ad: "R. Freul",
         takim: "Bologna RedBlues",
         uyruk: "İsviçre",
         mevki: "MDO",
@@ -368,7 +368,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Skorp",
+        ad: "L. Skorp",
         takim: "Bologna RedBlues",
         uyruk: "Polonya",
         mevki: "KL",
@@ -394,7 +394,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Lew Fergie",
+        ad: "L. Fergie",
         takim: "Bologna RedBlues",
         uyruk: "İskoçya",
         mevki: "MO",
@@ -420,7 +420,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Santi Castro",
+        ad: "S. Castro",
         takim: "Bologna RedBlues",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -445,7 +445,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Nico Casale",
+        ad: "N. Casale",
         takim: "Bologna RedBlues",
         uyruk: "İtalya",
         mevki: "STP",
@@ -468,7 +468,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Emil Holm",
+        ad: "E. Holm",
         takim: "Bologna RedBlues",
         uyruk: "İsveç",
         mevki: "SĞB",
@@ -494,7 +494,7 @@ export const BOLOGNA_REDBLUES_SQUAD = [
         ]
     },
     {
-        ad: "Jhon Lucu",
+        ad: "J. Lucu",
         takim: "Bologna RedBlues",
         uyruk: "Kolombiya",
         mevki: "STP",
@@ -518,26 +518,26 @@ export const BOLOGNA_REDBLUES_SQUAD = [
             "Güçlü"
         ]
     },
-  {
-    ad: "Carlos Perez",
-    takim: "Bologna",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Diego Santos",
-    takim: "Bologna",
-    uyruk: "Arjantin",
-    mevki: "SLB",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Perez",
+        takim: "Bologna Redblues",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Santos",
+        takim: "Bologna Redblues",
+        uyruk: "Arjantin",
+        mevki: "SLB",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+        oyun_tarzlari: []
+    }
 ];

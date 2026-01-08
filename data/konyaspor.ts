@@ -1,7 +1,7 @@
 
 export const KONYASPOR_SQUAD = [
   {
-    ad: "Guilherme Sityá",
+    ad: "G. Sityah",
     takim: "Konya Green",
     uyruk: "Brezilya",
     mevki: "SLB",
@@ -12,7 +12,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Güçlü", "Kesme Pas", "Top Kesici", "Uzun Topla Pas"]
   },
   {
-    ad: "Riechedly Bazoer",
+    ad: "R. Bazoerr",
     takim: "Konya Green",
     uyruk: "Hollanda",
     mevki: "STP",
@@ -23,7 +23,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Baskıya Dayanıklı", "Güçlü"]
   },
   {
-    ad: "Enis Bardhi",
+    ad: "E. Bardhy",
     takim: "Konya Green",
     uyruk: "Kuzey Makedonya",
     mevki: "MOO",
@@ -34,7 +34,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Kesme Pas"]
   },
   {
-    ad: "Jackson Muleka",
+    ad: "J. Mulekkah",
     takim: "Konya Green",
     uyruk: "Congo DR",
     mevki: "SNT",
@@ -45,7 +45,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Plase Şut"]
   },
   {
-    ad: "Umut Nayir",
+    ad: "U. Nayyr",
     takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "SNT",
@@ -56,7 +56,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu", "Hava Hakimi"]
   },
   {
-    ad: "Adil Demirbağ",
+    ad: "A. Demirbagh",
     takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "STP",
@@ -67,7 +67,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Engel", "Hava Hakimi", "Yakın Markaj"]
   },
   {
-    ad: "Alassane Ndao",
+    ad: "A. Ndaoh",
     takim: "Konya Green",
     uyruk: "Senegal",
     mevki: "SĞO",
@@ -78,7 +78,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Seri"]
   },
   {
-    ad: "Marius Ștefănescu",
+    ad: "M. Stefanisku",
     takim: "Konya Green",
     uyruk: "Romanya",
     mevki: "SĞK",
@@ -89,7 +89,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: ["Kesme Pas"]
   },
   {
-    ad: "Morten Bjørlo",
+    ad: "M. Bjorloh",
     takim: "Konya Green",
     uyruk: "Norveç",
     mevki: "MO",
@@ -100,7 +100,7 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Ufuk Akyol",
+    ad: "U. Akyoll",
     takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "MDO",
@@ -111,8 +111,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Yılmaz",
-    takim: "Konyaspor",
+    ad: "E. Yilmy",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 70,
@@ -122,8 +122,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hüseyin Kaya",
-    takim: "Konyaspor",
+    ad: "H. Kayya",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 68,
@@ -133,8 +133,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Barış Güneş",
-    takim: "Konyaspor",
+    ad: "B. Guness",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 67,
@@ -144,8 +144,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Kaan Demir",
-    takim: "Konyaspor",
+    ad: "K. Demirry",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 66,
@@ -155,8 +155,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Eren Türk",
-    takim: "Konyaspor",
+    ad: "E. Turkk",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 65,
@@ -166,8 +166,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Hüseyin Demirci",
-    takim: "Konyaspor",
+    ad: "H. Demirky",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 64,
@@ -177,8 +177,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Berkay Kaya",
-    takim: "Konyaspor",
+    ad: "B. Kayya",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 63,
@@ -188,8 +188,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Garcia",
-    takim: "Konyaspor",
+    ad: "D. Garcy",
+    takim: "Konya Green",
     uyruk: "Arjantin",
     mevki: "SLB",
     reyting: 62,
@@ -199,8 +199,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
-    takim: "Konyaspor",
+    ad: "C. Martines",
+    takim: "Konya Green",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 61,
@@ -210,8 +210,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Garcia",
-    takim: "Konyaspor",
+    ad: "A. Garcy",
+    takim: "Konya Green",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 60,
@@ -221,8 +221,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Cem Güneş",
-    takim: "Konyaspor",
+    ad: "C. Guness",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 59,
@@ -232,8 +232,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Selçuk Koç",
-    takim: "Konyaspor",
+    ad: "S. Kocc",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 64,
@@ -243,8 +243,8 @@ export const KONYASPOR_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Selçuk Doğan",
-    takim: "Konyaspor",
+    ad: "S. Dogann",
+    takim: "Konya Green",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 63,

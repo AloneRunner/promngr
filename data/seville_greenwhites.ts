@@ -1,6 +1,6 @@
 export const SEVILLE_GREENWHITES_SQUAD = [
     {
-        ad: "Isco Alarc",
+        ad: "I. Alarconne",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "MOO",
@@ -14,7 +14,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: ["Top Cambazı", "Maestro", "Teknik"]
     },
     {
-        ad: "Gio Lo Cel",
+        ad: "G. Lo Celsso",
         takim: "Seville GreenWhites",
         uyruk: "Arjantin",
         mevki: "MOO",
@@ -27,7 +27,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: ["Yaratıcı", "Uzaktan Şut"]
     },
     {
-        ad: "Pablo Forn",
+        ad: "P. Fornall",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -40,7 +40,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: ["Motor"]
     },
     {
-        ad: "Vitor Roq",
+        ad: "V. Roquey",
         takim: "Seville GreenWhites",
         uyruk: "Brezilya",
         mevki: "SNT",
@@ -53,7 +53,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: ["Kaplan", "Genç Yetenek"]
     },
     {
-        ad: "Ez Abde",
+        ad: "E. Abdehh",
         takim: "Seville GreenWhites",
         uyruk: "Fas",
         mevki: "SLO",
@@ -66,7 +66,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: ["Top Cambazı", "Seri"]
     },
     {
-        ad: "Marc Bart",
+        ad: "M. Bartrah",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "STP",
@@ -79,7 +79,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Hector Bell",
+        ad: "H. Bellerrin",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -97,7 +97,7 @@ export const SEVILLE_GREENWHITES_SQUAD = [
 
 export const SEVILLE_GREENWHITES_RESERVES = [
     {
-        ad: "Chimy Avi",
+        ad: "C. Avyllah",
         takim: "Seville GreenWhites",
         uyruk: "Arjantin",
         mevki: "SNT",
@@ -108,7 +108,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: ["Savaşçı", "Amansız"]
     },
     {
-        ad: "Abde Ezz",
+        ad: "E. Abdehh",
         takim: "Seville GreenWhites",
         uyruk: "Fas",
         mevki: "SLO",
@@ -119,7 +119,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: ["Top Cambazı"]
     },
     {
-        ad: "Cedric Baka",
+        ad: "C. Bakambyu",
         takim: "Seville GreenWhites",
         uyruk: "Kongo DC",
         mevki: "SNT",
@@ -130,7 +130,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: ["Fırsatçı"]
     },
     {
-        ad: "Marc Roc",
+        ad: "M. Roccas",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "MDO",
@@ -141,7 +141,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: ["Pasör"]
     },
     {
-        ad: "Aitor Rui",
+        ad: "A. Ruiball",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "SĞB",
@@ -152,7 +152,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: ["Joker"]
     },
     {
-        ad: "Diego Llor",
+        ad: "D. Llorente",
         takim: "Seville GreenWhites",
         uyruk: "İspanya",
         mevki: "STP",
@@ -163,7 +163,7 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         oyun_tarzlari: []
     },
     {
-        ad: "Natan",
+        ad: "Natanne",
         takim: "Seville GreenWhites",
         uyruk: "Brezilya",
         mevki: "STP",
@@ -173,104 +173,104 @@ export const SEVILLE_GREENWHITES_RESERVES = [
         detaylar: { guc: 80, kafa_isabeti: 78 },
         oyun_tarzlari: ["Güçlü"]
     },
-  {
-    ad: "Carlos Perez",
-    takim: "Seville Greenwhites",
-    uyruk: "Brezilya",
-    mevki: "KL",
-    reyting: 72,
-    yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "David Martinez",
-    takim: "Seville Greenwhites",
-    uyruk: "Arjantin",
-    mevki: "KL",
-    reyting: 70,
-    yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Andre Santos",
-    takim: "Seville Greenwhites",
-    uyruk: "İspanya",
-    mevki: "KL",
-    reyting: 69,
-    yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
-    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Lopez",
-    takim: "Seville Greenwhites",
-    uyruk: "Fransa",
-    mevki: "STP",
-    reyting: 68,
-    yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
-    detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Lucas Silva",
-    takim: "Seville Greenwhites",
-    uyruk: "İtalya",
-    mevki: "SLB",
-    reyting: 67,
-    yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
-    detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Carlos Rodriguez",
-    takim: "Seville Greenwhites",
-    uyruk: "Portekiz",
-    mevki: "SLB",
-    reyting: 66,
-    yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
-    detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Costa",
-    takim: "Seville Greenwhites",
-    uyruk: "Brezilya",
-    mevki: "MDO",
-    reyting: 65,
-    yas: 26,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "João Santos",
-    takim: "Seville Greenwhites",
-    uyruk: "Arjantin",
-    mevki: "MO",
-    reyting: 64,
-    yas: 27,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
-    detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
-  },
-  {
-    ad: "Pedro Rodriguez",
-    takim: "Seville Greenwhites",
-    uyruk: "İspanya",
-    mevki: "MO",
-    reyting: 63,
-    yas: 28,
-    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
-    detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
-    oyun_tarzlari: []
-  }
+    {
+        ad: "C. Pereze",
+        takim: "Seville GreenWhites",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
+        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martines",
+        takim: "Seville GreenWhites",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 70,
+        yas: 21,
+        ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
+        detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Santoz",
+        takim: "Seville GreenWhites",
+        uyruk: "İspanya",
+        mevki: "KL",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
+        detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Lopeze",
+        takim: "Seville GreenWhites",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 68,
+        yas: 23,
+        ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+        detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Sylva",
+        takim: "Seville GreenWhites",
+        uyruk: "İtalya",
+        mevki: "SLB",
+        reyting: 67,
+        yas: 24,
+        ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+        detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Rodrigz",
+        takim: "Seville GreenWhites",
+        uyruk: "Portekiz",
+        mevki: "SLB",
+        reyting: 66,
+        yas: 25,
+        ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+        detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Costas",
+        takim: "Seville GreenWhites",
+        uyruk: "Brezilya",
+        mevki: "MDO",
+        reyting: 65,
+        yas: 26,
+        ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
+        detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Santoz",
+        takim: "Seville GreenWhites",
+        uyruk: "Arjantin",
+        mevki: "MO",
+        reyting: 64,
+        yas: 27,
+        ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+        detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Rodrigz",
+        takim: "Seville GreenWhites",
+        uyruk: "İspanya",
+        mevki: "MO",
+        reyting: 63,
+        yas: 28,
+        ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+        detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
+        oyun_tarzlari: []
+    }
 ];
 

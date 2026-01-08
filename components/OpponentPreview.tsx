@@ -2,6 +2,7 @@
 import React from 'react';
 import { Team, Player, Translation, Position } from '../types';
 import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle } from 'lucide-react';
+import { getTeamLogo } from '../logoMapping';
 
 interface OpponentPreviewProps {
     opponent: Team;
@@ -63,31 +64,36 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 rounded-2xl border border-slate-700 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
 
                 {/* Header */}
                 <div
-                    className="p-6 text-center border-b border-slate-800 relative overflow-hidden"
+                    className="p-6 text-center border-b border-white/10 relative overflow-hidden"
                     style={{ background: `linear-gradient(135deg, ${opponent.primaryColor}40, transparent)` }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/90"></div>
                     <div className="relative">
                         <div
-                            className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-3xl font-bold border-4 border-white/20 shadow-xl mb-3"
-                            style={{ backgroundColor: opponent.primaryColor, color: '#fff' }}
+                            className="w-24 h-24 rounded-2xl mx-auto flex items-center justify-center overflow-hidden border-4 border-white/20 shadow-2xl mb-4 backdrop-blur"
+                            style={{ backgroundColor: opponent.primaryColor }}
                         >
-                            {opponent.name.charAt(0)}
+                            <img
+                                src={getTeamLogo(opponent.name)}
+                                alt={opponent.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-4xl font-bold" style="color: #fff">${opponent.name.charAt(0)}</span>`; }}
+                            />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">{opponent.name}</h2>
+                        <h2 className="text-2xl font-bold text-white drop-shadow-lg">{opponent.name}</h2>
                         <p className="text-slate-400 text-sm mt-1">{opponent.city}</p>
                     </div>
                 </div>
 
                 {/* Difficulty Badge */}
-                <div className="px-6 py-4 border-b border-slate-800">
-                    <div className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl ${difficulty.bg}`}>
-                        <difficulty.icon size={20} className={difficulty.color} />
+                <div className="px-6 py-4 border-b border-white/10">
+                    <div className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl ${difficulty.bg} backdrop-blur border border-white/5`}>
+                        <difficulty.icon size={20} className={`${difficulty.color} drop-shadow-[0_0_8px_currentColor]`} />
                         <span className={`font-bold text-lg ${difficulty.color}`}>
                             {difficulty.level === 'EASY' ? 'Kolay Rakip' : difficulty.level === 'MEDIUM' ? 'Dengeli Maç' : 'Zorlu Rakip'}
                         </span>
@@ -95,32 +101,32 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-4 p-6 border-b border-slate-800">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{avgOverall}</div>
-                        <div className="text-xs text-slate-400 uppercase">Kadro Gücü</div>
+                <div className="grid grid-cols-3 gap-4 p-6 border-b border-white/10">
+                    <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
+                        <div className="text-2xl font-bold text-white drop-shadow-lg">{avgOverall}</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kadro Gücü</div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{formation}</div>
-                        <div className="text-xs text-slate-400 uppercase">Formasyon</div>
+                    <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
+                        <div className="text-2xl font-bold text-white drop-shadow-lg">{formation}</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Formasyon</div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{opponent.reputation}</div>
-                        <div className="text-xs text-slate-400 uppercase">Prestij</div>
+                    <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
+                        <div className="text-2xl font-bold text-white drop-shadow-lg">{opponent.reputation}</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Prestij</div>
                     </div>
                 </div>
 
                 {/* Recent Form */}
-                <div className="px-6 py-4 border-b border-slate-800">
-                    <h3 className="text-xs uppercase text-slate-500 font-bold mb-3 flex items-center gap-1">
-                        <TrendingUp size={14} /> Son 5 Maç
+                <div className="px-6 py-4 border-b border-white/10">
+                    <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
+                        <TrendingUp size={14} className="text-cyan-400" /> Son 5 Maç
                     </h3>
-                    <div className="flex justify-center gap-2">
+                    <div className="flex justify-center gap-3">
                         {recentForm.length > 0 ? (
                             recentForm.slice(-5).map((result, i) => (
                                 <div
                                     key={i}
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${formColors[result] || 'bg-slate-600'}`}
+                                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg ${formColors[result] || 'bg-slate-600'}`}
                                 >
                                     {result}
                                 </div>
@@ -132,23 +138,23 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 </div>
 
                 {/* Key Players */}
-                <div className="px-6 py-4 border-b border-slate-800">
-                    <h3 className="text-xs uppercase text-slate-500 font-bold mb-3 flex items-center gap-1">
-                        <Zap size={14} /> Dikkat Edilmesi Gerekenler
+                <div className="px-6 py-4 border-b border-white/10">
+                    <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
+                        <Zap size={14} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" /> Dikkat Edilmesi Gerekenler
                     </h3>
                     <div className="space-y-2">
                         {topPlayers.map(player => (
-                            <div key={player.id} className="flex items-center gap-3 bg-slate-800/50 p-3 rounded-lg">
-                                <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-sm font-bold text-white">
+                            <div key={player.id} className="flex items-center gap-3 bg-gradient-to-r from-slate-800/60 to-slate-800/30 backdrop-blur p-3 rounded-xl border border-white/5">
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-sm font-bold text-white shadow-lg border border-white/10">
                                     {player.overall}
                                 </div>
                                 <div className="flex-1">
-                                    <div className="font-bold text-white text-sm">{player.firstName} {player.lastName}</div>
+                                    <div className="font-bold text-white text-sm">{player.firstName.charAt(0)}. {player.lastName}</div>
                                     <div className="text-xs text-slate-400">{player.position}</div>
                                 </div>
-                                <span className={`text-xs px-2 py-1 rounded font-bold ${player.overall >= 85 ? 'bg-emerald-500/20 text-emerald-400' :
-                                        player.overall >= 75 ? 'bg-blue-500/20 text-blue-400' :
-                                            'bg-slate-600 text-slate-300'
+                                <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${player.overall >= 85 ? 'bg-gradient-to-r from-emerald-900/50 to-emerald-800/30 text-emerald-400 border border-emerald-700/50' :
+                                    player.overall >= 75 ? 'bg-gradient-to-r from-blue-900/50 to-blue-800/30 text-blue-400 border border-blue-700/50' :
+                                        'bg-slate-700/50 text-slate-300 border border-slate-600/50'
                                     }`}>
                                     ⭐ Star
                                 </span>
@@ -158,15 +164,15 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 </div>
 
                 {/* Lineup Summary */}
-                <div className="px-6 py-4 border-b border-slate-800">
-                    <h3 className="text-xs uppercase text-slate-500 font-bold mb-3 flex items-center gap-1">
-                        <Users size={14} /> Kadro Dağılımı
+                <div className="px-6 py-4 border-b border-white/10">
+                    <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
+                        <Users size={14} className="text-purple-400" /> Kadro Dağılımı
                     </h3>
                     <div className="flex justify-around">
                         {Object.entries(positionCounts).map(([pos, count]) => (
-                            <div key={pos} className="text-center">
+                            <div key={pos} className="text-center bg-slate-800/40 backdrop-blur rounded-xl px-4 py-2">
                                 <div className="text-lg font-bold text-white">{count}</div>
-                                <div className="text-xs text-slate-400">{pos}</div>
+                                <div className="text-[10px] text-slate-400 font-bold">{pos}</div>
                             </div>
                         ))}
                     </div>
@@ -176,14 +182,14 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 <div className="p-6 space-y-3">
                     <button
                         onClick={onStartMatch}
-                        className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-lg rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-lg rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 active:scale-95"
                     >
-                        <Target size={20} />
+                        <Target size={20} className="drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         Maça Başla!
                     </button>
                     <button
                         onClick={onClose}
-                        className="w-full py-3 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-all"
+                        className="w-full py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-slate-300 font-bold rounded-xl hover:from-slate-700 hover:to-slate-600 transition-all border border-white/10 active:scale-95"
                     >
                         Geri Dön
                     </button>

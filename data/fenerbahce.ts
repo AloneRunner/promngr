@@ -1,8 +1,8 @@
 
 export const FENERBAHCE_SQUAD = [
   {
-    ad: "Ahmet Candemir",
-    takim: "Fener Canaries",
+    ad: "A. Candem",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞK",
     reyting: 86,
@@ -18,8 +18,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Amansız+", "Çabuk Adım+", "Ezber Bozan+", "Keskin Pas+", "Kuvvetli Şut+", "Plase Şut+", "Seri+", "Teknik+", "Yaratıcı+"]
   },
   {
-    ad: "Ederson",
-    takim: "Fener Canaries",
+    ad: "E. Edersun",
+    takim: "Istanbul Yellows",
     uyruk: "Brezilya",
     mevki: "KL",
     reyting: 85,
@@ -32,8 +32,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Uzun Topla Pas+", "İnce Pas", "Ortaya Çıkan"]
   },
   {
-    ad: "Youssef En-Nesyri",
-    takim: "Fener Canaries",
+    ad: "Y. Nesiry",
+    takim: "Istanbul Yellows",
     uyruk: "Fas",
     mevki: "SNT",
     reyting: 82,
@@ -49,8 +49,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Amansız", "Çabuk Adım", "Hassas Kafa Vuruşu", "Hava Hakimi", "Seri"]
   },
   {
-    ad: "Anderson Talisca",
-    takim: "Fener Canaries",
+    ad: "A. Taliska",
+    takim: "Istanbul Yellows",
     uyruk: "Brezilya",
     mevki: "MOO",
     reyting: 81,
@@ -66,8 +66,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan+", "Akrobatik", "Hassas Kafa Vuruşu", "Plase Şut"]
   },
   {
-    ad: "Milan Škriniar",
-    takim: "Fener Canaries",
+    ad: "M. Skrinyar",
+    takim: "Istanbul Yellows",
     uyruk: "Slovakya",
     mevki: "STP",
     reyting: 81,
@@ -83,8 +83,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Yakın Markaj"]
   },
   {
-    ad: "Fred",
-    takim: "Fener Canaries",
+    ad: "Fredy",
+    takim: "Istanbul Yellows",
     uyruk: "Brezilya",
     mevki: "MO",
     reyting: 80,
@@ -100,8 +100,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Amansız+", "Yaratıcı"]
   },
   {
-    ad: "Marco Asensio",
-    takim: "Fener Canaries",
+    ad: "M. Asensyo",
+    takim: "Istanbul Yellows",
     uyruk: "İspanya",
     mevki: "SĞK",
     reyting: 80,
@@ -117,8 +117,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Keskin Pas", "Kesme Pas", "Plase Şut"]
   },
   {
-    ad: "Kerem Aktürkoğlu",
-    takim: "Fener Canaries",
+    ad: "K. Akturk",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SLK",
     reyting: 80,
@@ -134,8 +134,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Amansız", "Çabuk Adım", "Ezber Bozan", "Keskin Pas", "Plase Şut", "Seri"]
   },
   {
-    ad: "Jhon Durán",
-    takim: "Fener Canaries",
+    ad: "J. Durano",
+    takim: "Istanbul Yellows",
     uyruk: "Kolombiya",
     mevki: "SNT",
     reyting: 79,
@@ -151,8 +151,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Hassas Kafa Vuruşu"]
   },
   {
-    ad: "İrfan Can Kahveci",
-    takim: "Fener Canaries",
+    ad: "I. Kahvecy",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞK",
     reyting: 78,
@@ -168,8 +168,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["İlk Dokunuş", "Keskin Pas", "Kesme Pas", "Kuvvetli Şut", "Plase Şut", "Teknik"]
   },
   {
-    ad: "Sebastian Szymański",
-    takim: "Fener Canaries",
+    ad: "S. Szyman",
+    takim: "Istanbul Yellows",
     uyruk: "Polonya",
     mevki: "MOO",
     reyting: 78,
@@ -185,8 +185,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Duran Top", "Keskin Pas", "Plase Şut", "Teknik"]
   },
   {
-    ad: "Edson Álvarez",
-    takim: "Fener Canaries",
+    ad: "E. Alvare",
+    takim: "Istanbul Yellows",
     uyruk: "Meksika",
     mevki: "MDO",
     reyting: 78,
@@ -202,8 +202,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Engel", "Güçlü", "Kayarak Müdahale", "Sezgili"]
   },
   {
-    ad: "Oğuz Aydın",
-    takim: "Fener Canaries",
+    ad: "O. Aydinn",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SLK",
     reyting: 77,
@@ -216,8 +216,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "Kesme Pas", "Plase Şut", "Teknik"]
   },
   {
-    ad: "İsmail Yüksek",
-    takim: "Fener Canaries",
+    ad: "I. Yuksekk",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 77,
@@ -230,8 +230,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Hava Hakimi", "Kayarak Müdahale", "Yakın Markaj"]
   },
   {
-    ad: "Nélson Semedo",
-    takim: "Fener Canaries",
+    ad: "N. Semedho",
+    takim: "Istanbul Yellows",
     uyruk: "Portekiz",
     mevki: "SĞB",
     reyting: 77,
@@ -244,8 +244,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Kesme Pas", "Seri"]
   },
   {
-    ad: "Çağlar Söyüncü",
-    takim: "Fener Canaries",
+    ad: "C. Soyunco",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 77,
@@ -258,8 +258,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Engel"]
   },
   {
-    ad: "Jayden Oosterwolde",
-    takim: "Fener Canaries",
+    ad: "J. Osterwol",
+    takim: "Istanbul Yellows",
     uyruk: "Hollanda",
     mevki: "SLB",
     reyting: 76,
@@ -272,8 +272,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Sezgili"]
   },
   {
-    ad: "Rodrigo Becão",
-    takim: "Fener Canaries",
+    ad: "R. Bekao",
+    takim: "Istanbul Yellows",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 76,
@@ -286,8 +286,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Yakın Markaj"]
   },
   {
-    ad: "İrfan Can Eğribayat",
-    takim: "Fener Canaries",
+    ad: "I. Egribay",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 75,
@@ -300,8 +300,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Deflector"]
   },
   {
-    ad: "Mert Müldür",
-    takim: "Fener Canaries",
+    ad: "M. Muldurr",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 74,
@@ -313,8 +313,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Emre Mor",
-    takim: "Fener Canaries",
+    ad: "E. Morr",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 73,
@@ -326,8 +326,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Ezber Bozan", "Teknik"]
   },
   {
-    ad: "Cenk Tosun",
-    takim: "Fener Canaries",
+    ad: "C. Tosunn",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SNT",
     reyting: 72,
@@ -339,8 +339,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Akrobatik"]
   },
   {
-    ad: "Levent Mercan",
-    takim: "Fener Canaries",
+    ad: "L. Merkan",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 71,
@@ -352,8 +352,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Güçlü", "Yakın Markaj"]
   },
   {
-    ad: "Archie Brown",
-    takim: "Fener Canaries",
+    ad: "A. Browne",
+    takim: "Istanbul Yellows",
     uyruk: "İngiltere",
     mevki: "SLB",
     reyting: 71,
@@ -365,8 +365,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Uzun Taç+", "Çabuk Adım"]
   },
   {
-    ad: "Nene Dorgeles",
-    takim: "Fener Canaries",
+    ad: "N. Dorgel",
+    takim: "Istanbul Yellows",
     uyruk: "Mali",
     mevki: "SNT",
     reyting: 71,
@@ -378,8 +378,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: ["Çabuk Adım"]
   },
   {
-    ad: "Mert Hakan Yandaş",
-    takim: "Fener Canaries",
+    ad: "M. Yandash",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 70,
@@ -391,8 +391,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Tarık Çetin",
-    takim: "Fener Canaries",
+    ad: "T. Cetinn",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 67,
@@ -405,8 +405,8 @@ export const FENERBAHCE_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Bartuğ Elmaz",
-    takim: "Fener Canaries",
+    ad: "B. Elmazz",
+    takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 66,

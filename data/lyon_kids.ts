@@ -1,18 +1,18 @@
 export const LYON_KIDS_SQUAD = [
-    {
-        ad: "Corentin Tolisso",
-        takim: "Lyon Kids",
-        uyruk: "Fransa",
-        mevki: "MO",
-        reyting: 81,
-        yas: 30,
-        ana_ozellikler: { hiz: 68, sut: 78, pas: 78, dribbling: 76, defans: 77, fizik: 79 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "C. Tolissow",
+    takim: "Lyon Kids",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 81,
+    yas: 30,
+    ana_ozellikler: { hiz: 68, sut: 78, pas: 78, dribbling: 76, defans: 77, fizik: 79 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Lopez",
+    ad: "C. Lopeze",
     takim: "Lyon Kids",
     uyruk: "Brezilya",
     mevki: "KL",
@@ -23,7 +23,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
+    ad: "D. Lopeze",
     takim: "Lyon Kids",
     uyruk: "Arjantin",
     mevki: "KL",
@@ -34,7 +34,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Rodriguez",
+    ad: "A. Rodrigz",
     takim: "Lyon Kids",
     uyruk: "İspanya",
     mevki: "KL",
@@ -45,7 +45,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
+    ad: "L. Costas",
     takim: "Lyon Kids",
     uyruk: "Fransa",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
+    ad: "C. Martines",
     takim: "Lyon Kids",
     uyruk: "İtalya",
     mevki: "STP",
@@ -67,7 +67,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Martinez",
+    ad: "D. Martines",
     takim: "Lyon Kids",
     uyruk: "Portekiz",
     mevki: "STP",
@@ -78,7 +78,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Silva",
+    ad: "D. Sylva",
     takim: "Lyon Kids",
     uyruk: "Brezilya",
     mevki: "STP",
@@ -89,7 +89,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Santos",
+    ad: "P. Santoz",
     takim: "Lyon Kids",
     uyruk: "Arjantin",
     mevki: "SĞB",
@@ -100,7 +100,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Martinez",
+    ad: "D. Martines",
     takim: "Lyon Kids",
     uyruk: "İspanya",
     mevki: "SĞB",
@@ -111,7 +111,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
+    ad: "D. Lopeze",
     takim: "Lyon Kids",
     uyruk: "Fransa",
     mevki: "SLB",
@@ -122,7 +122,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Rodriguez",
+    ad: "C. Rodrigz",
     takim: "Lyon Kids",
     uyruk: "İtalya",
     mevki: "SLB",
@@ -133,7 +133,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Garcia",
+    ad: "M. Garcy",
     takim: "Lyon Kids",
     uyruk: "Portekiz",
     mevki: "MDO",
@@ -144,7 +144,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Costa",
+    ad: "J. Costas",
     takim: "Lyon Kids",
     uyruk: "Brezilya",
     mevki: "MDO",
@@ -155,7 +155,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Garcia",
+    ad: "J. Garcy",
     takim: "Lyon Kids",
     uyruk: "Arjantin",
     mevki: "MDO",
@@ -166,7 +166,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Perez",
+    ad: "J. Pereze",
     takim: "Lyon Kids",
     uyruk: "İspanya",
     mevki: "MO",
@@ -177,7 +177,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
+    ad: "J. Lopeze",
     takim: "Lyon Kids",
     uyruk: "Fransa",
     mevki: "MO",
@@ -188,7 +188,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
+    ad: "P. Lopeze",
     takim: "Lyon Kids",
     uyruk: "İtalya",
     mevki: "MOO",
@@ -199,7 +199,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
+    ad: "P. Rodrigz",
     takim: "Lyon Kids",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -210,7 +210,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Costa",
+    ad: "L. Costas",
     takim: "Lyon Kids",
     uyruk: "Brezilya",
     mevki: "SĞO",
@@ -221,7 +221,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Martinez",
+    ad: "L. Martines",
     takim: "Lyon Kids",
     uyruk: "Arjantin",
     mevki: "SĞO",
@@ -232,7 +232,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
+    ad: "C. Martines",
     takim: "Lyon Kids",
     uyruk: "İspanya",
     mevki: "SLO",
@@ -243,7 +243,7 @@ export const LYON_KIDS_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
+    ad: "C. Sylva",
     takim: "Lyon Kids",
     uyruk: "Fransa",
     mevki: "SLO",

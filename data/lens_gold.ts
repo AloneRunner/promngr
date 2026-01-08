@@ -1,18 +1,18 @@
 export const LENS_GOLD_SQUAD = [
-    {
-        ad: "Odsonne Edouard",
-        takim: "Lens Gold",
-        uyruk: "Fransa",
-        mevki: "SNT",
-        reyting: 72,
-        yas: 27,
-        ana_ozellikler: { hiz: 66, sut: 73, pas: 65, dribbling: 71, defans: 45, fizik: 67 },
-        detaylar: {},
-        oyun_tarzlari: []
-    },
+  {
+    ad: "O. Edouardo",
+    takim: "Lens Gold",
+    uyruk: "Fransa",
+    mevki: "SNT",
+    reyting: 72,
+    yas: 27,
+    ana_ozellikler: { hiz: 66, sut: 73, pas: 65, dribbling: 71, defans: 45, fizik: 67 },
+    detaylar: {},
+    oyun_tarzlari: []
+  },
 
   {
-    ad: "Carlos Silva",
+    ad: "C. Sylva",
     takim: "Lens Gold",
     uyruk: "Brezilya",
     mevki: "KL",
@@ -23,7 +23,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Rodriguez",
+    ad: "D. Rodrigz",
     takim: "Lens Gold",
     uyruk: "Arjantin",
     mevki: "KL",
@@ -34,7 +34,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Andre Silva",
+    ad: "A. Sylva",
     takim: "Lens Gold",
     uyruk: "İspanya",
     mevki: "KL",
@@ -45,7 +45,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Lopez",
+    ad: "L. Lopeze",
     takim: "Lens Gold",
     uyruk: "Fransa",
     mevki: "STP",
@@ -56,7 +56,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
+    ad: "C. Sylva",
     takim: "Lens Gold",
     uyruk: "İtalya",
     mevki: "STP",
@@ -67,7 +67,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Diego Silva",
+    ad: "D. Sylva",
     takim: "Lens Gold",
     uyruk: "Portekiz",
     mevki: "STP",
@@ -78,7 +78,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Santos",
+    ad: "D. Santoz",
     takim: "Lens Gold",
     uyruk: "Brezilya",
     mevki: "STP",
@@ -89,7 +89,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
+    ad: "P. Sylva",
     takim: "Lens Gold",
     uyruk: "Arjantin",
     mevki: "SĞB",
@@ -100,7 +100,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Lopez",
+    ad: "D. Lopeze",
     takim: "Lens Gold",
     uyruk: "İspanya",
     mevki: "SĞB",
@@ -111,7 +111,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "David Costa",
+    ad: "D. Costas",
     takim: "Lens Gold",
     uyruk: "Fransa",
     mevki: "SLB",
@@ -122,7 +122,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Martinez",
+    ad: "C. Martines",
     takim: "Lens Gold",
     uyruk: "İtalya",
     mevki: "SLB",
@@ -133,7 +133,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Marco Rodriguez",
+    ad: "M. Rodrigz",
     takim: "Lens Gold",
     uyruk: "Portekiz",
     mevki: "MDO",
@@ -144,7 +144,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Lopez",
+    ad: "J. Lopeze",
     takim: "Lens Gold",
     uyruk: "Brezilya",
     mevki: "MDO",
@@ -155,7 +155,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Martinez",
+    ad: "J. Martines",
     takim: "Lens Gold",
     uyruk: "Arjantin",
     mevki: "MDO",
@@ -166,7 +166,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Rodriguez",
+    ad: "J. Rodrigz",
     takim: "Lens Gold",
     uyruk: "İspanya",
     mevki: "MO",
@@ -177,7 +177,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "João Silva",
+    ad: "J. Sylva",
     takim: "Lens Gold",
     uyruk: "Fransa",
     mevki: "MO",
@@ -188,7 +188,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Rodriguez",
+    ad: "P. Rodrigz",
     takim: "Lens Gold",
     uyruk: "İtalya",
     mevki: "MO",
@@ -199,7 +199,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Silva",
+    ad: "P. Sylva",
     takim: "Lens Gold",
     uyruk: "Portekiz",
     mevki: "MOO",
@@ -210,7 +210,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Pedro Lopez",
+    ad: "P. Lopeze",
     takim: "Lens Gold",
     uyruk: "Brezilya",
     mevki: "MOO",
@@ -221,7 +221,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Lucas Silva",
+    ad: "L. Sylva",
     takim: "Lens Gold",
     uyruk: "Arjantin",
     mevki: "SĞO",
@@ -232,7 +232,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Silva",
+    ad: "C. Sylva",
     takim: "Lens Gold",
     uyruk: "İspanya",
     mevki: "SĞO",
@@ -243,7 +243,7 @@ export const LENS_GOLD_SQUAD = [
     oyun_tarzlari: []
   },
   {
-    ad: "Carlos Santos",
+    ad: "C. Santoz",
     takim: "Lens Gold",
     uyruk: "Fransa",
     mevki: "SLO",

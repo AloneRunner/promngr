@@ -19,6 +19,139 @@ const distSq = (x1: number, y1: number, x2: number, y2: number) => (x2 - x1) * (
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
+// === KAPSAMLİ YORGUNLUK ETKİSİ SİSTEMİ ===
+// Her stat için ayrı ayrı yorgunluk etkisi hesaplar
+// Kaleciler için daha hafif, saha oyuncuları için daha ağır cezalar
+
+interface FatigueModifiers {
+    // Fiziksel
+    speed: number;
+    strength: number;
+    stamina: number;
+    aggression: number;
+    // Teknik
+    finishing: number;
+    passing: number;
+    dribbling: number;
+    tackling: number;
+    goalkeeping: number;
+    // Zihinsel
+    positioning: number;
+    composure: number;
+    decisions: number;
+    vision: number;
+    leadership: number;
+}
+
+// Saha oyuncuları için yorgunluk modifikatörleri
+const getFieldPlayerFatigueModifiers = (stamina: number): FatigueModifiers => {
+    if (stamina >= 80) {
+        // 80-100: Dinç - tam performans
+        return {
+            speed: 1.0, strength: 1.0, stamina: 1.0, aggression: 1.0,
+            finishing: 1.0, passing: 1.0, dribbling: 1.0, tackling: 1.0, goalkeeping: 1.0,
+            positioning: 1.0, composure: 1.0, decisions: 1.0, vision: 1.0, leadership: 1.0
+        };
+    } else if (stamina >= 60) {
+        // 60-80: Hafif yorgun
+        return {
+            speed: 0.95, strength: 0.98, stamina: 0.95, aggression: 0.97,
+            finishing: 0.94, passing: 0.95, dribbling: 0.93, tackling: 0.94, goalkeeping: 0.97,
+            positioning: 0.93, composure: 0.92, decisions: 0.90, vision: 0.93, leadership: 0.95
+        };
+    } else if (stamina >= 40) {
+        // 40-60: Orta yorgun - belirgin düşüş
+        return {
+            speed: 0.85, strength: 0.92, stamina: 0.85, aggression: 0.88,
+            finishing: 0.82, passing: 0.85, dribbling: 0.80, tackling: 0.83, goalkeeping: 0.90,
+            positioning: 0.80, composure: 0.78, decisions: 0.75, vision: 0.82, leadership: 0.88
+        };
+    } else if (stamina >= 20) {
+        // 20-40: Çok yorgun - AĞIR CEZALAR
+        return {
+            speed: 0.68, strength: 0.82, stamina: 0.70, aggression: 0.75,
+            finishing: 0.65, passing: 0.70, dribbling: 0.60, tackling: 0.65, goalkeeping: 0.80,
+            positioning: 0.62, composure: 0.55, decisions: 0.55, vision: 0.65, leadership: 0.78
+        };
+    } else {
+        // 0-20: Bitik - değişiklik şart!
+        return {
+            speed: 0.45, strength: 0.70, stamina: 0.50, aggression: 0.60,
+            finishing: 0.45, passing: 0.50, dribbling: 0.40, tackling: 0.45, goalkeeping: 0.65,
+            positioning: 0.42, composure: 0.35, decisions: 0.35, vision: 0.45, leadership: 0.65
+        };
+    }
+};
+
+// Kaleciler için özel yorgunluk modifikatörleri (daha hafif etkiler)
+const getGoalkeeperFatigueModifiers = (stamina: number): FatigueModifiers => {
+    if (stamina >= 70) {
+        // 70-100: Dinç
+        return {
+            speed: 1.0, strength: 1.0, stamina: 1.0, aggression: 1.0,
+            finishing: 1.0, passing: 1.0, dribbling: 1.0, tackling: 1.0, goalkeeping: 1.0,
+            positioning: 1.0, composure: 1.0, decisions: 1.0, vision: 1.0, leadership: 1.0
+        };
+    } else if (stamina >= 50) {
+        // 50-70: Hafif yorgun
+        return {
+            speed: 0.95, strength: 0.98, stamina: 0.95, aggression: 0.98,
+            finishing: 1.0, passing: 0.98, dribbling: 0.98, tackling: 0.98, goalkeeping: 0.97,
+            positioning: 0.96, composure: 0.95, decisions: 0.95, vision: 0.97, leadership: 0.98
+        };
+    } else if (stamina >= 30) {
+        // 30-50: Orta yorgun
+        return {
+            speed: 0.90, strength: 0.95, stamina: 0.88, aggression: 0.92,
+            finishing: 1.0, passing: 0.95, dribbling: 0.95, tackling: 0.92, goalkeeping: 0.93,
+            positioning: 0.90, composure: 0.88, decisions: 0.88, vision: 0.92, leadership: 0.95
+        };
+    } else if (stamina >= 10) {
+        // 10-30: Çok yorgun
+        return {
+            speed: 0.85, strength: 0.90, stamina: 0.80, aggression: 0.85,
+            finishing: 1.0, passing: 0.90, dribbling: 0.90, tackling: 0.85, goalkeeping: 0.85,
+            positioning: 0.82, composure: 0.80, decisions: 0.80, vision: 0.85, leadership: 0.90
+        };
+    } else {
+        // 0-10: Bitik
+        return {
+            speed: 0.75, strength: 0.85, stamina: 0.70, aggression: 0.75,
+            finishing: 1.0, passing: 0.85, dribbling: 0.85, tackling: 0.78, goalkeeping: 0.75,
+            positioning: 0.70, composure: 0.65, decisions: 0.65, vision: 0.75, leadership: 0.85
+        };
+    }
+};
+
+// Oyuncu için tüm yorgunluk modifikatörlerini al
+const getAllFatigueModifiers = (stamina: number, isGoalkeeper: boolean): FatigueModifiers => {
+    return isGoalkeeper 
+        ? getGoalkeeperFatigueModifiers(stamina) 
+        : getFieldPlayerFatigueModifiers(stamina);
+};
+
+// === BASİTLEŞTİRİLMİŞ YORGUNLUK FONKSİYONU (geriye uyumluluk için) ===
+// type: 'physical' (hız, ivme), 'technical' (pas, şut, dribling), 'mental' (karar, pozisyon)
+const getFatigueModifier = (stamina: number, type: 'physical' | 'technical' | 'mental'): number => {
+    const mods = getFieldPlayerFatigueModifiers(stamina);
+    if (type === 'physical') return mods.speed;
+    if (type === 'technical') return mods.passing;
+    return mods.decisions; // mental
+};
+
+// === YORGUNLUKLU STAT HESAPLAMA ===
+// Bir oyuncunun yorgunluk dahil gerçek stat değerini hesaplar
+const getEffectiveStat = (
+    player: Player, 
+    statName: keyof FatigueModifiers, 
+    currentStamina: number
+): number => {
+    const isGK = player.position === Position.GK;
+    const mods = getAllFatigueModifiers(currentStamina, isGK);
+    const baseStat = (player.attributes as any)[statName] || 50;
+    return baseStat * mods[statName];
+};
+
 // --- CONSTANTS ---
 export const TICKS_PER_MINUTE = 60; // ~3 seconds per minute at 1x speed (50ms per tick)
 
@@ -234,7 +367,10 @@ export class MatchEngine {
         momentum: number,
         isPressing: boolean,
         incomingSignal?: Signal | null,
-        outgoingSignal?: Signal | null
+        outgoingSignal?: Signal | null,
+        // === MESAFE BAZLI YORGUNLUK TAKİBİ ===
+        sprintDistance?: number,  // Toplam sprint mesafesi (birim)
+        runDistance?: number      // Toplam koşu mesafesi (birim)
     }> = {};
 
     private tickCount: number = 0;
@@ -290,7 +426,10 @@ export class MatchEngine {
                     actionLock: 0,
                     targetX: 50, targetY: 50,
                     momentum: 0,
-                    isPressing: false
+                    isPressing: false,
+                    // === MESAFE BAZLI YORGUNLUK TAKİBİ ===
+                    sprintDistance: 0,  // Toplam sprint mesafesi (birim)
+                    runDistance: 0      // Toplam koşu mesafesi (birim)
                 };
             }
         });
@@ -504,7 +643,11 @@ export class MatchEngine {
         const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
 
         if (subsMade >= this.MAX_SUBS) return;
-        if (this.internalMinute < 40) return; // Only consider subs after 40th minute (erkene alındı)
+        
+        // === GERÇEKÇİ DEĞİŞİKLİK ZAMANLARI ===
+        // Teknik direktörler genelde 55-70 arası ilk değişiklikleri yapar
+        // 75+ dakikada son değişiklikler
+        if (this.internalMinute < 55) return;
 
         const starters = players.filter(p => p.lineup === 'STARTING');
         // IMPORTANT: Filter out players who were already substituted out - they can't return!
@@ -525,9 +668,18 @@ export class MatchEngine {
             // Score based on stamina and position match
             let score = state.currentStamina;
 
-            // If very tired (below 50%), prioritize subbing greatly
-            if (state.currentStamina < 50) {
-                score -= 30;
+            // === POZİSYONA GÖRE DEĞİŞİKLİK ÖNCELİĞİ ===
+            // Orta sahalar daha çabuk yorulduğu için öncelikli değiştirilmeli
+            const role = this.playerRoles[p.id];
+            if (role === Position.MID && state.currentStamina < 55) {
+                score -= 20; // Orta saha yorgunsa daha acil
+            }
+            
+            // If very tired (below 45%), prioritize subbing greatly
+            if (state.currentStamina < 45) {
+                score -= 40;
+            } else if (state.currentStamina < 55) {
+                score -= 25;
             }
 
             if (score < worstScore) {
@@ -536,9 +688,16 @@ export class MatchEngine {
             }
         }
 
-        // Only sub if the player is getting tired
-        // Threshold 60 - AI değişiklik için daha agresif (artırıldı: 55 -> 60)
-        if (!worstPlayer || worstScore > 60) return;
+        // === GERÇEKÇİ DEĞİŞİKLİK EŞİKLERİ ===
+        // Geç dakikalarda daha erken değişiklik (yorgunluk daha kritik)
+        let subThreshold = 55;
+        if (this.internalMinute >= 75) {
+            subThreshold = 65; // Son 15 dakikada daha erken değiştir
+        } else if (this.internalMinute >= 65) {
+            subThreshold = 60; // 65-75 arası orta eşik
+        }
+        
+        if (!worstPlayer || worstScore > subThreshold) return;
 
         // Find best bench replacement for the position
         const neededPos = normalizePos(worstPlayer);
@@ -587,7 +746,7 @@ export class MatchEngine {
             ? this.match.homeScore - this.match.awayScore 
             : this.match.awayScore - this.match.homeScore;
         
-        const currentMentality = team.tactic.mentality;
+        const currentMentality = isHome ? this.sim.homeMentality : this.sim.awayMentality;
         let newMentality = currentMentality;
         let tacticChanged = false;
 
@@ -596,34 +755,38 @@ export class MatchEngine {
             // Late game adjustments
             if (scoreDiff <= -2) {
                 // Losing by 2+ → Ultra Attacking
-                newMentality = 'Ultra-Attacking';
+                newMentality = TeamMentality.ALL_OUT_ATTACK;
             } else if (scoreDiff === -1) {
                 // Losing by 1 → Attacking
-                newMentality = 'Attacking';
+                newMentality = TeamMentality.ATTACKING;
             } else if (scoreDiff >= 2) {
                 // Winning by 2+ → Defensive
-                newMentality = 'Defensive';
+                newMentality = TeamMentality.DEFENSIVE;
             } else if (scoreDiff === 1) {
                 // Winning by 1 → Balanced (protect lead but don't park bus)
-                newMentality = 'Balanced';
+                newMentality = TeamMentality.BALANCED;
             }
         } else if (this.internalMinute >= 55) {
             // Mid-late game
             if (scoreDiff <= -2) {
-                newMentality = 'Attacking';
+                newMentality = TeamMentality.ATTACKING;
             } else if (scoreDiff >= 2) {
-                newMentality = 'Balanced'; // Comfortable lead
+                newMentality = TeamMentality.BALANCED; // Comfortable lead
             }
         } else if (this.internalMinute >= 30) {
             // First half adjustments (more conservative)
             if (scoreDiff <= -2) {
-                newMentality = 'Attacking';
+                newMentality = TeamMentality.ATTACKING;
             }
         }
 
         // Only change if different from current
         if (newMentality !== currentMentality) {
-            team.tactic.mentality = newMentality;
+            if (isHome) {
+                this.sim.homeMentality = newMentality;
+            } else {
+                this.sim.awayMentality = newMentality;
+            }
             tacticChanged = true;
 
             // Create event for notification
@@ -651,18 +814,28 @@ export class MatchEngine {
         this.awayPlayers = awayPlayers.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH');
         this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
 
-        // 2. Re-initialize tactics/offsets
-        this.initializeTactics(this.homePlayers.filter(p => p.lineup === 'STARTING'), this.homeTeam.tactic);
-        this.initializeTactics(this.awayPlayers.filter(p => p.lineup === 'STARTING'), this.awayTeam.tactic);
+        // 2. Get current simulation state for existing players (to preserve positions)
+        const existingSimPlayers = { ...this.sim.players };
+        const existingPlayerStates = { ...this.playerStates };
 
-        // 3. Sync Simulation State
-        const allStarting = [...this.homePlayers, ...this.awayPlayers].filter(p => p.lineup === 'STARTING');
+        // 3. Re-initialize tactics/offsets for NEW players only
+        const homeStarters = this.homePlayers.filter(p => p.lineup === 'STARTING');
+        const awayStarters = this.awayPlayers.filter(p => p.lineup === 'STARTING');
+        
+        // Initialize tactics (this sets baseOffsets)
+        this.initializeTactics(homeStarters, this.homeTeam.tactic);
+        this.initializeTactics(awayStarters, this.awayTeam.tactic);
+
+        // 4. Sync Simulation State
+        const allStarting = [...homeStarters, ...awayStarters];
         const newIds = new Set(allStarting.map(p => p.id));
 
         // Remove players no longer starting
         Object.keys(this.sim.players).forEach(id => {
             if (!newIds.has(id)) {
                 delete this.sim.players[id];
+                // Also remove their player state to prevent ghost states
+                delete this.playerStates[id];
             }
         });
 
@@ -670,23 +843,28 @@ export class MatchEngine {
         allStarting.forEach(p => {
             const base = this.baseOffsets[p.id] || { x: 50, y: 50 };
             const isHome = p.teamId === this.homeTeam.id;
+            const existingSim = existingSimPlayers[p.id];
 
             if (!this.sim.players[p.id]) {
-                // New player entering pitch
+                // NEW player entering pitch (substitution already handled by substitutePlayer)
                 this.sim.players[p.id] = {
-                    x: isHome ? base.x : 100 - base.x,
-                    y: isHome ? base.y : 100 - base.y,
-                    facing: 0, vx: 0, vy: 0, state: 'IDLE'
+                    x: existingSim ? existingSim.x : (isHome ? base.x : 100 - base.x),
+                    y: existingSim ? existingSim.y : (isHome ? base.y : 100 - base.y),
+                    facing: existingSim ? existingSim.facing : 0,
+                    vx: 0, // Reset velocity to prevent glitches
+                    vy: 0,
+                    state: 'IDLE'
                 };
-
-                // Init state if missing
-                if (!this.playerStates[p.id]) {
-                    this.playerStates[p.id] = {
-                        currentStamina: p.condition || 100,
-                        decisionTimer: Math.random() * 5, possessionCooldown: 0, actionLock: 0,
-                        targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
-                    };
-                }
+            }
+            
+            // Init/restore state if missing
+            if (!this.playerStates[p.id]) {
+                const existingState = existingPlayerStates[p.id];
+                this.playerStates[p.id] = existingState || {
+                    currentStamina: p.condition || 100,
+                    decisionTimer: Math.random() * 5, possessionCooldown: 0, actionLock: 0,
+                    targetX: base.x, targetY: base.y, momentum: 0, isPressing: false
+                };
             }
         });
 
@@ -1123,10 +1301,21 @@ export class MatchEngine {
                     let gkReachBase = 2.5;
                     if (isCloseRange) gkReachBase = 1.8; // Nerf at close range
 
+                    // === KALECİ YORGUNLUK SİSTEMİ ===
+                    const gkState = this.playerStates[gk.id];
+                    const gkFatigueMods = getAllFatigueModifiers(gkState?.currentStamina || 100, true);
+                    
+                    // Yorgunluk dahil gerçek statlar
+                    const effectiveGKing = gk.attributes.goalkeeping * gkFatigueMods.goalkeeping;
+                    const effectiveComposure = gk.attributes.composure * gkFatigueMods.composure;
+                    const effectiveDecisions = gk.attributes.decisions * gkFatigueMods.decisions;
+                    const effectivePositioning = gk.attributes.positioning * gkFatigueMods.positioning;
+                    const effectiveSpeed = gk.attributes.speed * gkFatigueMods.speed;
+
                     // --- REALISTIC REFLEXES ---
                     // Reach is affected by Ball Speed vs Goalkeeper Reflexes.
                     // High speed shots reduce effective reach unless GK has high reflexes.
-                    const reflexes = (gk.attributes.goalkeeping * 0.7) + (gk.attributes.composure * 0.3);
+                    const reflexes = (effectiveGKing * 0.7) + (effectiveComposure * 0.3);
                     const speedFactor = ballSpeed * 2.5; // E.g., speed 3.0 -> 7.5 difficulty
 
                     // Reflex capability: Can they react in time?
@@ -1134,29 +1323,33 @@ export class MatchEngine {
                     const reactionDeficit = Math.max(0, speedFactor - (reflexes / 12));
                     const reflexPenalty = reactionDeficit * 0.8; // Penalty to reach
 
-                    const gkReach = Math.max(0.5, gkReachBase + (gk.attributes.goalkeeping / 90) - reflexPenalty);
+                    // Kaleci hızı da erişimi etkiler
+                    const speedBonus = (effectiveSpeed - 50) / 200; // -0.25 to +0.25
+                    const gkReach = Math.max(0.5, gkReachBase + (effectiveGKing / 90) - reflexPenalty + speedBonus);
 
                     if (distToGK < gkReach && b.z < 2.5) { // Ball is reachable height
-                        const gkSkill = gk.attributes.goalkeeping || 50;
-                        const gkState = this.playerStates[gk.id];
-
                         // Save difficulty based on shot speed and distance
                         // TWEAK: Higher penalty for speed at close range
                         const speedPenalty = ballSpeed * (isCloseRange ? 14 : 10);
                         const heightBonus = b.z > 0 ? -10 : 0; // Harder to save high shots
                         const distanceBonus = (gkReach - distToGK) * 5; // Easier if closer (but base reach is lower)
+                        
+                        // Positioning: İyi pozisyon alan kaleci daha kolay kurtarır
+                        const positioningBonus = (effectivePositioning - 50) / 5; // -10 to +10
+                        
+                        // Decisions: Doğru karar veren kaleci daha iyi tepki verir
+                        const decisionBonus = (effectiveDecisions - 50) / 10; // -5 to +5
 
-                        // Fatigue affects saves
-                        const staminaFactor = gkState?.currentStamina ? (gkState.currentStamina / 100) : 1;
-
-                        // Kurtarış şansı dengelendi (daha düşük)
-                        const saveChance = (gkSkill * staminaFactor * 0.65) + distanceBonus + heightBonus - speedPenalty;
+                        // Kurtarış şansı (yorgunluk dahil)
+                        const saveChance = (effectiveGKing * 0.65) + distanceBonus + heightBonus + positioningBonus + decisionBonus - speedPenalty;
                         const saveRoll = Math.random() * 100;
 
                         if (saveRoll < saveChance) {
                             // SAVE!
                             const catchRoll = Math.random();
-                            if (catchRoll < 0.4 && ballSpeed < 3.0) {
+                            // Yorgun kaleci topu tutmakta zorlanır
+                            const catchThreshold = 0.4 * gkFatigueMods.composure;
+                            if (catchRoll < catchThreshold && ballSpeed < 3.0) {
                                 // Catch the ball
                                 this.sim.ball.ownerId = gk.id;
                                 this.sim.ball.vx = 0;
@@ -1490,10 +1683,14 @@ export class MatchEngine {
         const state = this.playerStates[p.id];
         const tactic = isHome ? this.homeTeam.tactic : this.awayTeam.tactic;
 
-        const fatigueFactor = Math.max(0.3, state.currentStamina / 100);
-        const dribbleSkill = p.attributes.dribbling || 50;
+        // === MERKEZİ YORGUNLUK ETKİSİ ===
+        const technicalMod = getFatigueModifier(state.currentStamina, 'technical');
+        const mentalMod = getFatigueModifier(state.currentStamina, 'mental');
+        
+        const dribbleSkill = (p.attributes.dribbling || 50) * technicalMod;
         let closeControl = 1.0 + ((100 - dribbleSkill) / 100);
-        if (state.currentStamina < 50) closeControl *= 1.6;
+        // Yorgunluk top kontrolünü zorlaştırır
+        closeControl *= (2 - technicalMod); // technicalMod 1.0 → 1.0x, 0.6 → 1.4x zorluk
 
         this.sim.ball.x = simP.x + (Math.cos(simP.facing) * closeControl);
         this.sim.ball.y = simP.y + (Math.sin(simP.facing) * closeControl);
@@ -1559,7 +1756,9 @@ export class MatchEngine {
         if (tactic.tempo === 'Fast') decisionSpeed *= 0.7; // Faster decisions
         else if (tactic.tempo === 'Slow') decisionSpeed *= 1.4; // Slower decisions
 
-        if (state.currentStamina < 50) decisionSpeed *= 1.8; // Hafifletildi: 2.5 -> 1.8
+        // === MERKEZİ YORGUNLUK ETKİSİ - ZİHİNSEL ===
+        // Yorgun oyuncular daha yavaş karar verir
+        decisionSpeed *= (2 - mentalMod); // mentalMod 1.0 → 1.0x, 0.6 → 1.4x yavaş
 
         state.decisionTimer++;
 
@@ -1693,7 +1892,7 @@ export class MatchEngine {
             // === ORTA SAHA UZAK ŞUT ===
             // Orta sahalar da uzaktan şut atabilir! Özellikle "Uzaktan Şut" yeteneği varsa
             const hasLongShot = p.playStyles?.includes("Uzaktan Şut") || p.playStyles?.includes("Uzaktan Şut+");
-            const longShotAttr = p.attributes.longShots || 50;
+            const longShotAttr = (p.attributes as any).longShots || p.attributes.finishing || 50;
             // Uzaktan şut şansı: Long shot attr + açıklık + mesafe
             const longShotChance = isMidfielder && distToGoal < 35 && distToGoal > 18 && shotOpenness > 0.35
                 ? (0.08 + (longShotAttr - 50) / 500 + (hasLongShot ? 0.15 : 0)) // Base 8% + skill bonus
@@ -2643,13 +2842,18 @@ export class MatchEngine {
 
         const currentSpeed = Math.sqrt(simP.vx * simP.vx + simP.vy * simP.vy);
 
-        // --- STAMINA IMPACT ON SPEED ---
-        // Relaxed curve: Speed drops significantly only below 40%
-        let staminaFactor = 1.0;
-        if (state.currentStamina < 40) {
-            staminaFactor = 0.6 + (state.currentStamina / 40) * 0.4;
+        // === MERKEZİ YORGUNLUK ETKİSİ - HIZ ===
+        const physicalMod = getFatigueModifier(state.currentStamina, 'physical');
+        let staminaFactor = physicalMod;
+        
+        // 25% altında sprint atamaz - sadece jog yapabilir
+        if (state.currentStamina < 25) {
+            staminaFactor = Math.min(staminaFactor, 0.55); // Max %55 hız
         }
-        if (state.currentStamina < 20) staminaFactor = 0.4; // Crawl
+        // 10% altında yürümek bile zor
+        if (state.currentStamina < 10) {
+            staminaFactor = Math.min(staminaFactor, 0.40); // Max %40 hız
+        }
 
         let speedPenalty = 1.0;
         if (p.id === this.sim.ball.ownerId) {
@@ -2718,38 +2922,74 @@ export class MatchEngine {
         while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
         simP.facing += angleDiff * PLAYER_TURN_SPEED;
 
-        // --- STAMINA DEPLETION LOGIC ---
+        // --- MESAFE BAZLI YORGUNLUK SİSTEMİ ---
+        // Gerçek futbol verilerine göre:
+        // - Bir futbolcu 8-12 tam saha sprinti sonrası ciddi yorulur
+        // - Jog ile 20-30 tam saha sonrası yorulur
+        // - Saha = 100 birim (105 metre)
+        
         const isSprinting = currentSpeed > MAX_PLAYER_SPEED * 0.75;
         const isRunning = currentSpeed > MAX_PLAYER_SPEED * 0.3;
+        const isWalking = currentSpeed > MAX_PLAYER_SPEED * 0.1;
         
-        // === STAMINA ATTRIBUTE EFFECT ===
-        // Higher stamina attribute = slower stamina drain
-        // Scale: 50 stamina = 1.0x drain, 80 stamina = 0.7x drain, 99 stamina = 0.5x drain
+        // Her tick'te kat edilen mesafeyi hesapla ve kaydet
+        // ARTIRILDI: Mesafe çarpanları yükseltildi (daha hızlı yorulma)
+        const distanceThisTick = currentSpeed; // birim/tick
+        
+        if (isSprinting) {
+            // Sprint mesafesi 1.3x çarpanla kaydedilir (daha yorucu)
+            state.sprintDistance = (state.sprintDistance || 0) + (distanceThisTick * 1.3);
+        } else if (isRunning) {
+            // Koşu mesafesi 1.15x çarpanla kaydedilir
+            state.runDistance = (state.runDistance || 0) + (distanceThisTick * 1.15);
+        }
+        // Yürüyüş ve durma mesafe olarak sayılmaz (yorgunluk yaratmaz)
+        
+        // === YORGUNLUK PUANI HESABI ===
+        // Formül: (sprint mesafesi × 2.5) + (koşu mesafesi × 0.7)
+        // ARTIRILDI: Çarpanlar yükseltildi
+        const FIELD_LENGTH = 100; // birim = 1 tam saha
+        const sprintFields = (state.sprintDistance || 0) / FIELD_LENGTH;
+        const runFields = (state.runDistance || 0) / FIELD_LENGTH;
+        
+        // Yorgunluk puanı (tam saha cinsinden) - ARTIRILMIŞ ÇARPANLAR
+        const fatigueScore = (sprintFields * 2.5) + (runFields * 0.7);
+        
+        // === STAMINA ATTRIBUTE ETKİSİ ===
+        // Yüksek dayanıklılık = yorgunluk eşiği yükselir
+        // AZALTILDI: Eşikler düşürüldü (daha erken yorulma)
+        // 50 stamina = 7 puan eşik, 80 stamina = 10 puan eşik, 99 stamina = 12 puan eşik
         const staminaAttr = p.attributes?.stamina || 60;
-        const attrDrainMod = Math.max(0.5, 1.3 - (staminaAttr / 100));
+        let fatigueThreshold = 5 + (staminaAttr / 14); // 5-12 arası eşik (düşürüldü)
         
         // === YETENEK ETKİSİ: AMANSIZ ===
-        // "Amansız" yeteneği: Stamina kaybı %30 daha az
-        let staminaDrainMod = attrDrainMod;
         if (p.playStyles?.includes("Amansız") || p.playStyles?.includes("Amansız+")) {
-            staminaDrainMod *= 0.7;
+            fatigueThreshold *= 1.35; // %35 daha fazla dayanır
         }
-
-        if (isSprinting) {
-            // Sprint: Hızlı stamina kaybı - 90 dakikada sürekli sprint %55-65 kayıp
-            state.currentStamina = Math.max(0, state.currentStamina - (0.10 * staminaDrainMod));
-        } else if (isRunning) {
-            // Koşu: Orta hızda stamina kaybı - 90 dakikada sürekli koşu %30-35 kayıp  
-            state.currentStamina = Math.max(0, state.currentStamina - (0.035 * staminaDrainMod));
-        } else {
-            // Yürüyüş/Durma: YAVAŞ toparlanma 
-            // Sarıdan (40%) yeşile (70%) dönmek ~5-6 dakika süreli
-            // 30 puan fark, 0.008/tick * 60tick/dk * recoveryMod(0.5) = ~0.24/dk -> ~125dk (çok uzun)
-            // Daha makul: 0.015 * 0.5 = 0.0075/tick -> ~30 puan için ~66dk beklemek lazım
-            // Gerçekçi: toparlanma sadece hafif artış sağlar, tam toparlanma için oyuncu değişikliği lazım
-            const recoveryMod = 0.4 + (staminaAttr / 400); // 0.4-0.65 arası
-            state.currentStamina = Math.min(100, state.currentStamina + (0.008 * recoveryMod)); // ~2dk'da 1 puan
+        
+        // === STAMINA HESABI ===
+        // fatigueScore 0 → %100 stamina
+        // fatigueScore = threshold → %50 stamina (ciddi yorgunluk)
+        // fatigueScore = threshold * 2 → %0 stamina (bitkin)
+        const fatigueRatio = fatigueScore / fatigueThreshold;
+        let newStamina = 100 - (fatigueRatio * 50);
+        
+        // Durma/yürüyüş ile HAFIF dinlenme (ama mesafe sıfırlanmaz!)
+        if (!isSprinting && !isRunning) {
+            // Dinlenirken çok yavaş toparlanma - AZALTILDI
+            const recoveryRate = 0.005 + (staminaAttr / 12000); // 0.005-0.013 arası
+            newStamina = Math.min(100, newStamina + recoveryRate);
+            
+            // Ayrıca sprint/run distance çok yavaş azalır (laktik asit atılması)
+            if (state.sprintDistance > 0) {
+                state.sprintDistance = Math.max(0, state.sprintDistance - 0.015);
+            }
+            if (state.runDistance > 0) {
+                state.runDistance = Math.max(0, state.runDistance - 0.025);
+            }
         }
+        
+        state.currentStamina = Math.max(0, Math.min(100, newStamina));
 
         // SYNC TO PUBLIC STATE for UI
         simP.stamina = state.currentStamina;
@@ -2861,7 +3101,15 @@ export class MatchEngine {
         const tPos = this.sim.players[target.id];
         const state = this.playerStates[carrier.id];
 
-        const pasStat = carrier.attributes.passing || 50;
+        // === YORGUNLUK DAHİL GERÇEK STATLAR ===
+        const isGK = carrier.position === Position.GK;
+        const fatigueMods = getAllFatigueModifiers(state.currentStamina, isGK);
+        
+        const pasStat = carrier.attributes.passing * fatigueMods.passing;
+        const vision = carrier.attributes.vision * fatigueMods.vision;
+        const composure = carrier.attributes.composure * fatigueMods.composure;
+        const decisions = carrier.attributes.decisions * fatigueMods.decisions;
+        
         let tx = targetOverrideX !== undefined ? targetOverrideX : tPos.x;
         let ty = targetOverrideY !== undefined ? targetOverrideY : tPos.y;
 
@@ -2869,8 +3117,10 @@ export class MatchEngine {
         if (targetOverrideX === undefined) {
             if (type === 'THROUGH') {
                 // AI FIX: True Through Ball targeting - Lead the runner significantly
-                tx += tPos.vx * 18;
-                ty += tPos.vy * 18;
+                // Vision etkisi: Yüksek vision = daha iyi öngörü
+                const visionFactor = vision / 70;
+                tx += tPos.vx * 18 * visionFactor;
+                ty += tPos.vy * 18 * visionFactor;
             } else {
                 tx += tPos.vx * 4;
                 ty += tPos.vy * 4;
@@ -2881,7 +3131,14 @@ export class MatchEngine {
         const angle = Math.atan2(dy, dx);
         const distToT = Math.sqrt(dx * dx + dy * dy);
 
+        // Pas hatası: Passing stat + composure + decisions etkili
         let errorMargin = (100 - pasStat) * 0.005;
+        
+        // Composure: Baskı altında pas kalitesi
+        errorMargin *= (1 + (1 - composure / 100) * 0.3);
+        
+        // Decisions: Kötü karar = yanlış yere pas
+        errorMargin *= (1 + (1 - decisions / 100) * 0.2);
         
         // === YETENEK ETKİSİ: KESKİN PAS ===
         // "Keskin Pas" yeteneği: Through ball isabeti %25 artar
@@ -2894,20 +3151,18 @@ export class MatchEngine {
         if (type === 'AERIAL' && (carrier.playStyles?.includes("Uzun Topla Pas") || carrier.playStyles?.includes("Uzun Topla Pas+"))) {
             errorMargin *= 0.70;
         }
-        
-        // Fatigue Impact (hafifletildi: x3 -> x2)
-        const staminaFactor = state.currentStamina / 100;
-        if (staminaFactor < 0.5) errorMargin *= 2;
 
         const finalAngle = angle + (Math.random() * errorMargin - errorMargin / 2);
 
         // FIXED AERIAL PASS POWER - Was overshooting targets!
+        // Strength etkisi: Yorgun oyuncu uzun pas atamaz
         let power: number;
+        const strengthMod = fatigueMods.strength;
         if (type === 'AERIAL') {
             // Softer power for lobs - ball should land AT target, not beyond
-            power = Math.min(MAX_BALL_SPEED * 0.5, 1.0 + (distToT * 0.025)); // Reduced from 0.75/0.04
+            power = Math.min(MAX_BALL_SPEED * 0.5, 1.0 + (distToT * 0.025)) * strengthMod;
         } else {
-            power = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (distToT * 0.04));
+            power = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (distToT * 0.04)) * strengthMod;
         }
 
         this.sim.ball.ownerId = null;
@@ -2918,7 +3173,7 @@ export class MatchEngine {
 
         if (type === 'AERIAL') {
             // Calculated Lob - reduced height for more accurate landing
-            const lobHeight = Math.min(2.0, 0.6 + (distToT * 0.025)); // Was 2.5/0.8/0.035
+            const lobHeight = Math.min(2.0, 0.6 + (distToT * 0.025)) * strengthMod;
             this.sim.ball.vz = lobHeight;
             this.sim.ball.curve = 0;
             this.traceLog.push(`${carrier.lastName} havadan pas attı!`);
@@ -2944,9 +3199,16 @@ export class MatchEngine {
         const pos = this.sim.players[p.id];
         const goalX = isHome ? 100 : 0;
         const goalY = 50;
-        const fin = p.attributes.finishing || 50;
-        const pwr = p.attributes.strength || 70;
         const state = this.playerStates[p.id];
+        
+        // === YORGUNLUK DAHİL GERÇEK STATLAR ===
+        const isGK = p.position === Position.GK;
+        const fatigueMods = getAllFatigueModifiers(state.currentStamina, isGK);
+        
+        const fin = p.attributes.finishing * fatigueMods.finishing;
+        const pwr = p.attributes.strength * fatigueMods.strength;
+        const composure = p.attributes.composure * fatigueMods.composure;
+        const decisions = p.attributes.decisions * fatigueMods.decisions;
 
         const distToGoal = dist(pos.x, pos.y, goalX, 50);
         const xGValue = Math.max(0.01, (0.4 - (distToGoal / 100)));
@@ -2964,7 +3226,8 @@ export class MatchEngine {
         const gk = enemyPlayers.find(ep => this.playerRoles[ep.id] === Position.GK);
         let targetY = goalY;
 
-        const confidence = (fin - 50) / 50;
+        // Composure etkisi: Yorgun oyuncu daha az soğukkanlı şut atar
+        const confidence = ((fin - 50) / 50) * (composure / 100);
         const cornerBias = Math.max(0.5, confidence);
 
         if (gk && this.sim.players[gk.id]) {
@@ -2983,12 +3246,17 @@ export class MatchEngine {
         const currentSpeed = Math.sqrt(this.sim.players[p.id].vx ** 2 + this.sim.players[p.id].vy ** 2);
 
         if (currentSpeed > MAX_PLAYER_SPEED * 0.85) accuracyPenalty = 0.20;
-        // Fatigue Impact on shooting accuracy (hafifletildi)
-        if (state.currentStamina < 50) accuracyPenalty += 0.15; // Eskiden: <60 = 0.3
-        if (state.currentStamina < 25) accuracyPenalty += 0.25; // Eskiden: <30 = 0.5
-
+        
+        // === YORGUNLUK ETKİLİ ŞUT HESABI ===
+        // Finishing düştüğünde spread artar
         let spread = ((100 - fin) * 0.005) + accuracyPenalty;
+        
+        // Decisions: Yorgun oyuncu kötü karar verir (spread artar)
+        spread *= (1 + (1 - fatigueMods.decisions) * 0.5);
+        
+        // Şut gücü: Strength ve stamina'dan etkilenir
         let shotSpeed = 2.8 + (pwr / 70);
+        shotSpeed *= fatigueMods.speed; // Fiziksel güç de düşer
         
         // === ŞUT YETENEKLERİ ===
         // "Plase Şut" yeteneği: İsabet %25 artar, güç %10 azalır (yerleştirme öncelikli)
@@ -3068,16 +3336,23 @@ export class MatchEngine {
 
     private actionTackle(defender: Player, attacker: Player) {
         if (!attacker) return;
-        const def = defender.attributes.tackling || 50;
-        const dri = attacker.attributes.dribbling || 50;
-
+        
         const defState = this.playerStates[defender.id];
         const attState = this.playerStates[attacker.id];
         const tactic = defender.teamId === this.homeTeam.id ? this.homeTeam.tactic : this.awayTeam.tactic;
 
-        let effectiveDef = def;
-        // Fatigue Impact (hafifletildi: 0.6 -> 0.75)
-        if (defState.currentStamina < 50) effectiveDef *= 0.75; // Moderate penalty for tired defenders
+        // === YORGUNLUK DAHİL GERÇEK STATLAR - SAVUNUCU ===
+        const defIsGK = defender.position === Position.GK;
+        const defFatigueMods = getAllFatigueModifiers(defState.currentStamina, defIsGK);
+        
+        let effectiveDef = defender.attributes.tackling * defFatigueMods.tackling;
+        const defStrength = defender.attributes.strength * defFatigueMods.strength;
+        const defAggression = defender.attributes.aggression * defFatigueMods.aggression;
+        const defDecisions = defender.attributes.decisions * defFatigueMods.decisions;
+        const defPositioning = defender.attributes.positioning * defFatigueMods.positioning;
+        
+        // Strength etkisi: Fiziksel düellolar
+        effectiveDef = (effectiveDef * 0.7) + (defStrength * 0.2) + (defPositioning * 0.1);
         
         // === SAVUNMA YETENEKLERİ ===
         // "Top Kesici" yeteneği: Tackle başarısı %20 artar
@@ -3097,8 +3372,17 @@ export class MatchEngine {
             effectiveDef *= 1.10;
         }
 
-        let effectiveDri = dri;
-        if (attState.currentStamina < 50) effectiveDri *= 0.7;
+        // === YORGUNLUK DAHİL GERÇEK STATLAR - HÜCUMCU ===
+        const attIsGK = attacker.position === Position.GK;
+        const attFatigueMods = getAllFatigueModifiers(attState.currentStamina, attIsGK);
+        
+        let effectiveDri = attacker.attributes.dribbling * attFatigueMods.dribbling;
+        const attStrength = attacker.attributes.strength * attFatigueMods.strength;
+        const attComposure = attacker.attributes.composure * attFatigueMods.composure;
+        const attSpeed = attacker.attributes.speed * attFatigueMods.speed;
+        
+        // Composure etkisi: Baskı altında top koruma
+        effectiveDri = (effectiveDri * 0.6) + (attComposure * 0.2) + (attStrength * 0.1) + (attSpeed * 0.1);
         
         // === HÜCUM YETENEKLERİ ===
         // "Ezber Bozan" yeteneği: Çalım başarısı %25 artar
@@ -3125,8 +3409,10 @@ export class MatchEngine {
         }
 
         // BALANCED DUEL: Both get fair random multipliers
-        const rollD = effectiveDef * (Math.random() + 0.5);  // 0.5 - 1.5 range
-        const rollA = effectiveDri * (Math.random() + 0.3);  // 0.3 - 1.3 range (buffed from 0-1)
+        // Decisions etkisi: Kötü karar veren savunucu yanlış zamanda tackle atar
+        const decisionPenalty = Math.max(0.7, defDecisions / 100);
+        const rollD = effectiveDef * (Math.random() + 0.5) * decisionPenalty;
+        const rollA = effectiveDri * (Math.random() + 0.3);
 
         if (rollD > rollA) {
             if (Math.random() < 0.4) {
@@ -3146,7 +3432,9 @@ export class MatchEngine {
                 this.lastTouchTeamId = defender.teamId;
             }
         } else {
-            this.playerStates[defender.id].actionLock = 40 * riskFactor;
+            // Yorgun savunucu daha uzun süre recover olur
+            const recoveryTime = 40 * riskFactor * (2 - defFatigueMods.speed);
+            this.playerStates[defender.id].actionLock = recoveryTime;
             this.sim.players[defender.id].vx *= (0.1 / riskFactor);
             this.sim.players[defender.id].vy *= (0.1 / riskFactor);
             this.traceLog.push(`${attacker.lastName} rakibini geçti!`);

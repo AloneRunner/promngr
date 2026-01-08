@@ -1,7 +1,7 @@
 
 export const EAST_LONDON_HAMMERS_SQUAD = [
     {
-        ad: "Jarrod Bow",
+        ad: "J. Bowenn",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "SĞK",
@@ -32,7 +32,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Paque",
+        ad: "L. Paquettah",
         takim: "East London Hammers",
         uyruk: "Brezilya",
         mevki: "MOO",
@@ -65,7 +65,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Mohamed Kud",
+        ad: "M. Kuduss",
         takim: "East London Hammers",
         uyruk: "Gana",
         mevki: "SĞO",
@@ -96,7 +96,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Edson Alva",
+        ad: "E. Alvareze",
         takim: "East London Hammers",
         uyruk: "Meksika",
         mevki: "MDO",
@@ -125,7 +125,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Jean-Clair Tod",
+        ad: "J. Todiboh",
         takim: "East London Hammers",
         uyruk: "Fransa",
         mevki: "STP",
@@ -151,7 +151,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Aaron Wan",
+        ad: "A. Wan-Bisakky",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "SĞB",
@@ -177,7 +177,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Emerson Palm",
+        ad: "E. Palmyery",
         takim: "East London Hammers",
         uyruk: "İtalya",
         mevki: "SLB",
@@ -200,7 +200,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Alphonse Are",
+        ad: "A. Areollah",
         takim: "East London Hammers",
         uyruk: "Fransa",
         mevki: "KL",
@@ -226,7 +226,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Niclas Full",
+        ad: "N. Fullkrugg",
         takim: "East London Hammers",
         uyruk: "Almanya",
         mevki: "SNT",
@@ -255,7 +255,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Tomas Souc",
+        ad: "T. Soucekk",
         takim: "East London Hammers",
         uyruk: "Çek Cumhuriyeti",
         mevki: "MDO",
@@ -283,7 +283,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Max Kilm",
+        ad: "M. Kilmann",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -309,7 +309,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Guido Rodr",
+        ad: "G. Rodrigz",
         takim: "East London Hammers",
         uyruk: "Arjantin",
         mevki: "MDO",
@@ -334,7 +334,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Crysencio Summ",
+        ad: "C. Sumervil",
         takim: "East London Hammers",
         uyruk: "Hollanda",
         mevki: "SLK",
@@ -361,7 +361,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Michail Anton",
+        ad: "M. Antonnio",
         takim: "East London Hammers",
         uyruk: "Jamaika",
         mevki: "SNT",
@@ -387,7 +387,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Danny Ings",
+        ad: "D. Ingsy",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "SNT",
@@ -411,7 +411,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Lukasz Fab",
+        ad: "L. Fabiansky",
         takim: "East London Hammers",
         uyruk: "Polonya",
         mevki: "KL",
@@ -432,7 +432,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         oyun_tarzlari: []
     },
     {
-        ad: "Vladimir Couf",
+        ad: "V. Coufall",
         takim: "East London Hammers",
         uyruk: "Çek Cumhuriyeti",
         mevki: "SĞB",
@@ -456,7 +456,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Konstantinos Mav",
+        ad: "K. Mavropano",
         takim: "East London Hammers",
         uyruk: "Yunanistan",
         mevki: "STP",
@@ -480,7 +480,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Jared Bow",
+        ad: "J. Bowenn",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "SĞO",
@@ -507,7 +507,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Lucas Paq",
+        ad: "L. Paquettah",
         takim: "East London Hammers",
         uyruk: "Brezilya",
         mevki: "MO",
@@ -535,7 +535,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Aaron Wan-Bi",
+        ad: "A. Wan-Bisakky",
         takim: "East London Hammers",
         uyruk: "Kongo DC",
         mevki: "SĞB",
@@ -560,7 +560,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Tomas Suk",
+        ad: "T. Soucekk",
         takim: "East London Hammers",
         uyruk: "Çek Cumhuriyeti",
         mevki: "MDO",
@@ -586,7 +586,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Jean Todib",
+        ad: "J. Todiboh",
         takim: "East London Hammers",
         uyruk: "Fransa",
         mevki: "STP",
@@ -610,7 +610,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "James Ward-P",
+        ad: "J. Ward-Prowz",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "MO",
@@ -636,7 +636,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Max Kilman",
+        ad: "M. Kilmann",
         takim: "East London Hammers",
         uyruk: "İngiltere",
         mevki: "STP",
@@ -660,7 +660,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Alphonse Areo",
+        ad: "A. Areollah",
         takim: "East London Hammers",
         uyruk: "Fransa",
         mevki: "KL",
@@ -684,7 +684,7 @@ export const EAST_LONDON_HAMMERS_SQUAD = [
         ]
     },
     {
-        ad: "Crys Summe",
+        ad: "C. Sumervil",
         takim: "East London Hammers",
         uyruk: "Hollanda",
         mevki: "SLO",
