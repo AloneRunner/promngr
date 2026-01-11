@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;700&display=swap');
+
 /* Football Manager Theme - Global Styles */
 
 /* Base reset */
@@ -44,9 +47,6 @@
   --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 }
-
-/* Import nicer fonts if possible, or rely on system */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;700&display=swap');
 
 html {
   font-size: 14px;

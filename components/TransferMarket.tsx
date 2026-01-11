@@ -106,6 +106,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                 <th className="p-3 text-center hidden sm:table-cell">DRI</th>
                 <th className="p-3 text-center hidden sm:table-cell">DEF</th>
                 <th className="p-3 text-right">{t.value}</th>
+                <th className="p-3 text-right hidden md:table-cell">Maaş</th>
                 <th className="p-3 text-center">{t.action}</th>
               </tr>
             </thead>
@@ -138,6 +139,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                   <td className="p-2 text-center hidden sm:table-cell"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></td>
                   <td className="p-2 text-center hidden sm:table-cell"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></td>
                   <td className="p-2 text-right font-mono text-emerald-400 font-bold">€{(player.value / 1000000).toFixed(1)}M</td>
+                  <td className="p-2 text-right font-mono text-red-400 text-xs hidden md:table-cell">€{Math.floor(player.wage).toLocaleString()}/h</td>
                   <td className="p-2 text-center">
                     {isOwned(player) ? (
                       <span className="text-[10px] bg-slate-700 text-slate-400 px-2 py-1 rounded font-bold">OWNED</span>

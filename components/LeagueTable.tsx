@@ -319,8 +319,8 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <span className={`font-bold px-2 py-1 rounded ${(player.stats.averageRating || 0) >= 7.5 ? 'bg-emerald-500 text-white' :
-                                                    (player.stats.averageRating || 0) >= 7.0 ? 'bg-blue-500 text-white' :
-                                                        'text-slate-300'
+                                                (player.stats.averageRating || 0) >= 7.0 ? 'bg-blue-500 text-white' :
+                                                    'text-slate-300'
                                                 }`}>
                                                 {player.stats.averageRating?.toFixed(1) || '-'}
                                             </span>
@@ -339,47 +339,140 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                 )}
 
                 {tab === 'HISTORY' && (
-                    <div className="p-4">
-                        {history.length === 0 ? (
-                            <div className="text-center py-20 text-slate-500">
-                                <History className="mx-auto mb-2 text-slate-600" size={32} />
-                                No history available yet. Complete a season to see records here.
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 gap-4">
-                                {history.slice().reverse().map((entry) => (
-                                    <div key={entry.season} className="bg-slate-700/30 border border-slate-600 rounded-lg p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                                        <div className="flex items-center gap-6">
-                                            <div className="text-3xl font-bold text-slate-500 font-mono">{entry.season}</div>
-                                            <div>
-                                                <div className="text-xs text-slate-400 uppercase tracking-widest mb-1">{t.champion}</div>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white border-2 border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]" style={{ backgroundColor: entry.championColor }}>
-                                                        <Crown size={18} fill="currentColor" className="text-yellow-200" />
-                                                    </div>
-                                                    <div className="text-xl font-bold text-white">{entry.championName}</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div className="p-4 space-y-6">
+                        {/* User Team Achievements Section */}
+                        {(() => {
+                            // Calculate user achievements from history
+                            const userTeam = teams.find(t => t.id === (teams[0] as any)?.id); // Will get from props
+                            const userChampionships = history.filter(h => lookupTeams.find(t => t.id === h.championId)?.id === teams.find(t => t.stats)?.id).length;
+                            const userSecondPlaces = history.filter(h => {
+                                const sorted = [...lookupTeams].sort((a, b) => b.stats.points - a.stats.points);
+                                return sorted[1]?.id === teams.find(t => t.stats)?.id;
+                            }).length;
 
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
-                                            <div>
-                                                <div className="text-xs text-slate-500 uppercase">Runner-up</div>
-                                                <div className="font-bold text-slate-300">{entry.runnerUpName}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-xs text-slate-500 uppercase flex items-center gap-1"><Target size={10} /> Top Scorer</div>
-                                                <div className="font-bold text-emerald-400">{entry.topScorer}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-xs text-slate-500 uppercase flex items-center gap-1"><Award size={10} /> Assists</div>
-                                                <div className="font-bold text-blue-400">{entry.topAssister}</div>
-                                            </div>
+                            // Count how many times user's players were top scorer/assister
+                            const userTopScorerSeasons = history.filter(h => {
+                                const playerName = h.topScorer.split(' (')[0];
+                                return leaguePlayers.some(p => `${p.firstName} ${p.lastName}` === playerName);
+                            }).length;
+
+                            return (
+                                <div className="bg-gradient-to-br from-yellow-900/20 to-slate-800 border border-yellow-600/30 rounded-xl p-4">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <Trophy className="text-yellow-500" size={24} />
+                                        <span className="text-lg font-bold text-white">Kupa Dolabı</span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-yellow-500/20">
+                                            <div className="text-3xl font-black text-yellow-400">{userChampionships}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">Şampiyonluk</div>
+                                        </div>
+                                        <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-slate-500/20">
+                                            <div className="text-3xl font-black text-slate-300">{userSecondPlaces}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">İkincilik</div>
+                                        </div>
+                                        <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-emerald-500/20">
+                                            <div className="text-3xl font-black text-emerald-400">{userTopScorerSeasons}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">Gol Kralı</div>
+                                        </div>
+                                        <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-blue-500/20">
+                                            <div className="text-3xl font-black text-blue-400">{history.length}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">Sezon</div>
                                         </div>
                                     </div>
-                                ))}
+                                </div>
+                            );
+                        })()}
+
+                        {/* Season History */}
+                        <div>
+                            <div className="text-sm font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
+                                <History size={16} /> Sezon Geçmişi
                             </div>
-                        )}
+
+                            {(() => {
+                                // Filter history by current league
+                                const leagueHistory = history.filter(h => h.leagueId === currentLeagueId || !h.leagueId);
+
+                                if (leagueHistory.length === 0) {
+                                    return (
+                                        <div className="text-center py-12 text-slate-500 bg-slate-800/50 rounded-lg">
+                                            <History className="mx-auto mb-2 text-slate-600" size={32} />
+                                            Henüz geçmiş yok. Bir sezon tamamlayın!
+                                        </div>
+                                    );
+                                }
+
+                                // Get unique seasons sorted desc
+                                const uniqueSeasons = [...new Set(leagueHistory.map(h => h.season))].sort((a, b) => b - a);
+
+                                return (
+                                    <div className="space-y-3">
+                                        {uniqueSeasons.map(season => {
+                                            const entry = leagueHistory.find(h => h.season === season)!;
+                                            const isUserChampion = lookupTeams.find(t => t.id === entry.championId)?.name === teams[0]?.name;
+
+                                            return (
+                                                <div key={entry.season}
+                                                    className={`rounded-xl p-4 border transition-all ${isUserChampion
+                                                        ? 'bg-gradient-to-r from-yellow-900/30 to-slate-800 border-yellow-500/50 shadow-lg shadow-yellow-900/20'
+                                                        : 'bg-slate-800/50 border-slate-700'
+                                                        }`}
+                                                >
+                                                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                                        {/* Season & Champion */}
+                                                        <div className="flex items-center gap-4 flex-1">
+                                                            <div className="text-center">
+                                                                <div className="text-2xl font-black text-slate-500">{entry.season}</div>
+                                                                <div className="text-[9px] text-slate-600 uppercase">Sezon</div>
+                                                            </div>
+
+                                                            <div className="flex items-center gap-3">
+                                                                <div
+                                                                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white border-2 ${isUserChampion ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.6)]' : 'border-yellow-500/50'
+                                                                        }`}
+                                                                    style={{ backgroundColor: entry.championColor }}
+                                                                >
+                                                                    <Crown size={18} fill="currentColor" className="text-yellow-200" />
+                                                                </div>
+                                                                <div>
+                                                                    <div className="text-[10px] text-slate-500 uppercase">Şampiyon</div>
+                                                                    <div className={`font-bold ${isUserChampion ? 'text-yellow-400' : 'text-white'}`}>
+                                                                        {entry.championName}
+                                                                        {isUserChampion && <span className="ml-2 text-xs">🏆</span>}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Stats Grid */}
+                                                        <div className="grid grid-cols-3 gap-3 text-xs md:gap-6">
+                                                            <div className="text-center md:text-left">
+                                                                <div className="text-slate-500 text-[10px] uppercase">2. Sıra</div>
+                                                                <div className="font-semibold text-slate-300 truncate max-w-[80px]">{entry.runnerUpName}</div>
+                                                            </div>
+                                                            <div className="text-center md:text-left">
+                                                                <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
+                                                                    <Target size={10} /> Gol Kralı
+                                                                </div>
+                                                                <div className="font-semibold text-emerald-400 truncate max-w-[80px]">{entry.topScorer}</div>
+                                                            </div>
+                                                            <div className="text-center md:text-left">
+                                                                <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
+                                                                    <Award size={10} /> Asist Kralı
+                                                                </div>
+                                                                <div className="font-semibold text-blue-400 truncate max-w-[80px]">{entry.topAssister}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })()}
+                        </div>
                     </div>
                 )}
             </div>

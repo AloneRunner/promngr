@@ -3,6 +3,7 @@ import React from 'react';
 import { Team, Player, Translation, Position } from '../types';
 import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle } from 'lucide-react';
 import { getTeamLogo } from '../logoMapping';
+import { adMobService } from '../services/adMobService';
 
 interface OpponentPreviewProps {
     opponent: Team;
@@ -64,8 +65,8 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-            <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4" style={{ paddingTop: adMobService.isNative() ? '100px' : '1rem' }}>
+            <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto">
 
                 {/* Header */}
                 <div

@@ -130,6 +130,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [showHalfTime, setShowHalfTime] = useState(false);
     const halfTimeShown = useRef(false);
 
+    // NEW: Landscape Detection (for wide phones like Samsung A51)
+    const [isLandscape, setIsLandscape] = useState(false);
+    const [isSmallLandscape, setIsSmallLandscape] = useState(false); // Wide phone landscape (not tablet)
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -208,6 +212,22 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             }
         }
     }, [viewMode]);
+
+    // LANDSCAPE DETECTION for wide phones
+    useEffect(() => {
+        const checkLandscape = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const landscape = w > h;
+            const smallLandscape = landscape && h < 500; // Wide phone like Samsung A51 (412px height)
+            setIsLandscape(landscape);
+            setIsSmallLandscape(smallLandscape);
+        };
+
+        checkLandscape();
+        window.addEventListener('resize', checkLandscape);
+        return () => window.removeEventListener('resize', checkLandscape);
+    }, []);
 
     // SCREEN WAKE LOCK
     useEffect(() => {
@@ -1208,7 +1228,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             )}
 
             {/* TOP BAR: SCOREBOARD (Hidden on small landscape) */}
-            <div className="h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl landscape:max-h-[50px] landscape:md:max-h-none portrait:flex landscape:hidden landscape:md:flex">
+            <div className={`h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
                     <div className="text-lg md:text-4xl font-black text-slate-800 bg-white w-10 h-10 md:w-16 md:h-16 rounded flex items-center justify-center border-2 md:border-4 border-slate-300" style={{ color: homeTeam.primaryColor, borderColor: homeTeam.secondaryColor }}>
@@ -1246,7 +1266,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </div>
 
             {/* MOBILE TABS (Hidden on small landscape) */}
-            <div className="lg:hidden flex bg-slate-900 border-b border-slate-800 h-10 shrink-0 portrait:flex landscape:hidden landscape:md:flex">
+            <div className={`lg:hidden flex bg-slate-900 border-b border-slate-800 h-10 shrink-0 ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 <button onClick={() => setActiveTab('PITCH')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'PITCH' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><MonitorPlay size={14} /> Pitch</button>
                 <button onClick={() => setActiveTab('FEED')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'FEED' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><List size={14} /> Feed</button>
                 <button onClick={() => setActiveTab('STATS')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'STATS' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><BarChart2 size={14} /> Stats</button>
@@ -1255,8 +1275,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             {/* MAIN CONTENT AREA */}
             <div className="flex-1 flex overflow-hidden bg-black relative">
 
-                {/* 1. MATCH FEED SIDEBAR (Hidden on landscape) */}
-                <div className={`w-full lg:w-72 bg-slate-900 border-r border-slate-800 flex-col z-10 shrink-0 ${activeTab === 'FEED' ? 'flex' : 'hidden lg:flex'} landscape:hidden landscape:md:flex`}>
+                {/* 1. MATCH FEED SIDEBAR (Hidden on small landscape phones) */}
+                <div className={`w-full lg:w-72 bg-slate-900 border-r border-slate-800 flex-col z-10 shrink-0 ${isSmallLandscape ? 'hidden' : (activeTab === 'FEED' ? 'flex' : 'hidden lg:flex')}`}>
                     <div className="p-3 bg-slate-950 border-b border-slate-800 font-bold text-slate-400 uppercase text-xs tracking-wider hidden lg:flex items-center gap-2">
                         <List size={14} /> Match Feed
                     </div>
@@ -1271,8 +1291,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     </div>
                 </div>
 
-                {/* 2. PITCH VIEW (Full screen in landscape) */}
-                <div className={`flex-1 relative flex items-center justify-center bg-slate-950 p-2 md:p-4 landscape:p-0 ${activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex'}`}>
+                {/* 2. PITCH VIEW (Full screen in small landscape) */}
+                <div className={`flex-1 relative flex items-center justify-center bg-slate-950 p-2 md:p-4 ${isSmallLandscape ? 'flex p-0' : (activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex')}`}>
 
                     {/* TOAST NOTIFICATIONS - Fixed position overlay */}
                     <div className="absolute top-16 md:top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-[90%] max-w-md">
@@ -1280,14 +1300,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <div
                                 key={toast.id}
                                 className={`animate-pulse px-3 py-2 rounded-lg border backdrop-blur-md flex items-center gap-2 text-xs md:text-sm shadow-lg transition-all duration-300 ${toast.type === 'GOAL'
-                                        ? 'bg-emerald-900/90 border-emerald-500 text-emerald-100'
-                                        : toast.type === 'SUB' && toast.message.includes('📋')
-                                            ? 'bg-purple-900/90 border-purple-500 text-purple-100' // Tactic change
-                                            : toast.type === 'SUB'
-                                                ? 'bg-blue-900/90 border-blue-500 text-blue-100'
-                                                : toast.type === 'CARD'
-                                                    ? 'bg-yellow-900/90 border-yellow-500 text-yellow-100'
-                                                    : 'bg-slate-800/90 border-slate-600 text-slate-200'
+                                    ? 'bg-emerald-900/90 border-emerald-500 text-emerald-100'
+                                    : toast.type === 'SUB' && toast.message.includes('📋')
+                                        ? 'bg-purple-900/90 border-purple-500 text-purple-100' // Tactic change
+                                        : toast.type === 'SUB'
+                                            ? 'bg-blue-900/90 border-blue-500 text-blue-100'
+                                            : toast.type === 'CARD'
+                                                ? 'bg-yellow-900/90 border-yellow-500 text-yellow-100'
+                                                : 'bg-slate-800/90 border-slate-600 text-slate-200'
                                     }`}
                                 style={{
                                     animation: 'slideIn 0.3s ease-out',
@@ -1308,43 +1328,45 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         ))}
                     </div>
 
-                    {/* ACTION HUD (Landscape only) */}
-                    <div className="hidden landscape:block landscape:md:hidden absolute inset-0 z-40 pointer-events-none">
-                        {/* Floating Scoreboard HUD (Top Center) */}
-                        <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                            <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
-                                <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
-                                <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
-                                <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
+                    {/* ACTION HUD (Small Landscape only) */}
+                    {isSmallLandscape && (
+                        <div className="absolute inset-0 z-40 pointer-events-none">
+                            {/* Floating Scoreboard HUD (Top Center) */}
+                            <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                                <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
+                                    <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
+                                    <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
+                                    <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
+                                </div>
+                            </div>
+
+                            {/* Top Left: Play Controls */}
+                            <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
+                                <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className="w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center text-white">
+                                    {speed === 0 ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
+                                </button>
+                                <button onClick={() => setSpeed(speed === 4 ? 1 : speed * 2)} className={`w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center font-bold text-[10px] ${speed > 1 ? 'text-emerald-400' : 'text-white'}`}>
+                                    {speed}x
+                                </button>
+                            </div>
+
+                            {/* Top Right: Actions (Exit + Settings) */}
+                            <div className="absolute top-2 right-2 flex gap-2 pointer-events-auto scale-90 origin-top-right">
+                                <button onClick={() => setViewMode(viewMode === '2D' ? '2.5D' : '2D')} className="w-8 h-8 rounded-full bg-blue-600/80 border border-blue-400/30 flex items-center justify-center text-white font-bold text-[10px]">
+                                    {viewMode}
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
+                                    <Settings size={14} />
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 flex items-center justify-center bg-red-900/50 text-white rounded-full border border-red-500/30">
+                                    <X size={16} />
+                                </button>
                             </div>
                         </div>
+                    )}
 
-                        {/* Top Left: Play Controls (Moved from Bottom) */}
-                        <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
-                            <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className="w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center text-white">
-                                {speed === 0 ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
-                            </button>
-                            <button onClick={() => setSpeed(speed === 4 ? 1 : speed * 2)} className={`w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center font-bold text-[10px] ${speed > 1 ? 'text-emerald-400' : 'text-white'}`}>
-                                {speed}x
-                            </button>
-                        </div>
-
-                        {/* Top Right: Actions (Exit + Settings) */}
-                        <div className="absolute top-2 right-2 flex gap-2 pointer-events-auto scale-90 origin-top-right">
-                            <button onClick={() => setViewMode(viewMode === '2D' ? '2.5D' : '2D')} className="w-8 h-8 rounded-full bg-blue-600/80 border border-blue-400/30 flex items-center justify-center text-white font-bold text-[10px]">
-                                {viewMode}
-                            </button>
-                            <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
-                                <Settings size={14} />
-                            </button>
-                            <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 flex items-center justify-center bg-red-900/50 text-white rounded-full border border-red-500/30">
-                                <X size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Action Toast (Standard Mode) */}
-                    <div className="absolute top-4 md:top-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none portrait:block landscape:hidden landscape:md:block">
+                    {/* Action Toast (Standard Mode - hidden on small landscape) */}
+                    <div className={`absolute top-4 md:top-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${isSmallLandscape ? 'hidden' : 'block'}`}>
                         <div className="bg-black/70 backdrop-blur-md text-white px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-slate-600 shadow-2xl flex items-center gap-2 md:gap-3">
                             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full animate-ping"></div>
                             <span className="font-bold uppercase tracking-wide text-[10px] md:text-sm whitespace-nowrap">{statusText}</span>
@@ -1360,14 +1382,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             ref={canvasRef}
                             width={CANVAS_W}
                             height={CANVAS_H}
-                            className="max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 landscape:rounded-none landscape:border-0"
+                            className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
                             style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
                         />
                     </div>
                 </div>
 
-                {/* 3. STATS SIDEBAR (Hidden on landscape) */}
-                <div className={`w-full lg:w-72 bg-slate-900 border-l border-slate-800 flex-col z-10 shrink-0 ${activeTab === 'STATS' ? 'flex' : 'hidden lg:flex'} landscape:hidden landscape:md:flex`}>
+                {/* 3. STATS SIDEBAR (Hidden on small landscape phones) */}
+                <div className={`w-full lg:w-72 bg-slate-900 border-l border-slate-800 flex-col z-10 shrink-0 ${isSmallLandscape ? 'hidden' : (activeTab === 'STATS' ? 'flex' : 'hidden lg:flex')}`}>
                     <div className="p-3 bg-slate-950 border-b border-slate-800 font-bold text-slate-400 uppercase text-xs tracking-wider hidden lg:flex items-center gap-2">
                         <BarChart2 size={14} /> Live Stats
                     </div>
@@ -1400,10 +1422,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     </div>
                 </div>
 
-            </div>
+            </div >
 
-            {/* FOOTER CONTROLS (Optimized for Mobile) */}
-            <div className="h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-t border-white/10 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom">
+            {/* FOOTER CONTROLS (Optimized for Mobile) - Added pb-[100px] for AdMob banner space */}
+            < div className="h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-t border-white/10 flex items-center justify-between px-2 md:px-6 shrink-0 z-30 portrait:flex landscape:hidden landscape:md:flex safe-area-bottom mb-[100px] portrait:mb-[100px] landscape:mb-0" >
                 <button
                     onClick={() => { setSpeed(0); setShowExitModal(true); }}
                     className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-slate-800 active:bg-red-900/80 text-slate-400 active:text-white transition-colors border border-slate-700 active:border-red-500"
@@ -1442,206 +1464,212 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <Settings size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline text-[9px] uppercase">Mgmt</span>
                     </button>
                 </div>
-            </div>
+            </div >
 
             {/* FULL TIME MODAL */}
-            {match.isPlayed && (
-                <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center animate-fade-in p-4">
-                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden backdrop-blur-md">
-                        {/* Background Effect */}
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
+            {
+                match.isPlayed && (
+                    <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center animate-fade-in p-4">
+                        <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden backdrop-blur-md">
+                            {/* Background Effect */}
+                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
 
-                        <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
-                            FULL TIME
-                        </h2>
+                            <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
+                                FULL TIME
+                            </h2>
 
-                        {/* Score Display */}
-                        <div className="flex items-center justify-center gap-8 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
-                            <div className="flex flex-col items-center gap-2 flex-1">
-                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${homeTeam.primaryColor}` }}>
-                                    {match.homeScore}
+                            {/* Score Display */}
+                            <div className="flex items-center justify-center gap-8 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
+                                <div className="flex flex-col items-center gap-2 flex-1">
+                                    <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${homeTeam.primaryColor}` }}>
+                                        {match.homeScore}
+                                    </div>
+                                    <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                        {homeTeam.name}
+                                    </div>
                                 </div>
-                                <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
-                                    {homeTeam.name}
+
+                                <div className="text-slate-600 text-4xl font-black opacity-50">-</div>
+
+                                <div className="flex flex-col items-center gap-2 flex-1">
+                                    <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${awayTeam.primaryColor}` }}>
+                                        {match.awayScore}
+                                    </div>
+                                    <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                        {awayTeam.name}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="text-slate-600 text-4xl font-black opacity-50">-</div>
-
-                            <div className="flex flex-col items-center gap-2 flex-1">
-                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${awayTeam.primaryColor}` }}>
-                                    {match.awayScore}
+                            {/* Match Stats Mini Summary */}
+                            <div className="grid grid-cols-3 gap-4 w-full text-center py-2">
+                                <div>
+                                    <div className="text-slate-500 text-[10px] uppercase font-bold">Possession</div>
+                                    <div className="text-white font-mono">{match.stats.homePossession}% - {match.stats.awayPossession}%</div>
                                 </div>
-                                <div className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider text-center px-2">
-                                    {awayTeam.name}
+                                <div>
+                                    <div className="text-slate-500 text-[10px] uppercase font-bold">Shots</div>
+                                    <div className="text-white font-mono">{match.stats.homeShots} - {match.stats.awayShots}</div>
+                                </div>
+                                <div>
+                                    <div className="text-slate-500 text-[10px] uppercase font-bold">xG</div>
+                                    <div className="text-white font-mono">{match.stats.homeXG.toFixed(1)} - {match.stats.awayXG.toFixed(1)}</div>
                                 </div>
                             </div>
+
+                            <button
+                                onClick={() => onFinish(match.id)}
+                                className="w-full mt-2 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black rounded-xl text-lg shadow-lg shadow-emerald-900/40 hover:shadow-emerald-500/20 transition-all uppercase tracking-widest transform hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                                Continue
+                            </button>
                         </div>
-
-                        {/* Match Stats Mini Summary */}
-                        <div className="grid grid-cols-3 gap-4 w-full text-center py-2">
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold">Possession</div>
-                                <div className="text-white font-mono">{match.stats.homePossession}% - {match.stats.awayPossession}%</div>
-                            </div>
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold">Shots</div>
-                                <div className="text-white font-mono">{match.stats.homeShots} - {match.stats.awayShots}</div>
-                            </div>
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold">xG</div>
-                                <div className="text-white font-mono">{match.stats.homeXG.toFixed(1)} - {match.stats.awayXG.toFixed(1)}</div>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => onFinish(match.id)}
-                            className="w-full mt-2 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black rounded-xl text-lg shadow-lg shadow-emerald-900/40 hover:shadow-emerald-500/20 transition-all uppercase tracking-widest transform hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                            Continue
-                        </button>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* HALF-TIME MODAL */}
-            {showHalfTime && (
-                <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
-                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
-                        {/* Decorative Lines */}
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
-                        <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+            {
+                showHalfTime && (
+                    <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
+                        <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
+                            {/* Decorative Lines */}
+                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+                            <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
 
-                        {/* Half Time Badge */}
-                        <div className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest shadow-lg">
-                            Devre Arası
-                        </div>
+                            {/* Half Time Badge */}
+                            <div className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest shadow-lg">
+                                Devre Arası
+                            </div>
 
-                        <h2 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter">
-                            HALF TIME
-                        </h2>
+                            <h2 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter">
+                                HALF TIME
+                            </h2>
 
-                        {/* Score Display */}
-                        <div className="flex items-center justify-center gap-6 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
-                            <div className="flex flex-col items-center gap-1 flex-1">
-                                <div className="text-4xl md:text-5xl font-black text-white leading-none">
-                                    {match.homeScore}
+                            {/* Score Display */}
+                            <div className="flex items-center justify-center gap-6 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                                <div className="flex flex-col items-center gap-1 flex-1">
+                                    <div className="text-4xl md:text-5xl font-black text-white leading-none">
+                                        {match.homeScore}
+                                    </div>
+                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                        {homeTeam.shortName}
+                                    </div>
                                 </div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
-                                    {homeTeam.shortName}
+
+                                <div className="text-slate-600 text-3xl font-black">-</div>
+
+                                <div className="flex flex-col items-center gap-1 flex-1">
+                                    <div className="text-4xl md:text-5xl font-black text-white leading-none">
+                                        {match.awayScore}
+                                    </div>
+                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
+                                        {awayTeam.shortName}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="text-slate-600 text-3xl font-black">-</div>
+                            {/* First Half Stats */}
+                            <div className="w-full space-y-3 bg-slate-800/50 rounded-xl p-4">
+                                <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">İlk Yarı İstatistikleri</div>
 
-                            <div className="flex flex-col items-center gap-1 flex-1">
-                                <div className="text-4xl md:text-5xl font-black text-white leading-none">
-                                    {match.awayScore}
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="font-bold text-white w-8 text-right">{match.stats.homePossession}%</span>
+                                    <span className="text-slate-500 text-xs">Topa Sahiplik</span>
+                                    <span className="font-bold text-white w-8">{match.stats.awayPossession}%</span>
                                 </div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">
-                                    {awayTeam.shortName}
+
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="font-bold text-white w-8 text-right">{match.stats.homeShots}</span>
+                                    <span className="text-slate-500 text-xs">Şutlar</span>
+                                    <span className="font-bold text-white w-8">{match.stats.awayShots}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="font-bold text-emerald-400 w-8 text-right">{match.stats.homeOnTarget}</span>
+                                    <span className="text-slate-500 text-xs">İsabetli</span>
+                                    <span className="font-bold text-emerald-400 w-8">{match.stats.awayOnTarget}</span>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* First Half Stats */}
-                        <div className="w-full space-y-3 bg-slate-800/50 rounded-xl p-4">
-                            <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">İlk Yarı İstatistikleri</div>
-
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-white w-8 text-right">{match.stats.homePossession}%</span>
-                                <span className="text-slate-500 text-xs">Topa Sahiplik</span>
-                                <span className="font-bold text-white w-8">{match.stats.awayPossession}%</span>
+                            {/* Action Buttons */}
+                            <div className="flex gap-3 w-full">
+                                <button
+                                    onClick={() => {
+                                        setShowHalfTime(false);
+                                        setShowTacticsModal(true);
+                                    }}
+                                    className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors text-sm"
+                                >
+                                    ⚙️ Taktik Değiştir
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowHalfTime(false);
+                                        setSpeed(1);
+                                    }}
+                                    className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"
+                                >
+                                    ▶️ 2. Yarı Başlat
+                                </button>
                             </div>
-
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-white w-8 text-right">{match.stats.homeShots}</span>
-                                <span className="text-slate-500 text-xs">Şutlar</span>
-                                <span className="font-bold text-white w-8">{match.stats.awayShots}</span>
-                            </div>
-
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-emerald-400 w-8 text-right">{match.stats.homeOnTarget}</span>
-                                <span className="text-slate-500 text-xs">İsabetli</span>
-                                <span className="font-bold text-emerald-400 w-8">{match.stats.awayOnTarget}</span>
-                            </div>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-3 w-full">
-                            <button
-                                onClick={() => {
-                                    setShowHalfTime(false);
-                                    setShowTacticsModal(true);
-                                }}
-                                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors text-sm"
-                            >
-                                ⚙️ Taktik Değiştir
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setShowHalfTime(false);
-                                    setSpeed(1);
-                                }}
-                                className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"
-                            >
-                                ▶️ 2. Yarı Başlat
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* EXIT CONFIRMATION MODAL */}
-            {showExitModal && (
-                <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4">
-                    <div className="bg-slate-900/90 rounded-2xl border border-white/10 p-6 max-w-sm w-full shadow-2xl backdrop-blur-md">
-                        <div className="text-center mb-4">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/30 border-2 border-red-500/50 flex items-center justify-center">
-                                <LogOut size={28} className="text-red-400" />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-2">Maçtan Çıkılsın mı?</h3>
-                            <p className="text-slate-400 text-sm">
-                                Maç devam ediyor ({match.currentMinute}'). Çıkarsanız maçın geri kalanı otomatik simüle edilecek.
-                            </p>
-                        </div>
-
-                        <div className="text-center mb-4 p-3 bg-slate-800 rounded-xl">
-                            <div className="flex items-center justify-center gap-4">
-                                <div className="text-center">
-                                    <div className="text-xs text-slate-500 uppercase">{homeTeam.shortName}</div>
-                                    <div className="text-2xl font-black text-white">{match.homeScore}</div>
+            {
+                showExitModal && (
+                    <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4">
+                        <div className="bg-slate-900/90 rounded-2xl border border-white/10 p-6 max-w-sm w-full shadow-2xl backdrop-blur-md">
+                            <div className="text-center mb-4">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/30 border-2 border-red-500/50 flex items-center justify-center">
+                                    <LogOut size={28} className="text-red-400" />
                                 </div>
-                                <div className="text-emerald-400 font-mono text-sm">{match.currentMinute}'</div>
-                                <div className="text-center">
-                                    <div className="text-xs text-slate-500 uppercase">{awayTeam.shortName}</div>
-                                    <div className="text-2xl font-black text-white">{match.awayScore}</div>
+                                <h3 className="text-xl font-bold text-white mb-2">Maçtan Çıkılsın mı?</h3>
+                                <p className="text-slate-400 text-sm">
+                                    Maç devam ediyor ({match.currentMinute}'). Çıkarsanız maçın geri kalanı otomatik simüle edilecek.
+                                </p>
+                            </div>
+
+                            <div className="text-center mb-4 p-3 bg-slate-800 rounded-xl">
+                                <div className="flex items-center justify-center gap-4">
+                                    <div className="text-center">
+                                        <div className="text-xs text-slate-500 uppercase">{homeTeam.shortName}</div>
+                                        <div className="text-2xl font-black text-white">{match.homeScore}</div>
+                                    </div>
+                                    <div className="text-emerald-400 font-mono text-sm">{match.currentMinute}'</div>
+                                    <div className="text-center">
+                                        <div className="text-xs text-slate-500 uppercase">{awayTeam.shortName}</div>
+                                        <div className="text-2xl font-black text-white">{match.awayScore}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setShowExitModal(false)}
-                                className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
-                            >
-                                İptal
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setShowExitModal(false);
-                                    soundManager.stopAll(); // 🔊 Stop sounds before instant finish
-                                    onInstantFinish(match.id);
-                                }}
-                                className="flex-1 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl transition-colors"
-                            >
-                                Simüle Et & Çık
-                            </button>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowExitModal(false)}
+                                    className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
+                                >
+                                    İptal
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowExitModal(false);
+                                        soundManager.stopAll(); // 🔊 Stop sounds before instant finish
+                                        onInstantFinish(match.id);
+                                    }}
+                                    className="flex-1 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl transition-colors"
+                                >
+                                    Simüle Et & Çık
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-        </div>
+        </div >
     );
 };

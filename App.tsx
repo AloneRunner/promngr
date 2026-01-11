@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -192,6 +192,7 @@ const App: React.FC = () => {
     const t = TRANSLATIONS[lang];
 
     // 📱 Initialize AdMob on mount
+    // 📱 Initialize AdMob on mount
     useEffect(() => {
         const initAds = async () => {
             // Enable test mode during development
@@ -203,15 +204,20 @@ const App: React.FC = () => {
         initAds();
     }, []);
 
-    // 📱 Control banner visibility based on view
+    // 📱 Control banner visibility and position based on view
     useEffect(() => {
         const handleBannerVisibility = async () => {
-            // Hide banner during match, show on other views
-            if (view === 'match') {
+            if (gameState && !showProfileSelector && !showLeagueSelect && !showTeamSelect) {
+                // Show banner - service handles position changes internally
+                if (view === 'match') {
+                    // Match screen: Banner at BOTTOM (for landscape mode)
+                    await adMobService.showBanner('bottom');
+                } else {
+                    // All other screens: Banner at TOP
+                    await adMobService.showBanner('top');
+                }
+            } else {
                 await adMobService.hideBanner();
-            } else if (gameState && !showProfileSelector && !showLeagueSelect && !showTeamSelect) {
-                // Show banner on main game screens
-                await adMobService.showBanner();
             }
         };
         handleBannerVisibility();
@@ -558,6 +564,23 @@ const App: React.FC = () => {
         }
     };
 
+    const handleDeleteMessage = (id: string) => {
+        if (!gameState) return;
+        const updatedMessages = gameState.messages.filter(m => m.id !== id);
+        setGameState(prev => prev ? { ...prev, messages: updatedMessages } : null);
+    };
+
+    const handleDeleteAllRead = () => {
+        if (!gameState) return;
+        const updatedMessages = gameState.messages.filter(m => !m.isRead);
+        setGameState(prev => prev ? { ...prev, messages: updatedMessages } : null);
+    };
+
+    const handleDeleteAll = () => {
+        if (!gameState) return;
+        setGameState(prev => prev ? { ...prev, messages: [] } : null);
+    };
+
     const handleToggleTransferList = (player: Player) => {
         if (!gameState) return;
         // Ownership Check
@@ -609,6 +632,12 @@ const App: React.FC = () => {
 
         const playersCopy = JSON.parse(JSON.stringify(userPlayers));
 
+        // CRITICAL FIX: Get players who were substituted OUT during this match
+        // These players CANNOT return to the pitch (football rule!)
+        const substitutedOutIds = activeMatchId && view === 'match'
+            ? getSubstitutedOutPlayerIds()
+            : new Set<string>();
+
         // Inject LIVE STAMINA from engine if available
         if (activeMatchId && view === 'match') {
             playersCopy.forEach((p: Player) => {
@@ -616,14 +645,27 @@ const App: React.FC = () => {
                 if (liveStamina !== undefined) {
                     p.condition = liveStamina;
                 }
+                // Mark substituted out players as "injured" for lineup purposes
+                // This prevents autoPickLineup from selecting them
+                if (substitutedOutIds.has(p.id)) {
+                    p.weeksInjured = 99; // Temporary flag to exclude from selection
+                }
             });
         }
 
         autoPickLineup(playersCopy, userTeam.tactic.formation);
 
+        // Restore the temporary injury flag and apply lineup changes
         const updatedPlayers = gameState.players.map(p => {
             const fixedP = playersCopy.find((cp: Player) => cp.id === p.id);
-            return fixedP ? { ...p, lineup: fixedP.lineup, lineupIndex: fixedP.lineupIndex } : p;
+            if (!fixedP) return p;
+
+            // If player was substituted out, keep their current BENCH status
+            if (substitutedOutIds.has(p.id)) {
+                return { ...p, lineup: 'BENCH' as const, lineupIndex: 99 };
+            }
+
+            return { ...p, lineup: fixedP.lineup, lineupIndex: fixedP.lineupIndex };
         });
 
         const updatedTeams = gameState.teams.map(t => t.id === userTeam.id ? { ...t, tactic: { ...t.tactic, customPositions: {} } } : t);
@@ -1449,10 +1491,71 @@ const App: React.FC = () => {
                         }
                         return team;
                     });
+                    // *** WIN BONUS PAYMENT ***
+                    const userTeamId = prevState.userTeamId;
+                    const isUserHome = currentMatch.homeTeamId === userTeamId;
+                    const isUserAway = currentMatch.awayTeamId === userTeamId;
+                    const userWon = (isUserHome && hScore > aScore) || (isUserAway && aScore > hScore);
+
+                    let teamsWithBonus = updatedTeams;
+                    if (userWon) {
+                        teamsWithBonus = updatedTeams.map(t => {
+                            if (t.id === userTeamId && t.sponsor?.winBonus) {
+                                const bonus = t.sponsor.winBonus;
+                                return {
+                                    ...t,
+                                    budget: t.budget + bonus,
+                                    financials: {
+                                        ...t.financials,
+                                        lastWeekIncome: {
+                                            ...(t.financials?.lastWeekIncome || { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 }),
+                                            winBonus: (t.financials?.lastWeekIncome?.winBonus || 0) + bonus
+                                        }
+                                    }
+                                };
+                            }
+                            return t;
+                        });
+                    }
+
+                    // *** BOARD CONFIDENCE UPDATE ***
+                    const userTeam = teamsWithBonus.find(t => t.id === userTeamId);
+                    const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
+                    const opponent = teamsWithBonus.find(t => t.id === opponentId);
+
+                    if (userTeam && opponent) {
+                        const userScore = isUserHome ? hScore : aScore;
+                        const oppScore = isUserHome ? aScore : hScore;
+                        const won = userScore > oppScore;
+                        const drew = userScore === oppScore;
+
+                        const repDiff = opponent.reputation - userTeam.reputation;
+                        let confidenceChange = 0;
+
+                        if (won) {
+                            confidenceChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 2;
+                            if (userScore - oppScore >= 3) confidenceChange += 2;
+                        } else if (drew) {
+                            confidenceChange = repDiff > 500 ? 1 : repDiff < -500 ? -2 : -1;
+                        } else {
+                            confidenceChange = repDiff < -500 ? -8 : repDiff < 0 ? -5 : -3;
+                            if (oppScore - userScore >= 3) confidenceChange -= 2;
+                        }
+
+                        const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
+                        if (recentLosses >= 3) confidenceChange -= 3;
+
+                        teamsWithBonus = teamsWithBonus.map(t => {
+                            if (t.id === userTeamId) {
+                                return { ...t, boardConfidence: Math.max(0, Math.min(100, (t.boardConfidence || 70) + confidenceChange)) };
+                            }
+                            return t;
+                        });
+                    }
 
                     let newMatches = [...prevState.matches];
                     newMatches[matchIndex] = currentMatch;
-                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: updatedTeams };
+                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
                 }
             }
         }
@@ -1875,7 +1978,75 @@ const App: React.FC = () => {
                         currentMatch.awayTeamId, ptsAway, aScore, hScore, aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L'
                     );
 
-                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: newTeams };
+                    // *** WIN BONUS PAYMENT ***
+                    // Check if user won and pay sponsor win bonus
+                    const userTeamId = prevState.userTeamId;
+                    const isUserHome = currentMatch.homeTeamId === userTeamId;
+                    const isUserAway = currentMatch.awayTeamId === userTeamId;
+                    const userWon = (isUserHome && hScore > aScore) || (isUserAway && aScore > hScore);
+
+                    let teamsWithBonus = newTeams;
+                    if (userWon) {
+                        teamsWithBonus = newTeams.map(t => {
+                            if (t.id === userTeamId && t.sponsor?.winBonus) {
+                                const bonus = t.sponsor.winBonus;
+                                return {
+                                    ...t,
+                                    budget: t.budget + bonus,
+                                    financials: {
+                                        ...t.financials,
+                                        lastWeekIncome: {
+                                            ...(t.financials?.lastWeekIncome || { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 }),
+                                            winBonus: (t.financials?.lastWeekIncome?.winBonus || 0) + bonus
+                                        }
+                                    }
+                                };
+                            }
+                            return t;
+                        });
+                    }
+
+                    // *** BOARD CONFIDENCE UPDATE ***
+                    // Update board confidence for user team based on match result
+                    const userTeam = teamsWithBonus.find(t => t.id === userTeamId);
+                    const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
+                    const opponent = teamsWithBonus.find(t => t.id === opponentId);
+
+                    if (userTeam && opponent) {
+                        const userScore = isUserHome ? hScore : aScore;
+                        const oppScore = isUserHome ? aScore : hScore;
+                        const won = userScore > oppScore;
+                        const drew = userScore === oppScore;
+
+                        const repDiff = opponent.reputation - userTeam.reputation;
+                        let confidenceChange = 0;
+
+                        if (won) {
+                            confidenceChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 2;
+                            if (userScore - oppScore >= 3) confidenceChange += 2;
+                        } else if (drew) {
+                            confidenceChange = repDiff > 500 ? 1 : repDiff < -500 ? -2 : -1;
+                        } else {
+                            confidenceChange = repDiff < -500 ? -8 : repDiff < 0 ? -5 : -3;
+                            if (oppScore - userScore >= 3) confidenceChange -= 2;
+                        }
+
+                        // Check consecutive losses for extra penalty
+                        const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
+                        if (recentLosses >= 3) confidenceChange -= 3;
+
+                        teamsWithBonus = teamsWithBonus.map(t => {
+                            if (t.id === userTeamId) {
+                                return {
+                                    ...t,
+                                    boardConfidence: Math.max(0, Math.min(100, (t.boardConfidence || 70) + confidenceChange))
+                                };
+                            }
+                            return t;
+                        });
+                    }
+
+                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
                 }
 
                 return { ...prevState, matches: newMatches, players: updatedPlayers };
@@ -2119,7 +2290,7 @@ const App: React.FC = () => {
     const activeAway = activeMatch ? (gameState.teams.find(t => t.id === activeMatch.awayTeamId) || userTeam) : userTeam;
 
     return (
-        <Layout>
+        <Layout bannerPosition={view === 'match' ? 'bottom' : 'top'}>
             {!userTeam.sponsor && <SponsorModal onSelect={handleSelectSponsor} t={t} />}
 
             {/* Season Summary Modal */}
@@ -2253,73 +2424,53 @@ const App: React.FC = () => {
                 />
             )}
 
-            {/* Desktop Sidebar (Left) - Hidden on Mobile */}
-            <div className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
-                <div className="p-6 border-b border-slate-800 hidden md:block">
-                    <div className="text-emerald-500 font-bold text-2xl tracking-tighter">POCKET<span className="text-white">FM</span></div>
-                    {activeProfileId && profiles.find(p => p.id === activeProfileId) && (
-                        <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+            {/* Desktop Sidebar (Left) - Hidden on Mobile, Tablet, AND during Match */}
+            {view !== 'match' && (
+                <div className="hidden xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
+                    <div className="p-6 border-b border-slate-800 hidden xl:block">
+                        <div className="text-emerald-500 font-bold text-2xl tracking-tighter">POCKET<span className="text-white">FM</span></div>
+                        {activeProfileId && profiles.find(p => p.id === activeProfileId) && (
+                            <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                                <UserCircle size={14} />
+                                <span className="truncate">{profiles.find(p => p.id === activeProfileId)?.name}</span>
+                            </div>
+                        )}
+                    </div>
+                    <nav className="flex-1 p-2 xl:p-4 space-y-2 overflow-y-auto custom-scrollbar">
+                        <button onClick={() => setView('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'dashboard' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><LayoutDashboard size={20} /> <span className="hidden md:inline">{t.dashboard}</span></button>
+                        <button onClick={() => setView('news')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg relative transition-all ${view === 'news' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Mail size={20} /> <span className="hidden md:inline">{t.news}</span>{unreadMessages > 0 && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border border-slate-900"></span>}</button>
+                        <button onClick={() => setView('squad')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'squad' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Users size={20} /> <span className="hidden md:inline">{t.squad}</span></button>
+                        <button onClick={() => setView('training')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'training' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Activity size={20} /> <span className="hidden md:inline">{t.training}</span></button>
+                        <button onClick={() => setView('transfers')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'transfers' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><ShoppingCart size={20} /> <span className="hidden md:inline">{t.market}</span></button>
+                        <button onClick={() => setView('club')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'club' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Building2 size={20} /> <span className="hidden md:inline">{t.club}</span></button>
+                        <button onClick={() => setView('league')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'league' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Trophy size={20} /> <span className="hidden md:inline">{t.standings}</span></button>
+                        <button onClick={() => setView('rankings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'rankings' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Globe size={20} /> <span className="hidden md:inline">{t.worldRankings}</span></button>
+                        <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><BookOpen size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
+                        <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
+                        <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
+                        <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
+                    </nav>
+                    <div className="p-4 border-t border-slate-800 space-y-2 bg-slate-900">
+                        <button
+                            onClick={handleBackToProfiles}
+                            className="w-full flex items-center justify-center gap-2 text-xs px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                        >
                             <UserCircle size={14} />
-                            <span className="truncate">{profiles.find(p => p.id === activeProfileId)?.name}</span>
+                            {lang === 'tr' ? 'Profillere Dön' : 'Back to Profiles'}
+                        </button>
+                        <div className="flex justify-center gap-2">
+                            <button onClick={() => setLang('tr')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'tr' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>TR</button>
+                            <button onClick={() => setLang('en')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
                         </div>
-                    )}
-                </div>
-                <nav className="flex-1 p-2 md:p-4 space-y-2 overflow-y-auto custom-scrollbar">
-                    <button onClick={() => setView('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'dashboard' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><LayoutDashboard size={20} /> <span className="hidden md:inline">{t.dashboard}</span></button>
-                    <button onClick={() => setView('news')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg relative transition-all ${view === 'news' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Mail size={20} /> <span className="hidden md:inline">{t.news}</span>{unreadMessages > 0 && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border border-slate-900"></span>}</button>
-                    <button onClick={() => setView('squad')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'squad' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Users size={20} /> <span className="hidden md:inline">{t.squad}</span></button>
-                    <button onClick={() => setView('training')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'training' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Activity size={20} /> <span className="hidden md:inline">{t.training}</span></button>
-                    <button onClick={() => setView('transfers')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'transfers' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><ShoppingCart size={20} /> <span className="hidden md:inline">{t.market}</span></button>
-                    <button onClick={() => setView('club')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'club' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Building2 size={20} /> <span className="hidden md:inline">{t.club}</span></button>
-                    <button onClick={() => setView('league')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'league' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Trophy size={20} /> <span className="hidden md:inline">{t.standings}</span></button>
-                    <button onClick={() => setView('rankings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'rankings' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Globe size={20} /> <span className="hidden md:inline">{t.worldRankings}</span></button>
-                    <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><BookOpen size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
-                    <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
-                    <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
-                    <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
-                </nav>
-                <div className="p-4 border-t border-slate-800 space-y-2 bg-slate-900">
-                    <button
-                        onClick={handleBackToProfiles}
-                        className="w-full flex items-center justify-center gap-2 text-xs px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                    >
-                        <UserCircle size={14} />
-                        {lang === 'tr' ? 'Profillere Dön' : 'Back to Profiles'}
-                    </button>
-                    <div className="flex justify-center gap-2">
-                        <button onClick={() => setLang('tr')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'tr' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>TR</button>
-                        <button onClick={() => setLang('en')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Mobile Bottom Navigation - Glassmorphism (5 Items) */}
             {view !== 'match' && (
-                <div className="md:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
+                <div className="xl:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
                     {/* Premium Glass Background */}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/98 to-slate-900/95 backdrop-blur-xl border-t border-white/10"></div>
-
-                    {/* AdMob Control Bar (Just above navigation) */}
-                    {adMobService.isNative() && (
-                        <div className="relative z-10 mx-2 mb-1 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-900/50 to-indigo-900/30 border border-blue-500/20 flex items-center justify-between backdrop-blur">
-                            <span className="text-[10px] text-blue-400 font-bold flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                                {lang === 'tr' ? 'Test Reklamı' : 'Test Ad'}
-                            </span>
-                            <button
-                                onClick={() => {
-                                    if (adMobService.isBannerVisible()) {
-                                        adMobService.hideBanner();
-                                    } else {
-                                        adMobService.showBanner();
-                                    }
-                                }}
-                                className="text-blue-400 hover:text-blue-300 transition-colors active:scale-95 p-1"
-                            >
-                                <X size={14} />
-                            </button>
-                        </div>
-                    )}
 
                     <div className="relative z-10 flex justify-between items-stretch px-2 pt-2">
                         <button onClick={() => setView('dashboard')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'dashboard' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
@@ -2358,7 +2509,7 @@ const App: React.FC = () => {
                 </div>
             )}
 
-            <div className="md:ml-64 relative z-10 w-full h-full overflow-y-auto no-scrollbar overscroll-none p-4 md:p-8 pb-32 md:pb-8">
+            <div className={`relative z-10 w-full h-full overflow-y-auto no-scrollbar overscroll-none p-4 xl:p-8 pb-48 xl:pb-8 xl:pt-4 ${view !== 'match' ? 'xl:ml-64' : ''}`}>
                 <div className="max-w-7xl mx-auto min-h-full">
                     {view === 'match' && activeMatch ? (
                         <MatchCenter
@@ -2389,7 +2540,7 @@ const App: React.FC = () => {
                             {view === 'menu' && (
                                 <div className="flex flex-col gap-4 animate-fade-in pb-20">
                                     <h1 className="text-2xl font-bold text-white mb-2 ml-1">{t.menu || 'Menu'}</h1>
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                                         <button onClick={() => setView('match')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
                                             <img src="/assets/icon-match.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Match" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
@@ -2546,14 +2697,56 @@ const App: React.FC = () => {
                                                 </div>
                                             </button>
 
-                                            <div className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all overflow-hidden shadow-lg">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                                <Trophy size={24} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
-                                                <div className="text-center relative z-10">
-                                                    <div className="text-lg font-bold text-white">3rd</div>
-                                                    <div className="text-[10px] uppercase text-yellow-400/70 font-bold tracking-wider">{t.rank}</div>
-                                                </div>
-                                            </div>
+                                            {/* League Position Card - DYNAMIC */}
+                                            {(() => {
+                                                // Calculate last season position from history
+                                                const lastHistory = gameState.history[gameState.history.length - 1];
+                                                const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+                                                let lastPosition = '-';
+
+                                                if (lastHistory && userTeam) {
+                                                    // Check if user was champion
+                                                    if (lastHistory.championId === userTeam.id) {
+                                                        lastPosition = '1st';
+                                                    } else {
+                                                        // Check runner-up
+                                                        if (lastHistory.runnerUpName === userTeam.name) {
+                                                            lastPosition = '2nd';
+                                                        } else {
+                                                            // We don't have exact position in history, show current standing
+                                                            const leagueTeams = gameState.teams.filter(t => t.leagueId === userTeam.leagueId);
+                                                            const sorted = [...leagueTeams].sort((a, b) => {
+                                                                if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
+                                                                return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
+                                                            });
+                                                            const pos = sorted.findIndex(t => t.id === userTeam.id) + 1;
+                                                            const suffix = pos === 1 ? 'st' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th';
+                                                            lastPosition = `${pos}${suffix}`;
+                                                        }
+                                                    }
+                                                } else if (userTeam) {
+                                                    // No history yet, show current position
+                                                    const leagueTeams = gameState.teams.filter(t => t.leagueId === userTeam.leagueId);
+                                                    const sorted = [...leagueTeams].sort((a, b) => {
+                                                        if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
+                                                        return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
+                                                    });
+                                                    const pos = sorted.findIndex(t => t.id === userTeam.id) + 1;
+                                                    const suffix = pos === 1 ? 'st' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th';
+                                                    lastPosition = `${pos}${suffix}`;
+                                                }
+
+                                                return (
+                                                    <div className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all overflow-hidden shadow-lg">
+                                                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                        <Trophy size={24} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
+                                                        <div className="text-center relative z-10">
+                                                            <div className="text-lg font-bold text-white">{lastPosition}</div>
+                                                            <div className="text-[10px] uppercase text-yellow-400/70 font-bold tracking-wider">{t.rank}</div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
 
                                         {/* Next Match Card - Detailed */}
@@ -2667,11 +2860,24 @@ const App: React.FC = () => {
                                             <h3 className="text-[11px] uppercase text-slate-400 font-bold mb-4 flex items-center gap-2 tracking-wider"><Briefcase size={14} className="text-purple-400 drop-shadow-[0_0_4px_rgba(168,85,247,0.5)]" /> {t.boardConfidence}</h3>
                                             <div className="flex items-center gap-4 mb-5">
                                                 <div className="flex-1 bg-slate-900/80 h-3 rounded-full overflow-hidden border border-slate-700/50 shadow-inner">
-                                                    <div className="bg-gradient-to-r from-emerald-500 to-emerald-400 h-full rounded-full w-[85%] shadow-[0_0_12px_rgba(16,185,129,0.6)] relative">
+                                                    <div
+                                                        className={`h-full rounded-full relative transition-all duration-500 ${(userTeam.boardConfidence || 70) >= 60
+                                                            ? 'bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.6)]'
+                                                            : (userTeam.boardConfidence || 70) >= 30
+                                                                ? 'bg-gradient-to-r from-yellow-500 to-amber-400 shadow-[0_0_12px_rgba(234,179,8,0.6)]'
+                                                                : 'bg-gradient-to-r from-red-500 to-red-400 shadow-[0_0_12px_rgba(239,68,68,0.6)] animate-pulse'
+                                                            }`}
+                                                        style={{ width: `${userTeam.boardConfidence || 70}%` }}
+                                                    >
                                                         <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
                                                     </div>
                                                 </div>
-                                                <span className="text-sm font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]">85%</span>
+                                                <span className={`text-sm font-bold drop-shadow-[0_0_8px] ${(userTeam.boardConfidence || 70) >= 60
+                                                    ? 'text-emerald-400'
+                                                    : (userTeam.boardConfidence || 70) >= 30
+                                                        ? 'text-yellow-400'
+                                                        : 'text-red-400 animate-pulse'
+                                                    }`}>{userTeam.boardConfidence || 70}%</span>
                                             </div>
 
                                             <div className="space-y-2">
@@ -2692,6 +2898,9 @@ const App: React.FC = () => {
                                         messages={gameState.messages}
                                         pendingOffers={gameState.pendingOffers}
                                         onMarkAsRead={handleMarkAsRead}
+                                        onDeleteMessage={handleDeleteMessage}
+                                        onDeleteAllRead={handleDeleteAllRead}
+                                        onDeleteAll={handleDeleteAll}
                                         onAcceptOffer={handleAcceptOffer}
                                         onRejectOffer={handleRejectOffer}
                                         t={t}

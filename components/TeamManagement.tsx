@@ -68,7 +68,21 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
             </div>
 
             <div className="min-w-0">
-                <div className="font-bold text-white truncate text-xs md:text-sm">{player.firstName} {player.lastName}</div>
+                <div className="font-bold text-white truncate text-xs md:text-sm flex items-center gap-1">
+                    {player.firstName} {player.lastName}
+                    {/* 🏥 INJURY INDICATOR - HIGHLY VISIBLE */}
+                    {player.weeksInjured > 0 && (
+                        <span className="ml-1 px-1.5 py-0.5 bg-orange-600 text-white text-[8px] font-bold rounded animate-pulse flex items-center gap-1">
+                            🏥 {player.weeksInjured}h
+                        </span>
+                    )}
+                    {/* 🟥 SUSPENSION INDICATOR */}
+                    {player.matchSuspension > 0 && (
+                        <span className="ml-1 px-1.5 py-0.5 bg-red-600 text-white text-[8px] font-bold rounded flex items-center gap-1">
+                            🟥 {player.matchSuspension}m
+                        </span>
+                    )}
+                </div>
                 {assignedRole && assignedRole !== normalizePos(player) && (
                     <div className="text-[9px] text-amber-500 flex items-center gap-1">
                         <AlertTriangle size={8} /> OOP: {assignedRole}
@@ -84,7 +98,7 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
             <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
 
             {/* Status Bars (Mobile friendly) */}
-            <div className="flex flex-col gap-1 w-16 md:w-24">
+            <div className="flex flex-col gap-1 w-16 md:w-24 group/status relative">
                 <div className="flex items-center gap-1">
                     <span className="text-[9px] font-mono text-slate-500 w-3">CON</span>
                     <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
@@ -95,6 +109,22 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                     <span className="text-[9px] font-mono text-slate-500 w-3">MOR</span>
                     <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
                         <div className={`h-full ${player.morale > 80 ? 'bg-emerald-400' : player.morale > 50 ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${player.morale}%` }}></div>
+                    </div>
+                </div>
+                {/* Morale Reason Tooltip */}
+                <div className="absolute bottom-full left-0 mb-1 p-2 bg-slate-900 border border-slate-600 rounded shadow-xl opacity-0 group-hover/status:opacity-100 transition-opacity pointer-events-none z-50 w-48 text-[10px]">
+                    <div className="font-bold text-white mb-1">Moral: {player.morale}%</div>
+                    <div className="space-y-0.5 text-slate-400">
+                        {player.lineup === 'STARTING' && <div className="text-emerald-400">✓ 11'de oynuyor (+2/hafta)</div>}
+                        {player.lineup === 'BENCH' && <div className="text-blue-400">🪑 Yedek (stabil - oyuna girecek)</div>}
+                        {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ Kadro dışı, yıldız oyuncu (-3/hafta)</div>}
+                        {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ Kadro dışı (-1/hafta)</div>}
+                        {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 Kadro dışı (stabil)</div>}
+                        {player.weeksInjured > 0 && <div className="text-orange-400">🏥 Sakat ({player.weeksInjured} hafta)</div>}
+                        {player.matchSuspension > 0 && <div className="text-red-400">🟥 Cezalı ({player.matchSuspension} maç)</div>}
+                        {player.form > 7 && <div className="text-emerald-400">🔥 İyi form ({player.form}/10)</div>}
+                        {player.form < 5 && <div className="text-red-400">📉 Kötü form ({player.form}/10)</div>}
+                        {player.morale < 40 && <div className="text-amber-400 mt-1">💬 Motive etmeyi dene!</div>}
                     </div>
                 </div>
             </div>

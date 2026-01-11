@@ -65,6 +65,7 @@ export interface Player {
 export interface TeamTactic {
     formation: TacticType; style: string; aggression: string; tempo: string; width: string;
     defensiveLine: string; passingStyle: string; marking: string; customPositions?: Record<string, { x: number, y: number }>;
+    mentality?: 'PARK_THE_BUS' | 'DEFENSIVE' | 'BALANCED' | 'ATTACKING' | 'ALL_OUT_ATTACK'; // AI dynamic mentality
 }
 
 export interface TeamFacilities {
@@ -89,6 +90,10 @@ export interface BoardObjective {
 
 export interface Sponsor {
     id: string; name: string; description: string; weeklyIncome: number; winBonus: number; duration: number;
+    // Championship bonuses (season-end)
+    bonus1st?: number;  // 1st place bonus
+    bonus2nd?: number;  // 2nd place bonus
+    bonus3rd?: number;  // 3rd place bonus
 }
 
 export interface TeamStats {
@@ -98,6 +103,7 @@ export interface TeamStats {
 export interface Team {
     id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number;
+    boardConfidence: number; // NEW: Board confidence 0-100 (starts at 70)
     leagueId: string; // NEW: To separate teams by league
     wages: number; // Total weekly wage bill
     facilities: TeamFacilities;
@@ -107,7 +113,7 @@ export interface Team {
     coachArchetype: CoachArchetype; trainingFocus: TrainingFocus; trainingIntensity: TrainingIntensity;
     youthCandidates: Player[]; recentForm: string[]; stats: TeamStats; sponsor?: Sponsor;
     financials?: {
-        lastWeekIncome: { tickets: number; sponsor: number; merchandise: number; tvRights: number; transfers: number; };
+        lastWeekIncome: { tickets: number; sponsor: number; merchandise: number; tvRights: number; transfers: number; winBonus: number; };
         lastWeekExpenses: { wages: number; maintenance: number; academy: number; transfers: number; };
     };
 }
@@ -169,8 +175,18 @@ export interface TransferOffer {
 }
 
 export interface LeagueHistoryEntry {
-    season: number; championId: string; championName: string; championColor: string;
-    runnerUpName: string; topScorer: string; topAssister: string;
+    season: number;
+    leagueId: string;           // NEW: Which league this entry belongs to
+    leagueName: string;         // NEW: Display name of league
+    championId: string;
+    championName: string;
+    championColor: string;
+    runnerUpName: string;
+    topScorer: string;
+    topAssister: string;
+    bestRatedPlayer?: string;   // NEW: Best average rating player
+    championsLeagueWinner?: string;  // NEW: CL winner (only in 'tr' or main league)
+    europaLeagueWinner?: string;     // NEW: EL winner
 }
 
 export interface EuropeanCupMatch {
@@ -194,13 +210,31 @@ export interface EuropeanCup {
     _generatedForeignTeams?: any[]; // Temporary storage for foreign teams generated during cup creation
 }
 
+// Manager Career System
+export interface JobOffer {
+    id: string;
+    teamId: string;
+    teamName: string;
+    leagueId: string;
+    leagueName: string;
+    reputation: number;
+    salary: number; // Weekly salary offered
+    requiredRating: number;
+    expiresWeek: number;
+    isAccepted?: boolean;
+}
+
 export interface GameState {
     currentWeek: number; currentSeason: number; userTeamId: string; leagueId: string;
     teams: Team[]; players: Player[]; matches: Match[]; isSimulating: boolean;
     messages: Message[]; transferMarket: Player[]; history: LeagueHistoryEntry[];
     pendingOffers: TransferOffer[];
     europeanCup?: EuropeanCup;
-    europaLeague?: EuropeanCup; // NEW: UEFA Europa League support
+    europaLeague?: EuropeanCup;
+    // Manager Career System
+    managerRating?: number; // 0-100, starts based on team chosen
+    managerCareerHistory?: { season: number; teamName: string; position: number; rating: number }[];
+    jobOffers?: JobOffer[];
 }
 
 export interface AssistantAdvice {

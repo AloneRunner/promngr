@@ -18,6 +18,7 @@ const ADMOB_CONFIG = {
 class AdMobService {
   private isInitialized = false;
   private isBannerShowing = false;
+  private currentPosition: 'top' | 'bottom' | null = null;
   private useTestAds = false; // Production mode by default
 
   /**
@@ -46,9 +47,10 @@ class AdMobService {
   }
 
   /**
-   * Show banner ad at bottom of screen
+   * Show banner ad at specified position
+   * @param position 'top' or 'bottom' (default: 'top')
    */
-  async showBanner() {
+  async showBanner(position: 'top' | 'bottom' = 'top') {
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -58,27 +60,36 @@ class AdMobService {
       return;
     }
 
-    if (this.isBannerShowing) {
-      console.log('AdMob: Banner already showing');
+    // If banner is already showing at the same position, skip
+    if (this.isBannerShowing && this.currentPosition === position) {
+      console.log('AdMob: Banner already showing at same position');
       return;
     }
 
+    // If banner is showing at different position, remove first
+    if (this.isBannerShowing && this.currentPosition !== position) {
+      await this.removeBanner();
+      // Small delay to ensure banner is fully removed
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
     try {
-      const adId = this.useTestAds 
-        ? ADMOB_CONFIG.bannerAdUnitId.test 
+      const adId = this.useTestAds
+        ? ADMOB_CONFIG.bannerAdUnitId.test
         : ADMOB_CONFIG.bannerAdUnitId.production;
 
       const options: BannerAdOptions = {
         adId,
         adSize: BannerAdSize.BANNER, // 320x50
-        position: BannerAdPosition.BOTTOM_CENTER,
-        margin: 10, // 10px yukarı
+        position: position === 'top' ? BannerAdPosition.TOP_CENTER : BannerAdPosition.BOTTOM_CENTER,
+        margin: 0,
         isTesting: this.useTestAds,
       };
 
       await AdMob.showBanner(options);
       this.isBannerShowing = true;
-      console.log('AdMob: Banner shown successfully');
+      this.currentPosition = position;
+      console.log(`AdMob: Banner shown at ${position}`);
     } catch (error) {
       console.error('AdMob: Failed to show banner:', error);
     }
@@ -114,6 +125,7 @@ class AdMobService {
     try {
       await AdMob.removeBanner();
       this.isBannerShowing = false;
+      this.currentPosition = null;
       console.log('AdMob: Banner removed');
     } catch (error) {
       console.error('AdMob: Failed to remove banner:', error);
@@ -164,6 +176,13 @@ class AdMobService {
   }
 
   /**
+   * Get current banner position
+   */
+  getBannerPosition(): 'top' | 'bottom' | null {
+    return this.currentPosition;
+  }
+
+  /**
    * Check if running on native platform
    */
   isNative(): boolean {
@@ -176,3 +195,4 @@ export const adMobService = new AdMobService();
 
 // Export types for use in components
 export { BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
+

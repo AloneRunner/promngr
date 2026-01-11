@@ -25,7 +25,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
     // Safe access for old save files and new financial object
     const youthCandidates = team.youthCandidates || [];
     const fin = team.financials || {
-        lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0 },
+        lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 },
         lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 }
     };
 
@@ -140,7 +140,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         </div>
                     </div>
 
-                    {/* Weekly Report Table */}
+                    {/* Weekly Report Table - IMPROVED */}
                     <div className="fm-panel rounded-xl overflow-hidden">
                         <div className="bg-slate-900/50 p-2 border-b border-white/10 flex justify-between items-center">
                             <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t.lastWeekReport}</h2>
@@ -152,6 +152,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <h4 className="text-[10px] uppercase text-emerald-500 font-bold mb-2 flex items-center gap-1"><TrendingUp size={10} /> {t.income}</h4>
                                 <div className="space-y-1">
                                     <FinanceRow icon={Briefcase} label="Sponsor" value={team.sponsor?.weeklyIncome || 0} type="income" />
+                                    {(fin.lastWeekIncome.winBonus || 0) > 0 && (
+                                        <FinanceRow icon={Star} label={t.winBonus || "Galibiyet Primi"} value={fin.lastWeekIncome.winBonus} type="income" />
+                                    )}
                                     <FinanceRow icon={ShoppingBag} label={t.merchandise} value={Math.floor(fin.lastWeekIncome.merchandise)} type="income" />
                                     <FinanceRow icon={Tv} label={t.tvRights} value={fin.lastWeekIncome.tvRights} type="income" />
                                     {fin.lastWeekIncome.transfers > 0 && <FinanceRow icon={Users} label={t.playerSales} value={fin.lastWeekIncome.transfers} type="income" />}
@@ -168,6 +171,37 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     {fin.lastWeekExpenses.transfers > 0 && <FinanceRow icon={Users} label={t.transfers} value={fin.lastWeekExpenses.transfers} type="expense" />}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* NET BALANCE SUMMARY */}
+                        <div className="bg-slate-800/50 p-3 border-t border-white/10">
+                            {(() => {
+                                const totalIncome = (team.sponsor?.weeklyIncome || 0) +
+                                    (fin.lastWeekIncome.winBonus || 0) +
+                                    fin.lastWeekIncome.merchandise +
+                                    fin.lastWeekIncome.tvRights +
+                                    fin.lastWeekIncome.transfers;
+                                const totalExpense = fin.lastWeekExpenses.wages +
+                                    fin.lastWeekExpenses.maintenance +
+                                    fin.lastWeekExpenses.academy +
+                                    fin.lastWeekExpenses.transfers;
+                                const netBalance = totalIncome - totalExpense;
+                                const isPositive = netBalance >= 0;
+
+                                return (
+                                    <div className="flex justify-between items-center">
+                                        <div className="text-xs text-slate-400">
+                                            <span className="text-emerald-400">+€{totalIncome.toLocaleString()}</span>
+                                            <span className="mx-2">-</span>
+                                            <span className="text-red-400">€{totalExpense.toLocaleString()}</span>
+                                        </div>
+                                        <div className={`text-lg font-mono font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+                                            {isPositive ? '=' : ''} €{netBalance.toLocaleString()}
+                                            <span className="text-[10px] text-slate-500 ml-1">/hafta</span>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
 
@@ -189,7 +223,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
             {tab === 'FACILITIES' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
-                    {/* Stadium Card */}
+                    {/* Stadium Card - IMPROVED with upgrade info */}
                     <div className="bg-slate-800 rounded-lg p-3 md:p-4 border border-slate-700 shadow-xl">
                         <div className="flex justify-between items-center mb-2">
                             <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
@@ -205,9 +239,27 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487466365202-1afdb86c764e?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
                             <div className="absolute bottom-1 left-2">
                                 <div className="text-white font-bold text-sm">{team.city} Arena</div>
-                                <div className="text-emerald-400 text-[10px] font-mono">{team.facilities.stadiumCapacity.toLocaleString()} Seats</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">{(5000 + (team.facilities.stadiumLevel - 1) * 6000).toLocaleString()} Koltuk</div>
                             </div>
                         </div>
+
+                        {/* Upgrade Info */}
+                        {team.facilities.stadiumLevel < 25 && (
+                            <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
+                                <div className="flex justify-between text-slate-400 mb-1">
+                                    <span>Mevcut:</span>
+                                    <span className="text-white">{(5000 + (team.facilities.stadiumLevel - 1) * 6000).toLocaleString()} koltuk</span>
+                                </div>
+                                <div className="flex justify-between text-blue-400">
+                                    <span>→ Yeni:</span>
+                                    <span className="font-bold">{(5000 + team.facilities.stadiumLevel * 6000).toLocaleString()} koltuk (+6,000)</span>
+                                </div>
+                                <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
+                                    <span>Bakım artışı:</span>
+                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.stadiumLevel + 1, 1.8) - Math.pow(team.facilities.stadiumLevel, 1.8)) * 4000).toLocaleString()}/hafta</span>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
@@ -224,15 +276,15 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             disabled={team.facilities.stadiumLevel >= 25 || team.budget < 5000000}
                             className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> Upgrade (€5.0M)
+                            <Hammer size={14} /> {team.facilities.stadiumLevel >= 25 ? 'MAX' : 'Yükselt (€5.0M)'}
                         </button>
                     </div>
 
-                    {/* Training Centre */}
+                    {/* Training Centre - IMPROVED with upgrade info */}
                     <div className="bg-slate-800 rounded-lg p-3 md:p-4 border border-slate-700 shadow-xl">
                         <div className="flex justify-between items-center mb-2">
                             <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-                                <Activity className="text-emerald-500" size={18} /> Training Ground
+                                <Activity className="text-emerald-500" size={18} /> Antrenman Tesisi
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
@@ -243,14 +295,32 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="relative h-16 md:h-20 bg-slate-900 rounded-lg mb-2 overflow-hidden border border-slate-600">
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543351611-58f69d7c1781?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
                             <div className="absolute bottom-1 left-2">
-                                <div className="text-white font-bold text-sm">Performance Center</div>
-                                <div className="text-emerald-400 text-[10px] font-mono">Level {team.facilities.trainingLevel}</div>
+                                <div className="text-white font-bold text-sm">Performans Merkezi</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">+{(team.facilities.trainingLevel * 1).toFixed(0)}% Oyuncu Gelişimi</div>
                             </div>
                         </div>
 
+                        {/* Upgrade Info */}
+                        {team.facilities.trainingLevel < 25 && (
+                            <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
+                                <div className="flex justify-between text-slate-400 mb-1">
+                                    <span>Mevcut bonus:</span>
+                                    <span className="text-white">+{team.facilities.trainingLevel}% gelişim hızı</span>
+                                </div>
+                                <div className="flex justify-between text-emerald-400">
+                                    <span>→ Yeni:</span>
+                                    <span className="font-bold">+{team.facilities.trainingLevel + 1}% gelişim hızı</span>
+                                </div>
+                                <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
+                                    <span>Bakım artışı:</span>
+                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.trainingLevel + 1, 1.8) - Math.pow(team.facilities.trainingLevel, 1.8)) * 3500).toLocaleString()}/hafta</span>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                                <span>Quality</span>
+                                <span>Kalite</span>
                                 <span>{(team.facilities.trainingLevel / 25 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
@@ -263,57 +333,72 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             disabled={team.facilities.trainingLevel >= 25 || team.budget < 3000000}
                             className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> Upgrade (€3.0M)
+                            <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : 'Yükselt (€3.0M)'}
                         </button>
                     </div>
 
-                    {/* Youth Academy */}
-                    <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-xl md:col-span-2">
+                    {/* Youth Academy - IMPROVED with upgrade info */}
+                    <div className="bg-slate-800 rounded-lg p-4 md:p-6 border border-slate-700 shadow-xl md:col-span-2">
                         <div className="flex justify-between items-start mb-4">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <GraduationCap className="text-yellow-500" /> Youth Academy
+                            <h2 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
+                                <GraduationCap className="text-yellow-500" /> Altyapı Akademisi
                             </h2>
                             <div className="text-right">
-                                <span className="block text-xs uppercase text-slate-500 font-bold">Academy Tier</span>
-                                <span className="text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/25</span></span>
+                                <span className="block text-[10px] uppercase text-slate-500 font-bold">Akademi Seviyesi</span>
+                                <span className="text-xl md:text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/25</span></span>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative h-full min-h-[140px] bg-slate-900 rounded-lg overflow-hidden border border-slate-600 group">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            <div className="relative h-full min-h-[120px] md:min-h-[140px] bg-slate-900 rounded-lg overflow-hidden border border-slate-600 group">
                                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
-                                <div className="absolute inset-0 flex flex-col justify-end p-4">
-                                    <div className="text-white font-bold text-lg">Next Gen Academy</div>
-                                    <div className="text-yellow-400 text-sm font-mono"> producing {team.facilities.academyLevel * 2}0% better talents</div>
+                                <div className="absolute inset-0 flex flex-col justify-end p-3 md:p-4">
+                                    <div className="text-white font-bold text-base md:text-lg">Yeni Nesil Akademi</div>
+                                    <div className="text-yellow-400 text-xs md:text-sm font-mono">+{team.facilities.academyLevel * 2}% daha kaliteli gençler</div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col justify-center space-y-4">
+                            <div className="flex flex-col justify-center space-y-3">
+                                {/* Upgrade Info */}
+                                {team.facilities.academyLevel < 25 && (
+                                    <div className="bg-slate-900/50 rounded p-2 text-[10px]">
+                                        <div className="flex justify-between text-slate-400 mb-1">
+                                            <span>Mevcut:</span>
+                                            <span className="text-white">+{team.facilities.academyLevel * 2}% genç kalitesi</span>
+                                        </div>
+                                        <div className="flex justify-between text-yellow-400">
+                                            <span>→ Yeni:</span>
+                                            <span className="font-bold">+{(team.facilities.academyLevel + 1) * 2}% genç kalitesi</span>
+                                        </div>
+                                        <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
+                                            <span>Bakım artışı:</span>
+                                            <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.academyLevel + 1, 1.8) - Math.pow(team.facilities.academyLevel, 1.8)) * 2500).toLocaleString()}/hafta</span>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div>
-                                    <div className="flex justify-between text-xs text-slate-400 mb-1">
-                                        <span>Scouting Network</span>
+                                    <div className="flex justify-between text-[10px] md:text-xs text-slate-400 mb-1">
+                                        <span>Keşif Ağı</span>
                                         <span>{(team.facilities.academyLevel / 25 * 100).toFixed(0)}%</span>
                                     </div>
-                                    <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                                    <div className="w-full bg-slate-900 rounded-full h-1.5 md:h-2 overflow-hidden">
                                         <div className="bg-yellow-500 h-full rounded-full transition-all duration-500" style={{ width: `${(team.facilities.academyLevel / 25) * 100}%` }}></div>
                                     </div>
                                 </div>
-                                <p className="text-slate-400 text-sm italic border-l-2 border-yellow-500 pl-3">
-                                    Investing in the academy drastically improves the quality and potential of youth candidates found each season.
-                                </p>
+
                                 <button
                                     onClick={() => onUpgradeFacility && onUpgradeFacility('academy')}
                                     disabled={team.facilities.academyLevel >= 25 || team.budget < 2500000}
-                                    className="w-full py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-2 md:py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
                                 >
-                                    <Hammer size={18} /> Upgrade (€2.5M)
+                                    <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : 'Yükselt (€2.5M)'}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            )
-            }
+            )}
 
             {
                 tab === 'ACADEMY' && (
@@ -395,82 +480,124 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                 )
             }
 
-            {/* NEW STAFF TAB */}
+            {/* STAFF TAB - IMPROVED with upgrade benefits */}
             {
                 tab === 'STAFF' && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                        {/* Head Coach */}
-                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10"><ClipboardList size={100} /></div>
+                        {/* Assistant Coach */}
+                        <div className="bg-slate-800 p-4 md:p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><ClipboardList size={80} /></div>
                             <div className="relative z-10">
-                                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                    <ClipboardList size={32} />
+                                <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
+                                    <ClipboardList size={28} />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Assistant Coach</h3>
-                                <p className="text-sm text-slate-400 mb-4">Improves training efficiency and tactical familiarity.</p>
+                                <h3 className="text-lg font-bold text-white">Yardımcı Antrenör</h3>
+                                <p className="text-xs text-slate-400 mb-3">Antrenman verimliliğini ve taktik uyumu artırır.</p>
 
-                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                    <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}</span>
+                                <div className="bg-slate-900/50 p-3 rounded mb-3">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}<span className="text-slate-600 text-sm">/10</span></span>
+                                    </div>
+                                    {staff.headCoachLevel < 10 && (
+                                        <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
+                                            <div className="flex justify-between text-slate-400">
+                                                <span>Mevcut:</span>
+                                                <span className="text-white">+{(staff.headCoachLevel * 1.5).toFixed(1)}% antrenman verimliliği</span>
+                                            </div>
+                                            <div className="flex justify-between text-blue-400">
+                                                <span>→ Yeni:</span>
+                                                <span className="font-bold">+{((staff.headCoachLevel + 1) * 1.5).toFixed(1)}% antrenman verimliliği</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('headCoachLevel')}
                                     disabled={staff.headCoachLevel >= 10}
-                                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.headCoachLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.headCoachLevel * 100).toLocaleString()}k)`}
+                                    {staff.headCoachLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.headCoachLevel * 100).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
 
                         {/* Head Scout */}
-                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10"><Microscope size={100} /></div>
+                        <div className="bg-slate-800 p-4 md:p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><Microscope size={80} /></div>
                             <div className="relative z-10">
-                                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                    <Microscope size={32} />
+                                <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
+                                    <Microscope size={28} />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Chief Scout</h3>
-                                <p className="text-sm text-slate-400 mb-4">Finds better youth prospects and reveals hidden stats.</p>
+                                <h3 className="text-lg font-bold text-white">Baş Scout</h3>
+                                <p className="text-xs text-slate-400 mb-3">Daha iyi genç yetenekler bulur, gizli özellikleri ortaya çıkarır.</p>
 
-                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                    <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}</span>
+                                <div className="bg-slate-900/50 p-3 rounded mb-3">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}<span className="text-slate-600 text-sm">/10</span></span>
+                                    </div>
+                                    {staff.scoutLevel < 10 && (
+                                        <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
+                                            <div className="flex justify-between text-slate-400">
+                                                <span>Mevcut:</span>
+                                                <span className="text-white">+{staff.scoutLevel}% genç keşif şansı</span>
+                                            </div>
+                                            <div className="flex justify-between text-purple-400">
+                                                <span>→ Yeni:</span>
+                                                <span className="font-bold">+{staff.scoutLevel + 1}% genç keşif şansı</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('scoutLevel')}
                                     disabled={staff.scoutLevel >= 10}
-                                    className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                    className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.scoutLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.scoutLevel * 100).toLocaleString()}k)`}
+                                    {staff.scoutLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.scoutLevel * 100).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
 
                         {/* Head Physio */}
-                        <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10"><Stethoscope size={100} /></div>
+                        <div className="bg-slate-800 p-4 md:p-6 rounded-lg border border-slate-700 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10"><Stethoscope size={80} /></div>
                             <div className="relative z-10">
-                                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mb-4 text-white shadow-lg">
-                                    <Stethoscope size={32} />
+                                <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
+                                    <Stethoscope size={28} />
                                 </div>
-                                <h3 className="text-xl font-bold text-white">Head Physio</h3>
-                                <p className="text-sm text-slate-400 mb-4">Speeds up injury recovery and reduces fatigue accumulation.</p>
+                                <h3 className="text-lg font-bold text-white">Baş Fizyoterapist</h3>
+                                <p className="text-xs text-slate-400 mb-3">Sakatlık iyileşmesini hızlandırır, yorgunluk birikimini azaltır.</p>
 
-                                <div className="flex items-center justify-between mb-4 bg-slate-900/50 p-3 rounded">
-                                    <span className="text-slate-400 text-xs uppercase font-bold">Level</span>
-                                    <span className="text-red-400 font-bold text-xl">{staff.physioLevel}</span>
+                                <div className="bg-slate-900/50 p-3 rounded mb-3">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-red-400 font-bold text-xl">{staff.physioLevel}<span className="text-slate-600 text-sm">/10</span></span>
+                                    </div>
+                                    {staff.physioLevel < 10 && (
+                                        <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
+                                            <div className="flex justify-between text-slate-400">
+                                                <span>Mevcut:</span>
+                                                <span className="text-white">+{staff.physioLevel * 3} kondisyon/hafta</span>
+                                            </div>
+                                            <div className="flex justify-between text-red-400">
+                                                <span>→ Yeni:</span>
+                                                <span className="font-bold">+{(staff.physioLevel + 1) * 3} kondisyon/hafta</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('physioLevel')}
                                     disabled={staff.physioLevel >= 10}
-                                    className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors"
+                                    className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.physioLevel >= 10 ? 'MAX LEVEL' : `Upgrade (€${(staff.physioLevel * 100).toLocaleString()}k)`}
+                                    {staff.physioLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.physioLevel * 100).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>

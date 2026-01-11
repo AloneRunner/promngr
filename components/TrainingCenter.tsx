@@ -25,7 +25,7 @@ interface TrainingMatchResult {
 export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, onSetFocus, onSetIntensity, onTrainingMatch, t }) => {
     const [trainingMatchResult, setTrainingMatchResult] = useState<TrainingMatchResult | null>(null);
     const [isSimulating, setIsSimulating] = useState(false);
-    
+
     // Team Builder State
     const [showTeamBuilder, setShowTeamBuilder] = useState(false);
     const [teamA, setTeamA] = useState<Player[]>([]);
@@ -33,7 +33,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
 
     // Get available players
     const availablePlayers = players.filter(p => !p.injury && p.condition > 30);
-    const unassignedPlayers = availablePlayers.filter(p => 
+    const unassignedPlayers = availablePlayers.filter(p =>
         !teamA.find(t => t.id === p.id) && !teamB.find(t => t.id === p.id)
     );
 
@@ -107,18 +107,18 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
         for (let minute = 1; minute <= 90; minute += Math.floor(Math.random() * 10) + 5) {
             const rand = Math.random() * 100;
             const teamAChance = 50 + (teamAStrength - teamBStrength);
-            
+
             if (rand < 20) { // Goal event
                 const scoringTeam = Math.random() * 100 < teamAChance ? 'A' : 'B';
                 const squad = scoringTeam === 'A' ? teamA : teamB;
                 const goalscorer = squad[Math.floor(Math.random() * squad.length)];
-                
+
                 if (scoringTeam === 'A') {
                     teamAGoals++;
                 } else {
                     teamBGoals++;
                 }
-                
+
                 events.push(`${minute}' ⚽ ${goalscorer.name} (${scoringTeam === 'A' ? 'Turuncu' : 'Mavi'})`);
                 scorers.push({ name: goalscorer.name, team: scoringTeam, minute });
             }
@@ -141,7 +141,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
             setTrainingMatchResult(result);
             setIsSimulating(false);
             setShowTeamBuilder(false);
-            
+
             if (onTrainingMatch) {
                 onTrainingMatch({ teamAGoals, teamBGoals, mvp });
             }
@@ -186,8 +186,8 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             key={opt.id}
                             onClick={() => onSetFocus(opt.id)}
                             className={`w-full flex items-center gap-3 p-2 md:p-3 rounded-lg border transition-all text-left ${team.trainingFocus === opt.id
-                                    ? 'bg-emerald-900/40 border-emerald-500'
-                                    : 'bg-slate-700/30 border-slate-600 hover:bg-slate-700'
+                                ? 'bg-emerald-900/40 border-emerald-500'
+                                : 'bg-slate-700/30 border-slate-600 hover:bg-slate-700'
                                 }`}
                         >
                             <div className={`p-2 rounded-full bg-slate-800 ${opt.color} shrink-0`}>
@@ -223,8 +223,8 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                 key={item.id}
                                 onClick={() => onSetIntensity(item.id)}
                                 className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all ${currentIntensity === item.id
-                                        ? 'bg-slate-700 border-white text-white shadow-lg scale-105'
-                                        : 'bg-slate-900/50 border-slate-700 text-slate-400 hover:bg-slate-800'
+                                    ? 'bg-slate-700 border-white text-white shadow-lg scale-105'
+                                    : 'bg-slate-900/50 border-slate-700 text-slate-400 hover:bg-slate-800'
                                     }`}
                             >
                                 <div className={`w-full h-1 rounded-full ${item.color} mb-1`}></div>
@@ -272,11 +272,11 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         <Swords className="text-amber-400" /> {t.training === 'Training' ? 'Training Match' : 'Antrenman Maçı'}
                     </h3>
                     <p className="text-xs text-slate-400 mb-4">
-                        {t.training === 'Training' 
-                            ? 'Create two teams from your squad and watch them play!' 
+                        {t.training === 'Training'
+                            ? 'Create two teams from your squad and watch them play!'
                             : 'Kadronuzdan iki takım oluşturun ve maçı izleyin!'}
                     </p>
-                    
+
                     {!trainingMatchResult ? (
                         <button
                             onClick={() => setShowTeamBuilder(true)}
@@ -284,7 +284,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-500 disabled:bg-slate-600 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
                         >
                             <Users size={18} />
-                            {availablePlayers.length < 14 
+                            {availablePlayers.length < 14
                                 ? (t.training === 'Training' ? `Need ${14 - availablePlayers.length} more fit players` : `${14 - availablePlayers.length} fit oyuncu daha gerekli`)
                                 : (t.training === 'Training' ? 'Setup Training Match' : 'Antrenman Maçı Kur')}
                         </button>
@@ -450,15 +450,15 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                                 <span className="text-slate-500 font-mono text-xs">{p.overall}</span>
                                             </div>
                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button 
-                                                    onClick={() => addToTeamA(p)} 
+                                                <button
+                                                    onClick={() => addToTeamA(p)}
                                                     disabled={teamA.length >= 11}
                                                     className="px-2 py-0.5 bg-amber-600 hover:bg-amber-500 disabled:bg-slate-600 text-white text-xs rounded"
                                                 >
                                                     🟠
                                                 </button>
-                                                <button 
-                                                    onClick={() => addToTeamB(p)} 
+                                                <button
+                                                    onClick={() => addToTeamB(p)}
                                                     disabled={teamB.length >= 11}
                                                     className="px-2 py-0.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-600 text-white text-xs rounded"
                                                 >

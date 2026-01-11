@@ -7,8 +7,8 @@ android {
         applicationId "com.pocketfootballmanager.game"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "2.6"
+        versionCode 21
+        versionName "2.8.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -17,7 +17,9 @@ android {
         }
     }
     
+    // Splits removed for App Bundle compatibility
     // APK boyutunu azaltmak için splits ekleyin
+    /*
     splits {
         abi {
             enable true
@@ -31,6 +33,7 @@ android {
             include 'ldpi', 'mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'
         }
     }
+    */
     
     buildTypes {
         release {

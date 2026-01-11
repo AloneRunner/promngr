@@ -20,7 +20,8 @@ import {
     AssistantAdvice,
     BoardObjective,
     TeamStaff,
-    TransferOffer
+    TransferOffer,
+    JobOffer
 } from '../types';
 import { NAMES_DB, LEAGUE_PRESETS, REAL_PLAYERS, TICKET_PRICE, TEAM_TACTICAL_PROFILES, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES, DERBY_RIVALS } from '../constants';
 import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating } from './MatchEngine';
@@ -495,15 +496,16 @@ export const autoPickLineup = (
 };
 
 export const generateSponsors = (): Sponsor[] => {
-    // Realistic sponsor values (weekly income in EUR)
-    // Turkey big clubs: ~€100-200k/week from main sponsor
-    // England big clubs: ~€500k-1M/week from main sponsor
+    // Strategic sponsor selection:
+    // - High weekly / Low bonus = Safe choice (guaranteed income)
+    // - Low weekly / High bonus = Risky choice (rewards winning teams)
+    // Fictional sponsor names to avoid trademark issues
     return [
-        { id: uuid(), name: "FlyEmirates", description: "Global Airline - Premium", weeklyIncome: 180000, winBonus: 50000, duration: 1 },
-        { id: uuid(), name: "QatarAirways", description: "Premium Airline", weeklyIncome: 160000, winBonus: 60000, duration: 1 },
-        { id: uuid(), name: "Spotify", description: "Music Streaming", weeklyIncome: 140000, winBonus: 30000, duration: 1 },
-        { id: uuid(), name: "TeamViewer", description: "Tech Solutions", weeklyIncome: 100000, winBonus: 20000, duration: 1 },
-        { id: uuid(), name: "RedBull", description: "Energy Drink", weeklyIncome: 120000, winBonus: 40000, duration: 1 },
+        { id: uuid(), name: "SkyJet Airways", description: "Global Airline - Premium", weeklyIncome: 300000, winBonus: 50000, duration: 1 },
+        { id: uuid(), name: "GulfStar Airlines", description: "Premium Airline", weeklyIncome: 250000, winBonus: 150000, duration: 1 },
+        { id: uuid(), name: "Beatify", description: "Music Streaming", weeklyIncome: 180000, winBonus: 350000, duration: 1 },
+        { id: uuid(), name: "CloudLink", description: "Tech Solutions", weeklyIncome: 100000, winBonus: 600000, duration: 1 },
+        { id: uuid(), name: "VoltEnergy", description: "Energy Drink", weeklyIncome: 30000, winBonus: 1000000, duration: 1 },
     ];
 };
 
@@ -639,6 +641,7 @@ export const generateWorld = (leagueId: string): GameState => {
             const team: Team = {
                 id: teamId, name: rt.name, city: rt.city, primaryColor: rt.primaryColor, secondaryColor: rt.secondaryColor,
                 reputation: rt.reputation, budget: rt.budget,
+                boardConfidence: 70, // NEW: Starts at 70%
                 leagueId: preset.id, // Assign correct league ID
                 facilities: { stadiumCapacity: baseStadiumCapacity, stadiumLevel: Math.floor(rt.reputation / 100), trainingLevel: Math.floor(rt.reputation / 150), academyLevel: Math.floor(rt.reputation / 150) },
                 staff: { headCoachLevel: baseStaffLevel, physioLevel: baseStaffLevel, scoutLevel: baseStaffLevel },
@@ -663,7 +666,7 @@ export const generateWorld = (leagueId: string): GameState => {
             const MIN_STADIUM = 5000;
             const MAX_STADIUM = 150000;
             const CAPACITY_PER_LEVEL = (MAX_STADIUM - MIN_STADIUM) / 24; // ~6,042
-            
+
             // Calculate starting stadium level based on real capacity
             const realCapacity = team.facilities.stadiumCapacity;
             const calculatedLevel = Math.round((realCapacity - MIN_STADIUM) / CAPACITY_PER_LEVEL) + 1;
@@ -710,10 +713,24 @@ export const generateWorld = (leagueId: string): GameState => {
     const userLeagueTeams = teams.filter(t => t.leagueId === leagueId);
     const userTeamId = userLeagueTeams.length > 0 ? userLeagueTeams[0].id : teams[0].id; // Fallback
 
+    // ========== MANAGER RATING SYSTEM ==========
+    // Initial rating based on chosen team's reputation
+    const userTeam = teams.find(t => t.id === userTeamId);
+    const teamRep = userTeam?.reputation || 5000;
+    let initialManagerRating: number;
+    if (teamRep >= 9000) initialManagerRating = 75; // Elite clubs (Real Madrid, Man City, Bayern)
+    else if (teamRep >= 8000) initialManagerRating = 65; // Top clubs (BJK, GS, Dortmund)
+    else if (teamRep >= 7000) initialManagerRating = 55; // Good clubs (Midtable EPL, top Turkish)
+    else if (teamRep >= 5500) initialManagerRating = 45; // Mid-tier clubs
+    else initialManagerRating = 35; // Small clubs - starting from bottom
+
     return {
         currentWeek: 1, currentSeason: 2024, userTeamId, leagueId, teams, players, matches: allMatches,
         isSimulating: false, messages: [{ id: uuid(), week: 1, type: MessageType.BOARD, subject: 'Welcome', body: 'The board expects strong results.', isRead: false, date: new Date().toISOString() }],
-        transferMarket: players.filter(p => p.teamId === 'FREE_AGENT'), history: [], pendingOffers: []
+        transferMarket: players.filter(p => p.teamId === 'FREE_AGENT'), history: [], pendingOffers: [],
+        managerRating: initialManagerRating,
+        managerCareerHistory: [],
+        jobOffers: []
     };
 };
 
@@ -757,6 +774,13 @@ export const syncEngineLineups = (homePlayers: Player[], awayPlayers: Player[]) 
 export const getLivePlayerStamina = (playerId: string): number | undefined => {
     if (activeEngine) return activeEngine.getPlayerStamina(playerId);
     return undefined;
+}
+
+// Returns the set of player IDs who have been substituted OUT during the current match
+// These players CANNOT return to the pitch (football rule!)
+export const getSubstitutedOutPlayerIds = (): Set<string> => {
+    if (activeEngine) return (activeEngine as any).substitutedOutPlayerIds || new Set();
+    return new Set();
 }
 
 export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[]): Match => {
@@ -879,13 +903,24 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
         const hDefenseStrength = homePower.defense * homeAdvantage;
         const aDefenseStrength = awayPower.defense;
 
-        // Goal probability - cubic scaling rewards dominant teams even more
+        // Goal probability - scales with power ratio
+        // AGGRESSIVE DOMINANCE: Much stronger teams should score more and weaker teams much less
+        // This reduces draws significantly
         const hRatio = hAttackStrength / Math.max(100, aDefenseStrength);
         const aRatio = aAttackStrength / Math.max(100, hDefenseStrength);
 
-        // Base probability ~12% per 10 mins at equal strength, scales with power^2.5
-        const hGoalProb = Math.min(0.35, Math.max(0.02, Math.pow(hRatio, 2.5) * 0.12));
-        const aGoalProb = Math.min(0.30, Math.max(0.02, Math.pow(aRatio, 2.5) * 0.10));
+        const powerDiff = Math.abs(homePower.overall - awayPower.overall);
+        // More aggressive: squared power difference for dominance
+        const homeDominance = homePower.overall > awayPower.overall
+            ? 1 + Math.pow(powerDiff / 50, 1.5)  // Much bigger boost for stronger team
+            : 1 / (1 + Math.pow(powerDiff / 50, 1.5)); // Much bigger penalty for weaker
+        const awayDominance = awayPower.overall > homePower.overall
+            ? 1 + Math.pow(powerDiff / 50, 1.5)
+            : 1 / (1 + Math.pow(powerDiff / 50, 1.5));
+
+        // Higher base chance but more variance - creates decisive results
+        const hGoalProb = Math.min(0.50, Math.max(0.02, Math.pow(hRatio, 2.0) * 0.18 * homeDominance));
+        const aGoalProb = Math.min(0.45, Math.max(0.01, Math.pow(aRatio, 2.0) * 0.15 * awayDominance));
 
         const rollHome = Math.random();
         const rollAway = Math.random();
@@ -919,6 +954,49 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             const homePlayers = gameState.players.filter(p => p.teamId === home.id);
             const awayPlayers = gameState.players.filter(p => p.teamId === away.id);
 
+            // ========== DYNAMIC AI TACTICS ==========
+            // AI analyzes opponent and adjusts tactics accordingly
+            const homeStrength = homePlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(1, homePlayers.length);
+            const awayStrength = awayPlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(1, awayPlayers.length);
+
+            // Adjust AI tactics based on opponent (skip if user team - they set their own)
+            if (home.id !== gameState.userTeamId) {
+                const strengthDiff = homeStrength - awayStrength;
+                const isOnGoodForm = home.recentForm.filter(r => r === 'W').length >= 3;
+
+                // HOME TEAM AI TACTIC LOGIC
+                if (strengthDiff > 5) {
+                    // Much stronger - attack aggressively
+                    home.tactic.mentality = 'ATTACKING';
+                    if (Math.random() < 0.3) home.tactic.formation = TacticType.T_433;
+                } else if (strengthDiff < -5) {
+                    // Much weaker - defend and counter
+                    home.tactic.mentality = 'DEFENSIVE';
+                    if (Math.random() < 0.3) home.tactic.formation = TacticType.T_541;
+                } else {
+                    // Evenly matched - home advantage, slight attack
+                    home.tactic.mentality = isOnGoodForm ? 'ATTACKING' : 'BALANCED';
+                }
+            }
+
+            if (away.id !== gameState.userTeamId) {
+                const strengthDiff = awayStrength - homeStrength;
+                const isOnGoodForm = away.recentForm.filter(r => r === 'W').length >= 3;
+
+                // AWAY TEAM AI TACTIC LOGIC (more cautious away from home)
+                if (strengthDiff > 8) {
+                    // Much stronger even away - controlled attack
+                    away.tactic.mentality = 'BALANCED';
+                } else if (strengthDiff < -3) {
+                    // Weaker away - park the bus
+                    away.tactic.mentality = 'DEFENSIVE';
+                    if (Math.random() < 0.4) away.tactic.formation = TacticType.T_532;
+                } else {
+                    // Evenly matched away - careful approach
+                    away.tactic.mentality = isOnGoodForm ? 'BALANCED' : 'DEFENSIVE';
+                }
+            }
+
             // AI teams auto-pick their best available lineup before each match
             autoPickLineup(homePlayers, home.tactic.formation);
             autoPickLineup(awayPlayers, away.tactic.formation);
@@ -937,13 +1015,53 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             away.stats.played++; away.stats.won += ptsAway === 3 ? 1 : 0; away.stats.drawn += ptsAway === 1 ? 1 : 0; away.stats.lost += ptsAway === 0 ? 1 : 0;
             away.stats.gf += aScore; away.stats.ga += hScore; away.stats.points += ptsAway; away.recentForm = [...away.recentForm, resultAway].slice(-5);
 
-            // Update Player Stats (Goals)
+            // SPONSOR WIN BONUS - Pay user team if they won
+            const isUserHome = home.id === gameState.userTeamId;
+            const isUserAway = away.id === gameState.userTeamId;
+            if (isUserHome && hScore > aScore && home.sponsor?.winBonus) {
+                home.budget += home.sponsor.winBonus;
+            } else if (isUserAway && aScore > hScore && away.sponsor?.winBonus) {
+                away.budget += away.sponsor.winBonus;
+            }
+
+            // Update Player Stats (Goals + ASSISTS)
             m.events.forEach(e => {
                 if (e.type === MatchEventType.GOAL && e.playerId) {
                     const scorer = gameState.players.find(p => p.id === e.playerId);
                     if (scorer) {
                         if (!scorer.stats) scorer.stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0, averageRating: 0 };
                         scorer.stats.goals++;
+
+                        // === ASSIST TRACKING ===
+                        // Pick a random teammate (starting or bench) who could have assisted
+                        const teammates = gameState.players.filter(p =>
+                            p.teamId === scorer.teamId &&
+                            p.id !== scorer.id &&
+                            (p.lineup === 'STARTING' || p.lineup === 'BENCH')
+                        );
+
+                        if (teammates.length > 0) {
+                            // Weight by position (midfielders and forwards more likely to assist)
+                            const weightedTeammates: Player[] = [];
+                            teammates.forEach(tm => {
+                                const pos = mapTurkishPosition(tm.position);
+                                let weight = 1;
+                                if (pos === Position.FWD) weight = 4;
+                                else if (pos === Position.MID) weight = 6;
+                                else if (pos === Position.DEF) weight = 2;
+                                // Passing bonus
+                                weight += Math.floor((tm.attributes.passing || 50) / 20);
+                                for (let i = 0; i < weight; i++) weightedTeammates.push(tm);
+                            });
+
+                            const assister = weightedTeammates[Math.floor(Math.random() * weightedTeammates.length)];
+                            if (assister) {
+                                if (!assister.stats) assister.stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0, averageRating: 0 };
+                                assister.stats.assists++;
+                                // Store assist info in the event for rating calculation
+                                (e as any).assisterId = assister.id;
+                            }
+                        }
                     }
                 }
             });
@@ -974,6 +1092,10 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     // Goals Bonus
                     const goals = m.events.filter(e => e.type === MatchEventType.GOAL && e.playerId === p.id).length;
                     rating += (goals * 1.0);
+
+                    // Assists Bonus
+                    const assists = m.events.filter(e => e.type === MatchEventType.GOAL && (e as any).assisterId === p.id).length;
+                    rating += (assists * 0.7);
 
                     // Cap
                     rating = Math.max(3.0, Math.min(10.0, rating));
@@ -1019,6 +1141,47 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
 
             updateReputation(home, away.reputation, hScore > aScore, hScore === aScore);
             updateReputation(away, home.reputation, aScore > hScore, hScore === aScore);
+
+            // === BOARD CONFIDENCE SYSTEM ===
+            // Only update for user team (AI teams don't need this)
+            const updateBoardConfidence = (team: Team, opponentRep: number, won: boolean, drew: boolean, goalsFor: number, goalsAgainst: number) => {
+                if (team.id !== gameState.userTeamId) return; // Only for user team
+
+                const repDiff = opponentRep - team.reputation;
+                let change = 0;
+
+                if (won) {
+                    // Win = Board is happy
+                    if (repDiff > 500) change = 6;        // Beat much stronger team = +6
+                    else if (repDiff > 0) change = 4;     // Beat stronger team = +4
+                    else change = 2;                       // Beat weaker/equal = +2
+
+                    // Dominant win bonus
+                    if (goalsFor - goalsAgainst >= 3) change += 2;
+                } else if (drew) {
+                    // Draw
+                    if (repDiff > 500) change = 1;        // Draw against much stronger = +1
+                    else if (repDiff < -500) change = -2; // Draw against much weaker = -2
+                    else change = -1;                      // Normal draw = -1
+                } else {
+                    // Loss = Board is unhappy
+                    if (repDiff < -500) change = -8;      // Lost to much weaker = -8 (DISASTER)
+                    else if (repDiff < 0) change = -5;    // Lost to weaker = -5
+                    else change = -3;                      // Lost to stronger/equal = -3
+
+                    // Heavy loss penalty
+                    if (goalsAgainst - goalsFor >= 3) change -= 2;
+                }
+
+                // Consecutive losses streak check
+                const recentLosses = (team.recentForm || []).slice(-3).filter(r => r === 'L').length;
+                if (recentLosses >= 3) change -= 3; // Extra -3 for 3+ consecutive losses
+
+                team.boardConfidence = Math.max(0, Math.min(100, (team.boardConfidence || 70) + change));
+            };
+
+            updateBoardConfidence(home, away.reputation, hScore > aScore, hScore === aScore, hScore, aScore);
+            updateBoardConfidence(away, home.reputation, aScore > hScore, hScore === aScore, aScore, hScore);
         }
     });
     return { ...gameState };
@@ -1045,10 +1208,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     const headCoachLevel = userTeam?.staff?.headCoachLevel || 1;
 
     // Enhanced physio effect on recovery
-    const physioBonus = physioLevel * 4; // Increased from 3 to 4 per level
-    let recoveryBase = 30 + physioBonus;
-    if (intensity === 'LIGHT') recoveryBase = 45 + physioBonus;
-    if (intensity === 'HEAVY') recoveryBase = 15 + physioBonus;
+    const physioBonus = physioLevel * 3; // Reduced from 4 to 3 per level
+    let recoveryBase = 25 + physioBonus; // NORMAL: 25 (was 30) - slower recovery
+    if (intensity === 'LIGHT') recoveryBase = 40 + physioBonus; // LIGHT: 40 (was 45)
+    if (intensity === 'HEAVY') recoveryBase = 5 + physioBonus;  // HEAVY: 5 (was 15) - BİG DISADVANTAGE!
 
     // Injury risk calculation based on intensity and physio
     const baseInjuryRisk = intensity === 'HEAVY' ? 0.08 : intensity === 'NORMAL' ? 0.02 : 0.005;
@@ -1107,8 +1270,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             if (p.lineup === 'STARTING') {
                 newMorale = Math.min(100, newMorale + 2);
             } else if (p.lineup === 'BENCH') {
-                newMorale = Math.max(0, newMorale - 1);
+                // Yedekler oyuna girecekleri için moral stabil - değişiklik yok
+                // newMorale = newMorale; // No change
             } else {
+                // RESERVE - Kadro dışı
                 if (p.overall > 75) {
                     newMorale = Math.max(0, newMorale - 3);
                     if (newMorale < 40 && Math.random() > 0.8) {
@@ -1122,7 +1287,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                             date: new Date().toISOString()
                         });
                     }
+                } else if (p.overall > 65) {
+                    // Orta seviye oyuncular hafif moral düşüşü
+                    newMorale = Math.max(0, newMorale - 1);
                 }
+                // 65 altı oyuncular stabil (genç/düşük seviye)
             }
         }
 
@@ -1229,12 +1398,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         ) * (0.8 + (leagueMult * 0.2));
 
         // Find current week's match to check if it's a derby
-        const currentMatch = gameState.matches.find(m => 
-            m.week === gameState.currentWeek && 
+        const currentMatch = gameState.matches.find(m =>
+            m.week === gameState.currentWeek &&
             (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id)
         );
         const isHomeWeek = currentMatch?.homeTeamId === userTeam.id;
-        
+
         // Check if this is a derby match (100% attendance!)
         let isDerby = false;
         if (currentMatch) {
@@ -1252,20 +1421,20 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
         // Get league-specific ticket price (Turkey €18, England €55, etc.)
         const leagueTicketPrice = LEAGUE_TICKET_PRICES[userTeam.leagueId] || LEAGUE_TICKET_PRICES['default'];
-        
+
         // Get league-specific attendance rates
         const attendanceRates = LEAGUE_ATTENDANCE_RATES[userTeam.leagueId] || LEAGUE_ATTENDANCE_RATES['default'];
-        
+
         // Calculate attendance based on reputation (higher rep = higher attendance within league limits)
         const repFactor = Math.min(1, (userTeam.reputation - 5000) / 5000); // 0-1 scale
         const baseAttendance = attendanceRates.min + (attendanceRates.max - attendanceRates.min) * repFactor;
         const randomVariance = (Math.random() * 0.10) - 0.05; // ±5% variance
-        
+
         // DERBY BONUS: 100% attendance for derbies!
-        const attendance = isDerby 
+        const attendance = isDerby
             ? 1.0 // Full house for derbies
             : Math.max(attendanceRates.min, Math.min(attendanceRates.max, baseAttendance + randomVariance));
-        
+
         // =====================================================
         // STADIUM CAPACITY FROM LEVEL - Same formula worldwide
         // Level 1 = 5,000 | Level 25 = 150,000
@@ -1274,15 +1443,16 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         const STADIUM_MIN = 5000;
         const STADIUM_CAPACITY_PER_LEVEL = 6000; // ~6,042 rounded
         const effectiveCapacity = STADIUM_MIN + (userTeam.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
-        
+
         // Ticket income: Only when home, with realistic prices and attendance
-        const ticketIncome = isHomeWeek 
-            ? Math.floor(effectiveCapacity * leagueTicketPrice * attendance)
+        // +30% INCOME BOOST
+        const ticketIncome = isHomeWeek
+            ? Math.floor(effectiveCapacity * leagueTicketPrice * attendance * 1.3)
             : 0;
 
-        // Merchandise: Scaled down significantly, based on reputation
+        // Merchandise: Scaled down significantly, based on reputation (+30% BOOST)
         const starPlayerBonus = teamPlayers.filter(p => p.overall > 85).length * 5000;
-        const merchandise = Math.floor(((userTeam.reputation * 2) + starPlayerBonus) * (0.7 + (leagueMult * 0.3)));
+        const merchandise = Math.floor(((userTeam.reputation * 2) + starPlayerBonus) * (0.7 + (leagueMult * 0.3)) * 1.3);
 
         // TV Rights - REALISTIC: Based on real data
         // Turkey: ~€200k/week for big clubs, England: ~€2M/week for big clubs
@@ -1290,7 +1460,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             .filter(t => t.leagueId === userTeam.leagueId)
             .sort((a, b) => b.stats.points - a.stats.points)
             .findIndex(t => t.id === userTeam.id) + 1;
-        
+
         // Base TV rights by league (weekly)
         const baseTvRights: Record<string, number> = {
             'tr': 180000,   // Turkey: €180k base (increased)
@@ -1302,14 +1472,16 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             'default': 200000
         };
         const tvBase = baseTvRights[userTeam.leagueId] || baseTvRights['default'];
-        
-        // Position bonus: Top teams get more TV money (merit-based distribution)
+
+        // Position bonus: Top teams get more TV money (merit-based distribution) (+30% BOOST)
         const positionMultiplier = Math.max(0.5, 1.5 - ((leaguePosition - 1) * 0.05)); // 1.5x for 1st, down to 0.5x for last
         const repMultiplier = 0.8 + ((userTeam.reputation - 5000) / 10000) * 0.4; // 0.8x to 1.2x based on rep
-        const tvRights = Math.floor(tvBase * positionMultiplier * repMultiplier);
+        const tvRights = Math.floor(tvBase * positionMultiplier * repMultiplier * 1.3);
 
-        // Sponsor income (or default smaller amount if no sponsor)
-        const sponsorIncome = userTeam.sponsor ? userTeam.sponsor.weeklyIncome : Math.floor(50000 * Math.sqrt(leagueMult));
+        // Sponsor income (or default smaller amount if no sponsor) (+30% BOOST)
+        const sponsorIncome = userTeam.sponsor
+            ? Math.floor(userTeam.sponsor.weeklyIncome * 1.3)
+            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3);
 
         const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
         const weeklyExpenses = weeklyWages + maintenance + staffCosts;
@@ -1317,7 +1489,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         userTeam.budget += (weeklyIncome - weeklyExpenses);
 
         userTeam.financials = {
-            lastWeekIncome: { tickets: ticketIncome, sponsor: sponsorIncome, merchandise, tvRights, transfers: 0 },
+            lastWeekIncome: { tickets: ticketIncome, sponsor: sponsorIncome, merchandise, tvRights, transfers: 0, winBonus: 0 },
             lastWeekExpenses: { wages: weeklyWages, maintenance, academy: academyMaint, transfers: 0 }
         };
 
@@ -1375,30 +1547,64 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     updatedTeams = updatedTeams.map(team => {
         if (team.id === gameState.userTeamId) return team; // Skip user team
 
-        // AI Facility Upgrades (small chance each week based on budget and reputation)
-        const upgradeChance = 0.02 + (team.reputation / 10000); // 2% base + reputation bonus
+        // AI Facility Upgrades (SMART: checks ongoing maintenance costs before upgrading)
+        const upgradeChance = 0.015 + (team.reputation / 15000); // Reduced: 1.5% base + smaller reputation bonus
 
-        if (Math.random() < upgradeChance && team.budget > 5000000) {
+        // Calculate current maintenance costs
+        const leagueMult = getLeagueMultiplier(team.leagueId || 'tr');
+        const currentMaint = (
+            Math.pow(team.facilities.stadiumLevel, 1.8) * 4000 +
+            Math.pow(team.facilities.trainingLevel, 1.8) * 3500 +
+            Math.pow(team.facilities.academyLevel, 1.8) * 3000
+        ) * (0.8 + (leagueMult * 0.2));
+
+        // Estimate weekly income for AI
+        const tvBase: Record<string, number> = { 'tr': 180000, 'en': 1500000, 'es': 800000, 'it': 600000, 'de': 700000, 'fr': 500000 };
+        const aiTvRights = (tvBase[team.leagueId] || 200000) * (0.8 + ((team.reputation - 5000) / 10000) * 0.4);
+        const aiMerchandise = team.reputation * 2 * (0.7 + leagueMult * 0.3);
+        const aiSponsor = 50000 * Math.sqrt(leagueMult);
+        const estimatedWeeklyIncome = aiTvRights + aiMerchandise + aiSponsor;
+
+        // Calculate weekly wages
+        const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
+        const weeklyWages = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0) / 52;
+
+        // SMART CHECK: Only upgrade if budget positive AND weekly income > expenses with 30% buffer
+        const canAffordMaintenance = estimatedWeeklyIncome > (weeklyWages + currentMaint * 1.3);
+        const hasEnoughBudget = team.budget > 8000000; // Increased threshold from 5M to 8M
+
+        if (Math.random() < upgradeChance && hasEnoughBudget && canAffordMaintenance && team.budget > 0) {
             const facilityTypes = ['stadium', 'training', 'academy'];
             const targetFacility = facilityTypes[Math.floor(Math.random() * facilityTypes.length)];
 
             let cost = 0;
             const newFacilities = { ...team.facilities };
 
-            if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 25) {
+            // Also check if upgrading this facility would still be affordable
+            const projectedMaint = (facility: string) => {
+                const stadLvl = facility === 'stadium' ? team.facilities.stadiumLevel + 1 : team.facilities.stadiumLevel;
+                const trainLvl = facility === 'training' ? team.facilities.trainingLevel + 1 : team.facilities.trainingLevel;
+                const acadLvl = facility === 'academy' ? team.facilities.academyLevel + 1 : team.facilities.academyLevel;
+                return (Math.pow(stadLvl, 1.8) * 4000 + Math.pow(trainLvl, 1.8) * 3500 + Math.pow(acadLvl, 1.8) * 3000) * (0.8 + (leagueMult * 0.2));
+            };
+
+            if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 20) { // Max 20 for AI (was 25)
                 cost = 3000000;
-                if (team.budget > cost) {
+                const futureMaint = projectedMaint('stadium');
+                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.stadiumLevel += 1;
                     newFacilities.stadiumCapacity += 2000;
                 }
-            } else if (targetFacility === 'training' && newFacilities.trainingLevel < 25) {
+            } else if (targetFacility === 'training' && newFacilities.trainingLevel < 18) { // Max 18 for AI
                 cost = 2000000;
-                if (team.budget > cost) {
+                const futureMaint = projectedMaint('training');
+                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.trainingLevel += 1;
                 }
-            } else if (targetFacility === 'academy' && newFacilities.academyLevel < 25) {
+            } else if (targetFacility === 'academy' && newFacilities.academyLevel < 15) { // Max 15 for AI
                 cost = 1500000;
-                if (team.budget > cost) {
+                const futureMaint = projectedMaint('academy');
+                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.academyLevel += 1;
                 }
             }
@@ -1407,7 +1613,6 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 return { ...team, facilities: newFacilities, budget: team.budget - cost };
             }
         }
-
 
         return team;
     });
@@ -1440,12 +1645,51 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             }
         }
 
-        // Deduct wages for AI Teams too (simplified economy)
+        // ========== AI TEAMS FULL ECONOMY (Income & Expenses) ==========
         if (team.id !== gameState.userTeamId) {
             const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
             const weeklyWages = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0) / 52;
             team.wages = Math.round(weeklyWages);
-            team.budget -= weeklyWages;
+
+            // Calculate AI income (simplified but realistic)
+            const leagueMult = getLeagueMultiplier(team.leagueId || 'tr');
+            const tvBase: Record<string, number> = { 'tr': 180000, 'en': 1500000, 'es': 800000, 'it': 600000, 'de': 700000, 'fr': 500000 };
+            const repMultiplier = 0.8 + ((team.reputation - 5000) / 10000) * 0.4;
+            const aiTvRights = Math.floor((tvBase[team.leagueId] || 200000) * repMultiplier);
+            const aiMerchandise = Math.floor(team.reputation * 2 * (0.7 + leagueMult * 0.3));
+            const aiSponsor = Math.floor(50000 * Math.sqrt(leagueMult));
+
+            // Calculate maintenance costs (same formula as user)
+            const stadiumMaint = Math.pow(team.facilities.stadiumLevel, 1.8) * 4000;
+            const trainingMaint = Math.pow(team.facilities.trainingLevel, 1.8) * 3500;
+            const academyMaint = Math.pow(team.facilities.academyLevel, 1.8) * 3000;
+            const maintenance = (stadiumMaint + trainingMaint + academyMaint) * (0.8 + (leagueMult * 0.2));
+
+            const weeklyIncome = aiTvRights + aiMerchandise + aiSponsor;
+            const weeklyExpenses = weeklyWages + maintenance;
+
+            team.budget += (weeklyIncome - weeklyExpenses);
+
+            // ========== BANKRUPTCY PROTECTION ==========
+            if (team.budget < -5000000) { // -5M limit
+                // Force sell lowest rated non-starting player
+                const aiPlayersToSell = updatedPlayers
+                    .filter(p => p.teamId === team.id && p.lineup !== 'STARTING')
+                    .sort((a, b) => a.overall - b.overall);
+
+                // Only sell if team has more than 15 players
+                if (aiPlayersToSell.length > 5 && teamPlayers.length > 15) {
+                    const playerToSell = aiPlayersToSell[0];
+                    playerToSell.teamId = 'FREE_AGENT';
+                    playerToSell.lineup = 'RESERVE';
+                    team.budget += playerToSell.value * 0.5; // Emergency sale at 50% value
+                }
+
+                // Emergency funds injection if still deeply negative
+                if (team.budget < -3000000) {
+                    team.budget = Math.min(team.budget + 2000000, 0); // Inject €2M emergency funds (owner bail-out)
+                }
+            }
         }
 
         return team;
@@ -1512,53 +1756,197 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         }
     });
 
-    // AI-to-AI Transfers (Background)
-    // Small chance each week for AI teams to trade
-    if (Math.random() < 0.15) { // 15% chance per week
-        const aiTeams = gameState.teams.filter(t => t.id !== gameState.userTeamId);
-        const sellingTeam = aiTeams[Math.floor(Math.random() * aiTeams.length)];
-        const sellingPlayers = updatedPlayers.filter(p =>
-            p.teamId === sellingTeam.id &&
-            p.overall < 75 && // Only sell lower-rated players
-            Math.random() < 0.3
-        );
+    // ========== SMART AI TRANSFER SYSTEM ==========
+    // AI teams now: 1) Identify squad weaknesses, 2) Scout appropriate players, 3) Make intelligent offers
 
-        if (sellingPlayers.length > 0) {
-            const playerToSell = sellingPlayers[Math.floor(Math.random() * sellingPlayers.length)];
-            const potentialBuyers = aiTeams.filter(t =>
-                t.id !== sellingTeam.id &&
-                t.budget > playerToSell.value * 0.8
+    const aiTeams = gameState.teams.filter(t => t.id !== gameState.userTeamId);
+
+    aiTeams.forEach(aiTeam => {
+        // Skip if budget too low for transfers
+        if (aiTeam.budget < 2000000) return;
+
+        const teamPlayers = updatedPlayers.filter(p => p.teamId === aiTeam.id);
+
+        // ========== 1. SMART POSITION ANALYSIS ==========
+        // Count players by position and identify weaknesses
+        const positionCounts = {
+            [Position.GK]: teamPlayers.filter(p => p.position === Position.GK).length,
+            [Position.DEF]: teamPlayers.filter(p => p.position === Position.DEF).length,
+            [Position.MID]: teamPlayers.filter(p => p.position === Position.MID).length,
+            [Position.FWD]: teamPlayers.filter(p => p.position === Position.FWD).length
+        };
+
+        // Ideal squad composition
+        const idealCounts = { [Position.GK]: 2, [Position.DEF]: 5, [Position.MID]: 5, [Position.FWD]: 4 };
+
+        // Find positions that need reinforcement
+        const neededPositions: Position[] = [];
+        if (positionCounts[Position.GK] < idealCounts[Position.GK]) neededPositions.push(Position.GK);
+        if (positionCounts[Position.DEF] < idealCounts[Position.DEF]) neededPositions.push(Position.DEF);
+        if (positionCounts[Position.MID] < idealCounts[Position.MID]) neededPositions.push(Position.MID);
+        if (positionCounts[Position.FWD] < idealCounts[Position.FWD]) neededPositions.push(Position.FWD);
+
+        // Calculate average squad quality
+        const avgOverall = teamPlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(1, teamPlayers.length);
+
+        // ========== 2. SMART AI BUYING (Position-Based) ==========
+        if (neededPositions.length > 0 && Math.random() < 0.25 && aiTeam.budget > 5000000) {
+            const targetPosition = neededPositions[Math.floor(Math.random() * neededPositions.length)];
+
+            // Find suitable players from other AI teams OR the transfer market
+            const availablePlayers = updatedPlayers.filter(p =>
+                p.position === targetPosition &&
+                p.teamId !== aiTeam.id &&
+                p.teamId !== gameState.userTeamId && // Don't poach from user automatically
+                p.overall >= avgOverall - 5 && // At least close to team quality
+                p.overall <= avgOverall + 10 && // Not unrealistically good
+                p.value < aiTeam.budget * 0.6 // Can afford within budget
             );
 
-            if (potentialBuyers.length > 0) {
-                const buyingTeam = potentialBuyers[Math.floor(Math.random() * potentialBuyers.length)];
-                const transferFee = Math.floor(playerToSell.value * (0.8 + Math.random() * 0.3));
+            if (availablePlayers.length > 0) {
+                // Sort by value for money (overall / value ratio)
+                const sortedTargets = availablePlayers.sort((a, b) =>
+                    (b.overall / b.value) - (a.overall / a.value)
+                );
+                const targetPlayer = sortedTargets[0];
+                const sellingTeam = gameState.teams.find(t => t.id === targetPlayer.teamId);
 
-                // Execute transfer
-                playerToSell.teamId = buyingTeam.id;
-                playerToSell.lineup = 'RESERVE';
-                playerToSell.lineupIndex = 99;
+                if (sellingTeam && targetPlayer.value < aiTeam.budget) {
+                    const offerMultiplier = 0.9 + Math.random() * 0.3; // 90-120% of value
+                    const transferFee = Math.floor(targetPlayer.value * offerMultiplier);
 
-                // Update team budgets
-                updatedTeams = updatedTeams.map(t => {
-                    if (t.id === sellingTeam.id) return { ...t, budget: t.budget + transferFee };
-                    if (t.id === buyingTeam.id) return { ...t, budget: t.budget - transferFee };
-                    return t;
-                });
+                    // Execute transfer
+                    targetPlayer.teamId = aiTeam.id;
+                    targetPlayer.lineup = 'RESERVE';
+                    targetPlayer.lineupIndex = 99;
 
-                // News about AI transfer
+                    // Update budgets
+                    updatedTeams = updatedTeams.map(t => {
+                        if (t.id === sellingTeam.id) return { ...t, budget: t.budget + transferFee };
+                        if (t.id === aiTeam.id) return { ...t, budget: t.budget - transferFee };
+                        return t;
+                    });
+
+                    newMessages.push({
+                        id: uuid(),
+                        week: gameState.currentWeek,
+                        type: MessageType.INFO,
+                        subject: '📰 Transfer News',
+                        body: `${aiTeam.name} has signed ${targetPlayer.position} ${targetPlayer.firstName} ${targetPlayer.lastName} from ${sellingTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    });
+                }
+            }
+        }
+
+        // ========== 3. AI REQUESTING PLAYERS FROM USER ==========
+        // Top AI teams can make offers for user's non-listed players
+        if (aiTeam.reputation > 7500 && aiTeam.budget > 15000000 && Math.random() < 0.08) {
+            const userPlayers = updatedPlayers.filter(p =>
+                p.teamId === gameState.userTeamId &&
+                !p.isTransferListed &&
+                p.overall >= 75 && // Target good players
+                p.overall <= avgOverall + 8 && // But realistic for their level
+                p.value < aiTeam.budget * 0.7
+            );
+
+            if (userPlayers.length > 0) {
+                const targetPlayer = userPlayers[Math.floor(Math.random() * userPlayers.length)];
+                const offerMultiplier = 1.1 + Math.random() * 0.4; // 110-150% of value (premium offer)
+                const offerAmount = Math.floor(targetPlayer.value * offerMultiplier);
+
+                // Create a proper offer that user can accept/reject
+                const offer = {
+                    id: uuid(),
+                    playerId: targetPlayer.id,
+                    playerName: `${targetPlayer.firstName} ${targetPlayer.lastName}`,
+                    fromTeamId: gameState.userTeamId,
+                    fromTeamName: gameState.teams.find(t => t.id === gameState.userTeamId)?.name || 'Your Team',
+                    toTeamId: aiTeam.id,
+                    offerAmount,
+                    status: 'PENDING' as const,
+                    weekCreated: gameState.currentWeek
+                };
+
+                newOffers.push(offer);
+
                 newMessages.push({
                     id: uuid(),
                     week: gameState.currentWeek,
-                    type: MessageType.INFO,
-                    subject: '📰 Transfer News',
-                    body: `${buyingTeam.name} has signed ${playerToSell.firstName} ${playerToSell.lastName} from ${sellingTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                    type: MessageType.TRANSFER_OFFER,
+                    subject: `💰 ${aiTeam.name} wants ${targetPlayer.lastName}!`,
+                    body: `${aiTeam.name} has made an unsolicited offer of €${(offerAmount / 1000000).toFixed(1)}M for ${targetPlayer.firstName} ${targetPlayer.lastName}. They really want this player!`,
                     isRead: false,
-                    date: new Date().toISOString()
+                    date: new Date().toISOString(),
+                    data: { offerId: offer.id }
                 });
             }
         }
-    }
+
+        // ========== 4. SMART SELLING - Performance-based ==========
+        // Sell underperforming players or those with low value relative to wages
+        if (teamPlayers.length > 18 && Math.random() < 0.1) {
+            const sellCandidates = teamPlayers.filter(p =>
+                p.lineup !== 'STARTING' &&
+                (p.overall < avgOverall - 8 || // Below team average
+                    (p.age > 30 && p.overall < 72) || // Aging and declining
+                    p.morale < 40) // Unhappy players
+            ).sort((a, b) => a.overall - b.overall);
+
+            if (sellCandidates.length > 0) {
+                const playerToSell = sellCandidates[0];
+
+                // Find interested buyers
+                const interestedBuyers = aiTeams.filter(t =>
+                    t.id !== aiTeam.id &&
+                    t.budget > playerToSell.value * 0.7 &&
+                    t.reputation < aiTeam.reputation // Usually sell to smaller clubs
+                );
+
+                if (interestedBuyers.length > 0) {
+                    const buyer = interestedBuyers[Math.floor(Math.random() * interestedBuyers.length)];
+                    const transferFee = Math.floor(playerToSell.value * (0.7 + Math.random() * 0.2));
+
+                    playerToSell.teamId = buyer.id;
+                    playerToSell.lineup = 'RESERVE';
+                    playerToSell.lineupIndex = 99;
+
+                    updatedTeams = updatedTeams.map(t => {
+                        if (t.id === aiTeam.id) return { ...t, budget: t.budget + transferFee };
+                        if (t.id === buyer.id) return { ...t, budget: t.budget - transferFee };
+                        return t;
+                    });
+
+                    newMessages.push({
+                        id: uuid(),
+                        week: gameState.currentWeek,
+                        type: MessageType.INFO,
+                        subject: '📰 Transfer News',
+                        body: `${buyer.name} has signed ${playerToSell.firstName} ${playerToSell.lastName} from ${aiTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    });
+                }
+            }
+        }
+
+        // ========== 5. SMART CONTRACT RENEWAL ==========
+        // AI teams renew contracts of important players before they expire
+        teamPlayers.forEach(player => {
+            if (player.contractYears <= 1 && player.overall >= avgOverall) {
+                // Important player with expiring contract - renew!
+                const renewalCost = Math.floor(player.value * 0.05); // 5% of value as bonus
+                if (aiTeam.budget > renewalCost * 3) { // Only if can comfortably afford
+                    player.contractYears += 2 + Math.floor(Math.random() * 2); // 2-3 year extension
+                    // Deduct small signing bonus
+                    updatedTeams = updatedTeams.map(t =>
+                        t.id === aiTeam.id ? { ...t, budget: t.budget - renewalCost } : t
+                    );
+                }
+            }
+        });
+    });
 
     return {
         updatedTeams,
@@ -1578,27 +1966,75 @@ export const processSeasonEnd = (gameState: GameState) => {
         return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
     });
 
-    const winner = sensitiveSortedTeams[0];
-    const runnerUp = sensitiveSortedTeams[1];
-
-    // Find Top Scorer & Assister
-    let topScorer = { name: 'N/A', count: 0 };
-    let topAssister = { name: 'N/A', count: 0 };
-
-    gameState.players.forEach(p => {
-        if (p.stats && p.stats.goals > topScorer.count) topScorer = { name: `${p.firstName} ${p.lastName}`, count: p.stats.goals };
-        if (p.stats && p.stats.assists > topAssister.count) topAssister = { name: `${p.firstName} ${p.lastName}`, count: p.stats.assists };
-    });
-
-    const historyEntry: LeagueHistoryEntry = {
-        season: gameState.currentSeason,
-        championId: winner.id,
-        championName: winner.name,
-        championColor: winner.primaryColor,
-        runnerUpName: runnerUp ? runnerUp.name : 'N/A',
-        topScorer: `${topScorer.name} (${topScorer.count})`,
-        topAssister: `${topAssister.name} (${topAssister.count})`
+    // Get unique league IDs
+    const leagueIds = [...new Set(gameState.teams.map(t => t.leagueId))];
+    const leagueNames: Record<string, string> = {
+        'tr': '🇹🇷 Süper Lig',
+        'en': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League',
+        'es': '🇪🇸 La Liga',
+        'it': '🇮🇹 Serie A',
+        'de': '🇩🇪 Bundesliga',
+        'fr': '🇫🇷 Ligue 1'
     };
+
+    // Create history entry for EACH league
+    const historyEntries: LeagueHistoryEntry[] = leagueIds.map(leagueId => {
+        const leagueTeams = gameState.teams.filter(t => t.leagueId === leagueId);
+        const sortedLeague = [...leagueTeams].sort((a, b) => {
+            if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
+            return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
+        });
+
+        const winner = sortedLeague[0];
+        const runnerUp = sortedLeague[1];
+
+        // Find Top Scorer & Assister for this league only
+        const leaguePlayerIds = new Set(leagueTeams.map(t => t.id));
+        const leaguePlayers = gameState.players.filter(p => leaguePlayerIds.has(p.teamId));
+
+        let topScorer = { name: 'N/A', count: 0 };
+        let topAssister = { name: 'N/A', count: 0 };
+        let bestRated = { name: 'N/A', rating: 0 };
+
+        leaguePlayers.forEach(p => {
+            if (p.stats && p.stats.goals > topScorer.count) {
+                topScorer = { name: `${p.firstName} ${p.lastName}`, count: p.stats.goals };
+            }
+            if (p.stats && p.stats.assists > topAssister.count) {
+                topAssister = { name: `${p.firstName} ${p.lastName}`, count: p.stats.assists };
+            }
+            if (p.stats && (p.stats.averageRating || 0) > bestRated.rating && (p.stats.appearances || 0) >= 5) {
+                bestRated = { name: `${p.firstName} ${p.lastName}`, rating: p.stats.averageRating || 0 };
+            }
+        });
+
+        const entry: LeagueHistoryEntry = {
+            season: gameState.currentSeason,
+            leagueId: leagueId,
+            leagueName: leagueNames[leagueId] || leagueId.toUpperCase(),
+            championId: winner?.id || '',
+            championName: winner?.name || 'N/A',
+            championColor: winner?.primaryColor || '#888',
+            runnerUpName: runnerUp?.name || 'N/A',
+            topScorer: `${topScorer.name} (${topScorer.count})`,
+            topAssister: `${topAssister.name} (${topAssister.count})`,
+            bestRatedPlayer: bestRated.rating > 0 ? `${bestRated.name} (${bestRated.rating.toFixed(2)})` : undefined
+        };
+
+        // Add cup winners only to user's league entry
+        if (leagueId === gameState.leagueId) {
+            if (gameState.europeanCup?.winnerId) {
+                const clWinner = gameState.teams.find(t => t.id === gameState.europeanCup?.winnerId);
+                entry.championsLeagueWinner = clWinner?.name || 'Unknown';
+            }
+            if (gameState.europaLeague?.winnerId) {
+                const elWinner = gameState.teams.find(t => t.id === gameState.europaLeague?.winnerId);
+                entry.europaLeagueWinner = elWinner?.name || 'Unknown';
+            }
+        }
+
+        return entry;
+    });
 
     // 2. Economy: Prize Money Distribution (BALANCED - reduced from previous)
     // League prize money scales with league economy multiplier
@@ -1614,11 +2050,24 @@ export const processSeasonEnd = (gameState: GameState) => {
         if (index < 4) prize = prizeDistribution[index];
         else if (index < 6) prize = Math.floor(2000000 * leagueMult); // Europa League spots
 
+        // SPONSOR CHAMPIONSHIP BONUSES - Only for user team with sponsor
+        let sponsorBonus = 0;
+        if (t.id === gameState.userTeamId && t.sponsor) {
+            if (index === 0 && t.sponsor.bonus1st) {
+                sponsorBonus = t.sponsor.bonus1st; // 1st place bonus
+            } else if (index === 1 && t.sponsor.bonus2nd) {
+                sponsorBonus = t.sponsor.bonus2nd; // 2nd place bonus
+            } else if (index === 2 && t.sponsor.bonus3rd) {
+                sponsorBonus = t.sponsor.bonus3rd; // 3rd place bonus
+            }
+        }
+
         return {
             ...t,
-            budget: t.budget + prize,
+            budget: t.budget + prize + sponsorBonus,
             stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }, // Reset Stats
-            recentForm: []
+            recentForm: [],
+            sponsor: undefined // Reset sponsor for new season
         };
     });
 
@@ -1720,23 +2169,134 @@ export const processSeasonEnd = (gameState: GameState) => {
         }
     });
 
-    // 4. Update Game State
+    // 4. FIX: Generate fixtures PER LEAGUE, not all teams mixed!
+    const fixtureLeagueIds = [...new Set(updatedTeams.map(t => t.leagueId))];
+    const allNewMatches: Match[] = [];
+    fixtureLeagueIds.forEach(leagueId => {
+        const leagueTeams = updatedTeams.filter(t => t.leagueId === leagueId);
+        const leagueMatches = generateSeasonSchedule(leagueTeams);
+        allNewMatches.push(...leagueMatches);
+    });
+
+    // ========== MANAGER RATING SYSTEM ==========
+    // Calculate user's position in their league
+    const userLeagueTeams = sensitiveSortedTeams.filter(t => t.leagueId === gameState.leagueId);
+    const userPosition = userLeagueTeams.findIndex(t => t.id === gameState.userTeamId) + 1;
+    const totalTeams = userLeagueTeams.length;
+
+    let managerRating = gameState.managerRating || 50;
+    let ratingChange = 0;
+    let ratingChangeMessage = '';
+
+    // Championship bonus
+    if (userPosition === 1) {
+        ratingChange += 12;
+        ratingChangeMessage = '🏆 Şampiyonluk! (+12 rating)';
+    } else if (userPosition === 2) {
+        ratingChange += 7;
+        ratingChangeMessage = '🥈 İkinci oldu (+7 rating)';
+    } else if (userPosition === 3) {
+        ratingChange += 4;
+        ratingChangeMessage = '🥉 Üçüncü oldu (+4 rating)';
+    } else if (userPosition <= 6) {
+        ratingChange += 2;
+        ratingChangeMessage = '⬆️ Avrupa ligi (+2 rating)';
+    } else if (userPosition > totalTeams - 3) {
+        // Relegation zone
+        ratingChange -= 15;
+        ratingChangeMessage = '⬇️ Küme düşme tehlikesi! (-15 rating)';
+    } else if (userPosition > totalTeams / 2) {
+        // Below average
+        ratingChange -= 5;
+        ratingChangeMessage = '📉 Beklentilerin altında (-5 rating)';
+    }
+
+    // European cup bonuses
+    if (gameState.europeanCup?.winnerId === gameState.userTeamId) {
+        ratingChange += 20;
+        ratingChangeMessage += '\n🏆 Şampiyonlar Ligi şampiyonu! (+20 rating)';
+    } else if (gameState.europaLeague?.winnerId === gameState.userTeamId) {
+        ratingChange += 12;
+        ratingChangeMessage += '\n🏆 UEFA Europa League şampiyonu! (+12 rating)';
+    }
+
+    managerRating = Math.max(10, Math.min(100, managerRating + ratingChange));
+
+    // Update career history
+    const careerHistoryEntry = {
+        season: gameState.currentSeason,
+        teamName: userTeam?.name || 'Unknown',
+        position: userPosition,
+        rating: managerRating
+    };
+    const updatedCareerHistory = [...(gameState.managerCareerHistory || []), careerHistoryEntry];
+
+    // ========== JOB OFFERS GENERATION ==========
+    // Generate job offers based on manager rating and available positions
+    const leagueNamesForOffers: Record<string, string> = {
+        'tr': 'Süper Lig', 'en': 'Premier League', 'es': 'La Liga',
+        'it': 'Serie A', 'de': 'Bundesliga', 'fr': 'Ligue 1'
+    };
+
+    const newJobOffers: JobOffer[] = [];
+
+    // Generate offers from teams that might want you
+    const allLeagueTeams = updatedTeams.filter(t => t.id !== gameState.userTeamId);
+
+    allLeagueTeams.forEach(team => {
+        // Calculate team's "required manager rating" based on reputation
+        let requiredRating: number;
+        if (team.reputation >= 9500) requiredRating = 85; // Elite (Real Madrid, Bayern, Man City)
+        else if (team.reputation >= 9000) requiredRating = 80; // Top clubs
+        else if (team.reputation >= 8500) requiredRating = 70; // Strong clubs
+        else if (team.reputation >= 8000) requiredRating = 60; // Good clubs (BJK, GS)
+        else if (team.reputation >= 7000) requiredRating = 50; // Mid-tier
+        else if (team.reputation >= 5500) requiredRating = 40; // Lower-mid
+        else requiredRating = 25; // Small clubs
+
+        // Only make offer if manager meets requirement AND some randomness
+        if (managerRating >= requiredRating && Math.random() < 0.15) {
+            const weeklySalary = Math.floor(team.reputation * 1.5 + managerRating * 500);
+
+            newJobOffers.push({
+                id: uuid(),
+                teamId: team.id,
+                teamName: team.name,
+                leagueId: team.leagueId,
+                leagueName: leagueNamesForOffers[team.leagueId] || team.leagueId.toUpperCase(),
+                reputation: team.reputation,
+                salary: weeklySalary,
+                requiredRating,
+                expiresWeek: 4 // Expires after 4 weeks into new season
+            });
+        }
+    });
+
+    // Sort by reputation (best offers first)
+    newJobOffers.sort((a, b) => b.reputation - a.reputation);
+
+    // Limit to top 5 offers
+    const limitedOffers = newJobOffers.slice(0, 5);
+
+    // 5. Update Game State
     const newState = {
         ...gameState,
         currentSeason: gameState.currentSeason + 1,
         currentWeek: 1,
-        history: [...gameState.history, historyEntry],
+        history: [...gameState.history, ...historyEntries],
         teams: updatedTeams,
         players: finalPlayers,
-        matches: generateSeasonSchedule(updatedTeams),
+        matches: allNewMatches,
         europeanCup: undefined, // Reset cups
-        // Reset messages? Maybe keep them but clean up old ones? Let's keep for history.
+        managerRating,
+        managerCareerHistory: updatedCareerHistory,
+        jobOffers: limitedOffers,
         messages: [{
             id: uuid(),
             week: 1,
             type: MessageType.BOARD,
             subject: `Season ${gameState.currentSeason + 1} Begins!`,
-            body: `Welcome to the new season. The board expects another strong performance. Prize money of €${(historyEntry.championId === gameState.userTeamId ? 50 : 1).toFixed(0)}M has been added to the budget.`,
+            body: `Yeni sezon başladı. ${ratingChangeMessage}\nMenajer Rating: ${managerRating}/100\n${limitedOffers.length > 0 ? `📩 ${limitedOffers.length} yeni iş teklifi geldi!` : ''}`,
             isRead: false,
             date: new Date().toISOString()
         }, ...gameState.messages]
