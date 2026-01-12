@@ -1383,11 +1383,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         // League Multiplier (includes European success bonus!)
         const leagueMult = getLeagueMultiplier(userTeam.leagueId || 'tr');
 
-        // BALANCED: Facility costs scale with level exponentially (higher levels = more expensive)
-        // Using 1.8 exponent instead of 1.5 for more meaningful end-game costs
-        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.8) * 4000;
-        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.8) * 3500;
-        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.8) * 3000;
+        // BALANCED: Facility costs scale with level exponentially
+        // Using 1.6 exponent (reduced from 1.8) for more sustainable progression
+        const maintenanceDiscount = ['tr', 'fr'].includes(userTeam.leagueId) ? 0.8 : 1.0; // 20% discount for smaller leagues
+        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.6) * 4000 * maintenanceDiscount;
+        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.6) * 3500 * maintenanceDiscount;
+        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.6) * 3000 * maintenanceDiscount;
         const maintenance = (stadiumMaint + trainingMaint + academyMaint) * (0.8 + (leagueMult * 0.2));
 
         // Staff costs also scale with level
@@ -1461,14 +1462,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             .sort((a, b) => b.stats.points - a.stats.points)
             .findIndex(t => t.id === userTeam.id) + 1;
 
-        // Base TV rights by league (weekly)
+        // Base TV rights by league (weekly) - REBALANCED for better progression
         const baseTvRights: Record<string, number> = {
-            'tr': 180000,   // Turkey: €180k base (increased)
-            'en': 1500000,  // England: €1.5M base
-            'es': 800000,   // Spain: €800k base
-            'it': 600000,   // Italy: €600k base
-            'de': 700000,   // Germany: €700k base
-            'fr': 500000,   // France: €500k base
+            'tr': 280000,   // Turkey: €280k (increased from 180k)
+            'en': 1200000,  // England: €1.2M (reduced from 1.5M)
+            'es': 700000,   // Spain: €700k (reduced from 800k)
+            'it': 550000,   // Italy: €550k (reduced from 600k)
+            'de': 600000,   // Germany: €600k (reduced from 700k)
+            'fr': 450000,   // France: €450k (reduced from 500k)
             'default': 200000
         };
         const tvBase = baseTvRights[userTeam.leagueId] || baseTvRights['default'];

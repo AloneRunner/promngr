@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Message, MessageType, Translation, TransferOffer } from '../types';
-import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle } from 'lucide-react';
+import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye } from 'lucide-react';
 
 interface NewsCenterProps {
    messages: Message[];
@@ -12,10 +12,11 @@ interface NewsCenterProps {
    onDeleteAll?: () => void;
    onAcceptOffer?: (offerId: string) => void;
    onRejectOffer?: (offerId: string) => void;
+   onViewPlayer?: (playerId: string) => void;
    t: Translation;
 }
 
-export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, t }) => {
+export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onViewPlayer, t }) => {
    const sortedMessages = [...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
    // Count critical unread messages
@@ -128,7 +129,15 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
 
                            {/* Transfer Offer Actions */}
                            {pendingOffer && (
-                              <div className="mt-3 flex gap-2">
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                 {onViewPlayer && (
+                                    <button
+                                       onClick={(e) => { e.stopPropagation(); onViewPlayer(pendingOffer.playerId); }}
+                                       className="flex items-center gap-1 px-3 py-2 bg-slate-600 hover:bg-slate-500 text-white text-sm font-bold rounded-lg transition-all"
+                                    >
+                                       <Eye size={16} /> Detay
+                                    </button>
+                                 )}
                                  <button
                                     onClick={(e) => { e.stopPropagation(); onAcceptOffer && onAcceptOffer(pendingOffer.id); }}
                                     className="flex items-center gap-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition-all"

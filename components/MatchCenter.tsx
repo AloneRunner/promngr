@@ -1249,8 +1249,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         </div>
                         <span className="text-2xl md:text-5xl font-mono font-bold text-white">{match.awayScore}</span>
                     </div>
-                    <div className="mt-1 bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded text-[10px] md:text-sm font-mono border border-emerald-500/30">
-                        {match.currentMinute}'
+                    <div className="flex items-center gap-2 mt-1">
+                        <div className="bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded text-[10px] md:text-sm font-mono border border-emerald-500/30">
+                            {match.currentMinute}'
+                        </div>
+                        <div className="bg-slate-800/80 text-slate-300 px-2 py-0.5 rounded text-[10px] md:text-sm font-mono border border-slate-600/30 flex items-center gap-1">
+                            <span className="text-[8px] md:text-xs">👥</span>
+                            {Math.floor(match.attendance).toLocaleString()}
+                        </div>
                     </div>
                 </div>
 

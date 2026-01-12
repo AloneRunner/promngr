@@ -401,7 +401,9 @@ const App: React.FC = () => {
 
     const handleResign = () => {
         if (confirm(t.resignConfirm)) {
-            setShowTeamSelect(true);
+            // Show league selection first, allowing switch to any league
+            setShowLeagueSelect(true);
+            setShowTeamSelect(false);
             setView('dashboard');
         }
     };
@@ -728,25 +730,6 @@ const App: React.FC = () => {
         const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
         if (!userTeam) return;
 
-        let cost = 0;
-        let description = '';
-
-        if (type === 'stadium') {
-            cost = 5000000;
-            description = 'Stadium';
-        } else if (type === 'training') {
-            cost = 3000000;
-            description = 'Training Ground';
-        } else if (type === 'academy') {
-            cost = 2500000;
-            description = 'Youth Academy';
-        }
-
-        if (userTeam.budget < cost) {
-            alert(t.notEnoughFunds);
-            return;
-        }
-
         const currentLevel = type === 'stadium' ? userTeam.facilities.stadiumLevel :
             type === 'training' ? userTeam.facilities.trainingLevel :
                 userTeam.facilities.academyLevel;
@@ -756,7 +739,31 @@ const App: React.FC = () => {
             return;
         }
 
-        if (confirm(`Upgrade ${description} to level ${currentLevel + 1}? Cost: €${(cost / 1000000).toFixed(1)}M`)) {
+        // SCALING COSTS: Base × (NextLevel ^ 1.3)
+        // Early levels are cheap, late levels are expensive but still profitable
+        const nextLevel = currentLevel + 1;
+        let baseCost = 0;
+        let description = '';
+
+        if (type === 'stadium') {
+            baseCost = 1500000; // €1.5M base
+            description = 'Stadium';
+        } else if (type === 'training') {
+            baseCost = 1000000; // €1M base
+            description = 'Training Ground';
+        } else if (type === 'academy') {
+            baseCost = 800000; // €800K base
+            description = 'Youth Academy';
+        }
+
+        const cost = Math.floor(baseCost * Math.pow(nextLevel, 1.3));
+
+        if (userTeam.budget < cost) {
+            alert(t.notEnoughFunds);
+            return;
+        }
+
+        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: €${(cost / 1000000).toFixed(2)}M`)) {
             const updatedTeams = gameState.teams.map(team => {
                 if (team.id === userTeam.id) {
                     const newFacilities = { ...team.facilities };
@@ -2903,6 +2910,10 @@ const App: React.FC = () => {
                                         onDeleteAll={handleDeleteAll}
                                         onAcceptOffer={handleAcceptOffer}
                                         onRejectOffer={handleRejectOffer}
+                                        onViewPlayer={(playerId) => {
+                                            const player = gameState.players.find(p => p.id === playerId);
+                                            if (player) setSelectedPlayer(player);
+                                        }}
                                         t={t}
                                     />
                                 )

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Team, Translation, Player, TeamStaff } from '../types';
-import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye } from 'lucide-react';
+import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye, Ticket, Home, Dumbbell } from 'lucide-react';
 import { TICKET_PRICE } from '../constants';
 import { PlayerAvatar } from './PlayerAvatar';
 
@@ -151,6 +151,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             <div className="p-3">
                                 <h4 className="text-[10px] uppercase text-emerald-500 font-bold mb-2 flex items-center gap-1"><TrendingUp size={10} /> {t.income}</h4>
                                 <div className="space-y-1">
+                                    <FinanceRow icon={Ticket} label={t.ticketSales || "Tribün Geliri"} value={fin.lastWeekIncome.tickets} type="income" />
                                     <FinanceRow icon={Briefcase} label="Sponsor" value={team.sponsor?.weeklyIncome || 0} type="income" />
                                     {(fin.lastWeekIncome.winBonus || 0) > 0 && (
                                         <FinanceRow icon={Star} label={t.winBonus || "Galibiyet Primi"} value={fin.lastWeekIncome.winBonus} type="income" />
@@ -176,7 +177,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         {/* NET BALANCE SUMMARY */}
                         <div className="bg-slate-800/50 p-3 border-t border-white/10">
                             {(() => {
-                                const totalIncome = (team.sponsor?.weeklyIncome || 0) +
+                                const totalIncome = fin.lastWeekIncome.tickets +
+                                    (team.sponsor?.weeklyIncome || 0) +
                                     (fin.lastWeekIncome.winBonus || 0) +
                                     fin.lastWeekIncome.merchandise +
                                     fin.lastWeekIncome.tvRights +
@@ -218,6 +220,128 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </div>
                         </div>
                     )}
+
+                    {/* 🎫 DETAILED TICKET BREAKDOWN */}
+                    <div className="fm-panel rounded-xl overflow-hidden">
+                        <div className="bg-emerald-900/30 p-3 border-b border-emerald-500/20">
+                            <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                                <Ticket size={16} /> Tribün Geliri Detayı
+                            </h3>
+                        </div>
+                        <div className="p-4 space-y-3">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div className="text-[10px] uppercase text-slate-500 mb-1">Stadyum Kapasitesi</div>
+                                    <div className="text-lg font-mono text-white font-bold">{team.facilities.stadiumCapacity.toLocaleString()}</div>
+                                </div>
+                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div className="text-[10px] uppercase text-slate-500 mb-1">Bilet Fiyatı</div>
+                                    <div className="text-lg font-mono text-emerald-400 font-bold">€{TICKET_PRICE}</div>
+                                </div>
+                            </div>
+                            {fin.lastWeekIncome.tickets > 0 && (
+                                <div className="bg-emerald-900/20 p-3 rounded-lg border border-emerald-500/20">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <div className="text-[10px] uppercase text-emerald-400/70">Son Maç Seyircisi (Tahmini)</div>
+                                            <div className="text-xl font-bold text-white">
+                                                👥 {Math.floor(fin.lastWeekIncome.tickets / TICKET_PRICE).toLocaleString()} kişi
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-[10px] uppercase text-emerald-400/70">Gelir</div>
+                                            <div className="text-xl font-mono text-emerald-400 font-bold">+€{fin.lastWeekIncome.tickets.toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-2 text-xs text-slate-400">
+                                        Doluluk: {Math.floor((fin.lastWeekIncome.tickets / TICKET_PRICE) / team.facilities.stadiumCapacity * 100)}%
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* 🛠️ MAINTENANCE BREAKDOWN */}
+                    <div className="fm-panel rounded-xl overflow-hidden">
+                        <div className="bg-red-900/30 p-3 border-b border-red-500/20">
+                            <h3 className="text-sm font-bold text-red-400 flex items-center gap-2">
+                                <Hammer size={16} /> Bakım Giderleri Detayı
+                            </h3>
+                        </div>
+                        <div className="p-4">
+                            {(() => {
+                                // Calculate maintenance costs per facility (same formula as engine.ts)
+                                const maintenanceDiscount = ['tr', 'fr'].includes(team.leagueId) ? 0.8 : 1.0;
+                                const stadiumMaint = Math.floor(Math.pow(team.facilities.stadiumLevel, 1.6) * 4000 * maintenanceDiscount);
+                                const trainingMaint = Math.floor(Math.pow(team.facilities.trainingLevel, 1.6) * 3500 * maintenanceDiscount);
+                                const academyMaint = Math.floor(Math.pow(team.facilities.academyLevel, 1.6) * 3000 * maintenanceDiscount);
+                                const totalMaint = stadiumMaint + trainingMaint + academyMaint;
+
+                                return (
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
+                                            <span className="text-slate-400 flex items-center gap-2">
+                                                <Home size={14} className="text-blue-400" /> Stadyum (Lv.{team.facilities.stadiumLevel})
+                                            </span>
+                                            <span className="font-mono text-red-400">-€{stadiumMaint.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
+                                            <span className="text-slate-400 flex items-center gap-2">
+                                                <Dumbbell size={14} className="text-emerald-400" /> Antrenman (Lv.{team.facilities.trainingLevel})
+                                            </span>
+                                            <span className="font-mono text-red-400">-€{trainingMaint.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
+                                            <span className="text-slate-400 flex items-center gap-2">
+                                                <GraduationCap size={14} className="text-purple-400" /> Akademi (Lv.{team.facilities.academyLevel})
+                                            </span>
+                                            <span className="font-mono text-red-400">-€{academyMaint.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center pt-2 font-bold">
+                                            <span className="text-white">Toplam Bakım</span>
+                                            <span className="font-mono text-red-400">-€{totalMaint.toLocaleString()}/hafta</span>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+                        </div>
+                    </div>
+
+                    {/* 💰 TOP WAGE EARNERS */}
+                    <div className="fm-panel rounded-xl overflow-hidden">
+                        <div className="bg-yellow-900/30 p-3 border-b border-yellow-500/20">
+                            <h3 className="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                                <Users size={16} /> En Yüksek Maaşlı Oyuncular
+                            </h3>
+                        </div>
+                        <div className="p-4">
+                            <div className="space-y-2">
+                                {[...players].sort((a, b) => b.wage - a.wage).slice(0, 5).map((player, idx) => (
+                                    <div key={player.id}
+                                        onClick={() => onPlayerClick && onPlayerClick(player)}
+                                        className="flex justify-between items-center py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-800/50 cursor-pointer rounded px-2 -mx-2 transition-colors">
+                                        <div className="flex items-center gap-3">
+                                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${idx === 0 ? 'bg-yellow-500 text-black' : idx === 1 ? 'bg-slate-400 text-black' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                                {idx + 1}
+                                            </span>
+                                            <div>
+                                                <div className="text-white font-medium text-sm">{player.firstName} {player.lastName}</div>
+                                                <div className="text-[10px] text-slate-500">{player.position} • {player.overall} OVR</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="font-mono text-red-400 font-bold">-€{player.wage.toLocaleString()}</span>
+                                            <div className="text-[10px] text-slate-500">/hafta</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center">
+                                <span className="text-slate-400 text-sm">Toplam Maaş Gideri ({players.length} oyuncu)</span>
+                                <span className="font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}/hafta</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -273,10 +397,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
-                            disabled={team.facilities.stadiumLevel >= 25 || team.budget < 5000000}
+                            disabled={team.facilities.stadiumLevel >= 25 || team.budget < Math.floor(1500000 * Math.pow(team.facilities.stadiumLevel + 1, 1.3))}
                             className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> {team.facilities.stadiumLevel >= 25 ? 'MAX' : 'Yükselt (€5.0M)'}
+                            <Hammer size={14} /> {team.facilities.stadiumLevel >= 25 ? 'MAX' : `Yükselt (€${(Math.floor(1500000 * Math.pow(team.facilities.stadiumLevel + 1, 1.3)) / 1000000).toFixed(2)}M)`}
                         </button>
                     </div>
 
@@ -330,10 +454,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('training')}
-                            disabled={team.facilities.trainingLevel >= 25 || team.budget < 3000000}
+                            disabled={team.facilities.trainingLevel >= 25 || team.budget < Math.floor(1000000 * Math.pow(team.facilities.trainingLevel + 1, 1.3))}
                             className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : 'Yükselt (€3.0M)'}
+                            <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : `Yükselt (€${(Math.floor(1000000 * Math.pow(team.facilities.trainingLevel + 1, 1.3)) / 1000000).toFixed(2)}M)`}
                         </button>
                     </div>
 
@@ -372,7 +496,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                             <span>Bakım artışı:</span>
-                                            <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.academyLevel + 1, 1.8) - Math.pow(team.facilities.academyLevel, 1.8)) * 2500).toLocaleString()}/hafta</span>
+                                            <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.academyLevel + 1, 1.6) - Math.pow(team.facilities.academyLevel, 1.6)) * 2500).toLocaleString()}/hafta</span>
                                         </div>
                                     </div>
                                 )}
@@ -389,10 +513,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <button
                                     onClick={() => onUpgradeFacility && onUpgradeFacility('academy')}
-                                    disabled={team.facilities.academyLevel >= 25 || team.budget < 2500000}
+                                    disabled={team.facilities.academyLevel >= 25 || team.budget < Math.floor(800000 * Math.pow(team.facilities.academyLevel + 1, 1.3))}
                                     className="w-full py-2 md:py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
                                 >
-                                    <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : 'Yükselt (€2.5M)'}
+                                    <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(800000 * Math.pow(team.facilities.academyLevel + 1, 1.3)) / 1000000).toFixed(2)}M)`}
                                 </button>
                             </div>
                         </div>
@@ -411,6 +535,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         <GraduationCap className="text-purple-500" /> {t.youthAcademy}
                                     </h2>
                                     <p className="text-slate-400 text-sm mt-1">{t.scoutReport}</p>
+                                    <p className="text-purple-400/80 text-xs mt-2 bg-purple-900/20 px-2 py-1 rounded border border-purple-500/20">
+                                        🌍 Scoutlar dünya genelinden genç yetenekler bulur. Bu oyuncular başka kulüplerin altyapısından gelir.
+                                    </p>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-xs text-slate-500">{t.level}</div>
