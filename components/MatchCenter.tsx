@@ -155,6 +155,23 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // Cache for jersey numbers
     const playerNumbers = useRef<Record<string, number>>({});
 
+    // === STALE CLOSURE FIX ===
+    // Refs to store latest props for use in setInterval (prevents stale closure)
+    const matchRef = useRef(match);
+    const homeTeamRef = useRef(homeTeam);
+    const awayTeamRef = useRef(awayTeam);
+    const homePlayersRef = useRef(homePlayers);
+    const awayPlayersRef = useRef(awayPlayers);
+
+    // Keep refs updated with latest props
+    useEffect(() => {
+        matchRef.current = match;
+        homeTeamRef.current = homeTeam;
+        awayTeamRef.current = awayTeam;
+        homePlayersRef.current = homePlayers;
+        awayPlayersRef.current = awayPlayers;
+    }, [match, homeTeam, awayTeam, homePlayers, awayPlayers]);
+
     // 1. Initialize & Cleanup
     useEffect(() => {
         // Assign Jersey Numbers
@@ -287,7 +304,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         // NEW: Toast notifications for new events
         if (match.events.length > lastEventCount.current) {
             const newEvents = match.events.slice(lastEventCount.current);
-            newEvents.forEach(ev => {
+            const timestamp = Date.now(); // Get timestamp once for the batch
+            newEvents.forEach((ev, idx) => {
                 const isHome = ev.teamId === homeTeam.id;
                 let toastType: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' = 'GOAL';
 
@@ -297,7 +315,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 else return; // Skip other events for toast
 
                 const newToast = {
-                    id: `${ev.minute}-${ev.type}-${Date.now()}`,
+                    id: `${ev.minute}-${ev.type}-${timestamp}-${idx}`, // Added idx for uniqueness
                     type: toastType,
                     message: ev.description,
                     team: isHome ? 'HOME' as const : 'AWAY' as const,
@@ -351,8 +369,15 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             else if (speed === 4) ms = 12;
 
             logicTimerRef.current = window.setInterval(() => {
-                // RUN SIMULATION LOCALLY
-                const result = simulateTick(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
+                // RUN SIMULATION LOCALLY - Using refs to avoid stale closures
+                const result = simulateTick(
+                    matchRef.current,
+                    homeTeamRef.current,
+                    awayTeamRef.current,
+                    homePlayersRef.current,
+                    awayPlayersRef.current,
+                    userTeamId
+                );
 
                 // Update Local Physics State (No React Render)
                 if (result.simulation) {
@@ -396,10 +421,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 // 3. Match ended (90+ min)
                 const shouldSync = result.minuteIncrement ||
                     (result.event && result.event.type === MatchEventType.GOAL) ||
-                    (match.currentMinute >= 90);
+                    (matchRef.current.currentMinute >= 90);
 
                 if (shouldSync) {
-                    onSync(match.id, result);
+                    onSync(matchRef.current.id, result);
                 }
 
             }, ms);

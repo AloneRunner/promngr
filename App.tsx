@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useEffect, useCallback } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch } from './types';
@@ -22,6 +22,7 @@ import { OpponentPreview } from './components/OpponentPreview';
 import { EuropeanCupView } from './components/EuropeanCupView';
 import { ProfileSelector } from './components/ProfileSelector';
 import { TransferNegotiationModal } from './components/TransferNegotiationModal';
+import { JobOffersModal } from './components/JobOffersModal';
 import { Layout } from './components/Layout';
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu } from 'lucide-react';
@@ -35,7 +36,7 @@ const assignJerseyNumber = (player: Player, teamPlayers: Player[]): number => {
     // Takımdaki mevcut numaraları topla
     const usedNumbers = new Set(teamPlayers.filter(p => p.id !== player.id && p.jerseyNumber).map(p => p.jerseyNumber!));
 
-    // Eğer oyuncunun numarası varsa ve kullanılmıyorsa, onu kullan
+    // E�Yer oyuncunun numarası varsa ve kullanılmıyorsa, onu kullan
     if (player.jerseyNumber && !usedNumbers.has(player.jerseyNumber)) {
         return player.jerseyNumber;
     }
@@ -66,7 +67,7 @@ const assignJerseyNumber = (player: Player, teamPlayers: Player[]): number => {
         }
     }
 
-    // Boş olan ilk numarayı bul (2-99 arası)
+    // Bo�Y olan ilk numarayı bul (2-99 arası)
     for (let i = 2; i <= 99; i++) {
         if (!usedNumbers.has(i)) return i;
     }
@@ -125,7 +126,7 @@ const migrateJerseyNumbers = (gameState: GameState): GameState => {
                 }
             }
 
-            // Boş numara bul
+            // Bo�Y numara bul
             if (!assigned) {
                 for (let num = 2; num <= 99; num++) {
                     if (!usedNumbers.has(num)) {
@@ -172,6 +173,7 @@ const App: React.FC = () => {
     const [showWelcome, setShowWelcome] = useState(false);
     const [showLeagueSelect, setShowLeagueSelect] = useState(false);
     const [showTeamSelect, setShowTeamSelect] = useState(false);
+    const [isResignMode, setIsResignMode] = useState(false); // Resign mode: don't reset world, just switch team
     const [showSeasonSummary, setShowSeasonSummary] = useState(false);
     const [seasonSummaryData, setSeasonSummaryData] = useState<{ winner: Team, retired: string[], promoted: string[] } | null>(null);
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -188,11 +190,12 @@ const App: React.FC = () => {
     const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
     const [showEuropeanCup, setShowEuropeanCup] = useState(false);
     const [negotiatingPlayer, setNegotiatingPlayer] = useState<Player | null>(null);
+    const [showJobOffers, setShowJobOffers] = useState(false);
 
     const t = TRANSLATIONS[lang];
 
-    // 📱 Initialize AdMob on mount
-    // 📱 Initialize AdMob on mount
+    // gY"� Initialize AdMob on mount
+    // gY"� Initialize AdMob on mount
     useEffect(() => {
         const initAds = async () => {
             // Enable test mode during development
@@ -204,7 +207,7 @@ const App: React.FC = () => {
         initAds();
     }, []);
 
-    // 📱 Control banner visibility and position based on view
+    // gY"� Control banner visibility and position based on view
     useEffect(() => {
         const handleBannerVisibility = async () => {
             if (gameState && !showProfileSelector && !showLeagueSelect && !showTeamSelect) {
@@ -279,6 +282,18 @@ const App: React.FC = () => {
 
     const handleStartGame = (leagueId: string) => {
         setShowLeagueSelect(false);
+
+        // RESIGN MODE: Don't create new world, just show team selection for current world
+        if (isResignMode && gameState) {
+            // Filter teams to the selected league from existing world
+            setViewLeagueId(leagueId);
+            setTimeout(() => {
+                setShowTeamSelect(true);
+            }, 300);
+            return;
+        }
+
+        // NORMAL MODE: Create new world
         setTimeout(() => {
             const world = generateWorld(leagueId);
             setGameState(world);
@@ -291,9 +306,25 @@ const App: React.FC = () => {
         if (!gameState) return;
         const selectedTeam = gameState.teams.find(t => t.id === teamId);
 
+        // RESIGN MODE: Just switch userTeamId, don't regenerate European competitions
+        if (isResignMode) {
+            // CRITICAL: Clear old team's messages and pending offers to prevent exploit!
+            setGameState(prev => prev ? {
+                ...prev,
+                userTeamId: teamId,
+                messages: [], // Clear all messages from old team
+                pendingOffers: [] // Clear pending transfer offers
+            } : null);
+            setShowTeamSelect(false);
+            setIsResignMode(false); // Reset resign mode
+            // Show welcome message for new team
+            setShowWelcome(true);
+            return;
+        }
+
         let newState = { ...gameState, userTeamId: teamId };
 
-        // Async Generate European Competitions
+        // Async Generate European Competitions (only for NEW games)
         import('./services/engine').then(({ generateChampionsLeague, generateEuropaLeague }) => {
             // 1. Generate Champions League
             const clStart = generateChampionsLeague({ ...newState, userTeamId: teamId });
@@ -311,14 +342,14 @@ const App: React.FC = () => {
             if (inCL) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: '🏆 Şampiyonlar Ligi Daveti!',
+                    subject: 'gY�? Şampiyonlar Ligi Daveti!',
                     body: `${selectedTeam?.name} olarak Şampiyonlar Ligi'ne katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
             } else if (inEL) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: '🟠 UEFA Avrupa Ligi Daveti!',
+                    subject: 'gYY� UEFA Avrupa Ligi Daveti!',
                     body: `${selectedTeam?.name} olarak UEFA Avrupa Ligi'ne katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
@@ -390,7 +421,7 @@ const App: React.FC = () => {
     };
 
     const handleBackToProfiles = () => {
-        if (confirm(lang === 'tr' ? 'İlerleme kaydedilecek. Profil seçiciye dönmek istediğinizden emin misiniz?' : 'Progress will be saved. Are you sure you want to return to profile selector?')) {
+        if (confirm(lang === 'tr' ? 'İlerleme kaydedilecek. Profil seçiciye dönmek istedi�Yinizden emin misiniz?' : 'Progress will be saved. Are you sure you want to return to profile selector?')) {
             setShowProfileSelector(true);
             setShowLeagueSelect(false);
             setShowTeamSelect(false);
@@ -399,9 +430,34 @@ const App: React.FC = () => {
         }
     };
 
+    const handleAcceptJobOffer = (offer: import('./types').JobOffer) => {
+        if (!gameState) return;
+
+        // Switch to the new team, clear messages and pending offers
+        setGameState(prev => prev ? {
+            ...prev,
+            userTeamId: offer.teamId,
+            messages: [{
+                id: uuid(),
+                week: prev.currentWeek,
+                type: MessageType.BOARD,
+                subject: `gY�? ${offer.teamName}'a Ho�Y Geldiniz!`,
+                body: `${offer.teamName} takımının yeni teknik direktörü olarak göreve ba�Yladınız. Haftalık maa�Yınız: �,�${offer.salary.toLocaleString()}`,
+                isRead: false,
+                date: new Date().toISOString()
+            }],
+            pendingOffers: [],
+            jobOffers: [] // Clear job offers after accepting
+        } : null);
+
+        setShowJobOffers(false);
+        setShowWelcome(true);
+    };
+
     const handleResign = () => {
         if (confirm(t.resignConfirm)) {
-            // Show league selection first, allowing switch to any league
+            // RESIGN MODE: Enable resign mode, show league selection without resetting world
+            setIsResignMode(true);
             setShowLeagueSelect(true);
             setShowTeamSelect(false);
             setView('dashboard');
@@ -613,7 +669,7 @@ const App: React.FC = () => {
             alert(t.notEnoughFunds);
             return;
         }
-        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: €${(renewalCost / 1000).toFixed(0)}k`)) {
+        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: �,�${(renewalCost / 1000).toFixed(0)}k`)) {
             const updatedPlayers = gameState.players.map(p =>
                 p.id === player.id ? { ...p, contractYears: p.contractYears + 2, morale: Math.min(100, p.morale + 10) } : p
             );
@@ -623,6 +679,70 @@ const App: React.FC = () => {
             setGameState(prev => prev ? { ...prev, players: updatedPlayers, teams: updatedTeams } : null);
             alert(t.contractExtended);
             setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2 } : null);
+        }
+    };
+
+    // === BUG FIX: Handler to actually update player morale after interactions ===
+    const handlePlayerMoraleChange = (playerId: string, moraleChange: number, reason: string) => {
+        if (!gameState) return;
+
+        const updatedPlayers = gameState.players.map(p => {
+            if (p.id === playerId) {
+                const newMorale = Math.max(0, Math.min(100, p.morale + moraleChange));
+
+                // Add to morale history
+                const history = p.moraleHistory || [];
+                history.push({
+                    week: gameState.currentWeek,
+                    change: moraleChange,
+                    reason: reason
+                });
+
+                return {
+                    ...p,
+                    morale: newMorale,
+                    moraleHistory: history.slice(-10) // Keep last 10 entries
+                };
+            }
+            return p;
+        });
+
+        setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
+    };
+
+    // === CONTRACT TERMINATION: Release unwanted players ===
+    const handleTerminateContract = (player: Player) => {
+        if (!gameState) return;
+        const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+        if (!userTeam) return;
+
+        // Calculate severance: 50% of remaining contract value
+        const severancePay = Math.floor(player.salary * player.contractYears * 0.5);
+
+        if (userTeam.budget < severancePay) {
+            alert(t.notEnoughFunds);
+            return;
+        }
+
+        const confirmMsg = t.terminateConfirm
+            ? t.terminateConfirm.replace('{name}', player.lastName).replace('{cost}', (severancePay / 1000).toFixed(0))
+            : `Release ${player.lastName}? Severance pay: €${(severancePay / 1000).toFixed(0)}K`;
+
+        if (confirm(confirmMsg)) {
+            // Update team budget
+            const updatedTeams = gameState.teams.map(t =>
+                t.id === userTeam.id ? { ...t, budget: t.budget - severancePay } : t
+            );
+
+            // Make player a free agent
+            const updatedPlayers = gameState.players.map(p =>
+                p.id === player.id ? { ...p, teamId: 'FREE_AGENT', lineup: 'RESERVE' as const, lineupIndex: 99 } : p
+            );
+
+            setGameState(prev => prev ? { ...prev, teams: updatedTeams, players: updatedPlayers } : null);
+            setSelectedPlayer(null);
+
+            alert(t.playerReleased || `${player.lastName} has been released.`);
         }
     };
 
@@ -703,14 +823,15 @@ const App: React.FC = () => {
         if (!userTeam) return;
 
         const currentLevel = userTeam.staff ? userTeam.staff[role] : 1;
-        const cost = currentLevel * 100000; // BALANCED: Was 500K, now 100K per level
+        // EXPENSIVE UPGRADES: Exponential scaling - 2x more expensive
+        const cost = Math.floor(100000 * Math.pow(2, currentLevel)); // Lv1→2: €200K, Lv5→6: €6.4M, Lv9→10: €102M
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
             return;
         }
 
-        if (confirm(`Upgrade ${role} to level ${currentLevel + 1}? Cost: €${(cost / 1000).toLocaleString()}k`)) {
+        if (confirm(`Upgrade ${role} to level ${currentLevel + 1}? Cost: �,�${(cost / 1000).toLocaleString()}k`)) {
             const updatedTeams = gameState.teams.map(t => {
                 if (t.id === userTeam.id) {
                     return {
@@ -739,31 +860,32 @@ const App: React.FC = () => {
             return;
         }
 
-        // SCALING COSTS: Base × (NextLevel ^ 1.3)
-        // Early levels are cheap, late levels are expensive but still profitable
+        // EXPENSIVE UPGRADES: 2x more expensive than before
+        // Early levels affordable, late levels VERY expensive
         const nextLevel = currentLevel + 1;
         let baseCost = 0;
         let description = '';
 
         if (type === 'stadium') {
-            baseCost = 1500000; // €1.5M base
+            baseCost = 3000000; // €3M base (was 1.5M)
             description = 'Stadium';
         } else if (type === 'training') {
-            baseCost = 1000000; // €1M base
+            baseCost = 2000000; // €2M base (was 1M)
             description = 'Training Ground';
         } else if (type === 'academy') {
-            baseCost = 800000; // €800K base
+            baseCost = 1600000; // €1.6M base (was 800K)
             description = 'Youth Academy';
         }
 
-        const cost = Math.floor(baseCost * Math.pow(nextLevel, 1.3));
+        // Lv9→10: Stadium ~€95M, Training ~€63M, Academy ~€50M
+        const cost = Math.floor(baseCost * Math.pow(nextLevel, 1.5));
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
             return;
         }
 
-        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: €${(cost / 1000000).toFixed(2)}M`)) {
+        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: �,�${(cost / 1000000).toFixed(2)}M`)) {
             const updatedTeams = gameState.teams.map(team => {
                 if (team.id === userTeam.id) {
                     const newFacilities = { ...team.facilities };
@@ -793,6 +915,15 @@ const App: React.FC = () => {
 
         const buyingTeam = gameState.teams.find(t => t.id === offer.toTeamId);
         if (!buyingTeam) return;
+
+        // ========== MINIMUM SQUAD SIZE CHECK ==========
+        // Cannot sell if team will have less than 14 players
+        const MIN_SQUAD_SIZE = 14;
+        const currentSquadSize = gameState.players.filter(p => p.teamId === gameState.userTeamId).length;
+        if (currentSquadSize <= MIN_SQUAD_SIZE) {
+            alert(t.cannotSellMinSquad || `Kadro minimum ${MIN_SQUAD_SIZE} oyuncuya dü�Ytü. Daha fazla satı�Y yapamazsınız!`);
+            return;
+        }
 
         // Execute transfer
         const updatedPlayers = gameState.players.map(p => {
@@ -825,8 +956,8 @@ const App: React.FC = () => {
             id: uuid(),
             week: gameState.currentWeek,
             type: MessageType.INFO,
-            subject: '✅ Transfer Completed',
-            body: `${player.firstName} ${player.lastName} has been sold to ${buyingTeam.name} for €${(offer.offerAmount / 1000000).toFixed(1)}M.`,
+            subject: '�o. Transfer Completed',
+            body: `${player.firstName} ${player.lastName} has been sold to ${buyingTeam.name} for �,�${(offer.offerAmount / 1000000).toFixed(1)}M.`,
             isRead: false,
             date: new Date().toISOString()
         };
@@ -1060,7 +1191,7 @@ const App: React.FC = () => {
 
         setGameState(prev => prev ? { ...prev, players: updatedPlayers, transferMarket: updatedMarket, teams: updatedTeams } : null);
         setNegotiatingPlayer(null); // Close modal
-        alert(`${t.successfullySigned} ${player.lastName} for €${(finalPrice / 1000000).toFixed(2)}M!`);
+        alert(`${t.successfullySigned} ${player.lastName} for �,�${(finalPrice / 1000000).toFixed(2)}M!`);
     };
 
     const handlePromoteYouth = (player: Player) => {
@@ -1127,10 +1258,10 @@ const App: React.FC = () => {
                 id: Math.random().toString(36).substring(2, 15),
                 week: gameState.currentWeek,
                 type: MessageType.BOARD,
-                subject: '🌟 Şampiyonlar Ligi Kura Çekimi!',
+                subject: 'gYOY Şampiyonlar Ligi Kura �?ekimi!',
                 body: userQualified
-                    ? 'Takımınız Şampiyonlar Ligi\'ne katılmaya hak kazandı! Çeyrek final eşleşmeleri belirlendi.'
-                    : 'Şampiyonlar Ligi başladı. Maalesef takımınız bu sezon katılmaya hak kazanamadı.',
+                    ? 'Takımınız Şampiyonlar Ligi\'ne katılmaya hak kazandı! �?eyrek final e�Yle�Ymeleri belirlendi.'
+                    : 'Şampiyonlar Ligi ba�Yladı. Maalesef takımınız bu sezon katılmaya hak kazanamadı.',
                 isRead: false,
                 date: new Date().toISOString()
             }]
@@ -1201,7 +1332,7 @@ const App: React.FC = () => {
             const subEvent: MatchEvent = {
                 minute: currentMatch.currentMinute,
                 type: MatchEventType.SUB,
-                description: `🔄 ${playerOut.lastName} ⬇️ ${playerIn.lastName} ⬆️`,
+                description: `gY"" ${playerOut.lastName} �?️ ${playerIn.lastName} �?️`,
                 teamId: userTeam?.id || '',
                 playerId: playerIn.id
             };
@@ -1249,13 +1380,46 @@ const App: React.FC = () => {
     };
 
     const executeMatchUpdate = (prevState: GameState, matchId: string, simulateToEnd: boolean = false): GameState => {
-        const matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+        let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+        let isCupMatch = false;
+        let cupType: 'europeanCup' | 'europaLeague' | null = null;
+
+        // Search in Cups if not in League
+        if (matchIndex === -1) {
+            if (prevState.europeanCup) {
+                matchIndex = prevState.europeanCup.matches.findIndex(m => m.id === matchId);
+                if (matchIndex !== -1) {
+                    isCupMatch = true;
+                    cupType = 'europeanCup';
+                }
+            }
+            if (matchIndex === -1 && prevState.europaLeague) {
+                matchIndex = prevState.europaLeague.matches.findIndex(m => m.id === matchId);
+                if (matchIndex !== -1) {
+                    isCupMatch = true;
+                    cupType = 'europaLeague';
+                }
+            }
+        }
+
         if (matchIndex === -1) return prevState;
-        const match = prevState.matches[matchIndex];
+
+        const matchStr = isCupMatch && cupType
+            ? prevState[cupType]!.matches[matchIndex]
+            : prevState.matches[matchIndex];
+
+        // Type assertion: EuropeanCupMatch is compatible with Match for simulation purposes
+        const match = { ...matchStr, week: matchStr.week ?? 0, liveData: (matchStr as any).liveData } as Match;
+
         if (match.isPlayed) return prevState;
+
+        // Find teams (European teams might need to be found in Cup struct or general teams list)
+        // Note: European teams are usually added to gameState.teams during generation
         const homeTeam = prevState.teams.find(t => t.id === match.homeTeamId);
         const awayTeam = prevState.teams.find(t => t.id === match.awayTeamId);
+
         if (!homeTeam || !awayTeam) return prevState;
+
         const homePlayers = prevState.players.filter(p => p.teamId === homeTeam.id);
         const awayPlayers = prevState.players.filter(p => p.teamId === awayTeam.id);
 
@@ -1537,8 +1701,20 @@ const App: React.FC = () => {
                         const drew = userScore === oppScore;
 
                         const repDiff = opponent.reputation - userTeam.reputation;
-                        let confidenceChange = 0;
 
+                        // ========== REPUTATION CHANGE ==========
+                        let reputationChange = 0;
+                        if (won) {
+                            reputationChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
+                        } else if (drew) {
+                            reputationChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
+                        } else {
+                            reputationChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
+                        }
+                        const newReputation = Math.max(1000, Math.min(10000, userTeam.reputation + reputationChange));
+
+                        // ========== CONFIDENCE CHANGE ==========
+                        let confidenceChange = 0;
                         if (won) {
                             confidenceChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 2;
                             if (userScore - oppScore >= 3) confidenceChange += 2;
@@ -1552,9 +1728,41 @@ const App: React.FC = () => {
                         const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
                         if (recentLosses >= 3) confidenceChange -= 3;
 
+                        const newConfidence = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confidenceChange));
+
+                        // ========== RECORD HISTORY ==========
+                        const resultText = won ? 'G' : drew ? 'B' : 'M';
+                        const score = `${userScore}-${oppScore}`;
+
+                        const repHistory = [...(userTeam.reputationHistory || [])];
+                        if (reputationChange !== 0) {
+                            repHistory.push({
+                                week: prevState.currentWeek,
+                                change: reputationChange,
+                                reason: `${opponent.name} (${resultText}) ${score}`,
+                                newValue: newReputation
+                            });
+                        }
+
+                        const confHistory = [...(userTeam.confidenceHistory || [])];
+                        if (confidenceChange !== 0) {
+                            confHistory.push({
+                                week: prevState.currentWeek,
+                                change: confidenceChange,
+                                reason: `${opponent.name} (${resultText}) ${score}`,
+                                newValue: newConfidence
+                            });
+                        }
+
                         teamsWithBonus = teamsWithBonus.map(t => {
                             if (t.id === userTeamId) {
-                                return { ...t, boardConfidence: Math.max(0, Math.min(100, (t.boardConfidence || 70) + confidenceChange)) };
+                                return {
+                                    ...t,
+                                    reputation: newReputation,
+                                    boardConfidence: newConfidence,
+                                    reputationHistory: repHistory.slice(-20),
+                                    confidenceHistory: confHistory.slice(-20)
+                                };
                             }
                             return t;
                         });
@@ -1716,7 +1924,65 @@ const App: React.FC = () => {
                 }
 
                 // Process weekly events
-                const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = processWeeklyEvents(updatedState, t);
+                // Process weekly events
+                const weeklyEventsResults = processWeeklyEvents(updatedState, t);
+                let { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+
+                // ========== HISTORY RECORDING FOR CUP MATCH (QUICK SIM) ==========
+                if (cupMatch) {
+                    const userTeam = updatedTeams.find(tm => tm.id === updatedState.userTeamId);
+                    // Find correct opponent ID
+                    const opponentId = cupMatch.homeTeamId === updatedState.userTeamId ? cupMatch.awayTeamId : cupMatch.homeTeamId;
+                    const opponent = updatedTeams.find(tm => tm.id === opponentId);
+
+                    // Get played match result from updated state
+                    let playedCupMatch: EuropeanCupMatch | undefined;
+                    if (clMatch && updatedState.europeanCup) playedCupMatch = updatedState.europeanCup.matches.find(m => m.id === cupMatch.id);
+                    else if (elMatch && updatedState.europaLeague) playedCupMatch = updatedState.europaLeague.matches.find(m => m.id === cupMatch.id);
+
+                    if (userTeam && opponent && playedCupMatch && playedCupMatch.isPlayed) {
+                        const isUserHome = playedCupMatch.homeTeamId === userTeam.id;
+                        const userScore = isUserHome ? playedCupMatch.homeScore : playedCupMatch.awayScore;
+                        const oppScore = isUserHome ? playedCupMatch.awayScore : playedCupMatch.homeScore;
+
+                        const won = userScore > oppScore;
+                        const drew = userScore === oppScore;
+                        const repDiff = opponent.reputation - userTeam.reputation;
+
+                        const cupName = clMatch ? '🏆 CL' : '🏆 UEL';
+                        const resultText = won ? 'G' : drew ? 'B' : 'M';
+                        const scoreStr = `${userScore}-${oppScore}`;
+
+                        let repChange = 0;
+                        let confChange = 0;
+
+                        if (won) {
+                            repChange = repDiff > 500 ? 15 : repDiff > 0 ? 10 : 6;
+                            confChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 3;
+                        } else if (drew) { // Should not happen in cups usually due to penalties, but just in case
+                            repChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
+                            confChange = repDiff > 500 ? 1 : repDiff < -500 ? -2 : -1;
+                        } else {
+                            repChange = repDiff < -500 ? -12 : repDiff < 0 ? -6 : -3;
+                            confChange = repDiff < -500 ? -6 : repDiff < 0 ? -4 : -2;
+                        }
+
+                        const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
+                        const newConf = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confChange));
+
+                        const repHistory = [...(userTeam.reputationHistory || [])];
+                        repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${scoreStr}`, newValue: newRep });
+
+                        const confHistory = [...(userTeam.confidenceHistory || [])];
+                        confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${scoreStr}`, newValue: newConf });
+
+                        updatedTeams = updatedTeams.map(tm =>
+                            tm.id === userTeam.id
+                                ? { ...tm, reputation: newRep, boardConfidence: newConf, reputationHistory: repHistory.slice(-20), confidenceHistory: confHistory.slice(-20) }
+                                : tm
+                        );
+                    }
+                }
 
                 setGameState({
                     ...updatedState,
@@ -1769,7 +2035,69 @@ const App: React.FC = () => {
                     }
 
                     // 4. Process weekly events (Training, News, etc.)
-                    const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = processWeeklyEvents(updatedState, t);
+                    // 4. Process weekly events (Training, News, etc.)
+                    const weeklyEventsResults = processWeeklyEvents(updatedState, t);
+                    let { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+
+                    // ========== HISTORY RECORDING FOR LEAGUE MATCH (QUICK SIM) ==========
+                    if (playedMatch) {
+                        const userTeamId = updatedState.userTeamId;
+                        const isUserHome = playedMatch.homeTeamId === userTeamId;
+                        const opponentId = isUserHome ? playedMatch.awayTeamId : playedMatch.homeTeamId;
+                        const userTeam = updatedTeams.find(tm => tm.id === userTeamId);
+                        const opponent = updatedTeams.find(tm => tm.id === opponentId);
+
+                        if (userTeam && opponent) {
+                            const userScore = isUserHome ? playedMatch.homeScore : playedMatch.awayScore;
+                            const oppScore = isUserHome ? playedMatch.awayScore : playedMatch.homeScore;
+                            const won = userScore > oppScore;
+                            const drew = userScore === oppScore;
+                            const repDiff = opponent.reputation - userTeam.reputation;
+
+                            let repChange = 0;
+                            if (won) {
+                                repChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
+                            } else if (drew) {
+                                repChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
+                            } else {
+                                repChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
+                            }
+                            const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
+
+                            let confChange = 0;
+                            if (won) {
+                                confChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 2;
+                                if (userScore - oppScore >= 3) confChange += 2;
+                            } else if (drew) {
+                                confChange = repDiff > 500 ? 1 : repDiff < -500 ? -2 : -1;
+                            } else {
+                                confChange = repDiff < -500 ? -8 : repDiff < 0 ? -5 : -3;
+                                if (oppScore - userScore >= 3) confChange -= 2;
+                            }
+                            const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
+                            if (recentLosses >= 3) confChange -= 3;
+                            const newConf = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confChange));
+
+                            const resultText = won ? 'G' : drew ? 'B' : 'M';
+                            const scoreStr = `${userScore}-${oppScore}`;
+
+                            const repHistory = [...(userTeam.reputationHistory || [])];
+                            if (repChange !== 0) {
+                                repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: `${opponent.name} (${resultText}) ${scoreStr}`, newValue: newRep });
+                            }
+
+                            const confHistory = [...(userTeam.confidenceHistory || [])];
+                            if (confChange !== 0) {
+                                confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${opponent.name} (${resultText}) ${scoreStr}`, newValue: newConf });
+                            }
+
+                            updatedTeams = updatedTeams.map(tm =>
+                                tm.id === userTeamId
+                                    ? { ...tm, reputation: newRep, boardConfidence: newConf, reputationHistory: repHistory.slice(-20), confidenceHistory: confHistory.slice(-20) }
+                                    : tm
+                            );
+                        }
+                    }
 
                     // 5. Update Game State & Advance Week
                     setGameState({
@@ -2083,95 +2411,194 @@ const App: React.FC = () => {
 
         let currentState = gameState;
 
-        // 1. Identify and Process the Active Match
-        if (activeMatchId) {
-            const match = currentState.matches.find(m => m.id === activeMatchId);
+        // 1. Identify Match
+        const match = currentState.matches.find(m => m.id === activeMatchId);
 
-            // Check Cups if not found in League
-            const clMatch = !match ? currentState.europeanCup?.matches.find(m => m.id === activeMatchId) : null;
-            const elMatch = !match && !clMatch ? currentState.europaLeague?.matches.find(m => m.id === activeMatchId) : null;
+        // Check Cups if not found in League
+        const clMatch = !match ? currentState.europeanCup?.matches.find(m => m.id === activeMatchId) : null;
+        const elMatch = !match && !clMatch ? currentState.europaLeague?.matches.find(m => m.id === activeMatchId) : null;
+        const activeCupMatch = clMatch || elMatch;
 
-            const activeCupMatch = clMatch || elMatch;
+        // --- CUP MATCH HANDLING ---
+        if (activeCupMatch) {
+            const cupType = clMatch ? 'europeanCup' : 'europaLeague';
 
-            // --- CUP MATCH HANDLING ---
-            if (activeCupMatch) {
-                // If exiting early, simulate to end
-                if (!activeCupMatch.isPlayed) {
-                    // We need a specialized simulator for Cup matches here if we want instant result?
-                    // Or just rely on previous logic? The previous logic called executeMatchUpdate which worked on ID.
-                    // But executeMatchUpdate searches in gameState.matches! It might fail for Cup matches if not updated.
-                    // Let's assume for now user played it or we handle it via executeMatchUpdate if we patch it.
-                    // Actually, handleInstantFinish calls executeMatchUpdate.
-                    // Let's patch executeMatchUpdate to support Cups first?
-                    // For now, let's assume it was played fully or handleMatchFinish is called after full time.
-                }
+            // Get the latest cup match state from engine if possible
+            const cupMatchInState = currentState[cupType]?.matches.find(m => m.id === activeMatchId);
+            let updatedCupMatch = cupMatchInState || activeCupMatch;
 
-                // If it's a CUP match, we only update the Cup state and run AI Cup Games.
-                // We DO NOT advance the week or simulate the league yet.
-
-                // Simulate other AI European matches for this week
-                let updatedState = { ...currentState };
-
-                if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-                    const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                        updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
-                    );
-                    updatedState.europeanCup = updatedCup;
-                    updatedState.teams = updatedTeams;
-                }
-
-                if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-                    const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                        updatedState.europaLeague, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
-                    );
-                    updatedState.europaLeague = updatedCup;
-                    updatedState.teams = updatedTeams;
-                }
-
-                setGameState(updatedState);
-                setView('dashboard');
-                setActiveMatchId(null);
-                setPendingMatch(null);
-                return; // EXIT EARLY
+            // Mark as played if not already
+            if (!updatedCupMatch.isPlayed) {
+                updatedCupMatch = { ...updatedCupMatch, isPlayed: true };
             }
 
-            // --- LEAGUE/FRIENDLY MATCH HANDLING ---
-            if (match) {
-                // If exiting early, simulate the rest
+            // ========== CUP DRAW FIX: PENALTY SHOOTOUT ==========
+            // Cup matches require a winner - simulate penalties if draw
+            if (updatedCupMatch.homeScore === updatedCupMatch.awayScore) {
+                const homeTeam = currentState.teams.find(t => t.id === updatedCupMatch.homeTeamId);
+                const awayTeam = currentState.teams.find(t => t.id === updatedCupMatch.awayTeamId);
+
+                if (homeTeam && awayTeam) {
+                    // Simulate penalties
+                    let homePenalties = 0;
+                    let awayPenalties = 0;
+
+                    const homePlayers = currentState.players.filter(p => p.teamId === homeTeam.id);
+                    const awayPlayers = currentState.players.filter(p => p.teamId === awayTeam.id);
+                    const homeStrength = homePlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(homePlayers.length, 1);
+                    const awayStrength = awayPlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(awayPlayers.length, 1);
+
+                    for (let i = 0; i < 5; i++) {
+                        if (Math.random() < 0.70 + (homeStrength - 70) / 200) homePenalties++;
+                        if (Math.random() < 0.70 + (awayStrength - 70) / 200) awayPenalties++;
+                    }
+
+                    while (homePenalties === awayPenalties) {
+                        if (Math.random() < 0.75) homePenalties++;
+                        if (Math.random() < 0.75) awayPenalties++;
+                    }
+
+                    const winnerId = homePenalties > awayPenalties ? homeTeam.id : awayTeam.id;
+                    const winnerName = homePenalties > awayPenalties ? homeTeam.name : awayTeam.name;
+                    updatedCupMatch = { ...updatedCupMatch, winnerId };
+
+                    currentState = {
+                        ...currentState,
+                        messages: [...currentState.messages, {
+                            id: uuid(),
+                            week: currentState.currentWeek,
+                            type: MessageType.INFO,
+                            subject: ` Penaltı Atışları!`,
+                            body: `${homeTeam.name} ${updatedCupMatch.homeScore}-${updatedCupMatch.awayScore} ${awayTeam.name} (Penaltılar: ${homePenalties}-${awayPenalties}) - ${winnerName} turu geçti!`,
+                            isRead: false,
+                            date: new Date().toISOString()
+                        }]
+                    };
+                }
+            } else {
+                // Non-draw: winner is the one with more goals
+                updatedCupMatch = {
+                    ...updatedCupMatch,
+                    winnerId: updatedCupMatch.homeScore > updatedCupMatch.awayScore
+                        ? updatedCupMatch.homeTeamId
+                        : updatedCupMatch.awayTeamId
+                };
+            }
+
+            // Update cup match in state
+            if (currentState[cupType]) {
+                const updatedCup = {
+                    ...currentState[cupType],
+                    matches: currentState[cupType].matches.map(m =>
+                        m.id === activeMatchId ? updatedCupMatch : m
+                    )
+                };
+
+                currentState = {
+                    ...currentState,
+                    [cupType]: updatedCup
+                };
+            }
+
+            // Simulate other AI European matches
+            let updatedState = { ...currentState };
+            if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
+                const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                    updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
+                );
+                updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
+            }
+            if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
+                const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                    updatedState.europaLeague, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
+                );
+                updatedState = { ...updatedState, europaLeague: updatedCup, teams: updatedTeams };
+            }
+
+            // ========== CUP HISTORY RECORDING ==========
+            const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
+            const opponentId = updatedCupMatch.homeTeamId === updatedState.userTeamId
+                ? updatedCupMatch.awayTeamId
+                : updatedCupMatch.homeTeamId;
+            const opponent = updatedState.teams.find(t => t.id === opponentId);
+
+            if (userTeam && opponent) {
+                const userIsHome = updatedCupMatch.homeTeamId === updatedState.userTeamId;
+                const userScore = userIsHome ? updatedCupMatch.homeScore : updatedCupMatch.awayScore;
+                const oppScore = userIsHome ? updatedCupMatch.awayScore : updatedCupMatch.homeScore;
+                const won = userScore > oppScore || updatedCupMatch.winnerId === updatedState.userTeamId;
+
+                const repDiff = opponent.reputation - userTeam.reputation;
+
+                let repChange = 0;
+                let confChange = 0;
+
+                if (won) {
+                    repChange = repDiff > 500 ? 15 : repDiff > 0 ? 10 : 6;
+                    confChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 3;
+                } else {
+                    repChange = repDiff < -500 ? -12 : repDiff < 0 ? -6 : -3;
+                    confChange = repDiff < -500 ? -6 : repDiff < 0 ? -4 : -2;
+                }
+
+                const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
+                const newConf = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confChange));
+
+                const cupName = cupType === 'europeanCup' ? ' CL' : ' UEL';
+                const resultText = won ? 'G' : 'M';
+                const score = `${userScore}-${oppScore}`;
+
+                const repHistory = [...(userTeam.reputationHistory || [])];
+                repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${score}`, newValue: newRep });
+
+                const confHistory = [...(userTeam.confidenceHistory || [])];
+                confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${score}`, newValue: newConf });
+
+                updatedState.teams = updatedState.teams.map(t =>
+                    t.id === userTeam.id
+                        ? { ...t, reputation: newRep, boardConfidence: newConf, reputationHistory: repHistory.slice(-20), confidenceHistory: confHistory.slice(-20) }
+                        : t
+                );
+            }
+
+            setGameState(updatedState);
+            setView('dashboard');
+            setActiveMatchId(null);
+            setPendingMatch(null);
+            return; // EXIT EARLY
+        }
+
+        // --- LEAGUE/FRIENDLY MATCH HANDLING ---
+        if (match) {
+            if (match.isFriendly) {
                 if (!match.isPlayed) {
                     currentState = executeMatchUpdate(currentState, activeMatchId, true);
                 }
+                setGameState(currentState);
+                setView('dashboard');
+                setActiveMatchId(null);
+                setPendingMatch(null);
+                return;
+            }
 
-                // Friendly: Just save and exit
-                if (match.isFriendly) {
-                    setGameState(currentState);
-                    setView('dashboard');
-                    setActiveMatchId(null);
-                    return;
-                }
+            if (!match.isPlayed) {
+                currentState = executeMatchUpdate(currentState, activeMatchId, true);
             }
         }
 
-        // 3. Normal League Match Flow (Only reaches here if it was a League match)
-        // Simulate other matches for this week
+        // 3. Normal League Week Simulation & Weekly Events
         let updatedState = simulateLeagueRound(currentState, currentState.currentWeek);
 
-        // Also Simulate AI European Cup Matches (in case user didn't have a match but AI does)
         if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
             const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                updatedState.europeanCup,
-                updatedState.teams,
-                updatedState.players,
-                updatedState.userTeamId,
-                updatedState.currentWeek
+                updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
             );
             updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
         }
 
-        // Simulate AI Europa League Matches (UEFA)
         if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
             const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
-                updatedState.europaLeague, // Reuse logic, fits perfectly
+                updatedState.europaLeague,
                 updatedState.teams,
                 updatedState.players,
                 updatedState.userTeamId,
@@ -2180,13 +2607,77 @@ const App: React.FC = () => {
             updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
         }
 
-        // Process weekly events (Training, News, etc.)
-        // Pass 't' for localized news/reports
         const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = processWeeklyEvents(updatedState, t);
+
+        // ========== FINAL HISTORY RECORDING FOR USER LEAGUE MATCH ==========
+        let teamsWithHistory = updatedTeams;
+
+        const playedUserMatch = updatedState.matches.find(m =>
+            m.id === activeMatchId && m.isPlayed
+        );
+
+        if (playedUserMatch && !playedUserMatch.isFriendly) {
+            const userTeamId = updatedState.userTeamId;
+            const isUserHome = playedUserMatch.homeTeamId === userTeamId;
+            const opponentId = isUserHome ? playedUserMatch.awayTeamId : playedUserMatch.homeTeamId;
+            const userTeam = teamsWithHistory.find(t => t.id === userTeamId);
+            const opponent = teamsWithHistory.find(t => t.id === opponentId);
+
+            if (userTeam && opponent) {
+                const userScore = isUserHome ? playedUserMatch.homeScore : playedUserMatch.awayScore;
+                const oppScore = isUserHome ? playedUserMatch.awayScore : playedUserMatch.homeScore;
+                const won = userScore > oppScore;
+                const drew = userScore === oppScore;
+                const repDiff = opponent.reputation - userTeam.reputation;
+
+                let repChange = 0;
+                if (won) {
+                    repChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
+                } else if (drew) {
+                    repChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
+                } else {
+                    repChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
+                }
+                const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
+
+                let confChange = 0;
+                if (won) {
+                    confChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 2;
+                    if (userScore - oppScore >= 3) confChange += 2;
+                } else if (drew) {
+                    confChange = repDiff > 500 ? 1 : repDiff < -500 ? -2 : -1;
+                } else {
+                    confChange = repDiff < -500 ? -8 : repDiff < 0 ? -5 : -3;
+                    if (oppScore - userScore >= 3) confChange -= 2;
+                }
+                const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
+                if (recentLosses >= 3) confChange -= 3;
+                const newConf = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confChange));
+
+                const resultText = won ? 'G' : drew ? 'B' : 'M';
+                const score = `${userScore}-${oppScore}`;
+
+                const repHistory = [...(userTeam.reputationHistory || [])];
+                const confHistory = [...(userTeam.confidenceHistory || [])];
+
+                if (repChange !== 0) {
+                    repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: `${opponent.name} (${resultText}) ${score}`, newValue: newRep });
+                }
+                if (confChange !== 0) {
+                    confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${opponent.name} (${resultText}) ${score}`, newValue: newConf });
+                }
+
+                teamsWithHistory = teamsWithHistory.map(t =>
+                    t.id === userTeamId
+                        ? { ...t, reputation: newRep, boardConfidence: newConf, reputationHistory: repHistory.slice(-20), confidenceHistory: confHistory.slice(-20) }
+                        : t
+                );
+            }
+        }
 
         setGameState({
             ...updatedState,
-            teams: updatedTeams,
+            teams: teamsWithHistory,
             players: updatedPlayers,
             transferMarket: updatedMarket,
             currentWeek: updatedState.currentWeek + 1,
@@ -2199,6 +2690,7 @@ const App: React.FC = () => {
         });
         setView('dashboard');
         setActiveMatchId(null);
+        setPendingMatch(null);
     };
 
     // Show Profile Selector if requested
@@ -2246,9 +2738,9 @@ const App: React.FC = () => {
     }
 
     if (showTeamSelect && gameState) {
-        // Filter teams by the selected league (gameState.leagueId)
-        // Since we now generate ALL teams, we only want to show teams from the chosen league for selection
-        const leagueTeams = gameState.teams.filter(t => t.leagueId === gameState.leagueId);
+        // Filter teams by the selected league (viewLeagueId - set by handleStartGame)
+        // In RESIGN mode, viewLeagueId is set to the newly selected league
+        const leagueTeams = gameState.teams.filter(t => t.leagueId === viewLeagueId);
         const sortedTeams = [...leagueTeams].sort((a, b) => b.reputation - a.reputation);
         return (
 
@@ -2275,7 +2767,7 @@ const App: React.FC = () => {
                                         </div>
                                         <div className="flex justify-between text-[10px] md:text-xs">
                                             <span className="text-slate-400">Budget</span>
-                                            <span className="font-bold text-emerald-400">€{(team.budget / 1000000).toFixed(1)}M</span>
+                                            <span className="font-bold text-emerald-400">�,�{(team.budget / 1000000).toFixed(1)}M</span>
                                         </div>
                                     </div>
                                 </div>
@@ -2304,7 +2796,7 @@ const App: React.FC = () => {
             {showSeasonSummary && seasonSummaryData && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
                     <div className="bg-slate-900 rounded-2xl p-6 md:p-8 max-w-md w-full border border-yellow-500/30 shadow-2xl text-center">
-                        <div className="text-6xl mb-4">🏆</div>
+                        <div className="text-6xl mb-4">gY�?</div>
                         <h2 className="text-2xl font-bold text-yellow-400 mb-2">{t.seasonComplete || 'Season Complete!'}</h2>
                         <p className="text-slate-400 mb-6">{t.seasonOver || 'The season has ended.'}</p>
 
@@ -2323,7 +2815,7 @@ const App: React.FC = () => {
                             onClick={handleStartNewSeason}
                             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-colors text-lg shadow-lg"
                         >
-                            {t.startNewSeason || 'Start New Season'} →
+                            {t.startNewSeason || 'Start New Season'} �?'
                         </button>
                     </div>
                 </div>
@@ -2335,6 +2827,7 @@ const App: React.FC = () => {
                 onClose={() => setSelectedPlayer(null)}
                 onRenew={selectedPlayer?.teamId === userTeam.id ? handleContractRenewal : undefined}
                 onToggleTransferList={selectedPlayer?.teamId === userTeam.id ? handleToggleTransferList : undefined}
+                onTerminateContract={selectedPlayer?.teamId === userTeam.id ? handleTerminateContract : undefined}
                 t={t}
             />
             {inspectedTeamId && <TeamInspector team={gameState.teams.find(t => t.id === inspectedTeamId)!} players={gameState.players.filter(p => p.teamId === inspectedTeamId)} onClose={() => setInspectedTeamId(null)} t={t} />}
@@ -2431,6 +2924,17 @@ const App: React.FC = () => {
                 />
             )}
 
+            {/* Job Offers Modal */}
+            {showJobOffers && gameState && (
+                <JobOffersModal
+                    offers={gameState.jobOffers || []}
+                    currentTeamId={gameState.userTeamId}
+                    onAccept={handleAcceptJobOffer}
+                    onClose={() => setShowJobOffers(false)}
+                    t={t}
+                />
+            )}
+
             {/* Desktop Sidebar (Left) - Hidden on Mobile, Tablet, AND during Match */}
             {view !== 'match' && (
                 <div className="hidden xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
@@ -2456,6 +2960,20 @@ const App: React.FC = () => {
                         <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                         <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
                         <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
+
+                        {/* Job Offers Button - Only show if there are offers */}
+                        {(gameState?.jobOffers?.length || 0) > 0 && (
+                            <button
+                                onClick={() => setShowJobOffers(true)}
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-2 text-purple-400 hover:bg-purple-900/30 border border-purple-500/30 font-bold transition-all hover:border-purple-500 relative"
+                            >
+                                <Briefcase size={20} />
+                                <span className="hidden md:inline">İş Teklifleri</span>
+                                <span className="absolute top-2 right-2 w-5 h-5 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center font-bold animate-pulse">
+                                    {gameState?.jobOffers?.length || 0}
+                                </span>
+                            </button>
+                        )}
                     </nav>
                     <div className="p-4 border-t border-slate-800 space-y-2 bg-slate-900">
                         <button
@@ -2468,6 +2986,7 @@ const App: React.FC = () => {
                         <div className="flex justify-center gap-2">
                             <button onClick={() => setLang('tr')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'tr' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>TR</button>
                             <button onClick={() => setLang('en')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
+                            <button onClick={() => setLang('es')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'es' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>ES</button>
                         </div>
                     </div>
                 </div>
@@ -2531,13 +3050,13 @@ const App: React.FC = () => {
                         <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
                             <div className="bg-slate-800 rounded-xl p-8 border border-slate-700 text-center max-w-sm">
                                 <SkipForward size={48} className="text-slate-600 mx-auto mb-4" />
-                                <h2 className="text-xl font-bold text-white mb-2">{t.noMatchToday || 'Bugün maç yok'}</h2>
-                                <p className="text-slate-400 text-sm mb-6">{t.noMatchDesc || 'Panelden haftayı ilerletin veya fikstüre bakın.'}</p>
+                                <h2 className="text-xl font-bold text-white mb-2">{t.noMatchToday}</h2>
+                                <p className="text-slate-400">{t.noMatchInfo}</p>
                                 <button
                                     onClick={() => setView('dashboard')}
                                     className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-lg transition-colors"
                                 >
-                                    ← {t.backToDashboard || 'Panele Dön'}
+                                    {t.returnToDashboard}
                                 </button>
                             </div>
                         </div>
@@ -2552,7 +3071,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-match.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Match" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-emerald-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.matchDay}</div>
+                                                <div className="text-emerald-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.matchDay}</div>
                                             </div>
                                         </button>
 
@@ -2560,7 +3079,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-squad-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Squad" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-blue-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.squad}</div>
+                                                <div className="text-blue-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.squad}</div>
                                             </div>
                                         </button>
 
@@ -2568,7 +3087,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-training-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Training" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-orange-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.training}</div>
+                                                <div className="text-orange-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.training}</div>
                                             </div>
                                         </button>
 
@@ -2576,7 +3095,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-shield-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Club" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-purple-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.club}</div>
+                                                <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.club}</div>
                                             </div>
                                         </button>
 
@@ -2584,7 +3103,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-transfer-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Transfers" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-cyan-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.market}</div>
+                                                <div className="text-cyan-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.market}</div>
                                             </div>
                                         </button>
 
@@ -2592,7 +3111,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-fixtures-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Fixtures" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-teal-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.fixtures}</div>
+                                                <div className="text-teal-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.fixtures}</div>
                                             </div>
                                         </button >
 
@@ -2600,7 +3119,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-league.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="League" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-amber-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.standings}</div>
+                                                <div className="text-amber-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.standings}</div>
                                             </div>
                                         </button>
 
@@ -2608,7 +3127,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-rank.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Rankings" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-pink-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.worldRankings}</div>
+                                                <div className="text-pink-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.worldRankings}</div>
                                             </div>
                                         </button>
 
@@ -2616,7 +3135,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-news-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="News" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-red-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.news}</div>
+                                                <div className="text-red-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.news}</div>
                                             </div>
                                         </button>
 
@@ -2624,15 +3143,15 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-guide-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Guide" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-teal-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.gameGuide}</div>
+                                                <div className="text-teal-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.gameGuide}</div>
                                             </div>
                                         </button>
 
-                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
                                             <img src="/assets/icon-language-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Language" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-indigo-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : 'ENGLISH'}</div>
+                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : 'ESPAÑOL'}</div>
                                             </div>
                                         </button>
 
@@ -2640,7 +3159,7 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-friendly-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Friendly" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-yellow-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.playFriendly}</div>
+                                                <div className="text-yellow-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.playFriendly}</div>
                                             </div>
                                         </button>
 
@@ -2648,15 +3167,29 @@ const App: React.FC = () => {
                                             <img src="/assets/icon-ads-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Ads" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-emerald-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">ADS ON/OFF</div>
+                                                <div className="text-emerald-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">ADS ON/OFF</div>
                                             </div>
                                         </button>
+
+                                        {/* İş Teklifleri - Only show if offers exist */}
+                                        {(gameState?.jobOffers?.length || 0) > 0 && (
+                                            <button onClick={() => setShowJobOffers(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform border-2 border-purple-500/50">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-slate-900/90"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
+                                                <div className="relative z-10 mt-auto mb-3 text-center">
+                                                    <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">İş Teklifleri</div>
+                                                    <span className="absolute -top-8 right-2 w-5 h-5 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center font-bold animate-pulse">
+                                                        {gameState?.jobOffers?.length || 0}
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        )}
 
                                         <button onClick={handleBackToProfiles} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
                                             <img src="/assets/icon-exit-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Exit" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-rose-400 font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.saveAndExit}</div>
+                                                <div className="text-rose-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.saveAndExit}</div>
                                             </div>
                                         </button>
 
@@ -2837,8 +3370,8 @@ const App: React.FC = () => {
                                                                             : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40')
                                                                         : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40'}`}
                                                             >
-                                                                <SkipForward size={20} className="fill-current" />
-                                                                <span className="hidden md:inline">{t.playNextMatch || 'Play Match'}</span>
+                                                                <SkipForward size={20} className="mr-2" />
+                                                                <span className="hidden md:inline">{t.playNextMatch}</span>
                                                             </button>
                                                         </div>
                                                     );
@@ -2918,7 +3451,7 @@ const App: React.FC = () => {
                                     />
                                 )
                             }
-                            {view === 'squad' && <TeamManagement team={userTeam} players={userPlayers} onUpdateTactic={handleUpdateTactic} onPlayerClick={setSelectedPlayer} onUpdateLineup={handleUpdateLineup} onSwapPlayers={handleSwapPlayers} onMovePlayer={handleMovePlayer} onAutoFix={handleAutoFix} t={t} />}
+                            {view === 'squad' && <TeamManagement team={userTeam} players={userPlayers} onUpdateTactic={handleUpdateTactic} onPlayerClick={setSelectedPlayer} onUpdateLineup={handleUpdateLineup} onSwapPlayers={handleSwapPlayers} onMovePlayer={handleMovePlayer} onAutoFix={handleAutoFix} onPlayerMoraleChange={handlePlayerMoraleChange} t={t} />}
                             {view === 'training' && <TrainingCenter team={userTeam} players={userPlayers} onSetFocus={handleSetTrainingFocus} onSetIntensity={handleSetTrainingIntensity} t={t} />}
                             {view === 'transfers' && <TransferMarket marketPlayers={gameState.players} userTeam={userTeam} onBuyPlayer={handleBuyPlayer} onPlayerClick={setSelectedPlayer} t={t} />}
                             {

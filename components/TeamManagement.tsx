@@ -34,6 +34,7 @@ interface PlayerRowProps {
     isLast?: boolean;
     assignedRole?: Position;
     key?: React.Key;
+    t: Translation;
 }
 
 
@@ -44,9 +45,13 @@ const getAttributeClass = (val: number) => {
     return 'attr-box attr-low';                  // < 70
 };
 
-const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole }: PlayerRowProps) => {
+const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole, t }: PlayerRowProps) => {
     const isSelected = selectedPlayerId === player.id;
-    const effectiveRating = assignedRole ? calculateEffectiveRating(player, assignedRole, player.condition) : player.overall;
+    // === OVR CONSISTENCY FIX ===
+    // Always calculate effective rating with condition - even for bench/reserve players
+    // This ensures consistent OVR display across all lists (no more "94 on bench, 90 in starting 11")
+    const roleToUse = assignedRole || normalizePos(player);
+    const effectiveRating = calculateEffectiveRating(player, roleToUse, player.condition);
 
     return (
         <div
@@ -90,33 +95,46 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                 )}
             </div>
 
-            {/* Hidden on Mobile - Attributes */}
-            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.speed)}>{player.attributes.speed}</span></div>
-            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.finishing)}>{player.attributes.finishing}</span></div>
-            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></div>
-            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></div>
-            <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
+            {/* Hidden on Mobile - Attributes (Different for GK vs Outfield) */}
+            {(player.position as string) === 'GK' || (player.position as string) === 'KL' ? (
+                <>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.goalkeeping)}>GK {player.attributes.goalkeeping}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.composure)}>REF {player.attributes.composure}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.positioning)}>POS {player.attributes.positioning}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.strength)}>STR {player.attributes.strength}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>KCK {player.attributes.passing}</span></div>
+                </>
+            ) : (
+                <>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.speed)}>{player.attributes.speed}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.finishing)}>{player.attributes.finishing}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></div>
+                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
+                </>
+            )}
 
             {/* Status Bars (Mobile friendly) */}
             <div className="flex flex-col gap-1 w-16 md:w-24 group/status relative">
                 <div className="flex items-center gap-1">
-                    <span className="text-[9px] font-mono text-slate-500 w-3">CON</span>
+                    <span className="text-[9px] font-mono text-slate-500 w-3">{t.con}</span>
                     <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
                         <div className="h-full bg-emerald-500" style={{ width: `${player.condition}%` }}></div>
                     </div>
                 </div>
                 <div className="flex items-center gap-1">
-                    <span className="text-[9px] font-mono text-slate-500 w-3">MOR</span>
+                    <span className="text-[9px] font-mono text-slate-500 w-3">{t.mor}</span>
                     <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
                         <div className={`h-full ${player.morale > 80 ? 'bg-emerald-400' : player.morale > 50 ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${player.morale}%` }}></div>
                     </div>
                 </div>
                 {/* Morale Reason Tooltip */}
-                <div className="absolute bottom-full left-0 mb-1 p-2 bg-slate-900 border border-slate-600 rounded shadow-xl opacity-0 group-hover/status:opacity-100 transition-opacity pointer-events-none z-50 w-48 text-[10px]">
+                <div className="absolute bottom-full left-0 mb-1 p-2 bg-slate-900 border border-slate-600 rounded shadow-xl opacity-0 group-hover/status:opacity-100 transition-opacity pointer-events-none z-50 w-56 text-[10px]">
                     <div className="font-bold text-white mb-1">Moral: {player.morale}%</div>
                     <div className="space-y-0.5 text-slate-400">
-                        {player.lineup === 'STARTING' && <div className="text-emerald-400">✓ 11'de oynuyor (+2/hafta)</div>}
-                        {player.lineup === 'BENCH' && <div className="text-blue-400">🪑 Yedek (stabil - oyuna girecek)</div>}
+                        {player.playedThisWeek && <div className="text-emerald-400">✅ Bu hafta maçta oynadı (+2)</div>}
+                        {!player.playedThisWeek && player.lineup === 'STARTING' && <div className="text-emerald-400">✓ 11'de oynuyor (+2/hafta)</div>}
+                        {!player.playedThisWeek && player.lineup === 'BENCH' && <div className="text-blue-400">🪑 Yedek (stabil - oyuna girecek)</div>}
                         {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ Kadro dışı, yıldız oyuncu (-3/hafta)</div>}
                         {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ Kadro dışı (-1/hafta)</div>}
                         {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 Kadro dışı (stabil)</div>}
@@ -126,6 +144,18 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                         {player.form < 5 && <div className="text-red-400">📉 Kötü form ({player.form}/10)</div>}
                         {player.morale < 40 && <div className="text-amber-400 mt-1">💬 Motive etmeyi dene!</div>}
                     </div>
+
+                    {/* Moral History - Son değişiklikler */}
+                    {player.moraleHistory && player.moraleHistory.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-slate-700">
+                            <div className="text-[9px] text-slate-500 mb-1">Son Moral Değişimleri:</div>
+                            {player.moraleHistory.slice(-3).reverse().map((h, i) => (
+                                <div key={i} className={`text-[9px] ${h.change > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                                    Hafta {h.week}: {h.change > 0 ? '+' : ''}{h.change} ({h.reason})
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -157,11 +187,12 @@ interface TeamManagementProps {
     onSwapPlayers: (player1Id: string, player2Id: string) => void;
     onMovePlayer?: (playerId: string, direction: 'UP' | 'DOWN') => void;
     onAutoFix?: () => void;
+    onPlayerMoraleChange?: (playerId: string, moraleChange: number, reason: string) => void;
     t: Translation;
 }
 
 export const TeamManagement: React.FC<TeamManagementProps> = ({
-    team, players, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, t
+    team, players, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, t
 }) => {
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [tacticTab, setTacticTab] = useState<'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
@@ -200,6 +231,17 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const handleInteract = (type: 'PRAISE' | 'CRITICIZE' | 'MOTIVATE', intensity: 'LOW' | 'HIGH') => {
         if (!interactingPlayer) return;
         const result = handlePlayerInteraction(interactingPlayer, type, intensity);
+
+        // === BUG FIX: Actually apply the morale change! ===
+        if (onPlayerMoraleChange && result.moraleChange !== 0) {
+            const reasonMap = {
+                PRAISE: intensity === 'HIGH' ? 'Yoğun övgü' : 'Övgü',
+                CRITICIZE: intensity === 'HIGH' ? 'Sert eleştiri' : 'Eleştiri',
+                MOTIVATE: 'Motivasyon konuşması'
+            };
+            onPlayerMoraleChange(interactingPlayer.id, result.moraleChange, reasonMap[type]);
+        }
+
         alert(`${result.message}\n(Morale change: ${result.moraleChange > 0 ? '+' : ''}${result.moraleChange})`);
         setInteractingPlayer(null);
     };
@@ -284,22 +326,22 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 onClick={handleAutoPick}
                                 className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 transition-all"
                             >
-                                <Wand2 size={10} /> Auto
+                                <Wand2 size={10} /> {t.auto}
                             </button>
                         </div>
                     </div>
 
                     <div className="flex bg-slate-900 rounded p-1 mb-2">
-                        <button onClick={() => setTacticTab('FORMATION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'FORMATION' ? 'bg-slate-700 text-white' : 'text-slate-500'}`}>Base</button>
-                        <button onClick={() => setTacticTab('IN_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'IN_POSSESSION' ? 'bg-emerald-700 text-white' : 'text-slate-500'}`}>Attack</button>
-                        <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white' : 'text-slate-500'}`}>Defense</button>
+                        <button onClick={() => setTacticTab('FORMATION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'FORMATION' ? 'bg-slate-700 text-white' : 'text-slate-500'}`}>{t.base}</button>
+                        <button onClick={() => setTacticTab('IN_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'IN_POSSESSION' ? 'bg-emerald-700 text-white' : 'text-slate-500'}`}>{t.attack}</button>
+                        <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white' : 'text-slate-500'}`}>{t.defense}</button>
                     </div>
 
                     <div className="space-y-2 min-h-[80px]">
                         {tacticTab === 'FORMATION' && (
                             <>
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">Formation</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.formation}</label>
                                     <select
                                         value={team.tactic.formation}
                                         onChange={(e) => handleTacticChange('formation', e.target.value as TacticType)}
@@ -309,17 +351,31 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">Aggression</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                        {['Safe', 'Normal', 'Aggressive'].map(opt => (
-                                            <button
-                                                key={opt}
-                                                onClick={() => handleTacticChange('aggression', opt)}
-                                                className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === opt ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                            >
-                                                {opt}
-                                            </button>
-                                        ))}
+
+                                        <button
+                                            key="Safe"
+                                            onClick={() => handleTacticChange('aggression', 'Safe')}
+                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Safe' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            {t.safe}
+                                        </button>
+                                        <button
+                                            key="Normal"
+                                            onClick={() => handleTacticChange('aggression', 'Normal')}
+                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Normal' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            {t.normal}
+                                        </button>
+                                        <button
+                                            key="Aggressive"
+                                            onClick={() => handleTacticChange('aggression', 'Aggressive')}
+                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Aggressive' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            {t.aggressive}
+                                        </button>
+
                                     </div>
                                 </div>
                             </>
@@ -332,7 +388,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
                                         <select value={team.tactic.width || 'Balanced'} onChange={(e) => handleTacticChange('width', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
                                             <option value="Narrow">{t.tacticNarrow}</option>
-                                            <option value="Balanced">Balanced</option>
+                                            <option value="Balanced">{t.tacticBalanced || 'Balanced'}</option>
                                             <option value="Wide">{t.tacticWide}</option>
                                         </select>
                                     </div>
@@ -340,7 +396,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
                                         <select value={team.tactic.passingStyle || 'Mixed'} onChange={(e) => handleTacticChange('passingStyle', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
                                             <option value="Short">{t.tacticShort}</option>
-                                            <option value="Mixed">Mixed</option>
+                                            <option value="Mixed">{t.tacticBalanced || 'Mixed'}</option>
                                             <option value="Direct">{t.tacticDirect}</option>
                                         </select>
                                     </div>
@@ -349,7 +405,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.tempo || 'Tempo'}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
                                         <button onClick={() => handleTacticChange('tempo', 'Slow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Slow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoSlow || 'Slow'}</button>
-                                        <button onClick={() => handleTacticChange('tempo', 'Normal')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Normal' || !team.tactic.tempo ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>Normal</button>
+                                        <button onClick={() => handleTacticChange('tempo', 'Normal')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Normal' || !team.tactic.tempo ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Normal'}</button>
                                         <button onClick={() => handleTacticChange('tempo', 'Fast')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Fast' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoFast || 'Fast'}</button>
                                     </div>
                                 </div>
@@ -362,7 +418,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensiveLine}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
                                         <button onClick={() => handleTacticChange('defensiveLine', 'Deep')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'Deep' ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticDeep}</button>
-                                        <button onClick={() => handleTacticChange('defensiveLine', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'Balanced' || !team.tactic.defensiveLine ? 'bg-red-600 text-white' : 'text-slate-400'}`}>Normal</button>
+                                        <button onClick={() => handleTacticChange('defensiveLine', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'Balanced' || !team.tactic.defensiveLine ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticBalanced || 'Normal'}</button>
                                         <button onClick={() => handleTacticChange('defensiveLine', 'High')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'High' ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticHigh}</button>
                                     </div>
                                 </div>
@@ -443,8 +499,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                 </div>
 
                 <div className="bg-slate-800 p-2 rounded text-[10px] text-slate-400 border border-slate-700 flex justify-between">
-                    <span className="flex items-center gap-1"><ArrowRightLeft size={10} /> Click swap.</span>
-                    <span className="flex items-center gap-1 text-emerald-400"><ArrowRight size={10} /> Drag adjust.</span>
+                    <span className="flex items-center gap-1"><ArrowRightLeft size={10} /> {t.clickSwap}</span>
+                    <span className="flex items-center gap-1 text-emerald-400"><ArrowRight size={10} /> {t.dragAdjust}</span>
                 </div>
             </div>
 
@@ -488,6 +544,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 isFirst={idx === 0}
                                 isLast={idx === starters.length - 1}
                                 assignedRole={assignedRoleMap[p.id]}
+                                t={t}
                             />
                         ))}
                         {starters.length === 0 && <div className="text-slate-600 text-center py-4 text-sm">Select players to start</div>}
@@ -509,6 +566,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 onMove={onMovePlayer}
                                 isFirst={idx === 0}
                                 isLast={idx === bench.length - 1}
+                                t={t}
                             />
                         ))}
                     </div>
@@ -537,6 +595,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 selectedPlayerId={selectedPlayerId}
                                 onSelect={handlePlayerSelect}
                                 onInteractStart={setInteractingPlayer}
+                                t={t}
                             />
                         ))}
                     </div>

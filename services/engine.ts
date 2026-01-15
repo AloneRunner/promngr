@@ -371,16 +371,25 @@ export const autoPickLineup = (
         // Morale bonus
         score += (p.morale - 50) * 0.05;
 
-        // Position match bonus - if playing in natural position, give bonus
+        // ========== DETAILED OOP PENALTY MATRIX ==========
+        // Only affects match performance, NOT permanent player stats!
+        // Penalty based on how far the position is from natural position
         if (forRole && p.position === forRole) {
-            score += 5;
+            score += 5; // Natural position bonus
         } else if (forRole && p.position !== forRole) {
-            // Out of position penalty
-            score -= 10;
-            // GK playing field or Field playing GK is terrible
-            if (p.position === Position.GK || forRole === Position.GK) {
-                score -= 100;
-            }
+            // OOP Penalty Matrix
+            const oopPenalty: Record<string, Record<string, number>> = {
+                'GK': { 'GK': 0, 'DEF': -25, 'MID': -35, 'FWD': -40 },
+                'DEF': { 'GK': -50, 'DEF': 0, 'MID': -10, 'FWD': -20 },
+                'MID': { 'GK': -50, 'DEF': -8, 'MID': 0, 'FWD': -8 },
+                'FWD': { 'GK': -50, 'DEF': -25, 'MID': -10, 'FWD': 0 }
+            };
+
+            const playerPos = p.position as string;
+            const targetPos = forRole as string;
+            const penalty = oopPenalty[playerPos]?.[targetPos] ?? -15;
+
+            score += penalty;
         }
 
         return score;
@@ -815,7 +824,7 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
     if (tacticsRockPaperScissors[homeTeam.tactic.style] === awayTeam.tactic.style) homeAdvantage += 0.05;
     if (tacticsRockPaperScissors[awayTeam.tactic.style] === homeTeam.tactic.style) homeAdvantage -= 0.05;
 
-    // 2. POWER CALCULATION - IMPROVED: Uses total team overall
+    // 2. POWER CALCULATION - IMPROVED: Uses total team overall + OOP penalties
     const getTeamPower = (players: Player[]): { attack: number, defense: number, overall: number } => {
         const starters = players.filter(p => p.lineup === 'STARTING');
         if (starters.length === 0) {
@@ -824,23 +833,38 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
             starters.push(...sorted.slice(0, 11));
         }
 
+        // OOP Penalty Matrix (percentage reduction)
+        const oopPenaltyPct: Record<string, Record<string, number>> = {
+            'GK': { 'GK': 0, 'DEF': 0.30, 'MID': 0.40, 'FWD': 0.50 },
+            'DEF': { 'GK': 0.60, 'DEF': 0, 'MID': 0.12, 'FWD': 0.25 },
+            'MID': { 'GK': 0.60, 'DEF': 0.10, 'MID': 0, 'FWD': 0.10 },
+            'FWD': { 'GK': 0.60, 'DEF': 0.30, 'MID': 0.12, 'FWD': 0 }
+        };
+
         let attack = 0, defense = 0, overall = 0;
         starters.forEach(p => {
-            const pos = mapTurkishPosition(p.position);
-            const rating = calculateEffectiveRating(p, pos);
-            overall += rating;
+            const naturalPos = mapTurkishPosition(p.position);
+            // TODO: Detect assigned position from formation/custom positions
+            // For now, use natural position (no OOP in auto-sim)
+            const playingPos = naturalPos;
 
-            if (pos === Position.FWD) {
-                attack += rating * 1.2;
-                defense += rating * 0.2;
-            } else if (pos === Position.MID) {
-                attack += rating * 0.7;
-                defense += rating * 0.6;
-            } else if (pos === Position.DEF) {
-                attack += rating * 0.2;
-                defense += rating * 1.1;
-            } else if (pos === Position.GK) {
-                defense += rating * 1.5;
+            // Calculate OOP penalty
+            const penalty = oopPenaltyPct[p.position as string]?.[playingPos as string] ?? 0;
+            const effectiveRating = p.overall * (1 - penalty);
+
+            overall += effectiveRating;
+
+            if (naturalPos === Position.FWD) {
+                attack += effectiveRating * 1.2;
+                defense += effectiveRating * 0.2;
+            } else if (naturalPos === Position.MID) {
+                attack += effectiveRating * 0.7;
+                defense += effectiveRating * 0.6;
+            } else if (naturalPos === Position.DEF) {
+                attack += effectiveRating * 0.2;
+                defense += effectiveRating * 1.1;
+            } else if (naturalPos === Position.GK) {
+                defense += effectiveRating * 1.5;
             }
         });
 
@@ -944,6 +968,57 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
 }
 
 export const simulateLeagueRound = (gameState: GameState, currentWeek: number): GameState => {
+    // ========== SQUAD REGENERATION (Exploit Prevention) ==========
+    // Minimum 16 players per team, position requirements enforced
+    // Generated players are LOW QUALITY youth academy rejects (not exploitable)
+    const MIN_SQUAD_SIZE = 16;
+    const MIN_GK = 2;
+    const MIN_DEF = 5;
+    const MIN_MID = 5;
+    const MIN_FWD = 4;
+
+    let allPlayers = [...gameState.players];
+
+    gameState.teams.forEach(team => {
+        // Check ALL teams including user's team when they switch back
+        const teamPlayers = allPlayers.filter(p => p.teamId === team.id);
+
+        if (teamPlayers.length < MIN_SQUAD_SIZE) {
+            // Count positions needed
+            const gkCount = teamPlayers.filter(p => p.position === 'GK').length;
+            const defCount = teamPlayers.filter(p => p.position === 'DEF').length;
+            const midCount = teamPlayers.filter(p => p.position === 'MID').length;
+            const fwdCount = teamPlayers.filter(p => p.position === 'FWD').length;
+
+            const neededPositions: Position[] = [];
+            if (gkCount < MIN_GK) for (let i = gkCount; i < MIN_GK; i++) neededPositions.push(Position.GK);
+            if (defCount < MIN_DEF) for (let i = defCount; i < MIN_DEF; i++) neededPositions.push(Position.DEF);
+            if (midCount < MIN_MID) for (let i = midCount; i < MIN_MID; i++) neededPositions.push(Position.MID);
+            if (fwdCount < MIN_FWD) for (let i = fwdCount; i < MIN_FWD; i++) neededPositions.push(Position.FWD);
+
+            // Generate LOW QUALITY youth academy rejects (exploit prevention)
+            // These players are 50-60 overall, not worth selling!
+            const nationalities = ['tr', 'br', 'de', 'fr', 'es', 'ar'];
+
+            neededPositions.forEach(pos => {
+                const newPlayer = generatePlayer(
+                    team.id,
+                    pos,
+                    nationalities[Math.floor(Math.random() * nationalities.length)],
+                    [17, 21], // Very young
+                    [45, 55]  // LOW potential = LOW overall (not exploitable)
+                );
+                newPlayer.lineup = 'RESERVE';
+                newPlayer.wage = 500; // Minimum wage
+                newPlayer.value = 5000; // Almost worthless
+                allPlayers.push(newPlayer);
+            });
+        }
+    });
+
+    // Update players array with regenerated players
+    gameState = { ...gameState, players: allPlayers };
+
     // FIX: Simulate ALL matches for the current week across ALL leagues
     const matchesToSimulate = gameState.matches.filter(m => m.week === currentWeek && !m.isPlayed);
 
@@ -1073,6 +1148,19 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                 const keptCleanSheet = isHome ? aScore === 0 : hScore === 0;
                 const saves = isHome ? (m.stats?.homeSaves || 0) : (m.stats?.awaySaves || 0);
 
+                // === MORAL FIX: Mark ALL players who played this week ===
+                // This includes starters AND anyone who came on as a sub
+                // (Subs already have lineup='STARTING' after substitution)
+                players.filter(p => p.lineup === 'STARTING' || p.lineup === 'BENCH').forEach(p => {
+                    // If they started OR were subbed in (events show SUB with their id)
+                    const wasStarter = p.lineup === 'STARTING';
+                    const wasSubbedIn = m.events.some(e => e.type === MatchEventType.SUB && e.playerId === p.id);
+
+                    if (wasStarter || wasSubbedIn) {
+                        p.playedThisWeek = true;
+                    }
+                });
+
                 players.filter(p => p.lineup === 'STARTING').forEach(p => {
                     const oldApps = p.stats?.appearances || 0;
                     const newApps = oldApps + 1;
@@ -1117,7 +1205,8 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             updatePlayerRatings(awayPlayers, away.id, false);
 
             // REPUTATION SYSTEM - ENHANCED: More dynamic changes!
-            const updateReputation = (team: Team, opponentRep: number, won: boolean, drew: boolean) => {
+            const updateReputation = (team: Team, opponent: Team, won: boolean, drew: boolean) => {
+                const opponentRep = opponent.reputation;
                 const repDiff = opponentRep - team.reputation;
                 let change = 0;
 
@@ -1136,17 +1225,30 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     else change = -2; // -2 for losing to stronger (was -1)
                 }
 
-                team.reputation = Math.max(1000, Math.min(10000, team.reputation + change));
+                const newReputation = Math.max(1000, Math.min(10000, team.reputation + change));
+
+                // Record history (only for user team to save memory)
+                if (team.id === gameState.userTeamId && change !== 0) {
+                    const resultText = won ? 'G' : drew ? 'B' : 'M';
+                    const reason = `${opponent.name} (${resultText})`;
+                    const history = team.reputationHistory || [];
+                    history.push({ week: gameState.currentWeek, change, reason, newValue: newReputation });
+                    // Keep only last 20 entries
+                    team.reputationHistory = history.slice(-20);
+                }
+
+                team.reputation = newReputation;
             };
 
-            updateReputation(home, away.reputation, hScore > aScore, hScore === aScore);
-            updateReputation(away, home.reputation, aScore > hScore, hScore === aScore);
+            updateReputation(home, away, hScore > aScore, hScore === aScore);
+            updateReputation(away, home, aScore > hScore, hScore === aScore);
 
             // === BOARD CONFIDENCE SYSTEM ===
             // Only update for user team (AI teams don't need this)
-            const updateBoardConfidence = (team: Team, opponentRep: number, won: boolean, drew: boolean, goalsFor: number, goalsAgainst: number) => {
+            const updateBoardConfidence = (team: Team, opponent: Team, won: boolean, drew: boolean, goalsFor: number, goalsAgainst: number) => {
                 if (team.id !== gameState.userTeamId) return; // Only for user team
 
+                const opponentRep = opponent.reputation;
                 const repDiff = opponentRep - team.reputation;
                 let change = 0;
 
@@ -1177,11 +1279,24 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                 const recentLosses = (team.recentForm || []).slice(-3).filter(r => r === 'L').length;
                 if (recentLosses >= 3) change -= 3; // Extra -3 for 3+ consecutive losses
 
-                team.boardConfidence = Math.max(0, Math.min(100, (team.boardConfidence || 70) + change));
+                const newConfidence = Math.max(0, Math.min(100, (team.boardConfidence || 70) + change));
+
+                // Record history
+                if (change !== 0) {
+                    const resultText = won ? 'Galibiyet' : drew ? 'Beraberlik' : 'Mağlubiyet';
+                    const score = won || drew ? `${goalsFor}-${goalsAgainst}` : `${goalsFor}-${goalsAgainst}`;
+                    const reason = `${opponent.name} ${resultText} (${score})`;
+                    const history = team.confidenceHistory || [];
+                    history.push({ week: gameState.currentWeek, change, reason, newValue: newConfidence });
+                    // Keep only last 20 entries
+                    team.confidenceHistory = history.slice(-20);
+                }
+
+                team.boardConfidence = newConfidence;
             };
 
-            updateBoardConfidence(home, away.reputation, hScore > aScore, hScore === aScore, hScore, aScore);
-            updateBoardConfidence(away, home.reputation, aScore > hScore, hScore === aScore, aScore, hScore);
+            updateBoardConfidence(home, away, hScore > aScore, hScore === aScore, hScore, aScore);
+            updateBoardConfidence(away, home, aScore > hScore, hScore === aScore, aScore, hScore);
         }
     });
     return { ...gameState };
@@ -1206,6 +1321,13 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     const intensity = userTeam?.trainingIntensity || 'NORMAL';
     const physioLevel = userTeam?.staff?.physioLevel || 1;
     const headCoachLevel = userTeam?.staff?.headCoachLevel || 1;
+
+    // === RESET playedThisWeek FLAG FOR ALL PLAYERS ===
+    // This flag is set during match simulation when a player plays
+    // Reset at start of week so it can be tracked for next week
+    gameState.players.forEach(p => {
+        p.playedThisWeek = false;
+    });
 
     // Enhanced physio effect on recovery
     const physioBonus = physioLevel * 3; // Reduced from 4 to 3 per level
@@ -1258,8 +1380,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     id: uuid(),
                     week: gameState.currentWeek,
                     type: MessageType.INJURY,
-                    subject: `🏥 ${p.lastName} Injured!`,
-                    body: `${p.firstName} ${p.lastName} sustained an injury during training. Expected recovery: ${newWeeksInjured} week(s).`,
+                    subject: t.injurySubject.replace('{name}', p.lastName),
+                    body: t.injuryBody.replace('{name}', `${p.firstName} ${p.lastName}`).replace('{weeks}', newWeeksInjured.toString()),
                     isRead: false,
                     date: new Date().toISOString()
                 });
@@ -1267,15 +1389,27 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         }
 
         if (isUserPlayer) {
-            if (p.lineup === 'STARTING') {
+            let moraleReason = '';
+
+            // === MORAL FIX: Check if player PLAYED this week (not just lineup status) ===
+            // A player who started and got subbed out should get CREDIT for playing!
+            if (p.playedThisWeek) {
+                // Player played this week (started or came on as sub) - morale boost!
                 newMorale = Math.min(100, newMorale + 2);
+                moraleReason = 'Maçta oynadı';
+            } else if (p.lineup === 'STARTING') {
+                // Lineup says starting but didn't play? (Edge case - shouldn't happen normally)
+                newMorale = Math.min(100, newMorale + 2);
+                moraleReason = 'İlk 11\'de';
             } else if (p.lineup === 'BENCH') {
-                // Yedekler oyuna girecekleri için moral stabil - değişiklik yok
-                // newMorale = newMorale; // No change
+                // On bench and didn't play - neutral (they're ready to play)
+                moraleReason = 'Yedek - stabil';
+                // newMorale stays same
             } else {
-                // RESERVE - Kadro dışı
+                // RESERVE - Kadro dışı AND didn't play this week
                 if (p.overall > 75) {
                     newMorale = Math.max(0, newMorale - 3);
+                    moraleReason = 'Yıldız oyuncu kadro dışı';
                     if (newMorale < 40 && Math.random() > 0.8) {
                         newMessages.push({
                             id: uuid(),
@@ -1290,8 +1424,26 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 } else if (p.overall > 65) {
                     // Orta seviye oyuncular hafif moral düşüşü
                     newMorale = Math.max(0, newMorale - 1);
+                    moraleReason = 'Kadro dışı';
+                } else {
+                    // 65 altı oyuncular stabil (genç/düşük seviye)
+                    moraleReason = 'Kadro dışı (stabil)';
                 }
-                // 65 altı oyuncular stabil (genç/düşük seviye)
+            }
+
+            // === MORAL HISTORY TRACKING ===
+            const moraleChange = newMorale - p.morale;
+            if (moraleChange !== 0) {
+                if (!p.moraleHistory) p.moraleHistory = [];
+                p.moraleHistory.push({
+                    week: gameState.currentWeek,
+                    change: moraleChange,
+                    reason: moraleReason
+                });
+                // Keep only last 10 entries
+                if (p.moraleHistory.length > 10) {
+                    p.moraleHistory = p.moraleHistory.slice(-10);
+                }
             }
         }
 
@@ -1319,6 +1471,17 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     trainingBoost = ['speed', 'stamina', 'strength'];
                 } else if (focus === 'TECHNICAL') {
                     trainingBoost = ['passing', 'dribbling', 'vision'];
+                } else if (focus === 'POSITION_BASED') {
+                    // Each player trains based on their position
+                    if (p.position === 'FWD') {
+                        trainingBoost = ['finishing', 'dribbling', 'speed'];
+                    } else if (p.position === 'MID') {
+                        trainingBoost = ['passing', 'vision', 'stamina'];
+                    } else if (p.position === 'DEF') {
+                        trainingBoost = ['tackling', 'positioning', 'strength'];
+                    } else if (p.position === 'GK') {
+                        trainingBoost = ['goalkeeping', 'composure', 'strength'];
+                    }
                 }
             } else if (playerTeam) {
                 const trainingLevel = playerTeam.facilities?.trainingLevel || 1;
@@ -1521,9 +1684,20 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             const potentialBonus = Math.floor(scoutLevel * 2 + academyLevel); // Higher scout = higher potential
             const potential = Math.min(99, baseOverall + 20 + Math.floor(Math.random() * 15) + potentialBonus);
 
+            // === FIX: League-based nationality ===
+            const nationalityPools: Record<string, string[]> = {
+                'tr': ['Turkey', 'Turkey', 'Turkey', 'Turkey', 'Turkey', 'Turkey', 'Turkey', 'Germany', 'Brazil', 'France'], // 70% Turkish
+                'eng': ['England', 'England', 'England', 'England', 'England', 'France', 'Brazil', 'Germany', 'Spain', 'Nigeria'], // 50% English
+                'esp': ['Spain', 'Spain', 'Spain', 'Spain', 'Spain', 'Argentina', 'Brazil', 'France', 'Colombia', 'Portugal'] // 50% Spanish
+            };
+            const pool = nationalityPools[gameState.leagueId] || nationalityPools['tr'];
+            const youthNationality = pool[Math.floor(Math.random() * pool.length)];
 
-            const youthPlayer = generatePlayer(userTeam.id, pos, 'Turkey', [16, 17], [potential, potential]);
-            youthPlayer.salary = youthPlayer.value * 0.15; // Approx 15% of value as yearly salary
+            const youthPlayer = generatePlayer(userTeam.id, pos, youthNationality, [16, 17], [potential, potential]);
+
+            // === FIX: Academy players are CHEAP (your own youth) ===
+            youthPlayer.value = 50000; // €50K - academy product, not transfer market
+            youthPlayer.salary = 25000; // €25K/year - youth wage
             updatedTeams = gameState.teams.map(t => {
                 if (t.id === userTeam.id) {
                     return { ...t, youthCandidates: [...(t.youthCandidates || []), youthPlayer] };
@@ -1535,8 +1709,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 id: uuid(),
                 week: gameState.currentWeek,
                 type: MessageType.INFO,
-                subject: '🌟 Youth Prospect Found!',
-                body: `Your scouts have discovered ${youthPlayer.firstName} ${youthPlayer.lastName} (${pos}, ${youthPlayer.age}). Overall: ${baseOverall}, Potential: ${potential}`,
+                subject: t.youthProspectSubject,
+                body: t.youthProspectBody.replace('{name}', `${youthPlayer.firstName} ${youthPlayer.lastName}`).replace('{position}', pos).replace('{age}', youthPlayer.age.toString()).replace('{overall}', baseOverall.toString()).replace('{potential}', potential.toString()),
                 isRead: false,
                 date: new Date().toISOString()
             });
@@ -1747,8 +1921,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     id: uuid(),
                     week: gameState.currentWeek,
                     type: MessageType.TRANSFER_OFFER,
-                    subject: `💰 Transfer Offer: ${player.lastName}`,
-                    body: `${buyingTeam.name} has offered €${(offerAmount / 1000000).toFixed(1)}M for ${player.firstName} ${player.lastName}.`,
+                    subject: t.transferOfferSubject.replace('{team}', buyingTeam.name).replace('{name}', player.lastName),
+                    body: t.transferOfferBody.replace('{team}', buyingTeam.name).replace('{amount}', (offerAmount / 1000000).toFixed(1)).replace('{name}', `${player.firstName} ${player.lastName}`),
                     isRead: false,
                     date: new Date().toISOString(),
                     data: { offerId: offer.id }
@@ -1832,8 +2006,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                         id: uuid(),
                         week: gameState.currentWeek,
                         type: MessageType.INFO,
-                        subject: '📰 Transfer News',
-                        body: `${aiTeam.name} has signed ${targetPlayer.position} ${targetPlayer.firstName} ${targetPlayer.lastName} from ${sellingTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                        subject: t.transferNewsSubject,
+                        body: t.transferSignedBody.replace('{team}', aiTeam.name).replace('{position}', targetPlayer.position).replace('{name}', `${targetPlayer.firstName} ${targetPlayer.lastName}`).replace('{fromTeam}', sellingTeam.name).replace('{amount}', (transferFee / 1000000).toFixed(1)),
                         isRead: false,
                         date: new Date().toISOString()
                     });
@@ -1876,8 +2050,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     id: uuid(),
                     week: gameState.currentWeek,
                     type: MessageType.TRANSFER_OFFER,
-                    subject: `💰 ${aiTeam.name} wants ${targetPlayer.lastName}!`,
-                    body: `${aiTeam.name} has made an unsolicited offer of €${(offerAmount / 1000000).toFixed(1)}M for ${targetPlayer.firstName} ${targetPlayer.lastName}. They really want this player!`,
+                    subject: t.transferOfferSubject.replace('{team}', aiTeam.name).replace('{name}', targetPlayer.lastName),
+                    body: t.transferOfferBody.replace('{team}', aiTeam.name).replace('{amount}', (offerAmount / 1000000).toFixed(1)).replace('{name}', `${targetPlayer.firstName} ${targetPlayer.lastName}`),
                     isRead: false,
                     date: new Date().toISOString(),
                     data: { offerId: offer.id }
@@ -1923,8 +2097,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                         id: uuid(),
                         week: gameState.currentWeek,
                         type: MessageType.INFO,
-                        subject: '📰 Transfer News',
-                        body: `${buyer.name} has signed ${playerToSell.firstName} ${playerToSell.lastName} from ${aiTeam.name} for €${(transferFee / 1000000).toFixed(1)}M.`,
+                        subject: t.transferNewsSubject,
+                        body: t.transferSignedBody.replace('{team}', buyer.name).replace('{name}', `${playerToSell.firstName} ${playerToSell.lastName}`).replace('{fromTeam}', aiTeam.name).replace('{amount}', (transferFee / 1000000).toFixed(1)).replace('{position}', playerToSell.position),
                         isRead: false,
                         date: new Date().toISOString()
                     });

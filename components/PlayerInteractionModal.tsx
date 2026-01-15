@@ -46,29 +46,29 @@ export const PlayerInteractionModal: React.FC<PlayerInteractionModalProps> = ({ 
                 <div className="p-6">
                     {step === 'SELECT' ? (
                         <div className="space-y-3">
-                            <p className="text-slate-400 text-sm mb-4">Choose a topic to discuss with the player.</p>
+                            <p className="text-slate-400 text-sm mb-4">{t.chooseTopic}</p>
 
                             <button onClick={() => handleSelect('PRAISE')} className="w-full bg-slate-800 hover:bg-emerald-900/30 border border-slate-700 hover:border-emerald-500 p-4 rounded-lg flex items-center gap-4 transition-all group">
                                 <div className="bg-emerald-500/20 p-2 rounded-full text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors"><ThumbsUp size={20} /></div>
                                 <div className="text-left">
-                                    <div className="font-bold text-white">Praise Performance</div>
-                                    <div className="text-xs text-slate-500">Boost morale if playing well.</div>
+                                    <div className="font-bold text-white">{t.praisePerformance}</div>
+                                    <div className="text-xs text-slate-500">{t.praiseDesc}</div>
                                 </div>
                             </button>
 
                             <button onClick={() => handleSelect('CRITICIZE')} className="w-full bg-slate-800 hover:bg-red-900/30 border border-slate-700 hover:border-red-500 p-4 rounded-lg flex items-center gap-4 transition-all group">
                                 <div className="bg-red-500/20 p-2 rounded-full text-red-400 group-hover:bg-red-500 group-hover:text-white transition-colors"><ThumbsDown size={20} /></div>
                                 <div className="text-left">
-                                    <div className="font-bold text-white">Criticize Form</div>
-                                    <div className="text-xs text-slate-500">Demand better results. Risky.</div>
+                                    <div className="font-bold text-white">{t.criticizeForm}</div>
+                                    <div className="text-xs text-slate-500">{t.criticizeDesc}</div>
                                 </div>
                             </button>
 
                             <button onClick={() => handleSelect('MOTIVATE')} className="w-full bg-slate-800 hover:bg-blue-900/30 border border-slate-700 hover:border-blue-500 p-4 rounded-lg flex items-center gap-4 transition-all group">
                                 <div className="bg-blue-500/20 p-2 rounded-full text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors"><TrendingUp size={20} /></div>
                                 <div className="text-left">
-                                    <div className="font-bold text-white">Encourage</div>
-                                    <div className="text-xs text-slate-500">Help with confidence issues.</div>
+                                    <div className="font-bold text-white">{t.encourage}</div>
+                                    <div className="text-xs text-slate-500">{t.encourageDesc}</div>
                                 </div>
                             </button>
                         </div>
@@ -83,17 +83,17 @@ export const PlayerInteractionModal: React.FC<PlayerInteractionModalProps> = ({ 
 
                             <div className="space-y-3">
                                 <button onClick={() => execute('LOW')} className="w-full p-3 rounded bg-slate-700 hover:bg-slate-600 text-left text-sm text-slate-200 border border-slate-600">
-                                    {selectedType === 'PRAISE' && "Good job recently, keep it up."}
-                                    {selectedType === 'CRITICIZE' && "You need to step up your game."}
-                                    {selectedType === 'MOTIVATE' && "I believe in your ability."}
-                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wide">Calm Tone</span>
+                                    {selectedType === 'PRAISE' && t.praisePlayer}
+                                    {selectedType === 'CRITICIZE' && t.criticizePlayer}
+                                    {selectedType === 'MOTIVATE' && t.motivatePlayer}
+                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wide">{t.calmTone}</span>
                                 </button>
 
                                 <button onClick={() => execute('HIGH')} className="w-full p-3 rounded bg-slate-700 hover:bg-slate-600 text-left text-sm text-slate-200 border border-slate-600">
-                                    {selectedType === 'PRAISE' && "You are absolutely world class!"}
-                                    {selectedType === 'CRITICIZE' && "This performance is unacceptable!"}
-                                    {selectedType === 'MOTIVATE' && "You are the key to our success!"}
-                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wide">Passionate Tone</span>
+                                    {selectedType === 'PRAISE' && t.praisePlayer + "!!!"}
+                                    {selectedType === 'CRITICIZE' && t.criticizePlayer + "!!!"}
+                                    {selectedType === 'MOTIVATE' && t.motivatePlayer + "!!!"}
+                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wide">{t.passionateTone}</span>
                                 </button>
                             </div>
                         </div>

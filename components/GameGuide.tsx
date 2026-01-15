@@ -1,678 +1,488 @@
 
 import React, { useState } from 'react';
 import { Translation } from '../types';
-import { BookOpen, Activity, Zap, Brain, Target, Shield, Play, Users, DollarSign, Trophy, Gauge, Settings, Swords, ChevronDown, ChevronUp, Star, AlertTriangle, Info, Dumbbell } from 'lucide-react';
+import { BookOpen, Users, Trophy, DollarSign, Dumbbell, Building2, Target, ArrowRight, Star, AlertTriangle, TrendingUp, ChevronDown, ChevronUp, Zap, Shield, Heart, Brain, Crosshair } from 'lucide-react';
 
 interface GameGuideProps {
     t: Translation;
 }
 
-// Collapsible Section Component
-const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }> = ({ title, icon, children, defaultOpen = false }) => {
-    const [isOpen, setIsOpen] = useState(defaultOpen);
-    return (
-        <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors">
-                <div className="flex items-center gap-3">
-                    <div className="text-emerald-500">{icon}</div>
-                    <h3 className="font-bold text-white text-left">{title}</h3>
-                </div>
-                {isOpen ? <ChevronUp className="text-slate-400" size={20} /> : <ChevronDown className="text-slate-400" size={20} />}
-            </button>
-            {isOpen && <div className="p-4 pt-0 border-t border-slate-700">{children}</div>}
-        </div>
-    );
-};
-
-// Info Box Component
-const InfoBox: React.FC<{ type: 'tip' | 'warning' | 'info'; children: React.ReactNode }> = ({ type, children }) => {
-    const styles = {
-        tip: 'bg-emerald-900/30 border-emerald-500/50 text-emerald-300',
-        warning: 'bg-yellow-900/30 border-yellow-500/50 text-yellow-300',
-        info: 'bg-blue-900/30 border-blue-500/50 text-blue-300'
-    };
-    const icons = {
-        tip: <Star size={16} />,
-        warning: <AlertTriangle size={16} />,
-        info: <Info size={16} />
-    };
-    return (
-        <div className={`flex items-start gap-2 p-3 rounded border ${styles[type]} text-sm mt-3`}>
-            <div className="shrink-0 mt-0.5">{icons[type]}</div>
-            <div>{children}</div>
-        </div>
-    );
-};
+interface GuideSection {
+    id: string;
+    title: string;
+    icon: any;
+    color: string;
+    content: React.ReactNode;
+}
 
 export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
-    const [tab, setTab] = useState<'BASICS' | 'TACTICS' | 'MATCH' | 'ATTRIBUTES' | 'TRAINING' | 'TIPS'>('BASICS');
+    const [expandedSection, setExpandedSection] = useState<string | null>('basics');
+
+    const sections: GuideSection[] = [
+        {
+            id: 'basics',
+            title: '🎮 Oyun Temelleri',
+            icon: BookOpen,
+            color: 'emerald',
+            content: (
+                <div className="space-y-3">
+                    <p>⚽ Bu oyunda bir futbol takımının teknik direktörüsün.</p>
+                    <p>📅 Her hafta bir lig maçı oynanır. Sezon sonunda şampiyon belirlenir.</p>
+                    <p>🏆 <strong>Hedefin:</strong> Şampiyonluk, Avrupa kupaları ve kulübü büyütmek.</p>
+                    <p>💾 Oyun otomatik kaydedilir. "Kaydet ve Çık" ile güvenli çıkış yapabilirsin.</p>
+                    <p>📊 <strong>Yönetim güveni</strong> düşerse kovulabilirsin!</p>
+                    <div className="bg-slate-900/50 p-3 rounded mt-3">
+                        <p className="text-yellow-400 font-bold mb-2">⚠️ Yönetim Güveni Etkileri:</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Galibiyet: +3 güven</li>
+                            <li>• Beraberlik: +0 güven</li>
+                            <li>• Mağlubiyet: -5 güven</li>
+                            <li>• %30 altına düşerse: Kovulursun!</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'squad',
+            title: '👥 Kadro Yönetimi',
+            icon: Users,
+            color: 'blue',
+            content: (
+                <div className="space-y-3">
+                    <p>⭐ Oyuncuları <strong>İlk 11</strong>, <strong>Yedek</strong> veya <strong>Rezerv</strong> olarak ayarla.</p>
+                    <p>🔄 Oyuncuyu tıkla ve başka biriyle değiştir.</p>
+                    <p>📍 Diziliş seçerek farklı formasyonlar dene.</p>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">📊 OVR (Overall Rating) Nasıl Hesaplanır?</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• <strong>Pozisyon Uyumu:</strong> Doğru pozisyonda oynayan oyuncu daha yüksek OVR gösterir.</li>
+                            <li>• <strong>Moral Etkisi:</strong> 50+ moral = bonus, 50- moral = ceza</li>
+                            <li>• <strong>Kondisyon:</strong> 30% altı kondisyon = ciddi performans düşüşü</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">❌ Sözleşme Fesih</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• İstemediğin oyuncuyu serbest bırakabilirsin.</li>
+                            <li>• <strong>Tazminat:</strong> Kalan yıl × Yıllık maaş × %50</li>
+                            <li>• Oyuncu serbest oyuncu olur.</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'tactics',
+            title: '🎯 Taktik Sistemi (Detaylı)',
+            icon: Target,
+            color: 'purple',
+            content: (
+                <div className="space-y-4">
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-purple-400 font-bold mb-2">📐 Formasyonlar</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div><strong>4-3-3:</strong> Dengeli, kanat ağırlıklı</div>
+                            <div><strong>4-4-2:</strong> Klasik, güvenli</div>
+                            <div><strong>4-2-3-1:</strong> Orta saha kontrolü</div>
+                            <div><strong>3-5-2:</strong> Orta saha dominantı</div>
+                            <div><strong>5-3-2:</strong> Savunmacı</div>
+                            <div><strong>4-1-4-1:</strong> Su sızdırmaz savunma</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-orange-400 font-bold mb-2">⚡ Oyun Stili</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong className="text-blue-400">Possession:</strong> Top tutma, kısa pas, sabırlı atak. Güçlü orta saha gerektirir.</li>
+                            <li><strong className="text-green-400">Counter:</strong> Savunup hızlı kontra. Hızlı forvetler ve orta sahalar gerektirir.</li>
+                            <li><strong className="text-red-400">HighPress:</strong> Yüksek baskı, rakibi kendi yarısında boğ. Yüksek stamina gerektirir!</li>
+                            <li><strong className="text-gray-400">ParkTheBus:</strong> 11 adam savunma, kontra bekle. Büyük takımlara karşı etkili.</li>
+                            <li><strong className="text-yellow-400">Balanced:</strong> Her şeyden biraz. Güvenli seçim.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">👊 Agresiflik</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong className="text-green-400">Safe:</strong> Daha az faul, daha az sarı kart. Kontrollü oyun.</li>
+                            <li><strong className="text-yellow-400">Normal:</strong> Dengeli yaklaşım.</li>
+                            <li><strong className="text-red-400">Aggressive:</strong> Sert müdahaleler, daha fazla top kazanma ama kart riski yüksek!</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-cyan-400 font-bold mb-2">📏 Genişlik & Pas Stili</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong>Dar (Narrow):</strong> Ortadan oyna. İç oyuncular için ideal.</li>
+                            <li><strong>Geniş (Wide):</strong> Kanatları kullan. Hızlı kanat oyuncuları gerektirir.</li>
+                            <li><strong>Kısa Pas (Short):</strong> Kontrol, az risk, yavaş ilerleme.</li>
+                            <li><strong>Direkt Pas (Direct):</strong> Hızlı ileri paslar, şans yaratır.</li>
+                            <li><strong>Uzun Top (LongBall):</strong> Direk forvetlere, boylu forvet gerektirir.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-pink-400 font-bold mb-2">🛡️ Savunma Hattı</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong>Derin (Deep):</strong> Kendi yarında bekle. Kontra stili için uygun.</li>
+                            <li><strong>Dengeli (Balanced):</strong> Ne çok önde ne çok geride.</li>
+                            <li><strong>Yüksek (High):</strong> Rakibi kendi yarısına hapsET. Ofsayt tuzağı, riskli!</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'training',
+            title: '🏋️ Antrenman Sistemi',
+            icon: Dumbbell,
+            color: 'orange',
+            content: (
+                <div className="space-y-3">
+                    <p>📈 <strong>Sadece 28 yaş altı</strong> oyuncular gelişebilir!</p>
+                    <p>⚠️ Gelişim <strong>şansa bağlıdır</strong> - her hafta garantili değil.</p>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-orange-400 font-bold mb-2">🎯 Antrenman Odakları</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong className="text-yellow-400">Dengeli:</strong> Tüm özellikler eşit şans.</li>
+                            <li><strong className="text-red-400">Hücum:</strong> Bitiricilik, Şut, Dribling gelişir.</li>
+                            <li><strong className="text-blue-400">Savunma:</strong> Müdahale, Pozisyon, Güç gelişir.</li>
+                            <li><strong className="text-green-400">Fiziksel:</strong> Hız, Dayanıklılık, Güç gelişir.</li>
+                            <li><strong className="text-purple-400">Teknik:</strong> Pas, Dribling, Vizyon gelişir.</li>
+                            <li><strong className="text-emerald-400">Mevkiye Göre (YENİ!):</strong> Otomatik pozisyon bazlı:</li>
+                        </ul>
+                        <div className="mt-2 pl-4 text-xs text-slate-400">
+                            <p>• <strong>Forvet:</strong> Bitiricilik, Dribling, Hız</p>
+                            <p>• <strong>Orta Saha:</strong> Pas, Vizyon, Dayanıklılık</p>
+                            <p>• <strong>Defans:</strong> Müdahale, Pozisyon, Güç</p>
+                            <p>• <strong>Kaleci:</strong> Kalecilik, Soğukkanlılık, Güç</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-cyan-400 font-bold mb-2">💪 Antrenman Yoğunluğu</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong>Hafif:</strong> +15 kondisyon, yavaş gelişim</li>
+                            <li><strong>Normal:</strong> +10 kondisyon, orta gelişim</li>
+                            <li><strong>Ağır:</strong> +5 kondisyon, hızlı gelişim (sakatlık riski!)</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'facilities',
+            title: '🏟️ Tesisler & Personel (Detaylı)',
+            icon: Building2,
+            color: 'cyan',
+            content: (
+                <div className="space-y-4">
+                    <div className="bg-red-900/20 border border-red-500/30 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">⚠️ Yükseltme Maliyetleri (ÇOK PAHALI!)</p>
+                        <table className="w-full text-xs">
+                            <thead>
+                                <tr className="text-slate-400">
+                                    <th className="text-left">Level</th>
+                                    <th className="text-right">Stadyum</th>
+                                    <th className="text-right">Antrenman</th>
+                                    <th className="text-right">Akademi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-slate-300">
+                                <tr><td>1→2</td><td className="text-right">~€9.5M</td><td className="text-right">~€6.3M</td><td className="text-right">~€5M</td></tr>
+                                <tr><td>5→6</td><td className="text-right">~€46M</td><td className="text-right">~€31M</td><td className="text-right">~€25M</td></tr>
+                                <tr><td>9→10</td><td className="text-right text-red-400 font-bold">~€95M</td><td className="text-right text-red-400 font-bold">~€63M</td><td className="text-right text-red-400 font-bold">~€50M</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-blue-400 font-bold mb-2">🏟️ Stadyum</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Her level = +2,500 kapasite</li>
+                            <li>• Daha fazla seyirci = daha fazla bilet geliri</li>
+                            <li>• İtibar arttıkça doluluk oranı artar</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-green-400 font-bold mb-2">🏋️ Antrenman Merkezi</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Oyuncu gelişim hızı artar</li>
+                            <li>• Daha yüksek potansiyele ulaşma şansı</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-yellow-900/20 border border-yellow-500/30 p-3 rounded">
+                        <p className="text-yellow-400 font-bold mb-2">⚽ Akademi vs Scout - FARK NE?</p>
+                        <table className="w-full text-xs mt-2">
+                            <thead>
+                                <tr className="text-slate-400">
+                                    <th className="text-left">Özellik</th>
+                                    <th className="text-center">Scout</th>
+                                    <th className="text-center">Akademi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-slate-300">
+                                <tr>
+                                    <td>Genç Bulma Şansı</td>
+                                    <td className="text-center text-emerald-400">+%1/level</td>
+                                    <td className="text-center text-blue-400">+%0.5/level</td>
+                                </tr>
+                                <tr>
+                                    <td>Potansiyel Bonus</td>
+                                    <td className="text-center text-emerald-400">+2/level</td>
+                                    <td className="text-center text-blue-400">+1/level</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p className="text-xs text-slate-400 mt-2">
+                            📊 <strong>Formül:</strong> Genç şansı = %3 + (Scout×%1) + (Akademi×%0.5)
+                        </p>
+                        <p className="text-xs text-slate-400">
+                            ⭐ <strong>Potansiyel:</strong> Base + (Scout×2) + (Akademi×1)
+                        </p>
+                        <p className="text-xs text-emerald-400 mt-1">
+                            💡 <strong>Tavsiye:</strong> Scout daha etkili, önce onu yükselt!
+                        </p>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'morale',
+            title: '😊 Moral Sistemi',
+            icon: Heart,
+            color: 'pink',
+            content: (
+                <div className="space-y-3">
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-pink-400 font-bold mb-2">📊 Haftalık Moral Değişimleri</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong className="text-emerald-400">İlk 11:</strong> +2 moral</li>
+                            <li><strong className="text-yellow-400">Yedek:</strong> Değişmez</li>
+                            <li><strong className="text-red-400">Rezerv (75+ OVR):</strong> -3 moral ❗</li>
+                            <li><strong className="text-orange-400">Rezerv (65-75 OVR):</strong> -1 moral</li>
+                            <li><strong className="text-slate-400">Rezerv (65- OVR):</strong> Değişmez</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-purple-400 font-bold mb-2">🗣️ Oyuncu Etkileşimleri</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong className="text-green-400">Öv:</strong> Form 7+ veya moral 60- ise etkili. +5 ile +10 arası.</li>
+                            <li><strong className="text-red-400">Eleştir:</strong> Riskli! Profesyonel oyuncular tepki vermez, diğerleri moral kaybedebilir.</li>
+                            <li><strong className="text-blue-400">Motive Et:</strong> Düşük moralli oyuncular için. +3 ile +8 arası.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-yellow-400 font-bold mb-2">⚡ Moral → Performans Etkisi</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong>100 moral:</strong> +%5 OVR bonus</li>
+                            <li><strong>50 moral:</strong> Normal performans</li>
+                            <li><strong>0 moral:</strong> -%10 OVR ceza!</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'transfers',
+            title: '💰 Transfer Sistemi',
+            icon: DollarSign,
+            color: 'yellow',
+            content: (
+                <div className="space-y-3">
+                    <p>🛒 <strong>Transfer Pazarı:</strong> Tüm liglerdeki oyuncuları gör ve teklif yap.</p>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-yellow-400 font-bold mb-2">💵 Pazarlık Sistemi</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Transfer listesindeki oyuncular daha ucuza gelir.</li>
+                            <li>• Transfer listesinde olmayan oyuncular için %20-50 fazla iste.</li>
+                            <li>• "Israr Et" butonu riskli - görüşme kopabilir!</li>
+                            <li>• Sabır göster, tekrar teklif yap.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">🌟 Alt Yapı (Ucuz!)</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Genç oyuncular €50K değerinde gelir</li>
+                            <li>• Maaş: Sadece €25K/yıl</li>
+                            <li>• Potansiyel yüksekse büyük kar sağlar!</li>
+                            <li>• Milliyet: Ligin ülkesine göre (%70 yerel)</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">📤 Oyuncu Satışı</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Transfer listesine koy → AI takımlar teklif yapar</li>
+                            <li>• Mesajlardan teklifleri takip et</li>
+                            <li>• Kabul/Red seçenekleri</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'finances',
+            title: '💵 Finans Yönetimi',
+            icon: Building2,
+            color: 'green',
+            content: (
+                <div className="space-y-3">
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-green-400 font-bold mb-2">📈 Gelir Kaynakları</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong>Bilet Geliri:</strong> Kapasite × Doluluk × Bilet Fiyatı</li>
+                            <li><strong>Sponsor:</strong> Haftalık sabit + galibiyet primi</li>
+                            <li><strong>Transfer:</strong> Oyuncu satışları</li>
+                            <li><strong>Avrupa:</strong> Kupa maçları ek gelir sağlar</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">📉 Gider Kaynakları</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong>Maaşlar:</strong> Tüm oyuncuların haftalık maaşları</li>
+                            <li><strong>Bakım:</strong> Stadyum + Tesisler</li>
+                            <li><strong>Transferler:</strong> Oyuncu alımları</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-yellow-400 font-bold mb-2">🤝 Sponsor Türleri</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong className="text-green-400">Garantili:</strong> Yüksek sabit, düşük bonus. Güvenli.</li>
+                            <li><strong className="text-yellow-400">Dengeli:</strong> Orta sabit, orta bonus.</li>
+                            <li><strong className="text-red-400">Riskli:</strong> Düşük sabit, yüksek bonus. Çok kazanırsan karlı!</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'european',
+            title: '🏆 Avrupa Kupaları',
+            icon: Trophy,
+            color: 'amber',
+            content: (
+                <div className="space-y-3">
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-amber-400 font-bold mb-2">🎫 Katılım Şartları</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li><strong>Şampiyonlar Ligi:</strong> Lig 1. ve 2.si</li>
+                            <li><strong>UEFA Avrupa Ligi:</strong> Lig 3. ve 4.sü</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-blue-400 font-bold mb-2">📊 Turnuva Formatı</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Grup aşaması: 4 takımlı gruplar</li>
+                            <li>• İlk 2 eleme turuna geçer</li>
+                            <li>• Çeyrek final, yarı final, final</li>
+                            <li>• Tek maç eleme sistemi</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'tips',
+            title: '💡 Pro İpuçları',
+            icon: Brain,
+            color: 'violet',
+            content: (
+                <div className="space-y-3">
+                    <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">✅ Yapılması Gerekenler</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Her pozisyonda en az 2 oyuncu bulundur.</li>
+                            <li>• Genç oyunculara şans ver - gelişirler!</li>
+                            <li>• Scout'u önce yükselt (daha etkili).</li>
+                            <li>• Alt yapı gençlerini sat - çok karlı!</li>
+                            <li>• Rakibe göre taktik değiştir.</li>
+                            <li>• Yorgun oyuncuları dinlendir.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-red-900/20 border border-red-500/30 p-3 rounded">
+                        <p className="text-red-400 font-bold mb-2">❌ Kaçınılması Gerekenler</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• Yüksek OVR oyuncuları sürekli rezervde tutma.</li>
+                            <li>• Bütçeni aşan transferler yapma.</li>
+                            <li>• Tek formasyona bağlı kalma.</li>
+                            <li>• Sakatlıkları görmezden gelme.</li>
+                            <li>• Sözleşmelerin bitmesine izin verme.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded">
+                        <p className="text-blue-400 font-bold mb-2">🎯 Taktik İpuçları</p>
+                        <ul className="text-sm space-y-1 text-slate-300">
+                            <li>• <strong>Güçlü rakip:</strong> ParkTheBus + Counter</li>
+                            <li>• <strong>Zayıf rakip:</strong> HighPress + Possession</li>
+                            <li>• <strong>Önde skorken:</strong> Safe agresiflik</li>
+                            <li>• <strong>Gerideyken:</strong> Aggressive + Hızlı tempo</li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        }
+    ];
+
+    const toggleSection = (id: string) => {
+        setExpandedSection(expandedSection === id ? null : id);
+    };
 
     return (
-        <div className="animate-fade-in space-y-6 pb-20">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-900/50 to-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                    <BookOpen className="text-emerald-500" /> Pocket FM Tam Rehber
-                </h2>
-                <p className="text-slate-400 text-sm mt-1">Oyunun tüm mekaniklerini, taktik sistemini ve kazanma stratejilerini öğren.</p>
+        <div className="space-y-4 animate-fade-in">
+            <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl">
+                <div className="flex items-center gap-3 mb-2">
+                    <BookOpen className="text-emerald-500" size={28} />
+                    <div>
+                        <h2 className="text-2xl font-bold text-white">{t.gameGuide || 'Oyun Rehberi'}</h2>
+                        <p className="text-slate-400 text-sm">Oyunun tüm mekaniklerini detaylı öğren!</p>
+                    </div>
+                </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-                <button onClick={() => setTab('BASICS')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'BASICS' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><BookOpen size={16} /> Temeller</button>
-                <button onClick={() => setTab('TACTICS')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'TACTICS' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><Settings size={16} /> Taktikler</button>
-                <button onClick={() => setTab('MATCH')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'MATCH' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><Play size={16} /> Maç Motoru</button>
-                <button onClick={() => setTab('ATTRIBUTES')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'ATTRIBUTES' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><Activity size={16} /> Özellikler</button>
-                <button onClick={() => setTab('TRAINING')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'TRAINING' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><Dumbbell size={16} /> Antrenman</button>
-                <button onClick={() => setTab('TIPS')} className={`shrink-0 px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${tab === 'TIPS' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}><Trophy size={16} /> İpuçları</button>
-            </div>
-
-            {/* Content */}
-            <div className="space-y-4">
-
-                {/* ==================== TEMELLER ==================== */}
-                {tab === 'BASICS' && (
-                    <div className="space-y-4">
-                        <Section title="Oyuna Başlarken" icon={<Users size={20} />} defaultOpen={true}>
-                            <div className="space-y-4 text-sm text-slate-300">
-                                <p>Pocket FM'de bir futbol kulübünün teknik direktörüsün. Görevin takımı şampiyonluğa taşımak!</p>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white mb-1">📋 Kadro</h4>
-                                        <p className="text-slate-400 text-xs">İlk 11, yedekler ve rezerv oyuncuları yönet. Sürükleyerek pozisyonları ayarla.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white mb-1">⚙️ Taktik</h4>
-                                        <p className="text-slate-400 text-xs">Formasyon, tempo, genişlik, pas stili ve defans çizgisini ayarla.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white mb-1">🏋️ Antrenman</h4>
-                                        <p className="text-slate-400 text-xs">Haftalık antrenman odağı ve yoğunluğu seç. Oyuncuların gelişmesi buna bağlı.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white mb-1">💰 Transfer</h4>
-                                        <p className="text-slate-400 text-xs">Pazardan oyuncu al, istemediğin oyuncuları transfer listesine koy.</p>
-                                    </div>
-                                </div>
-
-                                <InfoBox type="tip">
-                                    <strong>İlk Adım:</strong> Maça başlamadan önce "Kadro" bölümünden "Auto" butonuna tıklayarak en iyi 11'i otomatik oluştur.
-                                </InfoBox>
+            <div className="space-y-2">
+                {sections.map(section => (
+                    <div
+                        key={section.id}
+                        className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden"
+                    >
+                        <button
+                            onClick={() => toggleSection(section.id)}
+                            className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-700/50 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <section.icon className={`text-${section.color}-400`} size={20} />
+                                <span className="font-bold text-white">{section.title}</span>
                             </div>
-                        </Section>
+                            {expandedSection === section.id ? (
+                                <ChevronUp className="text-slate-400" size={20} />
+                            ) : (
+                                <ChevronDown className="text-slate-400" size={20} />
+                            )}
+                        </button>
 
-                        <Section title="Ekonomi Yönetimi" icon={<DollarSign size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Kulübün bütçesi sınırlıdır. Gelir ve giderlerini dengeli tutmalısın.</p>
-
-                                <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                    <h4 className="font-bold text-emerald-400 mb-2">💵 Gelir Kaynakları</h4>
-                                    <ul className="space-y-1 text-slate-400 text-xs">
-                                        <li>• <strong>Maç Günü:</strong> Stadyum kapasitesi × bilet fiyatı</li>
-                                        <li>• <strong>Sponsor:</strong> Sezon başında seçtiğin sponsor haftalık gelir sağlar</li>
-                                        <li>• <strong>Galibiyet Primi:</strong> Kazandığın maçlar için ekstra bonus</li>
-                                        <li>• <strong>Oyuncu Satışı:</strong> Transfer listesindeki oyuncular için teklifler gelir</li>
-                                    </ul>
-                                </div>
-
-                                <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                    <h4 className="font-bold text-red-400 mb-2">💸 Giderler</h4>
-                                    <ul className="space-y-1 text-slate-400 text-xs">
-                                        <li>• <strong>Maaşlar:</strong> Tüm oyuncuların haftalık maaşı otomatik kesilir</li>
-                                        <li>• <strong>Bakım:</strong> Stadyum ve tesis bakım masrafları</li>
-                                        <li>• <strong>Transfer:</strong> Oyuncu satın alma bedeli</li>
-                                    </ul>
-                                </div>
-
-                                <InfoBox type="warning">
-                                    <strong>Dikkat:</strong> Bütçe eksiye düşerse yönetim kurulu güveni azalır ve görevden alınabilirsin!
-                                </InfoBox>
+                        {expandedSection === section.id && (
+                            <div className="px-4 pb-4 pt-2 border-t border-slate-700 animate-fade-in text-slate-300 text-sm">
+                                {section.content}
                             </div>
-                        </Section>
-
-                        <Section title="Oyuncu Durumları" icon={<Activity size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                    <div className="bg-slate-900 p-3 rounded border border-emerald-500/30">
-                                        <h4 className="font-bold text-emerald-400 mb-1">💪 Kondisyon</h4>
-                                        <p className="text-slate-400 text-xs">Oyuncunun fiziksel durumu. Maçlarda azalır, dinlenince artar. %40 altında ciddi performans düşüşü.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-yellow-500/30">
-                                        <h4 className="font-bold text-yellow-400 mb-1">😊 Moral</h4>
-                                        <p className="text-slate-400 text-xs">Oyuncunun mutluluğu. Oynamayan oyuncuların morali düşer. Galibiyetler morali artırır.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-blue-500/30">
-                                        <h4 className="font-bold text-blue-400 mb-1">📈 Form</h4>
-                                        <p className="text-slate-400 text-xs">Son maçlardaki performans. Gol atan, asist yapan oyuncuların formu artar.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
+                        )}
                     </div>
-                )}
-
-                {/* ==================== TAKTİKLER ==================== */}
-                {tab === 'TACTICS' && (
-                    <div className="space-y-4">
-                        <Section title="Formasyon Seçimi" icon={<Shield size={20} />} defaultOpen={true}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Formasyon, oyuncuların sahada nasıl dizileceğini belirler. Her formasyonun güçlü ve zayıf yönleri vardır.</p>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">4-3-3</h4>
-                                        <p className="text-emerald-400 text-xs mb-1">Kanat Oyunu & Hücum</p>
-                                        <p className="text-slate-400 text-xs">3 forvet ile geniş hücum. Kanat oyuncuları orta atabilir. Kontra ataklara açık.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">4-2-3-1</h4>
-                                        <p className="text-blue-400 text-xs mb-1">Dengeli & Esnek</p>
-                                        <p className="text-slate-400 text-xs">2 defansif orta sahayla güvenli. 10 numara yaratıcı oyuncu için ideal.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">4-4-2</h4>
-                                        <p className="text-yellow-400 text-xs mb-1">Klasik & Basit</p>
-                                        <p className="text-slate-400 text-xs">İkili forvet ile direkt oyun. Orta sahada kalabalık ama kanatlar zayıf.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">5-3-2 / 5-4-1</h4>
-                                        <p className="text-red-400 text-xs mb-1">Defansif & Kontra</p>
-                                        <p className="text-slate-400 text-xs">3 stoper ile sağlam defans. Kontra atak için ideal ama hücumda zayıf.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">4-1-2-1-2 (Diamond)</h4>
-                                        <p className="text-purple-400 text-xs mb-1">Dar & Tiki-Taka</p>
-                                        <p className="text-slate-400 text-xs">Merkez ağırlıklı, kısa pas oyunu için ideal. Kanatlarda boşluk bırakır.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-white">3-4-3</h4>
-                                        <p className="text-orange-400 text-xs mb-1">Ultra Hücum</p>
-                                        <p className="text-slate-400 text-xs">Yüksek riskli, yüksek ödüllü. Çok gol pozisyonu ama arkada çok açık.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Taktik Ayarları" icon={<Settings size={20} />} defaultOpen={true}>
-                            <div className="space-y-4 text-sm text-slate-300">
-
-                                {/* TEMPO */}
-                                <div className="bg-slate-900 p-4 rounded border border-slate-700">
-                                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">⏱️ Tempo</h4>
-                                    <p className="text-slate-400 text-xs mb-3">Oyuncuların karar alma hızını belirler.</p>
-                                    <div className="grid grid-cols-3 gap-2 text-center">
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-blue-400 font-bold text-sm">Yavaş</span>
-                                            <span className="text-slate-500 text-xs">Kontrollü oyun, %40 yavaş karar. Tiki-taka için.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-white font-bold text-sm">Normal</span>
-                                            <span className="text-slate-500 text-xs">Standart karar hızı.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-emerald-400 font-bold text-sm">Hızlı</span>
-                                            <span className="text-slate-500 text-xs">Agresif oyun, %30 hızlı karar. Kontra için.</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* GENİŞLİK */}
-                                <div className="bg-slate-900 p-4 rounded border border-slate-700">
-                                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">↔️ Genişlik</h4>
-                                    <p className="text-slate-400 text-xs mb-3">Oyuncuların saha genişliğinde nasıl yayılacağını belirler.</p>
-                                    <div className="grid grid-cols-3 gap-2 text-center">
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-purple-400 font-bold text-sm">Dar</span>
-                                            <span className="text-slate-500 text-xs">Merkez ağırlıklı. Kısa pas için ideal.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-white font-bold text-sm">Dengeli</span>
-                                            <span className="text-slate-500 text-xs">Standart dağılım.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-emerald-400 font-bold text-sm">Geniş</span>
-                                            <span className="text-slate-500 text-xs">Kanat oyunu. Orta atma bonusu (+500)!</span>
-                                        </div>
-                                    </div>
-                                    <InfoBox type="tip">
-                                        <strong>Orta Bonusu:</strong> "Geniş" genişlik seçildiğinde kanat oyuncularının orta atması çok daha etkili olur!
-                                    </InfoBox>
-                                </div>
-
-                                {/* PAS STİLİ */}
-                                <div className="bg-slate-900 p-4 rounded border border-slate-700">
-                                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">⚽ Pas Stili</h4>
-                                    <p className="text-slate-400 text-xs mb-3">Oyuncuların tercih edeceği pas tipini belirler.</p>
-                                    <div className="grid grid-cols-3 gap-2 text-center">
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-blue-400 font-bold text-sm">Kısa</span>
-                                            <span className="text-slate-500 text-xs">15m altı paslara +30 bonus. Tiki-taka için.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-white font-bold text-sm">Karma</span>
-                                            <span className="text-slate-500 text-xs">Duruma göre pas seçimi.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-orange-400 font-bold text-sm">Direkt</span>
-                                            <span className="text-slate-500 text-xs">Havadan paslara +20 bonus. Kontra için.</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* DEFANS HATTI */}
-                                <div className="bg-slate-900 p-4 rounded border border-slate-700">
-                                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">🛡️ Defans Hattı</h4>
-                                    <p className="text-slate-400 text-xs mb-3">Defans oyuncularının sahada ne kadar yukarıda duracağını belirler.</p>
-                                    <div className="grid grid-cols-3 gap-2 text-center">
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-blue-400 font-bold text-sm">Derin</span>
-                                            <span className="text-slate-500 text-xs">Kendi yarı sahamızda. Arkada boşluk yok.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-white font-bold text-sm">Normal</span>
-                                            <span className="text-slate-500 text-xs">Orta sahada buluşma.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-red-400 font-bold text-sm">Önde</span>
-                                            <span className="text-slate-500 text-xs">Yüksek pres. Ofsayt tuzağı. Arkada risk.</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* AGRESİFLİK */}
-                                <div className="bg-slate-900 p-4 rounded border border-slate-700">
-                                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">⚔️ Agresiflik</h4>
-                                    <p className="text-slate-400 text-xs mb-3">Müdahale şiddetini ve risk alma seviyesini belirler.</p>
-                                    <div className="grid grid-cols-3 gap-2 text-center">
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-blue-400 font-bold text-sm">Güvenli</span>
-                                            <span className="text-slate-500 text-xs">Müdahale ×0.85 ama geçilince az risk.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-white font-bold text-sm">Normal</span>
-                                            <span className="text-slate-500 text-xs">Standart müdahale.</span>
-                                        </div>
-                                        <div className="bg-slate-800 p-2 rounded">
-                                            <span className="block text-red-400 font-bold text-sm">Agresif</span>
-                                            <span className="text-slate-500 text-xs">Müdahale ×1.25 AMA geçilince ×1.8 risk!</span>
-                                        </div>
-                                    </div>
-                                    <InfoBox type="warning">
-                                        <strong>Risk:</strong> Agresif müdahale oyuncuyu geçerlerse, defans uzun süre yerde kalır!
-                                    </InfoBox>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Önerilen Taktik Kombinasyonları" icon={<Trophy size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="bg-emerald-900/30 p-3 rounded border border-emerald-500/30">
-                                    <h4 className="font-bold text-emerald-400">🦅 Hücum Ağırlıklı (Eğlenceli)</h4>
-                                    <p className="text-xs text-slate-400 mt-1">4-3-3 | Tempo: Hızlı | Genişlik: Geniş | Pas: Direkt | Defans: Önde</p>
-                                </div>
-                                <div className="bg-blue-900/30 p-3 rounded border border-blue-500/30">
-                                    <h4 className="font-bold text-blue-400">🎯 Tiki-Taka (Kontrol)</h4>
-                                    <p className="text-xs text-slate-400 mt-1">4-1-2-1-2 | Tempo: Yavaş | Genişlik: Dar | Pas: Kısa | Defans: Önde</p>
-                                </div>
-                                <div className="bg-red-900/30 p-3 rounded border border-red-500/30">
-                                    <h4 className="font-bold text-red-400">⚡ Kontra Atak (Zayıf takım)</h4>
-                                    <p className="text-xs text-slate-400 mt-1">5-4-1 | Tempo: Hızlı | Genişlik: Dengeli | Pas: Direkt | Defans: Derin</p>
-                                </div>
-                            </div>
-                        </Section>
-                    </div>
-                )}
-
-                {/* ==================== MAÇ MOTORU ==================== */}
-                {tab === 'MATCH' && (
-                    <div className="space-y-4">
-                        <Section title="Hız Kontrolleri" icon={<Gauge size={20} />} defaultOpen={true}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Maç esnasında oyunun akış hızını değiştirebilirsin:</p>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <span className="block text-blue-400 font-bold text-lg">0.5×</span>
-                                        <span className="text-slate-500 text-xs">Ağır Çekim</span>
-                                        <p className="text-slate-600 text-[10px] mt-1">Detaylı analiz için</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <span className="block text-white font-bold text-lg">1×</span>
-                                        <span className="text-slate-500 text-xs">Normal</span>
-                                        <p className="text-slate-600 text-[10px] mt-1">Standart izleme</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <span className="block text-emerald-400 font-bold text-lg">2×</span>
-                                        <span className="text-slate-500 text-xs">Hızlı</span>
-                                        <p className="text-slate-600 text-[10px] mt-1">Hızlı ilerleme</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <span className="block text-purple-400 font-bold text-lg">4×</span>
-                                        <span className="text-slate-500 text-xs">Süper Hızlı</span>
-                                        <p className="text-slate-600 text-[10px] mt-1">Maçı hızla bitir</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Yapay Zeka (AI) Nasıl Çalışır?" icon={<Brain size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Oyuncu AI'ı her an şu 3 opsiyonu değerlendirir:</p>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                    <div className="bg-red-900/20 p-3 rounded border border-red-500/30">
-                                        <h4 className="font-bold text-red-400 mb-1">🎯 Şut</h4>
-                                        <p className="text-slate-400 text-xs">Kaleye mesafe, şut açıklığı, bitiricilik yeteneği ve forvet bonusu hesaplanır.</p>
-                                    </div>
-                                    <div className="bg-emerald-900/20 p-3 rounded border border-emerald-500/30">
-                                        <h4 className="font-bold text-emerald-400 mb-1">⚽ Pas</h4>
-                                        <p className="text-slate-400 text-xs">Takım arkadaşlarının durumu, koşu yapanlar, kesme riski ve vizyon yeteneği hesaplanır.</p>
-                                    </div>
-                                    <div className="bg-blue-900/20 p-3 rounded border border-blue-500/30">
-                                        <h4 className="font-bold text-blue-400 mb-1">🏃 Çalım</h4>
-                                        <p className="text-slate-400 text-xs">Önde boş alan, dribbling yeteneği ve baskı durumu hesaplanır.</p>
-                                    </div>
-                                </div>
-
-                                <InfoBox type="info">
-                                    <strong>Karar Sistemi:</strong> En yüksek skoru alan aksiyon seçilir. Forvetler şut çekmeye meyilli, oyun kurucular pas atmaya meyillidir.
-                                </InfoBox>
-                            </div>
-                        </Section>
-
-                        <Section title="Çalım vs Müdahale Dengesi" icon={<Swords size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>1v1 düellolarda:</p>
-                                <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                    <div className="grid grid-cols-2 gap-4 text-center">
-                                        <div>
-                                            <h4 className="font-bold text-red-400">Forvet (Çalım)</h4>
-                                            <p className="text-xs text-slate-400 mt-1">Dribbling stat × (0.3 - 1.3)</p>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-blue-400">Defans (Müdahale)</h4>
-                                            <p className="text-xs text-slate-400 mt-1">Tackling stat × (0.5 - 1.5)</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-center text-slate-500 text-xs mt-3">Aynı stat değerinde defans hafif avantajlı (~%55-60)</p>
-                                </div>
-
-                                <InfoBox type="tip">
-                                    <strong>Güçlü Forvetler:</strong> 80+ dribbling stat'ı olan forvetler defansları geçmekte çok başarılı!
-                                </InfoBox>
-                            </div>
-                        </Section>
-
-                        <Section title="Kaleci Mekaniği" icon={<Shield size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Kaleci kurtarış şansı şu formülle hesaplanır:</p>
-                                <div className="bg-slate-900 p-3 rounded border border-slate-700 font-mono text-xs">
-                                    <p className="text-emerald-400">Kurtarış = (Kalecilik × 0.65) + Mesafe Bonusu - Şut Hızı Cezası</p>
-                                </div>
-                                <ul className="space-y-1 text-slate-400 text-xs">
-                                    <li>• <strong className="text-white">Yakın şutlar ({"<"}6m):</strong> Kaleci erişim mesafesi azalır</li>
-                                    <li>• <strong className="text-white">Hızlı şutlar:</strong> Reaksiyon süresi düşer</li>
-                                    <li>• <strong className="text-white">Yorgun kaleci:</strong> Kondisyon %50 altında performans düşer</li>
-                                </ul>
-                            </div>
-                        </Section>
-
-                        <Section title="Oyuncu Değişikliği" icon={<Users size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Maç içinde 5 oyuncu değişikliği hakkın var.</p>
-                                <ul className="space-y-1 text-slate-400 text-xs">
-                                    <li>• Yorgun oyuncuları değiştir (kondisyon %40 altında performans çok düşer)</li>
-                                    <li>• Yedekler tam kondisyonla girer</li>
-                                    <li>• Taktik ayarlarını maç içinde değiştirebilirsin</li>
-                                </ul>
-                            </div>
-                        </Section>
-                    </div>
-                )}
-
-                {/* ==================== ÖZELLİKLER ==================== */}
-                {tab === 'ATTRIBUTES' && (
-                    <div className="space-y-4">
-                        <Section title="Fiziksel Özellikler" icon={<Zap size={20} />} defaultOpen={true}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="space-y-2">
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-blue-400">Hız</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Oyuncunun maksimum koşu hızı. Formül: 0.75 + (Speed/250)</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">60 hız = 0.99x, 80 hız = 1.07x, 100 hız = 1.15x</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-emerald-400">Dayanıklılık</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Kondisyon tüketim hızını belirler. Yüksek = daha uzun koşar.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-orange-400">Güç</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Topu koruma ve "hold-up play" yeteneği. 65+ güç = baskı altında topu korur.</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">Hava toplarında da avantaj sağlar.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Teknik Özellikler" icon={<Target size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="space-y-2">
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-red-400">Bitiricilik</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Şut isabeti VE şut çekme eğilimi. Yüksek = daha çok şut dener.</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">Şut skoru: (Finishing × 1.2) - 30</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-emerald-400">Pas</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Pas hata payını azaltır. Yüksek = isabetli paslar.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-purple-400">Çalım</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">1v1 düellolarda geçme yeteneği ve top kontrolü.</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">60+ dribbling = çalım skoru bonusu</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-blue-400">Müdahale</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Topu kapma yeteneği. Defansçılar için kritik önem.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-yellow-400">Kalecilik</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Kaleci için temel stat. Kurtarış şansını belirler.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Zihinsel Özellikler" icon={<Brain size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="space-y-2">
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-purple-400">Vizyon</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Pas menzilini ve kalitesini artırır. Oyun kurucular için kritik.</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">Pas skoru: +(Vision-50) × 1.0</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-emerald-400">Pozisyon Alma</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Topsuz oyuncu hareketleri ve koşu zamanlaması.</p>
-                                            <p className="text-slate-500 text-[10px] mt-1">Forvet koşu derinliği: 5 + (Positioning/100 × 5)</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-yellow-400">Karar Alma</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">AI karar kalitesi. Düşük = bazen kötü kararlar alır.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 bg-slate-900 rounded border border-slate-700">
-                                        <div className="w-24 shrink-0 font-bold text-blue-400">Soğukkanlılık</div>
-                                        <div>
-                                            <p className="text-slate-400 text-xs">Baskı altında performans. Kaleci reflekslerini de etkiler.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Özel Yetenekler (PlayStyles)" icon={<Star size={20} />}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {[
-                                    { name: "Bencil", desc: "Pas -30, Şut +20, Çalım +20. Bireysel oyuncu." },
-                                    { name: "Plase Şut", desc: "Şutlara kavis verir. Bloklanması zor." },
-                                    { name: "Uzaktan Şut", desc: "25m altında +40 şut bonusu." },
-                                    { name: "Uzun Topla Pas", desc: "Görüş menzili +25 birim." },
-                                    { name: "Teknik", desc: "Top kontrolü artırır, kaybetme riski azalır." },
-                                    { name: "Amansız", desc: "Kondisyon %20 daha hızlı yenilenir." },
-                                    { name: "Seri", desc: "Maksimum hıza daha hızlı ulaşır." },
-                                    { name: "Hava Hakimi", desc: "Kafa toplarında bonus." }
-                                ].map((ps, i) => (
-                                    <div key={i} className="flex items-start gap-3 p-3 bg-slate-800 rounded border border-slate-700">
-                                        <div className="mt-0.5 bg-yellow-500/20 p-1.5 rounded text-yellow-400"><Zap size={12} /></div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-sm">{ps.name}</h4>
-                                            <p className="text-xs text-slate-400">{ps.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </Section>
-                    </div>
-                )}
-
-                {/* ==================== ANTRENMAN ==================== */}
-                {tab === 'TRAINING' && (
-                    <div className="space-y-4">
-                        <Section title="Antrenman Odağı" icon={<Target size={20} />} defaultOpen={true}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <p>Haftalık antrenman odağını seçerek oyuncuların hangi alanlarda gelişeceğini belirle.</p>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-emerald-400">⚖️ Dengeli</h4>
-                                        <p className="text-slate-400 text-xs">Tüm özellikleri eşit geliştirir. Güvenli seçim.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-red-400">⚔️ Hücum</h4>
-                                        <p className="text-slate-400 text-xs">Bitiricilik, pas ve çalım odaklı.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-blue-400">🛡️ Savunma</h4>
-                                        <p className="text-slate-400 text-xs">Müdahale ve pozisyon alma odaklı.</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                                        <h4 className="font-bold text-orange-400">💪 Fiziksel</h4>
-                                        <p className="text-slate-400 text-xs">Hız, güç ve dayanıklılık odaklı.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Antrenman Yoğunluğu" icon={<Gauge size={20} />}>
-                            <div className="space-y-3 text-sm text-slate-300">
-                                <div className="grid grid-cols-3 gap-3">
-                                    <div className="bg-slate-900 p-3 rounded border border-emerald-500/30 text-center">
-                                        <h4 className="font-bold text-emerald-400">Hafif</h4>
-                                        <p className="text-slate-400 text-xs mt-1">Az gelişme, çok yenilenme</p>
-                                        <p className="text-slate-500 text-[10px]">Yoğun maç takviminde</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-yellow-500/30 text-center">
-                                        <h4 className="font-bold text-yellow-400">Normal</h4>
-                                        <p className="text-slate-400 text-xs mt-1">Dengeli gelişme</p>
-                                        <p className="text-slate-500 text-[10px]">Standart seçim</p>
-                                    </div>
-                                    <div className="bg-slate-900 p-3 rounded border border-red-500/30 text-center">
-                                        <h4 className="font-bold text-red-400">Ağır</h4>
-                                        <p className="text-slate-400 text-xs mt-1">Çok gelişme, az yenilenme</p>
-                                        <p className="text-slate-500 text-[10px]">Maçsız haftalarda</p>
-                                    </div>
-                                </div>
-
-                                <InfoBox type="warning">
-                                    <strong>Sakatlanma Riski:</strong> Ağır antrenman + düşük kondisyonlu oyuncu = sakatlanma riski artar!
-                                </InfoBox>
-                            </div>
-                        </Section>
-                    </div>
-                )}
-
-                {/* ==================== İPUÇLARI ==================== */}
-                {tab === 'TIPS' && (
-                    <div className="space-y-4">
-                        <Section title="Şampiyon Olma Taktikleri" icon={<Trophy size={20} />} defaultOpen={true}>
-                            <div className="space-y-3">
-                                <div className="bg-emerald-900/20 p-4 rounded border-l-4 border-emerald-500">
-                                    <strong className="text-white">✅ Kadro Rotasyonu Yap</strong>
-                                    <p className="text-slate-400 text-sm mt-1">38 haftalık ligde aynı 11'i oynatma. Yedekleri zayıf rakiplere karşı kullan, as oyuncuları derbi maçlarına sakla.</p>
-                                </div>
-                                <div className="bg-blue-900/20 p-4 rounded border-l-4 border-blue-500">
-                                    <strong className="text-white">📈 Genç Yetenekleri Geliştir</strong>
-                                    <p className="text-slate-400 text-sm mt-1">18-21 yaş arası yüksek potansiyelli oyuncuları oynayarak geliştir. 2-3 sezonda değerleri 3-5 katına çıkar.</p>
-                                </div>
-                                <div className="bg-purple-900/20 p-4 rounded border-l-4 border-purple-500">
-                                    <strong className="text-white">🎯 Rakibe Göre Taktik</strong>
-                                    <p className="text-slate-400 text-sm mt-1">Güçlü rakip için "Defans Derin + Kontra", zayıf rakip için "Hücum Önde + Baskı" kullan.</p>
-                                </div>
-                                <div className="bg-yellow-900/20 p-4 rounded border-l-4 border-yellow-500">
-                                    <strong className="text-white">💰 Bütçeyi Akıllı Kullan</strong>
-                                    <p className="text-slate-400 text-sm mt-1">Yüksek maaşlı yaşlı yıldızlar yerine düşük maaşlı genç yeteneklere yatırım yap. Uzun vadede daha karlı.</p>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Maç İçi İpuçları" icon={<Play size={20} />}>
-                            <div className="space-y-3">
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-emerald-400">⚡ Tempo Değiştir</strong>
-                                    <p className="text-slate-400 text-xs mt-1">Öndeysen "Yavaş" tempo ile kontrol et. Gerideysen "Hızlı" tempo ile baskı kur.</p>
-                                </div>
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-blue-400">🔄 Erken Değişiklik</strong>
-                                    <p className="text-slate-400 text-xs mt-1">Kondisyonu %50 altına düşen oyuncuyu hemen değiştir. Performansı dramatik düşer.</p>
-                                </div>
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-red-400">🎯 Kanat Kullan</strong>
-                                    <p className="text-slate-400 text-xs mt-1">"Geniş" genişlik + "Direkt" pas = etkili kanat ortaları. Ceza sahasında forvetlerin olsun!</p>
-                                </div>
-                            </div>
-                        </Section>
-
-                        <Section title="Ekonomi İpuçları" icon={<DollarSign size={20} />}>
-                            <div className="space-y-3">
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-emerald-400">📊 Sponsor Seçimi</strong>
-                                    <p className="text-slate-400 text-xs mt-1">Haftalık geliri yüksek sponsoru seç. Galibiyet primi bonus, temel gelir daha önemli.</p>
-                                </div>
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-yellow-400">🏟️ Stadyum Geliştir</strong>
-                                    <p className="text-slate-400 text-xs mt-1">Stadyum kapasitesi = maç günü geliri. Uzun vadede en iyi yatırım.</p>
-                                </div>
-                                <div className="bg-slate-800 p-3 rounded border border-slate-700">
-                                    <strong className="text-blue-400">⚽ Transfer Zamanlaması</strong>
-                                    <p className="text-slate-400 text-xs mt-1">Oyuncu satarken yüksek formda sat (değer artar). Alırken düşük formda al (değer düşük).</p>
-                                </div>
-                            </div>
-                        </Section>
-                    </div>
-                )}
-
+                ))}
             </div>
         </div>
     );

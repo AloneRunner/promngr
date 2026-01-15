@@ -17,7 +17,7 @@ export enum MatchEventType { GOAL = 'GOAL', CARD_YELLOW = 'CARD_YELLOW', CARD_RE
 export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING' }
 export type LineupStatus = 'STARTING' | 'BENCH' | 'RESERVE';
 export enum CoachArchetype { TACTICIAN = 'TACTICIAN', MOTIVATOR = 'MOTIVATOR', DEVELOPER = 'DEVELOPER' }
-export type TrainingFocus = 'BALANCED' | 'ATTACK' | 'DEFENSE' | 'PHYSICAL' | 'TECHNICAL';
+export type TrainingFocus = 'BALANCED' | 'ATTACK' | 'DEFENSE' | 'PHYSICAL' | 'TECHNICAL' | 'POSITION_BASED';
 export type TrainingIntensity = 'LIGHT' | 'NORMAL' | 'HEAVY';
 
 export enum TeamMentality {
@@ -58,6 +58,10 @@ export interface Player {
     lineupIndex: number; // NEW: Explicit ordering in lineup views
     jerseyNumber?: number;
     playStyles: string[]; details: any; careerHistory?: any[];
+    // Morale tracking - shows WHY morale is at this level
+    moraleHistory?: { week: number; change: number; reason: string }[];
+    // Tracks if player played in a match this week (to prevent morale drop on sub outs)
+    playedThisWeek?: boolean;
     // Runtime generated properties
     personality?: PlayerPersonality;
 }
@@ -100,6 +104,13 @@ export interface TeamStats {
     played: number; won: number; drawn: number; lost: number; gf: number; ga: number; points: number;
 }
 
+export interface StatChange {
+    week: number;
+    change: number;
+    reason: string;
+    newValue: number;
+}
+
 export interface Team {
     id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number;
@@ -116,6 +127,8 @@ export interface Team {
         lastWeekIncome: { tickets: number; sponsor: number; merchandise: number; tvRights: number; transfers: number; winBonus: number; };
         lastWeekExpenses: { wages: number; maintenance: number; academy: number; transfers: number; };
     };
+    reputationHistory?: StatChange[]; // History of reputation changes
+    confidenceHistory?: StatChange[]; // History of board confidence changes
 }
 
 export interface MatchEvent {
@@ -198,6 +211,16 @@ export interface EuropeanCupMatch {
     awayScore: number;
     isPlayed: boolean;
     winnerId?: string;
+    // Extended properties for simulation compatibility
+    events?: MatchEvent[];
+    currentMinute?: number;
+    stats?: MatchStats;
+    attendance?: number;
+    weather?: string;
+    timeOfDay?: string;
+    week?: number; // Virtual week for compatibility
+    date?: number;
+    isFriendly?: boolean;
 }
 
 export interface EuropeanCup {

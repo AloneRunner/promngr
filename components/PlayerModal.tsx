@@ -9,11 +9,12 @@ interface PlayerModalProps {
     player: Player | null;
     onClose: () => void;
     onRenew?: (player: Player) => void;
-    onToggleTransferList?: (player: Player) => void; // New Prop
+    onToggleTransferList?: (player: Player) => void;
+    onTerminateContract?: (player: Player) => void; // New: Release player
     t: Translation;
 }
 
-export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, t }) => {
+export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onTerminateContract, t }) => {
     const [viewMode, setViewMode] = React.useState<'GRID' | 'GRAPH'>('GRAPH');
     if (!player) return null;
 
@@ -32,6 +33,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
     );
 
     const renewalCost = Math.floor(player.value * 0.1);
+    const terminationCost = Math.floor(player.salary * player.contractYears * 0.5); // 50% of remaining contract
     const hidden = player.hiddenAttributes || { consistency: 10, importantMatches: 10, injuryProneness: 10 };
 
     return (
@@ -115,6 +117,15 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                                 title={player.isTransferListed ? t.removeFromList : t.transferList}
                             >
                                 {player.isTransferListed ? <Ban size={14} /> : <DollarSign size={14} />}
+                            </button>
+                        )}
+                        {player.teamId !== 'FREE_AGENT' && onTerminateContract && (
+                            <button
+                                onClick={() => onTerminateContract(player)}
+                                className="w-8 h-8 flex items-center justify-center rounded border bg-red-900/30 border-red-600/50 text-red-400 hover:bg-red-900/50 transition-colors"
+                                title={t.terminateContract || 'Terminate Contract'}
+                            >
+                                <X size={14} />
                             </button>
                         )}
                     </div>

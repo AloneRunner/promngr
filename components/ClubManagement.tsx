@@ -93,7 +93,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white border-cyan-400/50 shadow-lg shadow-cyan-900/50'
                         : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200'}`}
                 >
-                    <UserCog size={18} className={tab === 'STAFF' ? 'drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]' : ''} /> Staff
+                    <UserCog size={18} className={tab === 'STAFF' ? 'drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]' : ''} /> {t.staff}
                 </button>
 
                 <button
@@ -114,7 +114,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-white tracking-tight drop-shadow-lg">{t.finances}</h2>
-                                <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">Kulüp Bütçesi</div>
+                                <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">{t.clubBudget || "Club Budget"}</div>
                             </div>
                         </div>
                         <div className="text-right">
@@ -151,10 +151,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             <div className="p-3">
                                 <h4 className="text-[10px] uppercase text-emerald-500 font-bold mb-2 flex items-center gap-1"><TrendingUp size={10} /> {t.income}</h4>
                                 <div className="space-y-1">
-                                    <FinanceRow icon={Ticket} label={t.ticketSales || "Tribün Geliri"} value={fin.lastWeekIncome.tickets} type="income" />
+                                    <FinanceRow icon={Ticket} label={t.ticketSales || "Ticket Sales"} value={fin.lastWeekIncome.tickets} type="income" />
                                     <FinanceRow icon={Briefcase} label="Sponsor" value={team.sponsor?.weeklyIncome || 0} type="income" />
                                     {(fin.lastWeekIncome.winBonus || 0) > 0 && (
-                                        <FinanceRow icon={Star} label={t.winBonus || "Galibiyet Primi"} value={fin.lastWeekIncome.winBonus} type="income" />
+                                        <FinanceRow icon={Star} label={t.winBonus || "Win Bonus"} value={fin.lastWeekIncome.winBonus} type="income" />
                                     )}
                                     <FinanceRow icon={ShoppingBag} label={t.merchandise} value={Math.floor(fin.lastWeekIncome.merchandise)} type="income" />
                                     <FinanceRow icon={Tv} label={t.tvRights} value={fin.lastWeekIncome.tvRights} type="income" />
@@ -225,17 +225,17 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     <div className="fm-panel rounded-xl overflow-hidden">
                         <div className="bg-emerald-900/30 p-3 border-b border-emerald-500/20">
                             <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
-                                <Ticket size={16} /> Tribün Geliri Detayı
+                                <Ticket size={16} /> {t.gateReceiptsDetail}
                             </h3>
                         </div>
                         <div className="p-4 space-y-3">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
-                                    <div className="text-[10px] uppercase text-slate-500 mb-1">Stadyum Kapasitesi</div>
+                                    <div className="text-[10px] uppercase text-slate-500 mb-1">{t.stadiumCapacity}</div>
                                     <div className="text-lg font-mono text-white font-bold">{team.facilities.stadiumCapacity.toLocaleString()}</div>
                                 </div>
                                 <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
-                                    <div className="text-[10px] uppercase text-slate-500 mb-1">Bilet Fiyatı</div>
+                                    <div className="text-[10px] uppercase text-slate-500 mb-1">{t.ticketPrice}</div>
                                     <div className="text-lg font-mono text-emerald-400 font-bold">€{TICKET_PRICE}</div>
                                 </div>
                             </div>
@@ -243,18 +243,18 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="bg-emerald-900/20 p-3 rounded-lg border border-emerald-500/20">
                                     <div className="flex justify-between items-center">
                                         <div>
-                                            <div className="text-[10px] uppercase text-emerald-400/70">Son Maç Seyircisi (Tahmini)</div>
+                                            <div className="text-[10px] uppercase text-emerald-400/70">{t.lastMatchAttendance}</div>
                                             <div className="text-xl font-bold text-white">
-                                                👥 {Math.floor(fin.lastWeekIncome.tickets / TICKET_PRICE).toLocaleString()} kişi
+                                                👥 {Math.floor(fin.lastWeekIncome.tickets / TICKET_PRICE).toLocaleString()} {t.people}
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-[10px] uppercase text-emerald-400/70">Gelir</div>
+                                            <div className="text-[10px] uppercase text-emerald-400/70">{t.income}</div>
                                             <div className="text-xl font-mono text-emerald-400 font-bold">+€{fin.lastWeekIncome.tickets.toLocaleString()}</div>
                                         </div>
                                     </div>
                                     <div className="mt-2 text-xs text-slate-400">
-                                        Doluluk: {Math.floor((fin.lastWeekIncome.tickets / TICKET_PRICE) / team.facilities.stadiumCapacity * 100)}%
+                                        {t.occupancy}: {Math.floor((fin.lastWeekIncome.tickets / TICKET_PRICE) / team.facilities.stadiumCapacity * 100)}%
                                     </div>
                                 </div>
                             )}
@@ -265,7 +265,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     <div className="fm-panel rounded-xl overflow-hidden">
                         <div className="bg-red-900/30 p-3 border-b border-red-500/20">
                             <h3 className="text-sm font-bold text-red-400 flex items-center gap-2">
-                                <Hammer size={16} /> Bakım Giderleri Detayı
+                                <Hammer size={16} /> {t.maintenanceDetail}
                             </h3>
                         </div>
                         <div className="p-4">
@@ -298,7 +298,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                             <span className="font-mono text-red-400">-€{academyMaint.toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between items-center pt-2 font-bold">
-                                            <span className="text-white">Toplam Bakım</span>
+                                            <span className="text-white">{t.totalMaintenance}</span>
                                             <span className="font-mono text-red-400">-€{totalMaint.toLocaleString()}/hafta</span>
                                         </div>
                                     </div>
@@ -311,7 +311,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     <div className="fm-panel rounded-xl overflow-hidden">
                         <div className="bg-yellow-900/30 p-3 border-b border-yellow-500/20">
                             <h3 className="text-sm font-bold text-yellow-400 flex items-center gap-2">
-                                <Users size={16} /> En Yüksek Maaşlı Oyuncular
+                                <Users size={16} /> {t.highestEarners}
                             </h3>
                         </div>
                         <div className="p-4">
@@ -337,8 +337,71 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 ))}
                             </div>
                             <div className="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center">
-                                <span className="text-slate-400 text-sm">Toplam Maaş Gideri ({players.length} oyuncu)</span>
+                                <span className="text-slate-400 text-sm">{t.totalWages} ({players.length} {t.people || 'players'})</span>
                                 <span className="font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}/hafta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 📈 REPUTATION & CONFIDENCE HISTORY */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Reputation History */}
+                        <div className="fm-panel rounded-xl overflow-hidden">
+                            <div className="bg-purple-900/30 p-3 border-b border-purple-500/20">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-sm font-bold text-purple-400 flex items-center gap-2">
+                                        📈 {t.reputationHistory}
+                                    </h3>
+                                    <span className="text-lg font-mono text-white font-bold">{team.reputation.toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div className="p-3 max-h-48 overflow-y-auto">
+                                {(team.reputationHistory || []).length === 0 ? (
+                                    <div className="text-slate-500 text-xs text-center py-4">{t.noChangesYet}</div>
+                                ) : (
+                                    <div className="space-y-1">
+                                        {[...(team.reputationHistory || [])].reverse().slice(0, 10).map((h, idx) => (
+                                            <div key={idx} className="flex justify-between items-center py-1 border-b border-slate-700/30 text-xs">
+                                                <div className="text-slate-400">
+                                                    <span className="text-slate-500">{t.weekShort}{h.week}</span> {h.reason}
+                                                </div>
+                                                <span className={`font-mono font-bold ${h.change > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                    {h.change > 0 ? '+' : ''}{h.change}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Confidence History */}
+                        <div className="fm-panel rounded-xl overflow-hidden">
+                            <div className="bg-cyan-900/30 p-3 border-b border-cyan-500/20">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-sm font-bold text-cyan-400 flex items-center gap-2">
+                                        🎯 {t.confidenceHistory}
+                                    </h3>
+                                    <span className="text-lg font-mono text-white font-bold">{team.boardConfidence || 70}%</span>
+                                </div>
+                            </div>
+                            <div className="p-3 max-h-48 overflow-y-auto">
+                                {(team.confidenceHistory || []).length === 0 ? (
+                                    <div className="text-slate-500 text-xs text-center py-4">{t.noChangesYet}</div>
+                                ) : (
+                                    <div className="space-y-1">
+                                        {[...(team.confidenceHistory || [])].reverse().slice(0, 10).map((h, idx) => (
+                                            <div key={idx} className="flex justify-between items-center py-1 border-b border-slate-700/30 text-xs">
+                                                <div className="text-slate-400">
+                                                    <span className="text-slate-500">{t.weekShort}{h.week}</span> {h.reason}
+                                                </div>
+                                                <span className={`font-mono font-bold ${h.change > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                    {h.change > 0 ? '+' : ''}{h.change}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

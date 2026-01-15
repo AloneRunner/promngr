@@ -20,6 +20,7 @@ class AdMobService {
   private isBannerShowing = false;
   private currentPosition: 'top' | 'bottom' | null = null;
   private useTestAds = false; // Production mode by default
+  private webPlatformLogged = false; // Prevent log spam on web
 
   /**
    * Initialize AdMob
@@ -29,7 +30,10 @@ class AdMobService {
 
     // Only run on native platforms
     if (!Capacitor.isNativePlatform()) {
-      console.log('AdMob: Web platform detected, skipping initialization');
+      if (!this.webPlatformLogged) {
+        console.log('AdMob: Web platform detected, skipping initialization');
+        this.webPlatformLogged = true;
+      }
       return;
     }
 
@@ -56,7 +60,7 @@ class AdMobService {
     }
 
     if (!Capacitor.isNativePlatform()) {
-      console.log('AdMob: Web platform, banner not shown');
+      // Silent return on web - already logged once
       return;
     }
 

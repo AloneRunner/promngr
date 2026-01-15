@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Message, MessageType, Translation, TransferOffer } from '../types';
-import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye } from 'lucide-react';
+import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye, Star, Filter } from 'lucide-react';
 
 interface NewsCenterProps {
    messages: Message[];
@@ -16,8 +16,46 @@ interface NewsCenterProps {
    t: Translation;
 }
 
+type MessageTab = 'ALL' | 'TRANSFERS' | 'INJURIES' | 'YOUTH' | 'BOARD';
+
 export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onViewPlayer, t }) => {
-   const sortedMessages = [...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+   const [activeTab, setActiveTab] = useState<MessageTab>('ALL');
+
+   // Filter messages by tab
+   const filterMessages = (msgs: Message[]): Message[] => {
+      switch (activeTab) {
+         case 'TRANSFERS':
+            return msgs.filter(m => m.type === MessageType.TRANSFER_OFFER);
+         case 'INJURIES':
+            return msgs.filter(m => m.type === MessageType.INJURY);
+         case 'YOUTH':
+            return msgs.filter(m => m.subject?.includes('Youth') || m.subject?.includes('Genç') || m.subject?.includes('Prospect') || m.subject?.includes('Yetenek'));
+         case 'BOARD':
+            return msgs.filter(m => m.type === MessageType.BOARD);
+         default:
+            return msgs;
+      }
+   };
+
+   const sortedMessages = filterMessages([...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+
+   // Count messages per tab
+   const tabCounts = {
+      ALL: messages.length,
+      TRANSFERS: messages.filter(m => m.type === MessageType.TRANSFER_OFFER).length,
+      INJURIES: messages.filter(m => m.type === MessageType.INJURY).length,
+      YOUTH: messages.filter(m => m.subject?.includes('Youth') || m.subject?.includes('Genç') || m.subject?.includes('Prospect') || m.subject?.includes('Yetenek')).length,
+      BOARD: messages.filter(m => m.type === MessageType.BOARD).length
+   };
+
+   // Tab definitions
+   const tabs: { id: MessageTab; label: string; icon: any; color: string }[] = [
+      { id: 'ALL', label: t.inbox || 'All', icon: Mail, color: 'text-white' },
+      { id: 'TRANSFERS', label: t.market || 'Transfers', icon: DollarSign, color: 'text-yellow-400' },
+      { id: 'INJURIES', label: t.injured || 'Injuries', icon: AlertTriangle, color: 'text-red-400' },
+      { id: 'YOUTH', label: t.youthAcademy || 'Youth', icon: Star, color: 'text-emerald-400' },
+      { id: 'BOARD', label: t.club || 'Board', icon: Briefcase, color: 'text-blue-400' }
+   ];
 
    // Count critical unread messages
    const criticalUnread = messages.filter(m => !m.isRead && (
@@ -63,11 +101,11 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                      <Mail className="text-emerald-500" /> {t.inbox}
                      {criticalUnread > 0 && (
                         <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse flex items-center gap-1">
-                           <AlertCircle size={12} /> {criticalUnread} Acil
+                           <AlertCircle size={12} /> {criticalUnread} {t.urgent}
                         </span>
                      )}
                   </h2>
-                  <p className="text-slate-400 text-sm">Kulübünüzle ilgili son haberler.</p>
+                  <p className="text-slate-400 text-sm">{t.lastNews}</p>
                </div>
 
                {/* Delete All Read Button */}
@@ -76,7 +114,7 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                      onClick={onDeleteAllRead}
                      className="flex items-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 text-sm font-bold rounded-lg border border-slate-500/30 transition-all"
                   >
-                     <Trash2 size={16} /> Okunanları Sil ({readMessages})
+                     <Trash2 size={16} /> {t.deleteRead} ({readMessages})
                   </button>
                )}
                {messages.length > 0 && onDeleteAll && (
@@ -84,10 +122,33 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                      onClick={onDeleteAll}
                      className="flex items-center gap-2 px-3 py-2 bg-red-900/30 hover:bg-red-800/50 text-red-400 text-sm font-bold rounded-lg border border-red-500/30 transition-all"
                   >
-                     <Trash2 size={16} /> Hepsini Sil
+                     <Trash2 size={16} /> {t.deleteAll}
                   </button>
                )}
             </div>
+         </div>
+
+         {/* Tab Buttons */}
+         <div className="flex gap-1 flex-wrap bg-slate-900/50 p-2 rounded-lg border border-slate-700 mb-4">
+            {tabs.map(tab => (
+               <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === tab.id
+                        ? 'bg-slate-700 text-white shadow-md'
+                        : 'bg-transparent text-slate-400 hover:bg-slate-800 hover:text-white'
+                     }`}
+               >
+                  <tab.icon size={14} className={activeTab === tab.id ? tab.color : ''} />
+                  {tab.label}
+                  {tabCounts[tab.id] > 0 && (
+                     <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${activeTab === tab.id ? 'bg-slate-600' : 'bg-slate-800'
+                        }`}>
+                        {tabCounts[tab.id]}
+                     </span>
+                  )}
+               </button>
+            ))}
          </div>
 
          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
@@ -118,7 +179,7 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                                     <button
                                        onClick={(e) => { e.stopPropagation(); onDeleteMessage(msg.id); }}
                                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all"
-                                       title="Mesajı Sil"
+                                       title={t.deleteMessage}
                                     >
                                        <Trash2 size={14} />
                                     </button>
@@ -135,20 +196,20 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                                        onClick={(e) => { e.stopPropagation(); onViewPlayer(pendingOffer.playerId); }}
                                        className="flex items-center gap-1 px-3 py-2 bg-slate-600 hover:bg-slate-500 text-white text-sm font-bold rounded-lg transition-all"
                                     >
-                                       <Eye size={16} /> Detay
+                                       <Eye size={16} /> {t.detail}
                                     </button>
                                  )}
                                  <button
                                     onClick={(e) => { e.stopPropagation(); onAcceptOffer && onAcceptOffer(pendingOffer.id); }}
                                     className="flex items-center gap-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition-all"
                                  >
-                                    <Check size={16} /> Kabul
+                                    <Check size={16} /> {t.accept}
                                  </button>
                                  <button
                                     onClick={(e) => { e.stopPropagation(); onRejectOffer && onRejectOffer(pendingOffer.id); }}
                                     className="flex items-center gap-1 px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-lg transition-all"
                                  >
-                                    <X size={16} /> Reddet
+                                    <X size={16} /> {t.reject}
                                  </button>
                                  <span className="ml-auto text-yellow-400 font-mono text-sm self-center">
                                     €{(pendingOffer.offerAmount / 1000000).toFixed(1)}M

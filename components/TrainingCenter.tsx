@@ -87,7 +87,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
 
     const startTrainingMatch = () => {
         if (teamA.length < 7 || teamB.length < 7) {
-            alert(t.training === 'Training' ? 'Each team needs at least 7 players!' : 'Her takımda en az 7 oyuncu olmalı!');
+            alert(t.minPlayersWarning);
             return;
         }
 
@@ -119,7 +119,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                     teamBGoals++;
                 }
 
-                events.push(`${minute}' ⚽ ${goalscorer.name} (${scoringTeam === 'A' ? 'Turuncu' : 'Mavi'})`);
+                events.push(`${minute}' ⚽ ${goalscorer.name} (${scoringTeam === 'A' ? t.orange : t.blue})`);
                 scorers.push({ name: goalscorer.name, team: scoringTeam, minute });
             }
         }
@@ -161,6 +161,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
         { id: 'DEFENSE', icon: Shield, label: t.training === 'Training' ? 'Defending' : 'Savunma', desc: t.training === 'Training' ? 'Boosts Tackling, Positioning. Lowers Attack.' : 'Top Kapma ve Pozisyon Almayı geliştirir.', color: 'text-blue-400' },
         { id: 'PHYSICAL', icon: Zap, label: t.training === 'Training' ? 'Physical' : 'Fiziksel', desc: t.training === 'Training' ? 'Boosts Speed, Strength. High Fatigue risk.' : 'Hız ve Güç artar. Yorgunluk riski.', color: 'text-yellow-400' },
         { id: 'TECHNICAL', icon: Brain, label: t.training === 'Training' ? 'Technical' : 'Teknik', desc: t.training === 'Training' ? 'Boosts Dribbling, Vision, Control.' : 'Top Sürme ve Vizyonu geliştirir.', color: 'text-purple-400' },
+        { id: 'POSITION_BASED', icon: Users, label: t.training === 'Training' ? 'Position Based' : 'Mevkiye Göre', desc: t.training === 'Training' ? 'Each player trains based on their position.' : 'Her oyuncu kendi mevkisine göre antrenman alır.', color: 'text-emerald-400' },
     ];
 
     const intensities: { id: TrainingIntensity, label: string, recovery: string, growth: string, color: string }[] = [
@@ -269,12 +270,10 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                 {/* Training Match Section */}
                 <div className="bg-gradient-to-br from-amber-900/50 to-slate-900 p-6 rounded-lg border border-amber-500/30 shadow-xl">
                     <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                        <Swords className="text-amber-400" /> {t.training === 'Training' ? 'Training Match' : 'Antrenman Maçı'}
+                        <Swords className="text-amber-400" /> {t.trainingMatch}
                     </h3>
                     <p className="text-xs text-slate-400 mb-4">
-                        {t.training === 'Training'
-                            ? 'Create two teams from your squad and watch them play!'
-                            : 'Kadronuzdan iki takım oluşturun ve maçı izleyin!'}
+                        {t.trainingMatchDesc}
                     </p>
 
                     {!trainingMatchResult ? (
@@ -285,8 +284,8 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         >
                             <Users size={18} />
                             {availablePlayers.length < 14
-                                ? (t.training === 'Training' ? `Need ${14 - availablePlayers.length} more fit players` : `${14 - availablePlayers.length} fit oyuncu daha gerekli`)
-                                : (t.training === 'Training' ? 'Setup Training Match' : 'Antrenman Maçı Kur')}
+                                ? (t.needMorePlayers.replace('{count}', String(14 - availablePlayers.length)))
+                                : (t.setupMatch)}
                         </button>
                     ) : (
                         <div className="space-y-3">
@@ -294,12 +293,12 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             <div className="bg-slate-800 rounded-lg p-4">
                                 <div className="flex items-center justify-center gap-4">
                                     <div className="text-center">
-                                        <div className="text-xs text-amber-400 mb-1 font-bold">🟠 Turuncu</div>
+                                        <div className="text-xs text-amber-400 mb-1 font-bold">🟠 {t.orange}</div>
                                         <div className="text-4xl font-bold text-amber-400">{trainingMatchResult.teamAGoals}</div>
                                     </div>
                                     <div className="text-2xl text-slate-500">-</div>
                                     <div className="text-center">
-                                        <div className="text-xs text-blue-400 mb-1 font-bold">🔵 Mavi</div>
+                                        <div className="text-xs text-blue-400 mb-1 font-bold">🔵 {t.blue}</div>
                                         <div className="text-4xl font-bold text-blue-400">{trainingMatchResult.teamBGoals}</div>
                                     </div>
                                 </div>
@@ -309,7 +308,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             <div className="bg-gradient-to-r from-yellow-900/30 to-amber-900/30 rounded-lg p-3 flex items-center gap-3">
                                 <Trophy className="text-yellow-400" size={24} />
                                 <div>
-                                    <div className="text-xs text-yellow-400">{t.training === 'Training' ? 'Man of the Match' : 'Maçın Adamı'}</div>
+                                    <div className="text-xs text-yellow-400">{t.motm}</div>
                                     <div className="font-bold text-white">{trainingMatchResult.mvp.name} ({trainingMatchResult.mvp.overall})</div>
                                 </div>
                             </div>
@@ -317,7 +316,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             {/* Scorers */}
                             {trainingMatchResult.scorers.length > 0 && (
                                 <div className="bg-slate-800/50 rounded-lg p-3">
-                                    <div className="text-xs text-slate-400 mb-2 font-bold">⚽ Goller</div>
+                                    <div className="text-xs text-slate-400 mb-2 font-bold">⚽ {t.goals}</div>
                                     <div className="flex flex-wrap gap-2">
                                         {trainingMatchResult.scorers.map((s, i) => (
                                             <span key={i} className={`text-xs px-2 py-1 rounded ${s.team === 'A' ? 'bg-amber-900/50 text-amber-300' : 'bg-blue-900/50 text-blue-300'}`}>
@@ -331,7 +330,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             {/* Teams List - Full */}
                             <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div className="bg-amber-900/20 rounded p-2 border border-amber-500/20">
-                                    <div className="font-bold text-amber-400 mb-2 text-center">🟠 Turuncu Takım</div>
+                                    <div className="font-bold text-amber-400 mb-2 text-center">🟠 {t.orangeTeam}</div>
                                     <div className="space-y-1 max-h-40 overflow-y-auto">
                                         {trainingMatchResult.teamA.map(p => (
                                             <div key={p.id} className="flex justify-between items-center text-slate-300 py-0.5 border-b border-slate-700/50">
@@ -341,14 +340,14 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                         ))}
                                     </div>
                                     <div className="mt-2 pt-2 border-t border-amber-500/30 text-center">
-                                        <span className="text-slate-500">Ort: </span>
+                                        <span className="text-slate-500">{t.avg}: </span>
                                         <span className="text-amber-400 font-bold">
                                             {Math.round(trainingMatchResult.teamA.reduce((s, p) => s + p.overall, 0) / trainingMatchResult.teamA.length)}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="bg-blue-900/20 rounded p-2 border border-blue-500/20">
-                                    <div className="font-bold text-blue-400 mb-2 text-center">🔵 Mavi Takım</div>
+                                    <div className="font-bold text-blue-400 mb-2 text-center">🔵 {t.blueTeam}</div>
                                     <div className="space-y-1 max-h-40 overflow-y-auto">
                                         {trainingMatchResult.teamB.map(p => (
                                             <div key={p.id} className="flex justify-between items-center text-slate-300 py-0.5 border-b border-slate-700/50">
@@ -358,7 +357,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                         ))}
                                     </div>
                                     <div className="mt-2 pt-2 border-t border-blue-500/30 text-center">
-                                        <span className="text-slate-500">Ort: </span>
+                                        <span className="text-slate-500">{t.avg}: </span>
                                         <span className="text-blue-400 font-bold">
                                             {Math.round(trainingMatchResult.teamB.reduce((s, p) => s + p.overall, 0) / trainingMatchResult.teamB.length)}
                                         </span>
@@ -370,7 +369,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                 onClick={() => { setTrainingMatchResult(null); setTeamA([]); setTeamB([]); }}
                                 className="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition-all"
                             >
-                                {t.training === 'Training' ? 'New Match' : 'Yeni Maç'}
+                                {t.newMatch}
                             </button>
                         </div>
                     )}
@@ -384,7 +383,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         {/* Header */}
                         <div className="p-4 bg-slate-800 border-b border-slate-700 flex items-center justify-between">
                             <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                                <Swords className="text-amber-400" /> Antrenman Maçı - Takım Seçimi
+                                <Swords className="text-amber-400" /> {t.trainingMatchSetup}
                             </h2>
                             <button onClick={() => setShowTeamBuilder(false)} className="text-slate-400 hover:text-white">
                                 <X size={24} />
@@ -396,7 +395,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             {/* Team A */}
                             <div className="flex-1 bg-amber-900/20 rounded-lg border border-amber-500/30 p-3 flex flex-col">
                                 <div className="font-bold text-amber-400 mb-2 text-center flex items-center justify-center gap-2">
-                                    🟠 Turuncu Takım ({teamA.length}/11)
+                                    🟠 {t.orangeTeam} ({teamA.length}/11)
                                 </div>
                                 <div className="flex-1 overflow-y-auto space-y-1 min-h-[150px]">
                                     {teamA.map(p => (
@@ -416,12 +415,12 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                         </div>
                                     ))}
                                     {teamA.length === 0 && (
-                                        <div className="text-slate-500 text-center py-4 text-sm">Oyuncu seçin</div>
+                                        <div className="text-slate-500 text-center py-4 text-sm">{t.selectPlayer}</div>
                                     )}
                                 </div>
                                 {teamA.length > 0 && (
                                     <div className="mt-2 pt-2 border-t border-amber-500/30 text-center text-sm">
-                                        Ortalama: <span className="text-amber-400 font-bold">{Math.round(teamA.reduce((s, p) => s + p.overall, 0) / teamA.length)}</span>
+                                        {t.avg}: <span className="text-amber-400 font-bold">{Math.round(teamA.reduce((s, p) => s + p.overall, 0) / teamA.length)}</span>
                                     </div>
                                 )}
                             </div>
@@ -429,14 +428,14 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             {/* Player Pool */}
                             <div className="flex-1 bg-slate-800 rounded-lg border border-slate-600 p-3 flex flex-col">
                                 <div className="font-bold text-slate-300 mb-2 text-center">
-                                    Oyuncu Havuzu ({unassignedPlayers.length})
+                                    {t.playerPool} ({unassignedPlayers.length})
                                 </div>
                                 <div className="flex gap-2 mb-2">
                                     <button onClick={autoFillTeams} className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs rounded flex items-center justify-center gap-1">
-                                        <Shuffle size={14} /> Otomatik Dağıt
+                                        <Shuffle size={14} /> {t.autoPick}
                                     </button>
                                     <button onClick={clearTeams} className="flex-1 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded">
-                                        Temizle
+                                        {t.clear}
                                     </button>
                                 </div>
                                 <div className="flex-1 overflow-y-auto space-y-1 min-h-[150px]">
@@ -473,7 +472,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                             {/* Team B */}
                             <div className="flex-1 bg-blue-900/20 rounded-lg border border-blue-500/30 p-3 flex flex-col">
                                 <div className="font-bold text-blue-400 mb-2 text-center flex items-center justify-center gap-2">
-                                    🔵 Mavi Takım ({teamB.length}/11)
+                                    🔵 {t.blueTeam} ({teamB.length}/11)
                                 </div>
                                 <div className="flex-1 overflow-y-auto space-y-1 min-h-[150px]">
                                     {teamB.map(p => (
@@ -493,12 +492,12 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                         </div>
                                     ))}
                                     {teamB.length === 0 && (
-                                        <div className="text-slate-500 text-center py-4 text-sm">Oyuncu seçin</div>
+                                        <div className="text-slate-500 text-center py-4 text-sm">{t.selectPlayer}</div>
                                     )}
                                 </div>
                                 {teamB.length > 0 && (
                                     <div className="mt-2 pt-2 border-t border-blue-500/30 text-center text-sm">
-                                        Ortalama: <span className="text-blue-400 font-bold">{Math.round(teamB.reduce((s, p) => s + p.overall, 0) / teamB.length)}</span>
+                                        {t.avg}: <span className="text-blue-400 font-bold">{Math.round(teamB.reduce((s, p) => s + p.overall, 0) / teamB.length)}</span>
                                     </div>
                                 )}
                             </div>
@@ -507,7 +506,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         {/* Footer */}
                         <div className="p-4 bg-slate-800 border-t border-slate-700 flex items-center justify-between">
                             <div className="text-sm text-slate-400">
-                                Her takımda en az 7 oyuncu olmalı
+                                {t.minPlayersWarning}
                             </div>
                             <button
                                 onClick={startTrainingMatch}
@@ -517,11 +516,11 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                 {isSimulating ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                        Oynanıyor...
+                                        {t.playing}
                                     </>
                                 ) : (
                                     <>
-                                        <Swords size={18} /> Maçı Başlat
+                                        <Swords size={18} /> {t.startMatch}
                                     </>
                                 )}
                             </button>
