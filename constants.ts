@@ -168,8 +168,66 @@ export const DERBY_RIVALS: Record<string, string[]> = {
 };
 
 export const NAMES_DB: any = {
-    'World': { first: ['John', 'David', 'Michael'], last: ['Smith', 'Johnson', 'Brown'] },
-    'Turkey': { first: ['Ahmet', 'Mehmet', 'Ali'], last: ['Yılmaz', 'Demir', 'Kaya'] }
+    // 🇹🇷 Turkey (Süper Lig)
+    'Turkey': {
+        first: ['Emre', 'Burak', 'Mert', 'Can', 'Oğuz', 'Alper', 'Serkan', 'Baran', 'Kaan', 'Efe', 'Yiğit', 'Umut', 'Furkan', 'Tolga', 'Kerem', 'Batuhan', 'Deniz', 'Arda', 'Taha', 'Samet'],
+        last: ['Yıldız', 'Demir', 'Şahin', 'Kaya', 'Aydın', 'Koç', 'Aksoy', 'Özkan', 'Çelik', 'Güneş', 'Arslan', 'Polat', 'Erdem', 'Yalçın', 'Karaca', 'Öztürk', 'Kılıç', 'Uçar', 'Bozkurt', 'Tunç']
+    },
+    // 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England (Premier League)
+    'England': {
+        first: ['Jack', 'Harry', 'Oliver', 'George', 'Charlie', 'Alfie', 'Archie', 'Freddie', 'Leo', 'Oscar', 'Henry', 'Thomas', 'Finley', 'Theo', 'Isaac', 'Lucas', 'Max', 'Reuben', 'Edward', 'Samuel'],
+        last: ['Smith', 'Johnson', 'Taylor', 'Brown', 'Williams', 'Jones', 'Davis', 'Wilson', 'Evans', 'Thomas', 'Clarke', 'Lewis', 'Walker', 'Hall', 'Allen', 'Wright', 'Green', 'Baker', 'Adams', 'Cooper']
+    },
+    // 🇪🇸 Spain (La Liga)
+    'Spain': {
+        first: ['Alejandro', 'Javier', 'Diego', 'Pablo', 'Miguel', 'Carlos', 'Sergio', 'Luis', 'Andrés', 'Juan', 'Manuel', 'Álvaro', 'David', 'Rubén', 'Marcos', 'Raúl', 'Iker', 'Hugo', 'Antonio', 'Iván'],
+        last: ['García', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Rodríguez', 'Pérez', 'Gómez', 'Torres', 'Ramírez', 'Díaz', 'Morales', 'Ortega', 'Navarro', 'Castro', 'Herrera', 'Molina', 'Vega', 'León', 'Rivas']
+    },
+    // 🇮🇹 Italy (Serie A)
+    'Italy': {
+        first: ['Luca', 'Matteo', 'Alessandro', 'Marco', 'Francesco', 'Davide', 'Simone', 'Andrea', 'Giuseppe', 'Stefano', 'Fabio', 'Riccardo', 'Enrico', 'Daniele', 'Nicola', 'Gabriele', 'Tommaso', 'Paolo', 'Roberto', 'Mauro'],
+        last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'Mancini', 'Moretti', 'Rizzo', 'Lombardi', 'Barbieri', 'De Luca', 'Costa']
+    },
+    // 🇫🇷 France (Ligue 1)
+    'France': {
+        first: ['Lucas', 'Hugo', 'Nathan', 'Louis', 'Jules', 'Léo', 'Arthur', 'Théo', 'Maxime', 'Enzo', 'Clément', 'Antoine', 'Adrien', 'Paul', 'Baptiste', 'Romain', 'Mathis', 'Tom', 'Alexandre', 'Evan'],
+        last: ['Martin', 'Bernard', 'Dubois', 'Moreau', 'Laurent', 'Lefebvre', 'Simon', 'Michel', 'Garcia', 'Petit', 'Rousseau', 'Henry', 'Faure', 'Noël', 'Chevalier', 'André', 'Robin', 'Blanchard', 'Colin', 'Giraud']
+    },
+    // 🇩🇪 Germany (Bundesliga)
+    'Germany': {
+        first: ['Leon', 'Elias', 'Noah', 'Finn', 'Jonas', 'Paul', 'Emil', 'Luca', 'Max', 'Felix', 'Moritz', 'Tim', 'Julian', 'Niklas', 'Ben', 'Theo', 'Erik', 'David', 'Fabian', 'Linus'],
+        last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Braun']
+    },
+    // 🇳🇱 Netherlands
+    'Netherlands': {
+        first: ['Daan', 'Sven', 'Lars', 'Bram', 'Milan', 'Luuk', 'Thijs', 'Joost', 'Ruben', 'Bas'],
+        last: ['de Vries', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'de Jong', 'Smit', 'Meijer', 'Bos', 'van den Berg']
+    },
+    // 🇧🇷 Brazil
+    'Brazil': {
+        first: ['João', 'Lucas', 'Gabriel', 'Thiago', 'Rafael', 'Pedro', 'Mateus', 'Bruno', 'Diego', 'Vinicius'],
+        last: ['Silva', 'Souza', 'Oliveira', 'Costa', 'Lima', 'Santos', 'Almeida', 'Ferreira', 'Pereira', 'Rodrigues']
+    },
+    // 🇷🇺 Russia
+    'Russia': {
+        first: ['Ivan', 'Dmitry', 'Alexey', 'Nikita', 'Egor', 'Andrey', 'Sergey', 'Pavel', 'Mikhail', 'Artem'],
+        last: ['Ivanov', 'Smirnov', 'Kuznetsov', 'Popov', 'Volkov', 'Petrov', 'Sokolov', 'Lebedev', 'Kozlov', 'Novikov']
+    },
+    // 🇸🇪 Sweden
+    'Sweden': {
+        first: ['Erik', 'Axel', 'Emil', 'Viktor', 'Gustav', 'Oscar', 'Liam', 'Hugo', 'Anton', 'Felix'],
+        last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Berg', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson']
+    },
+    // 🌍 World (fallback for Europe, etc.)
+    'World': {
+        first: ['Jack', 'Leo', 'Lucas', 'Max', 'Oliver', 'Noah', 'Liam', 'Oscar', 'Theo', 'Henry', 'Alexander', 'Daniel', 'James', 'Michael', 'David'],
+        last: ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Martinez', 'Wilson', 'Anderson', 'Taylor', 'Thomas', 'Moore', 'White', 'Harris', 'Martin']
+    },
+    // Alias for Europe fallback
+    'Europe': {
+        first: ['Jack', 'Leo', 'Lucas', 'Max', 'Oliver', 'Noah', 'Liam', 'Oscar', 'Theo', 'Henry', 'Marco', 'Pierre', 'Hans', 'Antonio', 'Stefan'],
+        last: ['Smith', 'Johnson', 'Garcia', 'Müller', 'Martin', 'Rossi', 'Silva', 'Nielsen', 'Jansen', 'Andersson', 'Ferrari', 'Bernard', 'Schmidt', 'Lopez', 'Costa']
+    }
 };
 
 // --- REAL WORLD TACTICAL PROFILES ---
@@ -717,7 +775,40 @@ export const TRANSLATIONS: Record<string, any> = {
         jobOffers: "Job Offers",
         terminateContract: "Release Player",
         terminateConfirm: "Release {name}? Severance: €{cost}K",
-        playerReleased: "Player has been released."
+        playerReleased: "Player has been released.",
+
+        // GameGuide Translations
+        guideAbout: "About the Game",
+        guideBasics: "Game Basics",
+        guideSquad: "Squad Management",
+        guideTactics: "Tactics (Detailed)",
+        guideTraining: "Training System",
+        guideFacilities: "Facilities & Staff",
+        guideMorale: "Morale System",
+        guideTransfers: "Transfer System",
+        guideFinance: "Financial Management",
+        guideEuropean: "European Cups",
+        guideTips: "Pro Tips",
+
+        guideUnderDev: "Under Development!",
+        guideUnderDevDesc: "This game is actively being developed. User feedback is directly reflected in the game. Contact us for bugs or suggestions!",
+        guideDifferent: "What Makes Us Different?",
+        guideDifferentDesc: "Unlike other manager games, we don't overwhelm users with stats. An easy-to-learn, hard-to-master game that even casual football fans can enjoy.",
+        guideSimple: "Simple and clear interface",
+        guideFast: "Fast match simulation",
+        guideMobile: "Mobile-first design",
+        guideLiveEngine: "Live Match Engine",
+        guideLiveEngineDesc: "Most manager games (FM, Top Eleven etc.) pre-calculate matches and show you highlights. The 'scenario' is already written.",
+        guideOurEngine: "Our engine is different!",
+        guideEvery50ms: "Every 50ms (20 times per second):",
+        guide22Players: "22 player positions are calculated",
+        guideAIDecides: "AI decides (shoot, pass, or dribble?)",
+        guideBallPhysics: "Ball physics are simulated",
+        guideUnpredictable: "Real-time, unpredictable matches!",
+        guide2D25D: "2D vs 2.5D View",
+        guide2DDesc: "Classic bird's eye view. Ideal for tactical analysis. See the entire pitch.",
+        guide25DDesc: "Perspective view. More cinematic, like a TV broadcast.",
+        guideChangeView: "Change view during match from top right!"
     },
     tr: {
         dashboard: "Panel", news: "Haberler", squad: "Kadro", training: "Antrenman", market: "Pazar", club: "Kulüp", standings: "Puan Durumu", matchDay: "Maç Günü",
@@ -896,7 +987,40 @@ export const TRANSLATIONS: Record<string, any> = {
         jobOffers: "İş Teklifleri",
         terminateContract: "Oyuncuyu Serbest Bırak",
         terminateConfirm: "{name} oyuncusunu serbest bırak? Tazminat: €{cost}K",
-        playerReleased: "Oyuncu serbest bırakıldı."
+        playerReleased: "Oyuncu serbest bırakıldı.",
+
+        // GameGuide Translations - Türkçe
+        guideAbout: "Oyun Hakkında",
+        guideBasics: "Oyun Temelleri",
+        guideSquad: "Kadro Yönetimi",
+        guideTactics: "Taktik Sistemi (Detaylı)",
+        guideTraining: "Antrenman Sistemi",
+        guideFacilities: "Tesisler & Personel",
+        guideMorale: "Moral Sistemi",
+        guideTransfers: "Transfer Sistemi",
+        guideFinance: "Finans Yönetimi",
+        guideEuropean: "Avrupa Kupaları",
+        guideTips: "Pro İpuçları",
+
+        guideUnderDev: "Geliştirme Aşamasında!",
+        guideUnderDevDesc: "Bu oyun aktif olarak geliştirilmektedir. Kullanıcılardan gelen geri bildirimler doğrudan oyuna yansıtılmaktadır. Hata veya öneri için bizimle iletişime geçebilirsiniz!",
+        guideDifferent: "Farkımız Ne?",
+        guideDifferentDesc: "Diğer menajerlik oyunlarının aksine, kullanıcıyı bilgi ve istatistiklerle boğmuyoruz. Futbola ilgisi az olan insanların bile zevk alacağı, öğrenmesi kolay ama ustalaşması zor bir oyun sunuyoruz.",
+        guideSimple: "Sade ve anlaşılır arayüz",
+        guideFast: "Hızlı maç simülasyonu",
+        guideMobile: "Mobil öncelikli tasarım",
+        guideLiveEngine: "Canlı Maç Motoru",
+        guideLiveEngineDesc: "Çoğu menajerlik oyunu (FM, Top Eleven vb.) maçı önceden hesaplar ve size sadece önemli anları gösterir. Maç 'senaryosu' zaten yazılmıştır.",
+        guideOurEngine: "Bizim motorumuz farklı!",
+        guideEvery50ms: "Her 50ms'de (saniyede 20 kez):",
+        guide22Players: "22 oyuncunun pozisyonları hesaplanır",
+        guideAIDecides: "Yapay zeka karar verir (şut mu, pas mı, çalım mı?)",
+        guideBallPhysics: "Top fiziği simüle edilir",
+        guideUnpredictable: "Gerçek zamanlı, öngörülemez maçlar!",
+        guide2D25D: "2D vs 2.5D Görünüm",
+        guide2DDesc: "Klasik kuş bakışı. Taktik analiz için ideal. Tüm sahayı görürsün.",
+        guide25DDesc: "Perspektif görünüm. Daha sinematik ve TV yayını hissi verir.",
+        guideChangeView: "Maç sırasında sağ üstten değiştirebilirsin!"
     },
     es: {
         dashboard: "Panel", news: "Noticias", squad: "Plantilla", training: "Entrenamiento", market: "Mercado", club: "Club", standings: "Clasificación", matchDay: "Día de Partido",
@@ -1060,6 +1184,39 @@ export const TRANSLATIONS: Record<string, any> = {
         currentValue: "Valor Actual",
         patience: "Paciencia",
         insistHelp: "Presionar al club (Alto Riesgo)",
-        jobOffers: "Ofertas de Trabajo"
+        jobOffers: "Ofertas de Trabajo",
+
+        // GameGuide Translations - Español
+        guideAbout: "Sobre el Juego",
+        guideBasics: "Fundamentos del Juego",
+        guideSquad: "Gestión de Plantilla",
+        guideTactics: "Sistema Táctico (Detallado)",
+        guideTraining: "Sistema de Entrenamiento",
+        guideFacilities: "Instalaciones y Personal",
+        guideMorale: "Sistema de Moral",
+        guideTransfers: "Sistema de Fichajes",
+        guideFinance: "Gestión Financiera",
+        guideEuropean: "Copas Europeas",
+        guideTips: "Consejos Pro",
+
+        guideUnderDev: "¡En Desarrollo!",
+        guideUnderDevDesc: "Este juego está en desarrollo activo. Los comentarios de los usuarios se reflejan directamente. ¡Contáctanos para errores o sugerencias!",
+        guideDifferent: "¿Qué nos hace diferentes?",
+        guideDifferentDesc: "A diferencia de otros juegos de manager, no abrumamos con estadísticas. Un juego fácil de aprender pero difícil de dominar que incluso los fans casuales pueden disfrutar.",
+        guideSimple: "Interfaz simple y clara",
+        guideFast: "Simulación de partidos rápida",
+        guideMobile: "Diseño móvil primero",
+        guideLiveEngine: "Motor de Partido en Vivo",
+        guideLiveEngineDesc: "La mayoría de juegos de manager (FM, Top Eleven etc.) pre-calculan los partidos y te muestran los momentos importantes. El 'guión' ya está escrito.",
+        guideOurEngine: "¡Nuestro motor es diferente!",
+        guideEvery50ms: "Cada 50ms (20 veces por segundo):",
+        guide22Players: "Se calculan las posiciones de 22 jugadores",
+        guideAIDecides: "La IA decide (¿disparar, pasar o regatear?)",
+        guideBallPhysics: "Se simula la física del balón",
+        guideUnpredictable: "¡Partidos en tiempo real e impredecibles!",
+        guide2D25D: "Vista 2D vs 2.5D",
+        guide2DDesc: "Vista clásica desde arriba. Ideal para análisis táctico. Ves todo el campo.",
+        guide25DDesc: "Vista en perspectiva. Más cinematográfica, como una transmisión de TV.",
+        guideChangeView: "¡Cambia la vista durante el partido desde arriba a la derecha!"
     }
 };

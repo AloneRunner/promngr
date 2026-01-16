@@ -760,6 +760,27 @@ const App: React.FC = () => {
             ? getSubstitutedOutPlayerIds()
             : new Set<string>();
 
+        // CRITICAL FIX: Get players who received RED CARDS during this match
+        // These players are SENT OFF and cannot play (lineup count stays at 10!)
+        let redCardedIds = new Set<string>();
+        if (activeMatchId && view === 'match') {
+            // Find the active match to get events
+            let activeMatch = gameState.matches.find(m => m.id === activeMatchId);
+            if (!activeMatch && gameState.europeanCup) {
+                activeMatch = gameState.europeanCup.matches.find(m => m.id === activeMatchId);
+            }
+            if (!activeMatch && gameState.europaLeague) {
+                activeMatch = gameState.europaLeague.matches.find(m => m.id === activeMatchId);
+            }
+            if (activeMatch) {
+                activeMatch.events.forEach(ev => {
+                    if (ev.type === MatchEventType.CARD_RED && ev.playerId) {
+                        redCardedIds.add(ev.playerId);
+                    }
+                });
+            }
+        }
+
         // Inject LIVE STAMINA from engine if available
         if (activeMatchId && view === 'match') {
             playersCopy.forEach((p: Player) => {
@@ -767,9 +788,9 @@ const App: React.FC = () => {
                 if (liveStamina !== undefined) {
                     p.condition = liveStamina;
                 }
-                // Mark substituted out players as "injured" for lineup purposes
+                // Mark substituted out OR red-carded players as "injured" for lineup purposes
                 // This prevents autoPickLineup from selecting them
-                if (substitutedOutIds.has(p.id)) {
+                if (substitutedOutIds.has(p.id) || redCardedIds.has(p.id)) {
                     p.weeksInjured = 99; // Temporary flag to exclude from selection
                 }
             });

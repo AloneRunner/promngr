@@ -119,8 +119,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
     const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
 
+    // NEW: Set Piece Indicator - Shows what's happening (FOUL, FREE_KICK, CORNER, etc.)
+    const [setPieceIndicator, setSetPieceIndicator] = useState<{ type: string, message: string } | null>(null);
+
     // NEW: Toast Notification System
-    const [toasts, setToasts] = useState<Array<{ id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD', message: string, team: 'HOME' | 'AWAY', minute: number }>>([]);
+    const [toasts, setToasts] = useState<Array<{ id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' | 'SET_PIECE', message: string, team: 'HOME' | 'AWAY', minute: number }>>([]);
     const lastEventCount = useRef(0);
 
     // NEW: Exit Confirmation Modal
@@ -307,12 +310,58 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const timestamp = Date.now(); // Get timestamp once for the batch
             newEvents.forEach((ev, idx) => {
                 const isHome = ev.teamId === homeTeam.id;
-                let toastType: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' = 'GOAL';
+                let toastType: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' | 'SET_PIECE' = 'GOAL';
+                let showIndicator = false;
+                let indicatorType = '';
+                let indicatorMessage = '';
 
-                if (ev.type === MatchEventType.GOAL) toastType = 'GOAL';
-                else if (ev.type === MatchEventType.SUB) toastType = 'SUB';
-                else if (ev.type === MatchEventType.CARD_YELLOW || ev.type === MatchEventType.CARD_RED) toastType = 'CARD';
-                else return; // Skip other events for toast
+                if (ev.type === MatchEventType.GOAL) {
+                    toastType = 'GOAL';
+                } else if (ev.type === MatchEventType.SUB) {
+                    toastType = 'SUB';
+                } else if (ev.type === MatchEventType.CARD_YELLOW || ev.type === MatchEventType.CARD_RED) {
+                    toastType = 'CARD';
+                } else if (ev.type === MatchEventType.FOUL) {
+                    toastType = 'SET_PIECE';
+                    showIndicator = true;
+                    indicatorType = 'FOUL';
+                    indicatorMessage = 'FOUL';
+                } else if (ev.type === MatchEventType.FREE_KICK) {
+                    toastType = 'SET_PIECE';
+                    showIndicator = true;
+                    indicatorType = 'FREE_KICK';
+                    indicatorMessage = 'FREE KICK';
+                } else if (ev.type === MatchEventType.CORNER) {
+                    toastType = 'SET_PIECE';
+                    showIndicator = true;
+                    indicatorType = 'CORNER';
+                    indicatorMessage = 'CORNER';
+                } else if (ev.type === MatchEventType.THROW_IN) {
+                    // Don't show toast for throw-ins, just indicator briefly
+                    showIndicator = true;
+                    indicatorType = 'THROW_IN';
+                    indicatorMessage = 'THROW IN';
+                    // Show indicator briefly then clear
+                    setSetPieceIndicator({ type: indicatorType, message: indicatorMessage });
+                    setTimeout(() => setSetPieceIndicator(null), 1500);
+                    return; // Skip toast for throw-ins
+                } else if (ev.type === MatchEventType.KICKOFF) {
+                    showIndicator = true;
+                    indicatorType = 'KICKOFF';
+                    indicatorMessage = 'KICK OFF';
+                    setSetPieceIndicator({ type: indicatorType, message: indicatorMessage });
+                    setTimeout(() => setSetPieceIndicator(null), 2000);
+                    return; // Skip toast for kickoffs
+                } else {
+                    return; // Skip other events
+                }
+
+                // Show set piece indicator
+                if (showIndicator) {
+                    setSetPieceIndicator({ type: indicatorType, message: indicatorMessage });
+                    // Clear after 2.5 seconds
+                    setTimeout(() => setSetPieceIndicator(null), 2500);
+                }
 
                 const newToast = {
                     id: `${ev.minute}-${ev.type}-${timestamp}-${idx}`, // Added idx for uniqueness
@@ -419,8 +468,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 // 1. Minute changed
                 // 2. Goal Scored (Event type GOAL)
                 // 3. Match ended (90+ min)
+                // 4. Set pieces (FOUL, FREE_KICK, CORNER, etc.) - for visual indicators
                 const shouldSync = result.minuteIncrement ||
-                    (result.event && result.event.type === MatchEventType.GOAL) ||
+                    (result.event && [
+                        MatchEventType.GOAL,
+                        MatchEventType.FOUL,
+                        MatchEventType.FREE_KICK,
+                        MatchEventType.CORNER,
+                        MatchEventType.THROW_IN,
+                        MatchEventType.CARD_YELLOW,
+                        MatchEventType.CARD_RED,
+                        MatchEventType.KICKOFF
+                    ].includes(result.event.type)) ||
                     (matchRef.current.currentMinute >= 90);
 
                 if (shouldSync) {
@@ -1416,6 +1475,21 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
                             style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
                         />
+
+                        {/* SET PIECE INDICATOR - Bottom left, compact */}
+                        {setPieceIndicator && (
+                            <div className="absolute bottom-4 left-4 pointer-events-none animate-pulse">
+                                <div className={`px-3 py-1.5 rounded-lg font-bold text-xs md:text-sm shadow-lg backdrop-blur-sm ${setPieceIndicator.type === 'FOUL' ? 'bg-red-600/90 text-white' :
+                                        setPieceIndicator.type === 'FREE_KICK' ? 'bg-yellow-500/90 text-black' :
+                                            setPieceIndicator.type === 'CORNER' ? 'bg-orange-500/90 text-white' :
+                                                setPieceIndicator.type === 'THROW_IN' ? 'bg-blue-500/90 text-white' :
+                                                    setPieceIndicator.type === 'KICKOFF' ? 'bg-emerald-500/90 text-white' :
+                                                        'bg-slate-700/90 text-white'
+                                    }`}>
+                                    {setPieceIndicator.message}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -1637,6 +1711,16 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                 <button
                                     onClick={() => {
                                         setShowHalfTime(false);
+                                        // FIX: Jump minute to 46 for 2nd half kickoff
+                                        // The match.currentMinute is still 45, we need to sync a minute increment
+                                        onSync(match.id, {
+                                            minuteIncrement: true, // This will bump minute to 46
+                                            event: null,
+                                            additionalEvents: [],
+                                            trace: [],
+                                            liveData: match.liveData,
+                                            stats: match.stats
+                                        });
                                         setSpeed(1);
                                     }}
                                     className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"

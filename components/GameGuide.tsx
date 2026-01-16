@@ -20,6 +20,59 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
 
     const sections: GuideSection[] = [
         {
+            id: 'about',
+            title: `🚀 ${t.guideAbout || 'Oyun Hakkında'}`,
+            icon: Star,
+            color: 'amber',
+            content: (
+                <div className="space-y-4">
+                    <div className="bg-amber-900/20 border border-amber-500/30 p-3 rounded">
+                        <p className="text-amber-400 font-bold mb-2">🔧 {t.guideUnderDev || 'Geliştirme Aşamasında!'}</p>
+                        <p className="text-sm text-slate-300">
+                            {t.guideUnderDevDesc || 'Bu oyun aktif olarak geliştirilmektedir. Kullanıcılardan gelen geri bildirimler doğrudan oyuna yansıtılmaktadır.'}
+                        </p>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">💡 {t.guideDifferent || 'Farkımız Ne?'}</p>
+                        <p className="text-sm text-slate-300 mb-2">
+                            {t.guideDifferentDesc || 'Diğer menajerlik oyunlarının aksine, kullanıcıyı bilgi ve istatistiklerle boğmuyoruz.'}
+                        </p>
+                        <ul className="text-xs space-y-1 text-slate-400">
+                            <li>• {t.guideSimple || 'Sade ve anlaşılır arayüz'}</li>
+                            <li>• {t.guideFast || 'Hızlı maç simülasyonu'}</li>
+                            <li>• {t.guideMobile || 'Mobil öncelikli tasarım'}</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded">
+                        <p className="text-blue-400 font-bold mb-2">⚽ {t.guideLiveEngine || 'Canlı Maç Motoru'}</p>
+                        <p className="text-sm text-slate-300 mb-3">
+                            {t.guideLiveEngineDesc || 'Çoğu menajerlik oyunu maçı önceden hesaplar ve size sadece önemli anları gösterir.'}
+                        </p>
+                        <p className="text-sm text-slate-300 mb-2">
+                            <strong className="text-emerald-400">{t.guideOurEngine || 'Bizim motorumuz farklı!'}</strong> {t.guideEvery50ms || 'Her 50ms\'de (saniyede 20 kez):'}
+                        </p>
+                        <ul className="text-xs space-y-1 text-slate-400">
+                            <li>• {t.guide22Players || '22 oyuncunun pozisyonları hesaplanır'}</li>
+                            <li>• {t.guideAIDecides || 'Yapay zeka karar verir (şut mu, pas mı, çalım mı?)'}</li>
+                            <li>• {t.guideBallPhysics || 'Top fiziği simüle edilir'}</li>
+                            <li>• {t.guideUnpredictable || 'Gerçek zamanlı, öngörülemez maçlar!'}</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-purple-900/20 border border-purple-500/30 p-3 rounded">
+                        <p className="text-purple-400 font-bold mb-2">📺 {t.guide2D25D || '2D vs 2.5D Görünüm'}</p>
+                        <ul className="text-sm space-y-2 text-slate-300">
+                            <li><strong className="text-green-400">2D:</strong> {t.guide2DDesc || 'Klasik kuş bakışı. Taktik analiz için ideal.'}</li>
+                            <li><strong className="text-blue-400">2.5D:</strong> {t.guide25DDesc || 'Perspektif görünüm. Daha sinematik ve TV yayını hissi verir.'}</li>
+                        </ul>
+                        <p className="text-xs text-slate-400 mt-2">💡 {t.guideChangeView || 'Maç sırasında sağ üstten değiştirebilirsin!'}</p>
+                    </div>
+                </div>
+            )
+        },
+        {
             id: 'basics',
             title: '🎮 Oyun Temelleri',
             icon: BookOpen,
@@ -181,8 +234,8 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
             color: 'cyan',
             content: (
                 <div className="space-y-4">
-                    <div className="bg-red-900/20 border border-red-500/30 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">⚠️ Yükseltme Maliyetleri (ÇOK PAHALI!)</p>
+                    <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">🏗️ Yükseltme Maliyetleri (25 Level)</p>
                         <table className="w-full text-xs">
                             <thead>
                                 <tr className="text-slate-400">
@@ -193,17 +246,18 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                                 </tr>
                             </thead>
                             <tbody className="text-slate-300">
-                                <tr><td>1→2</td><td className="text-right">~€9.5M</td><td className="text-right">~€6.3M</td><td className="text-right">~€5M</td></tr>
-                                <tr><td>5→6</td><td className="text-right">~€46M</td><td className="text-right">~€31M</td><td className="text-right">~€25M</td></tr>
-                                <tr><td>9→10</td><td className="text-right text-red-400 font-bold">~€95M</td><td className="text-right text-red-400 font-bold">~€63M</td><td className="text-right text-red-400 font-bold">~€50M</td></tr>
+                                <tr><td>1→2</td><td className="text-right">~€1.7M</td><td className="text-right">~€1.3M</td><td className="text-right">~€1.1M</td></tr>
+                                <tr><td>10→11</td><td className="text-right">~€9M</td><td className="text-right">~€7M</td><td className="text-right">~€5.5M</td></tr>
+                                <tr><td>24→25</td><td className="text-right text-yellow-400 font-bold">~€22M</td><td className="text-right text-yellow-400 font-bold">~€16M</td><td className="text-right text-yellow-400 font-bold">~€13M</td></tr>
                             </tbody>
                         </table>
+                        <p className="text-xs text-slate-400 mt-2">💡 Türkiye ve Fransa liglerinde %30 bakım indirimi var!</p>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
                         <p className="text-blue-400 font-bold mb-2">🏟️ Stadyum</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Her level = +2,500 kapasite</li>
+                            <li>• Her level = +6,000 kapasite</li>
                             <li>• Daha fazla seyirci = daha fazla bilet geliri</li>
                             <li>• İtibar arttıkça doluluk oranı artar</li>
                         </ul>

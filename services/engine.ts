@@ -1547,11 +1547,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         const leagueMult = getLeagueMultiplier(userTeam.leagueId || 'tr');
 
         // BALANCED: Facility costs scale with level exponentially
-        // Using 1.6 exponent (reduced from 1.8) for more sustainable progression
-        const maintenanceDiscount = ['tr', 'fr'].includes(userTeam.leagueId) ? 0.8 : 1.0; // 20% discount for smaller leagues
-        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.6) * 4000 * maintenanceDiscount;
-        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.6) * 3500 * maintenanceDiscount;
-        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.6) * 3000 * maintenanceDiscount;
+        // Using 1.3 exponent (reduced from 1.6) for more sustainable progression
+        const maintenanceDiscount = ['tr', 'fr'].includes(userTeam.leagueId) ? 0.7 : 1.0; // 30% discount for smaller leagues
+        const stadiumMaint = Math.pow(userTeam.facilities.stadiumLevel, 1.3) * 2000 * maintenanceDiscount;
+        const trainingMaint = Math.pow(userTeam.facilities.trainingLevel, 1.3) * 1500 * maintenanceDiscount;
+        const academyMaint = Math.pow(userTeam.facilities.academyLevel, 1.3) * 1200 * maintenanceDiscount;
         const maintenance = (stadiumMaint + trainingMaint + academyMaint) * (0.8 + (leagueMult * 0.2));
 
         // Staff costs also scale with level

@@ -383,6 +383,17 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
 
                         {tacticTab === 'IN_POSSESSION' && (
                             <div className="space-y-2">
+                                {/* Style - Main playing style */}
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">Oyun Stili</label>
+                                    <select value={team.tactic.style || 'Balanced'} onChange={(e) => handleTacticChange('style', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
+                                        <option value="Balanced">Dengeli</option>
+                                        <option value="Possession">Topa Sahip Ol</option>
+                                        <option value="Counter">Kontra Atak</option>
+                                        <option value="HighPress">Yüksek Pres</option>
+                                        <option value="ParkTheBus">Kapalı Savunma</option>
+                                    </select>
+                                </div>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
