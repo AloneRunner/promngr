@@ -342,13 +342,20 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             <>
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.formation}</label>
-                                    <select
-                                        value={team.tactic.formation}
-                                        onChange={(e) => handleTacticChange('formation', e.target.value as TacticType)}
-                                        className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 focus:outline-none mt-0.5 text-xs"
-                                    >
-                                        {Object.values(TacticType).map(f => <option key={f} value={f}>{f}</option>)}
-                                    </select>
+                                    <div className="grid grid-cols-3 gap-1 mt-1 max-h-32 overflow-y-auto custom-scrollbar pr-1">
+                                        {Object.values(TacticType).map(f => (
+                                            <button
+                                                key={f}
+                                                onClick={() => handleTacticChange('formation', f)}
+                                                className={`px-2 py-1.5 text-[10px] font-bold rounded border transition-all ${team.tactic.formation === f
+                                                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
+                                                    : 'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600 hover:border-slate-500'
+                                                    }`}
+                                            >
+                                                {f}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
@@ -386,30 +393,43 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 {/* Style - Main playing style */}
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">Oyun Stili</label>
-                                    <select value={team.tactic.style || 'Balanced'} onChange={(e) => handleTacticChange('style', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
-                                        <option value="Balanced">Dengeli</option>
-                                        <option value="Possession">Topa Sahip Ol</option>
-                                        <option value="Counter">Kontra Atak</option>
-                                        <option value="HighPress">Yüksek Pres</option>
-                                        <option value="ParkTheBus">Kapalı Savunma</option>
-                                    </select>
+                                    <div className="grid grid-cols-3 gap-1 mt-0.5">
+                                        {[
+                                            { value: 'Balanced', label: 'Dengeli' },
+                                            { value: 'Possession', label: 'Topa Sahip' },
+                                            { value: 'Counter', label: 'Kontra' },
+                                            { value: 'HighPress', label: 'Yüksek Pres' },
+                                            { value: 'ParkTheBus', label: 'Kapalı' }
+                                        ].map(s => (
+                                            <button
+                                                key={s.value}
+                                                onClick={() => handleTacticChange('style', s.value)}
+                                                className={`px-1 py-1 text-[9px] font-bold rounded border transition-all ${(team.tactic.style || 'Balanced') === s.value
+                                                        ? 'bg-emerald-600 text-white border-emerald-500'
+                                                        : 'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600'
+                                                    }`}
+                                            >
+                                                {s.label}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
-                                        <select value={team.tactic.width || 'Balanced'} onChange={(e) => handleTacticChange('width', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
-                                            <option value="Narrow">{t.tacticNarrow}</option>
-                                            <option value="Balanced">{t.tacticBalanced || 'Balanced'}</option>
-                                            <option value="Wide">{t.tacticWide}</option>
-                                        </select>
+                                        <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
+                                            <button onClick={() => handleTacticChange('width', 'Narrow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Narrow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticNarrow}</button>
+                                            <button onClick={() => handleTacticChange('width', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Balanced' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Bal'}</button>
+                                            <button onClick={() => handleTacticChange('width', 'Wide')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.width === 'Wide' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticWide}</button>
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
-                                        <select value={team.tactic.passingStyle || 'Mixed'} onChange={(e) => handleTacticChange('passingStyle', e.target.value)} className="w-full bg-slate-700 text-white rounded px-2 py-1 border border-slate-600 text-[10px] mt-0.5">
-                                            <option value="Short">{t.tacticShort}</option>
-                                            <option value="Mixed">{t.tacticBalanced || 'Mixed'}</option>
-                                            <option value="Direct">{t.tacticDirect}</option>
-                                        </select>
+                                        <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
+                                            <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button>
+                                            <button onClick={() => handleTacticChange('passingStyle', 'Mixed')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.passingStyle || 'Mixed') === 'Mixed' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Mix'}</button>
+                                            <button onClick={() => handleTacticChange('passingStyle', 'Direct')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Direct' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticDirect}</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div>

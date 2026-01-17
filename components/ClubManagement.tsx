@@ -419,7 +419,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
-                                <span className="text-lg font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-sm">/25</span></span>
+                                <span className="text-lg font-black text-white">{team.facilities.stadiumLevel}<span className="text-slate-600 text-sm">/15</span></span>
                             </div>
                         </div>
 
@@ -432,7 +432,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         </div>
 
                         {/* Upgrade Info */}
-                        {team.facilities.stadiumLevel < 25 && (
+                        {team.facilities.stadiumLevel < 15 && (
                             <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
                                 <div className="flex justify-between text-slate-400 mb-1">
                                     <span>Mevcut:</span>
@@ -452,19 +452,28 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
                                 <span>Progress</span>
-                                <span>{(team.facilities.stadiumLevel / 25 * 100).toFixed(0)}%</span>
+                                <span>{(team.facilities.stadiumLevel / 15 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 25) * 100}%` }}></div>
+                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 15) * 100}%` }}></div>
                             </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
-                            disabled={team.facilities.stadiumLevel >= 25 || team.budget < Math.floor(800000 * Math.pow(team.facilities.stadiumLevel + 1, 1.15))}
+                            disabled={team.facilities.stadiumLevel >= 15 || (() => {
+                                const nextLevel = team.facilities.stadiumLevel + 1;
+                                const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                return team.budget < Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.1));
+                            })()}
                             className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> {team.facilities.stadiumLevel >= 25 ? 'MAX' : `Yükselt (€${(Math.floor(800000 * Math.pow(team.facilities.stadiumLevel + 1, 1.15)) / 1000000).toFixed(2)}M)`}
+                            <Hammer size={14} /> {team.facilities.stadiumLevel >= 15 ? 'MAX' : (() => {
+                                const nextLevel = team.facilities.stadiumLevel + 1;
+                                const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                const cost = Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                            })()}
                         </button>
                     </div>
 
@@ -518,10 +527,19 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('training')}
-                            disabled={team.facilities.trainingLevel >= 25 || team.budget < Math.floor(600000 * Math.pow(team.facilities.trainingLevel + 1, 1.15))}
+                            disabled={team.facilities.trainingLevel >= 25 || (() => {
+                                const nextLevel = team.facilities.trainingLevel + 1;
+                                const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                return team.budget < Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.1));
+                            })()}
                             className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
-                            <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : `Yükselt (€${(Math.floor(600000 * Math.pow(team.facilities.trainingLevel + 1, 1.15)) / 1000000).toFixed(2)}M)`}
+                            <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : (() => {
+                                const nextLevel = team.facilities.trainingLevel + 1;
+                                const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                const cost = Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                            })()}
                         </button>
                     </div>
 
@@ -577,10 +595,19 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <button
                                     onClick={() => onUpgradeFacility && onUpgradeFacility('academy')}
-                                    disabled={team.facilities.academyLevel >= 25 || team.budget < Math.floor(500000 * Math.pow(team.facilities.academyLevel + 1, 1.15))}
+                                    disabled={team.facilities.academyLevel >= 25 || (() => {
+                                        const nextLevel = team.facilities.academyLevel + 1;
+                                        const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                        return team.budget < Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                    })()}
                                     className="w-full py-2 md:py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
                                 >
-                                    <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(500000 * Math.pow(team.facilities.academyLevel + 1, 1.15)) / 1000000).toFixed(2)}M)`}
+                                    <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : (() => {
+                                        const nextLevel = team.facilities.academyLevel + 1;
+                                        const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+                                        const cost = Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                        return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                                    })()}
                                 </button>
                             </div>
                         </div>
@@ -710,7 +737,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.headCoachLevel >= 10}
                                     className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.headCoachLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.headCoachLevel * 100).toLocaleString()}K)`}
+                                    {staff.headCoachLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -749,7 +776,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.scoutLevel >= 10}
                                     className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.scoutLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.scoutLevel * 100).toLocaleString()}K)`}
+                                    {staff.scoutLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.scoutLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -788,7 +815,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.physioLevel >= 10}
                                     className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.physioLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(staff.physioLevel * 100).toLocaleString()}K)`}
+                                    {staff.physioLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.physioLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>

@@ -23,7 +23,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, bgImage, bannerPositio
     const paddingBottom = isNative && bannerPosition === 'bottom' ? BANNER_PADDING : 0;
 
     return (
-        <div className="min-h-screen relative overflow-hidden font-body text-white">
+        <div className="min-h-screen relative overflow-hidden overflow-x-hidden max-w-[100vw] font-body text-white">
             {/* Dynamic Background Layer */}
             <div
                 className="screen-bg"

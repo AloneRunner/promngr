@@ -84,6 +84,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
         { id: 'it', name: '🇮🇹 Serie A' },
         { id: 'fr', name: '🇫🇷 Ligue 1' },
         { id: 'de', name: '🇩🇪 Bundesliga' },
+        { id: 'ar', name: '🇦🇷 Liga Profesional' },
     ];
 
     return (

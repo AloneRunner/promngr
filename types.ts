@@ -272,6 +272,24 @@ export interface GameState {
     managerRating?: number; // 0-100, starts based on team chosen
     managerCareerHistory?: { season: number; teamName: string; position: number; rating: number }[];
     jobOffers?: JobOffer[];
+    // Assistant Coach - Tactical Memory
+    tacticalHistory?: TacticalMatchRecord[];
+}
+
+// Yardımcı Antrenör - Maç Taktik Kaydı
+export interface TacticalMatchRecord {
+    season: number;
+    week: number;
+    homeTeamId: string;
+    awayTeamId: string;
+    homeTactic: { formation: string; style: string; aggression: string };
+    awayTactic: { formation: string; style: string; aggression: string };
+    homeGoals: number;
+    awayGoals: number;
+    homeXG: number;
+    awayXG: number;
+    isUserHome: boolean;
+    userWon: boolean;
 }
 
 export interface AssistantAdvice {

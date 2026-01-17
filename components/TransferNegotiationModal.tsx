@@ -155,12 +155,11 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                                 <button onClick={() => setOffer(Math.max(0, offer - 500000))} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">-</button>
                                 <div className="flex-1 relative">
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" size={16} />
-                                    <input
-                                        type="number"
-                                        value={offer}
-                                        onChange={(e) => setOffer(parseInt(e.target.value) || 0)}
-                                        className="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white font-mono font-bold focus:border-emerald-500 outline-none"
-                                    />
+                                    <div
+                                        className="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white font-mono font-bold text-center"
+                                    >
+                                        €{Math.round(offer).toLocaleString('tr-TR')}
+                                    </div>
                                 </div>
                                 <button onClick={() => setOffer(offer + 500000)} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">+</button>
                             </div>

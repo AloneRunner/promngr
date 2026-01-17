@@ -119,6 +119,37 @@ import { HAMBURG_PIRATES_SQUAD } from './data/stpauli';
 import { HEIDENHEIM_REDBLUE_SQUAD } from './data/heidenheim';
 import { BOCHUM_BLUE_SQUAD } from './data/bochum';
 
+import { LA_PLATA_WOLVES_SQUAD } from './data/la_plata_wolves';
+import { VELEZ_FORT_SQUAD } from './data/velez_fort';
+import { AVELLANEDA_DEVILS_SQUAD } from './data/avellaneda_devils';
+import { ROSARIO_LEPERS_SQUAD } from './data/rosario_lepers';
+import { BANFIELD_DRILLS_SQUAD } from './data/banfield_drills';
+import { CORDOBA_GLORY_SQUAD } from './data/cordoba_glory';
+import { MENDOZA_BLUES_SQUAD } from './data/mendoza_blues';
+import { MENDOZA_WINES_SQUAD } from './data/mendoza_wines';
+import { TUCUMAN_GIANTS_SQUAD } from './data/tucuman_giants';
+import { BUENOS_AIRES_STORM_SQUAD } from './data/buenos_aires_storm';
+import { SANTA_FE_UNION_SQUAD } from './data/santa_fe_union';
+import { VARELA_HAWKS_SQUAD } from './data/varela_hawks';
+import { SAAVEDRA_SQUIDS_SQUAD } from './data/saavedra_squids';
+import { BOEDO_SAINTS_SQUAD } from './data/boedo_saints';
+import { BARRACAS_TRUCKERS_SQUAD } from './data/barracas_truckers';
+import { JUNIN_WARRIORS_SQUAD } from './data/junin_warriors';
+import { RIESTRA_ENERGIZERS_SQUAD } from './data/riestra_energizers';
+import { MAR_DEL_PLATA_SHARKS_SQUAD } from './data/mar_del_plata_sharks';
+import { CITADEL_SAINTS_SQUAD } from './data/citadel_saints';
+import { BUENOS_AIRES_MILLIONAIRES_SQUAD } from './data/buenos_aires_millionaires';
+import { CORDOBA_TALL_SQUAD } from './data/cordoba_tall';
+import { LA_PLATA_LIONS_SQUAD } from './data/la_plata_lions';
+import { CORDOBA_PIRATES_SQUAD } from './data/cordoba_pirates';
+import { PATERNAL_BUGS_SQUAD } from './data/paternal_bugs';
+import { ROSARIO_CANALLAS_SQUAD } from './data/rosario_canallas';
+import { LA_BOCA_XENEIZES_SQUAD } from './data/la_boca_xeneizes';
+import { AVELLANEDA_RACERS_SQUAD } from './data/avellaneda_racers';
+import { LANUS_GRANATE_SQUAD } from './data/lanus_granate';
+import { VICTORIA_TIGERS_SQUAD } from './data/victoria_tigers';
+import { SANTIAGO_RAILWAYS_SQUAD } from './data/santiago_railways';
+
 import { TeamTactic, TacticType } from './types';
 
 export const TICKET_PRICE = 50; // Base price, adjusted by league
@@ -131,6 +162,7 @@ export const LEAGUE_TICKET_PRICES: Record<string, number> = {
     'it': 40,     // Italy average €40 (range €25-70)
     'de': 35,     // Germany average €35 (range €20-60)
     'fr': 40,     // France average €40 (range €25-70)
+    'ar': 15,     // Argentina average €15 (range €8-25)
     'default': 25
 };
 
@@ -142,6 +174,7 @@ export const LEAGUE_ATTENDANCE_RATES: Record<string, { min: number; max: number 
     'it': { min: 0.60, max: 0.90 },   // Italy: 60-90%
     'de': { min: 0.88, max: 1.00 },   // Germany: 88-100%
     'fr': { min: 0.70, max: 0.95 },   // France: 70-95%
+    'ar': { min: 0.60, max: 0.98 },   // Argentina: 60-98% (High passion)
     'default': { min: 0.50, max: 0.80 }
 };
 
@@ -164,7 +197,15 @@ export const DERBY_RIVALS: Record<string, string[]> = {
     'Milano Devils': ['Inter Lombardia', 'Piemonte Zebras'],
     'Piemonte Zebras': ['Inter Lombardia', 'Milano Devils'],
     'Roma Gladiators': ['Latium Eagles'],
-    'Latium Eagles': ['Roma Gladiators']
+    'Latium Eagles': ['Roma Gladiators'],
+    'Buenos Aires Millionaires': ['La Boca Xeneizes', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
+    'La Boca Xeneizes': ['Buenos Aires Millionaires', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
+    'Avellaneda Racers': ['Avellaneda Devils', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
+    'Avellaneda Devils': ['Avellaneda Racers', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
+    'Rosario Canallas': ['Rosario Lepers'],
+    'Rosario Lepers': ['Rosario Canallas'],
+    'La Plata Lions': ['La Plata Wolves'],
+    'La Plata Wolves': ['La Plata Lions']
 };
 
 export const NAMES_DB: any = {
@@ -558,6 +599,42 @@ export const LEAGUE_PRESETS = [
             { name: "Heidenheim Red-Blue", city: "Heidenheim", primaryColor: "#E30613", secondaryColor: "#0055A4", reputation: 6800, budget: 15000000 },
             { name: "Bochum Blue", city: "Bochum", primaryColor: "#005BAC", secondaryColor: "#FFFFFF", reputation: 6700, budget: 12000000 }
         ]
+    },
+    {
+        id: 'ar', name: 'Liga Profesional', country: 'Argentina', foreignPlayerChance: 0.3, playerNationality: 'Argentina',
+        matchFormat: 'single-round', // Single round-robin: 30 teams play 29 matches each
+        realTeams: [
+            { name: "Buenos Aires Millionaires", city: "Buenos Aires", primaryColor: "#FFFFFF", secondaryColor: "#DA291C", reputation: 8000, budget: 50000000, stadiumCapacity: 84500 },
+            { name: "La Boca Xeneizes", city: "Buenos Aires", primaryColor: "#003090", secondaryColor: "#FDB913", reputation: 7900, budget: 45000000, stadiumCapacity: 54000 },
+            { name: "Avellaneda Racers", city: "Avellaneda", primaryColor: "#87CEEB", secondaryColor: "#FFFFFF", reputation: 7500, budget: 30000000, stadiumCapacity: 51000 },
+            { name: "Avellaneda Devils", city: "Avellaneda", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 7400, budget: 25000000, stadiumCapacity: 42000 },
+            { name: "Boedo Saints", city: "Buenos Aires", primaryColor: "#003090", secondaryColor: "#DA291C", reputation: 7300, budget: 20000000, stadiumCapacity: 47000 },
+            { name: "La Plata Lions", city: "La Plata", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 7200, budget: 18000000, stadiumCapacity: 32000 },
+            { name: "Velez Fort", city: "Buenos Aires", primaryColor: "#FFFFFF", secondaryColor: "#003090", reputation: 7100, budget: 16000000, stadiumCapacity: 49000 },
+            { name: "Rosario Canallas", city: "Rosario", primaryColor: "#003090", secondaryColor: "#FDB913", reputation: 7000, budget: 15000000, stadiumCapacity: 41000 },
+            { name: "Rosario Lepers", city: "Rosario", primaryColor: "#000000", secondaryColor: "#DA291C", reputation: 7000, budget: 15000000, stadiumCapacity: 42000 },
+            { name: "Cordoba Tall", city: "Córdoba", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 6900, budget: 14000000, stadiumCapacity: 57000 },
+            { name: "Paternal Bugs", city: "Buenos Aires", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 6800, budget: 12000000, stadiumCapacity: 26000 },
+            { name: "Lanus Granate", city: "Lanús", primaryColor: "#800000", secondaryColor: "#FFFFFF", reputation: 6800, budget: 13000000, stadiumCapacity: 47000 },
+            { name: "Buenos Aires Storm", city: "Buenos Aires", primaryColor: "#FFFFFF", secondaryColor: "#DA291C", reputation: 6700, budget: 11000000, stadiumCapacity: 48000 },
+            { name: "Varela Hawks", city: "Florencio Varela", primaryColor: "#FFFF00", secondaryColor: "#008000", reputation: 6600, budget: 10000000, stadiumCapacity: 18000 },
+            { name: "La Plata Wolves", city: "La Plata", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 6500, budget: 9000000, stadiumCapacity: 21000 },
+            { name: "Banfield Drills", city: "Banfield", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6400, budget: 8500000, stadiumCapacity: 34000 },
+            { name: "Cordoba Pirates", city: "Córdoba", primaryColor: "#87CEEB", secondaryColor: "#000000", reputation: 6400, budget: 9000000, stadiumCapacity: 30000 },
+            { name: "Santa Fe Union", city: "Santa Fe", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 6300, budget: 8000000, stadiumCapacity: 26000 },
+            { name: "Mendoza Wines", city: "Mendoza", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 6300, budget: 8000000, stadiumCapacity: 14000 },
+            { name: "Mendoza Blues", city: "Mendoza", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 6300, budget: 8000000, stadiumCapacity: 40000 },
+            { name: "Cordoba Glory", city: "Córdoba", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 6200, budget: 7500000, stadiumCapacity: 26000 },
+            { name: "Tucuman Giants", city: "San Miguel de Tucumán", primaryColor: "#87CEEB", secondaryColor: "#FFFFFF", reputation: 6200, budget: 7000000, stadiumCapacity: 35000 },
+            { name: "Saavedra Squids", city: "Vicente López", primaryColor: "#8B4513", secondaryColor: "#FFFFFF", reputation: 6100, budget: 7000000, stadiumCapacity: 28000 },
+            { name: "Victoria Tigers", city: "Victoria", primaryColor: "#003090", secondaryColor: "#DA291C", reputation: 6100, budget: 7500000, stadiumCapacity: 26000 },
+            { name: "Barracas Truckers", city: "Buenos Aires", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 6000, budget: 6000000, stadiumCapacity: 4000 },
+            { name: "Junin Warriors", city: "Junín", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 6000000, stadiumCapacity: 22000 },
+            { name: "Santiago Railways", city: "Santiago del Estero", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 5500000, stadiumCapacity: 30000 },
+            { name: "Riestra Energizers", city: "Buenos Aires", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 5800, budget: 5000000, stadiumCapacity: 3000 },
+            { name: "Citadel Saints", city: "San Miguel de Tucumán", primaryColor: "#DA291C", secondaryColor: "#FFFFFF", reputation: 6200, budget: 6500000, stadiumCapacity: 30000 },
+            { name: "Mar del Plata Sharks", city: "Mar del Plata", primaryColor: "#FFFF00", secondaryColor: "#008000", reputation: 6000, budget: 6000000, stadiumCapacity: 35000 }
+        ]
     }
 ];
 
@@ -593,7 +670,15 @@ const ALL_SQUADS = [
     STUTTGART_FC_SQUAD, WOLFSBURG_FC_SQUAD, FREIBURG_FC_SQUAD, HOFFENHEIM_FC_SQUAD,
     UNION_BERLIN_FC_SQUAD, AUGSBURG_FC_SQUAD, KOLN_FC_SQUAD,
     FRANKFURT_EAGLES_SQUAD, GLADBACH_FOALS_SQUAD, BREMEN_RIVER_SQUAD, MAINZ_CARNIVAL_SQUAD,
-    HAMBURG_PIRATES_SQUAD, HEIDENHEIM_REDBLUE_SQUAD, BOCHUM_BLUE_SQUAD
+    HAMBURG_PIRATES_SQUAD, HEIDENHEIM_REDBLUE_SQUAD, BOCHUM_BLUE_SQUAD,
+    LA_PLATA_WOLVES_SQUAD, VELEZ_FORT_SQUAD, AVELLANEDA_DEVILS_SQUAD, ROSARIO_LEPERS_SQUAD,
+    BANFIELD_DRILLS_SQUAD, CORDOBA_GLORY_SQUAD, MENDOZA_BLUES_SQUAD, MENDOZA_WINES_SQUAD,
+    TUCUMAN_GIANTS_SQUAD, BUENOS_AIRES_STORM_SQUAD, SANTA_FE_UNION_SQUAD, VARELA_HAWKS_SQUAD,
+    SAAVEDRA_SQUIDS_SQUAD, BOEDO_SAINTS_SQUAD, BARRACAS_TRUCKERS_SQUAD, JUNIN_WARRIORS_SQUAD,
+    RIESTRA_ENERGIZERS_SQUAD, MAR_DEL_PLATA_SHARKS_SQUAD, CITADEL_SAINTS_SQUAD,
+    BUENOS_AIRES_MILLIONAIRES_SQUAD, CORDOBA_TALL_SQUAD, LA_PLATA_LIONS_SQUAD, CORDOBA_PIRATES_SQUAD,
+    PATERNAL_BUGS_SQUAD, ROSARIO_CANALLAS_SQUAD, LA_BOCA_XENEIZES_SQUAD, AVELLANEDA_RACERS_SQUAD,
+    LANUS_GRANATE_SQUAD, VICTORIA_TIGERS_SQUAD, SANTIAGO_RAILWAYS_SQUAD
 ];
 
 export const REAL_PLAYERS: any[] = ALL_SQUADS.flat();
@@ -808,7 +893,31 @@ export const TRANSLATIONS: Record<string, any> = {
         guide2D25D: "2D vs 2.5D View",
         guide2DDesc: "Classic bird's eye view. Ideal for tactical analysis. See the entire pitch.",
         guide25DDesc: "Perspective view. More cinematic, like a TV broadcast.",
-        guideChangeView: "Change view during match from top right!"
+        guideChangeView: "Change view during match from top right!",
+        // Assistant Coach
+        assistantCoach: "Assistant Coach",
+        coachRookie: "Rookie",
+        coachExperienced: "Experienced",
+        coachExpert: "Expert",
+        coachMaster: "Master",
+        matches: "matches",
+        opponentAnalysis: "Opponent Analysis",
+        style: "Style",
+        myRecommendation: "My Recommendation",
+        against: "against",
+        tryThis: "try this!",
+        reasonPressure: "Pressure breaks defensive setups",
+        reasonCounter: "Counter-attacks beat high press",
+        reasonPressWin: "Pressing wins the ball back",
+        reasonControl: "Control prevents counter-attacks",
+        reasonPressBalanced: "Pressing is effective against balanced teams",
+        tacticsRecord: "record vs this style",
+        winRate: "win rate",
+        needMoreExperience: "Need More Experience",
+        needMoreMatchesDesc: "I need at least 5 matches to give advice. We've played {count} so far.",
+        pastMatches: "Past Encounters",
+        season: "Season",
+        understood: "Got It"
     },
     tr: {
         dashboard: "Panel", news: "Haberler", squad: "Kadro", training: "Antrenman", market: "Pazar", club: "Kulüp", standings: "Puan Durumu", matchDay: "Maç Günü",
@@ -1020,7 +1129,31 @@ export const TRANSLATIONS: Record<string, any> = {
         guide2D25D: "2D vs 2.5D Görünüm",
         guide2DDesc: "Klasik kuş bakışı. Taktik analiz için ideal. Tüm sahayı görürsün.",
         guide25DDesc: "Perspektif görünüm. Daha sinematik ve TV yayını hissi verir.",
-        guideChangeView: "Maç sırasında sağ üstten değiştirebilirsin!"
+        guideChangeView: "Maç sırasında sağ üstten değiştirebilirsin!",
+        // Assistant Coach
+        assistantCoach: "Yardımcı Antrenör",
+        coachRookie: "Çaylak",
+        coachExperienced: "Deneyimli",
+        coachExpert: "Uzman",
+        coachMaster: "Usta",
+        matches: "maç",
+        opponentAnalysis: "Rakip Analizi",
+        style: "Stil",
+        myRecommendation: "Tavsiyem",
+        against: "karşısında",
+        tryThis: "dene!",
+        reasonPressure: "Baskı savunmayı kırar",
+        reasonCounter: "Kontra baskıyı alt eder",
+        reasonPressWin: "Baskı top kazandırır",
+        reasonControl: "Kontrol kontraya izin vermez",
+        reasonPressBalanced: "Baskı dengeli takımlara karşı etkili",
+        tacticsRecord: "bu stile karşı",
+        winRate: "kazanma",
+        needMoreExperience: "Deneyim Gerekli",
+        needMoreMatchesDesc: "Tavsiye verebilmem için en az 5 maç gerekli. Şu an {count} maç oynadık.",
+        pastMatches: "Geçmiş Karşılaşmalar",
+        season: "Sezon",
+        understood: "Anladım"
     },
     es: {
         dashboard: "Panel", news: "Noticias", squad: "Plantilla", training: "Entrenamiento", market: "Mercado", club: "Club", standings: "Clasificación", matchDay: "Día de Partido",
@@ -1217,6 +1350,30 @@ export const TRANSLATIONS: Record<string, any> = {
         guide2D25D: "Vista 2D vs 2.5D",
         guide2DDesc: "Vista clásica desde arriba. Ideal para análisis táctico. Ves todo el campo.",
         guide25DDesc: "Vista en perspectiva. Más cinematográfica, como una transmisión de TV.",
-        guideChangeView: "¡Cambia la vista durante el partido desde arriba a la derecha!"
+        guideChangeView: "¡Cambia la vista durante el partido desde arriba a la derecha!",
+        // Assistant Coach
+        assistantCoach: "Asistente Técnico",
+        coachRookie: "Novato",
+        coachExperienced: "Experimentado",
+        coachExpert: "Experto",
+        coachMaster: "Maestro",
+        matches: "partidos",
+        opponentAnalysis: "Análisis del Rival",
+        style: "Estilo",
+        myRecommendation: "Mi Recomendación",
+        against: "contra",
+        tryThis: "¡prueba esto!",
+        reasonPressure: "La presión rompe defensas",
+        reasonCounter: "Los contras vencen la presión alta",
+        reasonPressWin: "Presionar recupera el balón",
+        reasonControl: "El control evita contraataques",
+        reasonPressBalanced: "La presión es efectiva contra equipos equilibrados",
+        tacticsRecord: "récord vs este estilo",
+        winRate: "victorias",
+        needMoreExperience: "Necesito Más Experiencia",
+        needMoreMatchesDesc: "Necesito al menos 5 partidos para aconsejar. Hemos jugado {count} hasta ahora.",
+        pastMatches: "Encuentros Anteriores",
+        season: "Temporada",
+        understood: "Entendido"
     }
 };

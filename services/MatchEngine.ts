@@ -489,6 +489,16 @@ export class MatchEngine {
                     this.sim.players[p.id] = { x: base.x, y: base.y, facing: 0, vx: 0, vy: 0, state: 'IDLE' };
                 }
             });
+
+        // === MAÇ BAŞLANGIÇ DEBUG LOGU ===
+        const homeStarters = this.homePlayers.filter(p => p.lineup === 'STARTING');
+        const awayStarters = this.awayPlayers.filter(p => p.lineup === 'STARTING');
+        const homeAvg = Math.round(homeStarters.reduce((sum, p) => sum + p.overall, 0) / homeStarters.length);
+        const awayAvg = Math.round(awayStarters.reduce((sum, p) => sum + p.overall, 0) / awayStarters.length);
+
+        console.log(`\n🏟️ MAÇ BAŞLIYOR: ${homeTeam.name} vs ${awayTeam.name}`);
+        console.log(`📊 TAKIM GÜÇLERİ: ${homeTeam.name} (${homeAvg} OVR) vs ${awayTeam.name} (${awayAvg} OVR) | Fark: ${Math.abs(homeAvg - awayAvg)}`);
+        console.log(`⚙️ TAKTİKLER: ${homeTeam.name} [${homeTeam.tactic.formation}, ${homeTeam.tactic.aggression}, ${homeTeam.tactic.style}] vs ${awayTeam.name} [${awayTeam.tactic.formation}, ${awayTeam.tactic.aggression}, ${awayTeam.tactic.style}]`);
     }
 
     private initializeTactics(players: Player[], tactic: TeamTactic) {
@@ -1156,11 +1166,11 @@ export class MatchEngine {
             this.tickCount = 0;
             this.updateTeamMentality();
 
-            // === DEBUG: Her dakikada oyun durumunu logla ===
-            const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
-            const startingPlayers = this.allPlayers.filter(p => p.lineup === 'STARTING').length;
-            const simPlayerCount = Object.keys(this.sim.players).length;
-            console.log(`⏱️ ${this.internalMinute}' | Top: (${this.sim.ball.x.toFixed(0)},${this.sim.ball.y.toFixed(0)}) hız:${ballSpeed.toFixed(2)} | Sahip: ${this.sim.ball.ownerId ? this.getPlayer(this.sim.ball.ownerId)?.lastName || 'YOK' : 'Sahipsiz'} | Oyuncular: ${startingPlayers}/11 sim:${simPlayerCount}`);
+            // === DEBUG: Her 15 dakikada bir oyun durumunu logla ===
+            if (this.internalMinute % 15 === 0 || this.internalMinute === 45 || this.internalMinute === 90) {
+                const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
+                console.log(`⏱️ ${this.internalMinute}' | Top: (${this.sim.ball.x.toFixed(0)},${this.sim.ball.y.toFixed(0)}) hız:${ballSpeed.toFixed(2)} | Sahip: ${this.sim.ball.ownerId ? this.getPlayer(this.sim.ball.ownerId)?.lastName || 'YOK' : 'Sahipsiz'}`);
+            }
 
             // AI substitution check every 5 minutes for non-user teams
             if (this.internalMinute >= 40 && this.internalMinute % 5 === 0) {
@@ -1346,9 +1356,14 @@ export class MatchEngine {
             return priority(a) - priority(b);
         });
 
-        // DEBUG: Log all events being returned
-        if (allEvents.length > 0) {
-            console.log(`🟢 ALL EVENTS (${allEvents.length}):`, allEvents.map(e => e.type).join(', '));
+        // DEBUG: Sadece önemli olayları logla (GOAL, CARD)
+        const importantEvents = allEvents.filter(e =>
+            e.type === MatchEventType.GOAL ||
+            e.type === MatchEventType.CARD_YELLOW ||
+            e.type === MatchEventType.CARD_RED
+        );
+        if (importantEvents.length > 0) {
+            console.log(`⚡ ÖNEMLİ OLAY:`, importantEvents.map(e => `${e.type} - ${e.description}`).join(' | '));
         }
 
         // Export Stamina State for UI
@@ -3308,12 +3323,8 @@ export class MatchEngine {
 
         // === GOAL or OUT on goal line ===
         if (outLeft || outRight) {
-            // DEBUG LOG
-            console.log(`🔵 GAME EVENT: Ball out at x=${b.x.toFixed(1)}, y=${b.y.toFixed(1)}, z=${b.z.toFixed(1)} | GOAL_Y: ${GOAL_Y_TOP}-${GOAL_Y_BOTTOM}`);
-
             if (b.y > GOAL_Y_TOP && b.y < GOAL_Y_BOTTOM && b.z < 2.44) {
                 // GOAL!
-                console.log(`⚽ GOAL DETECTED! outLeft=${outLeft}, shooter=${this.lastShooterId}`);
                 if (outLeft) {
                     const scorerId = this.lastShooterId;
                     const scorer = scorerId ? this.getPlayer(scorerId) : null;
@@ -3347,18 +3358,18 @@ export class MatchEngine {
                 // Corner or Goal Kick
                 const isHomeGoalSide = outLeft;
                 const lastTouchWasHome = this.lastTouchTeamId === this.homeTeam.id;
-                console.log(`🔵 OUT OF PLAY: homeGoalSide=${isHomeGoalSide}, lastTouch=${this.lastTouchTeamId}`);
+
 
                 if (isHomeGoalSide) {
                     if (lastTouchWasHome) {
                         // CORNER for away team
                         const isTop = b.y < 50;
                         this.resetPositions(isTop ? 'CORNER_AWAY_TOP' : 'CORNER_AWAY_BOTTOM');
-                        console.log(`🚩 CORNER: Away team`);
+
                         return { minute: this.internalMinute, type: MatchEventType.CORNER, description: `Korner: ${this.awayTeam.name}`, teamId: this.awayTeam.id };
                     } else {
                         // GOAL KICK for home team - DON'T reset all positions!
-                        console.log(`🥅 GOAL KICK: Home team (NO full reset)`);
+
                         const gk = this.homePlayers.find(p => this.playerRoles[p.id] === Position.GK && p.lineup === 'STARTING');
                         if (gk && this.sim.players[gk.id]) {
                             this.sim.players[gk.id].x = 5;
@@ -3379,11 +3390,11 @@ export class MatchEngine {
                         // CORNER for home team
                         const isTop = b.y < 50;
                         this.resetPositions(isTop ? 'CORNER_HOME_TOP' : 'CORNER_HOME_BOTTOM');
-                        console.log(`🚩 CORNER: Home team`);
+
                         return { minute: this.internalMinute, type: MatchEventType.CORNER, description: `Korner: ${this.homeTeam.name}`, teamId: this.homeTeam.id };
                     } else {
                         // GOAL KICK for away team - DON'T reset all positions!
-                        console.log(`🥅 GOAL KICK: Away team (NO full reset)`);
+
                         const gk = this.awayPlayers.find(p => this.playerRoles[p.id] === Position.GK && p.lineup === 'STARTING');
                         if (gk && this.sim.players[gk.id]) {
                             this.sim.players[gk.id].x = 95;

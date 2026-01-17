@@ -1,8 +1,9 @@
 ﻿
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
+import { DERBY_RIVALS } from './constants';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound, calculateMatchAttendance } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -28,7 +29,6 @@ import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu } from 'lucide-react';
 import { adMobService } from './services/adMobService';
 
-const TOTAL_WEEKS_PER_SEASON = 38;
 const uuid = () => Math.random().toString(36).substring(2, 15);
 
 // Yeni oyuncuya takımda benzersiz forma numarası ata
@@ -169,7 +169,7 @@ const App: React.FC = () => {
     const [gameState, setGameState] = useState<GameState | null>(null);
     const [view, setView] = useState<'dashboard' | 'squad' | 'league' | 'match' | 'club' | 'transfers' | 'news' | 'training' | 'rankings' | 'guide' | 'fixtures'>('dashboard');
     const [activeMatchId, setActiveMatchId] = useState<string | null>(null);
-    const [lang, setLang] = useState<'tr' | 'en'>('tr');
+    const [lang, setLang] = useState<'tr' | 'en' | 'es'>('tr'); // Will sync to user's league language
     const [showWelcome, setShowWelcome] = useState(false);
     const [showLeagueSelect, setShowLeagueSelect] = useState(false);
     const [showTeamSelect, setShowTeamSelect] = useState(false);
@@ -178,7 +178,7 @@ const App: React.FC = () => {
     const [seasonSummaryData, setSeasonSummaryData] = useState<{ winner: Team, retired: string[], promoted: string[] } | null>(null);
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
     const [inspectedTeamId, setInspectedTeamId] = useState<string | null>(null);
-    const [viewLeagueId, setViewLeagueId] = useState<string>('tr'); // Default to TR, will sync with valid ID
+    const [viewLeagueId, setViewLeagueId] = useState<string>('tr'); // Will sync to user's league on load
     const [debugLog, setDebugLog] = useState<string[]>([]);
     const [offerToProcess, setOfferToProcess] = useState<Message | null>(null);
     const [assistantAdvice, setAssistantAdvice] = useState<AssistantAdvice[] | null>(null);
@@ -193,6 +193,17 @@ const App: React.FC = () => {
     const [showJobOffers, setShowJobOffers] = useState(false);
 
     const t = TRANSLATIONS[lang];
+
+    // Dynamic season length calculation based on league format
+    const totalWeeks = useMemo(() => {
+        if (!gameState) return 38; // Default fallback
+        const userLeagueMatches = gameState.matches.filter(m => {
+            const homeTeam = gameState.teams.find(t => t.id === m.homeTeamId);
+            return homeTeam?.leagueId === gameState.leagueId;
+        });
+        if (userLeagueMatches.length === 0) return 38;
+        return Math.max(...userLeagueMatches.map(m => m.week));
+    }, [gameState]);
 
     // gY"� Initialize AdMob on mount
     // gY"� Initialize AdMob on mount
@@ -225,6 +236,41 @@ const App: React.FC = () => {
         };
         handleBannerVisibility();
     }, [view, gameState, showProfileSelector, showLeagueSelect, showTeamSelect]);
+
+    // Sync viewLeagueId to user's league when gameState loads
+    useEffect(() => {
+        if (gameState && gameState.leagueId && viewLeagueId !== gameState.leagueId) {
+            setViewLeagueId(gameState.leagueId);
+        }
+    }, [gameState?.leagueId]);
+
+    // Sync language to device system language
+    useEffect(() => {
+        const setDeviceLanguage = async () => {
+            try {
+                // Get device language from Capacitor
+                const { Device } = await import('@capacitor/device');
+                const info = await Device.getLanguageCode();
+                const deviceLang = info.value.toLowerCase().split('-')[0]; // e.g., "en-US" → "en"
+
+                // Map device language to supported languages
+                const langMap: Record<string, 'tr' | 'en' | 'es'> = {
+                    'tr': 'tr',
+                    'es': 'es',
+                    'en': 'en',
+                };
+
+                const newLang = langMap[deviceLang] || 'en'; // Default to English
+                if (lang !== newLang) {
+                    setLang(newLang);
+                }
+            } catch (error) {
+                console.log('Could not detect device language, using default');
+            }
+        };
+
+        setDeviceLanguage();
+    }, []); // Run once on mount
 
     // Initialize profiles on mount
     useEffect(() => {
@@ -326,10 +372,10 @@ const App: React.FC = () => {
 
         // Async Generate European Competitions (only for NEW games)
         import('./services/engine').then(({ generateChampionsLeague, generateEuropaLeague }) => {
-            // 1. Generate Champions League
+            // 1. Generate Elite Cup
             const clStart = generateChampionsLeague({ ...newState, userTeamId: teamId });
 
-            // 2. Generate Europa League (Pass CL state so EL knows who is already taken)
+            // 2. Generate Challenge Cup (Pass Elite Cup state so Challenge Cup knows who is already taken)
             // Store CL in temp state to be read by EL generator if needed, or EL generator filters itself
             const elStart = generateEuropaLeague({ ...newState, userTeamId: teamId, europeanCup: clStart });
 
@@ -881,32 +927,35 @@ const App: React.FC = () => {
             return;
         }
 
-        // EXPENSIVE UPGRADES: 2x more expensive than before
-        // Early levels affordable, late levels VERY expensive
+        // ========== BALANCED UPGRADE COSTS ==========
+        // Early levels affordable, late levels more expensive but REASONABLE
+        // Max cost around €20M for final upgrades
         const nextLevel = currentLevel + 1;
         let baseCost = 0;
         let description = '';
 
         if (type === 'stadium') {
-            baseCost = 3000000; // €3M base (was 1.5M)
+            baseCost = 500000; // €500K base
             description = 'Stadium';
         } else if (type === 'training') {
-            baseCost = 2000000; // €2M base (was 1M)
+            baseCost = 300000; // €300K base
             description = 'Training Ground';
         } else if (type === 'academy') {
-            baseCost = 1600000; // €1.6M base (was 800K)
+            baseCost = 250000; // €250K base
             description = 'Youth Academy';
         }
 
-        // Lv9→10: Stadium ~€95M, Training ~€63M, Academy ~€50M
-        const cost = Math.floor(baseCost * Math.pow(nextLevel, 1.5));
+        // Linear progression with slight exponential at higher levels
+        // Level 1→2: Stadium ~€600K, Level 10→11: ~€4M, Level 20→21: ~€12M, Level 24→25: ~€20M
+        const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
+        const cost = Math.floor(baseCost * levelMultiplier * (1 + nextLevel * 0.1));
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
             return;
         }
 
-        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: �,�${(cost / 1000000).toFixed(2)}M`)) {
+        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: €${(cost / 1000000).toFixed(2)}M`)) {
             const updatedTeams = gameState.teams.map(team => {
                 if (team.id === userTeam.id) {
                     const newFacilities = { ...team.facilities };
@@ -1080,11 +1129,23 @@ const App: React.FC = () => {
                 let newEuropaLeague = prev.europaLeague ? { ...prev.europaLeague } : undefined;
 
                 // Helper to update match in list
-                const updateMatchInList = (list: Match[]): boolean => {
+                const updateMatchInList = (list: Match[], isEuropean: boolean = false, isCL: boolean = false): boolean => {
                     const idx = list.findIndex(m => m.id === match.id);
                     if (idx !== -1) {
+                        // Check if this is a derby
+                        const rivals = DERBY_RIVALS[homeTeam.name] || [];
+                        const isDerby = rivals.includes(awayTeam.name);
+
+                        // Calculate attendance based on fan-base system with all bonuses
+                        const calculatedAttendance = calculateMatchAttendance(homeTeam, awayTeam, {
+                            isDerby,
+                            isEuropeanMatch: isEuropean,
+                            isChampionsLeague: isCL
+                        });
+
                         list[idx] = {
                             ...list[idx],
+                            attendance: calculatedAttendance, // Use calculated attendance!
                             events: list[idx].events || match.events || [],
                             stats: list[idx].stats || match.stats || { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
                             liveData: {
@@ -1101,9 +1162,11 @@ const App: React.FC = () => {
 
                 if (updateMatchInList(newMatches)) {
                     return { ...prev, matches: newMatches };
-                } else if (newEuropeanCup && updateMatchInList(newEuropeanCup.matches)) {
+                } else if (newEuropeanCup && updateMatchInList(newEuropeanCup.matches, true, true)) {
+                    // Elite Cup: isEuropean=true, isChampionsLeague=true
                     return { ...prev, europeanCup: newEuropeanCup };
-                } else if (newEuropaLeague && updateMatchInList(newEuropaLeague.matches)) {
+                } else if (newEuropaLeague && updateMatchInList(newEuropaLeague.matches, true, false)) {
+                    // Challenge Cup: isEuropean=true, isChampionsLeague=false
                     return { ...prev, europaLeague: newEuropaLeague };
                 }
 
@@ -1166,6 +1229,14 @@ const App: React.FC = () => {
 
     const handleBuyPlayer = (player: Player) => {
         if (!gameState) return;
+
+        // FREE AGENTS: Skip negotiation, complete transfer directly at listed price
+        if (player.teamId === 'FREE_AGENT') {
+            handleTransferComplete(player, player.value);
+            return;
+        }
+
+        // Other players: Open negotiation modal
         setNegotiatingPlayer(player);
     };
 
@@ -2696,6 +2767,46 @@ const App: React.FC = () => {
             }
         }
 
+        // ========== TACTICAL HISTORY RECORDING FOR ASSISTANT COACH ==========
+        let updatedTacticalHistory = [...(updatedState.tacticalHistory || [])];
+        if (playedUserMatch) {
+            const homeTeam = teamsWithHistory.find(t => t.id === playedUserMatch.homeTeamId);
+            const awayTeam = teamsWithHistory.find(t => t.id === playedUserMatch.awayTeamId);
+            if (homeTeam && awayTeam) {
+                const isUserHome = playedUserMatch.homeTeamId === updatedState.userTeamId;
+                const userWon = isUserHome
+                    ? playedUserMatch.homeScore > playedUserMatch.awayScore
+                    : playedUserMatch.awayScore > playedUserMatch.homeScore;
+                const tacticalRecord = {
+                    season: updatedState.currentSeason,
+                    week: updatedState.currentWeek,
+                    homeTeamId: playedUserMatch.homeTeamId,
+                    awayTeamId: playedUserMatch.awayTeamId,
+                    homeTactic: {
+                        formation: homeTeam.tactic.formation,
+                        style: homeTeam.tactic.style,
+                        aggression: homeTeam.tactic.aggression
+                    },
+                    awayTactic: {
+                        formation: awayTeam.tactic.formation,
+                        style: awayTeam.tactic.style,
+                        aggression: awayTeam.tactic.aggression
+                    },
+                    homeGoals: playedUserMatch.homeScore,
+                    awayGoals: playedUserMatch.awayScore,
+                    homeXG: playedUserMatch.stats?.homeXG || 0,
+                    awayXG: playedUserMatch.stats?.awayXG || 0,
+                    isUserHome,
+                    userWon
+                };
+                updatedTacticalHistory.push(tacticalRecord);
+                // Keep last 100 matches to save memory
+                if (updatedTacticalHistory.length > 100) {
+                    updatedTacticalHistory = updatedTacticalHistory.slice(-100);
+                }
+            }
+        }
+
         setGameState({
             ...updatedState,
             teams: teamsWithHistory,
@@ -2703,6 +2814,7 @@ const App: React.FC = () => {
             transferMarket: updatedMarket,
             currentWeek: updatedState.currentWeek + 1,
             pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
+            tacticalHistory: updatedTacticalHistory,
             messages: [
                 ...updatedState.messages,
                 ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
@@ -2924,6 +3036,7 @@ const App: React.FC = () => {
                         opponentPlayers={opponentPlayers}
                         userTeam={userTeam}
                         t={t}
+                        tacticalHistory={gameState.tacticalHistory || []}
                         onClose={() => {
                             setShowOpponentPreview(false);
                             setPendingMatch(null);
@@ -2958,8 +3071,8 @@ const App: React.FC = () => {
 
             {/* Desktop Sidebar (Left) - Hidden on Mobile, Tablet, AND during Match */}
             {view !== 'match' && (
-                <div className="hidden xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
-                    <div className="p-6 border-b border-slate-800 hidden xl:block">
+                <div className="hidden 2xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
+                    <div className="p-6 border-b border-slate-800 hidden 2xl:block">
                         <div className="text-emerald-500 font-bold text-2xl tracking-tighter">POCKET<span className="text-white">FM</span></div>
                         {activeProfileId && profiles.find(p => p.id === activeProfileId) && (
                             <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
@@ -2968,7 +3081,7 @@ const App: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <nav className="flex-1 p-2 xl:p-4 space-y-2 overflow-y-auto custom-scrollbar">
+                    <nav className="flex-1 p-2 2xl:p-4 space-y-2 overflow-y-auto custom-scrollbar">
                         <button onClick={() => setView('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'dashboard' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><LayoutDashboard size={20} /> <span className="hidden md:inline">{t.dashboard}</span></button>
                         <button onClick={() => setView('news')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg relative transition-all ${view === 'news' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Mail size={20} /> <span className="hidden md:inline">{t.news}</span>{unreadMessages > 0 && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border border-slate-900"></span>}</button>
                         <button onClick={() => setView('squad')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'squad' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Users size={20} /> <span className="hidden md:inline">{t.squad}</span></button>
@@ -3015,7 +3128,7 @@ const App: React.FC = () => {
 
             {/* Mobile Bottom Navigation - Glassmorphism (5 Items) */}
             {view !== 'match' && (
-                <div className="xl:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
+                <div className="2xl:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
                     {/* Premium Glass Background */}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/98 to-slate-900/95 backdrop-blur-xl border-t border-white/10"></div>
 
@@ -3056,7 +3169,7 @@ const App: React.FC = () => {
                 </div>
             )}
 
-            <div className={`relative z-10 w-full h-full overflow-y-auto no-scrollbar overscroll-none p-4 xl:p-8 pb-48 xl:pb-8 xl:pt-4 ${view !== 'match' ? 'xl:ml-64' : ''}`}>
+            <div className={`relative z-10 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-none p-4 2xl:p-8 pb-48 2xl:pb-8 2xl:pt-4 ${view !== 'match' ? '2xl:ml-64' : ''}`}>
                 <div className="max-w-7xl mx-auto min-h-full">
                     {view === 'match' && activeMatch ? (
                         <MatchCenter
@@ -3220,7 +3333,7 @@ const App: React.FC = () => {
                             )}
                             {
                                 view === 'dashboard' && (
-                                    <div className="flex flex-col gap-4 animate-fade-in pb-20">
+                                    <div className="flex flex-col gap-4 animate-fade-in pb-20 max-w-full overflow-hidden">
                                         {/* Top Row: Manager Profile & Quick Stats */}
                                         <div className="fm-panel rounded-2xl p-4 flex items-center justify-between gap-4 border border-white/5">
                                             <div className="flex items-center gap-4">
@@ -3241,8 +3354,9 @@ const App: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* Inbox & Status Widget */}
-                                        <div className="grid grid-cols-2 gap-3">
+                                        {/* Inbox, Transfer Offers & League Position Widget */}
+                                        <div className="grid grid-cols-3 gap-3">
+                                            {/* Inbox */}
                                             <button onClick={() => setView('news')} className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-cyan-500/30 transition-all active:scale-95 overflow-hidden shadow-lg">
                                                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                 <div className="relative">
@@ -3258,7 +3372,21 @@ const App: React.FC = () => {
                                                 </div>
                                             </button>
 
-                                            {/* League Position Card - DYNAMIC */}
+                                            {/* Transfer Offers */}
+                                            <button onClick={() => setView('news')} className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all active:scale-95 overflow-hidden shadow-lg">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                <div className="relative">
+                                                    <DollarSign size={24} className="text-yellow-400 group-hover:text-yellow-300 transition-colors drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
+                                                    {(gameState.pendingOffers?.filter(o => o.status === 'PENDING').length || 0) > 0 && <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500 border border-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+                                                    </span>}
+                                                </div>
+                                                <div className="text-center relative z-10">
+                                                    <div className="text-lg font-bold text-white">{gameState.pendingOffers?.filter(o => o.status === 'PENDING').length || 0}</div>
+                                                    <div className="text-[10px] uppercase text-yellow-400/70 font-bold tracking-wider">TEKLİF</div>
+                                                </div>
+                                            </button>
                                             {(() => {
                                                 // Calculate last season position from history
                                                 const lastHistory = gameState.history[gameState.history.length - 1];
@@ -3298,14 +3426,20 @@ const App: React.FC = () => {
                                                 }
 
                                                 return (
-                                                    <div className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all overflow-hidden shadow-lg">
+                                                    <button
+                                                        onClick={() => {
+                                                            setViewLeagueId(userTeam.leagueId);
+                                                            setView('league');
+                                                        }}
+                                                        className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all overflow-hidden shadow-lg active:scale-95 cursor-pointer"
+                                                    >
                                                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                         <Trophy size={24} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
                                                         <div className="text-center relative z-10">
                                                             <div className="text-lg font-bold text-white">{lastPosition}</div>
                                                             <div className="text-[10px] uppercase text-yellow-400/70 font-bold tracking-wider">{t.rank}</div>
                                                         </div>
-                                                    </div>
+                                                    </button>
                                                 );
                                             })()}
                                         </div>
@@ -3503,7 +3637,7 @@ const App: React.FC = () => {
                                     />
                                 )
                             }
-                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} onPlayCupMatch={handlePlayEuropeanCupMatch} />}
+                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} onPlayCupMatch={handlePlayEuropeanCupMatch} />}
                             {view === 'rankings' && <WorldRankings players={gameState.players} teams={gameState.teams} t={t} onPlayerClick={setSelectedPlayer} />}
                             {view === 'guide' && <GameGuide t={t} />}
                         </div >

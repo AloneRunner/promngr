@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupStatus } from '../types';
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
+import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
 import { simulateTick } from '../services/engine';
 import { soundManager } from '../services/soundManager';
@@ -373,10 +374,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                 setToasts(prev => [...prev.slice(-4), newToast]); // Keep max 5 toasts
 
-                // Auto-remove after 5 seconds
+                // Auto-remove after 2.5 seconds (was 5s - too long)
                 setTimeout(() => {
                     setToasts(prev => prev.filter(t => t.id !== newToast.id));
-                }, 5000);
+                }, 2500);
             });
             lastEventCount.current = match.events.length;
         }
@@ -1315,8 +1316,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             <div className={`h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
-                    <div className="text-lg md:text-4xl font-black text-slate-800 bg-white w-10 h-10 md:w-16 md:h-16 rounded flex items-center justify-center border-2 md:border-4 border-slate-300" style={{ color: homeTeam.primaryColor, borderColor: homeTeam.secondaryColor }}>
-                        {homeTeam.name.substring(0, 1)}
+                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
+                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
                     </div>
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{homeTeam.name}</h1>
@@ -1349,8 +1350,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{awayTeam.name}</h1>
                     </div>
-                    <div className="text-lg md:text-4xl font-black text-slate-800 bg-white w-10 h-10 md:w-16 md:h-16 rounded flex items-center justify-center border-2 md:border-4 border-slate-300" style={{ color: awayTeam.primaryColor, borderColor: awayTeam.secondaryColor }}>
-                        {awayTeam.name.substring(0, 1)}
+                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
+                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
                     </div>
                 </div>
             </div>
@@ -1463,6 +1464,31 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         </div>
                     </div>
 
+                    {/* LANDSCAPE MODE: Side Panels with Team Info */}
+                    {isSmallLandscape && (
+                        <>
+                            {/* Left Side - Home Team */}
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-r from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
+                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" />
+                                </div>
+                                <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
+                                <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession || 50}%</div>
+                                <div className="text-[7px] text-slate-500">xG {match.stats?.homeXG?.toFixed(1) || '0.0'}</div>
+                            </div>
+
+                            {/* Right Side - Away Team */}
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-l from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
+                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" />
+                                </div>
+                                <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
+                                <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession || 50}%</div>
+                                <div className="text-[7px] text-slate-500">xG {match.stats?.awayXG?.toFixed(1) || '0.0'}</div>
+                            </div>
+                        </>
+                    )}
+
                     {/* Canvas Container with Fixed Aspect Ratio */}
                     <div
                         ref={containerRef}
@@ -1480,11 +1506,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         {setPieceIndicator && (
                             <div className="absolute bottom-4 left-4 pointer-events-none animate-pulse">
                                 <div className={`px-3 py-1.5 rounded-lg font-bold text-xs md:text-sm shadow-lg backdrop-blur-sm ${setPieceIndicator.type === 'FOUL' ? 'bg-red-600/90 text-white' :
-                                        setPieceIndicator.type === 'FREE_KICK' ? 'bg-yellow-500/90 text-black' :
-                                            setPieceIndicator.type === 'CORNER' ? 'bg-orange-500/90 text-white' :
-                                                setPieceIndicator.type === 'THROW_IN' ? 'bg-blue-500/90 text-white' :
-                                                    setPieceIndicator.type === 'KICKOFF' ? 'bg-emerald-500/90 text-white' :
-                                                        'bg-slate-700/90 text-white'
+                                    setPieceIndicator.type === 'FREE_KICK' ? 'bg-yellow-500/90 text-black' :
+                                        setPieceIndicator.type === 'CORNER' ? 'bg-orange-500/90 text-white' :
+                                            setPieceIndicator.type === 'THROW_IN' ? 'bg-blue-500/90 text-white' :
+                                                setPieceIndicator.type === 'KICKOFF' ? 'bg-emerald-500/90 text-white' :
+                                                    'bg-slate-700/90 text-white'
                                     }`}>
                                     {setPieceIndicator.message}
                                 </div>
@@ -1636,8 +1662,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             {/* HALF-TIME MODAL */}
             {
                 showHalfTime && (
-                    <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
-                        <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-5 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
+                    <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-start justify-center pt-8 md:pt-16 pb-20 p-4 animate-fade-in overflow-auto">
+                        <div className="bg-slate-900/90 border border-white/10 p-5 md:p-8 rounded-2xl flex flex-col items-center gap-4 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
                             {/* Decorative Lines */}
                             <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                             <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>

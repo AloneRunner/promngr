@@ -1,7 +1,8 @@
 
-import React from 'react';
-import { Team, Player, Translation, Position } from '../types';
-import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Team, Player, Translation, Position, TacticalMatchRecord } from '../types';
+import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle, Brain } from 'lucide-react';
+import { AssistantCoachModal } from './AssistantCoachModal';
 import { getTeamLogo } from '../logoMapping';
 import { adMobService } from '../services/adMobService';
 
@@ -10,6 +11,7 @@ interface OpponentPreviewProps {
     opponentPlayers: Player[];
     userTeam: Team;
     t: Translation;
+    tacticalHistory: TacticalMatchRecord[];
     onClose: () => void;
     onStartMatch: () => void;
 }
@@ -19,9 +21,11 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
     opponentPlayers,
     userTeam,
     t,
+    tacticalHistory,
     onClose,
     onStartMatch
 }) => {
+    const [showCoach, setShowCoach] = useState(false);
     // Get top 3 players by overall
     const topPlayers = [...opponentPlayers]
         .filter(p => p.lineup === 'STARTING')
@@ -65,8 +69,14 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4" style={{ paddingTop: adMobService.isNative() ? '100px' : '1rem' }}>
-            <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto">
+        <div
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+            style={{
+                paddingTop: adMobService.isNative() ? '100px' : '1rem',
+                paddingBottom: adMobService.isNative() ? '100px' : '1rem'
+            }}
+        >
+            <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto">
 
                 {/* Header */}
                 <div
@@ -179,8 +189,28 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                     </div>
                 </div>
 
+                {/* Assistant Coach Modal */}
+                {showCoach && (
+                    <AssistantCoachModal
+                        userTeam={userTeam}
+                        opponent={opponent}
+                        tacticalHistory={tacticalHistory}
+                        onClose={() => setShowCoach(false)}
+                        t={t}
+                    />
+                )}
+
                 {/* Actions */}
                 <div className="p-6 space-y-3">
+                    {/* Assistant Coach Button */}
+                    <button
+                        onClick={() => setShowCoach(true)}
+                        className="w-full py-3 bg-gradient-to-r from-purple-600/80 to-indigo-600/80 text-white font-bold rounded-xl hover:from-purple-500 hover:to-indigo-500 transition-all border border-purple-500/30 flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-purple-500/20"
+                    >
+                        <Brain size={20} className="drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
+                        {t.assistantCoach || 'Yardımcı Antrenör'}
+                    </button>
+
                     <button
                         onClick={onStartMatch}
                         className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-lg rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 active:scale-95"

@@ -19,12 +19,18 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
   t
 }) => {
   const [filterPos, setFilterPos] = useState<string>('ALL');
+  const [listFilter, setListFilter] = useState<'ALL' | 'LISTED' | 'UNLISTED' | 'FREE'>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  const filteredPlayers = marketPlayers.filter(p =>
-    filterPos === 'ALL' || p.position === filterPos
-  ).sort((a, b) => b.overall - a.overall);
+  const filteredPlayers = marketPlayers.filter(p => {
+    const posMatch = filterPos === 'ALL' || p.position === filterPos;
+    const listMatch = listFilter === 'ALL' ||
+      (listFilter === 'LISTED' && p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
+      (listFilter === 'UNLISTED' && !p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
+      (listFilter === 'FREE' && p.teamId === 'FREE_AGENT');
+    return posMatch && listMatch;
+  }).sort((a, b) => b.overall - a.overall);
 
   const totalPages = Math.ceil(filteredPlayers.length / itemsPerPage);
   const displayedPlayers = filteredPlayers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -32,7 +38,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
   // Reset page when filter changes
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [filterPos]);
+  }, [filterPos, listFilter]);
 
   const canAfford = (value: number) => userTeam.budget >= value;
 
@@ -57,7 +63,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-fade-in pb-20">
+    <div className="space-y-4 animate-fade-in pb-20 max-w-full overflow-hidden">
       {/* Header & Budget - Premium Glassmorphism */}
       <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 backdrop-blur-xl rounded-2xl p-5 flex items-center justify-between gap-4 border border-white/10 shadow-xl">
         <div className="flex items-center gap-3">
@@ -77,18 +83,44 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
       </div>
 
       {/* Filters - Premium Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar px-1">
-        {['ALL', ...Object.values(Position)].map(pos => (
-          <button
-            key={pos}
-            onClick={() => setFilterPos(pos)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap border active:scale-95 ${filterPos === pos
-              ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-emerald-400/50 shadow-lg shadow-emerald-900/50'
-              : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200 hover:border-slate-600'}`}
-          >
-            {pos}
-          </button>
-        ))}
+      <div className="flex flex-wrap gap-2 pb-2 px-1">
+        {/* Position Filters */}
+        <div className="flex gap-1 overflow-x-auto no-scrollbar">
+          {['ALL', ...Object.values(Position)].map(pos => (
+            <button
+              key={pos}
+              onClick={() => setFilterPos(pos)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap border active:scale-95 ${filterPos === pos
+                ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-emerald-400/50 shadow-lg shadow-emerald-900/50'
+                : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200 hover:border-slate-600'}`}
+            >
+              {pos}
+            </button>
+          ))}
+        </div>
+
+        {/* List Status Filters */}
+        <div className="flex gap-1 ml-auto">
+          {[
+            { key: 'ALL', label: 'Tümü', color: 'slate' },
+            { key: 'LISTED', label: '✅ Satılık', color: 'emerald' },
+            { key: 'UNLISTED', label: '🔒 Değil', color: 'red' },
+            { key: 'FREE', label: '🆓 Serbest', color: 'blue' }
+          ].map(item => (
+            <button
+              key={item.key}
+              onClick={() => setListFilter(item.key as any)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap border active:scale-95 ${listFilter === item.key
+                ? item.color === 'emerald' ? 'bg-emerald-600 text-white border-emerald-400/50'
+                  : item.color === 'red' ? 'bg-red-600 text-white border-red-400/50'
+                    : item.color === 'blue' ? 'bg-blue-600 text-white border-blue-400/50'
+                      : 'bg-slate-600 text-white border-slate-400/50'
+                : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80'}`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* List - Premium Table */}

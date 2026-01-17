@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Match, Team, MatchEventType, Translation, Player, EuropeanCup } from '../types';
 import { Calendar, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 
@@ -9,17 +9,28 @@ interface FixturesViewProps {
     currentWeek: number;
     t: Translation;
     userTeamId: string;
+    userLeagueId: string;
+    availableLeagues: { id: string; name: string }[]; // NEW: List of all leagues
     europeanCup?: EuropeanCup;
     europaLeague?: EuropeanCup;
     onPlayCupMatch?: (matchId: string) => void;
 }
 
-export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, europeanCup, europaLeague, onPlayCupMatch }) => {
+export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, userLeagueId, availableLeagues, europeanCup, europaLeague, onPlayCupMatch }) => {
     const [selectedWeek, setSelectedWeek] = useState(currentWeek);
     const [tab, setTab] = useState<'LEAGUE' | 'CUP' | 'EUROPA'>('LEAGUE');
-    const totalWeeks = Math.max(...matches.map(m => m.week));
+    const [selectedLeagueId, setSelectedLeagueId] = useState(userLeagueId); // NEW: League selector state
 
-    const weekMatches = matches.filter(m => m.week === selectedWeek);
+    // Filter matches by selected league
+    const leagueMatches = useMemo(() => {
+        return matches.filter(m => {
+            const homeTeam = teams.find(t => t.id === m.homeTeamId);
+            return homeTeam?.leagueId === selectedLeagueId;
+        });
+    }, [matches, teams, selectedLeagueId]);
+
+    const totalWeeks = leagueMatches.length > 0 ? Math.max(...leagueMatches.map(m => m.week)) : 1;
+    const weekMatches = leagueMatches.filter(m => m.week === selectedWeek);
 
     // ... helper functions ...
     const getTeam = (id: string) => teams.find(t => t.id === id);
@@ -51,7 +62,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                         onClick={() => setTab('CUP')}
                         className={`flex-1 py-4 text-center font-bold uppercase tracking-wider text-sm transition-colors ${tab === 'CUP' ? 'bg-slate-800 text-white border-b-2 border-blue-500' : 'text-slate-500 hover:text-slate-300'}`}
                     >
-                        🏆 Champions League
+                        🏆 Elite Cup
                     </button>
                 )}
                 {europaLeague && europaLeague.isActive && (
@@ -59,7 +70,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                         onClick={() => setTab('EUROPA')}
                         className={`flex-1 py-4 text-center font-bold uppercase tracking-wider text-sm transition-colors ${tab === 'EUROPA' ? 'bg-slate-800 text-white border-b-2 border-orange-500' : 'text-slate-500 hover:text-slate-300'}`}
                     >
-                        🟠 Europa League
+                        🟠 Challenge Cup
                     </button>
                 )}
             </div>
@@ -68,6 +79,24 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
 
             {tab === 'LEAGUE' && (
                 <>
+                    {/* League Selector */}
+                    <div className="bg-slate-950 p-4 border-b border-slate-700">
+                        <select
+                            value={selectedLeagueId}
+                            onChange={(e) => {
+                                setSelectedLeagueId(e.target.value);
+                                setSelectedWeek(1); // Reset to week 1 when changing league
+                            }}
+                            className="w-full bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-600 focus:border-emerald-500 focus:outline-none font-bold"
+                        >
+                            {availableLeagues.map(league => (
+                                <option key={league.id} value={league.id}>
+                                    {league.name} {league.id === userLeagueId ? '(Your League)' : ''}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     {/* Header with Week Navigation */}
                     <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-4 md:p-6 border-b border-slate-700 flex items-center justify-between sticky top-0 z-10">
                         <button
@@ -160,7 +189,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                 <div className="bg-slate-900/50">
                     <div className="p-4 bg-blue-900/20 text-center border-b border-blue-500/30">
                         <h3 className="text-blue-400 font-bold uppercase tracking-widest text-sm">
-                            Champions League
+                            Elite Cup
                             <span className="block text-[10px] text-slate-400 mt-1 opacity-70">
                                 Current Stage: {europeanCup.currentRound}
                             </span>
@@ -234,7 +263,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                 <div className="bg-slate-900/50">
                     <div className="p-4 bg-orange-900/20 text-center border-b border-orange-500/30">
                         <h3 className="text-orange-400 font-bold uppercase tracking-widest text-sm">
-                            Europa League
+                            Challenge Cup
                             <span className="block text-[10px] text-slate-400 mt-1 opacity-70">
                                 Current Stage: {europaLeague.currentRound}
                             </span>
