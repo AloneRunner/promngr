@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Match, Team, MatchEventType, Translation, Player, EuropeanCup } from '../types';
+import { Match, Team, MatchEventType, Translation, Player, EuropeanCup, SuperCup } from '../types';
 import { Calendar, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 
 interface FixturesViewProps {
@@ -13,12 +13,14 @@ interface FixturesViewProps {
     availableLeagues: { id: string; name: string }[]; // NEW: List of all leagues
     europeanCup?: EuropeanCup;
     europaLeague?: EuropeanCup;
+    superCup?: SuperCup;
     onPlayCupMatch?: (matchId: string) => void;
+    onPlaySuperCup?: () => void;
 }
 
-export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, userLeagueId, availableLeagues, europeanCup, europaLeague, onPlayCupMatch }) => {
+export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, userLeagueId, availableLeagues, europeanCup, europaLeague, superCup, onPlayCupMatch, onPlaySuperCup }) => {
     const [selectedWeek, setSelectedWeek] = useState(currentWeek);
-    const [tab, setTab] = useState<'LEAGUE' | 'CUP' | 'EUROPA'>('LEAGUE');
+    const [tab, setTab] = useState<'LEAGUE' | 'CUP' | 'EUROPA' | 'SUPER'>('LEAGUE');
     const [selectedLeagueId, setSelectedLeagueId] = useState(userLeagueId); // NEW: League selector state
 
     // Filter matches by selected league
@@ -71,6 +73,14 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                         className={`flex-1 py-4 text-center font-bold uppercase tracking-wider text-sm transition-colors ${tab === 'EUROPA' ? 'bg-slate-800 text-white border-b-2 border-orange-500' : 'text-slate-500 hover:text-slate-300'}`}
                     >
                         🟠 Challenge Cup
+                    </button>
+                )}
+                {superCup && (
+                    <button
+                        onClick={() => setTab('SUPER')}
+                        className={`flex-1 py-4 text-center font-bold uppercase tracking-wider text-sm transition-colors ${tab === 'SUPER' ? 'bg-slate-800 text-white border-b-2 border-purple-500' : 'text-slate-500 hover:text-slate-300'}`}
+                    >
+                        ⭐ Super Cup
                     </button>
                 )}
             </div>
@@ -143,38 +153,46 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
 
                                 return (
                                     <div key={match.id} className={`p-3 md:p-6 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-emerald-900/10 border-l-4 border-l-emerald-500' : ''}`}>
-                                        {/* Matches Content (Reused/Refactored from existing) */}
-                                        <div className="flex items-center gap-4 md:gap-8">
-                                            {/* Date/Status */}
-                                            <div className="w-16 md:w-24 text-right shrink-0">
+                                        {/* Match Row - Single horizontal line */}
+                                        <div className="flex items-center justify-between gap-2">
+                                            {/* Left: Date/Status */}
+                                            <div className="w-12 md:w-16 text-center shrink-0">
                                                 {match.isPlayed ? (
                                                     <span className="bg-slate-700 text-slate-300 text-[10px] md:text-xs px-2 py-1 rounded font-bold uppercase tracking-wider">FT</span>
                                                 ) : (
-                                                    <span className="text-slate-500 flex items-center justify-end gap-1 text-xs md:text-sm font-bold">
-                                                        <Clock size={14} /> Today
+                                                    <span className="text-slate-500 text-[10px] md:text-xs font-bold flex items-center justify-center gap-1">
+                                                        <Clock size={12} />
                                                     </span>
                                                 )}
                                             </div>
 
-                                            {/* Teams & Score */}
-                                            <div className="flex-1 grid grid-cols-[1fr,auto,1fr] items-center gap-2 md:gap-4">
-                                                <div className="flex items-center justify-end gap-3 text-right">
-                                                    <span className={`font-bold text-sm md:text-xl ${isUserMatch && match.homeTeamId === userTeamId ? 'text-emerald-400' : 'text-white'}`}>{homeTeam.name}</span>
-                                                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm md:text-lg font-bold shrink-0 border-2 border-slate-700 shadow-lg" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>{homeTeam.name.charAt(0)}</div>
+                                            {/* HOME Team (Left side) */}
+                                            <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                                                <span className={`font-bold text-xs md:text-base truncate ${isUserMatch && match.homeTeamId === userTeamId ? 'text-emerald-400' : 'text-white'}`}>
+                                                    {homeTeam.name}
+                                                </span>
+                                                <div className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>
+                                                    {homeTeam.name.charAt(0)}
                                                 </div>
+                                            </div>
 
-                                                <div className="px-2 md:px-4 py-1 md:py-2 bg-slate-950 rounded-lg border border-slate-800 min-w-[60px] md:min-w-[80px] text-center shadow-inner">
-                                                    {match.isPlayed ? (
-                                                        <div className="text-xl md:text-3xl font-black text-white tracking-widest font-mono">{match.homeScore}-{match.awayScore}</div>
-                                                    ) : (
-                                                        <div className="text-lg md:text-2xl font-bold text-slate-600 font-mono">VS</div>
-                                                    )}
-                                                </div>
+                                            {/* Score (Center) */}
+                                            <div className="px-3 md:px-4 py-1 bg-slate-950 rounded-lg border border-slate-800 min-w-[50px] md:min-w-[70px] text-center shrink-0">
+                                                {match.isPlayed ? (
+                                                    <div className="text-lg md:text-2xl font-black text-white tracking-wider font-mono">{match.homeScore}-{match.awayScore}</div>
+                                                ) : (
+                                                    <div className="text-base md:text-xl font-bold text-slate-600 font-mono">VS</div>
+                                                )}
+                                            </div>
 
-                                                <div className="flex items-center justify-start gap-3 text-left">
-                                                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm md:text-lg font-bold shrink-0 border-2 border-slate-700 shadow-lg" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>{awayTeam.name.charAt(0)}</div>
-                                                    <span className={`font-bold text-sm md:text-xl ${isUserMatch && match.awayTeamId === userTeamId ? 'text-emerald-400' : 'text-white'}`}>{awayTeam.name}</span>
+                                            {/* AWAY Team (Right side) */}
+                                            <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                                                <div className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>
+                                                    {awayTeam.name.charAt(0)}
                                                 </div>
+                                                <span className={`font-bold text-xs md:text-base truncate ${isUserMatch && match.awayTeamId === userTeamId ? 'text-emerald-400' : 'text-white'}`}>
+                                                    {awayTeam.name}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -217,42 +235,58 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                                         const isUserMatch = match.homeTeamId === userTeamId || match.awayTeamId === userTeamId;
 
                                         return (
-                                            <div key={match.id} className={`p-4 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-blue-900/10 border-l-4 border-l-blue-500' : ''}`}>
-                                                <div className="flex items-center gap-4 md:gap-8">
-                                                    <div className="w-16 md:w-24 text-right shrink-0">
+                                            <div key={match.id} className={`p-3 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-blue-900/10 border-l-4 border-l-blue-500' : ''}`}>
+                                                <div className="flex items-center justify-between gap-2">
+                                                    {/* Status */}
+                                                    <div className="w-14 md:w-16 text-center shrink-0">
                                                         {match.isPlayed ? (
                                                             <span className="bg-slate-700 text-slate-300 text-[10px] md:text-xs px-2 py-1 rounded font-bold uppercase tracking-wider">FT</span>
                                                         ) : (
                                                             isUserMatch ? (
-                                                                <button onClick={() => onPlayCupMatch && onPlayCupMatch(match.id)} className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] md:text-xs px-3 py-1.5 rounded font-bold uppercase tracking-wider shadow-lg animate-pulse">
+                                                                <button onClick={() => onPlayCupMatch && onPlayCupMatch(match.id)} className="bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] md:text-xs px-2 py-1 rounded font-bold uppercase shadow-lg animate-pulse">
                                                                     PLAY
                                                                 </button>
                                                             ) : (
-                                                                <span className="text-slate-500 text-[10px] uppercase font-bold">Pending</span>
+                                                                <span className="text-slate-500 text-[10px] uppercase font-bold">-</span>
                                                             )
                                                         )}
                                                     </div>
-                                                    <div className="flex-1 grid grid-cols-[1fr,auto,1fr] items-center gap-2 md:gap-4">
-                                                        <div className="flex items-center justify-end gap-3 text-right">
-                                                            <span className={`font-bold text-sm md:text-lg ${isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>{homeTeam.name}</span>
-                                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-700" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>{homeTeam.name.charAt(0)}</div>
+
+                                                    {/* HOME Team (Left side) */}
+                                                    <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === homeTeam.id ? 'text-green-400' : isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>
+                                                            {homeTeam.name}
+                                                            {match.isPlayed && match.winnerId === homeTeam.id && ' ✓'}
+                                                        </span>
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>
+                                                            {homeTeam.name.charAt(0)}
                                                         </div>
-                                                        <div className="px-2 py-1 bg-slate-950 rounded border border-slate-800 min-w-[50px] text-center">
-                                                            {match.isPlayed ? (
-                                                                <span className="text-lg font-mono font-bold text-white">{match.homeScore}-{match.awayScore}</span>
-                                                            ) : (
-                                                                <span className="text-sm font-mono text-slate-600">VS</span>
-                                                            )}
+                                                    </div>
+
+                                                    {/* Score */}
+                                                    <div className="px-2 py-1 bg-slate-950 rounded border border-slate-800 min-w-[45px] text-center shrink-0">
+                                                        {match.isPlayed ? (
+                                                            <span className="text-base md:text-lg font-mono font-bold text-white">{match.homeScore}-{match.awayScore}</span>
+                                                        ) : (
+                                                            <span className="text-sm font-mono text-slate-600">VS</span>
+                                                        )}
+                                                    </div>
+
+                                                    {/* AWAY Team (Right side) */}
+                                                    <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>
+                                                            {awayTeam.name.charAt(0)}
                                                         </div>
-                                                        <div className="flex items-center justify-start gap-3 text-left">
-                                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-700" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>{awayTeam.name.charAt(0)}</div>
-                                                            <span className={`font-bold text-sm md:text-lg ${isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>{awayTeam.name}</span>
-                                                        </div>
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === awayTeam.id ? 'text-green-400' : isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>
+                                                            {awayTeam.name}
+                                                            {match.isPlayed && match.winnerId === awayTeam.id && ' ✓'}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         );
                                     })}
+
                                 </div>
                             </div>
                         );
@@ -291,46 +325,139 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                                         const isUserMatch = match.homeTeamId === userTeamId || match.awayTeamId === userTeamId;
 
                                         return (
-                                            <div key={match.id} className={`p-4 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-orange-900/10 border-l-4 border-l-orange-500' : ''}`}>
-                                                <div className="flex items-center gap-4 md:gap-8">
-                                                    <div className="w-16 md:w-24 text-right shrink-0">
+                                            <div key={match.id} className={`p-3 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-orange-900/10 border-l-4 border-l-orange-500' : ''}`}>
+                                                <div className="flex items-center justify-between gap-2">
+                                                    {/* Status */}
+                                                    <div className="w-14 md:w-16 text-center shrink-0">
                                                         {match.isPlayed ? (
                                                             <span className="bg-slate-700 text-slate-300 text-[10px] md:text-xs px-2 py-1 rounded font-bold uppercase tracking-wider">FT</span>
                                                         ) : (
                                                             isUserMatch ? (
-                                                                <button onClick={() => onPlayCupMatch && onPlayCupMatch(match.id)} className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] md:text-xs px-3 py-1.5 rounded font-bold uppercase tracking-wider shadow-lg animate-pulse">
+                                                                <button onClick={() => onPlayCupMatch && onPlayCupMatch(match.id)} className="bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] md:text-xs px-2 py-1 rounded font-bold uppercase shadow-lg animate-pulse">
                                                                     PLAY
                                                                 </button>
                                                             ) : (
-                                                                <span className="text-slate-500 text-[10px] uppercase font-bold">Pending</span>
+                                                                <span className="text-slate-500 text-[10px] uppercase font-bold">-</span>
                                                             )
                                                         )}
                                                     </div>
-                                                    <div className="flex-1 grid grid-cols-[1fr,auto,1fr] items-center gap-2 md:gap-4">
-                                                        <div className="flex items-center justify-end gap-3 text-right">
-                                                            <span className={`font-bold text-sm md:text-lg ${isUserMatch ? 'text-orange-300' : 'text-slate-300'}`}>{homeTeam.name}</span>
-                                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-700" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>{homeTeam.name.charAt(0)}</div>
+
+                                                    {/* HOME Team (Left side) */}
+                                                    <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === homeTeam.id ? 'text-green-400' : isUserMatch ? 'text-orange-300' : 'text-slate-300'}`}>
+                                                            {homeTeam.name}
+                                                            {match.isPlayed && match.winnerId === homeTeam.id && ' ✓'}
+                                                        </span>
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>
+                                                            {homeTeam.name.charAt(0)}
                                                         </div>
-                                                        <div className="px-2 py-1 bg-slate-950 rounded border border-slate-800 min-w-[50px] text-center">
-                                                            {match.isPlayed ? (
-                                                                <span className="text-lg font-mono font-bold text-white">{match.homeScore}-{match.awayScore}</span>
-                                                            ) : (
-                                                                <span className="text-sm font-mono text-slate-600">VS</span>
-                                                            )}
+                                                    </div>
+
+                                                    {/* Score */}
+                                                    <div className="px-2 py-1 bg-slate-950 rounded border border-slate-800 min-w-[45px] text-center shrink-0">
+                                                        {match.isPlayed ? (
+                                                            <span className="text-base md:text-lg font-mono font-bold text-white">{match.homeScore}-{match.awayScore}</span>
+                                                        ) : (
+                                                            <span className="text-sm font-mono text-slate-600">VS</span>
+                                                        )}
+                                                    </div>
+
+                                                    {/* AWAY Team (Right side) */}
+                                                    <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>
+                                                            {awayTeam.name.charAt(0)}
                                                         </div>
-                                                        <div className="flex items-center justify-start gap-3 text-left">
-                                                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-700" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>{awayTeam.name.charAt(0)}</div>
-                                                            <span className={`font-bold text-sm md:text-lg ${isUserMatch ? 'text-orange-300' : 'text-slate-300'}`}>{awayTeam.name}</span>
-                                                        </div>
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === awayTeam.id ? 'text-green-400' : isUserMatch ? 'text-orange-300' : 'text-slate-300'}`}>
+                                                            {awayTeam.name}
+                                                            {match.isPlayed && match.winnerId === awayTeam.id && ' ✓'}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         );
                                     })}
+
                                 </div>
                             </div>
                         );
                     })}
+                </div>
+            )}
+            {tab === 'SUPER' && superCup && (
+                <div className="bg-slate-900/50">
+                    <div className="p-4 bg-purple-900/20 text-center border-b border-purple-500/30">
+                        <h3 className="text-purple-400 font-bold uppercase tracking-widest text-sm">
+                            ⭐ Super Cup
+                            <span className="block text-[10px] text-slate-400 mt-1 opacity-70">
+                                Elite Cup Champion vs Challenge Cup Champion
+                            </span>
+                        </h3>
+                    </div>
+                    {superCup.match && (() => {
+                        const homeTeam = getTeam(superCup.match.homeTeamId);
+                        const awayTeam = getTeam(superCup.match.awayTeamId);
+                        if (!homeTeam || !awayTeam) return null;
+
+                        const isUserMatch = superCup.match.homeTeamId === userTeamId || superCup.match.awayTeamId === userTeamId;
+
+                        return (
+                            <div className={`p-6 ${isUserMatch ? 'bg-purple-900/10 border-l-4 border-l-purple-500' : ''}`}>
+                                <div className="flex items-center justify-between gap-2 max-w-md mx-auto">
+                                    {/* Status */}
+                                    <div className="w-16 text-center shrink-0">
+                                        {superCup.isComplete ? (
+                                            <span className="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded font-bold uppercase tracking-wider">FT</span>
+                                        ) : (
+                                            isUserMatch ? (
+                                                <button onClick={() => onPlaySuperCup && onPlaySuperCup()} className="bg-purple-600 hover:bg-purple-500 text-white text-xs px-3 py-1.5 rounded font-bold uppercase shadow-lg animate-pulse">
+                                                    PLAY
+                                                </button>
+                                            ) : (
+                                                <span className="text-slate-500 text-[10px] uppercase font-bold">Pending</span>
+                                            )
+                                        )}
+                                    </div>
+
+                                    {/* HOME Team (Elite Cup Winner) */}
+                                    <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[10px] text-blue-400 font-bold">🏆 Elite</span>
+                                            <span className={`font-bold text-sm truncate ${superCup.isComplete && superCup.winnerId === homeTeam.id ? 'text-green-400' : isUserMatch ? 'text-purple-300' : 'text-slate-300'}`}>
+                                                {homeTeam.name}
+                                                {superCup.isComplete && superCup.winnerId === homeTeam.id && ' ✓'}
+                                            </span>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border-2 border-blue-500" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>
+                                            {homeTeam.name.charAt(0)}
+                                        </div>
+                                    </div>
+
+                                    {/* Score */}
+                                    <div className="px-3 py-2 bg-slate-950 rounded-lg border border-purple-800 min-w-[60px] text-center shrink-0">
+                                        {superCup.isComplete ? (
+                                            <span className="text-xl font-mono font-bold text-white">{superCup.match.homeScore}-{superCup.match.awayScore}</span>
+                                        ) : (
+                                            <span className="text-lg font-mono text-slate-600">VS</span>
+                                        )}
+                                    </div>
+
+                                    {/* AWAY Team (Challenge Cup Winner) */}
+                                    <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border-2 border-orange-500" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>
+                                            {awayTeam.name.charAt(0)}
+                                        </div>
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-[10px] text-orange-400 font-bold">🟠 Challenge</span>
+                                            <span className={`font-bold text-sm truncate ${superCup.isComplete && superCup.winnerId === awayTeam.id ? 'text-green-400' : isUserMatch ? 'text-purple-300' : 'text-slate-300'}`}>
+                                                {awayTeam.name}
+                                                {superCup.isComplete && superCup.winnerId === awayTeam.id && ' ✓'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
         </div>

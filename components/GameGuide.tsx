@@ -21,76 +21,76 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
     const sections: GuideSection[] = [
         {
             id: 'about',
-            title: `🚀 ${t.guideAbout || 'Oyun Hakkında'}`,
+            title: `🚀 ${t.guideAbout || 'About Game'}`,
             icon: Star,
             color: 'amber',
             content: (
                 <div className="space-y-4">
                     <div className="bg-amber-900/20 border border-amber-500/30 p-3 rounded">
-                        <p className="text-amber-400 font-bold mb-2">🔧 {t.guideUnderDev || 'Geliştirme Aşamasında!'}</p>
+                        <p className="text-amber-400 font-bold mb-2">🔧 {t.guideUnderDev || 'Under Development!'}</p>
                         <p className="text-sm text-slate-300">
-                            {t.guideUnderDevDesc || 'Bu oyun aktif olarak geliştirilmektedir. Kullanıcılardan gelen geri bildirimler doğrudan oyuna yansıtılmaktadır.'}
+                            {t.guideUnderDevDesc || 'This game is actively being developed. User feedback is directly reflected in the game.'}
                         </p>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">💡 {t.guideDifferent || 'Farkımız Ne?'}</p>
+                        <p className="text-emerald-400 font-bold mb-2">💡 {t.guideDifferent || 'What Makes Us Different?'}</p>
                         <p className="text-sm text-slate-300 mb-2">
-                            {t.guideDifferentDesc || 'Diğer menajerlik oyunlarının aksine, kullanıcıyı bilgi ve istatistiklerle boğmuyoruz.'}
+                            {t.guideDifferentDesc || 'Unlike other manager games, we don\'t overwhelm users with stats. Easy to learn, hard to master.'}
                         </p>
                         <ul className="text-xs space-y-1 text-slate-400">
-                            <li>• {t.guideSimple || 'Sade ve anlaşılır arayüz'}</li>
-                            <li>• {t.guideFast || 'Hızlı maç simülasyonu'}</li>
-                            <li>• {t.guideMobile || 'Mobil öncelikli tasarım'}</li>
+                            <li>• {t.guideSimple || 'Simple and clear interface'}</li>
+                            <li>• {t.guideFast || 'Fast match simulation'}</li>
+                            <li>• {t.guideMobile || 'Mobile-first design'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded">
-                        <p className="text-blue-400 font-bold mb-2">⚽ {t.guideLiveEngine || 'Canlı Maç Motoru'}</p>
+                        <p className="text-blue-400 font-bold mb-2">⚽ {t.guideLiveEngine || 'Live Match Engine'}</p>
                         <p className="text-sm text-slate-300 mb-3">
-                            {t.guideLiveEngineDesc || 'Çoğu menajerlik oyunu maçı önceden hesaplar ve size sadece önemli anları gösterir.'}
+                            {t.guideLiveEngineDesc || 'Most manager games pre-calculate matches. Our engine is different!'}
                         </p>
                         <p className="text-sm text-slate-300 mb-2">
-                            <strong className="text-emerald-400">{t.guideOurEngine || 'Bizim motorumuz farklı!'}</strong> {t.guideEvery50ms || 'Her 50ms\'de (saniyede 20 kez):'}
+                            <strong className="text-emerald-400">{t.guideOurEngine || 'Our engine is different!'}</strong> {t.guideEvery50ms || 'Every 50ms (20 times per second):'}
                         </p>
                         <ul className="text-xs space-y-1 text-slate-400">
-                            <li>• {t.guide22Players || '22 oyuncunun pozisyonları hesaplanır'}</li>
-                            <li>• {t.guideAIDecides || 'Yapay zeka karar verir (şut mu, pas mı, çalım mı?)'}</li>
-                            <li>• {t.guideBallPhysics || 'Top fiziği simüle edilir'}</li>
-                            <li>• {t.guideUnpredictable || 'Gerçek zamanlı, öngörülemez maçlar!'}</li>
+                            <li>• {t.guide22Players || '22 player positions are calculated'}</li>
+                            <li>• {t.guideAIDecides || 'AI decides (shoot, pass, or dribble?)'}</li>
+                            <li>• {t.guideBallPhysics || 'Ball physics are simulated'}</li>
+                            <li>• {t.guideUnpredictable || 'Real-time, unpredictable matches!'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-purple-900/20 border border-purple-500/30 p-3 rounded">
-                        <p className="text-purple-400 font-bold mb-2">📺 {t.guide2D25D || '2D vs 2.5D Görünüm'}</p>
+                        <p className="text-purple-400 font-bold mb-2">📺 {t.guide2D25D || '2D vs 2.5D View'}</p>
                         <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-green-400">2D:</strong> {t.guide2DDesc || 'Klasik kuş bakışı. Taktik analiz için ideal.'}</li>
-                            <li><strong className="text-blue-400">2.5D:</strong> {t.guide25DDesc || 'Perspektif görünüm. Daha sinematik ve TV yayını hissi verir.'}</li>
+                            <li><strong className="text-green-400">2D:</strong> {t.guide2DDesc || 'Classic top-down view. Ideal for tactical analysis.'}</li>
+                            <li><strong className="text-blue-400">2.5D:</strong> {t.guide25DDesc || 'Perspective view. More cinematic, like TV broadcast.'}</li>
                         </ul>
-                        <p className="text-xs text-slate-400 mt-2">💡 {t.guideChangeView || 'Maç sırasında sağ üstten değiştirebilirsin!'}</p>
+                        <p className="text-xs text-slate-400 mt-2">💡 {t.guideChangeView || 'Change view during match from top right!'}</p>
                     </div>
                 </div>
             )
         },
         {
             id: 'basics',
-            title: '🎮 Oyun Temelleri',
+            title: `🎮 ${t.guideBasicsTitle || t.guideBasics || 'Game Basics'}`,
             icon: BookOpen,
             color: 'emerald',
             content: (
                 <div className="space-y-3">
-                    <p>⚽ Bu oyunda bir futbol takımının teknik direktörüsün.</p>
-                    <p>📅 Her hafta bir lig maçı oynanır. Sezon sonunda şampiyon belirlenir.</p>
-                    <p>🏆 <strong>Hedefin:</strong> Şampiyonluk, Avrupa kupaları ve kulübü büyütmek.</p>
-                    <p>💾 Oyun otomatik kaydedilir. "Kaydet ve Çık" ile güvenli çıkış yapabilirsin.</p>
-                    <p>📊 <strong>Yönetim güveni</strong> düşerse kovulabilirsin!</p>
+                    <p>⚽ {t.guideBasics1 || 'You are the manager of a football team in this game.'}</p>
+                    <p>📅 {t.guideBasics2 || 'A league match is played every week. Champion is determined at the end of the season.'}</p>
+                    <p>🏆 <strong>{t.guideBasics3 || 'Goal: Championship, European cups and growing the club.'}</strong></p>
+                    <p>💾 {t.guideBasics4 || 'The game saves automatically. Use \'Save and Exit\' for a safe exit.'}</p>
+                    <p>📊 <strong>{t.guideBasics5 || 'If Board Confidence drops, you might be fired!'}</strong></p>
                     <div className="bg-slate-900/50 p-3 rounded mt-3">
-                        <p className="text-yellow-400 font-bold mb-2">⚠️ Yönetim Güveni Etkileri:</p>
+                        <p className="text-yellow-400 font-bold mb-2">⚠️ {t.guideBoardEffectTitle || 'Board Confidence Effects:'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Galibiyet: +3 güven</li>
-                            <li>• Beraberlik: +0 güven</li>
-                            <li>• Mağlubiyet: -5 güven</li>
-                            <li>• %30 altına düşerse: Kovulursun!</li>
+                            <li>• {t.guideWinEffect || 'Win: +3 confidence'}</li>
+                            <li>• {t.guideDrawEffect || 'Draw: +0 confidence'}</li>
+                            <li>• {t.guideLossEffect || 'Loss: -5 confidence'}</li>
+                            <li>• {t.guideFireWarning || 'Below 30%: You get fired!'}</li>
                         </ul>
                     </div>
                 </div>
@@ -98,30 +98,30 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'squad',
-            title: '👥 Kadro Yönetimi',
+            title: `👥 ${t.guideSquadTitle || t.guideSquad || 'Squad Management'}`,
             icon: Users,
             color: 'blue',
             content: (
                 <div className="space-y-3">
-                    <p>⭐ Oyuncuları <strong>İlk 11</strong>, <strong>Yedek</strong> veya <strong>Rezerv</strong> olarak ayarla.</p>
-                    <p>🔄 Oyuncuyu tıkla ve başka biriyle değiştir.</p>
-                    <p>📍 Diziliş seçerek farklı formasyonlar dene.</p>
+                    <p>⭐ {t.guideSquad1 || 'Set players as Starting XI, Bench, or Reserves.'}</p>
+                    <p>🔄 {t.guideSquad2 || 'Click a player to swap with another.'}</p>
+                    <p>📍 {t.guideSquad3 || 'Try different formations by selecting a layout.'}</p>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">📊 OVR (Overall Rating) Nasıl Hesaplanır?</p>
+                        <p className="text-emerald-400 font-bold mb-2">📊 {t.guideOvrCalcTitle || 'How is OVR (Overall Rating) Calculated?'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• <strong>Pozisyon Uyumu:</strong> Doğru pozisyonda oynayan oyuncu daha yüksek OVR gösterir.</li>
-                            <li>• <strong>Moral Etkisi:</strong> 50+ moral = bonus, 50- moral = ceza</li>
-                            <li>• <strong>Kondisyon:</strong> 30% altı kondisyon = ciddi performans düşüşü</li>
+                            <li>• <strong>{t.guidePosMatch || 'Position Match: Players in correct positions show higher OVR.'}</strong></li>
+                            <li>• <strong>{t.guideMoraleEffect || 'Morale Effect: 50+ morale = bonus, 50- morale = penalty.'}</strong></li>
+                            <li>• <strong>{t.guideConEffect || 'Condition: Below 30% condition = serious performance drop.'}</strong></li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">❌ Sözleşme Fesih</p>
+                        <p className="text-red-400 font-bold mb-2">❌ {t.guideReleaseTitle || 'Contract Termination'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• İstemediğin oyuncuyu serbest bırakabilirsin.</li>
-                            <li>• <strong>Tazminat:</strong> Kalan yıl × Yıllık maaş × %50</li>
-                            <li>• Oyuncu serbest oyuncu olur.</li>
+                            <li>• {t.guideRelease1 || 'You can release unwanted players.'}</li>
+                            <li>• <strong>{t.guideRelease2 || 'Compensation: Remaining Years × Annual Wage × 50%'}</strong></li>
+                            <li>• {t.guideRelease3 || 'The player becomes a free agent.'}</li>
                         </ul>
                     </div>
                 </div>
@@ -129,60 +129,39 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'tactics',
-            title: '🎯 Taktik Sistemi (Detaylı)',
+            title: `🎯 ${t.guideTacticsTitle || t.guideTactics || 'Tactics System (Detailed)'}`,
             icon: Target,
             color: 'purple',
             content: (
                 <div className="space-y-4">
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-purple-400 font-bold mb-2">📐 Formasyonlar</p>
+                        <p className="text-purple-400 font-bold mb-2">📐 {t.formation || 'Formations'}</p>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div><strong>4-3-3:</strong> Dengeli, kanat ağırlıklı</div>
-                            <div><strong>4-4-2:</strong> Klasik, güvenli</div>
-                            <div><strong>4-2-3-1:</strong> Orta saha kontrolü</div>
-                            <div><strong>3-5-2:</strong> Orta saha dominantı</div>
-                            <div><strong>5-3-2:</strong> Savunmacı</div>
-                            <div><strong>4-1-4-1:</strong> Su sızdırmaz savunma</div>
+                            <div>{t.guideForm433 || '4-3-3: Balanced, wing-heavy.'}</div>
+                            <div>{t.guideForm442 || '4-4-2: Classic, safe.'}</div>
+                            <div>{t.guideForm4231 || '4-2-3-1: Midfield control.'}</div>
+                            <div>{t.guideForm352 || '3-5-2: Midfield dominant.'}</div>
+                            <div>{t.guideForm532 || '5-3-2: Defensive.'}</div>
+                            <div>{t.guideForm4141 || '4-1-4-1: Solid defense.'}</div>
                         </div>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-orange-400 font-bold mb-2">⚡ Oyun Stili</p>
+                        <p className="text-orange-400 font-bold mb-2">⚡ {t.style || 'Play Style'}</p>
                         <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-blue-400">Possession:</strong> Top tutma, kısa pas, sabırlı atak. Güçlü orta saha gerektirir.</li>
-                            <li><strong className="text-green-400">Counter:</strong> Savunup hızlı kontra. Hızlı forvetler ve orta sahalar gerektirir.</li>
-                            <li><strong className="text-red-400">HighPress:</strong> Yüksek baskı, rakibi kendi yarısında boğ. Yüksek stamina gerektirir!</li>
-                            <li><strong className="text-gray-400">ParkTheBus:</strong> 11 adam savunma, kontra bekle. Büyük takımlara karşı etkili.</li>
-                            <li><strong className="text-yellow-400">Balanced:</strong> Her şeyden biraz. Güvenli seçim.</li>
+                            <li><strong className="text-blue-400">Possession:</strong> {t.guideStylePoss || 'Ball retention, short passing, patient attack. Needs strong midfield.'}</li>
+                            <li><strong className="text-green-400">Counter:</strong> {t.guideStyleCounter || 'Defend and fast break. Needs fast forwards and midfielders.'}</li>
+                            <li><strong className="text-red-400">HighPress:</strong> {t.guideStylePress || 'High pressure, suffocate opponent. Requires high stamina!'}</li>
+                            <li><strong className="text-gray-400">ParkTheBus:</strong> {t.guideStyleBus || '11-man defense, wait for counter. Effective against big teams.'}</li>
+                            <li><strong className="text-yellow-400">Balanced:</strong> {t.guideStyleBal || 'A bit of everything. A safe choice.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">👊 Agresiflik</p>
+                        <p className="text-cyan-400 font-bold mb-2">📏 {t.width || 'Width'} & {t.passingStyle || 'Passing Style'}</p>
                         <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-green-400">Safe:</strong> Daha az faul, daha az sarı kart. Kontrollü oyun.</li>
-                            <li><strong className="text-yellow-400">Normal:</strong> Dengeli yaklaşım.</li>
-                            <li><strong className="text-red-400">Aggressive:</strong> Sert müdahaleler, daha fazla top kazanma ama kart riski yüksek!</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-cyan-400 font-bold mb-2">📏 Genişlik & Pas Stili</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong>Dar (Narrow):</strong> Ortadan oyna. İç oyuncular için ideal.</li>
-                            <li><strong>Geniş (Wide):</strong> Kanatları kullan. Hızlı kanat oyuncuları gerektirir.</li>
-                            <li><strong>Kısa Pas (Short):</strong> Kontrol, az risk, yavaş ilerleme.</li>
-                            <li><strong>Direkt Pas (Direct):</strong> Hızlı ileri paslar, şans yaratır.</li>
-                            <li><strong>Uzun Top (LongBall):</strong> Direk forvetlere, boylu forvet gerektirir.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-pink-400 font-bold mb-2">🛡️ Savunma Hattı</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong>Derin (Deep):</strong> Kendi yarında bekle. Kontra stili için uygun.</li>
-                            <li><strong>Dengeli (Balanced):</strong> Ne çok önde ne çok geride.</li>
-                            <li><strong>Yüksek (High):</strong> Rakibi kendi yarısına hapsET. Ofsayt tuzağı, riskli!</li>
+                            <li><strong>{t.guideWidthNarrow || 'Narrow: Play through middle. Ideal for central players.'}</strong></li>
+                            <li><strong>{t.guideWidthWide || 'Wide: Use the wings. Requires fast wingers.'}</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -190,38 +169,23 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'training',
-            title: '🏋️ Antrenman Sistemi',
+            title: `🏋️ ${t.guideTrainingTitle || t.guideTraining || 'Training System'}`,
             icon: Dumbbell,
             color: 'orange',
             content: (
                 <div className="space-y-3">
-                    <p>📈 <strong>Sadece 28 yaş altı</strong> oyuncular gelişebilir!</p>
-                    <p>⚠️ Gelişim <strong>şansa bağlıdır</strong> - her hafta garantili değil.</p>
+                    <p>📈 <strong>{t.guideTrainAge || 'Only players under 28 can develop!'}</strong></p>
+                    <p>⚠️ {t.guideTrainLuck || 'Development is luck-based - not guaranteed every week.'}</p>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-orange-400 font-bold mb-2">🎯 Antrenman Odakları</p>
+                        <p className="text-orange-400 font-bold mb-2">🎯 {t.guideTrainFocus || 'Training Focuses'}</p>
                         <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-yellow-400">Dengeli:</strong> Tüm özellikler eşit şans.</li>
-                            <li><strong className="text-red-400">Hücum:</strong> Bitiricilik, Şut, Dribling gelişir.</li>
-                            <li><strong className="text-blue-400">Savunma:</strong> Müdahale, Pozisyon, Güç gelişir.</li>
-                            <li><strong className="text-green-400">Fiziksel:</strong> Hız, Dayanıklılık, Güç gelişir.</li>
-                            <li><strong className="text-purple-400">Teknik:</strong> Pas, Dribling, Vizyon gelişir.</li>
-                            <li><strong className="text-emerald-400">Mevkiye Göre (YENİ!):</strong> Otomatik pozisyon bazlı:</li>
-                        </ul>
-                        <div className="mt-2 pl-4 text-xs text-slate-400">
-                            <p>• <strong>Forvet:</strong> Bitiricilik, Dribling, Hız</p>
-                            <p>• <strong>Orta Saha:</strong> Pas, Vizyon, Dayanıklılık</p>
-                            <p>• <strong>Defans:</strong> Müdahale, Pozisyon, Güç</p>
-                            <p>• <strong>Kaleci:</strong> Kalecilik, Soğukkanlılık, Güç</p>
-                        </div>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-cyan-400 font-bold mb-2">💪 Antrenman Yoğunluğu</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong>Hafif:</strong> +15 kondisyon, yavaş gelişim</li>
-                            <li><strong>Normal:</strong> +10 kondisyon, orta gelişim</li>
-                            <li><strong>Ağır:</strong> +5 kondisyon, hızlı gelişim (sakatlık riski!)</li>
+                            <li><strong className="text-yellow-400">{t.guideTrainFocusBal || 'Balanced: Equal chance for all attributes.'}</strong></li>
+                            <li><strong className="text-red-400">{t.guideTrainFocusAtt || 'Attack: Finishing, Shooting, Dribbling improves.'}</strong></li>
+                            <li><strong className="text-blue-400">{t.guideTrainFocusDef || 'Defense: Tackling, Positioning, Strength improves.'}</strong></li>
+                            <li><strong className="text-green-400">{t.guideTrainFocusPhy || 'Physical: Pace, Stamina, Strength improves.'}</strong></li>
+                            <li><strong className="text-purple-400">{t.guideTrainFocusTec || 'Technical: Passing, Dribbling, Vision improves.'}</strong></li>
+                            <li><strong className="text-emerald-400">{t.guideTrainPosBased || 'By Position (NEW!): Automatically based on role.'}</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -229,157 +193,74 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'facilities',
-            title: '🏟️ Tesisler & Personel (Detaylı)',
+            title: `🏟️ ${t.guideFacilitiesTitle || t.guideFacilities || 'Facilities & Staff'}`,
             icon: Building2,
             color: 'cyan',
             content: (
                 <div className="space-y-4">
-                    <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">🏗️ Yükseltme Maliyetleri (25 Level)</p>
-                        <table className="w-full text-xs">
-                            <thead>
-                                <tr className="text-slate-400">
-                                    <th className="text-left">Level</th>
-                                    <th className="text-right">Stadyum</th>
-                                    <th className="text-right">Antrenman</th>
-                                    <th className="text-right">Akademi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-slate-300">
-                                <tr><td>1→2</td><td className="text-right">~€1.7M</td><td className="text-right">~€1.3M</td><td className="text-right">~€1.1M</td></tr>
-                                <tr><td>10→11</td><td className="text-right">~€9M</td><td className="text-right">~€7M</td><td className="text-right">~€5.5M</td></tr>
-                                <tr><td>24→25</td><td className="text-right text-yellow-400 font-bold">~€22M</td><td className="text-right text-yellow-400 font-bold">~€16M</td><td className="text-right text-yellow-400 font-bold">~€13M</td></tr>
-                            </tbody>
-                        </table>
-                        <p className="text-xs text-slate-400 mt-2">💡 Türkiye ve Fransa liglerinde %30 bakım indirimi var!</p>
-                    </div>
-
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-blue-400 font-bold mb-2">🏟️ Stadyum</p>
+                        <p className="text-blue-400 font-bold mb-2">🏟️ {t.stadium || 'Stadium'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Her level = +6,000 kapasite</li>
-                            <li>• Daha fazla seyirci = daha fazla bilet geliri</li>
-                            <li>• İtibar arttıkça doluluk oranı artar</li>
+                            <li>• {t.guideStadiumEffect || 'Each level = +6,000 capacity. More fans = more ticket revenue.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-green-400 font-bold mb-2">🏋️ Antrenman Merkezi</p>
+                        <p className="text-green-400 font-bold mb-2">🏋️ {t.trainingCenter || 'Training Center'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Oyuncu gelişim hızı artar</li>
-                            <li>• Daha yüksek potansiyele ulaşma şansı</li>
+                            <li>• {t.guideTrainingEffect || 'Training Center: Increases player growth speed and potential reach chance.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-yellow-900/20 border border-yellow-500/30 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">⚽ Akademi vs Scout - FARK NE?</p>
-                        <table className="w-full text-xs mt-2">
-                            <thead>
-                                <tr className="text-slate-400">
-                                    <th className="text-left">Özellik</th>
-                                    <th className="text-center">Scout</th>
-                                    <th className="text-center">Akademi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-slate-300">
-                                <tr>
-                                    <td>Genç Bulma Şansı</td>
-                                    <td className="text-center text-emerald-400">+%1/level</td>
-                                    <td className="text-center text-blue-400">+%0.5/level</td>
-                                </tr>
-                                <tr>
-                                    <td>Potansiyel Bonus</td>
-                                    <td className="text-center text-emerald-400">+2/level</td>
-                                    <td className="text-center text-blue-400">+1/level</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p className="text-xs text-slate-400 mt-2">
-                            📊 <strong>Formül:</strong> Genç şansı = %3 + (Scout×%1) + (Akademi×%0.5)
-                        </p>
-                        <p className="text-xs text-slate-400">
-                            ⭐ <strong>Potansiyel:</strong> Base + (Scout×2) + (Akademi×1)
-                        </p>
-                        <p className="text-xs text-emerald-400 mt-1">
-                            💡 <strong>Tavsiye:</strong> Scout daha etkili, önce onu yükselt!
-                        </p>
+                        <p className="text-yellow-400 font-bold mb-2">⚽ {t.guideScoutVsAcad || 'Scout vs Academy: Scouts are more effective for finding potential, upgrade them first!'}</p>
                     </div>
                 </div>
             )
         },
         {
             id: 'morale',
-            title: '😊 Moral Sistemi',
+            title: `😊 ${t.guideMoraleTitle || t.guideMorale || 'Morale System'}`,
             icon: Heart,
             color: 'pink',
             content: (
                 <div className="space-y-3">
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-pink-400 font-bold mb-2">📊 Haftalık Moral Değişimleri</p>
+                        <p className="text-pink-400 font-bold mb-2">📊 {t.guideMoraleTitle || 'Weekly Morale Changes'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong className="text-emerald-400">İlk 11:</strong> +2 moral</li>
-                            <li><strong className="text-yellow-400">Yedek:</strong> Değişmez</li>
-                            <li><strong className="text-red-400">Rezerv (75+ OVR):</strong> -3 moral ❗</li>
-                            <li><strong className="text-orange-400">Rezerv (65-75 OVR):</strong> -1 moral</li>
-                            <li><strong className="text-slate-400">Rezerv (65- OVR):</strong> Değişmez</li>
+                            <li><strong className="text-emerald-400">{t.guideMoraleXI || 'Starting XI: +2 morale'}</strong></li>
+                            <li><strong className="text-yellow-400">{t.guideMoraleBench || 'Bench: No change'}</strong></li>
+                            <li><strong className="text-red-400">{t.guideMoraleRes75 || 'Reserve (75+ OVR): -3 morale!'}</strong></li>
+                            <li><strong className="text-orange-400">{t.guideMoraleRes65 || 'Reserve (65-75 OVR): -1 morale'}</strong></li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-purple-400 font-bold mb-2">🗣️ Oyuncu Etkileşimleri</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-green-400">Öv:</strong> Form 7+ veya moral 60- ise etkili. +5 ile +10 arası.</li>
-                            <li><strong className="text-red-400">Eleştir:</strong> Riskli! Profesyonel oyuncular tepki vermez, diğerleri moral kaybedebilir.</li>
-                            <li><strong className="text-blue-400">Motive Et:</strong> Düşük moralli oyuncular için. +3 ile +8 arası.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">⚡ Moral → Performans Etkisi</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong>100 moral:</strong> +%5 OVR bonus</li>
-                            <li><strong>50 moral:</strong> Normal performans</li>
-                            <li><strong>0 moral:</strong> -%10 OVR ceza!</li>
-                        </ul>
+                        <p className="text-yellow-400 font-bold mb-2">⚡ {t.guideMoralePerform || '100 Morale: +5% OVR bonus. 0 Morale: -10% OVR penalty!'}</p>
                     </div>
                 </div>
             )
         },
         {
             id: 'transfers',
-            title: '💰 Transfer Sistemi',
+            title: `💰 ${t.guideTransferTitle || t.guideTransfers || 'Transfer System'}`,
             icon: DollarSign,
             color: 'yellow',
             content: (
                 <div className="space-y-3">
-                    <p>🛒 <strong>Transfer Pazarı:</strong> Tüm liglerdeki oyuncuları gör ve teklif yap.</p>
-
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">💵 Pazarlık Sistemi</p>
+                        <p className="text-yellow-400 font-bold mb-2">💵 {t.guideTransferTitle || 'Negotiation System'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Transfer listesindeki oyuncular daha ucuza gelir.</li>
-                            <li>• Transfer listesinde olmayan oyuncular için %20-50 fazla iste.</li>
-                            <li>• "Israr Et" butonu riskli - görüşme kopabilir!</li>
-                            <li>• Sabır göster, tekrar teklif yap.</li>
+                            <li>• {t.guideTransList || 'Players on transfer list are cheaper.'}</li>
+                            <li>• {t.guideTransUnlisted || 'Expect to pay 20-50% more for unlisted players.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">🌟 Alt Yapı (Ucuz!)</p>
+                        <p className="text-emerald-400 font-bold mb-2">🌟 {t.guideYouthTitle || 'Youth Academy (Cheap!)'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Genç oyuncular €50K değerinde gelir</li>
-                            <li>• Maaş: Sadece €25K/yıl</li>
-                            <li>• Potansiyel yüksekse büyük kar sağlar!</li>
-                            <li>• Milliyet: Ligin ülkesine göre (%70 yerel)</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">📤 Oyuncu Satışı</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Transfer listesine koy → AI takımlar teklif yapar</li>
-                            <li>• Mesajlardan teklifleri takip et</li>
-                            <li>• Kabul/Red seçenekleri</li>
+                            <li>• {t.guideYouth1 || 'Young players come at €50K value.'}</li>
+                            <li>• {t.guideYouth2 || 'Wage: Only €25K/year.'}</li>
                         </ul>
                     </div>
                 </div>
@@ -387,36 +268,17 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'finances',
-            title: '💵 Finans Yönetimi',
+            title: `💵 ${t.guideFinanceTitle || t.guideFinance || 'Finance Management'}`,
             icon: Building2,
             color: 'green',
             content: (
                 <div className="space-y-3">
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-green-400 font-bold mb-2">📈 Gelir Kaynakları</p>
+                        <p className="text-yellow-400 font-bold mb-2">🤝 {t.sponsorTitle || 'Sponsor Types'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong>Bilet Geliri:</strong> Kapasite × Doluluk × Bilet Fiyatı</li>
-                            <li><strong>Sponsor:</strong> Haftalık sabit + galibiyet primi</li>
-                            <li><strong>Transfer:</strong> Oyuncu satışları</li>
-                            <li><strong>Avrupa:</strong> Kupa maçları ek gelir sağlar</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">📉 Gider Kaynakları</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong>Maaşlar:</strong> Tüm oyuncuların haftalık maaşları</li>
-                            <li><strong>Bakım:</strong> Stadyum + Tesisler</li>
-                            <li><strong>Transferler:</strong> Oyuncu alımları</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">🤝 Sponsor Türleri</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong className="text-green-400">Garantili:</strong> Yüksek sabit, düşük bonus. Güvenli.</li>
-                            <li><strong className="text-yellow-400">Dengeli:</strong> Orta sabit, orta bonus.</li>
-                            <li><strong className="text-red-400">Riskli:</strong> Düşük sabit, yüksek bonus. Çok kazanırsan karlı!</li>
+                            <li><strong className="text-green-400">{t.guideSponsorG || 'Guaranteed: High fixed, low bonus. Safe.'}</strong></li>
+                            <li><strong className="text-yellow-400">{t.guideSponsorD || 'Balanced: Mid fixed, mid bonus.'}</strong></li>
+                            <li><strong className="text-red-400">{t.guideSponsorR || 'Risky: Low fixed, high bonus. Profitable if you win!'}</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -424,26 +286,26 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'european',
-            title: '🏆 Avrupa Kupaları',
+            title: `🏆 ${t.guideEuroTitle || t.guideEuropean || 'European Cups'}`,
             icon: Trophy,
             color: 'amber',
             content: (
                 <div className="space-y-3">
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-amber-400 font-bold mb-2">🎫 Katılım Şartları</p>
+                        <p className="text-amber-400 font-bold mb-2">🎫 {t.guideEuroReq || 'Participation Requirements'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong>Şampiyonlar Ligi:</strong> Lig 1. ve 2.si</li>
-                            <li><strong>UEFA Avrupa Ligi:</strong> Lig 3. ve 4.sü</li>
+                            <li><strong>{t.guideEuroCL || 'Champions League: 1st and 2nd in League'}</strong></li>
+                            <li><strong>{t.guideEuroEL || 'UEFA Europa League: 3rd and 4th in League'}</strong></li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-blue-400 font-bold mb-2">📊 Turnuva Formatı</p>
+                        <p className="text-blue-400 font-bold mb-2">📊 {t.guideEuroFormat || 'Tournament Format'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Grup aşaması: 4 takımlı gruplar</li>
-                            <li>• İlk 2 eleme turuna geçer</li>
-                            <li>• Çeyrek final, yarı final, final</li>
-                            <li>• Tek maç eleme sistemi</li>
+                            <li>• {t.guideEuroGroups || 'Group Stage: groups of 4 teams'}</li>
+                            <li>• {t.guideEuroAdv || 'Top 2 advance to knockout stage'}</li>
+                            <li>• {t.guideEuroKO || 'Quarter-final, semi-final, final'}</li>
+                            <li>• {t.guideEuroSingle || 'Single-leg knockout system'}</li>
                         </ul>
                     </div>
                 </div>
@@ -451,41 +313,41 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
         },
         {
             id: 'tips',
-            title: '💡 Pro İpuçları',
+            title: `💡 ${t.guideProTipsTitle || t.guideTips || 'Pro Tips'}`,
             icon: Brain,
             color: 'violet',
             content: (
                 <div className="space-y-3">
                     <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">✅ Yapılması Gerekenler</p>
+                        <p className="text-emerald-400 font-bold mb-2">✅ {t.guideTipsDos || 'Dos'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Her pozisyonda en az 2 oyuncu bulundur.</li>
-                            <li>• Genç oyunculara şans ver - gelişirler!</li>
-                            <li>• Scout'u önce yükselt (daha etkili).</li>
-                            <li>• Alt yapı gençlerini sat - çok karlı!</li>
-                            <li>• Rakibe göre taktik değiştir.</li>
-                            <li>• Yorgun oyuncuları dinlendir.</li>
+                            <li>• {t.guideTipsDo1 || 'Have at least 2 players in every position.'}</li>
+                            <li>• {t.guideTipsDo2 || 'Give young players a chance - they develop!'}</li>
+                            <li>• {t.guideTipsDo3 || 'Upgrade the Scout first (it\'s more effective).'}</li>
+                            <li>• {t.guideTipsDo4 || 'Sell youth academy prospects - very profitable!'}</li>
+                            <li>• {t.guideTipsDo5 || 'Change tactics according to the opponent.'}</li>
+                            <li>• {t.guideTipsDo6 || 'Rest your tired players.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-red-900/20 border border-red-500/30 p-3 rounded">
-                        <p className="text-red-400 font-bold mb-2">❌ Kaçınılması Gerekenler</p>
+                        <p className="text-red-400 font-bold mb-2">❌ {t.guideTipsDonts || 'Don\'ts'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• Yüksek OVR oyuncuları sürekli rezervde tutma.</li>
-                            <li>• Bütçeni aşan transferler yapma.</li>
-                            <li>• Tek formasyona bağlı kalma.</li>
-                            <li>• Sakatlıkları görmezden gelme.</li>
-                            <li>• Sözleşmelerin bitmesine izin verme.</li>
+                            <li>• {t.guideTipsDont1 || 'Don\'t keep high OVR players in reserves constantly.'}</li>
+                            <li>• {t.guideTipsDont2 || 'Don\'t make transfers exceeding your budget.'}</li>
+                            <li>• {t.guideTipsDont3 || 'Don\'t stick to only one formation.'}</li>
+                            <li>• {t.guideTipsDont4 || 'Don\'t ignore injuries.'}</li>
+                            <li>• {t.guideTipsDont5 || 'Don\'t let contracts expire.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded">
-                        <p className="text-blue-400 font-bold mb-2">🎯 Taktik İpuçları</p>
+                        <p className="text-blue-400 font-bold mb-2">🎯 {t.guideTipsTactical || 'Tactical Tips'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• <strong>Güçlü rakip:</strong> ParkTheBus + Counter</li>
-                            <li>• <strong>Zayıf rakip:</strong> HighPress + Possession</li>
-                            <li>• <strong>Önde skorken:</strong> Safe agresiflik</li>
-                            <li>• <strong>Gerideyken:</strong> Aggressive + Hızlı tempo</li>
+                            <li>• <strong>{t.guideTipStrong || 'Strong Opponent: ParkTheBus + Counter'}</strong></li>
+                            <li>• <strong>{t.guideTipWeak || 'Weak Opponent: HighPress + Possession'}</strong></li>
+                            <li>• <strong>{t.guideTipWinning || 'When Winning: Safe aggression'}</strong></li>
+                            <li>• <strong>{t.guideTipLosing || 'When Losing: Aggressive + Fast tempo'}</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -503,8 +365,8 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                 <div className="flex items-center gap-3 mb-2">
                     <BookOpen className="text-emerald-500" size={28} />
                     <div>
-                        <h2 className="text-2xl font-bold text-white">{t.gameGuide || 'Oyun Rehberi'}</h2>
-                        <p className="text-slate-400 text-sm">Oyunun tüm mekaniklerini detaylı öğren!</p>
+                        <h2 className="text-2xl font-bold text-white">{t.gameGuide || 'Game Guide'}</h2>
+                        <p className="text-slate-400 text-sm">{t.guideUnderDevDesc || 'Learn all the game mechanics in detail!'}</p>
                     </div>
                 </div>
             </div>

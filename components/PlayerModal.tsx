@@ -92,7 +92,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                             <div className="font-bold text-xs text-blue-400">{player.stats?.assists || 0}</div>
                         </div>
                         <div className="text-center border-l border-slate-800/50">
-                            <div className="text-[9px] uppercase text-slate-500">Cards</div>
+                            <div className="text-[9px] uppercase text-slate-500">{t.cards}</div>
                             <div className="font-bold text-xs text-yellow-500">{player.stats?.yellowCards || 0}</div>
                         </div>
                     </div>
@@ -259,7 +259,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                                         <tr>
                                             <th className="p-2">Season</th>
                                             <th className="p-2">Team</th>
-                                            <th className="p-2 text-center">Apps</th>
+                                            <th className="p-2 text-center">{t.apps}</th>
                                             <th className="p-2 text-center">Gls</th>
                                             <th className="p-2 text-center">Ast</th>
                                             <th className="p-2 text-center">Yel</th>

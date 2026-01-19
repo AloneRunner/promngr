@@ -145,15 +145,15 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">Formasyon</span>
+                                <span className="text-slate-500 text-xs">{t.formation || 'Formation'}</span>
                                 <div className="text-blue-400 font-mono font-bold">{opponentFormation}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">Oyun Stili</span>
+                                <span className="text-slate-500 text-xs">{t.playStyle || 'Play Style'}</span>
                                 <div className="text-purple-400 font-bold">{TACTIC_TR[opponentStyle] || opponentStyle}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">Agresiflik</span>
+                                <span className="text-slate-500 text-xs">{t.aggressiveness || 'Aggressiveness'}</span>
                                 <div className="text-orange-400 font-bold">{TACTIC_TR[opponentAggression] || opponentAggression}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded">
@@ -175,7 +175,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                             <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Users className="text-blue-400" size={16} />
-                                    <span className="text-slate-400 text-xs uppercase font-bold">Formasyon</span>
+                                    <span className="text-slate-400 text-xs uppercase font-bold">{t.formation || 'Formation'}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-2xl font-bold text-blue-400">{formationAdvice.formation}</span>
@@ -188,7 +188,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                             <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Footprints className="text-purple-400" size={16} />
-                                    <span className="text-slate-400 text-xs uppercase font-bold">Oyun Stili</span>
+                                    <span className="text-slate-400 text-xs uppercase font-bold">{t.playStyle || 'Play Style'}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-xl font-bold text-purple-400">{TACTIC_TR[styleAdvice.style]}</span>
@@ -201,7 +201,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                                 <div className="bg-slate-900/50 rounded-lg p-3">
                                     <div className="flex items-center gap-1 mb-1">
                                         <Gauge className="text-orange-400" size={14} />
-                                        <span className="text-slate-400 text-[10px] uppercase font-bold">Agresiflik</span>
+                                        <span className="text-slate-400 text-[10px] uppercase font-bold">{t.aggressiveness || 'Aggressiveness'}</span>
                                     </div>
                                     <span className="text-lg font-bold text-orange-400">{TACTIC_TR[styleAdvice.aggression]}</span>
                                 </div>

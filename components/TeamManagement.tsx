@@ -133,11 +133,11 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                     <div className="font-bold text-white mb-1">Moral: {player.morale}%</div>
                     <div className="space-y-0.5 text-slate-400">
                         {player.playedThisWeek && <div className="text-emerald-400">✅ Bu hafta maçta oynadı (+2)</div>}
-                        {!player.playedThisWeek && player.lineup === 'STARTING' && <div className="text-emerald-400">✓ 11'de oynuyor (+2/hafta)</div>}
-                        {!player.playedThisWeek && player.lineup === 'BENCH' && <div className="text-blue-400">🪑 Yedek (stabil - oyuna girecek)</div>}
-                        {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ Kadro dışı, yıldız oyuncu (-3/hafta)</div>}
-                        {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ Kadro dışı (-1/hafta)</div>}
-                        {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 Kadro dışı (stabil)</div>}
+                        {!player.playedThisWeek && player.lineup === 'STARTING' && <div className="text-emerald-400">✓ {t.playingXIBonus || 'Playing in Starting XI (+2/week)'}</div>}
+                        {!player.playedThisWeek && player.lineup === 'BENCH' && <div className="text-blue-400">🪑 {t.benchStable || 'On bench (stable - ready to play)'}</div>}
+                        {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ {t.reserveStarPenalty || 'Reserve, star player (-3/week)'}</div>}
+                        {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ {t.reserveMediumPenalty || 'Reserve (-1/week)'}</div>}
+                        {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 {t.reserveStable || 'Reserve (stable)'}</div>}
                         {player.weeksInjured > 0 && <div className="text-orange-400">🏥 Sakat ({player.weeksInjured} hafta)</div>}
                         {player.matchSuspension > 0 && <div className="text-red-400">🟥 Cezalı ({player.matchSuspension} maç)</div>}
                         {player.form > 7 && <div className="text-emerald-400">🔥 İyi form ({player.form}/10)</div>}
@@ -148,7 +148,7 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                     {/* Moral History - Son değişiklikler */}
                     {player.moraleHistory && player.moraleHistory.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-slate-700">
-                            <div className="text-[9px] text-slate-500 mb-1">Son Moral Değişimleri:</div>
+                            <div className="text-[9px] text-slate-500 mb-1">{t.lastMoraleChanges || 'Last Morale Changes'}:</div>
                             {player.moraleHistory.slice(-3).reverse().map((h, i) => (
                                 <div key={i} className={`text-[9px] ${h.change > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
                                     Hafta {h.week}: {h.change > 0 ? '+' : ''}{h.change} ({h.reason})
@@ -405,8 +405,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                                 key={s.value}
                                                 onClick={() => handleTacticChange('style', s.value)}
                                                 className={`px-1 py-1 text-[9px] font-bold rounded border transition-all ${(team.tactic.style || 'Balanced') === s.value
-                                                        ? 'bg-emerald-600 text-white border-emerald-500'
-                                                        : 'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600'
+                                                    ? 'bg-emerald-600 text-white border-emerald-500'
+                                                    : 'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600'
                                                     }`}
                                             >
                                                 {s.label}

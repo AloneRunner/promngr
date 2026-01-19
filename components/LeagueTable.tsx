@@ -85,6 +85,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
         { id: 'fr', name: '🇫🇷 Ligue 1' },
         { id: 'de', name: '🇩🇪 Bundesliga' },
         { id: 'ar', name: '🇦🇷 Liga Profesional' },
+        { id: 'br', name: '🇧🇷 Série A' },
     ];
 
     return (
@@ -139,13 +140,13 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                         onClick={() => setTab('RATING')}
                         className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'RATING' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        ⭐ <span className="hidden sm:inline">Rating</span><span className="sm:hidden">Puan</span>
+                        ⭐ <span className="hidden sm:inline">{t.rating}</span><span className="sm:hidden">{t.rating}</span>
                     </button>
                     <button
                         onClick={() => setTab('HISTORY')}
                         className={`px-2 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2 transition-all whitespace-nowrap ${tab === 'HISTORY' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
                     >
-                        <History size={14} /> <span className="hidden sm:inline">History</span>
+                        <History size={14} /> <span className="hidden sm:inline">{t.history}</span>
                     </button>
                 </div>
             </div>
@@ -162,7 +163,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                 <th className="px-2 py-2 md:px-6 md:py-3 text-center">{t.d}</th>
                                 <th className="px-2 py-2 md:px-6 md:py-3 text-center">{t.l}</th>
                                 <th className="px-2 py-2 md:px-6 md:py-3 text-center font-bold text-slate-300">{t.gd}</th>
-                                <th className="px-6 py-3 text-center hidden md:table-cell">Form</th>
+                                <th className="px-6 py-3 text-center hidden md:table-cell">{t.form}</th>
                                 <th className="px-3 py-2 md:px-6 md:py-3 text-center font-bold text-white bg-slate-700/30">{t.pts}</th>
                             </tr>
                         </thead>
@@ -207,7 +208,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                         <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
                             <tr>
                                 <th className="px-6 py-3">{t.pos}</th>
-                                <th className="px-6 py-3">Player</th>
+                                <th className="px-6 py-3">{t.player}</th>
                                 <th className="px-6 py-3">{t.team}</th>
                                 <th className="px-6 py-3 text-center">{tab === 'GOALS' ? t.goals : t.assists}</th>
                                 <th className="px-6 py-3 text-center">{t.apps}</th>
@@ -237,7 +238,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                             })}
                             {((tab === 'GOALS' && topScorers.length === 0) || (tab === 'ASSISTS' && topAssists.length === 0)) && (
                                 <tr>
-                                    <td colSpan={5} className="text-center py-10 text-slate-500">No stats recorded yet.</td>
+                                    <td colSpan={5} className="text-center py-10 text-slate-500">{t.noStatsYet}</td>
                                 </tr>
                             )}
                         </tbody>
@@ -250,12 +251,12 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                         <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
                             <tr>
                                 <th className="px-4 py-3">#</th>
-                                <th className="px-4 py-3">Oyuncu</th>
+                                <th className="px-4 py-3">{t.player}</th>
                                 <th className="px-4 py-3">{t.team}</th>
                                 <th className="px-4 py-3 text-center">{t.pos}</th>
                                 <th className="px-4 py-3 text-center">⚽</th>
                                 <th className="px-4 py-3 text-center">🅰️</th>
-                                <th className="px-4 py-3 text-center hidden md:table-cell">Maç</th>
+                                <th className="px-4 py-3 text-center hidden md:table-cell">{t.matches}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-700">
@@ -281,7 +282,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                 );
                             })}
                             {seasonPerformers.length === 0 && (
-                                <tr><td colSpan={7} className="text-center py-10 text-slate-500">Henüz istatistik yok.</td></tr>
+                                <tr><td colSpan={7} className="text-center py-10 text-slate-500">{t.noStatsYet}</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -293,13 +294,13 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                         <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
                             <tr>
                                 <th className="px-4 py-3">#</th>
-                                <th className="px-4 py-3">Oyuncu</th>
+                                <th className="px-4 py-3">{t.player}</th>
                                 <th className="px-4 py-3">{t.team}</th>
                                 <th className="px-4 py-3 text-center">{t.pos}</th>
-                                <th className="px-4 py-3 text-center">Rating</th>
+                                <th className="px-4 py-3 text-center">{t.rating}</th>
                                 <th className="px-4 py-3 text-center">⚽</th>
                                 <th className="px-4 py-3 text-center">🅰️</th>
-                                <th className="px-4 py-3 text-center hidden md:table-cell">Maç</th>
+                                <th className="px-4 py-3 text-center hidden md:table-cell">{t.matches}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-700">
@@ -333,7 +334,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                 );
                             })}
                             {topRatedPlayers.length === 0 && (
-                                <tr><td colSpan={8} className="text-center py-10 text-slate-500">Henüz yeterli maç oynanmadı.</td></tr>
+                                <tr><td colSpan={8} className="text-center py-10 text-slate-500">{t.notEnoughMatches}</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -361,25 +362,25 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                 <div className="bg-gradient-to-br from-yellow-900/20 to-slate-800 border border-yellow-600/30 rounded-xl p-4">
                                     <div className="flex items-center gap-3 mb-4">
                                         <Trophy className="text-yellow-500" size={24} />
-                                        <span className="text-lg font-bold text-white">Kupa Dolabı</span>
+                                        <span className="text-lg font-bold text-white">{t.trophyCabinet}</span>
                                     </div>
 
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-yellow-500/20">
                                             <div className="text-3xl font-black text-yellow-400">{userChampionships}</div>
-                                            <div className="text-[10px] text-slate-400 uppercase">Şampiyonluk</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">{t.championship}</div>
                                         </div>
                                         <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-slate-500/20">
                                             <div className="text-3xl font-black text-slate-300">{userSecondPlaces}</div>
-                                            <div className="text-[10px] text-slate-400 uppercase">İkincilik</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">{t.runnerUp}</div>
                                         </div>
                                         <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-emerald-500/20">
                                             <div className="text-3xl font-black text-emerald-400">{userTopScorerSeasons}</div>
-                                            <div className="text-[10px] text-slate-400 uppercase">Gol Kralı</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">{t.scorerKing}</div>
                                         </div>
                                         <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-blue-500/20">
                                             <div className="text-3xl font-black text-blue-400">{history.length}</div>
-                                            <div className="text-[10px] text-slate-400 uppercase">Sezon</div>
+                                            <div className="text-[10px] text-slate-400 uppercase">{t.season}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +390,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                         {/* Season History */}
                         <div>
                             <div className="text-sm font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
-                                <History size={16} /> Sezon Geçmişi
+                                <History size={16} /> {t.seasonHistory}
                             </div>
 
                             {(() => {
@@ -400,7 +401,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                     return (
                                         <div className="text-center py-12 text-slate-500 bg-slate-800/50 rounded-lg">
                                             <History className="mx-auto mb-2 text-slate-600" size={32} />
-                                            Henüz geçmiş yok. Bir sezon tamamlayın!
+                                            {t.noHistoryYet}
                                         </div>
                                     );
                                 }
@@ -426,7 +427,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                                         <div className="flex items-center gap-4 flex-1">
                                                             <div className="text-center">
                                                                 <div className="text-2xl font-black text-slate-500">{entry.season}</div>
-                                                                <div className="text-[9px] text-slate-600 uppercase">Sezon</div>
+                                                                <div className="text-[9px] text-slate-600 uppercase">{t.season}</div>
                                                             </div>
 
                                                             <div className="flex items-center gap-3">
@@ -438,7 +439,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                                                     <Crown size={18} fill="currentColor" className="text-yellow-200" />
                                                                 </div>
                                                                 <div>
-                                                                    <div className="text-[10px] text-slate-500 uppercase">Şampiyon</div>
+                                                                    <div className="text-[10px] text-slate-500 uppercase">{t.champion}</div>
                                                                     <div className={`font-bold ${isUserChampion ? 'text-yellow-400' : 'text-white'}`}>
                                                                         {entry.championName}
                                                                         {isUserChampion && <span className="ml-2 text-xs">🏆</span>}
@@ -450,18 +451,18 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                                         {/* Stats Grid */}
                                                         <div className="grid grid-cols-3 gap-3 text-xs md:gap-6">
                                                             <div className="text-center md:text-left">
-                                                                <div className="text-slate-500 text-[10px] uppercase">2. Sıra</div>
+                                                                <div className="text-slate-500 text-[10px] uppercase">{t.runnerUp}</div>
                                                                 <div className="font-semibold text-slate-300 truncate max-w-[80px]">{entry.runnerUpName}</div>
                                                             </div>
                                                             <div className="text-center md:text-left">
                                                                 <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
-                                                                    <Target size={10} /> Gol Kralı
+                                                                    <Target size={10} /> {t.scorerKing}
                                                                 </div>
                                                                 <div className="font-semibold text-emerald-400 truncate max-w-[80px]">{entry.topScorer}</div>
                                                             </div>
                                                             <div className="text-center md:text-left">
                                                                 <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
-                                                                    <Award size={10} /> Asist Kralı
+                                                                    <Award size={10} /> {t.assistKing}
                                                                 </div>
                                                                 <div className="font-semibold text-blue-400 truncate max-w-[80px]">{entry.topAssister}</div>
                                                             </div>

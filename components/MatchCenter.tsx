@@ -159,6 +159,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // Cache for jersey numbers
     const playerNumbers = useRef<Record<string, number>>({});
 
+
+
     // === STALE CLOSURE FIX ===
     // Refs to store latest props for use in setInterval (prevents stale closure)
     const matchRef = useRef(match);
@@ -562,10 +564,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             drawPitch(ctx);
         }
 
-        // Filter Players on Pitch
-        const homeStarters = homePlayers.filter(p => p.lineup === 'STARTING');
-        const awayStarters = awayPlayers.filter(p => p.lineup === 'STARTING');
-        const allPlayers = [...homeStarters, ...awayStarters];
+        // FIX: Get players directly from simulation state, not stale cache!
+        // The simulation knows exactly who's on the pitch after substitutions
+        const simPlayerIds = Object.keys(nextState.players || {});
+        const allPlayers = [...homePlayersRef.current, ...awayPlayersRef.current].filter(
+            p => simPlayerIds.includes(p.id)
+        );
 
         // Prepare Render Queue (Sort by Y for simple depth)
         const renderQueue = allPlayers.map(p => {
@@ -1578,6 +1582,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <button onClick={() => setSpeed(0.5)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 0.5 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>0.5</button>
                         <button onClick={() => setSpeed(1)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 1 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>1x</button>
                         <button onClick={() => setSpeed(2)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 2 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>2x</button>
+                        <button onClick={() => setSpeed(4)} className={`w-8 h-8 md:w-10 md:h-10 rounded md:rounded-lg text-[10px] md:text-xs font-black transition-all active:scale-95 ${speed === 4 ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500'}`}>4x</button>
                     </div>
                 </div>
 

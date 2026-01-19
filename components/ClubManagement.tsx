@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Team, Translation, Player, TeamStaff } from '../types';
 import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye, Ticket, Home, Dumbbell } from 'lucide-react';
-import { TICKET_PRICE } from '../constants';
+import { TICKET_PRICE, LEAGUE_TICKET_PRICES } from '../constants';
 import { PlayerAvatar } from './PlayerAvatar';
 
 interface ClubManagementProps {
@@ -20,7 +20,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
     const [tab, setTab] = useState<'FINANCE' | 'FACILITIES' | 'ACADEMY' | 'STAFF'>('FINANCE');
 
     const totalWages = players.reduce((sum, p) => sum + p.wage, 0);
-    const estimatedTicketIncome = team.facilities.stadiumCapacity * TICKET_PRICE * 0.8;
+    const ticketPrice = LEAGUE_TICKET_PRICES[team.leagueId] || LEAGUE_TICKET_PRICES['default'];
+    // 0.8 is average occupancy
+    const estimatedTicketIncome = team.facilities.stadiumCapacity * ticketPrice * 0.8;
 
     // Safe access for old save files and new financial object
     const youthCandidates = team.youthCandidates || [];
@@ -236,7 +238,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </div>
                                 <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
                                     <div className="text-[10px] uppercase text-slate-500 mb-1">{t.ticketPrice}</div>
-                                    <div className="text-lg font-mono text-emerald-400 font-bold">€{TICKET_PRICE}</div>
+                                    <div className="text-lg font-mono text-emerald-400 font-bold">€{ticketPrice}</div>
                                 </div>
                             </div>
                             {fin.lastWeekIncome.tickets > 0 && (
@@ -245,7 +247,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         <div>
                                             <div className="text-[10px] uppercase text-emerald-400/70">{t.lastMatchAttendance}</div>
                                             <div className="text-xl font-bold text-white">
-                                                👥 {Math.floor(fin.lastWeekIncome.tickets / TICKET_PRICE).toLocaleString()} {t.people}
+                                                👥 {Math.floor(fin.lastWeekIncome.tickets / ticketPrice).toLocaleString()} {t.people}
                                             </div>
                                         </div>
                                         <div className="text-right">
@@ -254,7 +256,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                     </div>
                                     <div className="mt-2 text-xs text-slate-400">
-                                        {t.occupancy}: {Math.floor((fin.lastWeekIncome.tickets / TICKET_PRICE) / team.facilities.stadiumCapacity * 100)}%
+                                        {t.occupancy}: {Math.floor((fin.lastWeekIncome.tickets / ticketPrice) / team.facilities.stadiumCapacity * 100)}%
                                     </div>
                                 </div>
                             )}
@@ -435,15 +437,15 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         {team.facilities.stadiumLevel < 15 && (
                             <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
                                 <div className="flex justify-between text-slate-400 mb-1">
-                                    <span>Mevcut:</span>
-                                    <span className="text-white">{(5000 + (team.facilities.stadiumLevel - 1) * 6000).toLocaleString()} koltuk</span>
+                                    <span>{t.currentLabel || 'Current'}:</span>
+                                    <span className="text-white">{(5000 + (team.facilities.stadiumLevel - 1) * 6000).toLocaleString()} {t.seatsLabel || 'seats'}</span>
                                 </div>
                                 <div className="flex justify-between text-blue-400">
-                                    <span>→ Yeni:</span>
-                                    <span className="font-bold">{(5000 + team.facilities.stadiumLevel * 6000).toLocaleString()} koltuk (+6,000)</span>
+                                    <span>→ {t.newLabel || 'New'}:</span>
+                                    <span className="font-bold">{(5000 + team.facilities.stadiumLevel * 6000).toLocaleString()} {t.seatsLabel || 'seats'} (+6,000)</span>
                                 </div>
                                 <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
-                                    <span>Bakım artışı:</span>
+                                    <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
                                     <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.stadiumLevel + 1, 1.8) - Math.pow(team.facilities.stadiumLevel, 1.8)) * 4000).toLocaleString()}/hafta</span>
                                 </div>
                             </div>
@@ -472,7 +474,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
                                 const cost = Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.1));
-                                return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                                return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
                     </div>
@@ -481,7 +483,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     <div className="bg-slate-800 rounded-lg p-3 md:p-4 border border-slate-700 shadow-xl">
                         <div className="flex justify-between items-center mb-2">
                             <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-                                <Activity className="text-emerald-500" size={18} /> Antrenman Tesisi
+                                <Activity className="text-emerald-500" size={18} /> {t.trainingFacility || 'Training Facility'}
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
@@ -492,8 +494,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="relative h-16 md:h-20 bg-slate-900 rounded-lg mb-2 overflow-hidden border border-slate-600">
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543351611-58f69d7c1781?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
                             <div className="absolute bottom-1 left-2">
-                                <div className="text-white font-bold text-sm">Performans Merkezi</div>
-                                <div className="text-emerald-400 text-[10px] font-mono">+{(team.facilities.trainingLevel * 1).toFixed(0)}% Oyuncu Gelişimi</div>
+                                <div className="text-white font-bold text-sm">{t.performanceCenter || 'Performance Center'}</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">+{(team.facilities.trainingLevel * 1).toFixed(0)}% {t.playerDevelopment || 'Player Development'}</div>
                             </div>
                         </div>
 
@@ -501,15 +503,15 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         {team.facilities.trainingLevel < 25 && (
                             <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
                                 <div className="flex justify-between text-slate-400 mb-1">
-                                    <span>Mevcut bonus:</span>
-                                    <span className="text-white">+{team.facilities.trainingLevel}% gelişim hızı</span>
+                                    <span>{t.currentLabel || 'Current'} bonus:</span>
+                                    <span className="text-white">+{team.facilities.trainingLevel}% {t.developmentSpeed || 'development speed'}</span>
                                 </div>
                                 <div className="flex justify-between text-emerald-400">
-                                    <span>→ Yeni:</span>
-                                    <span className="font-bold">+{team.facilities.trainingLevel + 1}% gelişim hızı</span>
+                                    <span>→ {t.newLabel || 'New'}:</span>
+                                    <span className="font-bold">+{team.facilities.trainingLevel + 1}% {t.developmentSpeed || 'development speed'}</span>
                                 </div>
                                 <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
-                                    <span>Bakım artışı:</span>
+                                    <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
                                     <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.trainingLevel + 1, 1.8) - Math.pow(team.facilities.trainingLevel, 1.8)) * 3500).toLocaleString()}/hafta</span>
                                 </div>
                             </div>
@@ -517,7 +519,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                                <span>Kalite</span>
+                                <span>{t.qualityLabel || 'Quality'}</span>
                                 <span>{(team.facilities.trainingLevel / 25 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
@@ -538,7 +540,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
                                 const cost = Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.1));
-                                return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                                return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
                     </div>
@@ -547,10 +549,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     <div className="bg-slate-800 rounded-lg p-4 md:p-6 border border-slate-700 shadow-xl md:col-span-2">
                         <div className="flex justify-between items-start mb-4">
                             <h2 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-                                <GraduationCap className="text-yellow-500" /> Altyapı Akademisi
+                                <GraduationCap className="text-yellow-500" /> {t.youthAcademyFacility || 'Youth Academy'}
                             </h2>
                             <div className="text-right">
-                                <span className="block text-[10px] uppercase text-slate-500 font-bold">Akademi Seviyesi</span>
+                                <span className="block text-[10px] uppercase text-slate-500 font-bold">{t.levelLabel || 'Level'}</span>
                                 <span className="text-xl md:text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/25</span></span>
                             </div>
                         </div>
@@ -559,8 +561,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             <div className="relative h-full min-h-[120px] md:min-h-[140px] bg-slate-900 rounded-lg overflow-hidden border border-slate-600 group">
                                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-110"></div>
                                 <div className="absolute inset-0 flex flex-col justify-end p-3 md:p-4">
-                                    <div className="text-white font-bold text-base md:text-lg">Yeni Nesil Akademi</div>
-                                    <div className="text-yellow-400 text-xs md:text-sm font-mono">+{team.facilities.academyLevel * 2}% daha kaliteli gençler</div>
+                                    <div className="text-white font-bold text-base md:text-lg">{t.nextGenAcademy || 'Next Gen Academy'}</div>
+                                    <div className="text-yellow-400 text-xs md:text-sm font-mono">+{team.facilities.academyLevel * 2}% {t.betterYouthLabel || 'better youth'}</div>
                                 </div>
                             </div>
 
@@ -569,15 +571,15 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 {team.facilities.academyLevel < 25 && (
                                     <div className="bg-slate-900/50 rounded p-2 text-[10px]">
                                         <div className="flex justify-between text-slate-400 mb-1">
-                                            <span>Mevcut:</span>
-                                            <span className="text-white">+{team.facilities.academyLevel * 2}% genç kalitesi</span>
+                                            <span>{t.currentLabel || 'Current'}:</span>
+                                            <span className="text-white">+{team.facilities.academyLevel * 2}% {t.youthQualityLabel || 'youth quality'}</span>
                                         </div>
                                         <div className="flex justify-between text-yellow-400">
-                                            <span>→ Yeni:</span>
-                                            <span className="font-bold">+{(team.facilities.academyLevel + 1) * 2}% genç kalitesi</span>
+                                            <span>→ {t.newLabel || 'New'}:</span>
+                                            <span className="font-bold">+{(team.facilities.academyLevel + 1) * 2}% {t.youthQualityLabel || 'youth quality'}</span>
                                         </div>
                                         <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
-                                            <span>Bakım artışı:</span>
+                                            <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
                                             <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.academyLevel + 1, 1.3) - Math.pow(team.facilities.academyLevel, 1.3)) * 1200).toLocaleString()}/hafta</span>
                                         </div>
                                     </div>
@@ -585,7 +587,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <div>
                                     <div className="flex justify-between text-[10px] md:text-xs text-slate-400 mb-1">
-                                        <span>Keşif Ağı</span>
+                                        <span>{t.scoutNetworkLabel || 'Scout Network'}</span>
                                         <span>{(team.facilities.academyLevel / 25 * 100).toFixed(0)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-900 rounded-full h-1.5 md:h-2 overflow-hidden">
@@ -606,7 +608,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
                                         const cost = Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.1));
-                                        return `Yükselt (€${(cost / 1000000).toFixed(2)}M)`;
+                                        return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                                     })()}
                                 </button>
                             </div>
@@ -710,23 +712,23 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
                                     <ClipboardList size={28} />
                                 </div>
-                                <h3 className="text-lg font-bold text-white">Yardımcı Antrenör</h3>
-                                <p className="text-xs text-slate-400 mb-3">Antrenman verimliliğini ve taktik uyumu artırır.</p>
+                                <h3 className="text-lg font-bold text-white">{t.assistantCoachTitle || 'Assistant Coach'}</h3>
+                                <p className="text-xs text-slate-400 mb-3">{t.assistantCoachDesc || 'Increases training efficiency and tactical harmony.'}</p>
 
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
                                         <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}<span className="text-slate-600 text-sm">/10</span></span>
                                     </div>
                                     {staff.headCoachLevel < 10 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
-                                                <span>Mevcut:</span>
-                                                <span className="text-white">+{(staff.headCoachLevel * 1.5).toFixed(1)}% antrenman verimliliği</span>
+                                                <span>{t.currentLabel || 'Current'}:</span>
+                                                <span className="text-white">+{(staff.headCoachLevel * 1.5).toFixed(1)}% {t.trainingEfficiency || 'training efficiency'}</span>
                                             </div>
                                             <div className="flex justify-between text-blue-400">
-                                                <span>→ Yeni:</span>
-                                                <span className="font-bold">+{((staff.headCoachLevel + 1) * 1.5).toFixed(1)}% antrenman verimliliği</span>
+                                                <span>→ {t.newLabel || 'New'}:</span>
+                                                <span className="font-bold">+{((staff.headCoachLevel + 1) * 1.5).toFixed(1)}% {t.trainingEfficiency || 'training efficiency'}</span>
                                             </div>
                                         </div>
                                     )}
@@ -737,7 +739,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.headCoachLevel >= 10}
                                     className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.headCoachLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.headCoachLevel >= 10 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(2, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -749,23 +751,23 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
                                     <Microscope size={28} />
                                 </div>
-                                <h3 className="text-lg font-bold text-white">Baş Scout</h3>
-                                <p className="text-xs text-slate-400 mb-3">Daha iyi genç yetenekler bulur, gizli özellikleri ortaya çıkarır.</p>
+                                <h3 className="text-lg font-bold text-white">{t.headScoutTitle || 'Head Scout'}</h3>
+                                <p className="text-xs text-slate-400 mb-3">{t.headScoutDesc || 'Finds better youth talents, reveals hidden attributes.'}</p>
 
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
                                         <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}<span className="text-slate-600 text-sm">/10</span></span>
                                     </div>
                                     {staff.scoutLevel < 10 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
-                                                <span>Mevcut:</span>
-                                                <span className="text-white">+{staff.scoutLevel}% genç keşif şansı</span>
+                                                <span>{t.currentLabel || 'Current'}:</span>
+                                                <span className="text-white">+{staff.scoutLevel}% {t.youthDiscoveryChance || 'youth discovery chance'}</span>
                                             </div>
                                             <div className="flex justify-between text-purple-400">
-                                                <span>→ Yeni:</span>
-                                                <span className="font-bold">+{staff.scoutLevel + 1}% genç keşif şansı</span>
+                                                <span>→ {t.newLabel || 'New'}:</span>
+                                                <span className="font-bold">+{staff.scoutLevel + 1}% {t.youthDiscoveryChance || 'youth discovery chance'}</span>
                                             </div>
                                         </div>
                                     )}
@@ -776,7 +778,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.scoutLevel >= 10}
                                     className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.scoutLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.scoutLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.scoutLevel >= 10 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(2, staff.scoutLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -788,23 +790,23 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center mb-3 text-white shadow-lg">
                                     <Stethoscope size={28} />
                                 </div>
-                                <h3 className="text-lg font-bold text-white">Baş Fizyoterapist</h3>
-                                <p className="text-xs text-slate-400 mb-3">Sakatlık iyileşmesini hızlandırır, yorgunluk birikimini azaltır.</p>
+                                <h3 className="text-lg font-bold text-white">{t.headPhysioTitle || 'Head Physio'}</h3>
+                                <p className="text-xs text-slate-400 mb-3">{t.headPhysioDesc || 'Speeds up injury recovery, reduces fatigue accumulation.'}</p>
 
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-slate-400 text-xs uppercase font-bold">Seviye</span>
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
                                         <span className="text-red-400 font-bold text-xl">{staff.physioLevel}<span className="text-slate-600 text-sm">/10</span></span>
                                     </div>
                                     {staff.physioLevel < 10 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
-                                                <span>Mevcut:</span>
-                                                <span className="text-white">+{staff.physioLevel * 3} kondisyon/hafta</span>
+                                                <span>{t.currentLabel || 'Current'}:</span>
+                                                <span className="text-white">+{staff.physioLevel * 3} {t.conditionPerWeek || 'condition/week'}</span>
                                             </div>
                                             <div className="flex justify-between text-red-400">
-                                                <span>→ Yeni:</span>
-                                                <span className="font-bold">+{(staff.physioLevel + 1) * 3} kondisyon/hafta</span>
+                                                <span>→ {t.newLabel || 'New'}:</span>
+                                                <span className="font-bold">+{(staff.physioLevel + 1) * 3} {t.conditionPerWeek || 'condition/week'}</span>
                                             </div>
                                         </div>
                                     )}
@@ -815,7 +817,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.physioLevel >= 10}
                                     className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.physioLevel >= 10 ? 'MAX SEVİYE' : `Yükselt (€${(Math.floor(100000 * Math.pow(2, staff.physioLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.physioLevel >= 10 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(2, staff.physioLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>

@@ -235,6 +235,9 @@ export interface EuropeanCupMatch {
     week?: number; // Virtual week for compatibility
     date?: number;
     isFriendly?: boolean;
+    // Tie-breaker results
+    extraTime?: { homeScore: number; awayScore: number };
+    penalties?: { homeScore: number; awayScore: number };
 }
 
 export interface EuropeanCup {
@@ -245,6 +248,16 @@ export interface EuropeanCup {
     currentRound: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL' | 'COMPLETE';
     winnerId?: string;
     _generatedForeignTeams?: any[]; // Temporary storage for foreign teams generated during cup creation
+}
+
+// Super Cup - CL Winner vs UEFA Cup Winner
+export interface SuperCup {
+    season: number;
+    championsLeagueWinnerId?: string;
+    uefaCupWinnerId?: string;
+    match?: EuropeanCupMatch;
+    winnerId?: string;
+    isComplete: boolean;
 }
 
 // Manager Career System
@@ -268,12 +281,30 @@ export interface GameState {
     pendingOffers: TransferOffer[];
     europeanCup?: EuropeanCup;
     europaLeague?: EuropeanCup;
-    // Manager Career System
+    superCup?: SuperCup;
+    // Manager Career System - Extended
     managerRating?: number; // 0-100, starts based on team chosen
-    managerCareerHistory?: { season: number; teamName: string; position: number; rating: number }[];
+    managerSalary?: number; // Weekly salary
+    managerCareerHistory?: {
+        season: number;
+        teamName: string;
+        position: number;
+        rating: number;
+        leagueChampion?: boolean;
+        championsLeagueWinner?: boolean;
+        uefaCupWinner?: boolean;
+        superCupWinner?: boolean;
+    }[];
+    managerTrophies?: {
+        leagueTitles: number;
+        championsLeagueTitles: number;
+        uefaCupTitles: number;
+        superCupTitles: number;
+    };
     jobOffers?: JobOffer[];
     // Assistant Coach - Tactical Memory
     tacticalHistory?: TacticalMatchRecord[];
+
 }
 
 // Yardımcı Antrenör - Maç Taktik Kaydı

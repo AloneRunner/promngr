@@ -106,7 +106,7 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                     <div className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl ${difficulty.bg} backdrop-blur border border-white/5`}>
                         <difficulty.icon size={20} className={`${difficulty.color} drop-shadow-[0_0_8px_currentColor]`} />
                         <span className={`font-bold text-lg ${difficulty.color}`}>
-                            {difficulty.level === 'EASY' ? 'Kolay Rakip' : difficulty.level === 'MEDIUM' ? 'Dengeli Maç' : 'Zorlu Rakip'}
+                            {difficulty.level === 'EASY' ? (t.easyOpponent || 'Easy Opponent') : difficulty.level === 'MEDIUM' ? (t.balancedMatch || 'Balanced Match') : (t.hardOpponent || 'Hard Opponent')}
                         </span>
                     </div>
                 </div>
@@ -115,22 +115,22 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 <div className="grid grid-cols-3 gap-4 p-6 border-b border-white/10">
                     <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
                         <div className="text-2xl font-bold text-white drop-shadow-lg">{avgOverall}</div>
-                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kadro Gücü</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t.squadStrength || 'Squad Strength'}</div>
                     </div>
                     <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
                         <div className="text-2xl font-bold text-white drop-shadow-lg">{formation}</div>
-                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Formasyon</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t.formation || 'Formation'}</div>
                     </div>
                     <div className="text-center bg-slate-800/50 backdrop-blur rounded-xl p-3">
                         <div className="text-2xl font-bold text-white drop-shadow-lg">{opponent.reputation}</div>
-                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Prestij</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t.prestige || 'Prestige'}</div>
                     </div>
                 </div>
 
                 {/* Recent Form */}
                 <div className="px-6 py-4 border-b border-white/10">
                     <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
-                        <TrendingUp size={14} className="text-cyan-400" /> Son 5 Maç
+                        <TrendingUp size={14} className="text-cyan-400" /> {t.last5Matches || 'Last 5 Matches'}
                     </h3>
                     <div className="flex justify-center gap-3">
                         {recentForm.length > 0 ? (
@@ -143,7 +143,7 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                                 </div>
                             ))
                         ) : (
-                            <span className="text-slate-500 text-sm">Henüz maç yok</span>
+                            <span className="text-slate-500 text-sm">{t.noMatchesYet || 'No matches yet'}</span>
                         )}
                     </div>
                 </div>
@@ -151,7 +151,7 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 {/* Key Players */}
                 <div className="px-6 py-4 border-b border-white/10">
                     <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
-                        <Zap size={14} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" /> Dikkat Edilmesi Gerekenler
+                        <Zap size={14} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" /> {t.keyPlayers || 'Key Players'}
                     </h3>
                     <div className="space-y-2">
                         {topPlayers.map(player => (
@@ -177,7 +177,7 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                 {/* Lineup Summary */}
                 <div className="px-6 py-4 border-b border-white/10">
                     <h3 className="text-[10px] uppercase text-slate-400 font-bold mb-3 flex items-center gap-2 tracking-wider">
-                        <Users size={14} className="text-purple-400" /> Kadro Dağılımı
+                        <Users size={14} className="text-purple-400" /> {t.squadDistribution || 'Squad Distribution'}
                     </h3>
                     <div className="flex justify-around">
                         {Object.entries(positionCounts).map(([pos, count]) => (
@@ -216,13 +216,13 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                         className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-lg rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 active:scale-95"
                     >
                         <Target size={20} className="drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        Maça Başla!
+                        {t.startMatchBtn || 'Start Match!'}
                     </button>
                     <button
                         onClick={onClose}
                         className="w-full py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-slate-300 font-bold rounded-xl hover:from-slate-700 hover:to-slate-600 transition-all border border-white/10 active:scale-95"
                     >
-                        Geri Dön
+                        {t.goBack || 'Go Back'}
                     </button>
                 </div>
             </div>

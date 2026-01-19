@@ -24,7 +24,9 @@ import { EuropeanCupView } from './components/EuropeanCupView';
 import { ProfileSelector } from './components/ProfileSelector';
 import { TransferNegotiationModal } from './components/TransferNegotiationModal';
 import { JobOffersModal } from './components/JobOffersModal';
+import { ManagerProfile } from './components/ManagerProfile';
 import { Layout } from './components/Layout';
+
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu } from 'lucide-react';
 import { adMobService } from './services/adMobService';
@@ -36,7 +38,7 @@ const assignJerseyNumber = (player: Player, teamPlayers: Player[]): number => {
     // Takımdaki mevcut numaraları topla
     const usedNumbers = new Set(teamPlayers.filter(p => p.id !== player.id && p.jerseyNumber).map(p => p.jerseyNumber!));
 
-    // E�Yer oyuncunun numarası varsa ve kullanılmıyorsa, onu kullan
+    // Eğer oyuncunun numarası varsa ve kullanılmıyorsa, onu kullan
     if (player.jerseyNumber && !usedNumbers.has(player.jerseyNumber)) {
         return player.jerseyNumber;
     }
@@ -67,7 +69,7 @@ const assignJerseyNumber = (player: Player, teamPlayers: Player[]): number => {
         }
     }
 
-    // Bo�Y olan ilk numarayı bul (2-99 arası)
+    // Boş olan ilk numarayı bul (2-99 arası)
     for (let i = 2; i <= 99; i++) {
         if (!usedNumbers.has(i)) return i;
     }
@@ -126,7 +128,7 @@ const migrateJerseyNumbers = (gameState: GameState): GameState => {
                 }
             }
 
-            // Bo�Y numara bul
+            // Boş numara bul
             if (!assigned) {
                 for (let num = 2; num <= 99; num++) {
                     if (!usedNumbers.has(num)) {
@@ -167,7 +169,7 @@ const App: React.FC = () => {
 
     // Game State
     const [gameState, setGameState] = useState<GameState | null>(null);
-    const [view, setView] = useState<'dashboard' | 'squad' | 'league' | 'match' | 'club' | 'transfers' | 'news' | 'training' | 'rankings' | 'guide' | 'fixtures'>('dashboard');
+    const [view, setView] = useState<'dashboard' | 'squad' | 'league' | 'match' | 'club' | 'transfers' | 'news' | 'training' | 'rankings' | 'guide' | 'fixtures' | 'manager'>('dashboard');
     const [activeMatchId, setActiveMatchId] = useState<string | null>(null);
     const [lang, setLang] = useState<'tr' | 'en' | 'es'>('tr'); // Will sync to user's league language
     const [showWelcome, setShowWelcome] = useState(false);
@@ -205,8 +207,8 @@ const App: React.FC = () => {
         return Math.max(...userLeagueMatches.map(m => m.week));
     }, [gameState]);
 
-    // gY"� Initialize AdMob on mount
-    // gY"� Initialize AdMob on mount
+    // 📱 Initialize AdMob on mount
+    // 📱 Initialize AdMob on mount
     useEffect(() => {
         const initAds = async () => {
             // Enable test mode during development
@@ -218,7 +220,7 @@ const App: React.FC = () => {
         initAds();
     }, []);
 
-    // gY"� Control banner visibility and position based on view
+    // 📱 Control banner visibility and position based on view
     useEffect(() => {
         const handleBannerVisibility = async () => {
             if (gameState && !showProfileSelector && !showLeagueSelect && !showTeamSelect) {
@@ -388,14 +390,14 @@ const App: React.FC = () => {
             if (inCL) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: 'gY�? Şampiyonlar Ligi Daveti!',
+                    subject: '🏆 Şampiyonlar Ligi Daveti!',
                     body: `${selectedTeam?.name} olarak Şampiyonlar Ligi'ne katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
             } else if (inEL) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: 'gYY� UEFA Avrupa Ligi Daveti!',
+                    subject: '⚽ UEFA Avrupa Ligi Daveti!',
                     body: `${selectedTeam?.name} olarak UEFA Avrupa Ligi'ne katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
@@ -467,7 +469,7 @@ const App: React.FC = () => {
     };
 
     const handleBackToProfiles = () => {
-        if (confirm(lang === 'tr' ? 'İlerleme kaydedilecek. Profil seçiciye dönmek istedi�Yinizden emin misiniz?' : 'Progress will be saved. Are you sure you want to return to profile selector?')) {
+        if (confirm(lang === 'tr' ? 'İlerleme kaydedilecek. Profil seçiciye dönmek istediğinizden emin misiniz?' : 'Progress will be saved. Are you sure you want to return to profile selector?')) {
             setShowProfileSelector(true);
             setShowLeagueSelect(false);
             setShowTeamSelect(false);
@@ -487,8 +489,8 @@ const App: React.FC = () => {
                 id: uuid(),
                 week: prev.currentWeek,
                 type: MessageType.BOARD,
-                subject: `gY�? ${offer.teamName}'a Ho�Y Geldiniz!`,
-                body: `${offer.teamName} takımının yeni teknik direktörü olarak göreve ba�Yladınız. Haftalık maa�Yınız: �,�${offer.salary.toLocaleString()}`,
+                subject: `🏆 ${offer.teamName}'a Hoş Geldiniz!`,
+                body: `${offer.teamName} takımının yeni teknik direktörü olarak göreve başladınız. Haftalık maaşınız: €${offer.salary.toLocaleString()}`,
                 isRead: false,
                 date: new Date().toISOString()
             }],
@@ -715,7 +717,7 @@ const App: React.FC = () => {
             alert(t.notEnoughFunds);
             return;
         }
-        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: �,�${(renewalCost / 1000).toFixed(0)}k`)) {
+        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: €${(renewalCost / 1000).toFixed(0)}k`)) {
             const updatedPlayers = gameState.players.map(p =>
                 p.id === player.id ? { ...p, contractYears: p.contractYears + 2, morale: Math.min(100, p.morale + 10) } : p
             );
@@ -898,7 +900,7 @@ const App: React.FC = () => {
             return;
         }
 
-        if (confirm(`Upgrade ${role} to level ${currentLevel + 1}? Cost: �,�${(cost / 1000).toLocaleString()}k`)) {
+        if (confirm(`Upgrade ${role} to level ${currentLevel + 1}? Cost: €${(cost / 1000).toLocaleString()}k`)) {
             const updatedTeams = gameState.teams.map(t => {
                 if (t.id === userTeam.id) {
                     return {
@@ -991,7 +993,7 @@ const App: React.FC = () => {
         const MIN_SQUAD_SIZE = 14;
         const currentSquadSize = gameState.players.filter(p => p.teamId === gameState.userTeamId).length;
         if (currentSquadSize <= MIN_SQUAD_SIZE) {
-            alert(t.cannotSellMinSquad || `Kadro minimum ${MIN_SQUAD_SIZE} oyuncuya dü�Ytü. Daha fazla satı�Y yapamazsınız!`);
+            alert(t.cannotSellMinSquad || `Kadro minimum ${MIN_SQUAD_SIZE} oyuncuya düştü. Daha fazla satış yapamazsınız!`);
             return;
         }
 
@@ -1026,8 +1028,8 @@ const App: React.FC = () => {
             id: uuid(),
             week: gameState.currentWeek,
             type: MessageType.INFO,
-            subject: '�o. Transfer Completed',
-            body: `${player.firstName} ${player.lastName} has been sold to ${buyingTeam.name} for �,�${(offer.offerAmount / 1000000).toFixed(1)}M.`,
+            subject: '✅ Transfer Completed',
+            body: `${player.firstName} ${player.lastName} has been sold to ${buyingTeam.name} for €${(offer.offerAmount / 1000000).toFixed(1)}M.`,
             isRead: false,
             date: new Date().toISOString()
         };
@@ -1218,14 +1220,52 @@ const App: React.FC = () => {
         setShowSeasonSummary(true);
     };
 
-    const handleStartNewSeason = () => {
+    const handleStartNewSeason = async () => {
         if (!gameState) return;
         const { newState } = processSeasonEnd(gameState);
-        setGameState(newState);
+
+        // Generate European competitions for new season
+        const { generateChampionsLeague, generateEuropaLeague } = await import('./services/engine');
+
+        const cl = generateChampionsLeague(newState);
+        const el = generateEuropaLeague({ ...newState, europeanCup: cl });
+
+        const finalState = {
+            ...newState,
+            europeanCup: cl,
+            europaLeague: el,
+            superCup: undefined // Will be generated when both cups complete
+        };
+
+        // Check if user qualified for cups
+        const userInCL = cl.qualifiedTeamIds.includes(newState.userTeamId);
+        const userInEL = el.qualifiedTeamIds.includes(newState.userTeamId);
+
+        let cupMessage = '';
+        if (userInCL) {
+            cupMessage = '🏆 Şampiyonlar Ligi\'ne katılıyorsunuz!';
+        } else if (userInEL) {
+            cupMessage = '🥈 UEFA Cup\'a katılıyorsunuz!';
+        }
+
+        if (cupMessage) {
+            finalState.messages = [{
+                id: Math.random().toString(36).substring(2, 15),
+                week: 1,
+                type: 'board' as any,
+                subject: 'Avrupa Kupası Katılımı',
+                body: cupMessage,
+                isRead: false,
+                date: new Date().toISOString()
+            }, ...finalState.messages];
+        }
+
+        setGameState(finalState);
         alert(`${t.startNewSeason}: ${gameState.currentSeason + 1}`);
         setShowSeasonSummary(false);
         setView('dashboard');
     };
+
 
     const handleBuyPlayer = (player: Player) => {
         if (!gameState) return;
@@ -1283,7 +1323,7 @@ const App: React.FC = () => {
 
         setGameState(prev => prev ? { ...prev, players: updatedPlayers, transferMarket: updatedMarket, teams: updatedTeams } : null);
         setNegotiatingPlayer(null); // Close modal
-        alert(`${t.successfullySigned} ${player.lastName} for �,�${(finalPrice / 1000000).toFixed(2)}M!`);
+        alert(`${t.successfullySigned} ${player.lastName} for €${(finalPrice / 1000000).toFixed(2)}M!`);
     };
 
     const handlePromoteYouth = (player: Player) => {
@@ -1350,10 +1390,10 @@ const App: React.FC = () => {
                 id: Math.random().toString(36).substring(2, 15),
                 week: gameState.currentWeek,
                 type: MessageType.BOARD,
-                subject: 'gYOY Şampiyonlar Ligi Kura �?ekimi!',
+                subject: '🏆 Şampiyonlar Ligi Kura Çekimi!',
                 body: userQualified
-                    ? 'Takımınız Şampiyonlar Ligi\'ne katılmaya hak kazandı! �?eyrek final e�Yle�Ymeleri belirlendi.'
-                    : 'Şampiyonlar Ligi ba�Yladı. Maalesef takımınız bu sezon katılmaya hak kazanamadı.',
+                    ? 'Takımınız Şampiyonlar Ligi\'ne katılmaya hak kazandı! Çeyrek final eşleşmeleri belirlendi.'
+                    : 'Şampiyonlar Ligi başladı. Maalesef takımınız bu sezon katılmaya hak kazanamadı.',
                 isRead: false,
                 date: new Date().toISOString()
             }]
@@ -1424,7 +1464,7 @@ const App: React.FC = () => {
             const subEvent: MatchEvent = {
                 minute: currentMatch.currentMinute,
                 type: MatchEventType.SUB,
-                description: `gY"" ${playerOut.lastName} �?️ ${playerIn.lastName} �?️`,
+                description: `🔄 ${playerOut.lastName} ⬅️ ${playerIn.lastName} ➡️`,
                 teamId: userTeam?.id || '',
                 playerId: playerIn.id
             };
@@ -1977,6 +2017,39 @@ const App: React.FC = () => {
                     const playedCupMatch = updatedCup.matches.find(m => m.id === cupMatch.id);
                     if (playedCupMatch) {
                         alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
+
+                        // === EUROPEAN CUP REPUTATION BONUS ===
+                        const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
+                        if (userTeam) {
+                            const isUserHome = homeTeam.id === updatedState.userTeamId;
+                            const userWon = playedCupMatch.winnerId === updatedState.userTeamId;
+                            const opponent = isUserHome ? awayTeam : homeTeam;
+                            const opponentRepDiff = opponent.reputation - userTeam.reputation;
+
+                            if (userWon) {
+                                // Champions League win bonus: +20 base, up to +40 for beating much stronger
+                                let repBonus = 20 + Math.max(0, Math.floor(opponentRepDiff / 200)); // +20 to +40
+                                repBonus = Math.min(40, repBonus);
+
+                                // Round bonus
+                                if (playedCupMatch.round === 'QUARTER') repBonus += 10;
+                                else if (playedCupMatch.round === 'SEMI') repBonus += 20;
+                                else if (playedCupMatch.round === 'FINAL') repBonus += 50;
+
+                                const newRep = Math.min(10000, userTeam.reputation + repBonus);
+                                userTeam.reputation = newRep;
+
+                                // Record history
+                                const history = userTeam.reputationHistory || [];
+                                history.push({
+                                    week: updatedState.currentWeek,
+                                    change: repBonus,
+                                    reason: `🏆 CL: ${opponent.name} (G)`,
+                                    newValue: newRep
+                                });
+                                userTeam.reputationHistory = history.slice(-20);
+                            }
+                        }
                     }
                 }
                 if (elMatch && gameState.europaLeague) {
@@ -1987,11 +2060,45 @@ const App: React.FC = () => {
                     const playedCupMatch = updatedCup.matches.find(m => m.id === cupMatch.id);
                     if (playedCupMatch) {
                         alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
+
+                        // === EUROPA LEAGUE REPUTATION BONUS ===
+                        const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
+                        if (userTeam) {
+                            const isUserHome = homeTeam.id === updatedState.userTeamId;
+                            const userWon = playedCupMatch.winnerId === updatedState.userTeamId;
+                            const opponent = isUserHome ? awayTeam : homeTeam;
+                            const opponentRepDiff = opponent.reputation - userTeam.reputation;
+
+                            if (userWon) {
+                                // Europa League win bonus: +15 base, up to +30 for beating much stronger
+                                let repBonus = 15 + Math.max(0, Math.floor(opponentRepDiff / 250)); // +15 to +30
+                                repBonus = Math.min(30, repBonus);
+
+                                // Round bonus
+                                if (playedCupMatch.round === 'QUARTER') repBonus += 8;
+                                else if (playedCupMatch.round === 'SEMI') repBonus += 15;
+                                else if (playedCupMatch.round === 'FINAL') repBonus += 40;
+
+                                const newRep = Math.min(10000, userTeam.reputation + repBonus);
+                                userTeam.reputation = newRep;
+
+                                // Record history
+                                const history = userTeam.reputationHistory || [];
+                                history.push({
+                                    week: updatedState.currentWeek,
+                                    change: repBonus,
+                                    reason: `🏆 UEL: ${opponent.name} (G)`,
+                                    newValue: newRep
+                                });
+                                userTeam.reputationHistory = history.slice(-20);
+                            }
+                        }
                     }
                 }
 
-                // Also simulate league round for this week
-                updatedState = simulateLeagueRound(updatedState, updatedState.currentWeek);
+                // NOTE: Do NOT simulate league round here!
+                // Cup matches are independent - user should play/sim league match separately
+                // Previously: updatedState = simulateLeagueRound(updatedState, updatedState.currentWeek);
 
                 // Simulate AI European Cup Matches (other Cup games this week)
                 if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
@@ -2000,7 +2107,8 @@ const App: React.FC = () => {
                         updatedState.teams,
                         updatedState.players,
                         updatedState.userTeamId,
-                        updatedState.currentWeek
+                        updatedState.currentWeek,
+                        'CL'
                     );
                     updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
                 }
@@ -2010,9 +2118,23 @@ const App: React.FC = () => {
                         updatedState.teams,
                         updatedState.players,
                         updatedState.userTeamId,
-                        updatedState.currentWeek
+                        updatedState.currentWeek,
+                        'UEFA'
                     );
                     updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
+                }
+
+                // Check if both cups are complete and Super Cup should be generated
+                if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
+                    updatedState.europaLeague?.currentRound === 'COMPLETE' &&
+                    !updatedState.superCup) {
+                    // Dynamically import and generate Super Cup
+                    import('./services/engine').then(({ generateSuperCup }) => {
+                        const superCup = generateSuperCup(updatedState);
+                        if (superCup) {
+                            setGameState(prev => prev ? { ...prev, superCup } : null);
+                        }
+                    });
                 }
 
                 // Process weekly events
@@ -2111,7 +2233,8 @@ const App: React.FC = () => {
                             updatedState.teams,
                             updatedState.players,
                             updatedState.userTeamId,
-                            updatedState.currentWeek
+                            updatedState.currentWeek,
+                            'CL'
                         );
                         updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
                     }
@@ -2121,13 +2244,26 @@ const App: React.FC = () => {
                             updatedState.teams,
                             updatedState.players,
                             updatedState.userTeamId,
-                            updatedState.currentWeek
+                            updatedState.currentWeek,
+                            'UEFA'
                         );
                         updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
                     }
 
+                    // Check if both cups are complete and Super Cup should be generated
+                    if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
+                        updatedState.europaLeague?.currentRound === 'COMPLETE' &&
+                        !updatedState.superCup) {
+                        import('./services/engine').then(({ generateSuperCup }) => {
+                            const superCup = generateSuperCup(updatedState);
+                            if (superCup) {
+                                setGameState(prev => prev ? { ...prev, superCup } : null);
+                            }
+                        });
+                    }
+
                     // 4. Process weekly events (Training, News, etc.)
-                    // 4. Process weekly events (Training, News, etc.)
+
                     const weeklyEventsResults = processWeeklyEvents(updatedState, t);
                     let { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
 
@@ -2208,14 +2344,79 @@ const App: React.FC = () => {
                 }
             }
         } else {
-            // No match available - check if season should end
+            // No match available - check if it's a cup week we should skip
+            const CUP_WEEKS = [7, 14, 21, 28];
+            const isOnCupWeek = CUP_WEEKS.includes(gameState.currentWeek);
+
             // Calculate maxWeek based on USER'S LEAGUE only (not all leagues)
             const userLeagueTeamIds = new Set(gameState.teams.filter(t => t.leagueId === gameState.leagueId).map(t => t.id));
             const userLeagueMatches = gameState.matches.filter(m => !m.isFriendly && (userLeagueTeamIds.has(m.homeTeamId) || userLeagueTeamIds.has(m.awayTeamId)));
-            const maxWeek = userLeagueMatches.length > 0 ? Math.max(...userLeagueMatches.map(m => m.week)) : 34;
+            const maxWeek = userLeagueMatches.length > 0 ? Math.max(...userLeagueMatches.map(m => m.week)) : 38;
 
             if (gameState.currentWeek > maxWeek) {
                 prepareSeasonEnd();
+            } else if (isOnCupWeek) {
+                // AUTO-SKIP CUP WEEK: User has no cup match (eliminated) - advance to next week
+                // Simulate AI cup matches first, then advance
+                let updatedState = { ...gameState };
+
+                // Process AI European Cup matches for this week
+                if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
+                    const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                        updatedState.europeanCup,
+                        updatedState.teams,
+                        updatedState.players,
+                        updatedState.userTeamId,
+                        updatedState.currentWeek,
+                        'CL'
+                    );
+                    updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
+                }
+                if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
+                    const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
+                        updatedState.europaLeague,
+                        updatedState.teams,
+                        updatedState.players,
+                        updatedState.userTeamId,
+                        updatedState.currentWeek,
+                        'UEFA'
+                    );
+                    updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
+                }
+
+                // Check if Super Cup should be generated
+                if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
+                    updatedState.europaLeague?.currentRound === 'COMPLETE' &&
+                    !updatedState.superCup) {
+                    import('./services/engine').then(({ generateSuperCup }) => {
+                        const superCup = generateSuperCup(updatedState);
+                        if (superCup) {
+                            setGameState(prev => prev ? { ...prev, superCup } : null);
+                        }
+                    });
+                }
+
+                // Process weekly events
+                const weeklyEventsResults = processWeeklyEvents(updatedState, t);
+                const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+
+                // Show skip message
+                alert(t.cupWeekSkipped || '⚽ Kupa haftası atlandı - Avrupa maçınız yok bu hafta.');
+
+                // Advance to next week
+                setGameState({
+                    ...updatedState,
+                    teams: updatedTeams,
+                    players: updatedPlayers,
+                    market: updatedMarket,
+                    currentWeek: updatedState.currentWeek + 1,
+                    pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
+                    messages: [
+                        ...updatedState.messages,
+                        ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
+                        ...offers
+                    ]
+                });
             } else {
                 alert(t.noMatchToday);
             }
@@ -2596,13 +2797,13 @@ const App: React.FC = () => {
             let updatedState = { ...currentState };
             if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
                 const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                    updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
+                    updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'CL'
                 );
                 updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
             }
             if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
                 const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                    updatedState.europaLeague, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
+                    updatedState.europaLeague, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'UEFA'
                 );
                 updatedState = { ...updatedState, europaLeague: updatedCup, teams: updatedTeams };
             }
@@ -2683,7 +2884,7 @@ const App: React.FC = () => {
 
         if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
             const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
+                updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'CL'
             );
             updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
         }
@@ -2694,7 +2895,8 @@ const App: React.FC = () => {
                 updatedState.teams,
                 updatedState.players,
                 updatedState.userTeamId,
-                updatedState.currentWeek
+                updatedState.currentWeek,
+                'UEFA'
             );
             updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
         }
@@ -2899,8 +3101,8 @@ const App: React.FC = () => {
                                             <span className="font-bold text-white">{team.reputation}</span>
                                         </div>
                                         <div className="flex justify-between text-[10px] md:text-xs">
-                                            <span className="text-slate-400">Budget</span>
-                                            <span className="font-bold text-emerald-400">�,�{(team.budget / 1000000).toFixed(1)}M</span>
+                                            <span className="text-slate-400">{t.clubBudget}</span>
+                                            <span className="font-bold text-emerald-400">€{(team.budget / 1000000).toFixed(1)}M</span>
                                         </div>
                                     </div>
                                 </div>
@@ -2929,7 +3131,7 @@ const App: React.FC = () => {
             {showSeasonSummary && seasonSummaryData && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
                     <div className="bg-slate-900 rounded-2xl p-6 md:p-8 max-w-md w-full border border-yellow-500/30 shadow-2xl text-center">
-                        <div className="text-6xl mb-4">gY�?</div>
+                        <div className="text-6xl mb-4">🏆</div>
                         <h2 className="text-2xl font-bold text-yellow-400 mb-2">{t.seasonComplete || 'Season Complete!'}</h2>
                         <p className="text-slate-400 mb-6">{t.seasonOver || 'The season has ended.'}</p>
 
@@ -2948,7 +3150,7 @@ const App: React.FC = () => {
                             onClick={handleStartNewSeason}
                             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-colors text-lg shadow-lg"
                         >
-                            {t.startNewSeason || 'Start New Season'} �?'
+                            {t.startNewSeason || 'Start New Season'} ➡️
                         </button>
                     </div>
                 </div>
@@ -3091,9 +3293,11 @@ const App: React.FC = () => {
                         <button onClick={() => setView('league')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'league' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Trophy size={20} /> <span className="hidden md:inline">{t.standings}</span></button>
                         <button onClick={() => setView('rankings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'rankings' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Globe size={20} /> <span className="hidden md:inline">{t.worldRankings}</span></button>
                         <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><BookOpen size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
+                        <button onClick={() => setView('manager')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'manager' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><UserCircle size={20} /> <span className="hidden md:inline">Menajer</span></button>
                         <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                         <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
                         <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
+
 
                         {/* Job Offers Button - Only show if there are offers */}
                         {(gameState?.jobOffers?.length || 0) > 0 && (
@@ -3115,12 +3319,13 @@ const App: React.FC = () => {
                             className="w-full flex items-center justify-center gap-2 text-xs px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
                         >
                             <UserCircle size={14} />
-                            {lang === 'tr' ? 'Profillere Dön' : 'Back to Profiles'}
+                            {t.backToProfiles || 'Back to Profiles'}
                         </button>
                         <div className="flex justify-center gap-2">
                             <button onClick={() => setLang('tr')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'tr' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>TR</button>
                             <button onClick={() => setLang('en')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
                             <button onClick={() => setLang('es')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'es' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>ES</button>
+                            <button onClick={() => setLang('id')} className={`text-xs px-2 py-1 rounded transition-colors ${lang === 'id' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>ID</button>
                         </div>
                     </div>
                 </div>
@@ -3281,11 +3486,21 @@ const App: React.FC = () => {
                                             </div>
                                         </button>
 
-                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                        <button onClick={() => setView('manager')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-indigo-900/80"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
+                                            <div className="relative z-10 text-5xl mb-2">👔</div>
+                                            <div className="relative z-10 text-center">
+                                                <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">MENAJER</div>
+                                            </div>
+                                        </button>
+
+                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : prev === 'es' ? 'id' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+
                                             <img src="/assets/icon-language-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Language" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : 'ESPAÑOL'}</div>
+                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : lang === 'es' ? 'ESPAÑOL' : 'INDONESIA'}</div>
                                             </div>
                                         </button>
 
@@ -3637,10 +3852,12 @@ const App: React.FC = () => {
                                     />
                                 )
                             }
-                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} onPlayCupMatch={handlePlayEuropeanCupMatch} />}
+                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} />}
                             {view === 'rankings' && <WorldRankings players={gameState.players} teams={gameState.teams} t={t} onPlayerClick={setSelectedPlayer} />}
                             {view === 'guide' && <GameGuide t={t} />}
+                            {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} t={t} onBack={() => setView('dashboard')} />}
                         </div >
+
                     )}
                 </div >
             </div >
