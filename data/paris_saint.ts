@@ -252,5 +252,16 @@ export const PARIS_SAINT_SQUAD = [
     ana_ozellikler: { hiz: 71, sut: 73, pas: 83, dribbling: 78, defans: 68, fizik: 73 },
     detaylar: { vizyon: 78, kisa_pas: 83, top_kontrol: 75, dayaniklilik: 71 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "G. Kasongo",
+    takim: "Paris Red-Blue",
+    uyruk: "Fransa",
+    mevki: "MO",
+    reyting: 77,
+    yas: 20,
+    ana_ozellikler: { hiz: 80, sut: 70, pas: 78, dribbling: 82, defans: 60, fizik: 75 },
+    detaylar: { top_kontrol: 84, vizyon: 80, kisa_pas: 79, dayaniklilik: 78 },
+    oyun_tarzlari: ["Genç Yetenek", "Kutu Kutu"]
   }
 ];

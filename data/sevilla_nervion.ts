@@ -267,6 +267,17 @@ export const SEVILLA_NERVION_SQUAD = [
     ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "G. Ibáñez",
+    takim: "Nervion Red-Whites",
+    uyruk: "İspanya",
+    mevki: "SĞK",
+    reyting: 76,
+    yas: 19,
+    ana_ozellikler: { hiz: 88, sut: 72, pas: 70, dribbling: 80, defans: 35, fizik: 68 },
+    detaylar: { hizlanma: 89, sprint: 87, dribbling: 82, ceviklik: 84, calim: 80 },
+    oyun_tarzlari: ["Genç Yetenek", "Seri"]
   }
 ];
 

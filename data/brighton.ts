@@ -252,5 +252,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
     detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
     oyun_tarzlari: []
+  },
+  {
+    ad: "D. Agustino",
+    takim: "Brighton Seagulls",
+    uyruk: "Endonezya",
+    mevki: "SNT",
+    reyting: 75,
+    yas: 21,
+    ana_ozellikler: { hiz: 82, sut: 76, pas: 68, dribbling: 78, defans: 32, fizik: 72 },
+    detaylar: { bitiricilik: 78, pozisyon: 80, hizlanma: 84, dribbling: 79 },
+    oyun_tarzlari: ["Genç Yetenek", "Fırsatçı"]
   }
 ];

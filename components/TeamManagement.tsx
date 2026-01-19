@@ -87,6 +87,12 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                             🟥 {player.matchSuspension}m
                         </span>
                     )}
+                    {/* ⚠️ CONTRACT EXPIRY WARNING */}
+                    {player.contractYears <= 1 && (
+                        <span className="ml-1 px-1.5 py-0.5 bg-amber-600 text-white text-[8px] font-bold rounded flex items-center gap-1" title={`Kontrat: ${player.contractYears} yıl kaldı`}>
+                            📝 {player.contractYears}y
+                        </span>
+                    )}
                 </div>
                 {assignedRole && assignedRole !== normalizePos(player) && (
                     <div className="text-[9px] text-amber-500 flex items-center gap-1">

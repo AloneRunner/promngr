@@ -76,7 +76,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Kulüp Bütçesi</div>
+          <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">{t.clubBudget}</div>
           <div className="text-xl font-mono text-emerald-400 font-bold tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€{(userTeam.budget / 1000000).toFixed(2)}M</div>
           <div className="text-[9px] text-slate-500 font-mono mt-1 text-right">DB: {marketPlayers.length} Players</div>
         </div>
@@ -102,10 +102,10 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
         {/* List Status Filters */}
         <div className="flex gap-1 ml-auto">
           {[
-            { key: 'ALL', label: 'Tümü', color: 'slate' },
-            { key: 'LISTED', label: '✅ Satılık', color: 'emerald' },
-            { key: 'UNLISTED', label: '🔒 Değil', color: 'red' },
-            { key: 'FREE', label: '🆓 Serbest', color: 'blue' }
+            { key: 'ALL', label: t.filterAll || 'All', color: 'slate' },
+            { key: 'LISTED', label: `✅ ${t.filterListed || 'Listed'}`, color: 'emerald' },
+            { key: 'UNLISTED', label: `🔒 ${t.filterUnlisted || 'Not Listed'}`, color: 'red' },
+            { key: 'FREE', label: `🆓 ${t.filterFree || 'Free'}`, color: 'blue' }
           ].map(item => (
             <button
               key={item.key}

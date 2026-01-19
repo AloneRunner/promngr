@@ -10,7 +10,7 @@ interface ProfileSelectorProps {
     onDeleteProfile: (profileId: string) => void;
     onResetProfile: (profileId: string) => void;
     onRenameProfile: (profileId: string, newName: string) => void;
-    lang: 'tr' | 'en';
+    lang: string;
 }
 
 export const ProfileSelector: React.FC<ProfileSelectorProps> = ({
@@ -27,7 +27,7 @@ export const ProfileSelector: React.FC<ProfileSelectorProps> = ({
     const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
     const [editingName, setEditingName] = useState('');
 
-    const t = {
+    const translations: Record<string, any> = {
         tr: {
             title: 'Profil Seçin',
             subtitle: 'Devam etmek için bir profil seçin veya yeni profil oluşturun',
@@ -73,8 +73,55 @@ export const ProfileSelector: React.FC<ProfileSelectorProps> = ({
             cancel: 'Cancel',
             save: 'Save',
             namePlaceholder: 'e.g. My Barcelona Career'
+        },
+        id: {
+            title: 'Pilih Profil',
+            subtitle: 'Pilih profil untuk melanjutkan atau buat yang baru',
+            newProfile: 'Profil Baru',
+            play: 'Main',
+            delete: 'Hapus',
+            reset: 'Reset',
+            rename: 'Ganti Nama',
+            week: 'Minggu',
+            season: 'Musim',
+            position: 'Posisi',
+            noProfiles: 'Belum ada profil',
+            createFirst: 'Buat profil pertama Anda untuk memulai',
+            deleteConfirm: 'Profil ini akan dihapus secara permanen. Apakah Anda yakin?',
+            resetConfirm: 'Profil ini akan direset. Semua progres akan hilang. Apakah Anda yakin?',
+            notStarted: 'Game belum dimulai',
+            startNew: 'Mulai Game Baru',
+            createProfile: 'Buat Profil',
+            profileName: 'Nama Profil',
+            cancel: 'Batal',
+            save: 'Simpan',
+            namePlaceholder: 'Contoh: Karier Barcelona Saya'
+        },
+        es: {
+            title: 'Seleccionar Perfil',
+            subtitle: 'Elige un perfil para continuar o crea uno nuevo',
+            newProfile: 'Nuevo Perfil',
+            play: 'Jugar',
+            delete: 'Eliminar',
+            reset: 'Reiniciar',
+            rename: 'Renombrar',
+            week: 'Semana',
+            season: 'Temporada',
+            position: 'Posición',
+            noProfiles: 'Aún no hay perfiles',
+            createFirst: 'Crea tu primer perfil para empezar',
+            deleteConfirm: 'Este perfil se eliminará permanentemente. ¿Estás seguro?',
+            resetConfirm: 'Este perfil se reiniciará. Todo el progreso se perderá. ¿Estás seguro?',
+            notStarted: 'Juego no iniciado',
+            startNew: 'Iniciar Nuevo Juego',
+            createProfile: 'Crear Perfil',
+            profileName: 'Nombre del Perfil',
+            cancel: 'Cancelar',
+            save: 'Guardar',
+            namePlaceholder: 'Ej: Mi Carrera Barcelona'
         }
-    }[lang];
+    };
+    const t = translations[lang] || translations.en;
 
     const handleCreate = () => {
         const trimmed = newProfileName.trim();
