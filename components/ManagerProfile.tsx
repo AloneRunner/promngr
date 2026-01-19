@@ -16,34 +16,34 @@ const formatMoney = (amount: number): string => {
     return `€${amount}`;
 };
 
-// Cup prize info
-const CUP_PRIZES = {
+// Cup prize info - function to get localized cup data
+const getCupPrizes = (t: any) => ({
     championsLeague: {
-        name: 'Şampiyonlar Ligi',
+        name: t.championsLeagueLabel || 'Champions League',
         rounds: [
-            { round: 'Son 16 → Çeyrek Final', prize: 5000000 },
-            { round: 'Çeyrek Final → Yarı Final', prize: 7500000 },
-            { round: 'Yarı Final → Final', prize: 12500000 },
-            { round: 'Şampiyonluk', prize: 25000000 }
+            { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 5000000 },
+            { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 7500000 },
+            { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 12500000 },
+            { round: t.championshipLabel || 'Championship', prize: 25000000 }
         ],
         total: 50000000
     },
     uefaCup: {
-        name: 'UEFA Cup',
+        name: t.uefaCupLabel || 'UEFA Cup',
         rounds: [
-            { round: 'Son 16 → Çeyrek Final', prize: 2500000 },
-            { round: 'Çeyrek Final → Yarı Final', prize: 3750000 },
-            { round: 'Yarı Final → Final', prize: 6250000 },
-            { round: 'Şampiyonluk', prize: 12500000 }
+            { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 2500000 },
+            { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 3750000 },
+            { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 6250000 },
+            { round: t.championshipLabel || 'Championship', prize: 12500000 }
         ],
         total: 25000000
     },
     superCup: {
-        name: 'Süper Kupa',
-        rounds: [{ round: 'Şampiyonluk', prize: 25000000 }],
+        name: t.superCupLabel || 'Super Cup',
+        rounds: [{ round: t.championshipLabel || 'Championship', prize: 25000000 }],
         total: 25000000
     }
-};
+});
 
 export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userTeam, t, onBack }) => {
     const rating = gameState.managerRating || 50;
@@ -230,7 +230,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                     <h2 className="text-xl font-bold text-white mb-4">💰 {t.cupPrizeInfoTitle || 'Cup Prize Info'}</h2>
 
                     <div className="grid md:grid-cols-3 gap-4">
-                        {Object.entries(CUP_PRIZES).map(([key, cup]) => (
+                        {Object.entries(getCupPrizes(t)).map(([key, cup]) => (
                             <div key={key} className="bg-slate-700/50 rounded-xl p-4">
                                 <h3 className="font-bold text-white mb-3">{cup.name}</h3>
                                 <div className="space-y-2">

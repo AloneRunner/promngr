@@ -156,12 +156,12 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
     };
 
     const options: { id: TrainingFocus, icon: any, label: string, desc: string, color: string }[] = [
-        { id: 'BALANCED', icon: Activity, label: t.training === 'Training' ? 'Balanced' : 'Dengeli', desc: t.training === 'Training' ? 'Maintain overall fitness and sharpness.' : 'Genel kondisyon ve formu korur.', color: 'text-white' },
-        { id: 'ATTACK', icon: Target, label: t.training === 'Training' ? 'Attacking' : 'Hücum', desc: t.training === 'Training' ? 'Boosts Finishing, Passing. Lowers Defense.' : 'Bitiricilik ve Pası geliştirir.', color: 'text-red-400' },
-        { id: 'DEFENSE', icon: Shield, label: t.training === 'Training' ? 'Defending' : 'Savunma', desc: t.training === 'Training' ? 'Boosts Tackling, Positioning. Lowers Attack.' : 'Top Kapma ve Pozisyon Almayı geliştirir.', color: 'text-blue-400' },
-        { id: 'PHYSICAL', icon: Zap, label: t.training === 'Training' ? 'Physical' : 'Fiziksel', desc: t.training === 'Training' ? 'Boosts Speed, Strength. High Fatigue risk.' : 'Hız ve Güç artar. Yorgunluk riski.', color: 'text-yellow-400' },
-        { id: 'TECHNICAL', icon: Brain, label: t.training === 'Training' ? 'Technical' : 'Teknik', desc: t.training === 'Training' ? 'Boosts Dribbling, Vision, Control.' : 'Top Sürme ve Vizyonu geliştirir.', color: 'text-purple-400' },
-        { id: 'POSITION_BASED', icon: Users, label: t.training === 'Training' ? 'Position Based' : 'Mevkiye Göre', desc: t.training === 'Training' ? 'Each player trains based on their position.' : 'Her oyuncu kendi mevkisine göre antrenman alır.', color: 'text-emerald-400' },
+        { id: 'BALANCED', icon: Activity, label: t.trainingBalanced || 'Balanced', desc: t.trainingBalancedDesc || 'Maintain overall fitness and sharpness.', color: 'text-white' },
+        { id: 'ATTACK', icon: Target, label: t.trainingAttack || 'Attacking', desc: t.trainingAttackDesc || 'Boosts Finishing, Passing. Lowers Defense.', color: 'text-red-400' },
+        { id: 'DEFENSE', icon: Shield, label: t.trainingDefense || 'Defending', desc: t.trainingDefenseDesc || 'Boosts Tackling, Positioning. Lowers Attack.', color: 'text-blue-400' },
+        { id: 'PHYSICAL', icon: Zap, label: t.trainingPhysical || 'Physical', desc: t.trainingPhysicalDesc || 'Boosts Speed, Strength. High Fatigue risk.', color: 'text-yellow-400' },
+        { id: 'TECHNICAL', icon: Brain, label: t.trainingTechnical || 'Technical', desc: t.trainingTechnicalDesc || 'Boosts Dribbling, Vision, Control.', color: 'text-purple-400' },
+        { id: 'POSITION_BASED', icon: Users, label: t.trainingPositionBased || 'Position Based', desc: t.trainingPositionBasedDesc || 'Each player trains based on their position.', color: 'text-emerald-400' },
     ];
 
     const intensities: { id: TrainingIntensity, label: string, recovery: string, growth: string, color: string }[] = [
@@ -215,7 +215,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         <BarChart2 className="text-orange-500" /> {t.trainingIntensity}
                     </h3>
                     <p className="text-xs text-slate-400 mb-4">
-                        {t.training === 'Training' ? 'Balance recovery and growth. Heavier training improves players faster but reduces fitness recovery.' : 'Dinlenme ve gelişimi dengeleyin. Ağır antrenman oyuncuları hızla geliştirir ancak dinlenmeyi azaltır.'}
+                        {t.trainingTip || 'Balance recovery and growth. Heavier training improves players faster but reduces fitness recovery.'}
                     </p>
 
                     <div className="grid grid-cols-3 gap-2">
@@ -254,16 +254,14 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                         <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${team.facilities.trainingLevel * 4}%` }}></div>
                     </div>
                     <p className="text-xs text-slate-400">
-                        {t.training === 'Training' ? 'Upgrade your Training Facilities in the Club menu to improve weekly player growth rates.' : 'Haftalık oyuncu gelişimini artırmak için Kulüp menüsünden Antrenman Tesislerini yükseltin.'}
+                        {t.upgradeTrainingTip || 'Upgrade your Training Facilities in the Club menu to improve weekly player growth rates.'}
                     </p>
                 </div>
 
                 <div className="bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-lg border border-indigo-500/30 shadow-xl">
                     <h3 className="text-lg font-bold text-white mb-2">{t.coachNote}</h3>
                     <p className="text-sm text-indigo-200 italic">
-                        "{t.training === 'Training' ?
-                            `Setting the focus to ${team.trainingFocus} will help shape the team's identity. Use Light intensity after tough matches to recover condition.` :
-                            `Odağı ${team.trainingFocus} olarak ayarlamak takımın kimliğini şekillendirecektir. Zorlu maçlardan sonra kondisyonu toparlamak için Hafif yoğunluğu kullanın.`}"
+                        "{t.coachNoteText?.replace('{focus}', team.trainingFocus) || `Setting the focus to ${team.trainingFocus} will help shape the team's identity. Use Light intensity after tough matches to recover condition.`}"
                     </p>
                 </div>
 

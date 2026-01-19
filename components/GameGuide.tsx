@@ -69,6 +69,51 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                         </ul>
                         <p className="text-xs text-slate-400 mt-2">💡 {t.guideChangeView || 'Change view during match from top right!'}</p>
                     </div>
+
+                    {/* Solo Developer Note */}
+                    <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">👨‍💻 {t.guideSoloDev || 'Solo Developer Project'}</p>
+                        <p className="text-sm text-slate-300 mb-2">
+                            {t.guideSoloDevDesc || 'This game is developed by a single person. Thank you for your patience with bugs and missing features!'}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                            💬 {t.guideFeedback || 'I read all reviews and try to add requested features. Examples: Indonesian & French language support was added based on user feedback!'}
+                        </p>
+                    </div>
+
+                    {/* Design Philosophy */}
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-cyan-400 font-bold mb-2">🎯 {t.guidePhilosophy || 'Design Philosophy'}</p>
+                        <p className="text-sm text-slate-300 mb-2">
+                            {t.guidePhilosophyDesc || 'Unlike ultra-detailed games like FM, this game is designed to be accessible to everyone - even casual football fans.'}
+                        </p>
+                        <ul className="text-xs space-y-1 text-slate-400">
+                            <li>• {t.guidePhilosophy1 || 'Play 10-15 minutes a day, enjoy your time!'}</li>
+                            <li>• {t.guidePhilosophy2 || 'Main feature: Real-time 2D/2.5D match simulation'}</li>
+                            <li>• {t.guidePhilosophy3 || 'No complex systems to overwhelm you'}</li>
+                        </ul>
+                    </div>
+
+                    {/* Why Some Features Are Missing */}
+                    <div className="bg-orange-900/20 border border-orange-500/30 p-3 rounded">
+                        <p className="text-orange-400 font-bold mb-2">❓ {t.guideWhyMissing || 'Why Some Features Are Missing?'}</p>
+                        <ul className="text-xs space-y-1 text-slate-400">
+                            <li>• {t.guideMissing1 || 'Player loans → Removed for simplicity'}</li>
+                            <li>• {t.guideMissing2 || 'World Cup → Maybe in the future'}</li>
+                            <li>• {t.guideMissing3 || 'Complex tactics → Kept simple intentionally'}</li>
+                        </ul>
+                    </div>
+
+                    {/* Future Plans */}
+                    <div className="bg-purple-900/20 border border-purple-500/30 p-3 rounded">
+                        <p className="text-purple-400 font-bold mb-2">🔮 {t.guideFuturePlans || 'Future Plans'}</p>
+                        <ul className="text-xs space-y-1 text-slate-400">
+                            <li>✅ {t.guideFuture1 || 'More language support'}</li>
+                            <li>🔜 {t.guideFuture2 || 'Create your own team'}</li>
+                            <li>🔜 {t.guideFuture3 || 'Customize team/player names'}</li>
+                            <li>❓ {t.guideFuture4 || 'World Cup (maybe)'}</li>
+                        </ul>
+                    </div>
                 </div>
             )
         },

@@ -102,6 +102,17 @@ export const VALENCIA_BATS_SQUAD = [
             sprint: 91, hizlanma: 89, dayaniklilik: 80
         },
         oyun_tarzlari: ["Hızlı Bek"]
+    },
+    {
+        ad: "M. Alegría",
+        takim: "Valencia Bats",
+        uyruk: "İspanya",
+        mevki: "MOO",
+        reyting: 76,
+        yas: 19,
+        ana_ozellikler: { hiz: 78, sut: 74, pas: 76, dribbling: 80, defans: 45, fizik: 65 },
+        detaylar: { vizyon: 82, dribbling: 81, top_kontrol: 80, ceviklik: 79 },
+        oyun_tarzlari: ["Genç Yetenek", "Teknik"]
     }
 ];
 

@@ -18,13 +18,13 @@ interface SponsorWithTier extends Sponsor {
 // GARANTİLİ: ~3M EUR/yıl garantili (iyi haftalık, düşük prim)
 // DENGELİ: ~4-5M EUR/yıl potansiyel (orta haftalık, orta prim)
 // RİSKLİ: ~7-8M EUR/yıl potansiyel (düşük haftalık, yüksek galibiyet + şampiyonluk primleri)
-const generateSponsors = (): SponsorWithTier[] => {
+const generateSponsors = (t: any): SponsorWithTier[] => {
     return [
         // === GARANTİLİ SPONSORLAR (~3M EUR/yıl güvence) ===
         {
             id: 'sponsor_safe_1',
             name: 'SafeBank Financial',
-            description: '🏦 Banka sponsoru - Stabil ve garantili gelir',
+            description: t.sponsorSafe1Desc,
             weeklyIncome: 55000,    // 55K * 52 hafta = ~2.86M EUR/yıl HAFTALİK
             winBonus: 5000,         // Düşük prim (sembolik)
             duration: 1,
@@ -37,7 +37,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_safe_2',
             name: 'TelekomPlus',
-            description: '📱 Telekomünikasyon - Güvenilir anlaşma',
+            description: t.sponsorSafe2Desc,
             weeklyIncome: 60000,    // ~3.12M EUR/yıl
             winBonus: 3000,         // Çok düşük prim
             duration: 1,
@@ -52,7 +52,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_balanced_1',
             name: 'GoldStar Energy',
-            description: '⚡ Enerji içeceği - Dengeli risk/kazanç',
+            description: t.sponsorBalanced1Desc,
             weeklyIncome: 40000,    // ~2.08M EUR/yıl baz
             winBonus: 20000,        // Her galibiyet +20K
             duration: 1,
@@ -65,7 +65,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_balanced_2',
             name: 'SportMax Gear',
-            description: '👟 Spor ekipmanları - Performansa dayalı',
+            description: t.sponsorBalanced2Desc,
             weeklyIncome: 35000,    // ~1.82M EUR/yıl baz
             winBonus: 25000,        // Her galibiyet +25K
             duration: 1,
@@ -80,7 +80,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_risky_1',
             name: 'CryptoVentures',
-            description: '🎰 Kripto girişim - Şampiyonluk hedefle!',
+            description: t.sponsorRisky1Desc,
             weeklyIncome: 15000,    // ~780K EUR/yıl baz (çok düşük!)
             winBonus: 60000,        // Her galibiyet = 60K 
             duration: 1,
@@ -93,7 +93,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_risky_2',
             name: 'BetKing Gaming',
-            description: '🎲 Bahis şirketi - Kazanırsan büyük kazan!',
+            description: t.sponsorRisky2Desc,
             weeklyIncome: 10000,    // ~520K EUR/yıl baz (en düşük)
             winBonus: 75000,        // Her galibiyet = 75K
             duration: 1,
@@ -106,7 +106,7 @@ const generateSponsors = (): SponsorWithTier[] => {
         {
             id: 'sponsor_risky_3',
             name: 'StartupX Tech',
-            description: '🚀 Tech startup - Başarı primi odaklı',
+            description: t.sponsorRisky3Desc,
             weeklyIncome: 20000,    // ~1.04M EUR/yıl baz
             winBonus: 50000,        // Her galibiyet = 50K
             duration: 1,
@@ -135,11 +135,11 @@ const getTierIcon = (tier: SponsorTier) => {
     }
 };
 
-const getTierLabel = (tier: SponsorTier) => {
+const getTierLabel = (tier: SponsorTier, t: any) => {
     switch (tier) {
-        case 'GUARANTEED': return 'GARANTİLİ';
-        case 'BALANCED': return 'DENGELİ';
-        case 'RISKY': return 'RİSKLİ';
+        case 'GUARANTEED': return t.tierGuaranteed;
+        case 'BALANCED': return t.tierBalanced;
+        case 'RISKY': return t.tierRisky;
     }
 };
 
@@ -157,7 +157,7 @@ const calculateYearlyPotential = (sponsor: SponsorWithTier, winsPerSeason: numbe
 export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
     const [selectedSponsor, setSelectedSponsor] = useState<SponsorWithTier | null>(null);
     const [filterTier, setFilterTier] = useState<SponsorTier | 'ALL'>('ALL');
-    const sponsors = generateSponsors();
+    const sponsors = generateSponsors(t);
 
     const filteredSponsors = filterTier === 'ALL'
         ? sponsors
@@ -176,10 +176,10 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                 <div className="p-4 bg-gradient-to-r from-emerald-900 to-slate-900 border-b border-slate-700">
                     <h2 className="text-xl font-bold text-white flex items-center gap-3">
                         <Briefcase className="text-emerald-400" size={24} />
-                        {t.sponsorTitle || 'Sponsor Seçimi'}
+                        {t.sponsorTitle}
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">
-                        {t.sponsorSelect || 'Sezonluk ana sponsorunu seç.'}
+                        {t.sponsorSelect}
                     </p>
                 </div>
 
@@ -194,7 +194,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                 : 'bg-slate-700/50 text-slate-400 hover:text-white'
                                 }`}
                         >
-                            {tier === 'ALL' ? 'Tümü' : getTierLabel(tier)}
+                            {tier === 'ALL' ? t.filterAll : getTierLabel(tier, t)}
                         </button>
                     ))}
                 </div>
@@ -221,7 +221,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                                             {getTierIcon(sponsor.tier)}
                                             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${getTierColor(sponsor.tier)}`}>
-                                                {getTierLabel(sponsor.tier)}
+                                                {getTierLabel(sponsor.tier, t)}
                                             </span>
                                             <h3 className="font-bold text-white text-lg">{sponsor.name}</h3>
                                             {selectedSponsor?.id === sponsor.id && (
@@ -249,22 +249,22 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                                     <div className="bg-slate-900/50 px-3 py-2 rounded">
                                         <div className="text-[10px] text-slate-500 uppercase flex items-center gap-1">
-                                            <TrendingUp size={10} /> Haftalık
+                                            <TrendingUp size={10} /> {t.weeklyIncome}
                                         </div>
                                         <div className="font-bold text-emerald-400">€{sponsor.weeklyIncome.toLocaleString()}</div>
                                     </div>
                                     <div className="bg-slate-900/50 px-3 py-2 rounded">
                                         <div className="text-[10px] text-slate-500 uppercase flex items-center gap-1">
-                                            <Trophy size={10} /> Galibiyet
+                                            <Trophy size={10} /> {t.winBonus}
                                         </div>
                                         <div className="font-bold text-yellow-400">€{sponsor.winBonus.toLocaleString()}</div>
                                     </div>
                                     <div className="bg-slate-900/50 px-3 py-2 rounded">
-                                        <div className="text-[10px] text-slate-500 uppercase">Min/Yıl</div>
+                                        <div className="text-[10px] text-slate-500 uppercase">{t.minYearly}</div>
                                         <div className="font-mono text-sm text-slate-400">€{(yearlyMin / 1000000).toFixed(1)}M</div>
                                     </div>
                                     <div className="bg-slate-900/50 px-3 py-2 rounded">
-                                        <div className="text-[10px] text-slate-500 uppercase">Şampiyon/Yıl</div>
+                                        <div className="text-[10px] text-slate-500 uppercase">{t.champYearly}</div>
                                         <div className="font-mono text-sm text-amber-400">€{(yearlyChamp / 1000000).toFixed(1)}M</div>
                                     </div>
                                 </div>
@@ -273,7 +273,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                 {(sponsor.bonus1st || sponsor.bonus2nd || sponsor.bonus3rd) && (
                                     <div className="bg-slate-900/70 rounded p-2">
                                         <div className="text-[10px] text-slate-500 uppercase mb-2 flex items-center gap-1">
-                                            <Crown size={10} className="text-yellow-400" /> Sezon Sonu Primleri
+                                            <Crown size={10} className="text-yellow-400" /> {t.seasonEndBonuses}
                                         </div>
                                         <div className="flex gap-3 flex-wrap">
                                             {sponsor.bonus1st && (
@@ -304,14 +304,14 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                 {sponsor.tier === 'RISKY' && (
                                     <div className="mt-2 flex items-center gap-2 text-[10px] text-orange-400 bg-orange-900/20 px-2 py-1 rounded">
                                         <Flame size={12} />
-                                        ⚠️ Dikkat: Kötü sezonda gelir çok düşük! Ama şampiyon olursan büyük ödül!
+                                        {t.riskyWarning}
                                     </div>
                                 )}
 
                                 {sponsor.tier === 'GUARANTEED' && (
                                     <div className="mt-2 flex items-center gap-2 text-[10px] text-emerald-400 bg-emerald-900/20 px-2 py-1 rounded">
                                         <Shield size={12} />
-                                        ✓ Güvenli: Sonuç ne olursa olsun sabit yüksek gelir
+                                        {t.guaranteedNote}
                                     </div>
                                 )}
                             </div>
@@ -324,14 +324,14 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                     <div className="text-sm">
                         {selectedSponsor ? (
                             <span className="text-white">
-                                <span className="text-slate-400">Seçilen:</span> {selectedSponsor.name}
+                                <span className="text-slate-400">{t.selectedLabel}</span> {selectedSponsor.name}
                                 <span className="text-emerald-400 ml-2">
-                                    (€{(calculateYearlyPotential(selectedSponsor, 12, 4) / 1000000).toFixed(1)}M orta sıra /
-                                    <span className="text-amber-400"> €{(calculateYearlyPotential(selectedSponsor, 17, 1) / 1000000).toFixed(1)}M şampiyon</span>)
+                                    (€{(calculateYearlyPotential(selectedSponsor, 12, 4) / 1000000).toFixed(1)}M {t.midTableLabel} /
+                                    <span className="text-amber-400"> €{(calculateYearlyPotential(selectedSponsor, 17, 1) / 1000000).toFixed(1)}M {t.championLabel}</span>)
                                 </span>
                             </span>
                         ) : (
-                            <span className="text-slate-400">Bir sponsor seçin</span>
+                            <span className="text-slate-400">{t.selectSponsorLabel}</span>
                         )}
                     </div>
                     <button
@@ -340,7 +340,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                         className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2"
                     >
                         <Check size={18} />
-                        Anlaşmayı Onayla
+                        {t.confirmDeal}
                     </button>
                 </div>
             </div>
