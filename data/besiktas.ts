@@ -2,7 +2,7 @@
 export const BESIKTAS_SQUAD = [
   {
     ad: "Kaan Özarık",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 86,
@@ -17,7 +17,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "O. Kokcu",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 82,
@@ -34,7 +34,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "R. Sylva",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Portekiz",
     mevki: "MOO",
     reyting: 82,
@@ -51,7 +51,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "M. Gunok",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 78,
@@ -65,7 +65,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "J. Mario",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Portekiz",
     mevki: "SLO",
     reyting: 78,
@@ -82,7 +82,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "V. Cerny",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SĞO",
     reyting: 77,
@@ -96,7 +96,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "T. Abrah",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "İngiltere",
     mevki: "SNT",
     reyting: 77,
@@ -110,7 +110,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "G. Paulis",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 77,
@@ -124,7 +124,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "M. Rashyc",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Kosova",
     mevki: "SĞO",
     reyting: 76,
@@ -138,7 +138,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "W. Ndidy",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Nijerya",
     mevki: "MDO",
     reyting: 76,
@@ -152,7 +152,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "C. Under",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "SĞK",
     reyting: 76,
@@ -166,7 +166,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "F. Uduokh",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Almanya",
     mevki: "STP",
     reyting: 76,
@@ -179,7 +179,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "J. Svenso",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Norveç",
     mevki: "SĞB",
     reyting: 75,
@@ -193,7 +193,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "T. Djalo",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Portekiz",
     mevki: "STP",
     reyting: 75,
@@ -207,7 +207,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "D. Jurasek",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Çek Cumhuriyeti",
     mevki: "SLB",
     reyting: 73,
@@ -221,7 +221,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "R. Yilmy",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 73,
@@ -235,7 +235,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "E. Topcu",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 73,
@@ -249,7 +249,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "E. Toure",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Mali",
     mevki: "SNT",
     reyting: 73,
@@ -263,7 +263,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "D. Tiknaz",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 72,
@@ -277,7 +277,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "S. Ucan",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 72,
@@ -291,7 +291,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "E. Destan",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 72,
@@ -305,7 +305,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "K. Yilmy",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
     reyting: 70,
@@ -319,7 +319,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "N. Uysal",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 68,
@@ -333,7 +333,7 @@ export const BESIKTAS_SQUAD = [
   },
   {
     ad: "T. Bulutt",
-    takim: "Besikta Eagles",
+    takim: "Istanbul Eagles",
     uyruk: "Almanya",
     mevki: "SĞB",
     reyting: 67,

@@ -18,7 +18,7 @@ export const TEAM_LOGOS: Record<string, string> = {
     // 🇹🇷 Süper Lig
     'Galata Lions': '/assets/logos/teams/tr/galata-lions.jpg',
     'Istanbul Yellows': '/assets/logos/teams/tr/istanbul-yellows.jpg',
-    'Besikta Eagles': '/assets/logos/teams/tr/besikta-eagles.jpg',
+    'Istanbul Eagles': '/assets/logos/teams/tr/besikta-eagles.jpg',
     'Trabzon Storm': '/assets/logos/teams/tr/trabzon-storm.jpg',
     'Basak City': '/assets/logos/teams/tr/basak-city.jpg',
     'Samsun Red': '/assets/logos/teams/tr/samsun-red.jpg',
@@ -29,7 +29,7 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Antalya Scorpions': '/assets/logos/teams/tr/antalya-scorpions.jpg',
     'Kayseri Stars': '/assets/logos/teams/tr/kayseri-stars.jpg',
     'Alanya Sun': '/assets/logos/teams/tr/alanya-sun.jpg',
-    'Izmir Göz': '/assets/logos/teams/tr/izmir-goz.jpg',
+    'Izmir Goz': '/assets/logos/teams/tr/izmir-goz.jpg',
     'Eyup Violet': '/assets/logos/teams/tr/eyup-violet.jpg',
     'Karagumruk Black': '/assets/logos/teams/tr/karagumruk-black.jpg',
     'Kocaeli Gulf': '/assets/logos/teams/tr/kocaeli-gulf.jpg',

@@ -3635,12 +3635,12 @@ const App: React.FC = () => {
                                             </div>
                                         </button>
 
-                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : prev === 'es' ? 'id' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : prev === 'es' ? 'fr' : prev === 'fr' ? 'ru' : prev === 'ru' ? 'id' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
 
                                             <img src="/assets/icon-language-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Language" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : lang === 'es' ? 'ESPAÑOL' : 'INDONESIA'}</div>
+                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : lang === 'es' ? 'ESPAÑOL' : lang === 'fr' ? 'FRANÇAIS' : lang === 'ru' ? 'РУССКИЙ' : 'INDONESIA'}</div>
                                             </div>
                                         </button>
 
