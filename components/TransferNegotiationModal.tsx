@@ -1,24 +1,42 @@
 
 import React, { useState, useEffect } from 'react';
 import { Player, Team, Translation } from '../types';
-import { DollarSign, MessageCircle, AlertTriangle, Briefcase, X } from 'lucide-react';
+import { DollarSign, MessageCircle, AlertTriangle, Briefcase, X, Heart, HeartCrack } from 'lucide-react';
+import { calculateTransferWillingness, getLeagueReputation } from '../services/engine';
 
 interface TransferNegotiationModalProps {
     player: Player;
     userTeam: Team;
+    sellingTeam?: Team; // Optional - the team selling the player
     onClose: () => void;
     onComplete: (player: Player, finalPrice: number) => void;
     t: Translation;
 }
 
-type NegotiationState = 'INITIAL' | 'NEGOTIATING' | 'AGREED' | 'REJECTED' | 'WALKOUT';
+type NegotiationState = 'INITIAL' | 'NEGOTIATING' | 'AGREED' | 'REJECTED' | 'WALKOUT' | 'PLAYER_REFUSED';
 
-export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> = ({ player, userTeam, onClose, onComplete, t }) => {
+export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> = ({ player, userTeam, sellingTeam, onClose, onComplete, t }) => {
     const [offer, setOffer] = useState<number>(player.value);
     const [status, setStatus] = useState<NegotiationState>('INITIAL');
     const [clubMessage, setClubMessage] = useState<string>('');
     const [patience, setPatience] = useState<number>(3); // 3 attempts before walkout
     const [requiredPrice, setRequiredPrice] = useState<number>(0);
+    const [playerWillingness, setPlayerWillingness] = useState<number>(50);
+
+    // Calculate player willingness based on league reputation, team rep, etc.
+    useEffect(() => {
+        const fromLeague = sellingTeam?.leagueId || 'en'; // Default to top league if unknown
+        const fromTeamRep = sellingTeam?.reputation || 8000;
+
+        const willingness = calculateTransferWillingness(
+            { overall: player.overall, age: player.age, potential: player.potential, morale: player.morale },
+            fromTeamRep,
+            userTeam.reputation,
+            fromLeague,
+            userTeam.leagueId || 'tr'
+        );
+        setPlayerWillingness(willingness);
+    }, [player, userTeam, sellingTeam]);
 
     // Initial calculation of AI asking price
     useEffect(() => {
@@ -35,10 +53,24 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
             if (player.overall > 80) multiplier += 0.2; // Star tax
         }
 
+        // NEW: Willingness affects price - low willingness = player demands more
+        if (playerWillingness < 30) {
+            multiplier += 0.5; // 50% premium if player doesn't want to come
+        } else if (playerWillingness < 50) {
+            multiplier += 0.25; // 25% premium if hesitant
+        }
+
         // Random variance +/- 10%
         const variance = 0.95 + Math.random() * 0.15;
         const calculatedPrice = Math.floor(player.value * multiplier * variance);
         setRequiredPrice(calculatedPrice);
+
+        // Check if player completely refuses
+        if (playerWillingness < 15) {
+            setStatus('PLAYER_REFUSED');
+            setClubMessage(t.playerRefusedTransfer || `${player.lastName} is not interested in joining your club at this time. The league prestige difference is too large.`);
+            return;
+        }
 
         if (player.isTransferListed) {
             setClubMessage(t.negotiationOpen
@@ -50,7 +82,7 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
             // Reduce patience for unlisted players
             setPatience(2);
         }
-    }, [player, t]);
+    }, [player, t, playerWillingness]);
 
     const handleOffer = (amount: number) => {
         if (patience <= 0) {
@@ -112,7 +144,7 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
-            <div className={`bg-slate-900 border-2 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative transition-colors duration-500 overflow-hidden ${status === 'WALKOUT' ? 'border-red-600' :
+            <div className={`bg-slate-900 border-2 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative transition-colors duration-500 overflow-hidden ${status === 'WALKOUT' || status === 'PLAYER_REFUSED' ? 'border-red-600' :
                 status === 'AGREED' ? 'border-emerald-500' : 'border-slate-700'
                 }`}>
 
@@ -125,8 +157,18 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                         <div>
                             <h2 className="text-xl font-bold text-white">{player.firstName} {player.lastName}</h2>
                             <div className="text-xs text-slate-400 font-mono">{t.currentValue}: {formatMoney(player.value)}</div>
-                            <div className={`text-xs font-bold mt-1 ${player.isTransferListed ? 'text-emerald-400' : 'text-red-400'}`}>
-                                {player.isTransferListed ? t.transferList : t.unlisted || 'UNLISTED'}
+                            <div className="flex items-center gap-2 mt-1">
+                                <div className={`text-xs font-bold ${player.isTransferListed ? 'text-emerald-400' : 'text-red-400'}`}>
+                                    {player.isTransferListed ? t.transferList : t.unlisted || 'UNLISTED'}
+                                </div>
+                                {/* Willingness Indicator */}
+                                <div className={`flex items-center gap-1 text-xs font-bold ${playerWillingness >= 60 ? 'text-emerald-400' :
+                                    playerWillingness >= 40 ? 'text-yellow-400' :
+                                        playerWillingness >= 20 ? 'text-orange-400' : 'text-red-400'
+                                    }`}>
+                                    {playerWillingness >= 40 ? <Heart size={12} /> : <HeartCrack size={12} />}
+                                    <span>{playerWillingness}%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -144,7 +186,7 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                 </div>
 
                 {/* Negotiation Controls */}
-                {status !== 'AGREED' && status !== 'WALKOUT' && (
+                {status !== 'AGREED' && status !== 'WALKOUT' && status !== 'PLAYER_REFUSED' && (
                     <div className="space-y-4">
                         <div>
                             <label className="block text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between">
@@ -219,6 +261,19 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                         <div className="bg-red-900/20 border border-red-500/30 p-4 rounded-xl text-center mb-4">
                             <h3 className="text-red-400 font-bold text-lg mb-1">{t.negotiationFailed}</h3>
                             <p className="text-slate-300 text-sm">{t.negotiationFailedDesc}</p>
+                        </div>
+                        <button onClick={onClose} className="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-lg">{t.close}</button>
+                    </div>
+                )}
+
+                {/* Player Refused State - When willingness is too low */}
+                {status === 'PLAYER_REFUSED' && (
+                    <div className="animate-fade-in">
+                        <div className="bg-red-900/20 border border-red-500/30 p-4 rounded-xl text-center mb-4">
+                            <HeartCrack className="mx-auto mb-2 text-red-400" size={32} />
+                            <h3 className="text-red-400 font-bold text-lg mb-1">{t.playerNotInterested || 'Player Not Interested'}</h3>
+                            <p className="text-slate-300 text-sm">{clubMessage}</p>
+                            <p className="text-slate-500 text-xs mt-2">{t.playerRefusedHint || 'Win European cups to increase your league reputation!'}</p>
                         </div>
                         <button onClick={onClose} className="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-lg">{t.close}</button>
                     </div>

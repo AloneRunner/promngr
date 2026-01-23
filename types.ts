@@ -214,6 +214,7 @@ export interface LeagueHistoryEntry {
     bestRatedPlayer?: string;   // NEW: Best average rating player
     championsLeagueWinner?: string;  // NEW: CL winner (only in 'tr' or main league)
     europaLeagueWinner?: string;     // NEW: EL winner
+    superCupWinner?: string;         // NEW: Super Cup winner
 }
 
 export interface EuropeanCupMatch {
@@ -305,9 +306,23 @@ export interface GameState {
     // Assistant Coach - Tactical Memory
     tacticalHistory?: TacticalMatchRecord[];
 
+    // Global World State (Persisted)
+    leagueReputationBonuses?: Record<string, number>; // Bonus reputation (0-35)
+    baseLeagueReputations?: Record<string, number>;   // Dynamic base reputation
+    leagueEuropeanBonuses?: Record<string, number>;   // Economic bonus (0-1.0)
+    leagueCoefficientHistory?: Record<string, number[]>; // NEW: 5-Year Coefficient History
 }
 
 // Yardımcı Antrenör - Maç Taktik Kaydı
+export interface TacticalChange {
+    minute: number;
+    previousFormation: string;
+    previousStyle: string;
+    newFormation: string;
+    newStyle: string;
+    scoreAtTime: { home: number; away: number };
+}
+
 export interface TacticalMatchRecord {
     season: number;
     week: number;
@@ -321,6 +336,7 @@ export interface TacticalMatchRecord {
     awayXG: number;
     isUserHome: boolean;
     userWon: boolean;
+    tacticalTimeline?: TacticalChange[]; // Mid-match tactical changes
 }
 
 export interface AssistantAdvice {

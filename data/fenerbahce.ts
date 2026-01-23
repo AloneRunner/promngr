@@ -1,7 +1,7 @@
 
 export const FENERBAHCE_SQUAD = [
   {
-    ad: "A. Candem",
+    ad: "A. Candemir",
     takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞK",

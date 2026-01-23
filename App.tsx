@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './constants';
-import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound, calculateMatchAttendance } from './services/engine';
+import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, TacticalChange } from './types';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound, calculateMatchAttendance, initializeEngine, getEngineState } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -15,7 +15,6 @@ import { NewsCenter } from './components/NewsCenter';
 import { TrainingCenter } from './components/TrainingCenter';
 import { SponsorModal } from './components/SponsorModal';
 import { TeamInspector } from './components/TeamInspector';
-import { WorldRankings } from './components/WorldRankings';
 import { AssistantReport } from './components/AssistantReport';
 import { GameGuide } from './components/GameGuide';
 import { FixturesView } from './components/FixturesView';
@@ -24,11 +23,14 @@ import { EuropeanCupView } from './components/EuropeanCupView';
 import { ProfileSelector } from './components/ProfileSelector';
 import { TransferNegotiationModal } from './components/TransferNegotiationModal';
 import { JobOffersModal } from './components/JobOffersModal';
+import { UpdatesModal } from './components/UpdatesModal';
 import { ManagerProfile } from './components/ManagerProfile';
+import { GlobalHistoryModal } from './components/GlobalHistoryModal';
+import { WorldRankingsModal } from './components/WorldRankingsModal';
 import { Layout } from './components/Layout';
 
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
-import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info } from 'lucide-react';
 import { adMobService } from './services/adMobService';
 
 const uuid = () => Math.random().toString(36).substring(2, 15);
@@ -184,6 +186,14 @@ const App: React.FC = () => {
     const [debugLog, setDebugLog] = useState<string[]>([]);
     const [offerToProcess, setOfferToProcess] = useState<Message | null>(null);
     const [assistantAdvice, setAssistantAdvice] = useState<AssistantAdvice[] | null>(null);
+    const [tacticalTimeline, setTacticalTimeline] = useState<TacticalChange[]>([]);
+
+    // Reset timeline when a new match starts
+    useEffect(() => {
+        if (activeMatchId) {
+            setTacticalTimeline([]);
+        }
+    }, [activeMatchId]);
 
     const [showDerbySelect, setShowDerbySelect] = useState(false);
     const [derbyHomeId, setDerbyHomeId] = useState<string | null>(null);
@@ -193,6 +203,9 @@ const App: React.FC = () => {
     const [showEuropeanCup, setShowEuropeanCup] = useState(false);
     const [negotiatingPlayer, setNegotiatingPlayer] = useState<Player | null>(null);
     const [showJobOffers, setShowJobOffers] = useState(false);
+    const [showUpdates, setShowUpdates] = useState(false);
+    const [showGlobalHistory, setShowGlobalHistory] = useState(false);
+    const [showWorldRankings, setShowWorldRankings] = useState(false);
 
     const t = TRANSLATIONS[lang];
 
@@ -294,7 +307,9 @@ const App: React.FC = () => {
                 const profileData = await loadProfileData(migratedProfileId);
                 if (profileData) {
                     // Forma numaralarını migrate et
-                    setGameState(migrateJerseyNumbers(profileData));
+                    const migratedState = migrateJerseyNumbers(profileData);
+                    setGameState(migratedState);
+                    initializeEngine(migratedState);
                 }
             } else if (loadedProfiles.length > 0) {
                 // Load last active profile or first profile
@@ -308,7 +323,9 @@ const App: React.FC = () => {
                 const profileData = await loadProfileData(profileToLoad);
                 if (profileData) {
                     // Forma numaralarını migrate et
-                    setGameState(migrateJerseyNumbers(profileData));
+                    const migratedState = migrateJerseyNumbers(profileData);
+                    setGameState(migratedState);
+                    initializeEngine(migratedState);
                 } else {
                     // Profile exists but has no game data yet
                     setShowLeagueSelect(true);
@@ -325,7 +342,10 @@ const App: React.FC = () => {
     useEffect(() => {
         const save = async () => {
             if (gameState && activeProfileId) {
-                await saveProfileData(activeProfileId, gameState);
+                // Merge current engine state (reputation bonuses) into save data
+                const engineState = getEngineState();
+                const stateToSave = { ...gameState, ...engineState };
+                await saveProfileData(activeProfileId, stateToSave);
             }
         };
         save();
@@ -360,14 +380,19 @@ const App: React.FC = () => {
         // RESIGN MODE: Just switch userTeamId, don't regenerate European competitions
         if (isResignMode) {
             // CRITICAL: Clear old team's messages and pending offers to prevent exploit!
+            const newTeam = gameState.teams.find(t => t.id === teamId);
+            const newLeagueId = newTeam?.leagueId || 'tr';
+
             setGameState(prev => prev ? {
                 ...prev,
                 userTeamId: teamId,
+                leagueId: newLeagueId, // BUGFIX: Update game's leagueId to new team's league
                 messages: [], // Clear all messages from old team
                 pendingOffers: [] // Clear pending transfer offers
             } : null);
             setShowTeamSelect(false);
             setIsResignMode(false); // Reset resign mode
+            setViewLeagueId(newLeagueId); // BUGFIX: Sync fixtures view to new league
             // Show welcome message for new team
             setShowWelcome(true);
             return;
@@ -393,8 +418,8 @@ const App: React.FC = () => {
             if (inCL) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: '🏆 Şampiyonlar Ligi Daveti!',
-                    body: `${selectedTeam?.name} olarak Şampiyonlar Ligi'ne katılmaya hak kazandınız!`,
+                    subject: `🏆 ${t.championsLeague} Daveti!`,
+                    body: `${selectedTeam?.name} olarak ${t.championsLeague}'ne katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
             } else if (inEL) {
@@ -574,8 +599,25 @@ const App: React.FC = () => {
         setDebugLog([]);
     };
 
-    const handleUpdateTactic = (tactic: TeamTactic) => {
+    const handleUpdateTactic = (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }) => {
         if (!gameState) return;
+
+        // Log change if context is provided (during live match)
+        if (context && gameState.userTeamId) {
+            const currentTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+            if (currentTeam) {
+                const change: TacticalChange = {
+                    minute: context.minute,
+                    previousFormation: currentTeam.tactic.formation,
+                    previousStyle: currentTeam.tactic.style,
+                    newFormation: tactic.formation,
+                    newStyle: tactic.style,
+                    scoreAtTime: context.score
+                };
+                setTacticalTimeline(prev => [...prev, change]);
+            }
+        }
+
         const updatedTeams = gameState.teams.map(t =>
             t.id === gameState.userTeamId ? { ...t, tactic } : t
         );
@@ -585,6 +627,89 @@ const App: React.FC = () => {
             updateMatchTactic(activeMatchId, gameState.userTeamId, tactic);
         }
     };
+
+    // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========
+    // Exposed to window for user to manually verify tactical impacts
+    const runTacticalAnalysis = async () => {
+        if (!gameState || !gameState.teams.length) return;
+
+        console.log("🚀 STARTING TACTICAL ANALYSIS...");
+        // Clone teams to not affect game state
+        const teamA = JSON.parse(JSON.stringify(gameState.teams[0])); // One team
+        const teamB = JSON.parse(JSON.stringify(gameState.teams[1])); // Another team
+
+        // Find players for these teams
+        const playersA = gameState.players.filter(p => p.teamId === teamA.id);
+        const playersB = gameState.players.filter(p => p.teamId === teamB.id);
+
+        const simulateScenario = (scenarioName: string, setupFn: () => void) => {
+            let winsA = 0, winsB = 0, draws = 0;
+            let goalsA = 0, goalsB = 0;
+
+            // Apply tactic changes
+            setupFn();
+
+            for (let i = 0; i < 200; i++) { // 200 matches per scenario
+                const match: any = {
+                    id: 'sim_' + i, homeTeamId: teamA.id, awayTeamId: teamB.id,
+                    homeScore: 0, awayScore: 0, events: [], stats: {}, isPlayed: false,
+                    currentMinute: 0 // Reset minute
+                };
+
+                // Reset stats/form/morale that might affect result
+                teamA.recentForm = []; teamB.recentForm = [];
+
+                // Simulate
+                const result = simulateFullMatch(match, teamA, teamB, playersA, playersB);
+
+                goalsA += result.homeScore;
+                goalsB += result.awayScore;
+                if (result.homeScore > result.awayScore) winsA++;
+                else if (result.awayScore > result.homeScore) winsB++;
+                else draws++;
+            }
+            console.log(`📊 SCENARIO: ${scenarioName}`);
+            console.log(`   ${teamA.name} vs ${teamB.name}`);
+            console.log(`   Wins A: ${winsA} (${((winsA / 200) * 100).toFixed(1)}%) | Wins B: ${winsB} (${((winsB / 200) * 100).toFixed(1)}%) | Draws: ${draws}`);
+            console.log(`   Avg Score: ${(goalsA / 200).toFixed(2)} - ${(goalsB / 200).toFixed(2)}`);
+            console.log("-------------------------------------------------");
+        };
+
+        // 1. BASELINE
+        simulateScenario("BASELINE (Both Balanced 4-3-3)", () => {
+            teamA.tactic = { ...teamA.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+            teamB.tactic = { ...teamB.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+        });
+
+        // 2. TEMPO
+        simulateScenario("TEMPO: A=Fast, B=Slow", () => {
+            teamA.tactic.tempo = 'Fast';
+            teamB.tactic.tempo = 'Slow';
+        });
+
+        // 3. WIDTH
+        simulateScenario("WIDTH: A=Wide, B=Narrow", () => {
+            teamA.tactic.width = 'Wide';
+            teamB.tactic.width = 'Narrow';
+        });
+
+        // 4. STYLE (Possession vs HighPress) - SHOULD HAVE EFFECT
+        simulateScenario("STYLE: A=Possession, B=HighPress (Rock-Paper-Scissors Check)", () => {
+            teamA.tactic.style = 'Possession';
+            teamB.tactic.style = 'HighPress';
+        });
+
+        // 5. FORMATION
+        simulateScenario("FORMATION: A=4-3-3, B=5-3-2", () => {
+            teamA.tactic.formation = '4-3-3';
+            teamB.tactic.formation = '5-3-2';
+        });
+    };
+
+    // Always expose to window
+    (window as any).runTacticalAnalysis = runTacticalAnalysis;
+
+
 
     const handleUpdateLineup = (playerId: string, status: LineupStatus, lineupIndex?: number) => {
         if (!gameState) return;
@@ -1074,11 +1199,22 @@ const App: React.FC = () => {
             return;
         }
 
+        // === SUPER CUP PRIORITY CHECK ===
+        const userInSuperCup = gameState.superCup?.match?.homeTeamId === gameState.userTeamId ||
+            gameState.superCup?.match?.awayTeamId === gameState.userTeamId;
+
+        if (gameState.superCup && !gameState.superCup.isComplete && userInSuperCup && !gameState.superCup.match.isPlayed) {
+            // Redirect to Super Cup match
+            handlePlaySuperCup();
+            return;
+        }
+
         const match = gameState.matches.find(m =>
             m.week === gameState.currentWeek &&
             !m.isPlayed &&
             (m.homeTeamId === gameState.userTeamId || m.awayTeamId === gameState.userTeamId)
         );
+
 
         if (match) {
             const homeTeam = gameState.teams.find(t => t.id === match.homeTeamId);
@@ -1093,6 +1229,14 @@ const App: React.FC = () => {
             // Calculate total weeks dynamically from match schedule
             const maxWeek = Math.max(...gameState.matches.filter(m => !m.isFriendly).map(m => m.week));
             if (gameState.currentWeek > maxWeek) {
+                // === FIX: Check if Super Cup needs to be played first ===
+                const userInSuperCup = gameState.superCup?.match?.homeTeamId === gameState.userTeamId ||
+                    gameState.superCup?.match?.awayTeamId === gameState.userTeamId;
+                if (gameState.superCup && !gameState.superCup.isComplete && userInSuperCup) {
+                    alert(t.superCupMustPlay || '🏆 You must play the Super Cup before the season ends!');
+                    handlePlaySuperCup();
+                    return;
+                }
                 prepareSeasonEnd();
             } else {
                 alert(t.noMatches);
@@ -1173,9 +1317,36 @@ const App: React.FC = () => {
                 } else if (newEuropaLeague && updateMatchInList(newEuropaLeague.matches, true, false)) {
                     // Challenge Cup: isEuropean=true, isChampionsLeague=false
                     return { ...prev, europaLeague: newEuropaLeague };
+                } else if (prev.superCup && prev.superCup.match && prev.superCup.match.id === match.id) {
+                    // === SUPER CUP FIX (Prevent Freeze) ===
+                    const calculatedAttendance = calculateMatchAttendance(homeTeam, awayTeam, {
+                        isDerby: false,
+                        isEuropeanMatch: true,
+                        isChampionsLeague: true // Super Cup gets premium attendance
+                    });
+
+                    return {
+                        ...prev,
+                        superCup: {
+                            ...prev.superCup,
+                            match: {
+                                ...prev.superCup.match,
+                                attendance: calculatedAttendance,
+                                events: match.events || [],
+                                stats: match.stats || { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
+                                liveData: {
+                                    ballHolderId: null,
+                                    pitchZone: 50,
+                                    lastActionText: 'Kickoff',
+                                    simulation: initialSimulation
+                                } as any
+                            }
+                        }
+                    };
                 }
 
                 return prev;
+
             });
         } catch (e) {
             console.error(e);
@@ -1236,8 +1407,7 @@ const App: React.FC = () => {
         const finalState = {
             ...newState,
             europeanCup: cl,
-            europaLeague: el,
-            superCup: undefined // Will be generated when both cups complete
+            europaLeague: el
         };
 
         // Check if user qualified for cups
@@ -1247,11 +1417,11 @@ const App: React.FC = () => {
         let cupSubject = '';
         let cupMessage = '';
         if (userInCL) {
-            cupSubject = '🏆 Şampiyonlar Ligi Daveti!';
-            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda Şampiyonlar Ligi'ne katılmaya hak kazandınız!`;
+            cupSubject = `🏆 ${t.championsLeague} Daveti!`;
+            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda ${t.championsLeague}'ne katılmaya hak kazandınız!`;
         } else if (userInEL) {
-            cupSubject = '⚽ UEFA Avrupa Ligi Daveti!';
-            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda UEFA Avrupa Ligi'ne katılmaya hak kazandınız!`;
+            cupSubject = `⚽ ${t.uefaCup} Daveti!`;
+            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda ${t.uefaCup}'na katılmaya hak kazandınız!`;
         }
 
         if (cupMessage) {
@@ -1547,7 +1717,7 @@ const App: React.FC = () => {
     const executeMatchUpdate = (prevState: GameState, matchId: string, simulateToEnd: boolean = false): GameState => {
         let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
         let isCupMatch = false;
-        let cupType: 'europeanCup' | 'europaLeague' | null = null;
+        let cupType: 'europeanCup' | 'europaLeague' | 'superCup' | null = null;
 
         // Search in Cups if not in League
         if (matchIndex === -1) {
@@ -1565,13 +1735,24 @@ const App: React.FC = () => {
                     cupType = 'europaLeague';
                 }
             }
+            // === SUPER CUP MATCH LOOKUP ===
+            if (matchIndex === -1 && prevState.superCup && prevState.superCup.match && prevState.superCup.match.id === matchId) {
+                matchIndex = 0; // Super Cup has only one match
+                isCupMatch = true;
+                cupType = 'superCup';
+            }
         }
 
         if (matchIndex === -1) return prevState;
 
-        const matchStr = isCupMatch && cupType
-            ? prevState[cupType]!.matches[matchIndex]
-            : prevState.matches[matchIndex];
+
+        // Handle SuperCup's single match separately from CL/EL matches arrays
+        const matchStr = cupType === 'superCup' && prevState.superCup
+            ? prevState.superCup.match
+            : isCupMatch && cupType && cupType !== 'superCup'
+                ? (prevState[cupType as 'europeanCup' | 'europaLeague']!.matches[matchIndex])
+                : prevState.matches[matchIndex];
+
 
         // Type assertion: EuropeanCupMatch is compatible with Match for simulation purposes
         const match = { ...matchStr, week: matchStr.week ?? 0, liveData: (matchStr as any).liveData } as Match;
@@ -1718,14 +1899,42 @@ const App: React.FC = () => {
                     return team;
                 });
 
+                // === SAVE TO CORRECT LOCATION BASED ON CUP TYPE ===
+                if (cupType === 'superCup' && prevState.superCup) {
+                    return { ...prevState, superCup: { ...prevState.superCup, match: simulated as any }, teams: updatedTeams, players: updatedPlayers };
+                } else if (cupType === 'europeanCup' && prevState.europeanCup) {
+                    const newCupMatches = [...prevState.europeanCup.matches];
+                    newCupMatches[matchIndex] = simulated as any;
+                    return { ...prevState, europeanCup: { ...prevState.europeanCup, matches: newCupMatches }, teams: updatedTeams, players: updatedPlayers };
+                } else if (cupType === 'europaLeague' && prevState.europaLeague) {
+                    const newCupMatches = [...prevState.europaLeague.matches];
+                    newCupMatches[matchIndex] = simulated as any;
+                    return { ...prevState, europaLeague: { ...prevState.europaLeague, matches: newCupMatches }, teams: updatedTeams, players: updatedPlayers };
+                }
+
                 let newMatches = [...prevState.matches];
                 newMatches[matchIndex] = simulated;
                 return { ...prevState, matches: newMatches, teams: updatedTeams, players: updatedPlayers };
             }
+
+            // Non-friendly match without full simulation (shouldn't happen often)
+            if (cupType === 'superCup' && prevState.superCup) {
+                return { ...prevState, superCup: { ...prevState.superCup, match: simulated as any } };
+            } else if (cupType === 'europeanCup' && prevState.europeanCup) {
+                const newCupMatches = [...prevState.europeanCup.matches];
+                newCupMatches[matchIndex] = simulated as any;
+                return { ...prevState, europeanCup: { ...prevState.europeanCup, matches: newCupMatches } };
+            } else if (cupType === 'europaLeague' && prevState.europaLeague) {
+                const newCupMatches = [...prevState.europaLeague.matches];
+                newCupMatches[matchIndex] = simulated as any;
+                return { ...prevState, europaLeague: { ...prevState.europaLeague, matches: newCupMatches } };
+            }
+
             let newMatches = [...prevState.matches];
             newMatches[matchIndex] = simulated;
             return { ...prevState, matches: newMatches };
         }
+
 
         const stepResult = simulateTick(currentMatch, homeTeam, awayTeam, homePlayers, awayPlayers);
         if (stepResult.minuteIncrement) currentMatch.currentMinute = (currentMatch.currentMinute || 0) + 1;
@@ -1867,15 +2076,20 @@ const App: React.FC = () => {
 
                         const repDiff = opponent.reputation - userTeam.reputation;
 
-                        // ========== REPUTATION CHANGE ==========
-                        let reputationChange = 0;
-                        if (won) {
-                            reputationChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
-                        } else if (drew) {
-                            reputationChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
-                        } else {
-                            reputationChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
-                        }
+                        // ========== REPUTATION CHANGE (ELO-STYLE) ==========
+                        // ELO expected outcome (0-1)
+                        const expectedOutcome = 1 / (1 + Math.pow(10, (opponent.reputation - userTeam.reputation) / 1500));
+                        const actualResult = won ? 1 : drew ? 0.5 : 0;
+                        const kFactor = 8;
+                        let reputationChange = Math.round(kFactor * (actualResult - expectedOutcome) * 2.5);
+
+                        // Cap maximum loss at -15 to prevent death spiral
+                        if (reputationChange < -15) reputationChange = -15;
+
+                        // Minimum change for wins/losses
+                        if (won && reputationChange < 2) reputationChange = 2;
+                        if (!won && !drew && reputationChange > -2) reputationChange = -2;
+
                         const newReputation = Math.max(1000, Math.min(10000, userTeam.reputation + reputationChange));
 
                         // ========== CONFIDENCE CHANGE ==========
@@ -1933,6 +2147,11 @@ const App: React.FC = () => {
                         });
                     }
 
+                    // Save Super Cup match separately
+                    if (cupType === 'superCup' && prevState.superCup) {
+                        return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any }, players: updatedPlayers, teams: teamsWithBonus };
+                    }
+
                     let newMatches = [...prevState.matches];
                     newMatches[matchIndex] = currentMatch;
                     return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
@@ -1940,17 +2159,90 @@ const App: React.FC = () => {
             }
         }
 
+        // Save Super Cup match separately for non-finished matches
+        if (cupType === 'superCup' && prevState.superCup) {
+            return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any } };
+        }
+
         let newMatches = [...prevState.matches];
         newMatches[matchIndex] = currentMatch;
         return { ...prevState, matches: newMatches };
     };
 
+
     const handleQuickSim = () => {
         if (!gameState) return;
 
+        // === SUPER CUP CHECK (Priority #1) ===
+        // Check if there's an unplayed Super Cup match the user is in
+        const userInSuperCup = gameState.superCup?.match?.homeTeamId === gameState.userTeamId ||
+            gameState.superCup?.match?.awayTeamId === gameState.userTeamId;
+
+        if (gameState.superCup && !gameState.superCup.isComplete && userInSuperCup && !gameState.superCup.match.isPlayed) {
+            // Simulate Super Cup match
+            const scMatch = gameState.superCup.match;
+            const homeTeam = gameState.teams.find(t => t.id === scMatch.homeTeamId);
+            const awayTeam = gameState.teams.find(t => t.id === scMatch.awayTeamId);
+
+            if (homeTeam && awayTeam) {
+                const homePlayers = gameState.players.filter(p => p.teamId === homeTeam.id);
+                const awayPlayers = gameState.players.filter(p => p.teamId === awayTeam.id);
+
+                // Auto-pick lineups
+                autoPickLineup(homePlayers, homeTeam.tactic.formation);
+                autoPickLineup(awayPlayers, awayTeam.tactic.formation);
+
+                // Simulate match
+                const simResult = simulateFullMatch(scMatch as any, homeTeam, awayTeam, homePlayers, awayPlayers);
+
+                // Determine winner (with penalties if draw)
+                let winnerId: string;
+                if (simResult.homeScore > simResult.awayScore) winnerId = homeTeam.id;
+                else if (simResult.awayScore > simResult.homeScore) winnerId = awayTeam.id;
+                else {
+                    // Penalty shootout
+                    let homePenalties = 0, awayPenalties = 0;
+                    for (let i = 0; i < 5; i++) {
+                        if (Math.random() < 0.75) homePenalties++;
+                        if (Math.random() < 0.75) awayPenalties++;
+                    }
+                    while (homePenalties === awayPenalties) {
+                        if (Math.random() < 0.75) homePenalties++;
+                        if (Math.random() < 0.75) awayPenalties++;
+                    }
+                    winnerId = homePenalties > awayPenalties ? homeTeam.id : awayTeam.id;
+                }
+
+                const winnerTeam = gameState.teams.find(tm => tm.id === winnerId);
+
+                alert(`${t.quickSimResult}: ${homeTeam.name} ${simResult.homeScore} - ${simResult.awayScore} ${awayTeam.name}`);
+
+                setGameState(prev => prev ? {
+                    ...prev,
+                    superCup: {
+                        ...prev.superCup!,
+                        match: { ...scMatch, homeScore: simResult.homeScore, awayScore: simResult.awayScore, isPlayed: true },
+                        winnerId,
+                        isComplete: true
+                    },
+                    messages: [...prev.messages, {
+                        id: uuid(),
+                        week: prev.currentWeek,
+                        type: MessageType.BOARD,
+                        subject: '🏆 Süper Kupa Şampiyonu!',
+                        body: `${winnerTeam?.name || 'Bilinmiyor'} Süper Kupa'yı kazandı! ${simResult.homeScore}-${simResult.awayScore}`,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    }]
+                } : null);
+                return;
+            }
+        }
+
         // Same logic as Dashboard's "Next Match" card
         // Cup matches have specific scheduled weeks
-        const CUP_SCHEDULE: { [key: string]: number } = { 'ROUND_16': 7, 'QUARTER': 14, 'SEMI': 21, 'FINAL': 28 };
+        const CUP_SCHEDULE: { [key: string]: number } = { 'ROUND_16': 4, 'QUARTER': 11, 'SEMI': 18, 'FINAL': 26 };
+
 
         const getCupMatch = (cup?: EuropeanCup) => {
             if (!cup || !cup.isActive || cup.currentRound === 'COMPLETE') return undefined;
@@ -2160,14 +2452,59 @@ const App: React.FC = () => {
                 // Check if both cups are complete and Super Cup should be generated
                 if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
                     updatedState.europaLeague?.currentRound === 'COMPLETE' &&
-                    !updatedState.superCup) {
-                    // Dynamically import and generate Super Cup
-                    import('./services/engine').then(({ generateSuperCup }) => {
-                        const superCup = generateSuperCup(updatedState);
-                        if (superCup) {
-                            setGameState(prev => prev ? { ...prev, superCup } : null);
+                    !updatedState.superCup &&
+                    updatedState.europeanCup?.winnerId &&
+                    updatedState.europaLeague?.winnerId) {
+                    // Generate Super Cup SYNC (not async to avoid race condition)
+                    const superCup = {
+                        season: updatedState.currentSeason,
+                        championsLeagueWinnerId: updatedState.europeanCup.winnerId,
+                        uefaCupWinnerId: updatedState.europaLeague.winnerId,
+                        match: {
+                            id: uuid(),
+                            round: 'FINAL' as const,
+                            homeTeamId: updatedState.europeanCup.winnerId,
+                            awayTeamId: updatedState.europaLeague.winnerId,
+                            homeScore: 0,
+                            awayScore: 0,
+                            isPlayed: false
+                        },
+                        winnerId: undefined,
+                        isComplete: false
+                    };
+                    updatedState = { ...updatedState, superCup };
+
+                    // Immediately simulate if user is NOT in Super Cup
+                    const userInNewSuperCup = superCup.match.homeTeamId === updatedState.userTeamId ||
+                        superCup.match.awayTeamId === updatedState.userTeamId;
+
+                    if (!userInNewSuperCup) {
+                        const scHome = updatedState.teams.find(tm => tm.id === superCup.match.homeTeamId);
+                        const scAway = updatedState.teams.find(tm => tm.id === superCup.match.awayTeamId);
+                        if (scHome && scAway) {
+                            const hGoals = Math.floor(Math.random() * 4);
+                            const aGoals = Math.floor(Math.random() * 4);
+                            let scWin = hGoals > aGoals ? scHome.id : aGoals > hGoals ? scAway.id : (Math.random() > 0.5 ? scHome.id : scAway.id);
+                            updatedState = {
+                                ...updatedState,
+                                superCup: {
+                                    ...superCup,
+                                    match: { ...superCup.match, homeScore: hGoals, awayScore: aGoals, isPlayed: true, winnerId: scWin },
+                                    winnerId: scWin,
+                                    isComplete: true
+                                },
+                                messages: [...updatedState.messages, {
+                                    id: uuid(),
+                                    week: updatedState.currentWeek,
+                                    type: MessageType.BOARD,
+                                    subject: '🏆 Super Cup Champion!',
+                                    body: `${scWin === scHome.id ? scHome.name : scAway.name} won the Super Cup! ${hGoals}-${aGoals}`,
+                                    isRead: false,
+                                    date: new Date().toISOString()
+                                }]
+                            };
                         }
-                    });
+                    }
                 }
 
                 // Process weekly events
@@ -2315,14 +2652,19 @@ const App: React.FC = () => {
                             const drew = userScore === oppScore;
                             const repDiff = opponent.reputation - userTeam.reputation;
 
-                            let repChange = 0;
-                            if (won) {
-                                repChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
-                            } else if (drew) {
-                                repChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
-                            } else {
-                                repChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
-                            }
+                            // ========== REPUTATION CHANGE (ELO-STYLE) ==========
+                            const expectedOutcome = 1 / (1 + Math.pow(10, (opponent.reputation - userTeam.reputation) / 1500));
+                            const actualResult = won ? 1 : drew ? 0.5 : 0;
+                            const kFactor = 8;
+                            let repChange = Math.round(kFactor * (actualResult - expectedOutcome) * 2.5);
+
+                            // Cap maximum loss at -15 to prevent death spiral
+                            if (repChange < -15) repChange = -15;
+
+                            // Minimum change for wins/losses
+                            if (won && repChange < 2) repChange = 2;
+                            if (!won && !drew && repChange > -2) repChange = -2;
+
                             const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
 
                             let confChange = 0;
@@ -2378,7 +2720,8 @@ const App: React.FC = () => {
             }
         } else {
             // No match available - check if it's a cup week we should skip
-            const CUP_WEEKS = [7, 14, 21, 28];
+            // MODIFIED: Updated cup weeks to 4, 11, 18, 26, 28 (Super Cup included)
+            const CUP_WEEKS = [4, 11, 18, 26, 28];
             const isOnCupWeek = CUP_WEEKS.includes(gameState.currentWeek);
 
             // Calculate maxWeek based on USER'S LEAGUE only (not all leagues)
@@ -2387,6 +2730,48 @@ const App: React.FC = () => {
             const maxWeek = userLeagueMatches.length > 0 ? Math.max(...userLeagueMatches.map(m => m.week)) : 38;
 
             if (gameState.currentWeek > maxWeek) {
+                // === FIX: Check if Super Cup needs to be played first ===
+                // Only block if: Super Cup exists AND user's team is in it AND not complete AND it's Week 28 or later
+                const userInSuperCup = gameState.superCup?.match?.homeTeamId === gameState.userTeamId ||
+                    gameState.superCup?.match?.awayTeamId === gameState.userTeamId;
+
+                // If it's the end of season (Week 28+), ensure Super Cup is played
+                if (gameState.superCup && !gameState.superCup.isComplete && userInSuperCup && gameState.currentWeek >= 28) {
+                    // Super Cup exists and user is in it - they must play
+                    alert(t.superCupMustPlay || '🏆 You must play the Super Cup before the season ends!');
+                    handlePlaySuperCup();
+                    return;
+                }
+
+                // AI SUPER CUP SIMULATION: If Super Cup exists but user is NOT in it, simulate it
+                if (gameState.superCup && !gameState.superCup.isComplete && !userInSuperCup) {
+                    // Simulate Super Cup match between AI teams
+                    const homeTeam = gameState.teams.find(tm => tm.id === gameState.superCup!.match.homeTeamId);
+                    const awayTeam = gameState.teams.find(tm => tm.id === gameState.superCup!.match.awayTeamId);
+                    if (homeTeam && awayTeam) {
+                        const homeGoals = Math.floor(Math.random() * 4);
+                        const awayGoals = Math.floor(Math.random() * 4);
+                        let winnerId: string;
+                        if (homeGoals > awayGoals) winnerId = homeTeam.id;
+                        else if (awayGoals > homeGoals) winnerId = awayTeam.id;
+                        else winnerId = Math.random() > 0.5 ? homeTeam.id : awayTeam.id; // Penalty shootout
+
+                        const completedSuperCup = {
+                            ...gameState.superCup,
+                            match: {
+                                ...gameState.superCup.match,
+                                homeScore: homeGoals,
+                                awayScore: awayGoals,
+                                isPlayed: true,
+                                winnerId
+                            },
+                            winnerId,
+                            isComplete: true
+                        };
+                        setGameState(prev => prev ? { ...prev, superCup: completedSuperCup } : null);
+                    }
+                }
+
                 prepareSeasonEnd();
             } else if (isOnCupWeek) {
                 // AUTO-SKIP CUP WEEK: User has no cup match (eliminated) - advance to next week
@@ -2417,16 +2802,62 @@ const App: React.FC = () => {
                     updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
                 }
 
-                // Check if Super Cup should be generated
+                // Check if Super Cup should be generated (SYNC - not async to prevent overwrite!)
                 if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
                     updatedState.europaLeague?.currentRound === 'COMPLETE' &&
-                    !updatedState.superCup) {
-                    import('./services/engine').then(({ generateSuperCup }) => {
-                        const superCup = generateSuperCup(updatedState);
-                        if (superCup) {
-                            setGameState(prev => prev ? { ...prev, superCup } : null);
+                    !updatedState.superCup &&
+                    updatedState.europeanCup?.winnerId &&
+                    updatedState.europaLeague?.winnerId) {
+                    // Generate Super Cup synchronously and add to state
+                    const superCup = {
+                        season: updatedState.currentSeason,
+                        championsLeagueWinnerId: updatedState.europeanCup.winnerId,
+                        uefaCupWinnerId: updatedState.europaLeague.winnerId,
+                        match: {
+                            id: uuid(),
+                            round: 'FINAL' as const,
+                            homeTeamId: updatedState.europeanCup.winnerId,
+                            awayTeamId: updatedState.europaLeague.winnerId,
+                            homeScore: 0,
+                            awayScore: 0,
+                            isPlayed: false
+                        },
+                        winnerId: undefined,
+                        isComplete: false
+                    };
+                    updatedState = { ...updatedState, superCup };
+
+                    // Immediately simulate if user is NOT in Super Cup
+                    const userInSC = superCup.match.homeTeamId === updatedState.userTeamId ||
+                        superCup.match.awayTeamId === updatedState.userTeamId;
+
+                    if (!userInSC) {
+                        const scH = updatedState.teams.find(tm => tm.id === superCup.match.homeTeamId);
+                        const scA = updatedState.teams.find(tm => tm.id === superCup.match.awayTeamId);
+                        if (scH && scA) {
+                            const hG = Math.floor(Math.random() * 4);
+                            const aG = Math.floor(Math.random() * 4);
+                            const win = hG > aG ? scH.id : aG > hG ? scA.id : (Math.random() > 0.5 ? scH.id : scA.id);
+                            updatedState = {
+                                ...updatedState,
+                                superCup: {
+                                    ...superCup,
+                                    match: { ...superCup.match, homeScore: hG, awayScore: aG, isPlayed: true, winnerId: win },
+                                    winnerId: win,
+                                    isComplete: true
+                                },
+                                messages: [...updatedState.messages, {
+                                    id: uuid(),
+                                    week: updatedState.currentWeek,
+                                    type: MessageType.BOARD,
+                                    subject: '🏆 Super Cup Champion!',
+                                    body: `${win === scH.id ? scH.name : scA.name} won the Super Cup! ${hG}-${aG}`,
+                                    isRead: false,
+                                    date: new Date().toISOString()
+                                }]
+                            };
                         }
-                    });
+                    }
                 }
 
                 // Process weekly events
@@ -2461,7 +2892,7 @@ const App: React.FC = () => {
             if (!prevState) return null;
 
             // Determine where the match is
-            let matchType: 'LEAGUE' | 'CL' | 'EL' = 'LEAGUE';
+            let matchType: 'LEAGUE' | 'CL' | 'EL' | 'SUPER_CUP' = 'LEAGUE';
             let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
 
             if (matchIndex === -1) {
@@ -2476,13 +2907,25 @@ const App: React.FC = () => {
                     if (matchIndex !== -1) matchType = 'EL';
                 }
             }
+            // === SUPER CUP CHECK ===
+            if (matchIndex === -1 && prevState.superCup?.match?.id === matchId) {
+                matchIndex = 0; // Super Cup has only one match
+                matchType = 'SUPER_CUP';
+            }
 
             if (matchIndex === -1) return prevState;
 
             // Get match
-            const currentMatch = matchType === 'LEAGUE'
-                ? { ...prevState.matches[matchIndex] }
-                : (matchType === 'CL' ? { ...prevState.europeanCup!.matches[matchIndex] } : { ...prevState.europaLeague!.matches[matchIndex] });
+            let currentMatch: any;
+            if (matchType === 'SUPER_CUP' && prevState.superCup) {
+                currentMatch = { ...prevState.superCup.match };
+            } else if (matchType === 'LEAGUE') {
+                currentMatch = { ...prevState.matches[matchIndex] };
+            } else if (matchType === 'CL') {
+                currentMatch = { ...prevState.europeanCup!.matches[matchIndex] };
+            } else {
+                currentMatch = { ...prevState.europaLeague!.matches[matchIndex] };
+            }
 
             // Sync Logic (Common)
             if (result.minuteIncrement) currentMatch.currentMinute = (currentMatch.currentMinute || 0) + 1;
@@ -2520,6 +2963,7 @@ const App: React.FC = () => {
                 // Only League matches update league stats.
                 // But we DO update player stats for everyone.
             }
+
 
             // --- Update Player Stats (Goals) Locally to avoid state drift ---
             const updatedPlayers = [...prevState.players];
@@ -2711,8 +3155,15 @@ const App: React.FC = () => {
                 }
 
                 return { ...prevState, matches: newMatches, players: updatedPlayers };
+            } else if (matchType === 'SUPER_CUP' && prevState.superCup) {
+                // === SUPER CUP MATCH SAVE ===
+                return {
+                    ...prevState,
+                    superCup: { ...prevState.superCup, match: currentMatch },
+                    players: updatedPlayers
+                };
             } else {
-                // CUP Matches
+                // CUP Matches (CL/EL)
                 const updateCup = (cup: EuropeanCup) => {
                     const newMatches = [...cup.matches];
                     newMatches[matchIndex] = currentMatch;
@@ -2722,6 +3173,7 @@ const App: React.FC = () => {
                 if (matchType === 'CL') return { ...prevState, europeanCup: updateCup(prevState.europeanCup!), players: updatedPlayers };
                 return { ...prevState, europaLeague: updateCup(prevState.europaLeague!), players: updatedPlayers };
             }
+
         });
     }, []);
 
@@ -3062,14 +3514,19 @@ const App: React.FC = () => {
                 const drew = userScore === oppScore;
                 const repDiff = opponent.reputation - userTeam.reputation;
 
-                let repChange = 0;
-                if (won) {
-                    repChange = repDiff > 500 ? Math.floor(repDiff / 50) + 10 : repDiff > 0 ? 6 + Math.floor(repDiff / 100) : 3;
-                } else if (drew) {
-                    repChange = repDiff > 500 ? 5 : repDiff < -500 ? -5 : 0;
-                } else {
-                    repChange = repDiff < -500 ? -Math.floor(Math.abs(repDiff) / 75) - 8 : repDiff < 0 ? -5 : -2;
-                }
+                // ========== REPUTATION CHANGE (ELO-STYLE) ==========
+                const expectedOutcome = 1 / (1 + Math.pow(10, (opponent.reputation - userTeam.reputation) / 1500));
+                const actualResult = won ? 1 : drew ? 0.5 : 0;
+                const kFactor = 8;
+                let repChange = Math.round(kFactor * (actualResult - expectedOutcome) * 2.5);
+
+                // Cap maximum loss at -15 to prevent death spiral
+                if (repChange < -15) repChange = -15;
+
+                // Minimum change for wins/losses
+                if (won && repChange < 2) repChange = 2;
+                if (!won && !drew && repChange > -2) repChange = -2;
+
                 const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
 
                 let confChange = 0;
@@ -3137,13 +3594,57 @@ const App: React.FC = () => {
                     homeXG: playedUserMatch.stats?.homeXG || 0,
                     awayXG: playedUserMatch.stats?.awayXG || 0,
                     isUserHome,
-                    userWon
+                    userWon,
+                    tacticalTimeline: tacticalTimeline.length > 0 ? [...tacticalTimeline] : undefined
                 };
                 updatedTacticalHistory.push(tacticalRecord);
                 // Keep last 100 matches to save memory
                 if (updatedTacticalHistory.length > 100) {
                     updatedTacticalHistory = updatedTacticalHistory.slice(-100);
                 }
+            }
+        }
+
+        // === AI SUPER CUP SIMULATION ===
+        // If Super Cup exists but user is NOT in it, simulate it automatically
+        const userInSuperCup = updatedState.superCup?.match?.homeTeamId === updatedState.userTeamId ||
+            updatedState.superCup?.match?.awayTeamId === updatedState.userTeamId;
+
+        if (updatedState.superCup && !updatedState.superCup.isComplete && !userInSuperCup) {
+            const scHomeTeam = updatedState.teams.find(tm => tm.id === updatedState.superCup!.match!.homeTeamId);
+            const scAwayTeam = updatedState.teams.find(tm => tm.id === updatedState.superCup!.match!.awayTeamId);
+            if (scHomeTeam && scAwayTeam) {
+                const homeGoals = Math.floor(Math.random() * 4);
+                const awayGoals = Math.floor(Math.random() * 4);
+                let scWinnerId: string;
+                if (homeGoals > awayGoals) scWinnerId = scHomeTeam.id;
+                else if (awayGoals > homeGoals) scWinnerId = scAwayTeam.id;
+                else scWinnerId = Math.random() > 0.5 ? scHomeTeam.id : scAwayTeam.id; // Penalty shootout
+
+                updatedState = {
+                    ...updatedState,
+                    superCup: {
+                        ...updatedState.superCup!,
+                        match: {
+                            ...updatedState.superCup!.match!,
+                            homeScore: homeGoals,
+                            awayScore: awayGoals,
+                            isPlayed: true,
+                            winnerId: scWinnerId
+                        },
+                        winnerId: scWinnerId,
+                        isComplete: true
+                    },
+                    messages: [...updatedState.messages, {
+                        id: uuid(),
+                        week: updatedState.currentWeek,
+                        type: MessageType.BOARD,
+                        subject: '🏆 Super Cup Champion!',
+                        body: `${scWinnerId === scHomeTeam.id ? scHomeTeam.name : scAwayTeam.name} won the Super Cup! ${homeGoals}-${awayGoals}`,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    }]
+                };
             }
         }
 
@@ -3168,6 +3669,87 @@ const App: React.FC = () => {
 
     // Show Profile Selector if requested
     if (showProfileSelector) {
+
+        // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========
+        const runTacticalAnalysis = async () => {
+            if (!gameState || !gameState.teams.length) return;
+
+            console.log("🚀 STARTING TACTICAL ANALYSIS...");
+            // Clone teams to not affect game state
+            const teamA = JSON.parse(JSON.stringify(gameState.teams[0])); // One team
+            const teamB = JSON.parse(JSON.stringify(gameState.teams[1])); // Another team
+
+            // Find players for these teams
+            const playersA = gameState.players.filter(p => p.teamId === teamA.id);
+            const playersB = gameState.players.filter(p => p.teamId === teamB.id);
+
+            const simulateScenario = (scenarioName: string, setupFn: () => void) => {
+                let winsA = 0, winsB = 0, draws = 0;
+                let goalsA = 0, goalsB = 0;
+
+                // Apply tactic changes
+                setupFn();
+
+                for (let i = 0; i < 200; i++) { // 200 matches per scenario
+                    const match: any = {
+                        id: 'sim_' + i, homeTeamId: teamA.id, awayTeamId: teamB.id,
+                        homeScore: 0, awayScore: 0, events: [], stats: {}, isPlayed: false,
+                        currentMinute: 0 // Reset minute
+                    };
+
+                    // Reset stats/form/morale that might affect result
+                    teamA.recentForm = []; teamB.recentForm = [];
+
+                    // Simulate
+                    const result = simulateFullMatch(match, teamA, teamB, playersA, playersB);
+
+                    goalsA += result.homeScore;
+                    goalsB += result.awayScore;
+                    if (result.homeScore > result.awayScore) winsA++;
+                    else if (result.awayScore > result.homeScore) winsB++;
+                    else draws++;
+                }
+                console.log(`📊 SCENARIO: ${scenarioName}`);
+                console.log(`   ${teamA.name} vs ${teamB.name}`);
+                console.log(`   Wins A: ${winsA} (${((winsA / 200) * 100).toFixed(1)}%) | Wins B: ${winsB} (${((winsB / 200) * 100).toFixed(1)}%) | Draws: ${draws}`);
+                console.log(`   Avg Score: ${(goalsA / 200).toFixed(2)} - ${(goalsB / 200).toFixed(2)}`);
+                console.log("-------------------------------------------------");
+            };
+
+            // 1. BASELINE
+            simulateScenario("BASELINE (Both Balanced 4-3-3)", () => {
+                teamA.tactic = { ...teamA.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+                teamB.tactic = { ...teamB.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+            });
+
+            // 2. TEMPO
+            simulateScenario("TEMPO: A=Fast, B=Slow", () => {
+                teamA.tactic.tempo = 'Fast';
+                teamB.tactic.tempo = 'Slow';
+            });
+
+            // 3. WIDTH
+            simulateScenario("WIDTH: A=Wide, B=Narrow", () => {
+                teamA.tactic.width = 'Wide';
+                teamB.tactic.width = 'Narrow';
+            });
+
+            // 4. STYLE (Possession vs HighPress) - SHOULD HAVE EFFECT
+            simulateScenario("STYLE: A=Possession, B=HighPress (Rock-Paper-Scissors Check)", () => {
+                teamA.tactic.style = 'Possession';
+                teamB.tactic.style = 'HighPress';
+            });
+
+            // 5. FORMATION
+            simulateScenario("FORMATION: A=4-3-3, B=5-3-2", () => {
+                teamA.tactic.formation = '4-3-3';
+                teamB.tactic.formation = '5-3-2';
+            });
+        };
+
+        // Expose to window for user to run
+        (window as any).runTacticalAnalysis = runTacticalAnalysis;
+
         return (
             <Layout>
                 <div className="w-full h-full overflow-y-auto no-scrollbar">
@@ -3257,7 +3839,13 @@ const App: React.FC = () => {
     const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId)!;
     const userPlayers = gameState.players.filter(p => p.teamId === userTeam.id);
     const unreadMessages = gameState.messages.filter(m => !m.isRead).length;
-    const activeMatch = activeMatchId ? (gameState.matches.find(m => m.id === activeMatchId) || gameState.europeanCup?.matches.find(m => m.id === activeMatchId) || gameState.europaLeague?.matches.find(m => m.id === activeMatchId)) : null;
+    const activeMatch = activeMatchId ? (
+        gameState.matches.find(m => m.id === activeMatchId) ||
+        gameState.europeanCup?.matches.find(m => m.id === activeMatchId) ||
+        gameState.europaLeague?.matches.find(m => m.id === activeMatchId) ||
+        (gameState.superCup?.match?.id === activeMatchId ? gameState.superCup.match as any : null)
+    ) : null;
+
     const activeHome = activeMatch ? (gameState.teams.find(t => t.id === activeMatch.homeTeamId) || userTeam) : userTeam;
     const activeAway = activeMatch ? (gameState.teams.find(t => t.id === activeMatch.awayTeamId) || userTeam) : userTeam;
 
@@ -3429,8 +4017,9 @@ const App: React.FC = () => {
                         <button onClick={() => setView('transfers')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'transfers' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><ShoppingCart size={20} /> <span className="hidden md:inline">{t.market}</span></button>
                         <button onClick={() => setView('club')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'club' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Building2 size={20} /> <span className="hidden md:inline">{t.club}</span></button>
                         <button onClick={() => setView('league')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'league' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Trophy size={20} /> <span className="hidden md:inline">{t.standings}</span></button>
-                        <button onClick={() => setView('rankings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'rankings' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Globe size={20} /> <span className="hidden md:inline">{t.worldRankings}</span></button>
-                        <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><BookOpen size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
+                        <button onClick={() => setShowWorldRankings(true)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-400 hover:bg-slate-800 hover:text-white`}><Globe size={20} /> <span className="hidden md:inline">{t.worldRankings}</span></button>
+                        <button onClick={() => setShowGlobalHistory(true)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-400 hover:bg-slate-800 hover:text-white`}><BookOpen size={20} /> <span className="hidden md:inline">{t.history || 'Global History'}</span></button>
+                        <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Info size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
                         <button onClick={() => setView('manager')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'manager' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><UserCircle size={20} /> <span className="hidden md:inline">Menajer</span></button>
                         <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                         <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
@@ -3602,14 +4191,6 @@ const App: React.FC = () => {
                                             </div>
                                         </button>
 
-                                        <button onClick={() => setView('rankings')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-rank.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Rankings" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-pink-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.worldRankings}</div>
-                                            </div>
-                                        </button>
-
                                         <button onClick={() => setView('news')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
                                             <img src="/assets/icon-news-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="News" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
@@ -3626,12 +4207,38 @@ const App: React.FC = () => {
                                             </div>
                                         </button>
 
+                                        <button onClick={() => setShowUpdates(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/80 to-pink-600/80"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
+                                            <div className="relative z-10 text-5xl mb-2">✨</div>
+                                            <div className="relative z-10 text-center">
+                                                <div className="text-purple-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.whatsNew || "What's New"}</div>
+                                            </div>
+                                        </button>
+
                                         <button onClick={() => setView('manager')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
                                             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-indigo-900/80"></div>
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
                                             <div className="relative z-10 text-5xl mb-2">👔</div>
                                             <div className="relative z-10 text-center">
                                                 <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">MENAJER</div>
+                                            </div>
+                                        </button>
+
+                                        <button onClick={() => setShowGlobalHistory(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-blue-900/80"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
+                                            <div className="relative z-10 text-5xl mb-2">🌍</div>
+                                            <div className="relative z-10 text-center">
+                                                <div className="text-indigo-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.history || 'HISTORY'}</div>
+                                            </div>
+                                        </button>
+
+                                        <button onClick={() => setShowWorldRankings(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                            <img src="/assets/icon-rank.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="World Rankings" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
+                                            <div className="relative z-10 mt-auto mb-3 text-center">
+                                                <div className="text-pink-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.worldRankings || 'RANKINGS'}</div>
                                             </div>
                                         </button>
 
@@ -3811,10 +4418,7 @@ const App: React.FC = () => {
                                                     // Helper to find priority match
                                                     const getCupMatch = (cup: EuropeanCup | undefined) => {
                                                         if (!cup || !cup.isActive) return null;
-                                                        // Cup matches schedule check is implicit in their existence in the 'matches' array for the current round?
-                                                        // No, matches are pre-generated. We check if there's an unplayed match for us in the current round.
-                                                        // AND strict check for schedule week to match Engine logic.
-                                                        const SCHEDULE: { [key: string]: number } = { 'ROUND_16': 7, 'QUARTER': 14, 'SEMI': 21, 'FINAL': 28 };
+                                                        const SCHEDULE: { [key: string]: number } = { 'ROUND_16': 4, 'QUARTER': 11, 'SEMI': 18, 'FINAL': 26 };
                                                         const scheduledWeek = SCHEDULE[cup.currentRound];
                                                         if (gameState.currentWeek !== scheduledWeek) return null;
 
@@ -3824,12 +4428,24 @@ const App: React.FC = () => {
                                                         );
                                                     };
 
+                                                    // Check Super Cup (Priority #1)
+                                                    const getSuperCupMatch = () => {
+                                                        if (gameState.superCup && !gameState.superCup.isComplete && gameState.superCup.match) {
+                                                            const m = gameState.superCup.match;
+                                                            if (!m.isPlayed && (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id)) {
+                                                                return m;
+                                                            }
+                                                        }
+                                                        return null;
+                                                    };
+
+                                                    const nextSuperCup = getSuperCupMatch();
                                                     const nextCL = getCupMatch(gameState.europeanCup);
                                                     const nextEL = getCupMatch(gameState.europaLeague);
                                                     const nextLeague = gameState.matches.find(m => m.week === gameState.currentWeek && (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id));
 
-                                                    // Priority: CL > EL > League
-                                                    const nextMatch = nextCL || nextEL || nextLeague;
+                                                    // Priority: Super Cup > CL > EL > League
+                                                    const nextMatch = nextSuperCup || nextCL || nextEL || nextLeague;
 
                                                     if (!nextMatch) return (
                                                         <div className="text-center text-slate-400 py-4">
@@ -3837,7 +4453,8 @@ const App: React.FC = () => {
                                                         </div>
                                                     );
 
-                                                    const isCup = !!(nextCL || nextEL);
+                                                    const isCup = !!(nextSuperCup || nextCL || nextEL);
+                                                    const isSuperCup = !!nextSuperCup;
                                                     const isCL = !!nextCL;
                                                     const opponentId = nextMatch.homeTeamId === userTeam.id ? nextMatch.awayTeamId : nextMatch.homeTeamId;
                                                     const opponent = gameState.teams.find(tm => tm.id === opponentId);
@@ -3846,7 +4463,7 @@ const App: React.FC = () => {
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex items-center gap-3">
                                                                 <div className={`w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center border shadow-lg ${isCup
-                                                                    ? (isCL ? 'bg-purple-900 border-purple-500' : 'bg-emerald-900 border-emerald-500')
+                                                                    ? (isSuperCup ? 'bg-amber-600 border-amber-400' : isCL ? 'bg-purple-900 border-purple-500' : 'bg-emerald-900 border-emerald-500')
                                                                     : 'bg-slate-800 border-slate-700'}`}>
                                                                     {opponent ? (
                                                                         <img src={getTeamLogo(opponent.name)} alt={opponent.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: #fff">${opponent.name.substring(0, 1)}</span>`; }} />
@@ -3856,9 +4473,9 @@ const App: React.FC = () => {
                                                                 </div>
                                                                 <div>
                                                                     <div className={`text-[10px] font-bold uppercase ${isCup
-                                                                        ? (isCL ? 'text-purple-400' : 'text-emerald-400')
+                                                                        ? (isSuperCup ? 'text-amber-300' : isCL ? 'text-purple-400' : 'text-emerald-400')
                                                                         : 'text-emerald-500'}`}>
-                                                                        {isCup ? (isCL ? 'CHAMPIONS LEAGUE' : 'EUROPA LEAGUE') : t.nextMatch}
+                                                                        {isSuperCup ? 'UEFA SUPER CUP' : isCup ? (isCL ? 'CHAMPIONS LEAGUE' : 'EUROPA LEAGUE') : t.nextMatch}
                                                                     </div>
                                                                     <div className="text-lg font-bold text-white">
                                                                         {opponent?.name || 'Unknown'}
@@ -3867,7 +4484,9 @@ const App: React.FC = () => {
                                                             </div>
                                                             <button
                                                                 onClick={() => {
-                                                                    if (isCup) {
+                                                                    if (isSuperCup) {
+                                                                        handlePlaySuperCup();
+                                                                    } else if (isCup) {
                                                                         handlePlayEuropeanCupMatch(nextMatch as EuropeanCupMatch);
                                                                     } else {
                                                                         startNextMatch();
@@ -3875,9 +4494,11 @@ const App: React.FC = () => {
                                                                 }}
                                                                 className={`px-4 py-3 rounded-lg shadow-lg transition-all active:scale-95 flex items-center gap-2 font-bold text-white
                                                             ${isCup
-                                                                        ? (isCL
-                                                                            ? 'bg-purple-600 hover:bg-purple-500 shadow-purple-900/40'
-                                                                            : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40')
+                                                                        ? (isSuperCup
+                                                                            ? 'bg-amber-500 hover:bg-amber-400 shadow-amber-900/40 text-black'
+                                                                            : isCL
+                                                                                ? 'bg-purple-600 hover:bg-purple-500 shadow-purple-900/40'
+                                                                                : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40')
                                                                         : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40'}`}
                                                             >
                                                                 <SkipForward size={20} className="mr-2" />
@@ -3993,7 +4614,6 @@ const App: React.FC = () => {
                                 )
                             }
                             {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} onPlaySuperCup={handlePlaySuperCup} />}
-                            {view === 'rankings' && <WorldRankings players={gameState.players} teams={gameState.teams} t={t} onPlayerClick={setSelectedPlayer} />}
                             {view === 'guide' && <GameGuide t={t} />}
                             {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} t={t} onBack={() => setView('dashboard')} />}
                         </div >
@@ -4001,6 +4621,26 @@ const App: React.FC = () => {
                     )}
                 </div >
             </div >
+
+            {/* Updates Modal */}
+            {showUpdates && <UpdatesModal onClose={() => setShowUpdates(false)} t={t} />}
+
+            {/* Global History Modal */}
+            <GlobalHistoryModal
+                isOpen={showGlobalHistory}
+                onClose={() => setShowGlobalHistory(false)}
+                history={gameState?.history || []}
+                teams={gameState?.teams || []}
+                t={t}
+            />
+
+            {/* World Rankings Modal */}
+            <WorldRankingsModal
+                isOpen={showWorldRankings}
+                onClose={() => setShowWorldRankings(false)}
+                teams={gameState?.teams || []}
+                players={gameState?.players || []}
+            />
         </Layout >
     );
 };

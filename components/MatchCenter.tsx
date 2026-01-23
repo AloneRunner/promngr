@@ -16,7 +16,7 @@ interface MatchCenterProps {
     onFinish: (matchId: string) => void;
     onInstantFinish: (matchId: string) => void;
     onSubstitute: (playerInId: string, playerOutId: string) => void;
-    onUpdateTactic: (tactic: TeamTactic) => void;
+    onUpdateTactic: (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }) => void;
     onAutoFix: () => void;
     userTeamId: string;
     t: Translation;
@@ -1302,7 +1302,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <TeamManagement
                             team={myTeam}
                             players={livePlayers}
-                            onUpdateTactic={onUpdateTactic}
+                            onUpdateTactic={(tactic) => onUpdateTactic(tactic, { minute: match.currentMinute, score: { home: match.homeScore, away: match.awayScore } })}
                             onPlayerClick={onPlayerClick}
                             onUpdateLineup={(id, status) => { }}
                             onSwapPlayers={onSubstitute}

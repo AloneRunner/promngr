@@ -1,6 +1,7 @@
 import React from 'react';
 import { Team, Translation, TacticalMatchRecord } from '../types';
-import { Brain, TrendingUp, Shield, Zap, Target, AlertTriangle, CheckCircle, HelpCircle, X, Footprints, Gauge, Timer, Users } from 'lucide-react';
+import { Brain, TrendingUp, Shield, AlertTriangle, CheckCircle, HelpCircle, X, Footprints, Users, BarChart3 } from 'lucide-react';
+import { analyzeUserHistory } from '../services/tactics';
 
 interface AssistantCoachModalProps {
     userTeam: Team;
@@ -29,30 +30,6 @@ const getTacticLabel = (key: string, t: Translation): string => {
     return key;
 };
 
-// Formation counter advice with translation keys
-const getFormationCounters = (t: Translation): Record<string, { formation: string; reasonKey: string }> => ({
-    '4-4-2': { formation: '4-3-3', reasonKey: 'adviceWingPressure' },
-    '4-3-3': { formation: '4-5-1', reasonKey: 'adviceMidfieldControl' },
-    '3-5-2': { formation: '4-3-3', reasonKey: 'adviceUseWings' },
-    '5-4-1': { formation: '4-3-3', reasonKey: 'adviceWingPressure' },
-    '4-5-1': { formation: '4-4-2', reasonKey: 'adviceTwoStrikers' },
-    '3-4-3': { formation: '5-3-2', reasonKey: 'adviceExtraDefense' },
-    '4-2-3-1': { formation: '4-1-4-1', reasonKey: 'adviceMarkPlaymaker' },
-    '4-1-4-1': { formation: '4-3-3', reasonKey: 'adviceMidfieldSuperiority' },
-    '4-1-2-1-2 (Diamond)': { formation: '4-5-1', reasonKey: 'adviceUseWingsNarrow' },
-    '4-3-2-1 (Xmas Tree)': { formation: '4-4-2', reasonKey: 'advicePlayWide' },
-    '5-3-2': { formation: '4-3-3', reasonKey: 'adviceUseWings' }
-});
-
-// Style counter advice with translation keys
-const getStyleCounters = (t: Translation): Record<string, { style: string; aggression: string; tempo: string; reasonKey: string }> => ({
-    'ParkTheBus': { style: 'Possession', aggression: 'Normal', tempo: 'Slow', reasonKey: 'adviceBePatient' },
-    'HighPress': { style: 'Counter', aggression: 'Safe', tempo: 'Fast', reasonKey: 'adviceQuickCounter' },
-    'Possession': { style: 'HighPress', aggression: 'Aggressive', tempo: 'Fast', reasonKey: 'advicePressOnLoss' },
-    'Counter': { style: 'Possession', aggression: 'Normal', tempo: 'Slow', reasonKey: 'adviceKeepPossession' },
-    'Balanced': { style: 'HighPress', aggression: 'Normal', tempo: 'Normal', reasonKey: 'adviceControlledPress' }
-});
-
 export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
     userTeam,
     opponent,
@@ -62,56 +39,83 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
 }) => {
     const matchCount = tacticalHistory.length;
 
-    // Deneyim seviyesi
+    // Experience level
     const getExperienceLevel = () => {
         if (matchCount < 5) return { level: 'rookie', icon: HelpCircle, color: 'slate' };
         if (matchCount < 15) return { level: 'experienced', icon: TrendingUp, color: 'blue' };
         if (matchCount < 30) return { level: 'expert', icon: Brain, color: 'purple' };
-        return { level: 'master', icon: Target, color: 'amber' };
+        return { level: 'master', icon: BarChart3, color: 'amber' };
     };
 
     const experience = getExperienceLevel();
 
-    // Rakibe karşı geçmiş maçlar
+    // Past matches against this specific opponent
     const pastMatchesVsOpponent = tacticalHistory.filter(
         m => m.homeTeamId === opponent.id || m.awayTeamId === opponent.id
     );
 
-    // Rakibin taktik stiline karşı istatistikler
+    // Get opponent's tactics
     const opponentStyle = opponent.tactic.style || 'Balanced';
     const opponentFormation = opponent.tactic.formation;
     const opponentAggression = opponent.tactic.aggression || 'Normal';
 
-    const matchesVsStyle = tacticalHistory.filter(m => {
-        const oppTactic = m.isUserHome ? m.awayTactic : m.homeTactic;
-        return oppTactic.style === opponentStyle;
-    });
+    // === HISTORY-BASED ANALYSIS ===
+    // Analyze user's past performance against THIS TYPE of opponent
+    const analysisVsFormation = analyzeUserHistory(tacticalHistory, opponentFormation, undefined);
+    const analysisVsStyle = analyzeUserHistory(tacticalHistory, undefined, opponentStyle);
+    const overallAnalysis = analyzeUserHistory(tacticalHistory);
 
-    const winsVsStyle = matchesVsStyle.filter(m => m.userWon).length;
-    const winRateVsStyle = matchesVsStyle.length > 0
-        ? Math.round((winsVsStyle / matchesVsStyle.length) * 100)
-        : null;
-
-    // Formasyon önerisi
-    const getFormationAdvice = () => {
-        const counters = getFormationCounters(t);
-        const counter = counters[opponentFormation];
-        if (counter) return { formation: counter.formation, reason: (t as any)[counter.reasonKey] || counter.reasonKey };
-        return { formation: '4-4-2', reason: t.adviceBalancedApproach || 'Balanced approach is safest' };
+    // Get the best recommendation based on history
+    const getBestFormation = () => {
+        // Priority: matches vs this specific formation > overall best
+        if (analysisVsFormation.bestFormation && analysisVsFormation.bestFormationMatches >= 3) {
+            return {
+                formation: analysisVsFormation.bestFormation,
+                winRate: analysisVsFormation.bestFormationWinRate,
+                matches: analysisVsFormation.bestFormationMatches,
+                context: `${opponentFormation} karşısında`
+            };
+        }
+        if (overallAnalysis.bestFormation) {
+            return {
+                formation: overallAnalysis.bestFormation,
+                winRate: overallAnalysis.bestFormationWinRate,
+                matches: overallAnalysis.bestFormationMatches,
+                context: 'genel'
+            };
+        }
+        return null;
     };
 
-    // Stil önerisi
-    const getStyleAdvice = () => {
-        const counters = getStyleCounters(t);
-        const counter = counters[opponentStyle];
-        if (counter) return { style: counter.style, aggression: counter.aggression, tempo: counter.tempo, reason: (t as any)[counter.reasonKey] || counter.reasonKey };
-        return { style: 'Balanced', aggression: 'Normal', tempo: 'Normal', reason: t.adviceBalancedApproach || 'Balanced approach' };
+    const getBestStyle = () => {
+        if (analysisVsStyle.bestStyle && analysisVsStyle.bestStyleMatches >= 3) {
+            return {
+                style: analysisVsStyle.bestStyle,
+                winRate: analysisVsStyle.bestStyleWinRate,
+                matches: analysisVsStyle.bestStyleMatches,
+                context: `${getTacticLabel(opponentStyle, t)} karşısında`
+            };
+        }
+        if (overallAnalysis.bestStyle) {
+            return {
+                style: overallAnalysis.bestStyle,
+                winRate: overallAnalysis.bestStyleWinRate,
+                matches: overallAnalysis.bestStyleMatches,
+                context: 'genel'
+            };
+        }
+        return null;
     };
 
-    const formationAdvice = getFormationAdvice();
-    const styleAdvice = getStyleAdvice();
+    const bestFormation = getBestFormation();
+    const bestStyle = getBestStyle();
 
-    // Çeviri anahtarları
+    // Check if we have ANY usable data
+    const hasEnoughData = matchCount >= 5;
+    const hasFormationData = bestFormation !== null;
+    const hasStyleData = bestStyle !== null;
+
+    // Translation keys
     const experienceLabels: Record<string, string> = {
         rookie: t.coachRookie || 'Çaylak',
         experienced: t.coachExperienced || 'Deneyimli',
@@ -142,7 +146,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                 </div>
 
                 <div className="p-4 space-y-4">
-                    {/* Rakip Analizi */}
+                    {/* Opponent Analysis */}
                     <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700">
                         <div className="flex items-center gap-2 mb-2">
                             <Shield className="text-red-400" size={18} />
@@ -150,92 +154,71 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">{t.formation || 'Formation'}</span>
+                                <span className="text-slate-500 text-xs">{t.formation || 'Diziliş'}</span>
                                 <div className="text-blue-400 font-mono font-bold">{opponentFormation}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">{t.playStyle || 'Play Style'}</span>
+                                <span className="text-slate-500 text-xs">{t.playStyle || 'Oyun Stili'}</span>
                                 <div className="text-purple-400 font-bold">{getTacticLabel(opponentStyle, t)}</div>
                             </div>
-                            <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">{t.aggressiveness || 'Aggressiveness'}</span>
+                            <div className="bg-slate-900/50 p-2 rounded col-span-2">
+                                <span className="text-slate-500 text-xs">{t.aggressiveness || 'Agresiflik'}</span>
                                 <div className="text-orange-400 font-bold">{getTacticLabel(opponentAggression, t)}</div>
-                            </div>
-                            <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">Tempo</span>
-                                <div className="text-cyan-400 font-bold">{getTacticLabel(opponent.tactic.tempo || 'Normal', t)}</div>
                             </div>
                         </div>
                     </div>
 
-                    {/* TAKTİK TAVSİYELERİ */}
-                    {matchCount >= 3 ? (
+                    {/* TACTICAL ADVICE - Based on History */}
+                    {hasEnoughData && (hasFormationData || hasStyleData) ? (
                         <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-500/30">
                             <div className="flex items-center gap-2 mb-3">
                                 <CheckCircle className="text-emerald-400" size={20} />
-                                <span className="font-bold text-emerald-400 text-lg">🎯 {t.myTacticalAdvice || 'My Tactical Advice'}</span>
+                                <span className="font-bold text-emerald-400 text-lg">📊 {t.myTacticalAdvice || 'Geçmiş Verilerine Göre'}</span>
                             </div>
 
-                            {/* Formasyon Önerisi */}
-                            <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Users className="text-blue-400" size={16} />
-                                    <span className="text-slate-400 text-xs uppercase font-bold">{t.formation || 'Formation'}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-2xl font-bold text-blue-400">{formationAdvice.formation}</span>
-                                    <span className="text-slate-500">{t.playWith || 'play'}</span>
-                                </div>
-                                <p className="text-xs text-slate-400 mt-1">💡 {formationAdvice.reason}</p>
-                            </div>
-
-                            {/* Stil Önerisi */}
-                            <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Footprints className="text-purple-400" size={16} />
-                                    <span className="text-slate-400 text-xs uppercase font-bold">{t.playStyle || 'Play Style'}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xl font-bold text-purple-400">{getTacticLabel(styleAdvice.style, t)}</span>
-                                </div>
-                                <p className="text-xs text-slate-400 mt-1">💡 {styleAdvice.reason}</p>
-                            </div>
-
-                            {/* Agresiflik & Tempo */}
-                            <div className="grid grid-cols-2 gap-2">
-                                <div className="bg-slate-900/50 rounded-lg p-3">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <Gauge className="text-orange-400" size={14} />
-                                        <span className="text-slate-400 text-[10px] uppercase font-bold">{t.aggressiveness || 'Aggressiveness'}</span>
+                            {/* Formation Advice */}
+                            {hasFormationData && bestFormation && (
+                                <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <Users className="text-blue-400" size={16} />
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.formation || 'Diziliş'}</span>
                                     </div>
-                                    <span className="text-lg font-bold text-orange-400">{getTacticLabel(styleAdvice.aggression, t)}</span>
-                                </div>
-                                <div className="bg-slate-900/50 rounded-lg p-3">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <Timer className="text-cyan-400" size={14} />
-                                        <span className="text-slate-400 text-[10px] uppercase font-bold">Tempo</span>
-                                    </div>
-                                    <span className="text-lg font-bold text-cyan-400">{getTacticLabel(styleAdvice.tempo, t)}</span>
-                                </div>
-                            </div>
-
-                            {/* Özet Kutusu */}
-                            <div className="mt-4 p-3 bg-emerald-800/30 rounded-lg border border-emerald-500/20">
-                                <p className="text-sm text-emerald-200 text-center">
-                                    📋 <strong>{formationAdvice.formation}</strong> {t.withStyle || 'with'} <strong>{getTacticLabel(styleAdvice.style, t)}</strong>,
-                                    <strong> {getTacticLabel(styleAdvice.aggression, t)}</strong> + <strong>{getTacticLabel(styleAdvice.tempo, t)}</strong> tempo
-                                </p>
-                            </div>
-
-                            {/* İstatistik (yeterli veri varsa) */}
-                            {matchesVsStyle.length >= 3 && winRateVsStyle !== null && (
-                                <div className="mt-3 pt-3 border-t border-emerald-500/20">
-                                    <p className="text-xs text-slate-400">
-                                        📊 {t.vsTacticStats?.replace('{tactic}', getTacticLabel(opponentStyle, t)) || `vs ${getTacticLabel(opponentStyle, t)} tactic:`}
-                                        <span className={`ml-1 font-bold ${winRateVsStyle >= 50 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                            {winRateVsStyle}% {t.winRate}
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-2xl font-bold text-blue-400">{bestFormation.formation}</span>
+                                        <span className={`text-sm font-bold ${bestFormation.winRate >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                            %{bestFormation.winRate} kazanç
                                         </span>
-                                        <span className="text-slate-500 ml-1">({matchesVsStyle.length} {t.matches})</span>
+                                    </div>
+                                    <p className="text-xs text-slate-400 mt-1">
+                                        📈 {bestFormation.context} ({bestFormation.matches} maç)
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Style Advice */}
+                            {hasStyleData && bestStyle && (
+                                <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <Footprints className="text-purple-400" size={16} />
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.playStyle || 'Oyun Stili'}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xl font-bold text-purple-400">{getTacticLabel(bestStyle.style, t)}</span>
+                                        <span className={`text-sm font-bold ${bestStyle.winRate >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                            %{bestStyle.winRate} kazanç
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-slate-400 mt-1">
+                                        � {bestStyle.context} ({bestStyle.matches} maç)
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Summary */}
+                            {hasFormationData && hasStyleData && bestFormation && bestStyle && (
+                                <div className="mt-4 p-3 bg-emerald-800/30 rounded-lg border border-emerald-500/20">
+                                    <p className="text-sm text-emerald-200 text-center">
+                                        ✅ <strong>{bestFormation.formation}</strong> + <strong>{getTacticLabel(bestStyle.style, t)}</strong> ile başarılısın!
                                     </p>
                                 </div>
                             )}
@@ -244,20 +227,18 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         <div className="bg-amber-900/30 rounded-xl p-3 border border-amber-500/30">
                             <div className="flex items-center gap-2 mb-2">
                                 <AlertTriangle className="text-amber-400" size={18} />
-                                <span className="font-bold text-amber-400">{t.needMoreExperience || 'Deneyim Gerekli'}</span>
+                                <span className="font-bold text-amber-400">{t.needMoreExperience || 'Veri Yetersiz'}</span>
                             </div>
                             <p className="text-sm text-slate-300">
-                                {t.needMoreMatchesDesc?.replace('{count}', String(matchCount)) || `I need a few more matches to give detailed advice. We've played ${matchCount} matches so far.`}
+                                {matchCount < 5
+                                    ? `Tavsiye verebilmem için en az 5 maç gerekli. Şu an ${matchCount} maç oynadık.`
+                                    : `${opponentFormation} veya ${getTacticLabel(opponentStyle, t)} stiline karşı yeterli verin yok. Denemeni öneririm!`
+                                }
                             </p>
-
-                            {/* Yine de temel öneri ver */}
-                            <div className="mt-3 p-2 bg-slate-800/50 rounded">
-                                <p className="text-xs text-slate-400">🎯 {t.generalAdvice || 'General advice'}: <strong className="text-blue-400">{formationAdvice.formation}</strong> {t.withStyle || 'with'} <strong className="text-purple-400">{getTacticLabel(styleAdvice.style, t)}</strong></p>
-                            </div>
                         </div>
                     )}
 
-                    {/* Geçmiş Karşılaşmalar */}
+                    {/* Past Matches Against This Opponent */}
                     {pastMatchesVsOpponent.length > 0 && (
                         <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700">
                             <div className="flex items-center gap-2 mb-2">
@@ -285,7 +266,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         onClick={onClose}
                         className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold py-3 px-6 rounded-xl transition-colors"
                     >
-                        {t.understood || 'Anladım, Hazırım!'}
+                        {t.understood || 'Anladım'}
                     </button>
                 </div>
             </div>
