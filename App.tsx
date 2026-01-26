@@ -27,7 +27,6 @@ import { UpdatesModal } from './components/UpdatesModal';
 import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
-import { TacticalAnalysis } from './components/TacticalAnalysis';
 import { Layout } from './components/Layout';
 
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
@@ -207,7 +206,6 @@ const App: React.FC = () => {
     const [showUpdates, setShowUpdates] = useState(false);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
-    const [showTacticalAnalysis, setShowTacticalAnalysis] = useState(false);
 
     const t = TRANSLATIONS[lang];
 
@@ -544,9 +542,8 @@ const App: React.FC = () => {
     const handleQuickDerbyStart = () => {
         if (!gameState || !derbyHomeId || !derbyAwayId) return;
         if (derbyHomeId === derbyAwayId) {
-            // Allow same team friendlies if explicitly desired (User Request)
-            // alert("Please select different teams.");
-            // return;
+            alert("Please select different teams.");
+            return;
         }
 
         const homeTeam = gameState.teams.find(team => team.id === derbyHomeId);
@@ -593,12 +590,14 @@ const App: React.FC = () => {
         setDebugLog([]);
     };
 
-    const handleUpdateTactic = (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }) => {
+    const handleUpdateTactic = (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }, targetTeamId?: string) => {
         if (!gameState) return;
+        const teamIdToUpdate = targetTeamId || gameState.userTeamId;
+        if (!teamIdToUpdate) return;
 
         // Log change if context is provided (during live match)
-        if (context && gameState.userTeamId) {
-            const currentTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+        if (context) {
+            const currentTeam = gameState.teams.find(t => t.id === teamIdToUpdate);
             if (currentTeam) {
                 const change: TacticalChange = {
                     minute: context.minute,
@@ -613,22 +612,92 @@ const App: React.FC = () => {
         }
 
         const updatedTeams = gameState.teams.map(t =>
-            t.id === gameState.userTeamId ? { ...t, tactic } : t
+            t.id === teamIdToUpdate ? { ...t, tactic } : t
         );
         setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
 
-        if (activeMatchId && gameState.userTeamId) {
-            updateMatchTactic(activeMatchId, gameState.userTeamId, tactic);
+        if (activeMatchId) {
+            updateMatchTactic(activeMatchId, teamIdToUpdate, tactic);
         }
     };
 
     // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========
+    // Exposed to window for user to manually verify tactical impacts
     const runTacticalAnalysis = async () => {
-        setShowTacticalAnalysis(true);
-    };
+        if (!gameState || !gameState.teams.length) return;
 
-    // Expose to window for manual triggering if needed
-    (window as any).runTacticalAnalysis = runTacticalAnalysis;
+        console.log("🚀 STARTING TACTICAL ANALYSIS...");
+        // Clone teams to not affect game state
+        const teamA = JSON.parse(JSON.stringify(gameState.teams[0])); // One team
+        const teamB = JSON.parse(JSON.stringify(gameState.teams[1])); // Another team
+
+        // Find players for these teams
+        const playersA = gameState.players.filter(p => p.teamId === teamA.id);
+        const playersB = gameState.players.filter(p => p.teamId === teamB.id);
+
+        const simulateScenario = (scenarioName: string, setupFn: () => void) => {
+            let winsA = 0, winsB = 0, draws = 0;
+            let goalsA = 0, goalsB = 0;
+
+            // Apply tactic changes
+            setupFn();
+
+            for (let i = 0; i < 200; i++) { // 200 matches per scenario
+                const match: any = {
+                    id: 'sim_' + i, homeTeamId: teamA.id, awayTeamId: teamB.id,
+                    homeScore: 0, awayScore: 0, events: [], stats: {}, isPlayed: false,
+                    currentMinute: 0 // Reset minute
+                };
+
+                // Reset stats/form/morale that might affect result
+                teamA.recentForm = []; teamB.recentForm = [];
+
+                // Simulate
+                const result = simulateFullMatch(match, teamA, teamB, playersA, playersB);
+
+                goalsA += result.homeScore;
+                goalsB += result.awayScore;
+                if (result.homeScore > result.awayScore) winsA++;
+                else if (result.awayScore > result.homeScore) winsB++;
+                else draws++;
+            }
+            console.log(`📊 SCENARIO: ${scenarioName}`);
+            console.log(`   ${teamA.name} vs ${teamB.name}`);
+            console.log(`   Wins A: ${winsA} (${((winsA / 200) * 100).toFixed(1)}%) | Wins B: ${winsB} (${((winsB / 200) * 100).toFixed(1)}%) | Draws: ${draws}`);
+            console.log(`   Avg Score: ${(goalsA / 200).toFixed(2)} - ${(goalsB / 200).toFixed(2)}`);
+            console.log("-------------------------------------------------");
+        };
+
+        // 1. BASELINE
+        simulateScenario("BASELINE (Both Balanced 4-3-3)", () => {
+            teamA.tactic = { ...teamA.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+            teamB.tactic = { ...teamB.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
+        });
+
+        // 2. TEMPO
+        simulateScenario("TEMPO: A=Fast, B=Slow", () => {
+            teamA.tactic.tempo = 'Fast';
+            teamB.tactic.tempo = 'Slow';
+        });
+
+        // 3. WIDTH
+        simulateScenario("WIDTH: A=Wide, B=Narrow", () => {
+            teamA.tactic.width = 'Wide';
+            teamB.tactic.width = 'Narrow';
+        });
+
+        // 4. STYLE (Possession vs HighPress) - SHOULD HAVE EFFECT
+        simulateScenario("STYLE: A=Possession, B=HighPress (Rock-Paper-Scissors Check)", () => {
+            teamA.tactic.style = 'Possession';
+            teamB.tactic.style = 'HighPress';
+        });
+
+        // 5. FORMATION
+        simulateScenario("FORMATION: A=4-3-3, B=5-3-2", () => {
+            teamA.tactic.formation = '4-3-3';
+            teamB.tactic.formation = '5-3-2';
+        });
+    };
 
     // Always expose to window
     (window as any).runTacticalAnalysis = runTacticalAnalysis;
@@ -4448,15 +4517,6 @@ const App: React.FC = () => {
                 />
             )}
 
-            {/* Tactical Analysis Lab */}
-            {showTacticalAnalysis && gameState && (
-                <TacticalAnalysis
-                    gameState={gameState}
-                    onClose={() => setShowTacticalAnalysis(false)}
-                    currentLang={lang}
-                />
-            )}
-
             {/* Desktop Sidebar (Left) - Hidden on Mobile, Tablet, AND during Match */}
             {view !== 'match' && (
                 <div className="hidden 2xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
@@ -4484,7 +4544,6 @@ const App: React.FC = () => {
                         <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                         <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
                         <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
-                        <button onClick={() => setShowTacticalAnalysis(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-2 text-cyan-400 hover:bg-slate-800 border border-cyan-500/30 font-bold transition-all hover:border-cyan-500"><Target size={20} /> <span className="hidden md:inline">Taktik Analiz</span></button>
 
 
                         {/* Job Offers Button - Only show if there are offers */}

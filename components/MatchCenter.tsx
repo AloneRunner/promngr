@@ -16,7 +16,7 @@ interface MatchCenterProps {
     onFinish: (matchId: string) => void;
     onInstantFinish: (matchId: string) => void;
     onSubstitute: (playerInId: string, playerOutId: string) => void;
-    onUpdateTactic: (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }) => void;
+    onUpdateTactic: (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }, targetTeamId?: string) => void;
     onAutoFix: () => void;
     userTeamId: string;
     t: Translation;
@@ -137,6 +137,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // NEW: Landscape Detection (for wide phones like Samsung A51)
     const [isLandscape, setIsLandscape] = useState(false);
     const [isSmallLandscape, setIsSmallLandscape] = useState(false); // Wide phone landscape (not tablet)
+
+    // DEBUG: Managed Side (Home/Away)
+    const [managedSide, setManagedSide] = useState<'HOME' | 'AWAY'>('HOME');
+
+    // Sync managed side to user team initially
+    useEffect(() => {
+        setManagedSide(userTeamId === awayTeam.id ? 'AWAY' : 'HOME');
+    }, [userTeamId, awayTeam.id]);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1271,8 +1279,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.restore();
     };
 
-    const myTeam = userTeamId === homeTeam.id ? homeTeam : awayTeam;
-    const myPlayers = userTeamId === homeTeam.id ? homePlayers : awayPlayers;
+    const myTeam = managedSide === 'HOME' ? homeTeam : awayTeam;
+    const myPlayers = managedSide === 'HOME' ? homePlayers : awayPlayers;
     const statusText = match.liveData?.lastActionText || 'Waiting...';
 
     // Merge live stamina data into players for the management view
@@ -1294,6 +1302,15 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                             <Settings className="text-emerald-500" /> Management
                         </h2>
+
+                        {/* DEBUG: Side Toggle for Friendly Matches */}
+                        {(match.isFriendly || true) && (
+                            <div className="flex bg-slate-800 rounded-lg p-1 gap-1 mx-4">
+                                <button onClick={() => setManagedSide('HOME')} className={`px-3 py-1 rounded text-xs font-bold transition-colors ${managedSide === 'HOME' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>Home ({homeTeam.shortName})</button>
+                                <button onClick={() => setManagedSide('AWAY')} className={`px-3 py-1 rounded text-xs font-bold transition-colors ${managedSide === 'AWAY' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>Away ({awayTeam.shortName})</button>
+                            </div>
+                        )}
+
                         <button onClick={() => { setShowTacticsModal(false); setSpeed(1); }} className="bg-red-600 hover:bg-red-500 text-white p-2 rounded">
                             <X size={20} />
                         </button>
@@ -1302,7 +1319,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <TeamManagement
                             team={myTeam}
                             players={livePlayers}
-                            onUpdateTactic={(tactic) => onUpdateTactic(tactic, { minute: match.currentMinute, score: { home: match.homeScore, away: match.awayScore } })}
+                            onUpdateTactic={(tactic) => onUpdateTactic(tactic, { minute: match.currentMinute, score: { home: match.homeScore, away: match.awayScore } }, myTeam.id)}
                             onPlayerClick={onPlayerClick}
                             onUpdateLineup={(id, status) => { }}
                             onSwapPlayers={onSubstitute}
@@ -1313,7 +1330,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <Users size={16} /> Note: Changes apply instantly. Stamina affects player ratings live.
                         </div>
                     </div>
-                </div>
+                </div >
             )}
 
             {/* TOP BAR: SCOREBOARD (Hidden on small landscape) */}

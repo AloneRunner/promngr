@@ -431,6 +431,7 @@ export class MatchEngine {
     private _cachedHomeStarters: Player[] = [];
     private _cachedAwayStarters: Player[] = [];
     private _starterCacheValid: boolean = false;
+    private _statsLogged: boolean = false;
 
     constructor(match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) {
         this.match = match;
@@ -503,9 +504,25 @@ export class MatchEngine {
         const homeAvg = Math.round(homeStarters.reduce((sum, p) => sum + p.overall, 0) / homeStarters.length);
         const awayAvg = Math.round(awayStarters.reduce((sum, p) => sum + p.overall, 0) / awayStarters.length);
 
-        console.log(`\n🏟️ MAÇ BAŞLIYOR: ${homeTeam.name} vs ${awayTeam.name}`);
-        console.log(`📊 TAKIM GÜÇLERİ: ${homeTeam.name} (${homeAvg} OVR) vs ${awayTeam.name} (${awayAvg} OVR) | Fark: ${Math.abs(homeAvg - awayAvg)}`);
-        console.log(`⚙️ TAKTİKLER: ${homeTeam.name} [${homeTeam.tactic.formation}, ${homeTeam.tactic.aggression}, ${homeTeam.tactic.style}] vs ${awayTeam.name} [${awayTeam.tactic.formation}, ${awayTeam.tactic.aggression}, ${awayTeam.tactic.style}]`);
+        console.log(`\n🏟️ MATCH START: ${homeTeam.name} vs ${awayTeam.name}`);
+
+        const logTeamTactic = (team: Team, avg: number, side: 'HOME' | 'AWAY') => {
+            console.log(`\n== ${side}: ${team.name} (Avg OVR: ${avg}) ==`);
+            console.log(`Formation: ${team.tactic.formation}`);
+            console.log(`Mentality: ${team.tactic.mentality || 'BALANCED'}`);
+            console.log(`Style: ${team.tactic.style}`);
+            console.log(`Detailed Instructions:`);
+            console.log(`- Aggression: ${team.tactic.aggression}`);
+            console.log(`- Tempo: ${team.tactic.tempo}`);
+            console.log(`- Width: ${team.tactic.width}`);
+            console.log(`- Defensive Line: ${team.tactic.defensiveLine}`);
+            console.log(`- Passing Style: ${team.tactic.passingStyle}`);
+            console.log(`- Marking: ${team.tactic.marking}`);
+        };
+
+        logTeamTactic(homeTeam, homeAvg, 'HOME');
+        logTeamTactic(awayTeam, awayAvg, 'AWAY');
+        console.log('\n----------------------------------------');
     }
 
     private initializeTactics(players: Player[], tactic: TeamTactic) {
@@ -1172,6 +1189,25 @@ export class MatchEngine {
         this.sim.awayMentality = this.awayMentality;
     }
 
+    public logMatchStats() {
+        if (this._statsLogged) return;
+        this._statsLogged = true;
+
+        const h = this.homeTeam;
+        const a = this.awayTeam;
+        const s = this.match.stats;
+
+        console.log(`\n🏁 FULL TIME STATS: ${h.name} ${this.match.homeScore} - ${this.match.awayScore} ${a.name}`);
+        console.log(`---------------------------------------------------------------`);
+        console.log(`METRIC             ${h.name.substring(0, 15).padEnd(15)} | ${a.name.substring(0, 15).padEnd(15)}`);
+        console.log(`---------------------------------------------------------------`);
+        console.log(`Possession:        ${(s.homePossession || 50)}%            | ${(s.awayPossession || 50)}%`);
+        console.log(`Expected Goals(xG):${(s.homeXG || 0).toFixed(2)}            | ${(s.awayXG || 0).toFixed(2)}`);
+        console.log(`Shots (On Target): ${s.homeShots} (${s.homeOnTarget})            | ${s.awayShots} (${s.awayOnTarget})`);
+        console.log(`Saves:             ${s.homeSaves || 0}                 | ${s.awaySaves || 0}`);
+        console.log(`---------------------------------------------------------------\n`);
+    }
+
     public step() {
         this.traceLog = [];
         this.tickCount++;
@@ -1186,6 +1222,10 @@ export class MatchEngine {
             if (this.internalMinute % 15 === 0 || this.internalMinute === 45 || this.internalMinute === 90) {
                 const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
                 console.log(`⏱️ ${this.internalMinute}' | Top: (${this.sim.ball.x.toFixed(0)},${this.sim.ball.y.toFixed(0)}) hız:${ballSpeed.toFixed(2)} | Sahip: ${this.sim.ball.ownerId ? this.getPlayer(this.sim.ball.ownerId)?.lastName || 'YOK' : 'Sahipsiz'}`);
+
+                if (this.internalMinute >= 90) {
+                    this.logMatchStats();
+                }
             }
 
             // AI substitution check every 5 minutes for non-user teams
@@ -3374,6 +3414,7 @@ export class MatchEngine {
                         description: 'Santra',
                         teamId: this.homeTeam.id
                     });
+                    this.match.awayScore++; // Update internal score state
                     return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.awayTeam.name}`, teamId: this.awayTeam.id, playerId: scorerId || undefined };
                 }
                 if (outRight) {
@@ -3388,6 +3429,7 @@ export class MatchEngine {
                         description: 'Santra',
                         teamId: this.awayTeam.id
                     });
+                    this.match.homeScore++; // Update internal score state
                     return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.homeTeam.name}`, teamId: this.homeTeam.id, playerId: scorerId || undefined };
                 }
             }
