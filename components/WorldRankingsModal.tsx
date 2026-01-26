@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Trophy, Search, X, Globe, Users, Map } from 'lucide-react';
 import { Team, Player } from '../types';
 import { LEAGUE_PRESETS } from '../constants';
-import { getLeagueReputation } from '../services/engine';
+import { getLeagueReputation, getLeagueCoefficients } from '../services/engine';
 
 interface WorldRankingsModalProps {
     isOpen: boolean;
@@ -55,6 +55,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                 name: preset.name,
                 country: preset.country,
                 reputation,
+                coefficients: getLeagueCoefficients(preset.id),
                 totalValue,
                 stars,
                 teamsCount: leagueTeams.length
@@ -248,9 +249,13 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                 <tr>
                                     <th className="p-4 text-center w-16">Rank</th>
                                     <th className="p-4">League</th>
-                                    <th className="p-4 text-center hidden sm:table-cell">Rating</th>
-                                    <th className="p-4 text-right">Avg Reputation</th>
-                                    <th className="p-4 text-right hidden sm:table-cell">Total Market Value</th>
+                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y1</th>
+                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y2</th>
+                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y3</th>
+                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y4</th>
+                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y5</th>
+                                    <th className="p-4 text-right text-emerald-400">Total Score</th>
+                                    <th className="p-4 text-right hidden lg:table-cell">Total Value</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
@@ -266,18 +271,22 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                                 </div>
                                                 <div>
                                                     <div className="font-bold text-white group-hover:text-purple-400 transition-colors">{league.name}</div>
-                                                    <div className="text-xs text-slate-500">{league.country} • {league.teamsCount} Teams</div>
+                                                    <div className="text-xs text-slate-500">{league.country}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center hidden sm:table-cell">
-                                            {renderStars(league.stars)}
-                                        </td>
-                                        <td className="p-4 text-right font-mono text-emerald-400 font-bold">
+                                        {/* 5-Year Coefficients - Hidden on very small screens */}
+                                        {league.coefficients.map((score, idx) => (
+                                            <td key={idx} className="p-2 text-center font-mono text-slate-400 text-sm hidden sm:table-cell">
+                                                {score.toFixed(1)}
+                                            </td>
+                                        ))}
+
+                                        <td className="p-4 text-right font-mono text-emerald-400 font-bold text-lg">
                                             {league.reputation.toFixed(1)}
                                         </td>
-                                        <td className="p-4 text-right font-mono text-slate-300 hidden sm:table-cell">
-                                            €{(league.totalValue / 1000000).toFixed(1)}M
+                                        <td className="p-4 text-right font-mono text-slate-300 hidden lg:table-cell">
+                                            €{(league.totalValue / 1000000).toFixed(0)}M
                                         </td>
                                     </tr>
                                 ))}

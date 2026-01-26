@@ -1321,7 +1321,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
                     <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
+                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
                     </div>
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{homeTeam.name}</h1>
@@ -1355,7 +1355,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{awayTeam.name}</h1>
                     </div>
                     <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
+                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
                     </div>
                 </div>
             </div>
@@ -1473,8 +1473,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <>
                             {/* Left Side - Home Team */}
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-r from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
-                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
-                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" />
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
+                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession || 50}%</div>
@@ -1483,8 +1483,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                             {/* Right Side - Away Team */}
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-l from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
-                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
-                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" />
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
+                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession || 50}%</div>

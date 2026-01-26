@@ -685,4 +685,178 @@
     update200Item6Desc: "¡Puntos de liga dinámicos! -20% anual si no mantienes el éxito. Es difícil mantenerse arriba.",
     update200Item7Title: "Corrección Supercopa",
     update200Item7Desc: "La Supercopa ahora se juega correctamente tras las finales de copa.",
+
+    // --- GUÍAS EXPERTAS (Deep Dive) ---
+    guideDeepTrainingTitle: "EXPERTO: Matemáticas de Desarrollo",
+    guideDeepTrainingContent: `Las fórmulas reales del motor:
+1. Factor de Edad:
+• < 21 Años: Probabilidad 5% (Muy Rápido)
+• 21-24 Años: Probabilidad 3% (Normal)
+• 24-28 Años: Probabilidad 1% (Lento)
+• 28+ Años: Desarrollo DETENIDO. Solo mantenimiento.
+• 32+ Años: 5% probabilidad de declive semanal.
+
+2. Impacto de Instalaciones:
+• Centro de Entrenamiento: +0.5% probabilidad por nivel.
+• Entrenador Principal: +0.8% bono por nivel.
+• EJEMPLO: Jugador 18 años + Nivel 10 Instalación + Nivel 5 Entrenador = ¡15% probabilidad semanal!
+
+3. Fatiga (Condición):
+• Condición < 60%: Eficiencia a la MITAD.
+• Condición < 30%: Jugador no entrena para descansar.`,
+
+    guideDeepFacilitiesTitle: "EXPERTO: Análisis ROI",
+    guideDeepFacilitiesContent: `Cómo crecer sin bancarrota:
+1. Mantenimiento (Costo Oculto):
+• Fórmula: (Nivel ^ 1.3) x 2000 €
+• Estadio Nivel 15: ~70,000 €/semana!
+• CONSEJO: No mejores a menos que tus ingresos lo soporten.
+
+2. Matemáticas de Estadio:
+• Cada asiento rinde ~15 €.
+• +2000 Capacidad (1 Mejora) = +30,000 €/semana.
+• ROI: Tarda ~100 semanas (2 temporadas) en pagarse.
+• VEREDICTO: El estadio es una inversión a largo plazo.
+
+3. Academia vs Ojeador:
+• Academia Nivel 10: 5% probabilidad/semana de joven mediocre (50-60 Media).
+• Ojeador Nivel 10: 10% probabilidad/semana de joven TALENTOSO (65-80 Potencial).
+• CONSEJO: Invierte primero en el Ojeador. ¡Puedes vender sus hallazgos por millones!`,
+
+    guideDeepMoraleTitle: "EXPERTO: Matemáticas de Moral",
+    guideDeepMoraleContent: `La moral determina el IQ en el campo.
+1. Cómo cae:
+• Estrella Reserva: Si Media > 75 y no juega -> -3 Moral/semana.
+• Suplente: Si Media 65-75 -> -1 Moral/semana.
+• Jóvenes: Estable incluso si no juegan.
+
+2. Efecto en Partido (Crítico):
+• 80-100 Moral: 110% Rendimiento.
+• 0-20 Moral: Falla goles hechos. El portero comete errores.
+• CONSEJO: Nunca pongas a una estrella descontenta en un derbi. Véndelo.`,
+
+    guideDeepTransferTitle: "EXPERTO: Secretos de Negociación",
+    guideDeepTransferContent: `¿Cómo convencer a la IA?
+1. Puntuación de "Voluntad" (>50 necesario):
+• Diferencia de Liga: PL vs TR es pequeña (Max -7 pts).
+• Reputación: Cada 75 de diferencia = +1 Pt.
+• Champions League: Bono indirecto vía reputación.
+
+2. El Dinero Habla (Multiplicador de Salario):
+• Oferta 1.5x: +25 Voluntad.
+• Oferta 2.0x: +50 Voluntad (EFECTO MAX).
+• ADVERTENCIA: ¡Ofrecer 3.0x NO da beneficio extra sobre 2.0x!
+
+3. Tácticas de Venta:
+• Jugadores listados: IA ofrece 100-150% del valor.
+• No listados: IA debe pagar prima de 120-170%.`,
+
+    guideDeepFinanceTitle: "EXPERTO: Trucos Financieros",
+    guideDeepFinanceContent: `Atajos legales para el presupuesto:
+1. Farming (Cultivo):
+• Ficha Agentes Libres de 16-19 años (Salario 25-50k).
+• Entrénalos 10 semanas -> Ponlos en lista.
+• Ganancia pura aunque se vendan barato.
+
+2. Apuesta de Patrocinador:
+• ¿Vas por el título? Elige "Arriesgado" (Bono enorme).
+• ¿Mitad de tabla? Elige "Garantizado" (Flujo de caja).`,
+
+    guideDeepPassTitle: "EXPERTO: Pase y Amplitud",
+    guideDeepPassContent: `1. Estilo de Pase
+A. Pase Corto (Short)
+"Mantener posesión, sin prisa."
+• Motor: Decisión de pase +30 si compañero a <15m.
+• Penalización Largo: Menos deseo de pase largo.
+• Sin Riesgo: Regate -10. Juegan seguro.
+
+B. Pase Directo (Direct)
+"¡Al hueco, al arco!" Estilo Premier.
+• Motor: Pases aéreos y centros +20.
+• Libertad: Tiro (+15) y Regate (+10) suben. Confían en su talento.
+• Penalización Lateral: Pases laterales -10. No al juego aburrido.
+
+2. Amplitud
+A. Estrecho (Narrow)
+"Perforar por el centro."
+• Efecto: Bono de pase/regate cerca del centro. Buscan paredes 1-2.
+• Ideal: 4-1-2-1-2 (Rombo).
+
+B. Ancho (Wide)
+"A la línea de fondo y centro."
+• Efecto: ¡Deseo de regate en bandas +20! Buscan la línea de fondo.`,
+
+    guideDeepTempoTitle: "EXPERTO: Tempo y Defensa",
+    guideDeepTempoContent: `1. Tempo (Velocidad de Juego)
+A. Lento - "Ajedrez"
+• Tiempo de Decisión: x1.4 (Piensan más).
+• Errores: Bajan. Menos pérdidas.
+• Rival: Tiene tiempo de organizarse.
+
+B. Rápido - "Caos"
+• Tiempo de Decisión: x0.7 (Pases de pánico).
+• Errores: Altos.
+• Efecto: Asfixia al rival, no le deja respirar.
+
+2. Línea Defensiva
+A. Profunda (Deep) - "Muralla"
+• Posición: 20-30m del arco.
+• Plus: No ganan la espalda (ni Mbappe).
+• Contra: Cedes el medio campo.
+
+B. Alta (High) - "Trampa del Fuera de Juego"
+• Posición: Cerca del medio campo.
+• Plus: Encierras al rival.
+• Contra: Balón largo = Gol al 90%.`,
+
+    guideDeepComboTitle: "Combos Letales",
+    guideDeepComboContent: `Combinaciones del código fuente:
+
+"Maestro Tiki-Taka":
+• Estilo: Posesión
+• Pase: Corto
+• Amplitud: Estrecha
+• Resultado: Rival no toca el balón, pero puede acabar 0-0. Paciencia.
+
+"Fútbol Caos (Estilo Klopp)":
+• Estilo: Presión Alta
+• Pase: Directo
+• Amplitud: Ancha
+• Resultado: 4-3. Gane quien gane, es divertido.
+
+"Muro Italiano (Catenaccio)":
+• Estilo: Contraataque
+• Pase: Directo
+• Amplitud: Estrecha (Cerrar centro)
+• Resultado: Ganas 1-0, gol y a dormir.`,
+
+    // --- v3.2 ACTUALIZACIÓN Y ESTILOS ---
+    update320Title: "Guía Experta y Matagigantes",
+    update320Item1Title: "Sistema Matagigantes",
+    update320Item1Desc: "¡Los equipos débiles ahora obtienen grandes recompensas! Ganar a un equipo de una liga superior aumenta la reputación hasta 3.5x.",
+    update320Item2Title: "Guía de Juego Experta",
+    update320Item2Desc: "Guía completamente reescrita. Ahora expone las fórmulas matemáticas reales (Probabilidades de entrenamiento, porcentajes de traspaso).",
+    update320Item3Title: "Lógica de Traspasos V3",
+    update320Item3Desc: "Corregido impacto de ofertas salariales (1.5x, 2.0x). Optimizadas penalizaciones por prestigio de liga.",
+    update320Item4Title: "Profundidad Táctica",
+    update320Item4Desc: "Añadido análisis profundo de mecánicas de Tempo, Amplitud y Pase a la guía.",
+
+    // Tactical Styles
+    styleLabel: "Estilo de Juego",
+    styleBalanced: "Equilibrado",
+    stylePossession: "Posesión (Tiki-Taka)",
+    styleCounter: "Contraataque",
+    styleHighPress: "Presión Alta (Gegenpress)",
+    styleParkTheBus: "Autobús (Defensa Total)",
+
+    // --- v3.2.1 UPDATE ---
+    update321Title: "Ingresos Dinámicos y Sistema de Coeficientes",
+    update321Item1Title: "Sistema de Coeficientes de 5 Años",
+    update321Item1Desc: "Sistema de coeficientes UEFA añadido. Ve los últimos 5 años de cada liga en el Ranking Mundial.",
+    update321Item2Title: "Derechos de TV Dinámicos",
+    update321Item2Desc: "Los ingresos por TV ahora cambian según el coeficiente de la liga. ¡Si Turquía domina el fútbol mundial, los derechos de TV pueden duplicarse!",
+    update321Item3Title: "Precios de Entradas Dinámicos",
+    update321Item3Desc: "Los precios de entradas también aumentan con el éxito de la liga. Ligas exitosas = Más interés = Entradas más caras.",
+    update321Item4Title: "Protección del Campeón",
+    update321Item4Desc: "La reputación del campeón NUNCA baja. Campeonato = Mínimo +200 de reputación garantizado."
 };

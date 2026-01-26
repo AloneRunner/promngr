@@ -599,6 +599,106 @@
     adviceUseWings: "You'll bypass through the wings",
     adviceTwoStrikers: "Two strikers will apply pressure",
     adviceExtraDefense: "Extra defensive support needed",
+    // --- DEEP DIVE TACTICS ---
+    // --- DEEP DIVE TACTICS (USER MANUAL EXACT TEXT) ---
+    guideDeepPassTitle: "📐 Tactical Analysis Report: Width & Passing",
+    guideDeepPassContent: `1. Passing Style
+This setting doesn't just change "how they pass", it alters the entire decision mechanism. The difference between Short and Direct is massive.
+
+A. Short Passing
+"Keep the ball, no rush."
+
+Engine Effect:
+🦶 Love for Short Distance: If a teammate is closer than 15m, that pass gets +30 Score. HUGE bonus for AI.
+🚫 Penalty for Long Pass: As distance exceeds 15m, score drops rapidly. They resist long balls.
+🛡️ Zero Risk: Desire to dribble drops by -10. They avoid risky moves.
+🧠 Pass Priority: +20 Score bonus to 'Pass' decision over Shot/Dribble.
+When to Use:
+• Technical midfield, good passers.
+• Playing "Possession" style.
+• Protecting a lead.
+
+B. Direct Passing
+"Vertical, straight to goal!" Premier League style.
+
+Engine Effect:
+🚀 Aerial Bonus: +20 Score for Aerial passes and Crosses. They don't mind lifting the ball.
+🔫 Shoot & Dribble: Interesting detail; Shoot score +15, Dribble score +10! They want to go to goal individually too.
+📉 Safety Penalty: Side passes get -10 score. No "boring play".
+When to Use:
+• Fast forwards (to hit behind defense).
+• Physical team.
+• Bad pitch or heavy pressing opponent.
+• Perfect match for "Counter Attack".
+
+C. Balanced (Mixed)
+Standard setting. Players choose the best option regardless of distance.
+
+2. Width
+Determines how the team uses the pitch geometry.
+
+A. Narrow
+"Drill through the center."
+
+Code Secret:
+🧱 Central Play: If a player is NOT near the touchline, Pass (+15) and Dribble (+10) bonus.
+Effect: Players become creative when crowded in the middle. They try 1-2s instead of going wide.
+Best Formations: 4-1-2-1-2 (Diamond), 4-3-1-2, 5-3-2.
+
+B. Wide
+"Hit the line, cross it in."
+
+Code Secret:
+🏍️ Wing Raids: If a player is on the wing, Dribble desire increases by +20! They become dribbling monsters.
+🎯 Cross Bonus: If on the wing and in the final third, Cross score +15. Focus is to get down the line and center it.
+Best Formations: 4-3-3, 3-4-3, 4-4-2.`,
+
+    guideDeepTempoTitle: "⚡ Tactical Analysis Report: Tempo & Defense",
+    guideDeepTempoContent: `1. Tempo (Game Speed)
+A. Slow - "Chess"
+• Decision Time: Increases x1.4. (They think more)
+• Turnovers: Decreased.
+• Opponent: Gets time to organize defense.
+• Usage: Protecting lead, technical team.
+
+B. Fast - "Chaos"
+• Decision Time: Decreases x0.7! (Panic passes)
+• Error Rate: High.
+• Effect: Overwhelms the opponent.
+• Usage: Chasing a goal, tired opponent.
+
+2. Defensive Line
+A. Deep - "Bunker"
+• Position: 20-30m from goal.
+• Pro: No space behind (Mbappe proof).
+• Con: You surrender midfield control.
+
+B. High - "Offside Trap"
+• Position: Near midfield.
+• Pro: You trap the opponent in their half.
+• Con: Every long ball is a 90% goal chance.`,
+
+    guideDeepComboTitle: "🛠️ Critical Combinations",
+    guideDeepComboContent: `Since I read the code before you, here are some dangerous combos:
+
+"The Tiki-Taka Master":
+• Style: Possession
+• Pass: Short
+• Width: Narrow
+• Result: Opponent never touches the ball, but match might end 0-0.
+
+"Chaos Football (Klopp Style)":
+• Style: High Press
+• Pass: Direct
+• Width: Wide
+• Result: Match ends 4-3. Who wins? Nobody knows, but it's fun.
+
+"Italian Wall (Catenaccio)":
+• Style: Counter Attack
+• Pass: Direct
+• Width: Narrow (To close the center)
+• Result: 1-0, we win.`,
+
     adviceMarkPlaymaker: "You'll mark the playmaker",
     adviceMidfieldSuperiority: "Midfield superiority",
     adviceUseWingsNarrow: "Use the wings, they play narrow",
@@ -688,4 +788,110 @@
     update200Item6Desc: "League points are now dynamic! 20% decay applied annually if success isn't maintained. Harder to stay at top.",
     update200Item7Title: "Super Cup Fix",
     update200Item7Desc: "Super Cup is now played at the correct time (Match week of cup finals) and champions are matched correctly.",
+
+    // --- EXPERT GUIDES (Migrated from TR) ---
+    guideDeepTrainingTitle: "EXPERT: Development Math",
+    guideDeepTrainingContent: `The real formulas inside the engine:
+1. Age Factor:
+• < 21 Years: Dev Chance 5% (Very Fast)
+• 21-24 Years: Dev Chance 3% (Normal)
+• 24-28 Years: Dev Chance 1% (Slow)
+• 28+ Years: Development STOPS. Only form maintenance.
+• 32+ Years: 5% chance of decline each week.
+
+2. Facility Impact:
+• Training Facility: +0.5% chance per level.
+• Head Coach: +0.8% bonus per level.
+• EXAMPLE: 18yo player + Lvl 10 Facility + Lvl 5 Coach = 15% weekly chance!
+
+3. Fatigue (Condition):
+• Condition < 60%: Training efficiency HALVED.
+• Condition < 30%: Player skips training to rest.`,
+
+    guideDeepFacilitiesTitle: "EXPERT: ROI Analysis",
+    guideDeepFacilitiesContent: `How to grow without bankruptcy:
+1. Maintenance (Hidden Cost):
+• Formula: (Level ^ 1.3) x 2000 €
+• Level 15 Stadium: ~70,000 €/week!
+• TIP: Don't upgrade unless your income supports it.
+
+2. Stadium Math:
+• Each seat yields ~15 €.
+• +2000 Capacity (1 Upgrade) = +30,000 €/week.
+• ROI: Takes ~100 weeks (2 seasons) to pay for itself.
+• VERDICT: Stadium is a long-term investment.
+
+3. Academy vs Scout:
+• Academy Lvl 10: 5% chance/week for mediocre youth (50-60 OVR).
+• Scout Lvl 10: 10% chance/week for TALENTED youth (65-80 Pot).
+• ADVICE: Invest in Scout first. You can sell his finds for millions!`,
+
+    guideDeepMoraleTitle: "EXPERT: Morale Math",
+    guideDeepMoraleContent: `Morale determines player IQ on the pitch.
+1. How it drops:
+• Reserve Star: If OVR > 75 and not playing -> -3 Morale/week.
+• Bench Warmer: If OVR 65-75 -> -1 Morale/week.
+• Youngsters: Stable even if not playing.
+
+2. Match Effect (Critical):
+• 80-100 Morale: 110% Performance.
+• 0-20 Morale: Misses open goals. GK lets ball slip.
+• TIP: Never play an unhappy star in a derby. Sell him.`,
+
+    guideDeepTransferTitle: "EXPERT: Negotiation Secrets",
+    guideDeepTransferContent: `How to convince AI?
+1. "Willingness" Score (>50 needed):
+• League Diff: PL vs TR difference is small (Max -7 pts).
+• Reputation: Every 75 rep difference = +1 Pt.
+• Champions League: Indirect bonus via reputation.
+
+2. Money Talks (Wage Multiplier):
+• 1.5x Wage Offer: +25 Willingness.
+• 2.0x Wage Offer: +50 Willingness (MAX EFFECT).
+• WARNING: Offering 3.0x gives NO extra benefit over 2.0x!
+
+3. Selling Tactics:
+• Listed players: AI offers 100-150% of value.
+• Unlisted players: AI must pay 120-170% premium.`,
+
+    guideDeepFinanceTitle: "EXPERT: Financial Tricks",
+    guideDeepFinanceContent: `Legal cheats for budget:
+1. Farming:
+• Sign 16-19yo Free Agents (Wage 25-50k).
+• Train for 10 weeks -> List them.
+• Pure profit even if sold cheap.
+
+2. Sponsor Gamble:
+• Playing for title? Pick "Risky" (Huge bonus).
+• Mid-table? Pick "Guaranteed" (Cash flow).`,
+
+    // --- v3.2 UPDATE ---
+    update320Title: "Expert Guide & Giant Killers",
+    update320Item1Title: "Giant Killer System",
+    update320Item1Desc: "Underdogs now get huge rewards! Beating a team from a superior league boosts reputation by up to 3.5x.",
+    update320Item2Title: "Expert Game Guide",
+    update320Item2Desc: "Guide completely rewritten. Now exposes real internal math (Training chances, Transfer percentages).",
+    update320Item3Title: "Transfer Logic V3",
+    update320Item3Desc: "Fixed wage offer impact (1.5x, 2.0x). League prestige penalties optimized.",
+    update320Item4Title: "Tactical Depth",
+    update320Item4Desc: "Added deep dive analysis for Tempo, Width and Passing mechanics to the guide.",
+
+    // Style Keys
+    styleLabel: "Play Style",
+    styleBalanced: "Balanced",
+    stylePossession: "Possession (Tiki-Taka)",
+    styleCounter: "Counter Attack",
+    styleHighPress: "High Press (Gegenpress)",
+    styleParkTheBus: "Park The Bus",
+
+    // --- v3.2.1 UPDATE ---
+    update321Title: "Dynamic Income & Coefficient System",
+    update321Item1Title: "5-Year League Coefficient System",
+    update321Item1Desc: "UEFA-style 5-year coefficient system added. View each league's last 5 years in World Rankings screen.",
+    update321Item2Title: "Dynamic TV Rights",
+    update321Item2Desc: "TV income now changes based on league coefficient. If Turkey dominates world football, TV rights can double!",
+    update321Item3Title: "Dynamic Ticket Prices",
+    update321Item3Desc: "Ticket prices also increase with league success. Successful leagues = More fan interest = Higher ticket prices.",
+    update321Item4Title: "Champion Protection",
+    update321Item4Desc: "League champion's reputation now NEVER decreases. Championship = Minimum +200 reputation guaranteed."
 };

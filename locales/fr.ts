@@ -685,4 +685,178 @@
     update200Item6Desc: "Points de ligue dynamiques ! -20% par an sans succès. Dur de rester au top.",
     update200Item7Title: "Correction Supercoupe",
     update200Item7Desc: "La Supercoupe se joue désormais au bon moment après les finales.",
+
+    // --- GUIDE EXPERT (Deep Dive) ---
+    guideDeepTrainingTitle: "EXPERT : Maths du Développement",
+    guideDeepTrainingContent: `Formules réelles du moteur :
+1. Facteur d'Âge :
+• < 21 Ans : Chance 5% (Très Rapide)
+• 21-24 Ans : Chance 3% (Normal)
+• 24-28 Ans : Chance 1% (Lent)
+• 28+ Ans : Développement ARRÊTÉ. Maintien seulement.
+• 32+ Ans : 5% chance de déclin hebdo.
+
+2. Impact Installations :
+• Centre d'entraînement : +0.5% chance par niveau.
+• Entraîneur Principal : +0.8% bonus par niveau.
+• EXEMPLE : Joueur 18 ans + Niveau 10 Centre + Niveau 5 Coach = 15% chance hebdo !
+
+3. Fatigue (Condition) :
+• Condition < 60% : Efficacité MOITIÉ.
+• Condition < 30% : Joueur ne s'entraîne pas, repos.`,
+
+    guideDeepFacilitiesTitle: "EXPERT : Analyse ROI",
+    guideDeepFacilitiesContent: `Croître sans faillite :
+1. Entretien (Coût Caché) :
+• Formule : (Niveau ^ 1.3) x 2000 €
+• Stade Niv 15 : ~70,000 €/semaine !
+• CONSEIL : N'améliorez pas sans les revenus adéquats.
+
+2. Maths du Stade :
+• Chaque siège rapporte ~15 €.
+• +2000 Places (1 Amélioration) = +30,000 €/semaine.
+• ROI : Prend ~100 semaines (2 saisons) à rembourser.
+• VERDICT : Le stade est un investissement long terme.
+
+3. Académie vs Scout :
+• Académie Niv 10 : 5% chance/semaine junior moyen (50-60 OVR).
+• Scout Niv 10 : 10% chance/semaine TALENT (65-80 Potentiel).
+• CONSEIL : Investissez d'abord dans le Scout. Vous pouvez vendre ses trouvailles des millions !`,
+
+    guideDeepMoraleTitle: "EXPERT : Maths du Moral",
+    guideDeepMoraleContent: `Le moral détermine le QI sur le terrain.
+1. Comment ça chute :
+• Star sur le banc : Si OVR > 75 et joue pas -> -3 Moral/sem.
+• Remplaçant : Si OVR 65-75 -> -1 Moral/sem.
+• Jeunes : Stable même sans jouer.
+
+2. Effet en Match (Critique) :
+• 80-100 Moral : 110% Performance.
+• 0-20 Moral : Rate des buts vides. Le gardien fait des boulettes.
+• CONSEIL : Ne mettez jamais une star mécontente dans un derby. Vendez-le.`,
+
+    guideDeepTransferTitle: "EXPERT : Secrets Négociation",
+    guideDeepTransferContent: `Convaincre l'IA ?
+1. Score de "Volonté" (>50 requis) :
+• Différence Ligue : PL vs TR faible (Max -7 Pts).
+• Réputation : Chaque 75 de diff = +1 Pt.
+• Ligue des Champions : Bonus indirect via réputation.
+
+2. L'Argent Parle (Multiplicateur Salaire) :
+• Offre 1.5x : +25 Pts.
+• Offre 2.0x : +50 Pts (EFFET MAX).
+• ATTENTION : Offrir 3.0x NE donne PAS plus que 2.0x !
+
+3. Tactique de Vente :
+• Joueurs listés : IA offre 100-150% valeur.
+• Non listés : IA doit payer prime 120-170%.`,
+
+    guideDeepFinanceTitle: "EXPERT : Astuces Finance",
+    guideDeepFinanceContent: `Raccourcis budget légaux :
+1. Farming (Élevage) :
+• Signez Agents Libres 16-19 ans (Salaire 25-50k).
+• Entraînez 10 semaines -> Mettre sur liste.
+• Profit pur même vendu pas cher.
+
+2. Pari Sponsor :
+• Visez le titre ? Choisissez "Risqué" (Gros bonus).
+• Milieu de tableau ? Choisissez "Garanti" (Sûr).`,
+
+    guideDeepPassTitle: "EXPERT : Passe & Largeur",
+    guideDeepPassContent: `1. Style de Passe
+A. Passe Courte (Short)
+"Possession, pas de précipitation."
+• Moteur : Décision passe +30 si partenaire <15m.
+• Pénalité Long : Moins d'envie de passe longue.
+• Sans Risque : Dribble -10. Jeu sûr.
+
+B. Passe Directe (Direct)
+"Devant, au but !" Style Premier League.
+• Moteur : Passes aériennes et centres +20.
+• Liberté : Tir (+15) et Dribble (+10) montent. Confiance au talent.
+• Pénalité Latérale : Passe latérale -10. Anti-ennui.
+
+2. Largeur (Width)
+A. Étroit (Narrow)
+"Percer par l'axe."
+• Effet : Bonus passe/dribble au centre. Cherche le 1-2.
+• Idéal : 4-1-2-1-2 (Losange).
+
+B. Large (Wide)
+"Ligne de fond et centre."
+• Effet : Envie de dribble sur les ailes +20 ! Cherche la ligne.`,
+
+    guideDeepTempoTitle: "EXPERT : Tempo & Défense",
+    guideDeepTempoContent: `1. Tempo (Vitesse)
+A. Lent - "Échecs"
+• Temps Décision : x1.4 (Réfléchissent plus).
+• Erreurs : Baisse. Moins de pertes.
+• Adversaire : A le temps de se placer.
+
+B. Rapide - "Chaos"
+• Temps Décision : x0.7 (Passes panique).
+• Erreurs : Hauto.
+• Effet : Étouffe l'adversaire.
+
+2. Ligne Défensive
+A. Basse (Deep) - "Mur"
+• Position : 20-30m du but.
+• Plus : Pas de ballon dans le dos (Même Mbappé passe pas).
+• Moins : Vous cédez le milieu.
+
+B. Haute (High) - "Piège du Hors-jeu"
+• Position : Près du milieu.
+• Plus : Enferme l'adversaire.
+• Moins : Balle longue = But à 90%.`,
+
+    guideDeepComboTitle: "Combos Mortels",
+    guideDeepComboContent: `Combinaisons du code source :
+
+"Maître Tiki-Taka" :
+• Style : Possession
+• Passe : Courte
+• Largeur : Étroit
+• Résultat : L'adversaire ne touche pas la balle, mais peut finir 0-0. Patience.
+
+"Football Chaos (Style Klopp)" :
+• Style : High Press
+• Passe : Directe
+• Largeur : Large
+• Résultat : 4-3. Peu importe le vainqueur, c'est fun.
+
+"Mur Italien (Catenaccio)" :
+• Style : Contre-attaque
+• Passe : Directe
+• Largeur : Étroit (Fermer l'axe)
+• Résultat : Gagner 1-0, marquer et dormir.`,
+
+    // --- MISE À JOUR v3.2 & STYLES ---
+    update320Title: "Guide Expert & Tueur de Géants",
+    update320Item1Title: "Système Tueur de Géants",
+    update320Item1Desc: "Les petites équipes gagnent gros ! Battre une équipe de ligue supérieure augmente la réputation jusqu'à 3.5x.",
+    update320Item2Title: "Guide de Jeu Expert",
+    update320Item2Desc: "Guide entièrement réécrit. Révèle les vraies formules (Chances entraînement, pourcentages transfert).",
+    update320Item3Title: "Logique Transferts V3",
+    update320Item3Desc: "Impact offres salaire corrigé (1.5x, 2.0x). Pénalités prestige ligue optimisées.",
+    update320Item4Title: "Profondeur Tactique",
+    update320Item4Desc: "Ajout analyse profonde du Tempo, Largeur et Passe au guide.",
+
+    // Tactical Styles
+    styleLabel: "Style de Jeu",
+    styleBalanced: "Équilibré",
+    stylePossession: "Possession (Tiki-Taka)",
+    styleCounter: "Contre-attaque",
+    styleHighPress: "Gegenpress (Pressing Haut)",
+    styleParkTheBus: "Park The Bus (Défense Totale)",
+
+    // --- v3.2.1 UPDATE ---
+    update321Title: "Revenus Dynamiques et Système de Coefficient",
+    update321Item1Title: "Système de Coefficient sur 5 Ans",
+    update321Item1Desc: "Système de coefficient UEFA ajouté. Consultez les 5 dernières années de chaque ligue dans le Classement Mondial.",
+    update321Item2Title: "Droits TV Dynamiques",
+    update321Item2Desc: "Les revenus TV changent maintenant selon le coefficient de la ligue. Si la Turquie domine le football mondial, les droits TV peuvent doubler !",
+    update321Item3Title: "Prix des Billets Dynamiques",
+    update321Item3Desc: "Les prix des billets augmentent aussi avec le succès de la ligue. Ligues à succès = Plus d'intérêt = Billets plus chers.",
+    update321Item4Title: "Protection du Champion",
+    update321Item4Desc: "La réputation du champion ne BAISSE JAMAIS. Championnat = Minimum +200 de réputation garanti."
 };

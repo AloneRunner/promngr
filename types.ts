@@ -76,6 +76,8 @@ export interface Player {
     moraleHistory?: { week: number; change: number; reason: string }[];
     // Tracks if player played in a match this week (to prevent morale drop on sub outs)
     playedThisWeek?: boolean;
+    // Transfer cooldown tracking
+    lastTransferWeek?: number;
     // Runtime generated properties
     personality?: PlayerPersonality;
 }
@@ -217,9 +219,10 @@ export interface LeagueHistoryEntry {
     superCupWinner?: string;         // NEW: Super Cup winner
 }
 
-export interface EuropeanCupMatch {
+export interface GlobalCupMatch {
     id: string;
-    round: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL';
+    stage: 'GROUP' | 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL';
+    groupName?: string; // e.g. "Group A"
     homeTeamId: string;
     awayTeamId: string;
     homeScore: number;
@@ -241,15 +244,41 @@ export interface EuropeanCupMatch {
     penalties?: { homeScore: number; awayScore: number };
 }
 
-export interface EuropeanCup {
+export interface GlobalCupGroupTeam {
+    teamId: string;
+    played: number;
+    won: number;
+    drawn: number;
+    lost: number;
+    gf: number;
+    ga: number;
+    points: number;
+}
+
+export interface GlobalCupGroup {
+    id: string;
+    name: string; // "Group A", "Group B", etc.
+    teams: string[]; // Team IDs
+    standings: GlobalCupGroupTeam[];
+    matches: GlobalCupMatch[];
+}
+
+export interface GlobalCup {
     season: number;
     isActive: boolean;
     qualifiedTeamIds: string[];
-    matches: EuropeanCupMatch[];
-    currentRound: 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL' | 'COMPLETE';
+    // NEW: Group Stage Structure
+    groups: GlobalCupGroup[];
+    // Knockout Stages
+    knockoutMatches: GlobalCupMatch[];
     winnerId?: string;
-    _generatedForeignTeams?: any[]; // Temporary storage for foreign teams generated during cup creation
+    currentStage: 'GROUP' | 'ROUND_16' | 'QUARTER' | 'SEMI' | 'FINAL' | 'COMPLETE';
+    _generatedForeignTeams?: any[]; // Temporary storage for foreign teams
 }
+
+// Deprecated alias for backward compatibility until refactor is complete
+export type EuropeanCup = GlobalCup;
+export type EuropeanCupMatch = GlobalCupMatch;
 
 // Super Cup - CL Winner vs UEFA Cup Winner
 export interface SuperCup {
@@ -308,6 +337,7 @@ export interface GameState {
 
     // Global World State (Persisted)
     leagueReputationBonuses?: Record<string, number>; // Bonus reputation (0-35)
+    leagueCoefficients?: Record<string, number[]>; // Last 5 years coefficients
     baseLeagueReputations?: Record<string, number>;   // Dynamic base reputation
     leagueEuropeanBonuses?: Record<string, number>;   // Economic bonus (0-1.0)
     leagueCoefficientHistory?: Record<string, number[]>; // NEW: 5-Year Coefficient History

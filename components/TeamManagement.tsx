@@ -5,6 +5,7 @@ import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, Shield
 import { PlayerAvatar } from './PlayerAvatar';
 import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset } from '../services/MatchEngine';
 import { autoPickLineup as smartAutoPick, analyzeClubHealth } from '../services/engine';
+import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey } from '../services/tactics';
 import { AssistantReport } from './AssistantReport';
 import { PlayerInteractionModal } from './PlayerInteractionModal';
 import { handlePlayerInteraction } from '../services/engine';
@@ -209,7 +210,9 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const pitchRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setAdvice(analyzeClubHealth(team, players));
+        const healthAdvice = analyzeClubHealth(team, players);
+        const tacticWarnings = validateTactic(team.tactic);
+        setAdvice([...healthAdvice, ...tacticWarnings]);
     }, [team, players]);
 
     const starters = players.filter(p => p.lineup === 'STARTING').sort((a, b) => (a.lineupIndex || 0) - (b.lineupIndex || 0));
@@ -320,7 +323,23 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                 <div className="bg-slate-800 rounded-lg p-3 shadow-xl border border-slate-700">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-sm font-bold text-white flex items-center gap-2"><Shield size={16} className="text-emerald-500" /> {t.tactics}</h2>
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 items-center">
+                            {/* Preset Selector */}
+                            <select
+                                onChange={(e) => {
+                                    if (e.target.value) {
+                                        const newTactic = applyPreset(team.tactic, e.target.value as PresetKey);
+                                        onUpdateTactic(newTactic);
+                                    }
+                                }}
+                                className="bg-slate-700 text-white text-[10px] font-bold px-1 py-1 rounded border border-slate-600 outline-none cursor-pointer hover:bg-slate-600 transition-colors w-20 truncate"
+                                defaultValue=""
+                            >
+                                <option value="" disabled>Preset</option>
+                                {Object.keys(TACTICAL_PRESETS).map(k => (
+                                    <option key={k} value={k}>{TACTICAL_PRESETS[k as PresetKey].name}</option>
+                                ))}
+                            </select>
                             <button
                                 onClick={() => setShowAssistant(true)}
                                 className={`relative bg-slate-700 hover:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 transition-all ${hasIssues ? 'ring-2 ring-red-500 animate-pulse' : ''}`}
@@ -398,14 +417,14 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             <div className="space-y-2">
                                 {/* Style - Main playing style */}
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">Oyun Stili</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.styleLabel || 'Style'}</label>
                                     <div className="grid grid-cols-3 gap-1 mt-0.5">
                                         {[
-                                            { value: 'Balanced', label: 'Dengeli' },
-                                            { value: 'Possession', label: 'Topa Sahip' },
-                                            { value: 'Counter', label: 'Kontra' },
-                                            { value: 'HighPress', label: 'Yüksek Pres' },
-                                            { value: 'ParkTheBus', label: 'Kapalı' }
+                                            { value: 'Balanced', label: t.styleBalanced || 'Balanced' },
+                                            { value: 'Possession', label: t.stylePossession || 'Possession' },
+                                            { value: 'Counter', label: t.styleCounter || 'Counter' },
+                                            { value: 'HighPress', label: t.styleHighPress || 'High Press' },
+                                            { value: 'ParkTheBus', label: t.styleParkTheBus || 'Park Bus' }
                                         ].map(s => (
                                             <button
                                                 key={s.value}

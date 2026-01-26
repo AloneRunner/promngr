@@ -16,11 +16,17 @@ interface FixturesViewProps {
     superCup?: SuperCup;
     onPlayCupMatch?: (matchId: string) => void;
     onPlaySuperCup?: () => void;
+    onOpenCupDetails?: () => void;
 }
 
-export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, userLeagueId, availableLeagues, europeanCup, europaLeague, superCup, onPlayCupMatch, onPlaySuperCup }) => {
+export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, players, currentWeek, t, userTeamId, userLeagueId, availableLeagues, europeanCup, europaLeague, superCup, onPlayCupMatch, onPlaySuperCup, onOpenCupDetails }) => {
     const [selectedWeek, setSelectedWeek] = useState(currentWeek);
-    const [tab, setTab] = useState<'LEAGUE' | 'CUP' | 'EUROPA' | 'SUPER'>('LEAGUE');
+
+    // Auto-switch to CUP tab if it's a cup week
+    const CUP_WEEKS = [6, 10, 14, 18, 22, 28, 31, 34, 37];
+    const isCupWeek = CUP_WEEKS.includes(currentWeek);
+
+    const [tab, setTab] = useState<'LEAGUE' | 'CUP' | 'EUROPA' | 'SUPER'>(isCupWeek && europeanCup?.isActive ? 'CUP' : 'LEAGUE');
     const [selectedLeagueId, setSelectedLeagueId] = useState(userLeagueId); // NEW: League selector state
 
     // Filter matches by selected league
@@ -209,13 +215,113 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                         <h3 className="text-blue-400 font-bold uppercase tracking-widest text-sm">
                             Elite Cup
                             <span className="block text-[10px] text-slate-400 mt-1 opacity-70">
-                                Current Stage: {europeanCup.currentRound}
+                                Current Stage: {europeanCup.currentStage}
                             </span>
                         </h3>
+                        {onOpenCupDetails && (
+                            <button
+                                onClick={onOpenCupDetails}
+                                className="mt-2 text-[10px] uppercase font-bold text-blue-300 hover:text-white border border-blue-500/30 hover:border-blue-400 px-3 py-1 rounded transition-colors"
+                            >
+                                View Tournament Details
+                            </button>
+                        )}
                     </div>
 
+                    {/* Group Stage Matches */}
+                    {europeanCup.currentStage === 'GROUP' && europeanCup.groups && (
+                        <div className="border-b border-slate-800/50">
+                            <div className="px-4 py-2 bg-slate-950/50 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                Group Stage
+                            </div>
+                            <div className="divide-y divide-slate-800/50">
+
+
+                                {(() => {
+                                    const matchesToShow = europeanCup.groups.flatMap(g => g.matches)
+                                        .filter(m => m.week === selectedWeek)
+                                        .sort((a, b) => {
+                                            const aIsUser = a.homeTeamId === userTeamId || a.awayTeamId === userTeamId;
+                                            const bIsUser = b.homeTeamId === userTeamId || b.awayTeamId === userTeamId;
+                                            if (aIsUser && !bIsUser) return -1;
+                                            if (!aIsUser && bIsUser) return 1;
+                                            return 0;
+                                        });
+
+                                    if (matchesToShow.length === 0) {
+                                        return (
+                                            <div className="p-8 text-center text-slate-500 italic">
+                                                No matches scheduled for Week {selectedWeek}.
+                                            </div>
+                                        );
+                                    }
+
+                                    return matchesToShow.map(match => {
+                                        const homeTeam = getTeam(match.homeTeamId);
+                                        const awayTeam = getTeam(match.awayTeamId);
+                                        if (!homeTeam || !awayTeam) return null;
+
+                                        const isUserMatch = match.homeTeamId === userTeamId || match.awayTeamId === userTeamId;
+
+                                        return (
+                                            <div key={match.id} className={`p-3 transition-colors hover:bg-slate-800/30 ${isUserMatch ? 'bg-blue-900/10 border-l-4 border-l-blue-500' : ''}`}>
+                                                <div className="flex items-center justify-between gap-2">
+                                                    {/* Status */}
+                                                    <div className="w-14 md:w-16 text-center shrink-0">
+                                                        {match.isPlayed ? (
+                                                            <span className="bg-slate-700 text-slate-300 text-[10px] md:text-xs px-2 py-1 rounded font-bold uppercase tracking-wider">FT</span>
+                                                        ) : (
+                                                            isUserMatch ? (
+                                                                <button onClick={() => onPlayCupMatch && onPlayCupMatch(match.id)} className="bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] md:text-xs px-2 py-1 rounded font-bold uppercase shadow-lg animate-pulse">
+                                                                    PLAY
+                                                                </button>
+                                                            ) : (
+                                                                <span className="text-slate-500 text-[10px] uppercase font-bold">-</span>
+                                                            )
+                                                        )}
+                                                    </div>
+
+                                                    {/* HOME Team */}
+                                                    <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === homeTeam.id ? 'text-green-400' : isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>
+                                                            {homeTeam.name}
+                                                            {match.isPlayed && match.winnerId === homeTeam.id && ' ✓'}
+                                                        </span>
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: homeTeam.primaryColor, color: '#fff' }}>
+                                                            {homeTeam.name.charAt(0)}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Score */}
+                                                    <div className="px-2 py-1 bg-slate-950 rounded border border-slate-800 min-w-[45px] text-center shrink-0">
+                                                        {match.isPlayed ? (
+                                                            <span className="text-base md:text-lg font-mono font-bold text-white">{match.homeScore}-{match.awayScore}</span>
+                                                        ) : (
+                                                            <span className="text-sm font-mono text-slate-600">VS</span>
+                                                        )}
+                                                    </div>
+
+                                                    {/* AWAY Team */}
+                                                    <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                                                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-slate-600" style={{ backgroundColor: awayTeam.primaryColor, color: '#fff' }}>
+                                                            {awayTeam.name.charAt(0)}
+                                                        </div>
+                                                        <span className={`font-bold text-xs md:text-sm truncate ${match.isPlayed && match.winnerId === awayTeam.id ? 'text-green-400' : isUserMatch ? 'text-blue-300' : 'text-slate-300'}`}>
+                                                            {awayTeam.name}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }) // End Map
+                                })() // End IIFE
+                                }
+                            </div>
+                        </div>
+                    )}
+
                     {['ROUND_16', 'QUARTER', 'SEMI', 'FINAL'].map(round => {
-                        const roundMatches = europeanCup.matches.filter(m => m.round === round);
+                        const roundMatches = europeanCup.knockoutMatches ? europeanCup.knockoutMatches.filter(m => m.stage === round) : [];
                         if (roundMatches.length === 0) return null;
 
                         return (
@@ -299,13 +405,13 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                         <h3 className="text-orange-400 font-bold uppercase tracking-widest text-sm">
                             Challenge Cup
                             <span className="block text-[10px] text-slate-400 mt-1 opacity-70">
-                                Current Stage: {europaLeague.currentRound}
+                                Current Stage: {europaLeague.currentStage}
                             </span>
                         </h3>
                     </div>
 
                     {['ROUND_16', 'QUARTER', 'SEMI', 'FINAL'].map(round => {
-                        const roundMatches = europaLeague.matches.filter(m => m.round === round);
+                        const roundMatches = europaLeague.knockoutMatches ? europaLeague.knockoutMatches.filter(m => m.stage === round) : (europaLeague.matches ? europaLeague.matches.filter(m => m.stage === round) : []);
                         if (roundMatches.length === 0) return null;
 
                         return (
@@ -463,3 +569,4 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
         </div>
     );
 };
+

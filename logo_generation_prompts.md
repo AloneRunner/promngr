@@ -4,10 +4,33 @@
 
 | League | Prompt |
 |:---|:---|
+| **Süper Lig** (Turkey) | A modern, premium esports style logo for a football league named 'Süper Lig'. Main icon: A stylized crescent and star with a football or dynamic swoosh. Colors: Red #E30A17, White #FFFFFF. Style: National pride, energetic, sleek vector, white background. |
+| **Premier League** (England) | A modern, premium esports style logo for a football league named 'Premier League'. Main icon: A crowned lion head purple/navy graphic. Colors: Purple #38003C, Cyan #00FF85, White. Style: Iconic, royal, modern minimalist, vector, white background. |
+| **La Liga** (Spain) | A modern, premium esports style logo for a football league named 'La Liga'. Main icon: A stylized wheel or abstract energetic shape (double L). Colors: Red #EE3123, Orange, and Black. Style: Passionate, fluid, modern corporate sport, vector, white background. |
+| **Serie A** (Italy) | A modern, premium esports style logo for a football league named 'Serie A'. Main icon: A stylized letter A with Italian tricolor accents. Colors: Blue #005FA5, Green, White, Red. Style: Elegant, high fashion, geometric, vector, white background. |
+| **Ligue 1** (France) | A modern, premium esports style logo for a football league named 'Ligue 1'. Main icon: A stylized L1 or hexagon (l'hexagone) shape. Colors: Lime Green #DAE025, Dark Blue #091c3e. Style: Modernist, bold typography, simple, vector, white background. |
+| **Bundesliga** (Germany) | A modern, premium esports style logo for a football league named 'Bundesliga'. Main icon: A silhouette of a player kicking a ball (jumping). Colors: Red #D20515, Black, White. Style: Action-oriented, strict silhouette, clean, vector, white background. |
+| **Ligue 1 Pro** (Tunisia) | A modern, premium esports style logo for a football league named 'Ligue 1 Pro'. Main icon: An eagle or Carthage inspired shield. Colors: Red #E70013 and White. Style: North African heritage, bold, vector, white background. |
+| **Primera División** (Costa Rica) | A modern, premium esports style logo for a football league named 'Primera División'. Main icon: A stylized jaguar or volcano silhouette. Colors: Red #CE1126, Blue #002B7F, White. Style: Central American vibrance, dynamic, vector, white background. |
+| **Indian Super League** (India) | A modern, premium esports style logo for a football league named 'Indian Super League'. Main icon: A stylized lotus or geometric football. Colors: Orange #FF9933, Green #138808, Blue #000080. Style: Modern, colorful, energetic, vector, white background. |
 | **Liga Profesional** (Argentina) | A modern, premium esports style logo for a football league named 'Liga Profesional'. Main icon: A stylized trophy cup with a sun burst (sol de mayo) element. Colors: Light Blue #75AADB, White #FFFFFF, and Gold. Style: Sleek, official, vector, white background, high contrast, professional typography. |
 | **Série A** (Brazil) | A modern, premium esports style logo for a football league named 'Série A'. Main icon: A stylized trophy or shield incorporating dynamic geometric shapes. Colors: Green #009C3B, Yellow #FFDF00, and Blue #002776. Style: Energetic, bold, samba flair, vector, white background, professional typography. |
 
-This document contains AI image generation prompts for all teams in the game (excluding Turkish Super Lig, which is already complete).
+| **North American League** (USA) | A modern, premium esports style logo for a football league named 'North American League'. Main icon: A stylized eagle or star shield. Colors: Navy #002B5C, Red #E31837, and White. Style: Bold, patriotic, major league sports style, vector, white background. |
+| **Liga MX** (Mexico) | A modern, premium esports style logo for a football league named 'Liga MX'. Main icon: A stylized Aztec pattern or eagle warrior profile. Colors: Green #006847, Red #CE1126, and White. Style: Vibrant, cultural geometric, vector, white background. |
+| **Saudi Pro League** (Saudi Arabia) | A modern, premium esports style logo for a football league named 'Saudi Pro League'. Main icon: A falcon or crossed scimitars with a palm tree. Colors: Dark Green #006C35 and Gold #D4AF37. Style: Luxurious, royal, Islamic geometric art inspired, vector, white background. |
+| **J1 League** (Japan) | A modern, premium esports style logo for a football league named 'J1 League'. Main icon: A rising red sun or stylized cherry blossom (sakura). Colors: Red #BC002D, White, and Black. Style: Minimalist, clean Japanese design, vector, white background. |
+| **K League 1** (South Korea) | A modern, premium esports style logo for a football league named 'K League 1'. Main icon: A dynamic taegeuk (red and blue yin-yang) loop or tiger stripe. Colors: Red #CD2E3A, Blue #0047A0, and Black. Style: Futuristic, tech-inspired, fluid, vector, white background. |
+| **A-League Men** (Australia) | A modern, premium esports style logo for a football league named 'A-League Men'. Main icon: A stylized kangaroo or the Southern Cross stars. Colors: Gold #FFD100 and Green #00843D. Style: Modern, flat design, dynamic, vector, white background. |
+| **Egyptian Premier League** (Egypt) | A modern, premium esports style logo for a football league named 'Egyptian Premier League'. Main icon: A subtle pyramid or sphinx silhouette integrated into a shield. Colors: Red #CE1126, White, and Black with Gold. Style: Historic yet modern, majestic, vector, white background. |
+| **Botola Pro** (Morocco) | A modern, premium esports style logo for a football league named 'Botola Pro'. Main icon: A stylized pentagram (star) from the flag or Moorish arch. Colors: Red #C1272D and Green #006233. Style: Elegant, geometric, vector, white background. |
+| **Premier Soccer League** (South Africa) | A modern, premium esports style logo for a football league named 'Premier Soccer League'. Main icon: A diamond shape or protea flower. Colors: Yellow #FDB913, Green #007A4D, and Black. Style: Vibrant, bold patterns, vector, white background. |
+| **Caribbean Super League** (Region) | A modern, premium esports style logo for a football league named 'Caribbean Super League'. Main icon: A sun over ocean waves or palm silhouette. Colors: Turquoise #00A9CE, Yellow #FFD100, and Coral. Style: Tropical, energetic, fresh, vector, white background. |
+| **Liga BetPlay** (Colombia) | A modern, premium esports style logo for a football league named 'Liga BetPlay'. Main icon: A condor or stylized coffee bean shape. Colors: Yellow #FCD116, Blue #003893, and Red #CE1126. Style: Tricolor, dynamic, vector, white background. |
+| **Campeonato Nacional** (Chile) | A modern, premium esports style logo for a football league named 'Campeonato Nacional'. Main icon: A lone star or Andean peak silhouette. Colors: Red #D52B1E, Blue #0039A6, and White. Style: Clean, sharp, patriotic, vector, white background. |
+| **Campeonato Uruguayo** (Uruguay) | A modern esports logo for a football league named 'Campeonato Uruguayo'. Main icon: The 'Sun of May' (Sol de Mayo) face or 4 stars. Colors: Light Blue #6CABDD, White, and Gold. Style: Historic, classic football prestige, vector, white background. |
+
+This document contains AI image generation prompts for all teams in the game.
 
 **Style Guide:**
 All prompts are designed for a consistent look: *Modern, 3D Vector, Esports Style, Premium, Minimalist, Clear Background.*
@@ -241,3 +264,241 @@ All prompts are designed for a consistent look: *Modern, 3D Vector, Esports Styl
 | **Chapecó Eagles** (Chapecoense) | A modern esports logo for a football club named 'Chapecó Eagles'. Main icon: Green design with a star. Colors: Green #006400 and White #FFFFFF. Style: Hope, rebirth, green shield, vector, white background. |
 | **Mirassol Suns** (Mirassol) | A modern esports logo for a football club named 'Mirassol Suns'. Main icon: A bright yellow sun. Colors: Yellow #FDB913 and Green #008000. Style: Rural, sunny, bright, vector, white background. |
 | **Belém Lions** (Fortaleza or similar placeholder) | A modern esports logo for a football club named 'Belém Lions'. Main icon: A lion head. Colors: Blue #003399 and White. Style: Proud lion, northern strength, vector, white background. |
+
+---
+
+## 🇹🇳 Ligue 1 Pro (Tunisia)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Tunis Gold** (Esperance) | A modern esports logo for a football club named 'Tunis Gold'. Main icon: A shield with red and yellow vertical stripes. Colors: Yellow #FFD700 and Red #FF0000. Style: African giant, prestigious, taraji inspired, vector, white background. |
+| **Tunis Red-Whites** (Club Africain) | A modern esports logo for a football club named 'Tunis Red-Whites'. Main icon: A shield with red and white horizontal hoops. Colors: Red #FF0000 and White #FFFFFF. Style: Historic, crowd favorite, simple, vector, white background. |
+| **Sousse Stars** (ES Sahel) | A modern esports logo for a football club named 'Sousse Stars'. Main icon: A large red star on a white background. Colors: Red #FF0000 and White #FFFFFF. Style: Coastal pearl, starry, vector, white background. |
+| **Sfax Zebra** (CS Sfaxien) | A modern esports logo for a football club named 'Sfax Zebra'. Main icon: Black and white stripes or eagle. Colors: Black #000000 and White #FFFFFF. Style: Traditional stripes, juve of africa, vector, white background. |
+| **Monastir Blue** (US Monastir) | A modern esports logo for a football club named 'Monastir Blue'. Main icon: A fortress (Ribat) silhouette. Colors: Blue #0000FF and White #FFFFFF. Style: Coastal, fortress, strong, vector, white background. |
+| **Bardo Green** (Stade Tunisien) | A modern esports logo for a football club named 'Bardo Green'. Main icon: A green and red shield. Colors: Green #008000 and Red #FF0000. Style: Baklawa nickname, geometric, vector, white background. |
+| **Bizerte Sharks** (CA Bizertin) | A modern esports logo for a football club named 'Bizerte Sharks'. Main icon: A shark or maritime anchor. Colors: Yellow #FFFF00 and Black #000000. Style: Naval, fierce, contrast, vector, white background. |
+| **Beja Storks** (Olympique Beja) | A modern esports logo for a football club named 'Beja Storks'. Main icon: A stork bird. Colors: Red #FF0000 and White #FFFFFF. Style: Regional bird mascot, simple, vector, white background. |
+| **Metlaoui Mines** (ES Metlaoui) | A modern esports logo for a football club named 'Metlaoui Mines'. Main icon: A pickaxe or mining gear. Colors: Gold #FFD700 and Red #FF0000. Style: Industrial, tough, vector, white background. |
+| **Ben Guerdane Riders** (US Ben Guerdane) | A modern esports logo for a football club named 'Ben Guerdane Riders'. Main icon: A horseman or desert theme. Colors: Yellow #FFFF00 and Black #000000. Style: Desert warriors, vector, white background. |
+| **Marsa Beach** (AS Marsa) | A modern esports logo for a football club named 'Marsa Beach'. Main icon: A green shield with a crescent. Colors: Green #008000 and Yellow #FFFF00. Style: Coastal suburb, elegant, vector, white background. |
+| **Zarzis Olive** (ES Zarzis) | A modern esports logo for a football club named 'Zarzis Olive'. Main icon: An olive branch or boat. Colors: Yellow #FFFF00 and Blue #0000FF. Style: Southern coast, colors of sun and sea, vector, white background. |
+| **Kairouan Historic** (JS Kairouan) | A modern esports logo for a football club named 'Kairouan Historic'. Main icon: A mosque silhouette or geometric pattern. Colors: Green #008000 and White #FFFFFF. Style: Historic city, islamic art, vector, white background. |
+| **Omrane Build** (JS Omrane) | A modern esports logo for a football club named 'Omrane Build'. Main icon: A brick wall or construction helmet. Colors: Blue #0000FF and White #FFFFFF. Style: Construction worker roots, solid, vector, white background. |
+| **Soliman Future** (AS Soliman) | A modern esports logo for a football club named 'Soliman Future'. Main icon: A rising sun or shield. Colors: Green #008000 and White #FFFFFF. Style: Modern town, cap bon, vector, white background. |
+| **Gabes Oasis** (AS Gabes) | A modern esports logo for a football club named 'Gabes Oasis'. Main icon: A palm tree. Colors: Green #008000 and Red #FF0000. Style: Oasis city, nature, vector, white background. |
+
+---
+
+## 🇨🇷 Primera División (Costa Rica)
+
+| Team Name | Prompt |
+|:---|:---|
+| **San Jose Purple** (Saprissa) | A modern esports logo for a football club named 'San Jose Purple'. Main icon: A stylized dragon or monster (The Monster). Colors: Purple #800080 and White #FFFFFF. Style: Iconic, mythical beast, energetic, vector, white background. |
+| **Alajuela Lions** (Alajuelense) | A modern esports logo for a football club named 'Alajuela Lions'. Main icon: A lion head with red and black mane. Colors: Red #FF0000 and Black #000000. Style: Fierce, striped shield, vector, white background. |
+| **Heredia Red-Yellow** (Herediano) | A modern esports logo for a football club named 'Heredia Red-Yellow'. Main icon: A tiger head or floral design. Colors: Red #FF0000 and Yellow #FFFF00. Style: The Team, born great, tiger mascot, vector, white background. |
+| **Cartago Blues** (Cartagines) | A modern esports logo for a football club named 'Cartago Blues'. Main icon: A geometric shield. Colors: Blue #0000FF and White #FFFFFF. Style: Oldest club, historic, simple, vector, white background. |
+| **San Carlos Bulls** (San Carlos) | A modern esports logo for a football club named 'San Carlos Bulls'. Main icon: A northern bull. Colors: Red #FF0000 and Blue #0000FF. Style: Northern Bulls, strong, agriculture, vector, white background. |
+| **San Isidro Warriors** (Perez Zeledon) | A modern esports logo for a football club named 'San Isidro Warriors'. Main icon: A warrior silhouette. Colors: Blue #0000FF and White #FFFFFF. Style: Southern warriors, fighters, vector, white background. |
+| **Puntarenas Sharks** (Puntarenas) | A modern esports logo for a football club named 'Puntarenas Sharks'. Main icon: An orange shark. Colors: Orange #FFA500 and Black #000000. Style: Pacific coast, predator, vibrant orange, vector, white background. |
+| **Sporting Jose** (Sporting FC) | A modern esports logo for a football club named 'Sporting Jose'. Main icon: A minimalist letter S. Colors: Black #000000 and White #FFFFFF. Style: Modern, clean, academy focus, vector, white background. |
+| **Liberia Gold** (Liberia) | A modern esports logo for a football club named 'Liberia Gold'. Main icon: A coyote or savanna sun. Colors: Yellow #FFFF00 and Black #000000. Style: Golden city, guanacaste, vector, white background. |
+| **Guadalupe Blue** (Guadalupe) | A modern esports logo for a football club named 'Guadalupe Blue'. Main icon: A shield with a generic crest. Colors: Blue #0000FF and Yellow #FFFF00. Style: Simple suburban club, vector, white background. |
+
+---
+
+## 🇮🇳 Indian Super League (India)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Kolkata Mariners** (Mohun Bagan) | A modern esports logo for a football club named 'Kolkata Mariners'. Main icon: A sailboat or boat wheel. Colors: Green #006400 and Maroon #800000. Style: Green and maroon halves, historic, maritime, vector, white background. |
+| **Mumbai Islanders** (Mumbai City) | A modern esports logo for a football club named 'Mumbai Islanders'. Main icon: A fortress wall with sea waves. Colors: Sky Blue #87CEEB and White #FFFFFF. Style: City group aesthetic, clean, modern, vector, white background. |
+| **East Bengal Torch** (East Bengal) | A modern esports logo for a football club named 'East Bengal Torch'. Main icon: A flaming torch. Colors: Red #FF0000 and Yellow #FFFF00. Style: Iconic flame, red and gold, historic rival, vector, white background. |
+| **Kerala Tuskers** (Kerala Blasters) | A modern esports logo for a football club named 'Kerala Tuskers'. Main icon: An elephant head. Colors: Yellow #FFFF00 and Blue #0000FF. Style: Elephant mascot, vibrant yellow army, vector, white background. |
+| **Goa Gaurs** (FC Goa) | A modern esports logo for a football club named 'Goa Gaurs'. Main icon: A wild bison (Gaur) head. Colors: Orange #FFA500 and Blue #0000FF. Style: Aggressive animal mascot, horns, vector, white background. |
+| **Bangalore Blues** (Bengaluru FC) | A modern esports logo for a football club named 'Bangalore Blues'. Main icon: A mythological two-headed bird (Gandaberunda) or generic eagle. Colors: Blue #0000FF and White #FFFFFF. Style: Garden city, royal emblem, vector, white background. |
+| **Odisha Juggernauts** (Odisha FC) | A modern esports logo for a football club named 'Odisha Juggernauts'. Main icon: A chakram (wheel) or circular design. Colors: Purple #800080 and Black #000000. Style: Cultural wheel, modern vibrant, vector, white background. |
+| **Chennai Titans** (Chennaiyin) | A modern esports logo for a football club named 'Chennai Titans'. Main icon: A generic titan head or shield. Colors: Blue #0000FF and Yellow #FFFF00. Style: Marina machans, solid, vector, white background. |
+| **Highland United** (NorthEast Utd) | A modern esports logo for a football club named 'Highland United'. Main icon: Eight stars or a mountain peak. Colors: White #FFFFFF and Red #FF0000. Style: Representing 8 states, clean, vector, white background. |
+| **Steel City Red** (Jamshedpur) | A modern esports logo for a football club named 'Steel City Red'. Main icon: A furnace or shield shape. Colors: Red #FF0000 and Blue #0000FF. Style: Industrial landscape, steelworks, vector, white background. |
+| **Punjab Lions** (Punjab FC) | A modern esports logo for a football club named 'Punjab Lions'. Main icon: A roaring lion. Colors: Orange #FFA500 and White #FFFFFF. Style: Warrior spirit, shers, vector, white background. |
+| **Kolkata Black-White** (Mohammedan) | A modern esports logo for a football club named 'Kolkata Black-White'. Main icon: A black and white shield. Colors: Black #000000 and White #FFFFFF. Style: Traditional, historic third giant, vector, white background. |
+| **Delhi Capital** (SC Delhi) | A modern esports logo for a football club named 'Delhi Capital'. Main icon: India gate silhouette or shield. Colors: Blue #0000FF and White #FFFFFF. Style: Capital city, monumental, vector, white background. |
+| **Varanasi Holy** (Inter Kashi) | A modern esports logo for a football club named 'Varanasi Holy'. Main icon: A trident (Trishul) or river wave. Colors: Orange #FFA500 and Black #000000. Style: Spiritual home, trishul, bold orange, vector, white background. |
+
+---
+
+## 🇹🇷 Süper Lig (Turkey)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Galata Lions** (Galatasaray) | A modern esports logo for a football club named 'Galata Lions'. Main icon: A roaring lion head. Colors: Red #A90432 and Yellow #FDB912. Style: Fierce, royal, aggressive, vector, white background. |
+| **Istanbul Yellows** (Fenerbahce) | A modern esports logo for a football club named 'Istanbul Yellows'. Main icon: A canary or oak leaf within a shield. Colors: Navy #002d72 and Yellow #f4e04d. Style: Classic, prestigious, striped shield, vector, white background. |
+| **Istanbul Eagles** (Besiktas) | A modern esports logo for a football club named 'Istanbul Eagles'. Main icon: A black eagle. Colors: Black #000000 and White #ffffff. Style: Gothic, sharp, powerful bird, vector, white background. |
+| **Trabzon Storm** (Trabzonspor) | A modern esports logo for a football club named 'Trabzon Storm'. Main icon: A ship's anchor or black sea storm waves. Colors: Bordeaux #800000 and Blue #87CEEB. Style: Maritime, intense, vector, white background. |
+| **Basak City** (Basaksehir) | A modern esports logo for a football club named 'Basak City'. Main icon: An owl or letter B monogram. Colors: Orange #E25920 and Navy #182A4A. Style: Corporate, distinct mascot, vector, white background. |
+| **Samsun Red** (Samsunspor) | A modern esports logo for a football club named 'Samsun Red'. Main icon: Atari Turk statue silhouette. Colors: Red #CC0000 and White #FFFFFF. Style: Historic, national symbol, vector, white background. |
+| **Konya Green** (Konyaspor) | A modern esports logo for a football club named 'Konya Green'. Main icon: A doubled-headed eagle. Colors: Green #008000 and White #FFFFFF. Style: Seljuk history, intricate, vector, white background. |
+| **Kasimpasa Navy** (Kasimpasa) | A modern esports logo for a football club named 'Kasimpasa Navy'. Main icon: An anchor. Colors: Navy #000080 and White #FFFFFF. Style: Maritime district, simple, vector, white background. |
+| **Rize Tea** (Rizespor) | A modern esports logo for a football club named 'Rize Tea'. Main icon: A tea leaf or sparrow hawk. Colors: Green #008000 and Blue #0000FF. Style: Nature, dynamic, vector, white background. |
+| **Antep Falcons** (Gaziantep) | A modern esports logo for a football club named 'Antep Falcons'. Main icon: A falcon head or castle. Colors: Red #FF0000 and Black #000000. Style: Fortress, aggressive bird, vector, white background. |
+| **Antalya Scorpions** (Antalyaspor) | A modern esports logo for a football club named 'Antalya Scorpions'. Main icon: A scorpion or Yivli Minare. Colors: Red #FF0000 and White #FFFFFF. Style: Unique mascot, dangerous, vector, white background. |
+| **Kayseri Stars** (Kayserispor) | A modern esports logo for a football club named 'Kayseri Stars'. Main icon: Mount Erciyes mountain silhouette. Colors: Yellow #FFFF00 and Red #FF0000. Style: Mountainous peak, solid, vector, white background. |
+| **Alanya Sun** (Alanyaspor) | A modern esports logo for a football club named 'Alanya Sun'. Main icon: A sun or castle tower. Colors: Orange #FFA500 and Green #008000. Style: Bright, holiday city, vector, white background. |
+| **Izmir Goz** (Goztepe) | A modern esports logo for a football club named 'Izmir Goz'. Main icon: A check mark or eye shape. Colors: Yellow #FFFF00 and Red #FF0000. Style: Passionate, fan culture, vector, white background. |
+| **Eyup Violet** (Eyupspor) | A modern esports logo for a football club named 'Eyup Violet'. Main icon: A lavender flower or shield. Colors: Purple #800080 and Yellow #FFFF00. Style: Floral, royal purple, vector, white background. |
+| **Karagumruk Black** (Karagumruk) | A modern esports logo for a football club named 'Karagumruk Black'. Main icon: A clover or flame. Colors: Red #FF0000 and Black #000000. Style: Burning passion, clover, vector, white background. |
+| **Kocaeli Gulf** (Kocaelispor) | A modern esports logo for a football club named 'Kocaeli Gulf'. Main icon: A shark or factory gear (industrial). Colors: Green #008000 and Black #000000. Style: Gulf sharks, industrial, dangerous, vector, white background. |
+| **Ankara Youth** (Genclerbirligi) | A modern esports logo for a football club named 'Ankara Youth'. Main icon: A poppy flower or star. Colors: Red #FF0000 and Black #000000. Style: Capital city, historic, vector, white background. |
+
+---
+
+## 🇺🇸 North American League (USA)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Miami Vice** (Inter Miami) | A modern esports logo for a football club named 'Miami Vice'. Main icon: Two herons with legs intertwined (M shape). Colors: Pink #F496BE and Black #000000. Style: Neon city vibe, art deco, unique pink, vector, white background. |
+| **Galaxy Stars** (LA Galaxy) | A modern esports logo for a football club named 'Galaxy Stars'. Main icon: A quasar or galaxy spiral. Colors: White #FFFFFF and Navy #00245D and Gold. Style: Cosmic, clean, sash inspired, vector, white background. |
+| **Seattle Emeralds** (Sounders) | A modern esports logo for a football club named 'Seattle Emeralds'. Main icon: Space Needle tower silhouette. Colors: Green #5D9732 and Blue #0033A0. Style: Iconic landmark, fresh green, vector, white background. |
+| **Los Angeles Gold** (LAFC) | A modern esports logo for a football club named 'Los Angeles Gold'. Main icon: A winged art deco wing. Colors: Black #000000 and Gold #C39E6C. Style: Luxury, street fashion, minimalist, vector, white background. |
+| **New York City Blue** (NYCFC) | A modern esports logo for a football club named 'New York City Blue'. Main icon: A monogram NYC. Colors: Sky Blue #6CACE4 and Navy #00205B. Style: Corporate, circular, subway token style, vector, white background. |
+| **New York Energy** (Red Bulls) | A modern esports logo for a football club named 'New York Energy'. Main icon: Two bulls charging. Colors: Red #ED1E36 and White #FFFFFF. Style: High energy, aggressive animals, vector, white background. |
+| **Toronto Reds** (Toronto FC) | A modern esports logo for a football club named 'Toronto Reds'. Main icon: A maple leaf or letter T. Colors: Red #AB1E2D and Grey #3F4743. Style: Canadian pride, geometric, vector, white background. |
+| **Atlanta Stripes** (Atlanta Utd) | A modern esports logo for a football club named 'Atlanta Stripes'. Main icon: An A within a circle with stripes. Colors: Red #80000A and Black #221F1F. Style: Bold, modern crest, vector, white background. |
+
+---
+
+## 🇲🇽 Liga MX (Mexico)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Mexico Eagles** (Club America) | A modern esports logo for a football club named 'Mexico Eagles'. Main icon: An eagle over a continent map. Colors: Yellow #F5E216 and Navy #001E62. Style: Continental dominant, detailed eagle, vector, white background. |
+| **Guadalajara Goats** (Chivas) | A modern esports logo for a football club named 'Guadalajara Goats'. Main icon: A coat of arms with red and white stripes. Colors: Red #E30613 and Navy #002758. Style: Traditional, sacred flock, vector, white background. |
+| **Monterrey Tigers** (Tigres) | A modern esports logo for a football club named 'Monterrey Tigers'. Main icon: A tiger head. Colors: Yellow #FDB913 and Blue #005596. Style: University style, fierce tiger, vector, white background. |
+| **Mexico City Cement** (Cruz Azul) | A modern esports logo for a football club named 'Mexico City Cement'. Main icon: A blue cross in a circle. Colors: Blue #00519E and White #FFFFFF. Style: Industrial roots, simple, vector, white background. |
+| **Toluca Devils** (Toluca) | A modern esports logo for a football club named 'Toluca Devils'. Main icon: A mischievous devil. Colors: Red #FF0000 and White #FFFFFF. Style: Mascot, red hot, vector, white background. |
+| **Mexico City Pumas** (Pumas) | A modern esports logo for a football club named 'Mexico City Pumas'. Main icon: A stylized puma face U shape. Colors: Gold #D4AF37 and Navy #000080. Style: University modern, iconic face, vector, white background. |
+| **Monterrey Rays** (Rayados) | A modern esports logo for a football club named 'Monterrey Rays'. Main icon: A letter M with stripes. Colors: Navy #092246 and White #FFFFFF. Style: Striped crest, mountain city, vector, white background. |
+
+---
+
+## 🇸🇦 Saudi Pro League (Saudi Arabia)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Riyadh Blue Waves** (Al Hilal) | A modern esports logo for a football club named 'Riyadh Blue Waves'. Main icon: A crescent moon or wave. Colors: Blue #0055A5 and White #FFFFFF. Style: The Blue Wave, dominant, clean, vector, white background. |
+| **Riyadh Knights** (Al Nassr) | A modern esports logo for a football club named 'Riyadh Knights'. Main icon: A map of Arabia or sun. Colors: Yellow #FFFF00 and Blue #0000CC. Style: Global star power, victory, vector, white background. |
+| **Jeddah Green** (Al Ahli) | A modern esports logo for a football club named 'Jeddah Green'. Main icon: A fortress or crossed scimitars. Colors: Green #006400 and White #FFFFFF. Style: Royal, fortress of trophies, vector, white background. |
+| **Jeddah Tigers** (Al Ittihad) | A modern esports logo for a football club named 'Jeddah Tigers'. Main icon: A tiger head. Colors: Yellow #FFF200 and Black #000000. Style: Distinctive stripes, fiercest club, vector, white background. |
+
+---
+
+## 🇪🇬 Egyptian Premier League (Egypt)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Cairo Red Devils** (Al Ahly) | A modern esports logo for a football club named 'Cairo Red Devils'. Main icon: An eagle. Colors: Red #D21616 and White #FFFFFF. Style: Club of the century, majestic eagle, vector, white background. |
+| **Cairo Knights** (Zamalek) | A modern esports logo for a football club named 'Cairo Knights'. Main icon: An archer or pharaonic stripes. Colors: White #FFFFFF and Red #D21616. Style: Royal, archer ancient symbol, vector, white background. |
+| **Pyramids FC** | A modern esports logo for a football club named 'Pyramids FC'. Main icon: The Pyramids of Giza silhouette. Colors: Navy #000080 and Sky Blue #87CEEB. Style: Modern investment, sleek, monument, vector, white background. |
+
+---
+
+## 🇯🇵 J1 League (Japan)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Kashima Antlers** | A modern esports logo for a football club named 'Kashima Antlers'. Main icon: Deer antlers. Colors: Red #B50029 and Black #000000. Style: Nature, sharp, distinct silhouette, vector, white background. |
+| **Gamba Osaka** | A modern esports logo for a football club named 'Gamba Osaka'. Main icon: A shield with a generic bird or crest. Colors: Blue #003399 and Black #000000. Style: Modern geometric, lightning, vector, white background. |
+| **Urawa Red Diamonds** | A modern esports logo for a football club named 'Urawa Red Diamonds'. Main icon: A red diamond shape. Colors: Red #E6002D and Black #000000. Style: Industrial, Mitsubishi heritage, geometric, vector, white background. |
+| **Kawasaki Frontale** | A modern esports logo for a football club named 'Kawasaki Frontale'. Main icon: A dolphin. Colors: Sky Blue #2EA7E0 and Black #000000. Style: Friendly mascot, coastal, vector, white background. |
+| **Yokohama F. Marinos** | A modern esports logo for a football club named 'Yokohama F. Marinos'. Main icon: An anchor and seagull. Colors: Blue #003399, Red #E60012, White. Style: Sailor theme, tricolor, vector, white background. |
+| **Vissel Kobe** | A modern esports logo for a football club named 'Vissel Kobe'. Main icon: A diamond V shape. Colors: Crimson #950029 and White #FFFFFF. Style: Luxury, shipping, modern V, vector, white background. |
+
+---
+
+## 🇰🇷 K League 1 (South Korea)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Ulsan Tigers** (Ulsan) | A modern esports logo for a football club named 'Ulsan Tigers'. Main icon: A tiger. Colors: Blue #003280 and Yellow #FFCC00. Style: Tiger of Asia, fierce, striped, vector, white background. |
+| **Jeonju Motors** (Jeonbuk) | A modern esports logo for a football club named 'Jeonju Motors'. Main icon: A phoenix. Colors: Green #009900 and Navy #000080. Style: Green warriors, mechanical precision, vector, white background. |
+| **Seoul City** (FC Seoul) | A modern esports logo for a football club named 'Seoul City'. Main icon: A kite shield with stripes. Colors: Black #000000 and Red #FF0000. Style: Capital soul, stripes, vector, white background. |
+
+---
+
+## 🇦🇺 A-League Men (Australia)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Sydney FC** | A modern esports logo for a football club named 'Sydney FC'. Main icon: Opera House silhouette. Colors: Sky Blue #87CEEB and Navy #000080. Style: Iconic landmark, clean, fresh, vector, white background. |
+| **Melbourne Victory** | A modern esports logo for a football club named 'Melbourne Victory'. Main icon: A large V chevron. Colors: Navy #000080 and White #FFFFFF. Style: Big V, victory, bold geometric, vector, white background. |
+| **Melbourne City** | A modern esports logo for a football club named 'Melbourne City'. Main icon: City Group circle style. Colors: Sky Blue #87CEEB and White #FFFFFF. Style: Corporate, clean, circle badge, vector, white background. |
+| **Central Coast Mariners** | A modern esports logo for a football club named 'Central Coast Mariners'. Main icon: An anchor or wave. Colors: Yellow #FFFF00 and Navy #000080. Style: Coastal, vibrant yellow, vector, white background. |
+| **Western Sydney** (Wanderers) | A modern esports logo for a football club named 'Western Sydney'. Main icon: A stylized W. Colors: Red #FF0000 and Black #000000. Style: Street football, bold, rebel, vector, white background. |
+| **Brisbane Roar** | A modern esports logo for a football club named 'Brisbane Roar'. Main icon: A lion. Colors: Orange #FFA500 and Black #000000. Style: Roaring lion, vibrant orange, vector, white background. |
+
+---
+
+## 🇿🇦 Premier Soccer League (South Africa)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Pretoria Brazilians** (Sundowns) | A modern esports logo for a football club named 'Pretoria Brazilians'. Main icon: A sun and open hand. Colors: Yellow #FFFF00, Green, and Blue. Style: The sky is the limit, vibrant, Brazilian colors, vector, white background. |
+| **Soweto Pirates** (Orlando Pirates) | A modern esports logo for a football club named 'Soweto Pirates'. Main icon: A skull and crossbones. Colors: Black #000000 and White #FFFFFF. Style: Iconic pirate symbol, simple, intimidating, vector, white background. |
+| **Soweto Chiefs** (Kaizer Chiefs) | A modern esports logo for a football club named 'Soweto Chiefs'. Main icon: A Native American chief head. Colors: Yellow #FFFF00 and Black #000000. Style: Amakhosi, royal, mascot, vector, white background. |
+| **Cape Town City** | A modern esports logo for a football club named 'Cape Town City'. Main icon: Table Mountain silhouette. Colors: Blue #0000FF and Yellow #FFFF00. Style: City landmark, modern, vector, white background. |
+
+---
+
+## 🇲🇦 Botola Pro (Morocco)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Casablanca Eagles** (Raja) | A modern esports logo for a football club named 'Casablanca Eagles'. Main icon: An eagle. Colors: Green #006400 and White #FFFFFF. Style: The Green People, eagle mascot, vector, white background. |
+| **Casablanca Reds** (Wydad) | A modern esports logo for a football club named 'Casablanca Reds'. Main icon: A W within a crest with a star. Colors: Red #E60000 and White #FFFFFF. Style: Nation's club, historic, clean, vector, white background. |
+| **AS FAR** (Rabat) | A modern esports logo for a football club named 'AS FAR'. Main icon: A black star. Colors: Black #000000, Red and Green. Style: Military roots, star emblem, vector, white background. |
+
+---
+
+## 🇯🇲 Caribbean Super League
+
+| Team Name | Prompt |
+|:---|:---|
+| **Kingston Bay United** | A modern esports logo for a football club named 'Kingston Bay United'. Main icon: A hummingbird or lion. Colors: Black #000000, Yellow #FFFF00, Green. Style: Reggae colors, island vibe, vector, white background. |
+| **Trinbago Riders FC** | A modern esports logo for a football club named 'Trinbago Riders FC'. Main icon: A steelpan or ibis bird. Colors: Red #FF0000, Black, White. Style: Soca warriors, energy, vector, white background. |
+| **Cibao Orange FC** | A modern esports logo for a football club named 'Cibao Orange FC'. Main icon: A mountain peak. Colors: Orange #FFA500 and Black #000000. Style: Dominican mountains, bold orange, vector, white background. |
+
+---
+
+## 🇨🇴 Liga BetPlay (Colombia)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Medellin Green** (Nacional) | A modern esports logo for a football club named 'Medellin Green'. Main icon: A tower or shield with green/white stripes. Colors: Green #008000 and White #FFFFFF. Style: King of cups, historic, vector, white background. |
+| **Bogota Blues** (Millonarios) | A modern esports logo for a football club named 'Bogota Blues'. Main icon: A shield with interlocking rings or M. Colors: Blue #0000FF and White #FFFFFF. Style: The Ambassadors, classic, vector, white background. |
+| **Cali Devils** (America) | A modern esports logo for a football club named 'Cali Devils'. Main icon: A red devil with a pitchfork. Colors: Red #FF0000 and White #FFFFFF. Style: The Red Devils, mascot, vector, white background. |
+| **Barranquilla Sharks** (Junior) | A modern esports logo for a football club named 'Barranquilla Sharks'. Main icon: A shark. Colors: Red #FF0000, White, Blue stripes. Style: Shark mascot, coastal, vector, white background. |
+| **Bogota Cardinals** (Santa Fe) | A modern esports logo for a football club named 'Bogota Cardinals'. Main icon: A red cardinal bird or lion. Colors: Red #FF0000 and White #FFFFFF. Style: The first champion, classic, vector, white background. |
+
+---
+
+## 🇨🇱 Campeonato Nacional (Chile)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Santiago Chiefs** (Colo Colo) | A modern esports logo for a football club named 'Santiago Chiefs'. Main icon: A Mapuche chief profile. Colors: White #FFFFFF and Black #000000. Style: Indigenous hero, historic, clean face, vector, white background. |
+| **Santiago Scholars** (U de Chile) | A modern esports logo for a football club named 'Santiago Scholars'. Main icon: A red owl (Chuncho). Colors: Blue #0000FF and Red #FF0000. Style: Wisdom, academic, owl mascot, vector, white background. |
+| **Santiago Crusaders** (U Catolica) | A modern esports logo for a football club named 'Santiago Crusaders'. Main icon: A blue cross on a white shield. Colors: White #FFFFFF and Blue #0000FF. Style: Crusader cross, knightly, vector, white background. |
+| **Desert Miners** (Cobresal) | A modern esports logo for a football club named 'Desert Miners'. Main icon: A miner's helmet or pickaxe. Colors: Orange #FFA500 and White #FFFFFF. Style: Mining heritage, tough, vector, white background. |
+
+---
+
+## 🇺🇾 Campeonato Uruguayo (Uruguay)
+
+| Team Name | Prompt |
+|:---|:---|
+| **Montevideo Tricolor** (Nacional) | A modern esports logo for a football club named 'Montevideo Tricolor'. Main icon: A shield with red, white, blue stripes. Colors: White #FFFFFF, Blue #000080, Red. Style: The dean, tricolor, historic, vector, white background. |
+| **Montevideo Coal** (Peñarol) | A modern esports logo for a football club named 'Montevideo Coal'. Main icon: 11 stars or yellow/black stripes. Colors: Yellow #FFFF00 and Black #000000. Style: Railway heritage, train tracks, stars, vector, white background. |
+| **Belvedere Blue** (Liverpool) | A modern esports logo for a football club named 'Belvedere Blue'. Main icon: A liver bird or anchor. Colors: Black #000000 and Blue #0000FF. Style: British connection, port, vector, white background. |
+| **Parque Violet** (Defensor) | A modern esports logo for a football club named 'Parque Violet'. Main icon: A lighthouse. Colors: Purple #800080 and White #FFFFFF. Style: Unique purple, lighthouse, vector, white background. |
+

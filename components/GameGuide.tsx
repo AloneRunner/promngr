@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Translation } from '../types';
-import { BookOpen, Users, Trophy, DollarSign, Dumbbell, Building2, Target, ArrowRight, Star, AlertTriangle, TrendingUp, ChevronDown, ChevronUp, Zap, Shield, Heart, Brain, Crosshair } from 'lucide-react';
+import { BookOpen, Users, Trophy, DollarSign, Dumbbell, Building2, Target, ArrowRight, Star, AlertTriangle, TrendingUp, ChevronDown, ChevronUp, Zap, Shield, Heart, Brain, Crosshair, GraduationCap } from 'lucide-react';
 
 interface GameGuideProps {
     t: Translation;
@@ -93,27 +93,6 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                             <li>• {t.guidePhilosophy3 || 'No complex systems to overwhelm you'}</li>
                         </ul>
                     </div>
-
-                    {/* Why Some Features Are Missing */}
-                    <div className="bg-orange-900/20 border border-orange-500/30 p-3 rounded">
-                        <p className="text-orange-400 font-bold mb-2">❓ {t.guideWhyMissing || 'Why Some Features Are Missing?'}</p>
-                        <ul className="text-xs space-y-1 text-slate-400">
-                            <li>• {t.guideMissing1 || 'Player loans → Removed for simplicity'}</li>
-                            <li>• {t.guideMissing2 || 'World Cup → Maybe in the future'}</li>
-                            <li>• {t.guideMissing3 || 'Complex tactics → Kept simple intentionally'}</li>
-                        </ul>
-                    </div>
-
-                    {/* Future Plans */}
-                    <div className="bg-purple-900/20 border border-purple-500/30 p-3 rounded">
-                        <p className="text-purple-400 font-bold mb-2">🔮 {t.guideFuturePlans || 'Future Plans'}</p>
-                        <ul className="text-xs space-y-1 text-slate-400">
-                            <li>✅ {t.guideFuture1 || 'More language support'}</li>
-                            <li>🔜 {t.guideFuture2 || 'Create your own team'}</li>
-                            <li>🔜 {t.guideFuture3 || 'Customize team/player names'}</li>
-                            <li>❓ {t.guideFuture4 || 'World Cup (maybe)'}</li>
-                        </ul>
-                    </div>
                 </div>
             )
         },
@@ -178,35 +157,77 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
             icon: Target,
             color: 'purple',
             content: (
-                <div className="space-y-4">
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-purple-400 font-bold mb-2">📐 {t.formation || 'Formations'}</p>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div>{t.guideForm433 || '4-3-3: Balanced, wing-heavy.'}</div>
-                            <div>{t.guideForm442 || '4-4-2: Classic, safe.'}</div>
-                            <div>{t.guideForm4231 || '4-2-3-1: Midfield control.'}</div>
-                            <div>{t.guideForm352 || '3-5-2: Midfield dominant.'}</div>
-                            <div>{t.guideForm532 || '5-3-2: Defensive.'}</div>
-                            <div>{t.guideForm4141 || '4-1-4-1: Solid defense.'}</div>
+                <div className="space-y-6 text-sm">
+                    {/* NEW DEEP DIVE SECTION */}
+
+                    {/* 1. PASSING STYLE (Pas ve Genişlik) */}
+                    <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Crosshair className="text-cyan-400" size={20} />
+                            <h3 className="text-lg font-bold text-white">{t.guideDeepPassTitle || 'Pas ve Genişlik Analizi (Passing & Width)'}</h3>
+                        </div>
+                        <div className="bg-black/30 p-4 rounded-lg text-slate-300 whitespace-pre-wrap leading-relaxed font-mono text-xs">
+                            {t.guideDeepPassContent || 'Loading detailed analysis...'}
                         </div>
                     </div>
 
+                    {/* 2. TEMPO & DEFENSIVE LINE */}
+                    <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Zap className="text-orange-400" size={20} />
+                            <h3 className="text-lg font-bold text-white">{t.guideDeepTempoTitle || 'Tempo ve Savunma Hattı (Tempo & Def Line)'}</h3>
+                        </div>
+                        <div className="bg-black/30 p-4 rounded-lg text-slate-300 whitespace-pre-wrap leading-relaxed font-mono text-xs">
+                            {t.guideDeepTempoContent || 'Loading detailed analysis...'}
+                        </div>
+                    </div>
+
+                    {/* 3. GOLDEN COMBINATIONS */}
+                    <div className="bg-gradient-to-r from-amber-600/20 to-yellow-600/20 p-4 rounded-xl border border-amber-500/30">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Trophy className="text-amber-400" size={20} />
+                            <h3 className="text-lg font-bold text-amber-100">{t.guideDeepComboTitle || 'Hoca\'nın Altın Kombinasyonları'}</h3>
+                        </div>
+                        <div className="bg-black/30 p-4 rounded-lg text-amber-100 whitespace-pre-wrap leading-relaxed font-mono text-xs">
+                            {t.guideDeepComboContent || 'Loading combinations...'}
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'roles',
+            title: `🎭 ${t.guideRolesTitle || 'Player Roles'}`,
+            icon: Users,
+            color: 'pink',
+            content: (
+                <div className="space-y-4">
+                    <p className="text-sm text-slate-300">{t.guideRolesIntro || 'Each player fits a specific role based on their attributes. Playing them in their best role maximizes performance.'}</p>
+
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-orange-400 font-bold mb-2">⚡ {t.style || 'Play Style'}</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-blue-400">Possession:</strong> {t.guideStylePoss || 'Ball retention, short passing, patient attack. Needs strong midfield.'}</li>
-                            <li><strong className="text-green-400">Counter:</strong> {t.guideStyleCounter || 'Defend and fast break. Needs fast forwards and midfielders.'}</li>
-                            <li><strong className="text-red-400">HighPress:</strong> {t.guideStylePress || 'High pressure, suffocate opponent. Requires high stamina!'}</li>
-                            <li><strong className="text-gray-400">ParkTheBus:</strong> {t.guideStyleBus || '11-man defense, wait for counter. Effective against big teams.'}</li>
-                            <li><strong className="text-yellow-400">Balanced:</strong> {t.guideStyleBal || 'A bit of everything. A safe choice.'}</li>
+                        <p className="text-red-400 font-bold mb-2">⚽ {t.attack || 'Attack'}</p>
+                        <ul className="text-xs space-y-2 text-slate-300">
+                            <li><strong className="text-white">{t.rolePoacher || 'Poacher'}:</strong> {t.guideRolePoacher || 'Sits on the last defender. Does not contribute to build-up. Pure finisher.'}</li>
+                            <li><strong className="text-white">{t.roleTargetMan || 'Target Man'}:</strong> {t.guideRoleTargetMan || 'Strong forward who holds up the ball for others.'}</li>
+                            <li><strong className="text-white">{t.roleFalse9 || 'False 9'}:</strong> {t.guideRoleFalse9 || 'Drops deep to create space. Needs high passing/vision.'}</li>
                         </ul>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-cyan-400 font-bold mb-2">📏 {t.width || 'Width'} & {t.passingStyle || 'Passing Style'}</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong>{t.guideWidthNarrow || 'Narrow: Play through middle. Ideal for central players.'}</strong></li>
-                            <li><strong>{t.guideWidthWide || 'Wide: Use the wings. Requires fast wingers.'}</strong></li>
+                        <p className="text-blue-400 font-bold mb-2">🧠 {t.midfield || 'Midfield'}</p>
+                        <ul className="text-xs space-y-2 text-slate-300">
+                            <li><strong className="text-white">{t.rolePlaymaker || 'Playmaker'}:</strong> {t.guideRolePlaymaker || 'The brain of the team. Dictates tempo with passing.'}</li>
+                            <li><strong className="text-white">{t.roleB2B || 'Box-to-Box'}:</strong> {t.guideRoleB2B || 'Runs tirelessly between both penalty boxes. Needs high stamina.'}</li>
+                            <li><strong className="text-white">{t.roleDestroyer || 'Destroyer'}:</strong> {t.guideRoleDestroyer || 'Defensive midfielder who breaks up attacks. High tackling.'}</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded">
+                        <p className="text-emerald-400 font-bold mb-2">🛡️ {t.defense || 'Defense'}</p>
+                        <ul className="text-xs space-y-2 text-slate-300">
+                            <li><strong className="text-white">{t.roleStopper || 'Stopper'}:</strong> {t.guideRoleStopper || 'Aggressive defender who steps up to win the ball.'}</li>
+                            <li><strong className="text-white">{t.roleBallPlaying || 'Ball Playing CB'}:</strong> {t.guideRoleBallPlaying || 'Comfortable with the ball. Starts attacks from the back.'}</li>
+                            <li><strong className="text-white">{t.roleWingback || 'Wingback'}:</strong> {t.guideRoleWingback || 'Attacking defender who overlaps on the wings.'}</li>
                         </ul>
                     </div>
                 </div>
@@ -218,20 +239,21 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
             icon: Dumbbell,
             color: 'orange',
             content: (
-                <div className="space-y-3">
-                    <p>📈 <strong>{t.guideTrainAge || 'Only players under 28 can develop!'}</strong></p>
-                    <p>⚠️ {t.guideTrainLuck || 'Development is luck-based - not guaranteed every week.'}</p>
+                <div className="space-y-4">
+                    <p className="font-bold text-orange-400 text-sm">Targeted Training (NEW!)</p>
+                    <p className="text-xs text-slate-300">
+                        {t.guideTrainPosBased ? 'Position-Based training improves attributes specifically for that role (e.g., FWD -> Finishing/Speed).' : 'Players under 28 develop faster with better facilities.'}
+                    </p>
 
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-orange-400 font-bold mb-2">🎯 {t.guideTrainFocus || 'Training Focuses'}</p>
-                        <ul className="text-sm space-y-2 text-slate-300">
-                            <li><strong className="text-yellow-400">{t.guideTrainFocusBal || 'Balanced: Equal chance for all attributes.'}</strong></li>
-                            <li><strong className="text-red-400">{t.guideTrainFocusAtt || 'Attack: Finishing, Shooting, Dribbling improves.'}</strong></li>
-                            <li><strong className="text-blue-400">{t.guideTrainFocusDef || 'Defense: Tackling, Positioning, Strength improves.'}</strong></li>
-                            <li><strong className="text-green-400">{t.guideTrainFocusPhy || 'Physical: Pace, Stamina, Strength improves.'}</strong></li>
-                            <li><strong className="text-purple-400">{t.guideTrainFocusTec || 'Technical: Passing, Dribbling, Vision improves.'}</strong></li>
-                            <li><strong className="text-emerald-400">{t.guideTrainPosBased || 'By Position (NEW!): Automatically based on role.'}</strong></li>
-                        </ul>
+                    {/* EXPERT ANALYSIS: TRAINING */}
+                    <div className="bg-gray-900/80 p-3 rounded-lg border border-orange-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                            <GraduationCap className="text-orange-400" size={16} />
+                            <span className="text-xs font-bold text-orange-200">{t.guideDeepTrainingTitle || 'EXPERT: Training Mechanics'}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
+                            {t.guideDeepTrainingContent || 'Loading training data...'}
+                        </div>
                     </div>
                 </div>
             )
@@ -257,8 +279,15 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                         </ul>
                     </div>
 
-                    <div className="bg-yellow-900/20 border border-yellow-500/30 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">⚽ {t.guideScoutVsAcad || 'Scout vs Academy: Scouts are more effective for finding potential, upgrade them first!'}</p>
+                    {/* EXPERT ANALYSIS: FACILITIES */}
+                    <div className="bg-gray-900/80 p-3 rounded-lg border border-cyan-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Building2 className="text-cyan-400" size={16} />
+                            <span className="text-xs font-bold text-cyan-200">{t.guideDeepFacilitiesTitle || 'EXPERT: ROI & Costs'}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
+                            {t.guideDeepFacilitiesContent || 'Loading facilities data...'}
+                        </div>
                     </div>
                 </div>
             )
@@ -270,18 +299,17 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
             color: 'pink',
             content: (
                 <div className="space-y-3">
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-pink-400 font-bold mb-2">📊 {t.guideMoraleTitle || 'Weekly Morale Changes'}</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong className="text-emerald-400">{t.guideMoraleXI || 'Starting XI: +2 morale'}</strong></li>
-                            <li><strong className="text-yellow-400">{t.guideMoraleBench || 'Bench: No change'}</strong></li>
-                            <li><strong className="text-red-400">{t.guideMoraleRes75 || 'Reserve (75+ OVR): -3 morale!'}</strong></li>
-                            <li><strong className="text-orange-400">{t.guideMoraleRes65 || 'Reserve (65-75 OVR): -1 morale'}</strong></li>
-                        </ul>
-                    </div>
+                    <p className="text-sm text-slate-300 mb-2">Morale directly affects player performance (OVR).</p>
 
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">⚡ {t.guideMoralePerform || '100 Morale: +5% OVR bonus. 0 Morale: -10% OVR penalty!'}</p>
+                    {/* EXPERT ANALYSIS: MORALE */}
+                    <div className="bg-gray-900/80 p-3 rounded-lg border border-pink-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Heart className="text-pink-400" size={16} />
+                            <span className="text-xs font-bold text-pink-200">{t.guideDeepMoraleTitle || 'EXPERT: Morale Math'}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
+                            {t.guideDeepMoraleContent || 'Loading morale data...'}
+                        </div>
                     </div>
                 </div>
             )
@@ -295,18 +323,26 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                 <div className="space-y-3">
                     <div className="bg-slate-900/50 p-3 rounded">
                         <p className="text-yellow-400 font-bold mb-2">💵 {t.guideTransferTitle || 'Negotiation System'}</p>
+                        <p className="text-xs text-slate-400 mb-2">{t.guideTransList || 'Transfer listed players are cheaper.'}</p>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded mt-2">
+                        <p className="text-red-400 font-bold mb-2">📅 {t.transferWindows || 'Transfer Windows (NEW!)'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• {t.guideTransList || 'Players on transfer list are cheaper.'}</li>
-                            <li>• {t.guideTransUnlisted || 'Expect to pay 20-50% more for unlisted players.'}</li>
+                            <li>• <strong>Summer:</strong> Weeks 1-8</li>
+                            <li>• <strong>Winter:</strong> Weeks 20-24</li>
                         </ul>
                     </div>
 
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-emerald-400 font-bold mb-2">🌟 {t.guideYouthTitle || 'Youth Academy (Cheap!)'}</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• {t.guideYouth1 || 'Young players come at €50K value.'}</li>
-                            <li>• {t.guideYouth2 || 'Wage: Only €25K/year.'}</li>
-                        </ul>
+                    {/* EXPERT ANALYSIS: TRANSFERS */}
+                    <div className="bg-gray-900/80 p-3 rounded-lg border border-yellow-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                            <DollarSign className="text-yellow-400" size={16} />
+                            <span className="text-xs font-bold text-yellow-200">{t.guideDeepTransferTitle || 'EXPERT: Negotiation Secrets'}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
+                            {t.guideDeepTransferContent || 'Loading transfer secrets...'}
+                        </div>
                     </div>
                 </div>
             )
@@ -318,13 +354,17 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
             color: 'green',
             content: (
                 <div className="space-y-3">
-                    <div className="bg-slate-900/50 p-3 rounded">
-                        <p className="text-yellow-400 font-bold mb-2">🤝 {t.sponsorTitle || 'Sponsor Types'}</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li><strong className="text-green-400">{t.guideSponsorG || 'Guaranteed: High fixed, low bonus. Safe.'}</strong></li>
-                            <li><strong className="text-yellow-400">{t.guideSponsorD || 'Balanced: Mid fixed, mid bonus.'}</strong></li>
-                            <li><strong className="text-red-400">{t.guideSponsorR || 'Risky: Low fixed, high bonus. Profitable if you win!'}</strong></li>
-                        </ul>
+                    <p className="text-sm text-slate-300">Manage your budget wisely to avoid bankruptcy.</p>
+
+                    {/* EXPERT ANALYSIS: FINANCE */}
+                    <div className="bg-gray-900/80 p-3 rounded-lg border border-green-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                            <TrendingUp className="text-green-400" size={16} />
+                            <span className="text-xs font-bold text-green-200">{t.guideDeepFinanceTitle || 'EXPERT: Financial Formulas'}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
+                            {t.guideDeepFinanceContent || 'Loading finance data...'}
+                        </div>
                     </div>
                 </div>
             )
@@ -383,16 +423,6 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                             <li>• {t.guideTipsDont3 || 'Don\'t stick to only one formation.'}</li>
                             <li>• {t.guideTipsDont4 || 'Don\'t ignore injuries.'}</li>
                             <li>• {t.guideTipsDont5 || 'Don\'t let contracts expire.'}</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded">
-                        <p className="text-blue-400 font-bold mb-2">🎯 {t.guideTipsTactical || 'Tactical Tips'}</p>
-                        <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• <strong>{t.guideTipStrong || 'Strong Opponent: ParkTheBus + Counter'}</strong></li>
-                            <li>• <strong>{t.guideTipWeak || 'Weak Opponent: HighPress + Possession'}</strong></li>
-                            <li>• <strong>{t.guideTipWinning || 'When Winning: Safe aggression'}</strong></li>
-                            <li>• <strong>{t.guideTipLosing || 'When Losing: Aggressive + Fast tempo'}</strong></li>
                         </ul>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Translation } from '../types';
-import { X, Sparkles, ChevronDown, ChevronUp, Heart, Shield, Trophy, Zap, Globe, TrendingDown, CalendarCheck } from 'lucide-react';
+import { X, Sparkles, ChevronDown, ChevronUp, Heart, Shield, Trophy, Zap, Globe, TrendingDown, CalendarCheck, BookOpen, DollarSign, Activity } from 'lucide-react';
 
 interface UpdatesModalProps {
     onClose: () => void;
@@ -23,8 +23,30 @@ interface VersionUpdate {
 // Version history - newest first
 const VERSION_HISTORY: VersionUpdate[] = [
     {
+        version: '3.2.1',
+        date: '2026-01-24',
+        titleKey: 'update321Title',
+        items: [
+            { icon: <Globe className="text-blue-400" size={16} />, titleKey: 'update321Item1Title', descKey: 'update321Item1Desc' },
+            { icon: <DollarSign className="text-emerald-400" size={16} />, titleKey: 'update321Item2Title', descKey: 'update321Item2Desc' },
+            { icon: <Activity className="text-yellow-400" size={16} />, titleKey: 'update321Item3Title', descKey: 'update321Item3Desc' },
+            { icon: <Shield className="text-purple-400" size={16} />, titleKey: 'update321Item4Title', descKey: 'update321Item4Desc' },
+        ]
+    },
+    {
+        version: '3.2',
+        date: '2026-01-24',
+        titleKey: 'update320Title',
+        items: [
+            { icon: <Trophy className="text-yellow-400" size={16} />, titleKey: 'update320Item1Title', descKey: 'update320Item1Desc' },
+            { icon: <BookOpen className="text-blue-400" size={16} />, titleKey: 'update320Item2Title', descKey: 'update320Item2Desc' },
+            { icon: <DollarSign className="text-emerald-400" size={16} />, titleKey: 'update320Item3Title', descKey: 'update320Item3Desc' },
+            { icon: <Activity className="text-purple-400" size={16} />, titleKey: 'update320Item4Title', descKey: 'update320Item4Desc' },
+        ]
+    },
+    {
         version: 'Dev Log',
-        date: new Date().toISOString().split('T')[0],
+        date: '2025-01-23',
         titleKey: 'devLogTitle',
         items: [
             { icon: <Heart className="text-pink-400" size={16} />, titleKey: 'updateApologyTitle', descKey: 'updateApologyDesc' },
@@ -37,7 +59,7 @@ const VERSION_HISTORY: VersionUpdate[] = [
 ];
 
 export const UpdatesModal: React.FC<UpdatesModalProps> = ({ onClose, t }) => {
-    const [expandedVersion, setExpandedVersion] = useState<string>('Dev Log');
+    const [expandedVersion, setExpandedVersion] = useState<string>('3.2.1');
 
     const getTranslation = (key: string): string => {
         return (t as any)[key] || key;

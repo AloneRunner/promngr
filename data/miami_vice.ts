@@ -1,0 +1,200 @@
+export const MIAMI_VICE_SQUAD = [
+    {
+        ad: "L. Messy",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "SĞK",
+        reyting: 93,
+        yas: 36,
+        ana_ozellikler: { hiz: 80, sut: 92, pas: 94, dribbling: 96, defans: 40, fizik: 65 },
+        detaylar: { bitiricilik: 95, vizyon: 96, frikik: 94, falso: 93, denge: 95 },
+        oyun_tarzlari: ["Teknik", "Oyun Kurucu", "Frikikçi", "Plase Şut"]
+    },
+    {
+        ad: "L. Suaraz",
+        takim: "Miami Vice",
+        uyruk: "Uruguay",
+        mevki: "SNT",
+        reyting: 86,
+        yas: 37,
+        ana_ozellikler: { hiz: 72, sut: 90, pas: 82, dribbling: 84, defans: 45, fizik: 80 },
+        detaylar: { bitiricilik: 92, pozisyon: 90, agresiflik: 88, vole: 88 },
+        oyun_tarzlari: ["Golcü", "Fırsatçı Golcü", "Savaşçı"]
+    },
+    {
+        ad: "S. Buskets",
+        takim: "Miami Vice",
+        uyruk: "İspanya",
+        mevki: "MDO",
+        reyting: 84,
+        yas: 35,
+        ana_ozellikler: { hiz: 55, sut: 65, pas: 90, dribbling: 82, defans: 82, fizik: 74 },
+        detaylar: { vizyon: 92, kisa_pas: 93, sogukkanlilik: 94, top_kesme: 88 },
+        oyun_tarzlari: ["Maestro", "Pasör"]
+    },
+    {
+        ad: "J. Albe",
+        takim: "Miami Vice",
+        uyruk: "İspanya",
+        mevki: "SLB",
+        reyting: 83,
+        yas: 34,
+        ana_ozellikler: { hiz: 82, sut: 74, pas: 84, dribbling: 83, defans: 78, fizik: 70 },
+        detaylar: { orta_acma: 85, bindirme: 88, dayaniklilik: 82 },
+        oyun_tarzlari: ["Ofansif Bek", "Orta Açma Ustası"]
+    },
+    {
+        ad: "D. Calmender",
+        takim: "Miami Vice",
+        uyruk: "ABD",
+        mevki: "KL",
+        reyting: 76,
+        yas: 26,
+        ana_ozellikler: { hiz: 40, sut: 20, pas: 65, dribbling: 30, defans: 20, fizik: 75 },
+        detaylar: { refleks: 78, ucma: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "T. Avilés",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 74,
+        yas: 19,
+        ana_ozellikler: { hiz: 72, sut: 45, pas: 68, dribbling: 65, defans: 72, fizik: 74 },
+        detaylar: { potansiyel: 84 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "N. Freiro",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 75,
+        yas: 30,
+        ana_ozellikler: { hiz: 65, sut: 40, pas: 65, dribbling: 60, defans: 76, fizik: 78 },
+        detaylar: { markaj: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Weigond",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "SĞB",
+        reyting: 74,
+        yas: 24,
+        ana_ozellikler: { hiz: 78, sut: 60, pas: 70, dribbling: 72, defans: 70, fizik: 74 },
+        detaylar: { agresiflik: 82 },
+        oyun_tarzlari: ["Savaşçı"]
+    },
+    {
+        ad: "D. Gómes",
+        takim: "Miami Vice",
+        uyruk: "Paraguay",
+        mevki: "MO",
+        reyting: 76,
+        yas: 21,
+        ana_ozellikler: { hiz: 76, sut: 70, pas: 74, dribbling: 75, defans: 68, fizik: 76 },
+        detaylar: { pres: 80, potansiyel: 82 },
+        oyun_tarzlari: ["Kutu Kutu"]
+    },
+    {
+        ad: "J. Gressle",
+        takim: "Miami Vice",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 75,
+        yas: 30,
+        ana_ozellikler: { hiz: 72, sut: 68, pas: 76, dribbling: 74, defans: 65, fizik: 74 },
+        detaylar: { orta_acma: 82, caliskanlik: 84 },
+        oyun_tarzlari: ["Çalışkan"]
+    },
+    {
+        ad: "F. Redondo",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 21,
+        ana_ozellikler: { hiz: 70, sut: 65, pas: 78, dribbling: 76, defans: 70, fizik: 76 },
+        detaylar: { vizyon: 80, potansiyel: 86 },
+        oyun_tarzlari: ["Genç Yetenek", "Maestro"]
+    },
+    {
+        ad: "L. Compana",
+        takim: "Miami Vice",
+        uyruk: "Ekvador",
+        mevki: "SNT",
+        reyting: 75,
+        yas: 23,
+        ana_ozellikler: { hiz: 76, sut: 76, pas: 65, dribbling: 72, defans: 35, fizik: 78 },
+        detaylar: { bitiricilik: 78, kafa_isabeti: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "R. Toylor",
+        takim: "Miami Vice",
+        uyruk: "Finlandiya",
+        mevki: "SLK",
+        reyting: 74,
+        yas: 29,
+        ana_ozellikler: { hiz: 80, sut: 72, pas: 70, dribbling: 76, defans: 45, fizik: 70 },
+        detaylar: { plase: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "B. Cremaschi",
+        takim: "Miami Vice",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 73,
+        yas: 19,
+        ana_ozellikler: { hiz: 78, sut: 65, pas: 72, dribbling: 74, defans: 60, fizik: 70 },
+        detaylar: { potansiyel: 84, caliskanlik: 82 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "S. Kryvtsov",
+        takim: "Miami Vice",
+        uyruk: "Ukrayna",
+        mevki: "STP",
+        reyting: 72,
+        yas: 33,
+        ana_ozellikler: { hiz: 55, sut: 35, pas: 60, dribbling: 55, defans: 74, fizik: 78 },
+        detaylar: { guc: 82 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "F. Negri",
+        takim: "Miami Vice",
+        uyruk: "Arjantin",
+        mevki: "SLB",
+        reyting: 72,
+        yas: 29,
+        ana_ozellikler: { hiz: 78, sut: 55, pas: 68, dribbling: 70, defans: 66, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Des Santos",
+        takim: "Miami Vice",
+        uyruk: "ABD",
+        mevki: "KL",
+        reyting: 68,
+        yas: 23,
+        ana_ozellikler: { hiz: 40, sut: 20, pas: 60, dribbling: 25, defans: 20, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Ruíz",
+        takim: "Miami Vice",
+        uyruk: "Honduras",
+        mevki: "MDO",
+        reyting: 69,
+        yas: 20,
+        ana_ozellikler: { hiz: 70, sut: 55, pas: 68, dribbling: 68, defans: 66, fizik: 72 },
+        detaylar: { potansiyel: 78 },
+        oyun_tarzlari: []
+    }
+];

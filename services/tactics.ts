@@ -1,131 +1,215 @@
-import { TacticalMatchRecord } from '../types';
 
-// === HISTORICAL ANALYSIS ENGINE ===
-// Analyzes user's past match performance to give personalized tactical advice
+import { TeamTactic, TacticType, TacticalMatchRecord } from '../types';
 
-export interface HistoricalAnalysis {
-    // Best performing tactics for the user
-    bestFormation: string | null;
-    bestFormationWinRate: number;
-    bestFormationMatches: number;
+export type PresetKey = 'Gegenpress' | 'TikiTaka' | 'CounterAttack' | 'ParkTheBus' | 'WingPlay' | 'Catenaccio';
 
-    bestStyle: string | null;
-    bestStyleWinRate: number;
-    bestStyleMatches: number;
-
-    // All stats by formation
-    formationStats: Record<string, { wins: number; total: number; winRate: number }>;
-    styleStats: Record<string, { wins: number; total: number; winRate: number }>;
-
-    // Total matches analyzed
-    totalMatches: number;
+export interface TacticalPreset {
+    name: string;
+    description: string;
+    tactic: Partial<TeamTactic>;
 }
 
-/**
- * Analyzes the user's tactical history against a specific opponent type.
- * Returns win rates for formations and styles the user has ACTUALLY used.
- * 
- * @param history - Full tactical match history
- * @param opponentFormation - Filter by opponent's formation (optional)
- * @param opponentStyle - Filter by opponent's style (optional)
- */
-export function analyzeUserHistory(
+export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
+    'Gegenpress': {
+        name: 'Gegenpress',
+        description: 'High intensity pressing to win the ball back immediately.',
+        tactic: {
+            style: 'HighPress',
+            aggression: 'Aggressive',
+            tempo: 'Fast',
+            width: 'Balanced',
+            defensiveLine: 'High',
+            passingStyle: 'Mixed',
+            marking: 'Zonal' // Defaulting to Zonal as specific marking type isn't fully in UI yet but good for backend
+        }
+    },
+    'TikiTaka': {
+        name: 'Tiki-Taka',
+        description: 'Patient, short passing game focused on retaining possession.',
+        tactic: {
+            style: 'Possession',
+            aggression: 'Normal',
+            tempo: 'Slow',
+            width: 'Narrow',
+            defensiveLine: 'High',
+            passingStyle: 'Short',
+            marking: 'Zonal'
+        }
+    },
+    'CounterAttack': {
+        name: 'Rapid Counter',
+        description: 'Soak up pressure and break fast with direct passing.',
+        tactic: {
+            style: 'Counter',
+            aggression: 'Aggressive',
+            tempo: 'Fast',
+            width: 'Wide',
+            defensiveLine: 'Deep',
+            passingStyle: 'Direct',
+            marking: 'Zonal'
+        }
+    },
+    'ParkTheBus': {
+        name: 'Park The Bus',
+        description: 'Defend with everyone behind the ball. Frustrate the opponent.',
+        tactic: {
+            style: 'ParkTheBus',
+            aggression: 'Safe',
+            tempo: 'Slow',
+            width: 'Narrow',
+            defensiveLine: 'Deep',
+            passingStyle: 'Direct',
+            marking: 'Man'
+        }
+    },
+    'WingPlay': {
+        name: 'Wing Play',
+        description: 'Get the ball wide and cross it into the box.',
+        tactic: {
+            style: 'Balanced',
+            aggression: 'Normal',
+            tempo: 'Normal',
+            width: 'Wide',
+            defensiveLine: 'Balanced',
+            passingStyle: 'Mixed',
+            marking: 'Zonal'
+        }
+    },
+    'Catenaccio': {
+        name: 'Catenaccio',
+        description: 'Classic Italian defense. Very strong defensive organization.',
+        tactic: {
+            style: 'Defensive', // Note: Needs to map to available styles or 'Balanced' if 'Defensive' isn't exact
+            aggression: 'Aggressive',
+            tempo: 'Slow',
+            width: 'Narrow',
+            defensiveLine: 'Deep',
+            passingStyle: 'Mixed',
+            marking: 'Man'
+        }
+    }
+};
+
+// Helper to apply preset
+export const applyPreset = (currentTactic: TeamTactic, presetKey: PresetKey): TeamTactic => {
+    const preset = TACTICAL_PRESETS[presetKey];
+    return {
+        ...currentTactic,
+        ...preset.tactic,
+        // Ensure we don't accidentally overwrite formation unless we want to enforce it (we generally don't for presets)
+    };
+};
+
+export interface TacticWarning {
+    type: 'WARNING' | 'CRITICAL';
+    message: string;
+}
+
+export const validateTactic = (tactic: TeamTactic): TacticWarning[] => {
+    const warnings: TacticWarning[] = [];
+
+    // Example 1: High Press but Deep Line (Gaps in midfield)
+    if (tactic.style === 'HighPress' && tactic.defensiveLine === 'Deep') {
+        warnings.push({
+            type: 'CRITICAL',
+            message: 'High Press with Deep Line creates massive gaps in midfield!'
+        });
+    }
+
+    // Example 2: Possession (Short Passing) but Fast Tempo (Rush mistakes)
+    if (tactic.style === 'Possession' && tactic.tempo === 'Fast') {
+        warnings.push({
+            type: 'WARNING',
+            message: 'Possession style works best with slower tempo to retain control.'
+        });
+    }
+
+    // Example 3: Park The Bus with High Line (Suicide)
+    if (tactic.style === 'ParkTheBus' && tactic.defensiveLine === 'High') {
+        warnings.push({
+            type: 'CRITICAL',
+            message: 'Cannot Park the Bus with a High Defensive Line!'
+        });
+    }
+
+    // Example 4: Counter Attack with Slow Tempo
+    if (tactic.style === 'Counter' && tactic.tempo === 'Slow') {
+        warnings.push({
+            type: 'WARNING',
+            message: 'Counter Attacks require Fast Tempo to be effective.'
+        });
+    }
+
+    return warnings;
+};
+
+export const analyzeUserHistory = (
     history: TacticalMatchRecord[],
-    opponentFormation?: string,
-    opponentStyle?: string
-): HistoricalAnalysis {
-    // Filter matches by opponent type if specified
+    formationFilter?: string,
+    styleFilter?: string
+) => {
+    // 1. Filter relevant matches
     let relevantMatches = history;
-
-    if (opponentFormation) {
-        relevantMatches = relevantMatches.filter(m => {
-            const oppTactic = m.isUserHome ? m.awayTactic : m.homeTactic;
-            return oppTactic.formation === opponentFormation;
-        });
+    if (formationFilter) {
+        // Look for matches where OPPONENT used this formation
+        relevantMatches = relevantMatches.filter(m =>
+            (m.isUserHome ? m.awayTactic.formation : m.homeTactic.formation) === formationFilter
+        );
+    }
+    if (styleFilter) {
+        relevantMatches = relevantMatches.filter(m =>
+            (m.isUserHome ? m.awayTactic.style : m.homeTactic.style) === styleFilter
+        );
     }
 
-    if (opponentStyle) {
-        relevantMatches = relevantMatches.filter(m => {
-            const oppTactic = m.isUserHome ? m.awayTactic : m.homeTactic;
-            return oppTactic.style === opponentStyle;
-        });
+    if (relevantMatches.length === 0) {
+        return {
+            bestFormation: null,
+            bestFormationWinRate: 0,
+            bestFormationMatches: 0,
+            bestStyle: null,
+            bestStyleWinRate: 0,
+            bestStyleMatches: 0
+        };
     }
 
-    // Group by user's formation
-    const formationStats: Record<string, { wins: number; total: number; winRate: number }> = {};
-    const styleStats: Record<string, { wins: number; total: number; winRate: number }> = {};
+    // 2. Analyze Performance by USER Tactic used
+    const formationStats: Record<string, { wins: number, total: number }> = {};
+    const styleStats: Record<string, { wins: number, total: number }> = {};
 
-    for (const match of relevantMatches) {
-        const userTactic = match.isUserHome ? match.homeTactic : match.awayTactic;
-        const userFormation = userTactic.formation;
-        const userStyle = userTactic.style || 'Balanced';
+    relevantMatches.forEach(m => {
+        const userTactic = m.isUserHome ? m.homeTactic : m.awayTactic;
+        const userWon = m.userWon;
 
-        // Formation stats
-        if (!formationStats[userFormation]) {
-            formationStats[userFormation] = { wins: 0, total: 0, winRate: 0 };
-        }
-        formationStats[userFormation].total++;
-        if (match.userWon) formationStats[userFormation].wins++;
+        // Formation
+        if (!formationStats[userTactic.formation]) formationStats[userTactic.formation] = { wins: 0, total: 0 };
+        formationStats[userTactic.formation].total++;
+        if (userWon) formationStats[userTactic.formation].wins++;
 
-        // Style stats
-        if (!styleStats[userStyle]) {
-            styleStats[userStyle] = { wins: 0, total: 0, winRate: 0 };
-        }
-        styleStats[userStyle].total++;
-        if (match.userWon) styleStats[userStyle].wins++;
-    }
+        // Style
+        if (!styleStats[userTactic.style]) styleStats[userTactic.style] = { wins: 0, total: 0 };
+        styleStats[userTactic.style].total++;
+        if (userWon) styleStats[userTactic.style].wins++;
+    });
 
-    // Calculate win rates
-    for (const key of Object.keys(formationStats)) {
-        const stat = formationStats[key];
-        stat.winRate = stat.total > 0 ? Math.round((stat.wins / stat.total) * 100) : 0;
-    }
-    for (const key of Object.keys(styleStats)) {
-        const stat = styleStats[key];
-        stat.winRate = stat.total > 0 ? Math.round((stat.wins / stat.total) * 100) : 0;
-    }
+    // 3. Find Best
+    const sortedFormations = Object.entries(formationStats)
+        .map(([key, val]) => ({ key, winRate: (val.wins / val.total) * 100, total: val.total }))
+        .sort((a, b) => b.winRate - a.winRate || b.total - a.total);
 
-    // Find best performing tactics (minimum 3 matches for reliability)
-    let bestFormation: string | null = null;
-    let bestFormationWinRate = 0;
-    let bestFormationMatches = 0;
+    const sortedStyles = Object.entries(styleStats)
+        .map(([key, val]) => ({ key, winRate: (val.wins / val.total) * 100, total: val.total }))
+        .sort((a, b) => b.winRate - a.winRate || b.total - a.total);
 
-    for (const [formation, stat] of Object.entries(formationStats)) {
-        if (stat.total >= 3 && stat.winRate > bestFormationWinRate) {
-            bestFormation = formation;
-            bestFormationWinRate = stat.winRate;
-            bestFormationMatches = stat.total;
-        }
-    }
-
-    let bestStyle: string | null = null;
-    let bestStyleWinRate = 0;
-    let bestStyleMatches = 0;
-
-    for (const [style, stat] of Object.entries(styleStats)) {
-        if (stat.total >= 3 && stat.winRate > bestStyleWinRate) {
-            bestStyle = style;
-            bestStyleWinRate = stat.winRate;
-            bestStyleMatches = stat.total;
-        }
-    }
+    const bestFormationData = sortedFormations[0];
+    const bestStyleData = sortedStyles[0];
 
     return {
-        bestFormation,
-        bestFormationWinRate,
-        bestFormationMatches,
-        bestStyle,
-        bestStyleWinRate,
-        bestStyleMatches,
-        formationStats,
-        styleStats,
-        totalMatches: relevantMatches.length
+        bestFormation: bestFormationData ? bestFormationData.key : null,
+        bestFormationWinRate: bestFormationData ? Math.round(bestFormationData.winRate) : 0,
+        bestFormationMatches: bestFormationData ? bestFormationData.total : 0,
+        bestStyle: bestStyleData ? bestStyleData.key : null,
+        bestStyleWinRate: bestStyleData ? Math.round(bestStyleData.winRate) : 0,
+        bestStyleMatches: bestStyleData ? bestStyleData.total : 0
     };
-}
-
-/**
- * Get overall stats from all matches (not filtered by opponent)
- */
-export function getOverallStats(history: TacticalMatchRecord[]): HistoricalAnalysis {
-    return analyzeUserHistory(history);
-}
+};

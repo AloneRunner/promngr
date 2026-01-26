@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { Player, Team, Translation, Position } from '../types';
-import { ShoppingCart, Filter, DollarSign } from 'lucide-react';
+import { ShoppingCart, Filter, DollarSign, Heart, Search, ChevronDown, ChevronUp } from 'lucide-react';
+
 
 interface TransferMarketProps {
   marketPlayers: Player[];
@@ -20,16 +21,38 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
 }) => {
   const [filterPos, setFilterPos] = useState<string>('ALL');
   const [listFilter, setListFilter] = useState<'ALL' | 'LISTED' | 'UNLISTED' | 'FREE'>('ALL');
+  const [showInterestedOnly, setShowInterestedOnly] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [minAttributes, setMinAttributes] = useState({
+    speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
   const filteredPlayers = marketPlayers.filter(p => {
     const posMatch = filterPos === 'ALL' || p.position === filterPos;
+
+    // Status Filter
     const listMatch = listFilter === 'ALL' ||
       (listFilter === 'LISTED' && p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
       (listFilter === 'UNLISTED' && !p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
       (listFilter === 'FREE' && p.teamId === 'FREE_AGENT');
-    return posMatch && listMatch;
+
+    // Interest Filter (Approximate: Reputation vs Overall)
+    // Formula: Player OVR <= Normalized Rep + 5 (Lenient)
+    const normalizedRep = userTeam.reputation / 100;
+    const interestMatch = !showInterestedOnly || p.teamId === 'FREE_AGENT' || p.overall <= (normalizedRep + 5);
+
+    // Attribute Filter
+    const attrMatch =
+      p.attributes.speed >= minAttributes.speed &&
+      p.attributes.finishing >= minAttributes.finishing &&
+      p.attributes.passing >= minAttributes.passing &&
+      p.attributes.dribbling >= minAttributes.dribbling &&
+      p.attributes.tackling >= minAttributes.tackling;
+
+    return posMatch && listMatch && interestMatch && attrMatch;
   }).sort((a, b) => b.overall - a.overall);
 
   const totalPages = Math.ceil(filteredPlayers.length / itemsPerPage);
@@ -121,6 +144,68 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Advanced Filters & Interest Toggle */}
+      <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          {/* Interest Toggle */}
+          <button
+            onClick={() => setShowInterestedOnly(!showInterestedOnly)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs transition-all border ${showInterestedOnly
+              ? 'bg-emerald-600 border-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+              : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white'
+              }`}
+          >
+            <Heart size={14} className={showInterestedOnly ? 'fill-white' : ''} />
+            {t.interestedOnly || 'Interested Players Only'}
+          </button>
+
+          {/* Advanced Search Toggle */}
+          <button
+            onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs transition-all border ${showAdvancedSearch
+              ? 'bg-blue-600 border-blue-500 text-white'
+              : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white'
+              }`}
+          >
+            <Search size={14} />
+            {t.advancedSearch || 'Has Attribute...'}
+            {showAdvancedSearch ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
+
+        {/* Collapsible Attribute Sliders */}
+        {showAdvancedSearch && (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pt-4 border-t border-white/5 animate-fade-in">
+            {Object.entries({
+              speed: 'SPD', finishing: 'SHT', passing: 'PAS', dribbling: 'DRI', tackling: 'DEF'
+            }).map(([key, label]) => (
+              <div key={key} className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
+                  <span>Min {label}</span>
+                  <span className="text-blue-400">{(minAttributes as any)[key]}</span>
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="99"
+                  value={(minAttributes as any)[key]}
+                  onChange={(e) => setMinAttributes(prev => ({ ...prev, [key]: parseInt(e.target.value) }))}
+                  className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                />
+              </div>
+            ))}
+            <div className="flex items-end">
+              <button
+                onClick={() => setMinAttributes({ speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0 })}
+                className="w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded border border-slate-600 transition-colors"
+              >
+                Reset Attributes
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* List - Premium Table */}

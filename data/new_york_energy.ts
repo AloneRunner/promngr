@@ -1,0 +1,200 @@
+export const NEW_YORK_ENERGY_SQUAD = [
+    {
+        ad: "E. Fersberg",
+        takim: "New York Energy",
+        uyruk: "İsveç",
+        mevki: "MOO",
+        reyting: 79,
+        yas: 32,
+        ana_ozellikler: { hiz: 72, sut: 78, pas: 84, dribbling: 82, defans: 45, fizik: 68 },
+        detaylar: { vizyon: 86, yaraticilik: 84, uzaktan_sut: 80, frikik: 82 },
+        oyun_tarzlari: ["Oyun Kurucu", "Frikikçi"]
+    },
+    {
+        ad: "L. Mergan",
+        takim: "New York Energy",
+        uyruk: "İskoçya",
+        mevki: "SLK",
+        reyting: 76,
+        yas: 27,
+        ana_ozellikler: { hiz: 86, sut: 76, pas: 72, dribbling: 78, defans: 45, fizik: 70 },
+        detaylar: { bitiricilik: 78, sprint: 88 },
+        oyun_tarzlari: ["Golcü Kanat"]
+    },
+    {
+        ad: "C. Coronil",
+        takim: "New York Energy",
+        uyruk: "Brezilya",
+        mevki: "KL",
+        reyting: 75,
+        yas: 27,
+        ana_ozellikler: { hiz: 45, sut: 20, pas: 60, dribbling: 25, defans: 20, fizik: 76 },
+        detaylar: { refleks: 78, ucma: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Tolkinz",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "SLB",
+        reyting: 74,
+        yas: 21,
+        ana_ozellikler: { hiz: 82, sut: 60, pas: 74, dribbling: 76, defans: 68, fizik: 68 },
+        detaylar: { orta_acma: 76, potansiyel: 82, sac_stili: "Moda" },
+        oyun_tarzlari: ["Ofansif Bek"]
+    },
+    {
+        ad: "D. Vanzier",
+        takim: "New York Energy",
+        uyruk: "Belçika",
+        mevki: "SNT",
+        reyting: 74,
+        yas: 26,
+        ana_ozellikler: { hiz: 80, sut: 74, pas: 68, dribbling: 74, defans: 35, fizik: 70 },
+        detaylar: { pozisyon: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "S. Neales",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "STP",
+        reyting: 73,
+        yas: 27,
+        ana_ozellikler: { hiz: 65, sut: 35, pas: 60, dribbling: 55, defans: 74, fizik: 78 },
+        detaylar: { guc: 80, liderlik: 76 },
+        oyun_tarzlari: ["Lider"]
+    },
+    {
+        ad: "A. Reyez",
+        takim: "New York Energy",
+        uyruk: "Kolombiya",
+        mevki: "STP",
+        reyting: 72,
+        yas: 24,
+        ana_ozellikler: { hiz: 74, sut: 35, pas: 60, dribbling: 58, defans: 72, fizik: 76 },
+        detaylar: { agresiflik: 82, hizlanma: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Duncon",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "SĞB",
+        reyting: 72,
+        yas: 28,
+        ana_ozellikler: { hiz: 84, sut: 55, pas: 68, dribbling: 72, defans: 68, fizik: 68 },
+        detaylar: { sprint: 86 },
+        oyun_tarzlari: ["Hızlı Bek"]
+    },
+    {
+        ad: "D. Edelman",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "MDO",
+        reyting: 71,
+        yas: 21,
+        ana_ozellikler: { hiz: 68, sut: 55, pas: 70, dribbling: 68, defans: 72, fizik: 72 },
+        detaylar: { pres: 80, dayaniklilik: 82 },
+        oyun_tarzlari: ["Çalışkan"]
+    },
+    {
+        ad: "F. Amayo",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 72, sut: 65, pas: 74, dribbling: 74, defans: 60, fizik: 65 },
+        detaylar: { pas: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "E. Manoel",
+        takim: "New York Energy",
+        uyruk: "Brezilya",
+        mevki: "SNT",
+        reyting: 70,
+        yas: 22,
+        ana_ozellikler: { hiz: 82, sut: 70, pas: 60, dribbling: 72, defans: 30, fizik: 72 },
+        detaylar: { guc: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Stroude",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 70,
+        yas: 22,
+        ana_ozellikler: { hiz: 76, sut: 60, pas: 70, dribbling: 72, defans: 55, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "N. Eilo",
+        takim: "New York Energy",
+        uyruk: "İsveç",
+        mevki: "STP",
+        reyting: 71,
+        yas: 21,
+        ana_ozellikler: { hiz: 65, sut: 35, pas: 65, dribbling: 60, defans: 70, fizik: 76 },
+        detaylar: { top_kesme: 72 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Herper",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "SĞK",
+        reyting: 69,
+        yas: 22,
+        ana_ozellikler: { hiz: 80, sut: 62, pas: 65, dribbling: 70, defans: 45, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "R. Mearo",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "KL",
+        reyting: 68,
+        yas: 33,
+        ana_ozellikler: { hiz: 35, sut: 20, pas: 55, dribbling: 20, defans: 20, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "W. Carmono",
+        takim: "New York Energy",
+        uyruk: "Venezuela",
+        mevki: "MOO",
+        reyting: 69,
+        yas: 21,
+        ana_ozellikler: { hiz: 74, sut: 65, pas: 70, dribbling: 72, defans: 40, fizik: 60 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Halle",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "SNT",
+        reyting: 65,
+        yas: 16,
+        ana_ozellikler: { hiz: 76, sut: 65, pas: 60, dribbling: 68, defans: 25, fizik: 55 },
+        detaylar: { potansiyel: 85 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "D. Neales",
+        takim: "New York Energy",
+        uyruk: "ABD",
+        mevki: "SĞB",
+        reyting: 68,
+        yas: 25,
+        ana_ozellikler: { hiz: 72, sut: 45, pas: 62, dribbling: 65, defans: 68, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

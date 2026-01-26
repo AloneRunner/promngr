@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Team, Player, Translation, LeagueHistoryEntry } from '../types';
+import { LEAGUE_PRESETS } from '../constants';
 import { Trophy, Target, Award, Crown, History, Eye } from 'lucide-react';
 
 interface LeagueTableProps {
@@ -77,16 +78,21 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
         return 'bg-slate-700 text-slate-400';
     }
 
-    const leagues = [
-        { id: 'tr', name: '🇹🇷 Süper Lig' },
-        { id: 'en', name: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League' },
-        { id: 'es', name: '🇪🇸 La Liga' },
-        { id: 'it', name: '🇮🇹 Serie A' },
-        { id: 'fr', name: '🇫🇷 Ligue 1' },
-        { id: 'de', name: '🇩🇪 Bundesliga' },
-        { id: 'ar', name: '🇦🇷 Liga Profesional' },
-        { id: 'br', name: '🇧🇷 Série A' },
-    ];
+    // Flag mapping for all 24 leagues
+    const getFlag = (id: string) => {
+        const flags: Record<string, string> = {
+            'tr': '🇹🇷', 'en': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'es': '🇪🇸', 'it': '🇮🇹', 'fr': '🇫🇷', 'de': '🇩🇪',
+            'ar': '🇦🇷', 'br': '🇧🇷', 'us': '🇺🇸', 'mx': '🇲🇽', 'sa': '🇸🇦', 'eg': '🇪🇬',
+            'jp': '🇯🇵', 'kr': '🇰🇷', 'au': '🇦🇺', 'za': '🇿🇦', 'ma': '🇲🇦', 'car': '🇯🇲',
+            'co': '🇨🇴', 'cl': '🇨🇱', 'uy': '🇺🇾', 'tn': '🇹🇳', 'cr': '🇨🇷', 'in': '🇮🇳'
+        };
+        return flags[id] || '🏳️';
+    };
+
+    const leagues = LEAGUE_PRESETS.map(preset => ({
+        id: preset.id,
+        name: `${getFlag(preset.id)} ${preset.name}`
+    }));
 
     return (
         <div className="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700 animate-fade-in min-h-[500px]">

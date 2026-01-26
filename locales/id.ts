@@ -674,4 +674,178 @@
     update200Item6Desc: "Poin liga dinamis! -20% per tahun jika tidak juara. Sulit bertahan di puncak.",
     update200Item7Title: "Perbaikan Piala Super",
     update200Item7Desc: "Piala Super kini dimainkan di waktu yang tepat setelah final piala.",
+
+    // --- PANDUAN AHLI (Deep Dive) ---
+    guideDeepTrainingTitle: "AHLI: Matematika Pengembangan",
+    guideDeepTrainingContent: `Rumus nyata dari mesin game:
+1. Faktor Usia:
+• < 21 Tahun: Peluang 5% (Sangat Cepat)
+• 21-24 Tahun: Peluang 3% (Normal)
+• 24-28 Tahun: Peluang 1% (Lambat)
+• 28+ Tahun: Pengembangan BERHENTI. Hanya menjaga kondisi.
+• 32+ Tahun: 5% peluang penurunan mingguan.
+
+2. Dampak Fasilitas:
+• Pusat Latihan: +0.5% peluang per level.
+• Pelatih Kepala: +0.8% bonus per level.
+• CONTOH: Pemain 18 tahun + Level 10 Fasilitas + Level 5 Pelatih = 15% peluang mingguan!
+
+3. Kelelahan (Kondisi):
+• Kondisi < 60%: Efisiensi SETENGAH.
+• Kondisi < 30%: Pemain tidak berlatih, istirahat.`,
+
+    guideDeepFacilitiesTitle: "AHLI: Analisis ROI",
+    guideDeepFacilitiesContent: `Cara tumbuh tanpa bangkrut:
+1. Pemeliharaan (Biaya Tersembunyi):
+• Rumus: (Level ^ 1.3) x 2000 €
+• Stadion Level 15: ~70,000 €/minggu!
+• TIPS: Jangan upgrade kecuali pendapatan mendukung.
+
+2. Matematika Stadion:
+• Setiap kursi menghasilkan ~15 €.
+• +2000 Kapasitas (1 Upgrade) = +30,000 €/minggu Pendapatan Ekstra.
+• ROI: Butuh ~100 minggu (2 musim) untuk balik modal.
+• KESIMPULAN: Stadion adalah investasi jangka panjang.
+
+3. Akademi vs Scout:
+• Akademi Level 10: 5% peluang/minggu dapat junior biasa (50-60 OVR).
+• Scout Level 10: 10% peluang/minggu dapat BAKAT (65-80 Potensi).
+• TIPS: Investasi di Scout dulu. Anda bisa jual temuannya jutaan!`,
+
+    guideDeepMoraleTitle: "AHLI: Matematika Moral",
+    guideDeepMoraleContent: `Moral menentukan IQ di lapangan.
+1. Bagaimana turun:
+• Bintang Cadangan: Jika OVR > 75 dan tak main -> -3 Moral/minggu.
+• Cadangan: Jika OVR 65-75 -> -1 Moral/minggu.
+• Pemuda: Stabil meski tak main.
+
+2. Efek di Pertandingan (Kritis):
+• 80-100 Moral: 110% Performa.
+• 0-20 Moral: Gagal gol mudah. Kiper blunder.
+• TIPS: Jangan pasang bintang tak bahagia di derbi. Jual saja.`,
+
+    guideDeepTransferTitle: "AHLI: Rahasia Negosiasi",
+    guideDeepTransferContent: `Cara meyakinkan AI?
+1. Skor "Keinginan" (>50 dibutuhkan):
+• Beda Liga: PL vs TR kecil (Maks -7 Poin).
+• Reputasi: Tiap selisih 75 = +1 Poin.
+• Liga Champions: Bonus tak langsung via reputasi.
+
+2. Uang Berbicara (Pengali Gaji):
+• Tawaran 1.5x: +25 Poin.
+• Tawaran 2.0x: +50 Poin (EFEK MAKS).
+• PERINGATAN: Menawar 3.0x TIDAK memberi bonus lebih dari 2.0x!
+
+3. Taktik Jual:
+• Pemain terdaftar: AI tawar 100-150% nilai.
+• Tak terdaftar: AI harus bayar premium 120-170%.`,
+
+    guideDeepFinanceTitle: "AHLI: Trik Keuangan",
+    guideDeepFinanceContent: `Jalan pintas legal anggaran:
+1. Farming (Ternak Pemain):
+• Rekrut Agen Bebas 16-19 tahun (Gaji 25-50k).
+• Latih 10 minggu -> Masukkan daftar transfer.
+• Untung bersih meski dijual murah.
+
+2. Taruhan Sponsor:
+• Yakin juara? Pilih "Berisiko" (Bonus besar).
+• Papan tengah? Pilih "Dijamin" (Aman).`,
+
+    guideDeepPassTitle: "AHLI: Operan & Lebar",
+    guideDeepPassContent: `1. Gaya Operan
+A. Operan Pendek (Short)
+"Penguasaan bola, santai."
+• Mesin: Keputusan oper +30 jika teman <15m.
+• Penalti Jauh: Kurang minat oper jauh.
+• Tanpa Risiko: Dribel -10. Main aman.
+
+B. Operan Langsung (Direct)
+"Ke depan, ke gawang!" Gaya Premier League.
+• Mesin: Operan lambung dan crossing +20.
+• Kebebasan: Tembakan (+15) dan Dribel (+10) naik. Percaya bakat.
+• Penalti Samping: Operan samping -10. Anti main bosan.
+
+2. Lebar (Width)
+A. Sempit (Narrow)
+"Terobos lewat tengah."
+• Efek: Bonus oper/dribel di tengah. Cari one-two.
+• Ideal: 4-1-2-1-2 (Diamond).
+
+B. Lebar (Wide)
+"Ke garis tepi dan crossing."
+• Efek: Hasrat dribel di sayap +20! Cari garis tepi.`,
+
+    guideDeepTempoTitle: "AHLI: Tempo & Pertahanan",
+    guideDeepTempoContent: `1. Tempo (Kecepatan Main)
+A. Lambat - "Catur"
+• Waktu Keputusan: x1.4 (Berpikir lebih lama).
+• Kesalahan: Turun. Kehilangan bola jarang.
+• Lawan: Punya waktu mengatur posisi.
+
+B. Cepat - "Kekacauan"
+• Waktu Keputusan: x0.7 (Operan panik).
+• Kesalahan: Tinggi.
+• Efek: Mencekik lawan dengan tempo.
+
+2. Garis Pertahanan
+A. Dalam (Deep) - "Tembok"
+• Posisi: 20-30m dari gawang.
+• Plus: Tidak kena bola atas (Mbappe pun tak bisa lari).
+• Minus: Memberikan lini tengah ke lawan.
+
+B. Tinggi (High) - "Perangkap Offside"
+• Posisi: Dekat garis tengah.
+• Plus: Mengurung lawan.
+• Minus: Bola panjang = Gol 90%.`,
+
+    guideDeepComboTitle: "Combo Mematikan",
+    guideDeepComboContent: `Kombinasi dari kode sumber:
+
+"Master Tiki-Taka":
+• Gaya: Possession
+• Operan: Short
+• Lebar: Narrow
+• Hasil: Lawan tak sentuh bola, tapi bisa 0-0. Sabar.
+
+"Sepak Bola Kekacauan (Gaya Klopp)":
+• Gaya: High Press
+• Operan: Direct
+• Lebar: Wide
+• Hasil: 4-3. Siapapun menang, seru ditonton.
+
+"Tembok Italia (Catenaccio)":
+• Gaya: Counter Attack
+• Operan: Direct
+• Lebar: Narrow (Tutup tengah)
+• Hasil: Menang 1-0, cetak gol dan tidur.`,
+
+    // --- v3.2 UPDATE & STYLES ---
+    update320Title: "Panduan Ahli & Pembunuh Raksasa",
+    update320Item1Title: "Sistem Pembunuh Raksasa",
+    update320Item1Desc: "Tim lemah kini dapat hadiah besar! Mengalahkan tim liga lebih tinggi meningkatkan reputasi hingga 3.5x.",
+    update320Item2Title: "Panduan Game Ahli",
+    update320Item2Desc: "Panduan ditulis ulang sepenuhnya. Mengungkap rumus matematika asli (Peluang latihan, persentase transfer).",
+    update320Item3Title: "Logika Transfer V3",
+    update320Item3Desc: "Dampak penawaran gaji diperbaiki (1.5x, 2.0x). Penalti prestise liga dioptimalkan.",
+    update320Item4Title: "Kedalaman Taktik",
+    update320Item4Desc: "Menambahkan analisis mendalam tentang Tempo, Lebar, dan Operan ke panduan.",
+
+    // Tactical Styles
+    styleLabel: "Gaya Bermain",
+    styleBalanced: "Seimbang",
+    stylePossession: "Penguasaan (Tiki-Taka)",
+    styleCounter: "Serangan Balik",
+    styleHighPress: "Tekanan Tinggi (Gegenpress)",
+    styleParkTheBus: "Parkir Bus (Pertahanan Total)",
+
+    // --- v3.2.1 UPDATE ---
+    update321Title: "Pendapatan Dinamis dan Sistem Koefisien",
+    update321Item1Title: "Sistem Koefisien 5 Tahun",
+    update321Item1Desc: "Sistem koefisien gaya UEFA ditambahkan. Lihat 5 tahun terakhir setiap liga di layar Peringkat Dunia.",
+    update321Item2Title: "Hak Siar TV Dinamis",
+    update321Item2Desc: "Pendapatan TV kini berubah berdasarkan koefisien liga. Jika Turki mendominasi dunia, hak TV bisa 2x lipat!",
+    update321Item3Title: "Harga Tiket Dinamis",
+    update321Item3Desc: "Harga tiket juga naik dengan kesuksesan liga. Liga sukses = Lebih banyak minat = Tiket lebih mahal.",
+    update321Item4Title: "Perlindungan Juara",
+    update321Item4Desc: "Reputasi juara liga TIDAK PERNAH turun. Juara = Minimum +200 reputasi terjamin."
 };

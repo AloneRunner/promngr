@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './constants';
-import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, TacticalChange } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateEuropeanCupMatch, simulateAIEuropeanCupMatches, generateNextRound, calculateMatchAttendance, initializeEngine, getEngineState } from './services/engine';
+import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, TacticalChange } from './types';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateMatchAttendance, initializeEngine, getEngineState } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -27,10 +27,11 @@ import { UpdatesModal } from './components/UpdatesModal';
 import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
+import { TacticalAnalysis } from './components/TacticalAnalysis';
 import { Layout } from './components/Layout';
 
 import { TRANSLATIONS, LEAGUE_PRESETS } from './constants';
-import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info } from 'lucide-react';
+import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock } from 'lucide-react';
 import { adMobService } from './services/adMobService';
 
 const uuid = () => Math.random().toString(36).substring(2, 15);
@@ -206,6 +207,7 @@ const App: React.FC = () => {
     const [showUpdates, setShowUpdates] = useState(false);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
+    const [showTacticalAnalysis, setShowTacticalAnalysis] = useState(false);
 
     const t = TRANSLATIONS[lang];
 
@@ -217,7 +219,8 @@ const App: React.FC = () => {
             return homeTeam?.leagueId === gameState.leagueId;
         });
         if (userLeagueMatches.length === 0) return 38;
-        return Math.max(...userLeagueMatches.map(m => m.week));
+        const leagueMax = Math.max(...userLeagueMatches.map(m => m.week));
+        return Math.max(38, leagueMax); // Force global calendar (38 weeks)
     }, [gameState]);
 
     // 📱 Initialize AdMob on mount
@@ -401,40 +404,30 @@ const App: React.FC = () => {
         let newState = { ...gameState, userTeamId: teamId };
 
         // Async Generate European Competitions (only for NEW games)
-        import('./services/engine').then(({ generateChampionsLeague, generateEuropaLeague }) => {
-            // 1. Generate Elite Cup
-            const clStart = generateChampionsLeague({ ...newState, userTeamId: teamId });
+        // Async Generate European Competitions (only for NEW games)
+        import('./services/engine').then(({ generateGlobalCup }) => {
+            // 1. Generate Global Cup (World Championship)
+            const globalCup = generateGlobalCup({ ...newState, userTeamId: teamId });
 
-            // 2. Generate Challenge Cup (Pass Elite Cup state so Challenge Cup knows who is already taken)
-            // Store CL in temp state to be read by EL generator if needed, or EL generator filters itself
-            const elStart = generateEuropaLeague({ ...newState, userTeamId: teamId, europeanCup: clStart });
-
-            // Check where the user ended up
-            const inCL = clStart.qualifiedTeamIds.includes(teamId);
-            const inEL = elStart.qualifiedTeamIds.includes(teamId);
+            // Check if the user qualified
+            // Global Cup uses 'qualifiedTeamIds'
+            const inGlobalCup = globalCup.qualifiedTeamIds.includes(teamId);
 
             const newMessages = [...newState.messages];
 
-            if (inCL) {
+            if (inGlobalCup) {
                 newMessages.push({
                     id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: `🏆 ${t.championsLeague} Daveti!`,
-                    body: `${selectedTeam?.name} olarak ${t.championsLeague}'ne katılmaya hak kazandınız!`,
-                    isRead: false, date: new Date().toISOString()
-                });
-            } else if (inEL) {
-                newMessages.push({
-                    id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: '⚽ UEFA Avrupa Ligi Daveti!',
-                    body: `${selectedTeam?.name} olarak UEFA Avrupa Ligi'ne katılmaya hak kazandınız!`,
+                    subject: `🌍 Global Cup Daveti!`,
+                    body: `${selectedTeam?.name} olarak Dünya Şampiyonası'na (Global Cup) katılmaya hak kazandınız!`,
                     isRead: false, date: new Date().toISOString()
                 });
             }
 
             newState = {
                 ...newState,
-                europeanCup: clStart,
-                europaLeague: elStart, // NEW
+                europeanCup: globalCup, // GlobalCup is stored in europeanCup field for now
+                europaLeague: undefined, // Deprecated
                 messages: newMessages
             };
 
@@ -551,8 +544,9 @@ const App: React.FC = () => {
     const handleQuickDerbyStart = () => {
         if (!gameState || !derbyHomeId || !derbyAwayId) return;
         if (derbyHomeId === derbyAwayId) {
-            alert("Please select different teams.");
-            return;
+            // Allow same team friendlies if explicitly desired (User Request)
+            // alert("Please select different teams.");
+            // return;
         }
 
         const homeTeam = gameState.teams.find(team => team.id === derbyHomeId);
@@ -629,82 +623,12 @@ const App: React.FC = () => {
     };
 
     // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========
-    // Exposed to window for user to manually verify tactical impacts
     const runTacticalAnalysis = async () => {
-        if (!gameState || !gameState.teams.length) return;
-
-        console.log("🚀 STARTING TACTICAL ANALYSIS...");
-        // Clone teams to not affect game state
-        const teamA = JSON.parse(JSON.stringify(gameState.teams[0])); // One team
-        const teamB = JSON.parse(JSON.stringify(gameState.teams[1])); // Another team
-
-        // Find players for these teams
-        const playersA = gameState.players.filter(p => p.teamId === teamA.id);
-        const playersB = gameState.players.filter(p => p.teamId === teamB.id);
-
-        const simulateScenario = (scenarioName: string, setupFn: () => void) => {
-            let winsA = 0, winsB = 0, draws = 0;
-            let goalsA = 0, goalsB = 0;
-
-            // Apply tactic changes
-            setupFn();
-
-            for (let i = 0; i < 200; i++) { // 200 matches per scenario
-                const match: any = {
-                    id: 'sim_' + i, homeTeamId: teamA.id, awayTeamId: teamB.id,
-                    homeScore: 0, awayScore: 0, events: [], stats: {}, isPlayed: false,
-                    currentMinute: 0 // Reset minute
-                };
-
-                // Reset stats/form/morale that might affect result
-                teamA.recentForm = []; teamB.recentForm = [];
-
-                // Simulate
-                const result = simulateFullMatch(match, teamA, teamB, playersA, playersB);
-
-                goalsA += result.homeScore;
-                goalsB += result.awayScore;
-                if (result.homeScore > result.awayScore) winsA++;
-                else if (result.awayScore > result.homeScore) winsB++;
-                else draws++;
-            }
-            console.log(`📊 SCENARIO: ${scenarioName}`);
-            console.log(`   ${teamA.name} vs ${teamB.name}`);
-            console.log(`   Wins A: ${winsA} (${((winsA / 200) * 100).toFixed(1)}%) | Wins B: ${winsB} (${((winsB / 200) * 100).toFixed(1)}%) | Draws: ${draws}`);
-            console.log(`   Avg Score: ${(goalsA / 200).toFixed(2)} - ${(goalsB / 200).toFixed(2)}`);
-            console.log("-------------------------------------------------");
-        };
-
-        // 1. BASELINE
-        simulateScenario("BASELINE (Both Balanced 4-3-3)", () => {
-            teamA.tactic = { ...teamA.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
-            teamB.tactic = { ...teamB.tactic, formation: '4-3-3', style: 'Balanced', mentality: 'Balanced', tempo: 'Normal', width: 'Balanced' };
-        });
-
-        // 2. TEMPO
-        simulateScenario("TEMPO: A=Fast, B=Slow", () => {
-            teamA.tactic.tempo = 'Fast';
-            teamB.tactic.tempo = 'Slow';
-        });
-
-        // 3. WIDTH
-        simulateScenario("WIDTH: A=Wide, B=Narrow", () => {
-            teamA.tactic.width = 'Wide';
-            teamB.tactic.width = 'Narrow';
-        });
-
-        // 4. STYLE (Possession vs HighPress) - SHOULD HAVE EFFECT
-        simulateScenario("STYLE: A=Possession, B=HighPress (Rock-Paper-Scissors Check)", () => {
-            teamA.tactic.style = 'Possession';
-            teamB.tactic.style = 'HighPress';
-        });
-
-        // 5. FORMATION
-        simulateScenario("FORMATION: A=4-3-3, B=5-3-2", () => {
-            teamA.tactic.formation = '4-3-3';
-            teamB.tactic.formation = '5-3-2';
-        });
+        setShowTacticalAnalysis(true);
     };
+
+    // Expose to window for manual triggering if needed
+    (window as any).runTacticalAnalysis = runTacticalAnalysis;
 
     // Always expose to window
     (window as any).runTacticalAnalysis = runTacticalAnalysis;
@@ -941,12 +865,23 @@ const App: React.FC = () => {
         let redCardedIds = new Set<string>();
         if (activeMatchId && view === 'match') {
             // Find the active match to get events
-            let activeMatch = gameState.matches.find(m => m.id === activeMatchId);
+            let activeMatch: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
+
+            // Check Cups (Groups & Knockout)
             if (!activeMatch && gameState.europeanCup) {
-                activeMatch = gameState.europeanCup.matches.find(m => m.id === activeMatchId);
-            }
-            if (!activeMatch && gameState.europaLeague) {
-                activeMatch = gameState.europaLeague.matches.find(m => m.id === activeMatchId);
+                // Check Knockouts
+                activeMatch = gameState.europeanCup.knockoutMatches?.find((m: GlobalCupMatch) => m.id === activeMatchId) as unknown as Match;
+
+                // Check Groups
+                if (!activeMatch && gameState.europeanCup.groups) {
+                    for (const group of gameState.europeanCup.groups) {
+                        const m = group.matches.find(m => m.id === activeMatchId);
+                        if (m) {
+                            activeMatch = m as unknown as Match;
+                            break;
+                        }
+                    }
+                }
             }
             if (activeMatch) {
                 activeMatch.events.forEach(ev => {
@@ -964,9 +899,14 @@ const App: React.FC = () => {
                 if (liveStamina !== undefined) {
                     p.condition = liveStamina;
                 }
-                // Mark substituted out OR red-carded players as "injured" for lineup purposes
+                // CRITICAL FIX: Get players who were INJURED during this match (Live events)
+                const isInjuredInMatch = activeMatch?.events.some(ev =>
+                    ev.type === MatchEventType.INJURY && ev.playerId === p.id
+                );
+
+                // Mark substituted out OR red-carded OR injured players as "injured" for lineup purposes
                 // This prevents autoPickLineup from selecting them
-                if (substitutedOutIds.has(p.id) || redCardedIds.has(p.id)) {
+                if (substitutedOutIds.has(p.id) || redCardedIds.has(p.id) || isInjuredInMatch) {
                     p.weeksInjured = 99; // Temporary flag to exclude from selection
                 }
             });
@@ -994,12 +934,23 @@ const App: React.FC = () => {
 
         if (activeMatchId && view === 'match' && gameState) {
             // Find match in league OR European cups
+            // Find match in league OR European cups
+            // FIX: Correctly finding match in Groups/Knockouts
             let match: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
+
             if (!match && gameState.europeanCup) {
-                match = gameState.europeanCup.matches.find(m => m.id === activeMatchId) as any;
-            }
-            if (!match && gameState.europaLeague) {
-                match = gameState.europaLeague.matches.find(m => m.id === activeMatchId) as any;
+                // Check Knockouts
+                match = gameState.europeanCup.knockoutMatches?.find((m: GlobalCupMatch) => m.id === activeMatchId) as unknown as Match;
+                // Check Groups
+                if (!match && gameState.europeanCup.groups) {
+                    for (const group of gameState.europeanCup.groups) {
+                        const m = group.matches.find(m => m.id === activeMatchId);
+                        if (m) {
+                            match = m as unknown as Match;
+                            break;
+                        }
+                    }
+                }
             }
 
             if (match) {
@@ -1105,6 +1056,40 @@ const App: React.FC = () => {
         }
     };
 
+    const handleDowngradeFacility = (type: 'stadium' | 'training' | 'academy') => {
+        if (!gameState) return;
+        const currentTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+        if (!currentTeam) return;
+
+        // Demolition/Restructuring cost: €50,000 flat fee
+        const cost = 50000;
+
+        if (currentTeam.budget < cost) {
+            alert(t.notEnoughFunds);
+            return;
+        }
+
+        const updatedTeams = gameState.teams.map(t => {
+            if (t.id === gameState.userTeamId) {
+                const newFacilities = { ...t.facilities };
+
+                if (type === 'stadium' && newFacilities.stadiumLevel > 1) {
+                    newFacilities.stadiumLevel -= 1;
+                    newFacilities.stadiumCapacity -= 2500; // Lose capacity
+                } else if (type === 'training' && newFacilities.trainingLevel > 1) {
+                    newFacilities.trainingLevel -= 1;
+                } else if (type === 'academy' && newFacilities.academyLevel > 1) {
+                    newFacilities.academyLevel -= 1;
+                }
+
+                return { ...t, facilities: newFacilities, budget: t.budget - cost };
+            }
+            return t;
+        });
+
+        setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
+    };
+
     const handleAcceptOffer = (offerId: string) => {
         if (!gameState) return;
         const offer = gameState.pendingOffers?.find(o => o.id === offerId);
@@ -1128,7 +1113,7 @@ const App: React.FC = () => {
         // Execute transfer
         const updatedPlayers = gameState.players.map(p => {
             if (p.id === offer.playerId) {
-                return { ...p, teamId: offer.toTeamId, isTransferListed: false, lineup: 'RESERVE' as const, lineupIndex: 99 };
+                return { ...p, teamId: offer.toTeamId, isTransferListed: false, lineup: 'RESERVE' as const, lineupIndex: 99, lastTransferWeek: gameState.currentWeek };
             }
             return p;
         });
@@ -1311,13 +1296,74 @@ const App: React.FC = () => {
 
                 if (updateMatchInList(newMatches)) {
                     return { ...prev, matches: newMatches };
-                } else if (newEuropeanCup && updateMatchInList(newEuropeanCup.matches, true, true)) {
-                    // Elite Cup: isEuropean=true, isChampionsLeague=true
-                    return { ...prev, europeanCup: newEuropeanCup };
-                } else if (newEuropaLeague && updateMatchInList(newEuropaLeague.matches, true, false)) {
-                    // Challenge Cup: isEuropean=true, isChampionsLeague=false
-                    return { ...prev, europaLeague: newEuropaLeague };
-                } else if (prev.superCup && prev.superCup.match && prev.superCup.match.id === match.id) {
+                } else if (newEuropeanCup) {
+                    // Flatten cup matches for update lookups
+                    const groupMatches = newEuropeanCup.groups?.flatMap(g => g.matches) || [];
+                    const knockoutMatches = newEuropeanCup.knockoutMatches || [];
+
+                    // Try updating in groups first (by reference since we copied the top object but not deep array)
+                    // Actually, since we need to update the state immutably deeply, this helper is slightly tricky.
+                    // But 'updateMatchInList' mutates the array passed to it.
+                    // The array 'groupMatches' is a brand new array created by flatMap, so mutating it WON'T work for groups.
+                    // We need a specific strategy for groups.
+
+                    // Let's create a custom updater for the cup structure
+                    let matchFound = false;
+                    let updatedGroups = newEuropeanCup.groups ? [...newEuropeanCup.groups] : [];
+                    let updatedKnockout = newEuropeanCup.knockoutMatches ? [...newEuropeanCup.knockoutMatches] : [];
+
+                    // check groups
+                    updatedGroups = updatedGroups.map(group => {
+                        const groupMatchIndex = group.matches.findIndex(m => m.id === match.id);
+                        if (groupMatchIndex !== -1) {
+                            const matches = [...group.matches];
+                            if (updateMatchInList(matches, true, true)) {
+                                matchFound = true;
+                                return { ...group, matches };
+                            }
+                        }
+                        return group;
+                    });
+
+                    if (matchFound) {
+                        return { ...prev, europeanCup: { ...newEuropeanCup, groups: updatedGroups } };
+                    }
+
+                    // check knockout
+                    if (updateMatchInList(updatedKnockout, true, true)) {
+                        return { ...prev, europeanCup: { ...newEuropeanCup, knockoutMatches: updatedKnockout } };
+                    }
+                }
+
+                // Same logical fix for Europa League (if needed, but user mentioned Elite Cup mostly)
+                if (newEuropaLeague) {
+                    let matchFound = false;
+                    let updatedGroups = newEuropaLeague.groups ? [...newEuropaLeague.groups] : [];
+                    let updatedKnockout = newEuropaLeague.knockoutMatches ? [...newEuropaLeague.knockoutMatches] : [];
+
+                    // check groups
+                    updatedGroups = updatedGroups.map(group => {
+                        const groupMatchIndex = group.matches.findIndex(m => m.id === match.id);
+                        if (groupMatchIndex !== -1) {
+                            const matches = [...group.matches];
+                            if (updateMatchInList(matches, true, false)) {
+                                matchFound = true;
+                                return { ...group, matches };
+                            }
+                        }
+                        return group;
+                    });
+
+                    if (matchFound) {
+                        return { ...prev, europaLeague: { ...newEuropaLeague, groups: updatedGroups } };
+                    }
+
+                    if (updateMatchInList(updatedKnockout, true, false)) {
+                        return { ...prev, europaLeague: { ...newEuropaLeague, knockoutMatches: updatedKnockout } };
+                    }
+                }
+
+                if (prev.superCup && prev.superCup.match && prev.superCup.match.id === match.id) {
                     // === SUPER CUP FIX (Prevent Freeze) ===
                     const calculatedAttendance = calculateMatchAttendance(homeTeam, awayTeam, {
                         isDerby: false,
@@ -1363,7 +1409,8 @@ const App: React.FC = () => {
         // Ensure other leagues (like La Liga with 38 weeks) finish even if user (Super Lig 34 weeks) finishes early.
         let tempState = { ...gameState };
         const allMatches = tempState.matches;
-        const lastWeek = Math.max(...allMatches.map(m => m.week));
+        // Ensure we simulate until Global Cup finals (Week 38)
+        const lastWeek = Math.max(38, ...allMatches.map(m => m.week));
 
         if (tempState.currentWeek <= lastWeek) {
             let simulated = false;
@@ -1399,10 +1446,11 @@ const App: React.FC = () => {
         const { newState } = processSeasonEnd(gameState);
 
         // Generate European competitions for new season
-        const { generateChampionsLeague, generateEuropaLeague } = await import('./services/engine');
+        // Generate European competitions for new season (Global Cup)
+        const { generateEuropeanCup } = await import('./services/engine');
 
-        const cl = generateChampionsLeague(newState);
-        const el = generateEuropaLeague({ ...newState, europeanCup: cl });
+        const cl = generateEuropeanCup(newState);
+        const el = undefined; // Deprecated
 
         const finalState = {
             ...newState,
@@ -1412,16 +1460,12 @@ const App: React.FC = () => {
 
         // Check if user qualified for cups
         const userInCL = cl.qualifiedTeamIds.includes(newState.userTeamId);
-        const userInEL = el.qualifiedTeamIds.includes(newState.userTeamId);
 
         let cupSubject = '';
         let cupMessage = '';
         if (userInCL) {
-            cupSubject = `🏆 ${t.championsLeague} Daveti!`;
-            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda ${t.championsLeague}'ne katılmaya hak kazandınız!`;
-        } else if (userInEL) {
-            cupSubject = `⚽ ${t.uefaCup} Daveti!`;
-            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda ${t.uefaCup}'na katılmaya hak kazandınız!`;
+            cupSubject = `🏆 Global Cup Daveti!`;
+            cupMessage = `Tebrikler! ${newState.userTeamId ? newState.teams.find(t => t.id === newState.userTeamId)?.name : 'Takımınız'} olarak yeni sezonda Global Cup'a katılmaya hak kazandınız!`;
         }
 
         if (cupMessage) {
@@ -1484,7 +1528,8 @@ const App: React.FC = () => {
                     lineup: 'RESERVE' as const,
                     lineupIndex: 99,
                     contractYears: 3,
-                    jerseyNumber: newJerseyNumber
+                    jerseyNumber: newJerseyNumber,
+                    lastTransferWeek: gameState.currentWeek // FIX: Set transfer week
                 };
             }
             return p;
@@ -1656,9 +1701,25 @@ const App: React.FC = () => {
         });
 
         // FIX: Sync engine lineups to prevent ghost player bug
+        // FIX: Sync engine lineups to prevent ghost player bug
         let currentMatch: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
-        if (!currentMatch && gameState.europeanCup) currentMatch = gameState.europeanCup.matches.find(m => m.id === activeMatchId);
-        if (!currentMatch && gameState.europaLeague) currentMatch = gameState.europaLeague.matches.find(m => m.id === activeMatchId);
+
+        // Check Cups if not found
+        if (!currentMatch && gameState.europeanCup) {
+            // Check Knockouts
+            currentMatch = gameState.europeanCup.knockoutMatches?.find((m: GlobalCupMatch) => m.id === activeMatchId) as unknown as Match;
+
+            // Check Groups
+            if (!currentMatch && gameState.europeanCup.groups) {
+                for (const group of gameState.europeanCup.groups) {
+                    const m = group.matches.find(m => m.id === activeMatchId);
+                    if (m) {
+                        currentMatch = m as unknown as Match;
+                        break;
+                    }
+                }
+            }
+        }
 
         // ADD SUB EVENT DIRECTLY TO MATCH for immediate notification
         // This ensures toast shows even when match is paused
@@ -1690,18 +1751,30 @@ const App: React.FC = () => {
                 newState.matches = updateMatchEvents(newState.matches);
 
                 // Update in European Cup matches if applicable
+                // Update in European Cup matches if applicable (Global Cup)
                 if (newState.europeanCup) {
+                    const cup = newState.europeanCup;
+                    let updatedGroups = cup.groups;
+                    let updatedKnockouts = cup.knockoutMatches;
+
+                    if (updatedGroups) {
+                        updatedGroups = updatedGroups.map(g => ({
+                            ...g,
+                            matches: updateMatchEvents(g.matches as unknown as Match[]) as unknown as GlobalCupMatch[]
+                        }));
+                    }
+                    if (updatedKnockouts) {
+                        updatedKnockouts = updateMatchEvents(updatedKnockouts as unknown as Match[]) as unknown as GlobalCupMatch[];
+                    }
+
                     newState.europeanCup = {
-                        ...newState.europeanCup,
-                        matches: updateMatchEvents(newState.europeanCup.matches) as any
+                        ...cup,
+                        groups: updatedGroups,
+                        knockoutMatches: updatedKnockouts
                     };
                 }
-                if (newState.europaLeague) {
-                    newState.europaLeague = {
-                        ...newState.europaLeague,
-                        matches: updateMatchEvents(newState.europaLeague.matches) as any
-                    };
-                }
+
+                // Europa League Deprecated - removed
 
                 return newState;
             });
@@ -1718,40 +1791,54 @@ const App: React.FC = () => {
         let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
         let isCupMatch = false;
         let cupType: 'europeanCup' | 'europaLeague' | 'superCup' | null = null;
+        let cupMatch: Match | undefined;
 
         // Search in Cups if not in League
         if (matchIndex === -1) {
+            // Check Global Cup (Groups & Knockout)
             if (prevState.europeanCup) {
-                matchIndex = prevState.europeanCup.matches.findIndex(m => m.id === matchId);
-                if (matchIndex !== -1) {
-                    isCupMatch = true;
-                    cupType = 'europeanCup';
+                // Check Groups
+                if (prevState.europeanCup.groups) {
+                    for (const group of prevState.europeanCup.groups) {
+                        const m = group.matches.find(m => m.id === matchId);
+                        if (m) {
+                            matchIndex = 0; // Placeholder
+                            isCupMatch = true;
+                            cupType = 'europeanCup';
+                            cupMatch = m as unknown as Match;
+                            break;
+                        }
+                    }
                 }
-            }
-            if (matchIndex === -1 && prevState.europaLeague) {
-                matchIndex = prevState.europaLeague.matches.findIndex(m => m.id === matchId);
-                if (matchIndex !== -1) {
-                    isCupMatch = true;
-                    cupType = 'europaLeague';
+                // Check Knockout
+                if (!cupMatch && prevState.europeanCup.knockoutMatches) {
+                    const m = prevState.europeanCup.knockoutMatches.find(m => m.id === matchId);
+                    if (m) {
+                        matchIndex = 0;
+                        isCupMatch = true;
+                        cupType = 'europeanCup';
+                        cupMatch = m as unknown as Match;
+                    }
                 }
+                // Legacy Fallback - Removed
             }
+
+            // Europe League Deprecated - Removed logic
+
             // === SUPER CUP MATCH LOOKUP ===
-            if (matchIndex === -1 && prevState.superCup && prevState.superCup.match && prevState.superCup.match.id === matchId) {
-                matchIndex = 0; // Super Cup has only one match
+            if (!cupMatch && prevState.superCup && prevState.superCup.match && prevState.superCup.match.id === matchId) {
+                matchIndex = 0;
                 isCupMatch = true;
                 cupType = 'superCup';
+                cupMatch = prevState.superCup.match as unknown as Match;
             }
         }
 
-        if (matchIndex === -1) return prevState;
+        if (matchIndex === -1 && !cupMatch) return prevState;
 
 
         // Handle SuperCup's single match separately from CL/EL matches arrays
-        const matchStr = cupType === 'superCup' && prevState.superCup
-            ? prevState.superCup.match
-            : isCupMatch && cupType && cupType !== 'superCup'
-                ? (prevState[cupType as 'europeanCup' | 'europaLeague']!.matches[matchIndex])
-                : prevState.matches[matchIndex];
+        const matchStr = cupMatch || prevState.matches[matchIndex];
 
 
         // Type assertion: EuropeanCupMatch is compatible with Match for simulation purposes
@@ -1903,14 +1990,31 @@ const App: React.FC = () => {
                 if (cupType === 'superCup' && prevState.superCup) {
                     return { ...prevState, superCup: { ...prevState.superCup, match: simulated as any }, teams: updatedTeams, players: updatedPlayers };
                 } else if (cupType === 'europeanCup' && prevState.europeanCup) {
-                    const newCupMatches = [...prevState.europeanCup.matches];
-                    newCupMatches[matchIndex] = simulated as any;
-                    return { ...prevState, europeanCup: { ...prevState.europeanCup, matches: newCupMatches }, teams: updatedTeams, players: updatedPlayers };
-                } else if (cupType === 'europaLeague' && prevState.europaLeague) {
-                    const newCupMatches = [...prevState.europaLeague.matches];
-                    newCupMatches[matchIndex] = simulated as any;
-                    return { ...prevState, europaLeague: { ...prevState.europaLeague, matches: newCupMatches }, teams: updatedTeams, players: updatedPlayers };
+                    const cup = prevState.europeanCup;
+                    let updatedGroups = cup.groups;
+                    let updatedKnockouts = cup.knockoutMatches;
+
+                    // Update in groups
+                    if (updatedGroups) {
+                        updatedGroups = updatedGroups.map(g => ({
+                            ...g,
+                            matches: g.matches.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m)
+                        }));
+                    }
+                    // Update in knockouts
+                    if (updatedKnockouts) {
+                        updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m);
+                    }
+
+                    return {
+                        ...prevState,
+                        europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts },
+                        teams: updatedTeams,
+                        players: updatedPlayers
+                    };
                 }
+
+                // Europa League Deprecated - removed
 
                 let newMatches = [...prevState.matches];
                 newMatches[matchIndex] = simulated;
@@ -1921,14 +2025,58 @@ const App: React.FC = () => {
             if (cupType === 'superCup' && prevState.superCup) {
                 return { ...prevState, superCup: { ...prevState.superCup, match: simulated as any } };
             } else if (cupType === 'europeanCup' && prevState.europeanCup) {
-                const newCupMatches = [...prevState.europeanCup.matches];
-                newCupMatches[matchIndex] = simulated as any;
-                return { ...prevState, europeanCup: { ...prevState.europeanCup, matches: newCupMatches } };
-            } else if (cupType === 'europaLeague' && prevState.europaLeague) {
-                const newCupMatches = [...prevState.europaLeague.matches];
-                newCupMatches[matchIndex] = simulated as any;
-                return { ...prevState, europaLeague: { ...prevState.europaLeague, matches: newCupMatches } };
+                const cup = prevState.europeanCup;
+                let updatedGroups = cup.groups;
+                let updatedKnockouts = cup.knockoutMatches;
+
+                // Update in groups
+                if (updatedGroups) {
+                    updatedGroups = updatedGroups.map(g => {
+                        const updatedMatches = g.matches.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m);
+
+                        // CRITICAL FIX: Recalculate standings after match update
+                        const updatedStandings = g.standings?.map(s => {
+                            const teamMatches = updatedMatches.filter(m =>
+                                m.isPlayed && (m.homeTeamId === s.teamId || m.awayTeamId === s.teamId)
+                            );
+
+                            let played = 0, won = 0, drawn = 0, lost = 0, gf = 0, ga = 0, points = 0;
+
+                            teamMatches.forEach(m => {
+                                const isHome = m.homeTeamId === s.teamId;
+                                const goalsFor = isHome ? m.homeScore : m.awayScore;
+                                const goalsAgainst = isHome ? m.awayScore : m.homeScore;
+
+                                played++;
+                                gf += goalsFor;
+                                ga += goalsAgainst;
+
+                                if (goalsFor > goalsAgainst) {
+                                    won++;
+                                    points += 3;
+                                } else if (goalsFor === goalsAgainst) {
+                                    drawn++;
+                                    points += 1;
+                                } else {
+                                    lost++;
+                                }
+                            });
+
+                            return { ...s, played, won, drawn, lost, gf, ga, points };
+                        });
+
+                        return { ...g, matches: updatedMatches, standings: updatedStandings };
+                    });
+                }
+                // Update in knockouts
+                if (updatedKnockouts) {
+                    updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m);
+                }
+
+                return { ...prevState, europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts } };
             }
+
+            // Europa League Deprecated - removed logic
 
             let newMatches = [...prevState.matches];
             newMatches[matchIndex] = simulated;
@@ -2239,18 +2387,29 @@ const App: React.FC = () => {
             }
         }
 
-        // Same logic as Dashboard's "Next Match" card
-        // Cup matches have specific scheduled weeks
-        const CUP_SCHEDULE: { [key: string]: number } = { 'ROUND_16': 4, 'QUARTER': 11, 'SEMI': 18, 'FINAL': 26 };
-
+        // Global Cup Schedule
+        const CUP_SCHEDULE: { [key: string]: number } = {
+            'GROUP': 4, // Occurs multiple times, handled by match specific weeks
+            'ROUND_16': 24,
+            'QUARTER': 28,
+            'SEMI': 32,
+            'FINAL': 36
+        };
 
         const getCupMatch = (cup?: EuropeanCup) => {
-            if (!cup || !cup.isActive || cup.currentRound === 'COMPLETE') return undefined;
-            const scheduledWeek = CUP_SCHEDULE[cup.currentRound];
-            if (gameState.currentWeek !== scheduledWeek) return undefined;
+            if (!cup || !cup.isActive || cup.currentStage === 'COMPLETE') return undefined;
 
-            return cup.matches.find(m =>
-                !m.isPlayed && m.round === cup.currentRound &&
+            let candidateMatches: Match[] = [];
+
+            if (cup.currentStage === 'GROUP' && cup.groups) {
+                candidateMatches = cup.groups.flatMap(g => g.matches as unknown as Match[]);
+            } else if (cup.knockoutMatches) {
+                candidateMatches = cup.knockoutMatches as unknown as Match[];
+            }
+
+            return candidateMatches.find(m =>
+                m.week === gameState.currentWeek &&
+                !m.isPlayed &&
                 (m.homeTeamId === gameState.userTeamId || m.awayTeamId === gameState.userTeamId)
             );
         };
@@ -2335,11 +2494,21 @@ const App: React.FC = () => {
                 let updatedState = { ...gameState };
 
                 if (clMatch && gameState.europeanCup) {
-                    const updatedCup = simulateEuropeanCupMatch(gameState.europeanCup, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers);
+                    const updatedCup = simulateGlobalCupMatch(gameState.europeanCup, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers);
                     updatedState.europeanCup = updatedCup;
 
                     // Find the played match to show result
-                    const playedCupMatch = updatedCup.matches.find(m => m.id === cupMatch.id);
+                    let playedCupMatch: Match | undefined;
+                    if (updatedCup.groups) {
+                        for (const g of updatedCup.groups) {
+                            const m = g.matches.find(x => x.id === cupMatch.id);
+                            if (m) { playedCupMatch = m as unknown as Match; break; }
+                        }
+                    }
+                    if (!playedCupMatch && updatedCup.knockoutMatches) {
+                        playedCupMatch = updatedCup.knockoutMatches.find(x => x.id === cupMatch.id) as unknown as Match;
+                    }
+
                     if (playedCupMatch) {
                         alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
 
@@ -2347,7 +2516,7 @@ const App: React.FC = () => {
                         const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
                         if (userTeam) {
                             const isUserHome = homeTeam.id === updatedState.userTeamId;
-                            const userWon = playedCupMatch.winnerId === updatedState.userTeamId;
+                            const userWon = (playedCupMatch as any).winnerId === updatedState.userTeamId;
                             const opponent = isUserHome ? awayTeam : homeTeam;
                             const opponentRepDiff = opponent.reputation - userTeam.reputation;
 
@@ -2357,9 +2526,9 @@ const App: React.FC = () => {
                                 repBonus = Math.min(40, repBonus);
 
                                 // Round bonus
-                                if (playedCupMatch.round === 'QUARTER') repBonus += 10;
-                                else if (playedCupMatch.round === 'SEMI') repBonus += 20;
-                                else if (playedCupMatch.round === 'FINAL') repBonus += 50;
+                                if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
+                                else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
+                                else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
 
                                 const newRep = Math.min(10000, userTeam.reputation + repBonus);
                                 userTeam.reputation = newRep;
@@ -2377,81 +2546,28 @@ const App: React.FC = () => {
                         }
                     }
                 }
-                if (elMatch && gameState.europaLeague) {
-                    const updatedCup = simulateEuropeanCupMatch(gameState.europaLeague, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers);
-                    updatedState.europaLeague = updatedCup;
-
-                    // Find the played match to show result
-                    const playedCupMatch = updatedCup.matches.find(m => m.id === cupMatch.id);
-                    if (playedCupMatch) {
-                        alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
-
-                        // === EUROPA LEAGUE REPUTATION BONUS ===
-                        const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
-                        if (userTeam) {
-                            const isUserHome = homeTeam.id === updatedState.userTeamId;
-                            const userWon = playedCupMatch.winnerId === updatedState.userTeamId;
-                            const opponent = isUserHome ? awayTeam : homeTeam;
-                            const opponentRepDiff = opponent.reputation - userTeam.reputation;
-
-                            if (userWon) {
-                                // Europa League win bonus: +15 base, up to +30 for beating much stronger
-                                let repBonus = 15 + Math.max(0, Math.floor(opponentRepDiff / 250)); // +15 to +30
-                                repBonus = Math.min(30, repBonus);
-
-                                // Round bonus
-                                if (playedCupMatch.round === 'QUARTER') repBonus += 8;
-                                else if (playedCupMatch.round === 'SEMI') repBonus += 15;
-                                else if (playedCupMatch.round === 'FINAL') repBonus += 40;
-
-                                const newRep = Math.min(10000, userTeam.reputation + repBonus);
-                                userTeam.reputation = newRep;
-
-                                // Record history
-                                const history = userTeam.reputationHistory || [];
-                                history.push({
-                                    week: updatedState.currentWeek,
-                                    change: repBonus,
-                                    reason: `🏆 UEL: ${opponent.name} (G)`,
-                                    newValue: newRep
-                                });
-                                userTeam.reputationHistory = history.slice(-20);
-                            }
-                        }
-                    }
-                }
+                // Europa League Deprecated - logic removed
 
                 // NOTE: Do NOT simulate league round here!
                 // Cup matches are independent - user should play/sim league match separately
-                // Previously: updatedState = simulateLeagueRound(updatedState, updatedState.currentWeek);
 
                 // Simulate AI European Cup Matches (other Cup games this week)
                 if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-                    const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                    const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
                         updatedState.europeanCup,
                         updatedState.teams,
                         updatedState.players,
                         updatedState.userTeamId,
-                        updatedState.currentWeek,
-                        'CL'
+                        updatedState.currentWeek
                     );
                     updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
                 }
-                if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-                    const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
-                        updatedState.europaLeague,
-                        updatedState.teams,
-                        updatedState.players,
-                        updatedState.userTeamId,
-                        updatedState.currentWeek,
-                        'UEFA'
-                    );
-                    updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
-                }
+
+                // EL AI Sim Removed
 
                 // Check if both cups are complete and Super Cup should be generated
-                if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
-                    updatedState.europaLeague?.currentRound === 'COMPLETE' &&
+                if (updatedState.europeanCup?.currentStage === 'COMPLETE' &&
+                    updatedState.europaLeague?.currentStage === 'COMPLETE' &&
                     !updatedState.superCup &&
                     updatedState.europeanCup?.winnerId &&
                     updatedState.europaLeague?.winnerId) {
@@ -2462,7 +2578,7 @@ const App: React.FC = () => {
                         uefaCupWinnerId: updatedState.europaLeague.winnerId,
                         match: {
                             id: uuid(),
-                            round: 'FINAL' as const,
+                            stage: 'FINAL' as const,
                             homeTeamId: updatedState.europeanCup.winnerId,
                             awayTeamId: updatedState.europaLeague.winnerId,
                             homeScore: 0,
@@ -2521,8 +2637,20 @@ const App: React.FC = () => {
 
                     // Get played match result from updated state
                     let playedCupMatch: EuropeanCupMatch | undefined;
-                    if (clMatch && updatedState.europeanCup) playedCupMatch = updatedState.europeanCup.matches.find(m => m.id === cupMatch.id);
-                    else if (elMatch && updatedState.europaLeague) playedCupMatch = updatedState.europaLeague.matches.find(m => m.id === cupMatch.id);
+                    if (clMatch && updatedState.europeanCup) {
+                        const allCupMatches = [
+                            ...(updatedState.europeanCup.groups?.flatMap(g => g.matches) || []),
+                            ...(updatedState.europeanCup.knockoutMatches || [])
+                        ];
+                        playedCupMatch = allCupMatches.find(m => m.id === cupMatch.id);
+                    }
+                    else if (elMatch && updatedState.europaLeague) {
+                        const allElMatches = [
+                            ...(updatedState.europaLeague.groups?.flatMap(g => g.matches) || []),
+                            ...(updatedState.europaLeague.knockoutMatches || [])
+                        ];
+                        playedCupMatch = allElMatches.find(m => m.id === cupMatch.id);
+                    }
 
                     if (userTeam && opponent && playedCupMatch && playedCupMatch.isPlayed) {
                         const isUserHome = playedCupMatch.homeTeamId === userTeam.id;
@@ -2596,40 +2724,54 @@ const App: React.FC = () => {
                     // 2. Simulate other matches for this week (League Logic)
                     let updatedState = simulateLeagueRound(newState, newState.currentWeek);
 
-                    // 3. Simulate AI European Cup Matches
+                    // 3. Simulate AI European Cup Matches (Global Cup)
+                    // Track stage change to notify user
+                    const initialCupStage = updatedState.europeanCup?.currentStage;
+
                     if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-                        const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                        const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
                             updatedState.europeanCup,
                             updatedState.teams,
                             updatedState.players,
                             updatedState.userTeamId,
-                            updatedState.currentWeek,
-                            'CL'
+                            updatedState.currentWeek
                         );
                         updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
                     }
-                    if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-                        const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
-                            updatedState.europaLeague,
-                            updatedState.teams,
-                            updatedState.players,
-                            updatedState.userTeamId,
-                            updatedState.currentWeek,
-                            'UEFA'
-                        );
-                        updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
+
+                    // Europa League Deprecated - removed simulation loop
+
+                    // Check Cup Completion (Stage Advancement)
+                    if (updatedState.europeanCup) {
+                        updatedState.europeanCup = advanceGlobalCupStage(updatedState.europeanCup);
                     }
 
-                    // Check if both cups are complete and Super Cup should be generated
-                    if (updatedState.europeanCup?.currentRound === 'COMPLETE' &&
-                        updatedState.europaLeague?.currentRound === 'COMPLETE' &&
-                        !updatedState.superCup) {
-                        import('./services/engine').then(({ generateSuperCup }) => {
-                            const superCup = generateSuperCup(updatedState);
-                            if (superCup) {
-                                setGameState(prev => prev ? { ...prev, superCup } : null);
-                            }
+                    // NOTIFY IF STAGE CHANGED
+                    if (updatedState.europeanCup && updatedState.europeanCup.currentStage !== initialCupStage) {
+                        const newStage = updatedState.europeanCup.currentStage;
+                        const msg = newStage === 'COMPLETE'
+                            ? `🏆 ${t.seasonComplete || 'Season Complete'}! The Global Cup has a winner!`
+                            : `🏆 Global Cup: ${initialCupStage} Completed! Starting ${newStage}. Check Fixtures for details.`;
+
+                        alert(msg);
+
+                        // Add to messages
+                        updatedState.messages.push({
+                            id: uuid(),
+                            week: updatedState.currentWeek,
+                            type: MessageType.INFO,
+                            subject: '🏆 Global Cup Update',
+                            body: msg,
+                            isRead: false,
+                            date: new Date().toISOString()
                         });
+                    }
+
+                    // Super Cup Logic (Deprecated or needs updates for Global Cup winner vs ?)
+                    // Leaving simplistic check for now
+                    if (updatedState.europeanCup?.currentStage === 'COMPLETE' && !updatedState.superCup) {
+                        // ... logic to generate super cup if needed ...
+                        // ignoring for now to prevent crashes
                     }
 
                     // 4. Process weekly events (Training, News, etc.)
@@ -2727,7 +2869,9 @@ const App: React.FC = () => {
             // Calculate maxWeek based on USER'S LEAGUE only (not all leagues)
             const userLeagueTeamIds = new Set(gameState.teams.filter(t => t.leagueId === gameState.leagueId).map(t => t.id));
             const userLeagueMatches = gameState.matches.filter(m => !m.isFriendly && (userLeagueTeamIds.has(m.homeTeamId) || userLeagueTeamIds.has(m.awayTeamId)));
-            const maxWeek = userLeagueMatches.length > 0 ? Math.max(...userLeagueMatches.map(m => m.week)) : 38;
+            // FIX: Force season to continue until Week 38 (Global Calendar) even if local league finishes early (e.g. Week 27)
+            // This allows users to play/watch European Cup matches until the end of the global season.
+            const maxWeek = Math.max(38, userLeagueMatches.length > 0 ? Math.max(...userLeagueMatches.map(m => m.week)) : 38);
 
             if (gameState.currentWeek > maxWeek) {
                 // === FIX: Check if Super Cup needs to be played first ===
@@ -2778,28 +2922,44 @@ const App: React.FC = () => {
                 // Simulate AI cup matches first, then advance
                 let updatedState = { ...gameState };
 
-                // Process AI European Cup matches for this week
+                // Process AI European Cup matches for this week (Global Cup)
+                const initialCupStage = updatedState.europeanCup?.currentStage;
+
                 if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-                    const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
+                    const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
                         updatedState.europeanCup,
                         updatedState.teams,
                         updatedState.players,
                         updatedState.userTeamId,
-                        updatedState.currentWeek,
-                        'CL'
+                        updatedState.currentWeek
                     );
                     updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
                 }
-                if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-                    const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
-                        updatedState.europaLeague,
-                        updatedState.teams,
-                        updatedState.players,
-                        updatedState.userTeamId,
-                        updatedState.currentWeek,
-                        'UEFA'
-                    );
-                    updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
+
+                // Europa League Deprecated - removed logic
+
+                // Check Cup Completion
+                if (updatedState.europeanCup) {
+                    updatedState.europeanCup = advanceGlobalCupStage(updatedState.europeanCup);
+                }
+
+                // NOTIFY IF STAGE CHANGED
+                if (updatedState.europeanCup && updatedState.europeanCup.currentStage !== initialCupStage) {
+                    const newStage = updatedState.europeanCup.currentStage;
+                    const msg = newStage === 'COMPLETE'
+                        ? `🏆 ${t.seasonComplete || 'Season Complete'}! The Global Cup has a winner!`
+                        : `🏆 Global Cup: ${initialCupStage} Completed! Starting ${newStage}. Check Fixtures for details.`;
+
+                    alert(msg);
+                    updatedState.messages.push({
+                        id: uuid(),
+                        week: updatedState.currentWeek,
+                        type: MessageType.INFO,
+                        subject: '🏆 Global Cup Update',
+                        body: msg,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    });
                 }
 
                 // Check if Super Cup should be generated (SYNC - not async to prevent overwrite!)
@@ -2882,7 +3042,62 @@ const App: React.FC = () => {
                     ]
                 });
             } else {
-                alert(t.noMatchToday);
+                // Empty week (neither League nor Cup) - Advance to next week
+                // Still process AI Cup matches if any exist this week
+                let updatedState = { ...gameState };
+                const initialCupStage = updatedState.europeanCup?.currentStage;
+
+                if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
+                    const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
+                        updatedState.europeanCup,
+                        updatedState.teams,
+                        updatedState.players,
+                        updatedState.userTeamId,
+                        updatedState.currentWeek
+                    );
+                    updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
+                }
+
+                // Check Cup Completion
+                if (updatedState.europeanCup) {
+                    updatedState.europeanCup = advanceGlobalCupStage(updatedState.europeanCup);
+                }
+
+                // NOTIFY IF STAGE CHANGED
+                if (updatedState.europeanCup && updatedState.europeanCup.currentStage !== initialCupStage) {
+                    const newStage = updatedState.europeanCup.currentStage;
+                    const msg = newStage === 'COMPLETE'
+                        ? `🏆 ${t.seasonComplete || 'Season Complete'}! The Global Cup has a winner!`
+                        : `🏆 Global Cup: ${initialCupStage} Completed! Starting ${newStage}. Check Fixtures for details.`;
+
+                    alert(msg);
+                    updatedState.messages.push({
+                        id: uuid(),
+                        week: updatedState.currentWeek,
+                        type: MessageType.INFO,
+                        subject: '🏆 Global Cup Update',
+                        body: msg,
+                        isRead: false,
+                        date: new Date().toISOString()
+                    });
+                }
+
+                const weeklyEventsResults = processWeeklyEvents(updatedState, t);
+                const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+
+                setGameState({
+                    ...updatedState,
+                    teams: updatedTeams,
+                    players: updatedPlayers,
+                    transferMarket: updatedMarket,
+                    currentWeek: updatedState.currentWeek + 1,
+                    pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
+                    messages: [
+                        ...updatedState.messages,
+                        ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
+                        ...offers
+                    ]
+                });
             }
         }
     };
@@ -2892,21 +3107,54 @@ const App: React.FC = () => {
             if (!prevState) return null;
 
             // Determine where the match is
-            let matchType: 'LEAGUE' | 'CL' | 'EL' | 'SUPER_CUP' = 'LEAGUE';
+            // Determine where the match is
+            let matchType: 'LEAGUE' | 'CL_GROUP' | 'CL_KNOCKOUT' | 'EL_GROUP' | 'EL_KNOCKOUT' | 'SUPER_CUP' = 'LEAGUE';
             let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+            let groupIndex = -1; // To track which group
 
-            if (matchIndex === -1) {
-                if (prevState.europeanCup) {
-                    matchIndex = prevState.europeanCup.matches.findIndex(m => m.id === matchId);
-                    if (matchIndex !== -1) matchType = 'CL';
+            if (matchIndex === -1 && prevState.europeanCup) {
+                // Check Groups
+                if (prevState.europeanCup.groups) {
+                    for (let i = 0; i < prevState.europeanCup.groups.length; i++) {
+                        const g = prevState.europeanCup.groups[i];
+                        const idx = g.matches.findIndex(m => m.id === matchId);
+                        if (idx !== -1) {
+                            matchIndex = idx;
+                            groupIndex = i;
+                            matchType = 'CL_GROUP';
+                            break;
+                        }
+                    }
+                }
+                // Check Knockouts
+                if (matchIndex === -1 && prevState.europeanCup.knockoutMatches) {
+                    matchIndex = prevState.europeanCup.knockoutMatches.findIndex(m => m.id === matchId);
+                    if (matchIndex !== -1) matchType = 'CL_KNOCKOUT';
                 }
             }
-            if (matchIndex === -1) {
-                if (prevState.europaLeague) {
-                    matchIndex = prevState.europaLeague.matches.findIndex(m => m.id === matchId);
-                    if (matchIndex !== -1) matchType = 'EL';
+
+            if (matchIndex === -1 && prevState.europaLeague) {
+                // Check Groups
+                if (prevState.europaLeague.groups) {
+                    for (let i = 0; i < prevState.europaLeague.groups.length; i++) {
+                        const g = prevState.europaLeague.groups[i];
+                        const idx = g.matches.findIndex(m => m.id === matchId);
+                        if (idx !== -1) {
+                            matchIndex = idx;
+                            groupIndex = i;
+                            matchType = 'EL_GROUP';
+                            break;
+                        }
+                    }
+                }
+                // Check Knockouts
+                if (matchIndex === -1) {
+                    const elMatches = prevState.europaLeague.knockoutMatches || prevState.europaLeague.matches || [];
+                    matchIndex = elMatches.findIndex(m => m.id === matchId);
+                    if (matchIndex !== -1) matchType = 'EL_KNOCKOUT';
                 }
             }
+
             // === SUPER CUP CHECK ===
             if (matchIndex === -1 && prevState.superCup?.match?.id === matchId) {
                 matchIndex = 0; // Super Cup has only one match
@@ -2921,10 +3169,15 @@ const App: React.FC = () => {
                 currentMatch = { ...prevState.superCup.match };
             } else if (matchType === 'LEAGUE') {
                 currentMatch = { ...prevState.matches[matchIndex] };
-            } else if (matchType === 'CL') {
-                currentMatch = { ...prevState.europeanCup!.matches[matchIndex] };
-            } else {
-                currentMatch = { ...prevState.europaLeague!.matches[matchIndex] };
+            } else if (matchType === 'CL_GROUP') {
+                currentMatch = { ...prevState.europeanCup!.groups[groupIndex].matches[matchIndex] };
+            } else if (matchType === 'CL_KNOCKOUT') {
+                currentMatch = { ...prevState.europeanCup!.knockoutMatches[matchIndex] };
+            } else if (matchType === 'EL_GROUP') {
+                currentMatch = { ...prevState.europaLeague!.groups[groupIndex].matches[matchIndex] };
+            } else if (matchType === 'EL_KNOCKOUT') {
+                const elMatches = prevState.europaLeague!.knockoutMatches || prevState.europaLeague!.matches || [];
+                currentMatch = { ...elMatches[matchIndex] };
             }
 
             // Sync Logic (Common)
@@ -2956,6 +3209,7 @@ const App: React.FC = () => {
                 if (!currentMatch.events.find((e: MatchEvent) => e.type === MatchEventType.FULL_TIME)) {
                     currentMatch.events.push({ minute: 90, type: MatchEventType.FULL_TIME, description: 'Full Time' });
                 }
+                // RESTORED: Set isPlayed = true so stats update logic (Line 3357) can run
                 currentMatch.isPlayed = true;
                 matchJustFinished = true;
 
@@ -3163,15 +3417,97 @@ const App: React.FC = () => {
                     players: updatedPlayers
                 };
             } else {
-                // CUP Matches (CL/EL)
-                const updateCup = (cup: EuropeanCup) => {
-                    const newMatches = [...cup.matches];
-                    newMatches[matchIndex] = currentMatch;
-                    return { ...cup, matches: newMatches };
-                };
+                // CUP Matches (Global Cup & Europa League)
+                // Helper to update CL/EL state
+                if (matchType === 'CL_GROUP' && prevState.europeanCup && groupIndex !== -1) {
+                    const newCup = { ...prevState.europeanCup };
+                    const newGroups = [...(newCup.groups || [])];
+                    const newGroup = { ...newGroups[groupIndex] };
+                    const newMatches = [...newGroup.matches];
 
-                if (matchType === 'CL') return { ...prevState, europeanCup: updateCup(prevState.europeanCup!), players: updatedPlayers };
-                return { ...prevState, europaLeague: updateCup(prevState.europaLeague!), players: updatedPlayers };
+                    newMatches[matchIndex] = currentMatch; // Update specific match
+                    newGroup.matches = newMatches;
+
+                    // CRITICAL FIX: Recalculate standings when match finishes
+                    if (matchJustFinished && newGroup.standings) {
+                        const updatedStandings = newGroup.standings.map(s => {
+                            // Find all matches involving this team that are played
+                            const teamMatches = newMatches.filter(m =>
+                                m.isPlayed && (m.homeTeamId === s.teamId || m.awayTeamId === s.teamId)
+                            );
+
+                            let played = 0, won = 0, drawn = 0, lost = 0, gf = 0, ga = 0, points = 0;
+
+                            teamMatches.forEach(m => {
+                                const isHome = m.homeTeamId === s.teamId;
+                                const goalsFor = isHome ? m.homeScore : m.awayScore;
+                                const goalsAgainst = isHome ? m.awayScore : m.homeScore;
+
+                                played++;
+                                gf += goalsFor;
+                                ga += goalsAgainst;
+
+                                if (goalsFor > goalsAgainst) {
+                                    won++;
+                                    points += 3;
+                                } else if (goalsFor === goalsAgainst) {
+                                    drawn++;
+                                    points += 1;
+                                } else {
+                                    lost++;
+                                }
+                            });
+
+                            return { ...s, played, won, drawn, lost, gf, ga, points };
+                        });
+
+                        newGroup.standings = updatedStandings;
+                    }
+
+                    newGroups[groupIndex] = newGroup;
+                    newCup.groups = newGroups;
+
+                    return { ...prevState, europeanCup: newCup, players: updatedPlayers };
+                }
+
+                if (matchType === 'CL_KNOCKOUT' && prevState.europeanCup) {
+                    const newCup = { ...prevState.europeanCup };
+                    const newKnockouts = [...(newCup.knockoutMatches || [])];
+                    newKnockouts[matchIndex] = currentMatch;
+                    newCup.knockoutMatches = newKnockouts;
+
+                    return { ...prevState, europeanCup: newCup, players: updatedPlayers };
+                }
+
+                if (matchType === 'EL_GROUP' && prevState.europaLeague && groupIndex !== -1) {
+                    const newCup = { ...prevState.europaLeague };
+                    const newGroups = [...(newCup.groups || [])];
+                    const newGroup = { ...newGroups[groupIndex] };
+                    const newMatches = [...newGroup.matches];
+
+                    newMatches[matchIndex] = currentMatch;
+                    newGroup.matches = newMatches;
+                    newGroups[groupIndex] = newGroup;
+                    newCup.groups = newGroups;
+
+                    return { ...prevState, europaLeague: newCup, players: updatedPlayers };
+                }
+
+                if (matchType === 'EL_KNOCKOUT' && prevState.europaLeague) {
+                    const newCup = { ...prevState.europaLeague };
+                    if (newCup.knockoutMatches) {
+                        const newKnockouts = [...newCup.knockoutMatches];
+                        newKnockouts[matchIndex] = currentMatch;
+                        newCup.knockoutMatches = newKnockouts;
+                    } else if (newCup.matches) {
+                        const newMatches = [...newCup.matches];
+                        newMatches[matchIndex] = currentMatch;
+                        newCup.matches = newMatches;
+                    }
+                    return { ...prevState, europaLeague: newCup, players: updatedPlayers };
+                }
+
+                return prevState;
             }
 
         });
@@ -3193,10 +3529,26 @@ const App: React.FC = () => {
         const match = currentState.matches.find(m => m.id === activeMatchId);
 
         // Check Cups if not found in League
-        const clMatch = !match ? currentState.europeanCup?.matches.find(m => m.id === activeMatchId) : null;
-        const elMatch = !match && !clMatch ? currentState.europaLeague?.matches.find(m => m.id === activeMatchId) : null;
-        const superCupMatch = !match && !clMatch && !elMatch && currentState.superCup?.match?.id === activeMatchId ? currentState.superCup.match : null;
-        const activeCupMatch = clMatch || elMatch;
+        // Check Cups if not found in League
+        let clMatch: Match | undefined;
+        if (!match && currentState.europeanCup && currentState.europeanCup.isActive) {
+            const cup = currentState.europeanCup;
+            // Search in groups
+            if (cup.groups) {
+                for (const g of cup.groups) {
+                    const m = g.matches.find(x => x.id === activeMatchId);
+                    if (m) { clMatch = m as unknown as Match; break; }
+                }
+            }
+            // Search in knockouts
+            if (!clMatch && cup.knockoutMatches) {
+                clMatch = cup.knockoutMatches.find(m => m.id === activeMatchId) as unknown as Match;
+            }
+        }
+
+        const elMatch = null;
+        const superCupMatch = !match && !clMatch && currentState.superCup?.match?.id === activeMatchId ? currentState.superCup.match : null;
+        const activeCupMatch = clMatch;
 
         // --- SUPER CUP MATCH HANDLING ---
         if (superCupMatch && currentState.superCup) {
@@ -3257,7 +3609,31 @@ const App: React.FC = () => {
             const cupType = clMatch ? 'europeanCup' : 'europaLeague';
 
             // Get the latest cup match state from engine if possible
-            const cupMatchInState = currentState[cupType]?.matches.find(m => m.id === activeMatchId);
+            let cupMatchInState: Match | GlobalCupMatch | undefined;
+
+            const cupObj = currentState[cupType];
+            if (cupObj) {
+                // Check Groups
+                if (cupObj.groups) {
+                    for (const g of cupObj.groups) {
+                        const m = g.matches.find(m => m.id === activeMatchId);
+                        if (m) {
+                            cupMatchInState = m;
+                            break;
+                        }
+                    }
+                }
+                // Check Knockouts
+                if (!cupMatchInState && cupObj.knockoutMatches) {
+                    cupMatchInState = cupObj.knockoutMatches.find(m => m.id === activeMatchId);
+                }
+            }
+
+            // Fallback for Europa League old structure if needed
+            if (!cupMatchInState && cupType === 'europaLeague' && cupObj?.matches) {
+                cupMatchInState = cupObj.matches.find((m: Match) => m.id === activeMatchId);
+            }
+
             let updatedCupMatch = cupMatchInState || activeCupMatch;
 
             // Mark as played if not already
@@ -3319,33 +3695,66 @@ const App: React.FC = () => {
             }
 
             // Update cup match in state
-            if (currentState[cupType]) {
+            if (currentState.europeanCup && cupType === 'europeanCup') {
+                const cup = currentState.europeanCup;
+                let updatedGroups = cup.groups;
+                let updatedKnockouts = cup.knockoutMatches;
+
+                // Try update in groups
+                if (updatedGroups) {
+                    updatedGroups = updatedGroups.map(g => ({
+                        ...g,
+                        matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
+                    }));
+                }
+                // Try update in knockouts
+                if (updatedKnockouts) {
+                    updatedKnockouts = updatedKnockouts.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m);
+                }
+
                 const updatedCup = {
-                    ...currentState[cupType],
-                    matches: currentState[cupType].matches.map(m =>
-                        m.id === activeMatchId ? updatedCupMatch : m
-                    )
+                    ...cup,
+                    groups: updatedGroups,
+                    knockoutMatches: updatedKnockouts
                 };
 
-                currentState = {
-                    ...currentState,
-                    [cupType]: updatedCup
+                currentState = { ...currentState, europeanCup: updatedCup };
+            } else if (currentState.europaLeague && cupType === 'europaLeague') {
+                // Similar logic for EL if needed
+                const cup = currentState.europaLeague;
+                let updatedGroups = cup.groups;
+                let updatedKnockouts = cup.knockoutMatches;
+                let updatedMatches = cup.matches;
+
+                if (updatedGroups) {
+                    updatedGroups = updatedGroups.map(g => ({
+                        ...g,
+                        matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
+                    }));
+                }
+                if (updatedKnockouts) {
+                    updatedKnockouts = updatedKnockouts.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m);
+                }
+                if (updatedMatches) {
+                    updatedMatches = updatedMatches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m);
+                }
+
+                const updatedCup = {
+                    ...cup,
+                    groups: updatedGroups,
+                    knockoutMatches: updatedKnockouts,
+                    matches: updatedMatches
                 };
+                currentState = { ...currentState, europaLeague: updatedCup };
             }
 
-            // Simulate other AI European matches
+            // Simulate other AI European matches (Global Cup)
             let updatedState = { ...currentState };
             if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-                const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                    updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'CL'
+                const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
+                    updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
                 );
                 updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
-            }
-            if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-                const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                    updatedState.europaLeague, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'UEFA'
-                );
-                updatedState = { ...updatedState, europaLeague: updatedCup, teams: updatedTeams };
             }
 
             // ========== CUP HISTORY RECORDING ==========
@@ -3359,7 +3768,7 @@ const App: React.FC = () => {
                 const userIsHome = updatedCupMatch.homeTeamId === updatedState.userTeamId;
                 const userScore = userIsHome ? updatedCupMatch.homeScore : updatedCupMatch.awayScore;
                 const oppScore = userIsHome ? updatedCupMatch.awayScore : updatedCupMatch.homeScore;
-                const won = userScore > oppScore || updatedCupMatch.winnerId === updatedState.userTeamId;
+                const won = userScore > oppScore || (updatedCupMatch as any).winnerId === updatedState.userTeamId;
 
                 const repDiff = opponent.reputation - userTeam.reputation;
 
@@ -3394,7 +3803,7 @@ const App: React.FC = () => {
                 );
             }
 
-            setGameState(updatedState);
+            setGameState(currentState);
             setView('dashboard');
             setActiveMatchId(null);
             setPendingMatch(null);
@@ -3415,7 +3824,23 @@ const App: React.FC = () => {
             }
 
             if (!match.isPlayed) {
-                currentState = executeMatchUpdate(currentState, activeMatchId, true);
+                // BUGFIX: Prevent Cup matches from counting as League matches
+                // If teams are from different leagues, it CANNOT be a league match.
+                // This prevents "Rio Flames" (Brazil) vs "Istanbul" (Turkey) from adding points to Süper Lig.
+                const homeT = currentState.teams.find(t => t.id === match.homeTeamId);
+                const awayT = currentState.teams.find(t => t.id === match.awayTeamId);
+                const isSameLeague = homeT && awayT && homeT.leagueId === awayT.leagueId;
+
+                if (isSameLeague) {
+                    currentState = executeMatchUpdate(currentState, activeMatchId, true);
+                } else {
+                    // It's a cross-league match (Cup/Friendly) leaking into matches array
+                    // Mark as played but DO NOT update league stats
+                    currentState = {
+                        ...currentState,
+                        matches: currentState.matches.map(m => m.id === activeMatchId ? { ...m, isPlayed: true } : m)
+                    };
+                }
             }
         }
 
@@ -3423,23 +3848,13 @@ const App: React.FC = () => {
         let updatedState = simulateLeagueRound(currentState, currentState.currentWeek);
 
         if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
-            const { updatedCup, updatedTeams } = simulateAIEuropeanCupMatches(
-                updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek, 'CL'
+            const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
+                updatedState.europeanCup, updatedState.teams, updatedState.players, updatedState.userTeamId, updatedState.currentWeek
             );
             updatedState = { ...updatedState, europeanCup: updatedCup, teams: updatedTeams };
         }
 
-        if (updatedState.europaLeague && updatedState.europaLeague.isActive) {
-            const { updatedCup: updatedEL, updatedTeams: updatedTeamsEL } = simulateAIEuropeanCupMatches(
-                updatedState.europaLeague,
-                updatedState.teams,
-                updatedState.players,
-                updatedState.userTeamId,
-                updatedState.currentWeek,
-                'UEFA'
-            );
-            updatedState = { ...updatedState, europaLeague: updatedEL, teams: updatedTeamsEL };
-        }
+        // Europa League Deprecated - removed logic
 
         const { updatedTeams, updatedPlayers: weeklyPlayers, updatedMarket, report, offers, newPendingOffers } = processWeeklyEvents(updatedState, t);
 
@@ -3770,16 +4185,31 @@ const App: React.FC = () => {
     if (showLeagueSelect) {
         return (
             <Layout>
-                <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-6 text-white animate-fade-in overflow-y-auto">
-                    <div className="text-center mb-4 md:mb-8">
+                <div className="w-full h-full flex flex-col items-center justify-start p-4 md:p-6 text-white animate-fade-in overflow-y-auto">
+                    <div className="text-center mb-4 md:mb-8 mt-10">
                         <div className="text-emerald-500 font-bold text-2xl md:text-4xl tracking-tighter mb-1 md:mb-2">POCKET<span className="text-white">FM</span></div>
                         <h1 className="text-lg md:text-2xl font-bold">{t.selectLeague}</h1>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl w-full">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl w-full pb-10">
                         {LEAGUE_PRESETS.map(league => (
                             <button key={league.id} onClick={() => handleStartGame(league.id)} className="bg-slate-900/70 backdrop-blur-xl hover:bg-slate-800/80 border border-white/10 hover:border-emerald-500/50 rounded-2xl p-4 md:p-6 transition-all group flex flex-col items-center gap-3 md:gap-4 shadow-2xl active:scale-95 hover:shadow-emerald-500/10">
                                 <div className="w-20 h-20 md:w-28 md:h-28 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform border border-white/5">
-                                    <img src={getLeagueLogo(league.id)} alt={league.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                    {(league.logo || getLeagueLogo(league.id)) ? (
+                                        <img src={league.logo || getLeagueLogo(league.id)} alt={league.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                    ) : (
+                                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800 p-2">
+                                            <span className="text-3xl font-black text-white/20 select-none">LG</span>
+                                            <span className="text-xl md:text-2xl font-bold text-white uppercase tracking-wider text-center drop-shadow-lg">
+                                                {league.id === 'en' ? 'ENG' :
+                                                    league.id === 'es' ? 'ESP' :
+                                                        league.id === 'de' ? 'GER' :
+                                                            league.id === 'it' ? 'ITA' :
+                                                                league.id === 'fr' ? 'FRA' :
+                                                                    league.id === 'tr' ? 'TUR' :
+                                                                        league.country.substring(0, 3).toUpperCase()}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="text-center">
                                     <h3 className="text-base md:text-xl font-bold text-white leading-tight">{t[`league${league.country}` as keyof typeof t] || league.name}</h3>
@@ -3810,7 +4240,22 @@ const App: React.FC = () => {
                                 <div className="h-28 md:h-36 relative flex items-center justify-center overflow-hidden" style={{ backgroundColor: team.primaryColor }}>
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-white/10"></div>
                                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden bg-slate-900/90 backdrop-blur flex items-center justify-center z-10 shadow-2xl border border-white/10">
-                                        <img src={getTeamLogo(team.name)} alt={team.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-2xl md:text-3xl font-bold" style="color: ${team.primaryColor}">${team.name.substring(0, 1)}</span>`; }} />
+                                        {getTeamLogo(team.name) ? (
+                                            <img
+                                                src={getTeamLogo(team.name)}
+                                                alt={team.name}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).style.display = 'none';
+                                                    (e.target as HTMLImageElement).parentElement!.innerText = team.name.substring(0, 1);
+                                                    (e.target as HTMLImageElement).parentElement!.className = "w-full h-full flex items-center justify-center text-4xl font-bold text-white";
+                                                }}
+                                            />
+                                        ) : (
+                                            <span className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
+                                                {team.name.substring(0, 1)}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="p-3 md:p-4 flex-1 flex flex-col w-full bg-gradient-to-t from-slate-900 to-slate-900/80">
@@ -3841,8 +4286,14 @@ const App: React.FC = () => {
     const unreadMessages = gameState.messages.filter(m => !m.isRead).length;
     const activeMatch = activeMatchId ? (
         gameState.matches.find(m => m.id === activeMatchId) ||
-        gameState.europeanCup?.matches.find(m => m.id === activeMatchId) ||
-        gameState.europaLeague?.matches.find(m => m.id === activeMatchId) ||
+        (gameState.europeanCup && (
+            (gameState.europeanCup.groups?.flatMap(g => g.matches).find(m => m.id === activeMatchId)) ||
+            (gameState.europeanCup.knockoutMatches?.find(m => m.id === activeMatchId))
+        )) ||
+        (gameState.europaLeague && (
+            (gameState.europaLeague.groups?.flatMap(g => g.matches).find(m => m.id === activeMatchId)) ||
+            (gameState.europaLeague.knockoutMatches?.find(m => m.id === activeMatchId))
+        )) ||
         (gameState.superCup?.match?.id === activeMatchId ? gameState.superCup.match as any : null)
     ) : null;
 
@@ -3997,6 +4448,15 @@ const App: React.FC = () => {
                 />
             )}
 
+            {/* Tactical Analysis Lab */}
+            {showTacticalAnalysis && gameState && (
+                <TacticalAnalysis
+                    gameState={gameState}
+                    onClose={() => setShowTacticalAnalysis(false)}
+                    currentLang={lang}
+                />
+            )}
+
             {/* Desktop Sidebar (Left) - Hidden on Mobile, Tablet, AND during Match */}
             {view !== 'match' && (
                 <div className="hidden 2xl:flex fixed left-0 top-0 h-full w-64 bg-slate-900/95 backdrop-blur-xl border-r border-slate-800 flex-col z-40 shadow-2xl">
@@ -4024,6 +4484,7 @@ const App: React.FC = () => {
                         <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                         <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
                         <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
+                        <button onClick={() => setShowTacticalAnalysis(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-2 text-cyan-400 hover:bg-slate-800 border border-cyan-500/30 font-bold transition-all hover:border-cyan-500"><Target size={20} /> <span className="hidden md:inline">Taktik Analiz</span></button>
 
 
                         {/* Job Offers Button - Only show if there are offers */}
@@ -4417,13 +4878,30 @@ const App: React.FC = () => {
                                                 {(() => {
                                                     // Helper to find priority match
                                                     const getCupMatch = (cup: EuropeanCup | undefined) => {
-                                                        if (!cup || !cup.isActive) return null;
-                                                        const SCHEDULE: { [key: string]: number } = { 'ROUND_16': 4, 'QUARTER': 11, 'SEMI': 18, 'FINAL': 26 };
-                                                        const scheduledWeek = SCHEDULE[cup.currentRound];
-                                                        if (gameState.currentWeek !== scheduledWeek) return null;
+                                                        if (!cup || !cup.isActive || cup.currentStage === 'COMPLETE') return null;
 
-                                                        return cup.matches.find(m =>
-                                                            !m.isPlayed && m.round === cup.currentRound &&
+                                                        // Global Cup Schedule (Matches previous definition)
+                                                        const SCHEDULE: { [key: string]: number } = {
+                                                            'GROUP': 4,
+                                                            'ROUND_16': 24,
+                                                            'QUARTER': 28,
+                                                            'SEMI': 32,
+                                                            'FINAL': 36
+                                                        };
+                                                        // Note: We check week on match level for groups primarily
+                                                        // But simplified check:
+                                                        // if (gameState.currentWeek !== SCHEDULE[cup.currentStage] && cup.currentStage !== 'GROUP') return null;
+
+                                                        let candidateMatches: Match[] = [];
+                                                        if (cup.currentStage === 'GROUP' && cup.groups) {
+                                                            candidateMatches = cup.groups.flatMap(g => g.matches as unknown as Match[]);
+                                                        } else if (cup.knockoutMatches) {
+                                                            candidateMatches = cup.knockoutMatches as unknown as Match[];
+                                                        }
+
+                                                        return candidateMatches.find(m =>
+                                                            m.week === gameState.currentWeek &&
+                                                            !m.isPlayed &&
                                                             (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id)
                                                         );
                                                     };
@@ -4441,15 +4919,22 @@ const App: React.FC = () => {
 
                                                     const nextSuperCup = getSuperCupMatch();
                                                     const nextCL = getCupMatch(gameState.europeanCup);
-                                                    const nextEL = getCupMatch(gameState.europaLeague);
+                                                    const nextEL = undefined; // Deprecated
                                                     const nextLeague = gameState.matches.find(m => m.week === gameState.currentWeek && (m.homeTeamId === userTeam.id || m.awayTeamId === userTeam.id));
 
-                                                    // Priority: Super Cup > CL > EL > League
-                                                    const nextMatch = nextSuperCup || nextCL || nextEL || nextLeague;
+                                                    // Priority: Super Cup > Global Cup > League
+                                                    const nextMatch = nextSuperCup || nextCL || nextLeague;
 
                                                     if (!nextMatch) return (
-                                                        <div className="text-center text-slate-400 py-4">
-                                                            {t.noMatchToday}
+                                                        <div className="text-center py-4">
+                                                            <div className="text-slate-400 mb-3">{t.noMatchToday}</div>
+                                                            <button
+                                                                onClick={() => handleQuickSim()}
+                                                                className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-bold border border-slate-600 transition-colors shadow-lg flex items-center gap-2 mx-auto"
+                                                            >
+                                                                <Clock size={16} />
+                                                                {t.simulateMatch || 'Advance Week'}
+                                                            </button>
                                                         </div>
                                                     );
 
@@ -4595,6 +5080,7 @@ const App: React.FC = () => {
                                         onResign={handleResign}
                                         onUpgradeStaff={handleUpgradeStaff}
                                         onUpgradeFacility={handleUpgradeFacility}
+                                        onDowngradeFacility={handleDowngradeFacility}
                                         onPlayerClick={setSelectedPlayer}
                                     />
                                 )
@@ -4613,7 +5099,7 @@ const App: React.FC = () => {
                                     />
                                 )
                             }
-                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} onPlaySuperCup={handlePlaySuperCup} />}
+                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} onPlaySuperCup={handlePlaySuperCup} onOpenCupDetails={() => setShowEuropeanCup(true)} />}
                             {view === 'guide' && <GameGuide t={t} />}
                             {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} t={t} onBack={() => setView('dashboard')} />}
                         </div >
