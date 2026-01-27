@@ -3151,7 +3151,7 @@ export class MatchEngine {
 
                     // Mevcut pressing mantığı (forvet takibi yoksa)
                     if (!closestThreatToMe && this.isClosestTeammateToBall(p)) {
-                        const pressDist = isDangerZone ? 25 : 18;
+                        const pressDist = isDangerZone ? 35 : 22;
                         if (distToBall < pressDist) shouldPress = true;
                     }
 
@@ -4033,10 +4033,10 @@ export class MatchEngine {
         if (tactic.style === 'HighPress') effectiveDef *= 1.1;
 
         const decisionPenalty = Math.max(0.7, defDecisions / 100);
-        // TACKLE BALANCE: Hücumcular artık daha zor top kaybeder
-        // DEF: 0.5→0.45 (nerf), ATT: 0.3→0.4 (buff) = Hücumcular %15 daha güçlü
-        const rollD = effectiveDef * (Math.random() + 0.45) * decisionPenalty;
-        const rollA = effectiveDri * (Math.random() + 0.4);
+        // TACKLE BALANCE v2: Savunma güçlendirildi
+        // DEF: 0.45→0.55 (buff), ATT: 0.40→0.35 (nerf) = Defans %20 daha etkili
+        const rollD = effectiveDef * (Math.random() + 0.55) * decisionPenalty;
+        const rollA = effectiveDri * (Math.random() + 0.35);
 
         if (rollD > rollA) {
             // Başarılı Müdahale
@@ -4063,10 +4063,10 @@ export class MatchEngine {
         } else {
             // Müdahale Başarısız - Çalım Yedi veya FAUL!
 
-            // === FOUL DETECTION (BUFFED) ===
+            // === FOUL DETECTION (BALANCED v2) ===
             // Faul şansı agresifliğe ve başarısızlığa bağlı
-            // INCREASED from 0.15 to 0.22 - Aggressive actions must be punished
-            const foulChance = riskFactor * 0.22; // Safe: %13, Normal: %22, Aggressive: %40
+            // BALANCED: Safe: %7, Normal: %12, Aggressive: %22
+            const foulChance = riskFactor * 0.12;
             const isFoul = Math.random() < foulChance;
 
             if (isFoul) {
@@ -4082,20 +4082,20 @@ export class MatchEngine {
 
                 // Card chance: based on aggression and how bad the foul is
                 const cardRoll = Math.random();
-                // BUFFED CARD RATES:
-                // Safe: Yellow 15%, Red 2%
-                // Normal: Yellow 45%, Red 8%
-                // Aggressive: Yellow 60%, Red 15% (High risk!)
+                // BALANCED CARD RATES v2:
+                // Safe: Yellow 10%, Red 1%
+                // Normal: Yellow 20%, Red 3%
+                // Aggressive: Yellow 35%, Red 8% (Still risky!)
 
-                let yellowChance = 0.45;
-                let redChance = 0.08;
+                let yellowChance = 0.20;
+                let redChance = 0.03;
 
                 if (tactic.aggression === 'Aggressive') {
-                    yellowChance = 0.60;
-                    redChance = 0.15; // VERY HIGH RISK
+                    yellowChance = 0.35;
+                    redChance = 0.08; // High risk - caydırıcı ama makul
                 } else if (tactic.aggression === 'Safe') {
-                    yellowChance = 0.15;
-                    redChance = 0.02;
+                    yellowChance = 0.10;
+                    redChance = 0.01;
                 }
 
                 let cardEvent: MatchEvent | null = null;
