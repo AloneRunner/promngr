@@ -706,6 +706,20 @@ const App: React.FC = () => {
 
     const handleUpdateLineup = (playerId: string, status: LineupStatus, lineupIndex?: number) => {
         if (!gameState) return;
+
+        // CHECK AVAILABILITY
+        const player = gameState.players.find(p => p.id === playerId);
+        if (player && (status === 'STARTING' || status === 'BENCH')) {
+            if ((player.matchSuspension || 0) > 0) {
+                alert(`${player.lastName} is suspended and cannot play.`);
+                return;
+            }
+            if ((player.weeksInjured || 0) > 0) {
+                alert(`${player.lastName} is injured and cannot play.`);
+                return;
+            }
+        }
+
         const updatedPlayers = gameState.players.map(p => {
             if (p.id === playerId) {
                 const updated = { ...p, lineup: status };
@@ -724,6 +738,21 @@ const App: React.FC = () => {
         const p1 = gameState.players.find(p => p.id === p1Id);
         const p2 = gameState.players.find(p => p.id === p2Id);
         if (!p1 || !p2) return;
+
+        // CHECK AVAILABILITY
+        const isMatchSquad = (status: LineupStatus) => status === 'STARTING' || status === 'BENCH';
+        const isUnavailable = (p: Player) => (p.matchSuspension || 0) > 0 || (p.weeksInjured || 0) > 0;
+
+        // If p1 is unavailable and moving to a match squad position (p2's position)
+        if (isUnavailable(p1) && isMatchSquad(p2.lineup)) {
+            alert(`${p1.lastName} is unavailable (Suspended/Injured) and cannot be selected.`);
+            return;
+        }
+        // If p2 is unavailable and moving to a match squad position (p1's position)
+        if (isUnavailable(p2) && isMatchSquad(p1.lineup)) {
+            alert(`${p2.lastName} is unavailable (Suspended/Injured) and cannot be selected.`);
+            return;
+        }
 
         const updatedPlayers = gameState.players.map(p => {
             if (p.id === p1Id) return { ...p, lineup: p2.lineup, lineupIndex: p2.lineupIndex || 0 };
@@ -981,7 +1010,8 @@ const App: React.FC = () => {
             });
         }
 
-        autoPickLineup(playersCopy, userTeam.tactic.formation);
+        const maxStarters = 11 - redCardedIds.size;
+        autoPickLineup(playersCopy, userTeam.tactic.formation, undefined, undefined, undefined, maxStarters);
 
         // Restore the temporary injury flag and apply lineup changes
         const updatedPlayers = gameState.players.map(p => {
@@ -2578,41 +2608,88 @@ const App: React.FC = () => {
                         playedCupMatch = updatedCup.knockoutMatches.find(x => x.id === cupMatch.id) as unknown as Match;
                     }
 
+
                     if (playedCupMatch) {
                         alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
 
-                        // === EUROPEAN CUP REPUTATION BONUS ===
-                        const userTeam = updatedState.teams.find(t => t.id === updatedState.userTeamId);
-                        if (userTeam) {
-                            const isUserHome = homeTeam.id === updatedState.userTeamId;
-                            const userWon = (playedCupMatch as any).winnerId === updatedState.userTeamId;
-                            const opponent = isUserHome ? awayTeam : homeTeam;
-                            const opponentRepDiff = opponent.reputation - userTeam.reputation;
+                        // === GLOBAL CUP REPUTATION UPDATE (BOTH TEAMS) ===
+                        // Update reputation for BOTH teams based on match result
+                        const homeWon = playedCupMatch.homeScore > playedCupMatch.awayScore;
+                        const awayWon = playedCupMatch.awayScore > playedCupMatch.homeScore;
+                        const isDraw = playedCupMatch.homeScore === playedCupMatch.awayScore;
 
-                            if (userWon) {
-                                // Champions League win bonus: +20 base, up to +40 for beating much stronger
-                                let repBonus = 20 + Math.max(0, Math.floor(opponentRepDiff / 200)); // +20 to +40
-                                repBonus = Math.min(40, repBonus);
+                        let teamsToUpdate: Array<{ teamId: string, repChange: number, reason: string }> = [];
 
-                                // Round bonus
-                                if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
-                                else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
-                                else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
+                        // Home team reputation change
+                        if (homeWon) {
+                            const repDiff = awayTeam.reputation - homeTeam.reputation;
+                            let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
+                            repBonus = Math.min(40, repBonus);
 
-                                const newRep = Math.min(10000, userTeam.reputation + repBonus);
-                                userTeam.reputation = newRep;
+                            if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
+                            else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
+                            else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
 
-                                // Record history
-                                const history = userTeam.reputationHistory || [];
+                            teamsToUpdate.push({
+                                teamId: homeTeam.id,
+                                repChange: repBonus,
+                                reason: `🏆 Global Cup: ${awayTeam.name} (G)`
+                            });
+                        } else if (!isDraw) {
+                            // Home team lost
+                            const repPenalty = Math.min(15, Math.floor((homeTeam.reputation - awayTeam.reputation) / 300));
+                            teamsToUpdate.push({
+                                teamId: homeTeam.id,
+                                repChange: -Math.max(5, repPenalty),
+                                reason: `🏆 Global Cup: ${awayTeam.name} (M)`
+                            });
+                        }
+
+                        // Away team reputation change
+                        if (awayWon) {
+                            const repDiff = homeTeam.reputation - awayTeam.reputation;
+                            let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
+                            repBonus = Math.min(40, repBonus);
+
+                            if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
+                            else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
+                            else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
+
+                            teamsToUpdate.push({
+                                teamId: awayTeam.id,
+                                repChange: repBonus,
+                                reason: `🏆 Global Cup: ${homeTeam.name} (G)`
+                            });
+                        } else if (!isDraw) {
+                            // Away team lost
+                            const repPenalty = Math.min(15, Math.floor((awayTeam.reputation - homeTeam.reputation) / 300));
+                            teamsToUpdate.push({
+                                teamId: awayTeam.id,
+                                repChange: -Math.max(5, repPenalty),
+                                reason: `🏆 Global Cup: ${homeTeam.name} (M)`
+                            });
+                        }
+
+                        // Apply reputation changes to updatedState.teams
+                        updatedState.teams = updatedState.teams.map(t => {
+                            const update = teamsToUpdate.find(u => u.teamId === t.id);
+                            if (update) {
+                                const newRep = Math.max(1000, Math.min(10000, t.reputation + update.repChange));
+                                const history = [...(t.reputationHistory || [])];
                                 history.push({
                                     week: updatedState.currentWeek,
-                                    change: repBonus,
-                                    reason: `🏆 CL: ${opponent.name} (G)`,
+                                    change: update.repChange,
+                                    reason: update.reason,
                                     newValue: newRep
                                 });
-                                userTeam.reputationHistory = history.slice(-20);
+                                return {
+                                    ...t,
+                                    reputation: newRep,
+                                    reputationHistory: history.slice(-20)
+                                };
                             }
-                        }
+                            return t;
+                        });
                     }
                 }
                 // Europa League Deprecated - logic removed
@@ -5186,6 +5263,35 @@ const App: React.FC = () => {
                 teams={gameState?.teams || []}
                 players={gameState?.players || []}
             />
+
+            {/* Game Over Modal */}
+            {gameState?.isGameOver && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+                    <div className="bg-slate-900 border border-red-500/30 rounded-3xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(239,68,68,0.3)] text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-600 to-orange-600"></div>
+                        <div className="mb-6 flex justify-center">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30 animate-pulse">
+                                <LogOut size={40} className="text-red-500" />
+                            </div>
+                        </div>
+                        <h2 className="text-3xl font-black text-white mb-2 uppercase tracking-tight">{t.gameOver || 'OYUN BİTTİ'}</h2>
+                        <h3 className="text-xl font-bold text-red-400 mb-4">{t.firedTitle || 'Kovuldunuz!'}</h3>
+                        <p className="text-slate-400 mb-8 leading-relaxed">
+                            {t.firedDesc || 'Yönetim size olan güvenini tamamen kaybetti. Eşyalarınızı toplayın.'}
+                        </p>
+                        <button
+                            onClick={() => {
+                                setGameState(null);
+                                setShowProfileSelector(true);
+                            }}
+                            className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/40 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        >
+                            <LogOut size={20} />
+                            {t.mainMenu || 'Ana Menüye Dön'}
+                        </button>
+                    </div>
+                </div>
+            )}
         </Layout >
     );
 };

@@ -307,7 +307,10 @@ export interface JobOffer {
 export interface GameState {
     currentWeek: number; currentSeason: number; userTeamId: string; leagueId: string;
     teams: Team[]; players: Player[]; matches: Match[]; isSimulating: boolean;
-    messages: Message[]; transferMarket: Player[]; history: LeagueHistoryEntry[];
+    messages: Message[];
+    isGameOver?: boolean; // NEW: Track game over state
+    gameOverReason?: string; // NEW: Reason for game over (e.g., 'FIRED')
+    transferMarket: Player[]; history: LeagueHistoryEntry[];
     pendingOffers: TransferOffer[];
     europeanCup?: EuropeanCup;
     europaLeague?: EuropeanCup;

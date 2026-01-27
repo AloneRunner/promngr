@@ -310,7 +310,7 @@
     guideFast: "Fast match simulation",
     guideMobile: "Mobile-first design",
     guideLiveEngine: "Live Match Engine",
-    guideLiveEngineDesc: "Most manager games (FM, Top Eleven etc.) pre-calculate matches and show you highlights. The 'scenario' is already written.",
+    guideLiveEngineDesc: "Most manager games (FM, Top Eleven etc.) pre-calculate matches and show you highlights. The 'script' is already written.",
     guideOurEngine: "Our engine is different!",
     guideEvery50ms: "Every 50ms (20 times per second):",
     guide22Players: "22 player positions are calculated",
@@ -360,94 +360,262 @@
     form: "Form",
     guideBasicsTitle: "Game Basics",
     guideBasics1: "You are the manager of a football team in this game.",
-    guideBasics2: "A league match is played every week. Champion is determined at the end of the season.",
-    guideBasics3: "Goal: Championship, European cups and growing the club.",
-    guideBasics4: "The game saves automatically. Use 'Save and Exit' for a safe exit.",
-    guideBasics5: "If Board Confidence drops, you might be fired!",
-    guideBoardEffectTitle: "Board Confidence Effects:",
-    guideWinEffect: "Win: +3 confidence",
-    guideDrawEffect: "Draw: +0 confidence",
-    guideLossEffect: "Loss: -5 confidence",
-    guideFireWarning: "Below 30%: You get fired!",
+    guideBasics2: "📅 A league match is played every week. Champion is determined at the end of the season.",
+    guideBasics3: "🏆 Goal: Championship, European cups and growing the club.",
+    guideBasics4: "💾 The game saves automatically. Use 'Save and Exit' for a safe exit.",
+    guideBasics5: "📊 If Board Confidence drops, you might be fired!",
+    guideBoardEffectTitle: "⚠️ Board Confidence Effects:",
+    guideWinEffect: "• Win: +2 to +6 (Depending on opponent)",
+    guideDrawEffect: "• Draw: Varies by expectation",
+    guideLossEffect: "• Loss: -3 to -8",
+    guideFireWarning: "• Below 30%: YOU GET FIRED!",
+    guideDerbyNote: "🔥 Derby & European matches are 2x more important!",
     guideSquadTitle: "Squad Management",
-    guideSquad1: "Set players as Starting XI, Bench, or Reserves.",
-    guideSquad2: "Click a player to swap with another.",
-    guideSquad3: "Try different formations by selecting a layout.",
-    guideOvrCalcTitle: "How is OVR (Overall Rating) Calculated?",
-    guidePosMatch: "Position Match: Players in correct positions show higher OVR.",
-    guideMoraleEffect: "Morale Effect: 50+ morale = bonus, 50- morale = penalty.",
-    guideConEffect: "Condition: Below 30% condition = serious performance drop.",
-    guideReleaseTitle: "Contract Termination",
-    guideRelease1: "You can release unwanted players.",
-    guideRelease2: "Compensation: Remaining Years × Annual Wage × 50%",
-    guideRelease3: "The player becomes a free agent.",
-    guideTacticsTitle: "Tactics System (Detailed)",
-    guideForm433: "4-3-3: Balanced, wing-heavy.",
-    guideForm442: "4-4-2: Classic, safe.",
-    guideForm4231: "4-2-3-1: Midfield control.",
-    guideForm352: "3-5-2: Midfield dominant.",
-    guideForm532: "5-3-2: Defensive.",
-    guideForm4141: "4-1-4-1: Solid defense.",
-    guideStylePoss: "Possession: Ball retention, short passing, patient attack. Needs strong midfield.",
-    guideStyleCounter: "Counter: Defend and fast break. Needs fast forwards and midfielders.",
-    guideStylePress: "HighPress: High pressure, suffocate opponent. Requires high stamina!",
-    guideStyleBus: "ParkTheBus: 11-man defense, wait for counter. Effective against big teams.",
-    guideStyleBal: "Balanced: A bit of everything. A safe choice.",
-    guideWidthNarrow: "Narrow: Play through middle. Ideal for central players.",
-    guideWidthWide: "Wide: Use the wings. Requires fast wingers.",
-    guideTrainingTitle: "Training System",
-    guideTrainAge: "Only players under 28 can develop!",
-    guideTrainLuck: "Development is luck-based - not guaranteed every week.",
+    guideSquad1: "• Set players as Starting XI, Bench, or Reserves.",
+    guideSquad2: "🔄 Click a player to swap with another.",
+    guideSquad3: "📍 Try different formations by selecting a layout.",
+    guideOvrCalcTitle: "📊 How is OVR (Overall Rating) Calculated?",
+    guidePosMatch: "• Position Match: Players in correct positions show higher OVR.",
+    guideMoraleEffect: "• Morale Effect: 50+ morale = bonus, 50- morale = penalty.",
+    guideConEffect: "• Condition: Below 30% condition = serious performance drop.",
+    guideReleaseTitle: "❌ Contract Termination",
+    guideRelease1: "• You can release unwanted players.",
+    guideRelease2: "• Compensation: Remaining Years × Annual Wage × 50%",
+    guideRelease3: "• The player becomes a free agent.",
+    guideTacticsTitle: "Tactics System (Detailed Analysis)",
+
+    // TACTICS DEEP DIVE
+    guideDeepPassTitle: "1. Passing Style",
+    guideDeepPassContent: `1. Passing Style
+⚠️ IMPORTANT NOTE: The "Short Passing" option has been REMOVED from the game engine because it prevented teams from shooting and locked up play.
+
+A. Direct Passing
+"Vertical, go to goal!" philosophy. Premier League style.
+• 🚀 Aerial Bonus: +20 Points for aerial passes and crosses.
+• 🔫 Shoot & Dribble: Shoot (+15) and Dribble (+10) desire increases! They want to be heroes.
+• 📉 Safe Pass Penalty: Side passing desire reduced by -10 Points.
+When?: Fast forwards, Physical team, Bad pitch, Counter-attacks.
+
+B. Balanced (Mixed)
+Standard setting. Players choose the best option (highest score) regardless of distance.
+
+2. Width
+This setting determines how the team parcels out the pitch.
+
+A. Narrow
+"Must go through the middle" tactic.
+• 🧱 Center Play: If player is NOT near touchline, Pass (+15) and Dribble (+10) bonus.
+• Effect: Players prefer one-twos in the center rather than going wide.
+• Suitable: 4-1-2-1-2 (Diamond), 4-3-1-2, 5-3-2.
+
+B. Wide
+"Hit the line, cross it" tactic.
+• 🏍️ Wing Attacks: Dribble desire increases by +20 Points if on the wing!
+• 🎯 Cross Bonus: Pass (Cross) points +15 in attack zone.
+• Suitable: 4-3-3, 3-4-3, 4-4-2.`,
+
+    guideDeepTempoTitle: "⚡ Detailed Analysis: Tempo & Defense",
+    guideDeepTempoContent: `1. Tempo (Game Speed)
+A. Slow - "Chess"
+• Decision Time: x1.4 slower (They think more).
+• Turnover Risk: Reduced.
+• Use: Protecting score, technical team.
+
+B. Fast - "Chaos"
+• Decision Time: x0.7 faster (Panic passes).
+• Error Risk: High.
+• Effect: Overwhelms the opponent.
+
+2. Defensive Line
+A. Deep - "Bunker"
+• Position: 20-30m from goal.
+• Advantage: No space behind (Anti-Mbappe).
+• Disadvantage: Midfield control given to opponent.
+
+B. High - "Offside Trap"
+• Position: Near midfield.
+• Advantage: Trap opponent in their half.
+• Disadvantage: Through balls are 90% goal chances.`,
+
+    guideDeepComboTitle: "🛠️ Critical Combination Recommendations",
+    guideDeepComboContent: `⚠️ "Chaos Football (Klopp Style)":
+Style: High Press + Pass: Direct + Width: Wide
+Result: Match ends 4-3. Fans go crazy.
+
+⚠️ "Italian Wall (Catenaccio)":
+Style: Counter + Pass: Direct + Width: Narrow
+Result: Win 1-0 and go home.
+
+(Note: Since 'Short Passing' required for Tiki-Taka is removed, possession lovers should prefer 'Balanced' style.)`,
+    guideRolesTitle: "Player Roles",
+    guideRolesIntro: "Each player fits a specific role based on their attributes. For example, you can't play a slow striker as a 'Poacher'.",
+    guideRolePoacher: "Poacher: Does not contribute to build-up, only finishes. Speed and Finishing required.",
+    guideRoleTargetMan: "Target Man: Holds up the ball with back to goal, brings teammates into play. Strength and Passing required.",
+    guideRoleFalse9: "False 9: Looks like a striker but drops deep to distribute passes.",
+    guideRolePlaymaker: "Playmaker: The brain of the team. All balls go through them. High Vision is essential.",
+    guideRoleB2B: "Box-to-Box: Runs between defense and attack. Requires high Stamina (lungs required!).",
+    guideRoleDestroyer: "Destroyer: Only goal is to stop opponent attacks with fouls or tackles. Weak passing.",
+    guideRoleStopper: "Stopper: Classic defender. Clears the ball.",
+    guideRoleBallPlaying: "Ball Playing CB: Essential for modern football. Starts play from the back, plays long balls.",
+    guideRoleWingback: "Wingback: Doesn't just defend, joins attack and crosses. Speed is crucial.",
+
+    guideTrainingTitle: "🏋️ Training System (DETAILED)",
+    guideTrainAge: "⚠️ Players over 28 do NOT improve!",
+    guideTrainLuck: "Development is luck-based, not guaranteed.",
     guideTrainFocus: "Training Focuses",
-    guideTrainFocusBal: "Balanced: Equal chance for all attributes.",
-    guideTrainFocusAtt: "Attack: Finishing, Shooting, Dribbling improves.",
-    guideTrainFocusDef: "Defense: Tackling, Positioning, Strength improves.",
-    guideTrainFocusPhy: "Physical: Pace, Stamina, Strength improves.",
-    guideTrainFocusTec: "Technical: Passing, Dribbling, Vision improves.",
-    guideTrainPosBased: "By Position (NEW!): Automatically based on role.",
-    guideFacilitiesTitle: "Facilities & Staff",
-    guideStadiumEffect: "Each level = +6,000 capacity. More fans = more ticket revenue.",
-    guideTrainingEffect: "Training Center: Increases player growth speed and potential reach chance.",
-    guideScoutVsAcad: "Scout vs Academy: Scouts are more effective for finding potential, upgrade them first!",
-    guideMoraleTitle: "Morale System",
-    guideMoraleXI: "Starting XI: +2 morale",
-    guideMoraleBench: "Bench: No change",
-    guideMoraleRes75: "Reserve (75+ OVR): -3 morale!",
-    guideMoraleRes65: "Reserve (65-75 OVR): -1 morale",
-    guideMoralePerform: "100 Morale: +5% OVR bonus. 0 Morale: -10% OVR penalty!",
-    guideTransferTitle: "Transfer System",
-    guideTransList: "Players on transfer list are cheaper.",
-    guideTransUnlisted: "Expect to pay 20-50% more for unlisted players.",
+    guideTrainFocusBal: "Balanced: Slight increase for all stats.",
+    guideTrainFocusAtt: "Attack: Finishing, Shooting, Dribbling increases.",
+    guideTrainFocusDef: "Defense: Tackling, Positioning, Strength increases.",
+    guideTrainFocusPhy: "Physical: Speed, Stamina, Strength increases.",
+    guideTrainFocusTec: "Technical: Passing, Dribbling, Vision increases.",
+    guideTrainPosBased: `Targeted Training (NEW!)
+Position-Based training improves attributes specifically for that role.
+
+EXPERT: Development Math
+Actual formulas inside the game engine:
+1. Age Factor:
+• < 21 Years: 5% Growth Chance (Very Fast)
+• 21-24 Years: 3% Growth Chance (Normal)
+• 24-28 Years: 1% Growth Chance (Slow)
+• 28+ Years: Growth STOPS. Can only maintain form by playing.
+• 32+ Years: 5% chance to DECLINE every week (Retirement nearing).
+
+2. Facility Effect:
+• Training Facility: +0.5% chance per Level.
+• Head Coach: +0.8% bonus per Level.
+• EXAMPLE: An 18-year-old with Lvl 10 Facility & Lvl 5 Coach has ~15% growth chance weekly!
+
+3. Fatigue (Condition):
+• Condition < 60%: Training efficiency HALVED.
+• Condition < 30%: Player skips training to rest.
+• TIP: Rest players with "Light" training after matches to speed up growth!`,
+
+    guideFacilitiesTitle: "🏢 Facilities & Staff",
+    guideStadiumEffect: `Stadium
+• Each level = +6,000 capacity. More fans = more ticket revenue.
+
+🏋️ Training Center
+• Training Center: Increases player development speed.
+
+EXPERT: Return on Investment (ROI)
+How to grow without going bankrupt?
+
+1. Maintenance Costs (Hidden Expense):
+• Formula: (Level ^ 1.3) x 2,000 €
+• Level 1 Stadium: 2,000 € / week
+• Level 15 Stadium: ~70,000 € / week (Huge spike!)
+• TIP: Do not upgrade facilities if your income hasn't increased. You will go bankrupt.
+
+2. Stadium Math:
+• Each seat yields avg. 15 €.
+• +2000 Capacity (1 Upgrade) = +30,000 € Extra Revenue/week.
+• Takes ~100 weeks (2 seasons) to cover the 3M € cost.
+• RESULT: Stadium is a long-term investment. It loses money in the short term.
+
+3. Academy vs Scout:
+• Academy Lvl 10: 5% chance for a mediocre youth (50-60 OVR) weekly.
+• Scout Lvl 10: 10% chance for a TALENTED youth (65-80 Pot/OVR) weekly.
+• ADVICE: Invest in Scout first. You can sell found talents for 5-10M €!`,
+    guideTrainingEffect: "Training Center: Increases development speed.",
+    guideScoutVsAcad: "Scout vs Academy: Scout finds better potential, upgrade it first!",
+
+    guideMoraleTitle: "🧠 Morale System",
+    guideMoraleXI: "Starting XI: +2 Morale",
+    guideMoraleBench: "Bench: No Change",
+    guideMoraleRes75: "Reserve (75+ OVR): -3 Morale!",
+    guideMoraleRes65: "Reserve (65-75 OVR): -1 Morale",
+    guideMoralePerform: `Morale directly affects player performance (OVR).
+
+EXPERT: Morale Math
+Morale defines the player's IQ on the pitch.
+
+1. How Morale Drops?
+• Star in Reserves: If OVR > 75 and not playing, -3 Morale/week (Star Ego).
+• Regular Sub: If OVR 65-75, -1 Morale/week.
+• Youngsters (<65 OVR): They don't mind not playing (Stable).
+
+2. In-Match Impact (Crucial!):
+• 80-100 Morale: Plays with 110% performance. Won't miss passes.
+• 40-60 Morale: Normal performance.
+• 0-20 Morale: Misses open goals. GK lets ball slip through hands.
+• CRITICAL: Never play an unhappy star in a derby. Sell them.`,
+
+    guideTransferTitle: "✈️ Transfer System",
+    guideTransList: "Listed players are cheaper.",
+    guideTransUnlisted: `📅 Transfer Windows (NEW!)
+• Summer: Weeks 1-8
+• Winter: Weeks 20-24
+
+EXPERT: Negotiation Secrets
+How to convince the AI?
+
+1. "Willingness" Score:
+Need > 50 points for player to say "Yes":
+• League Diff: England vs Turkey difference is capped (Max -7 Pts).
+• Team Rep: +1 Pt for every 75 reputation difference.
+• Champions League: Indirectly boosts willingness via reputation.
+
+2. Money Talks (Wage Strategy):
+Use wage to turn "No" into "Yes":
+• 1.5x Wage Offer: +25 Willingness Pts.
+• 2.0x Wage Offer: +50 Pts (MAX EFFECT).
+• WARNING: Offering 3.0x wage gives NO extra points! 2.0x is the cap.
+
+3. Selling Tactics:
+• AI offers 100-150% value for listed players.
+• They MUST pay 120-170% for unlisted players.
+• TIP: Don't list your stars if you don't want to sell; make AI pay a fortune!`,
+
     guideYouthTitle: "Youth Academy (Cheap!)",
-    guideYouth1: "Young players come at €50K value.",
-    guideYouth2: "Wage: Only €25K/year.",
-    guideFinanceTitle: "Finance Management",
+    guideYouth1: "Youths come with 50K € value.",
+    guideYouth2: "Wage: Only 25K €/year.",
+
+    guideFinanceTitle: "💰 Finance Management",
     guideSponsorG: "Guaranteed: High fixed, low bonus. Safe.",
     guideSponsorD: "Balanced: Mid fixed, mid bonus.",
-    guideSponsorR: "Risky: Low fixed, high bonus. Profitable if you win!",
-    guideEuroTitle: "European Cups",
-    guideEuroReq: "Participation Requirements",
-    guideEuroCL: "Champions League: 1st and 2nd in League",
-    guideEuroEL: "UEFA Europa League: 3rd and 4th in League",
+    guideSponsorR: `Risky: Low fixed, high bonus.
+
+EXPERT: Legal Cheats
+How to cover budget deficits:
+
+1. "Buy-Low Sell-High" (Farming):
+• Sign "Free Agent" players aged 16-19 at start of season.
+• Wages are only 25-50K €.
+• Train them for 10 weeks, then list them.
+• Even at 100K € value, it's profit. Getting free players and selling for 100K is clean money.
+
+2. Sponsor Gambling:
+• If aiming for title: Pick "Risky" (5M € Bonus).
+• If mid-table: Pick "Guaranteed" for safe weekly cash flow.
+
+3. European Income:
+• Just participating in Intercontinental Cup gives 2.5M € start money.
+• Finishing 3rd in League can sometimes be more profitable than 1st (Better to progress 3 rounds in lower cup than 0 in Champions League).`,
+
+    guideEuroTitle: "🌍 Intercontinental Cups",
+    guideEuroReq: "Participation Rules",
+    guideEuroCL: "Champions Cup: 1st & 2nd in League",
+    guideEuroEL: "Intercontinental Cup: 3rd & 4th in League",
     guideEuroFormat: "Tournament Format",
-    guideEuroGroups: "Group Stage: groups of 4 teams",
-    guideEuroAdv: "Top 2 advance to knockout stage",
-    guideEuroKO: "Quarter-final, semi-final, final",
-    guideEuroSingle: "Single-leg knockout system",
-    guideProTipsTitle: "Pro Tips",
-    guideTipsDos: "Dos",
-    guideTipsDo1: "Have at least 2 players in every position.",
-    guideTipsDo2: "Give young players a chance - they develop!",
-    guideTipsDo3: "Upgrade the Scout first (it's more effective).",
-    guideTipsDo4: "Sell youth academy prospects - very profitable!",
-    guideTipsDo5: "Change tactics according to the opponent.",
-    guideTipsDo6: "Rest your tired players.",
-    guideTipsDonts: "Don'ts",
-    guideTipsDont1: "Don't keep high OVR players in reserves constantly.",
-    guideTipsDont2: "Don't make transfers exceeding your budget.",
-    guideTipsDont3: "Don't stick to only one formation.",
-    guideTipsDont4: "Don't ignore injuries.",
-    guideTipsDont5: "Don't let contracts expire.",
+    guideEuroGroups: "Group Stage: Groups of 4",
+    guideEuroAdv: "Top 2 advance",
+    guideEuroKO: "QF, SF, Final",
+    guideEuroSingle: "Single-leg knockout",
+
+    guideProTipsTitle: "🏆 Pro Tips",
+    guideTipsDos: "Do's",
+    guideTipsDo1: "• Keep at least 2 players per position.",
+    guideTipsDo2: "• Give youngsters a chance - they improve!",
+    guideTipsDo3: "• Upgrade Scout Network first (most effective).",
+    guideTipsDo4: "• Sell academy players - pure profit!",
+    guideTipsDo5: "• Adapt tactics to your opponent.",
+    guideTipsDo6: "• Rest tired players.",
+    guideTipsDonts: "❌ Don'ts",
+    guideTipsDont1: "• Don't keep stars in reserves forever.",
+    guideTipsDont2: "• Don't overspend your budget.",
+    guideTipsDont3: "• Don't stick to one formation.",
+    guideTipsDont4: "• Don't ignore injuries.",
+    guideTipsDont5: "• Don't let contracts expire.",
     guideTipsTactical: "Tactical Tips",
     guideTipStrong: "Strong Opponent: ParkTheBus + Counter",
     guideTipWeak: "Weak Opponent: HighPress + Possession",
@@ -599,105 +767,8 @@
     adviceUseWings: "You'll bypass through the wings",
     adviceTwoStrikers: "Two strikers will apply pressure",
     adviceExtraDefense: "Extra defensive support needed",
-    // --- DEEP DIVE TACTICS ---
-    // --- DEEP DIVE TACTICS (USER MANUAL EXACT TEXT) ---
-    guideDeepPassTitle: "📐 Tactical Analysis Report: Width & Passing",
-    guideDeepPassContent: `1. Passing Style
-This setting doesn't just change "how they pass", it alters the entire decision mechanism. The difference between Short and Direct is massive.
 
-A. Short Passing
-"Keep the ball, no rush."
 
-Engine Effect:
-🦶 Love for Short Distance: If a teammate is closer than 15m, that pass gets +30 Score. HUGE bonus for AI.
-🚫 Penalty for Long Pass: As distance exceeds 15m, score drops rapidly. They resist long balls.
-🛡️ Zero Risk: Desire to dribble drops by -10. They avoid risky moves.
-🧠 Pass Priority: +20 Score bonus to 'Pass' decision over Shot/Dribble.
-When to Use:
-• Technical midfield, good passers.
-• Playing "Possession" style.
-• Protecting a lead.
-
-B. Direct Passing
-"Vertical, straight to goal!" Premier League style.
-
-Engine Effect:
-🚀 Aerial Bonus: +20 Score for Aerial passes and Crosses. They don't mind lifting the ball.
-🔫 Shoot & Dribble: Interesting detail; Shoot score +15, Dribble score +10! They want to go to goal individually too.
-📉 Safety Penalty: Side passes get -10 score. No "boring play".
-When to Use:
-• Fast forwards (to hit behind defense).
-• Physical team.
-• Bad pitch or heavy pressing opponent.
-• Perfect match for "Counter Attack".
-
-C. Balanced (Mixed)
-Standard setting. Players choose the best option regardless of distance.
-
-2. Width
-Determines how the team uses the pitch geometry.
-
-A. Narrow
-"Drill through the center."
-
-Code Secret:
-🧱 Central Play: If a player is NOT near the touchline, Pass (+15) and Dribble (+10) bonus.
-Effect: Players become creative when crowded in the middle. They try 1-2s instead of going wide.
-Best Formations: 4-1-2-1-2 (Diamond), 4-3-1-2, 5-3-2.
-
-B. Wide
-"Hit the line, cross it in."
-
-Code Secret:
-🏍️ Wing Raids: If a player is on the wing, Dribble desire increases by +20! They become dribbling monsters.
-🎯 Cross Bonus: If on the wing and in the final third, Cross score +15. Focus is to get down the line and center it.
-Best Formations: 4-3-3, 3-4-3, 4-4-2.`,
-
-    guideDeepTempoTitle: "⚡ Tactical Analysis Report: Tempo & Defense",
-    guideDeepTempoContent: `1. Tempo (Game Speed)
-A. Slow - "Chess"
-• Decision Time: Increases x1.4. (They think more)
-• Turnovers: Decreased.
-• Opponent: Gets time to organize defense.
-• Usage: Protecting lead, technical team.
-
-B. Fast - "Chaos"
-• Decision Time: Decreases x0.7! (Panic passes)
-• Error Rate: High.
-• Effect: Overwhelms the opponent.
-• Usage: Chasing a goal, tired opponent.
-
-2. Defensive Line
-A. Deep - "Bunker"
-• Position: 20-30m from goal.
-• Pro: No space behind (Mbappe proof).
-• Con: You surrender midfield control.
-
-B. High - "Offside Trap"
-• Position: Near midfield.
-• Pro: You trap the opponent in their half.
-• Con: Every long ball is a 90% goal chance.`,
-
-    guideDeepComboTitle: "🛠️ Critical Combinations",
-    guideDeepComboContent: `Since I read the code before you, here are some dangerous combos:
-
-"The Tiki-Taka Master":
-• Style: Possession
-• Pass: Short
-• Width: Narrow
-• Result: Opponent never touches the ball, but match might end 0-0.
-
-"Chaos Football (Klopp Style)":
-• Style: High Press
-• Pass: Direct
-• Width: Wide
-• Result: Match ends 4-3. Who wins? Nobody knows, but it's fun.
-
-"Italian Wall (Catenaccio)":
-• Style: Counter Attack
-• Pass: Direct
-• Width: Narrow (To close the center)
-• Result: 1-0, we win.`,
 
     adviceMarkPlaymaker: "You'll mark the playmaker",
     adviceMidfieldSuperiority: "Midfield superiority",
@@ -789,81 +860,7 @@ B. High - "Offside Trap"
     update200Item7Title: "Super Cup Fix",
     update200Item7Desc: "Super Cup is now played at the correct time (Match week of cup finals) and champions are matched correctly.",
 
-    // --- EXPERT GUIDES (Migrated from TR) ---
-    guideDeepTrainingTitle: "EXPERT: Development Math",
-    guideDeepTrainingContent: `The real formulas inside the engine:
-1. Age Factor:
-• < 21 Years: Dev Chance 5% (Very Fast)
-• 21-24 Years: Dev Chance 3% (Normal)
-• 24-28 Years: Dev Chance 1% (Slow)
-• 28+ Years: Development STOPS. Only form maintenance.
-• 32+ Years: 5% chance of decline each week.
 
-2. Facility Impact:
-• Training Facility: +0.5% chance per level.
-• Head Coach: +0.8% bonus per level.
-• EXAMPLE: 18yo player + Lvl 10 Facility + Lvl 5 Coach = 15% weekly chance!
-
-3. Fatigue (Condition):
-• Condition < 60%: Training efficiency HALVED.
-• Condition < 30%: Player skips training to rest.`,
-
-    guideDeepFacilitiesTitle: "EXPERT: ROI Analysis",
-    guideDeepFacilitiesContent: `How to grow without bankruptcy:
-1. Maintenance (Hidden Cost):
-• Formula: (Level ^ 1.3) x 2000 €
-• Level 15 Stadium: ~70,000 €/week!
-• TIP: Don't upgrade unless your income supports it.
-
-2. Stadium Math:
-• Each seat yields ~15 €.
-• +2000 Capacity (1 Upgrade) = +30,000 €/week.
-• ROI: Takes ~100 weeks (2 seasons) to pay for itself.
-• VERDICT: Stadium is a long-term investment.
-
-3. Academy vs Scout:
-• Academy Lvl 10: 5% chance/week for mediocre youth (50-60 OVR).
-• Scout Lvl 10: 10% chance/week for TALENTED youth (65-80 Pot).
-• ADVICE: Invest in Scout first. You can sell his finds for millions!`,
-
-    guideDeepMoraleTitle: "EXPERT: Morale Math",
-    guideDeepMoraleContent: `Morale determines player IQ on the pitch.
-1. How it drops:
-• Reserve Star: If OVR > 75 and not playing -> -3 Morale/week.
-• Bench Warmer: If OVR 65-75 -> -1 Morale/week.
-• Youngsters: Stable even if not playing.
-
-2. Match Effect (Critical):
-• 80-100 Morale: 110% Performance.
-• 0-20 Morale: Misses open goals. GK lets ball slip.
-• TIP: Never play an unhappy star in a derby. Sell him.`,
-
-    guideDeepTransferTitle: "EXPERT: Negotiation Secrets",
-    guideDeepTransferContent: `How to convince AI?
-1. "Willingness" Score (>50 needed):
-• League Diff: PL vs TR difference is small (Max -7 pts).
-• Reputation: Every 75 rep difference = +1 Pt.
-• Champions League: Indirect bonus via reputation.
-
-2. Money Talks (Wage Multiplier):
-• 1.5x Wage Offer: +25 Willingness.
-• 2.0x Wage Offer: +50 Willingness (MAX EFFECT).
-• WARNING: Offering 3.0x gives NO extra benefit over 2.0x!
-
-3. Selling Tactics:
-• Listed players: AI offers 100-150% of value.
-• Unlisted players: AI must pay 120-170% premium.`,
-
-    guideDeepFinanceTitle: "EXPERT: Financial Tricks",
-    guideDeepFinanceContent: `Legal cheats for budget:
-1. Farming:
-• Sign 16-19yo Free Agents (Wage 25-50k).
-• Train for 10 weeks -> List them.
-• Pure profit even if sold cheap.
-
-2. Sponsor Gamble:
-• Playing for title? Pick "Risky" (Huge bonus).
-• Mid-table? Pick "Guaranteed" (Cash flow).`,
 
     // --- v3.2 UPDATE ---
     update320Title: "Expert Guide & Giant Killers",
@@ -893,5 +890,37 @@ B. High - "Offside Trap"
     update321Item3Title: "Dynamic Ticket Prices",
     update321Item3Desc: "Ticket prices also increase with league success. Successful leagues = More fan interest = Higher ticket prices.",
     update321Item4Title: "Champion Protection",
-    update321Item4Desc: "League champion's reputation now NEVER decreases. Championship = Minimum +200 reputation guaranteed."
+    update321Item4Desc: "League champion's reputation now NEVER decreases. Championship = Minimum +200 reputation guaranteed.",
+
+    // --- v3.2.5 UPDATE ---
+    update325Title: "Version 3.2.5 – What's New",
+    update325Item1Title: "Match Engine & Gameplay",
+    update325Item1Desc: "• Match engine calibrated.\n• Short Pass & Possession tactics removed (ineffective).\n• Aggressive teams now receive more cards.\n• Shot accuracy reduced, Dribbling/Defense buffed.\n• AI tactics reset based on squad.",
+    update325Item2Title: "League & Tournament System",
+    update325Item2Desc: "• League count increased to 24.\n• Intercontinental Cup replaces European Cup (Top 2 teams qualify).",
+    update325Item3Title: "Management & Club System",
+    update325Item3Desc: "• Manager Sacking active! (Low Board Confidence = Game Over).\n• Red card bans are now active.\n• Reputation points updated.",
+
+    // Engine Reports & Attributes
+    reportGeneralDev: "General Development",
+    attrFinishing: "Finishing",
+    attrDribbling: "Dribbling",
+    attrPositioning: "Positioning",
+    attrTackling: "Tackling",
+    attrStrength: "Strength",
+    attrSpeed: "Speed",
+    attrStamina: "Stamina",
+    attrPassing: "Passing",
+    attrVision: "Vision",
+    attrGoalkeeping: "Goalkeeping",
+    attrComposure: "Composure",
+    attrLeadership: "Leadership",
+    attrDecisions: "Decisions",
+
+    moralePlayed: "Played in match",
+    moraleStarting: "Starting XI",
+    moraleBench: "Bench (Neutral)",
+    moraleReserve: "Reserves",
+    moraleReserveStar: "Star Player in Reserves",
+    moraleReserveStable: "Reserves (Stable)"
 };

@@ -361,109 +361,71 @@
     form: "Form",
     guideBasicsTitle: "Oyun Temelleri",
     guideBasics1: "Bu oyunda bir futbol takımının teknik direktörüsün.",
-    guideBasics2: "Her hafta bir lig maçı oynanır. Sezon sonunda şampiyon belirlenir.",
-    guideBasics3: "Hedef: Şampiyonluk, Avrupa kupaları ve kulübü büyütmek.",
-    guideBasics4: "Oyun otomatik kaydedilir. \"Kaydet ve Çık\" ile güvenli çıkış yap.",
-    guideBasics5: "Yönetim güveni düşerse kovulabilirsin!",
-    guideBoardEffectTitle: "Yönetim Güveni Etkileri:",
-    guideWinEffect: "Galibiyet: +3 güven",
-    guideDrawEffect: "Beraberlik: +0 güven",
-    guideLossEffect: "Mağlubiyet: -5 güven",
-    guideFireWarning: "%30 altına düşersen kovulursun!",
+    guideBasics2: "📅 Her hafta bir lig maçı oynanır. Sezon sonunda şampiyon belirlenir.",
+    guideBasics3: "🏆 Hedef: Şampiyonluk, Avrupa kupaları ve kulübü büyütmek.",
+    guideBasics4: "💾 Oyun otomatik kaydedilir. \"Kaydet ve Çık\" ile güvenli çıkış yap.",
+    guideBasics5: "📊 Yönetim güveni düşerse kovulabilirsin!",
+    guideBoardEffectTitle: "⚠️ Yönetim Güveni Etkileri:",
+    guideWinEffect: "• Galibiyet: +2 ile +6 arası (Rakibe bağlı)",
+    guideDrawEffect: "• Beraberlik: Beklentiye göre değişir",
+    guideLossEffect: "• Mağlubiyet: -3 ile -8 arası",
+    guideFireWarning: "• %30 altına düşersen KOVULURSUN!",
+    guideDerbyNote: "🔥 Derbi ve Avrupa maçları 2 kat daha önemlidir!",
     guideSquadTitle: "Kadro Yönetimi",
-    guideSquad1: "Oyuncuları İlk 11, Yedek veya Rezerv olarak ayarla.",
-    guideSquad2: "Oyuncuyu tıkla ve başka biriyle değiştir.",
-    guideSquad3: "Diziliş seçerek farklı formasyonlar dene.",
-    guideOvrCalcTitle: "OVR (Overall Rating) Nasıl Hesaplanır?",
-    guidePosMatch: "Pozisyon Uyumu: Doğru pozisyonda oynayan oyuncu daha yüksek OVR gösterir.",
-    guideMoraleEffect: "Moral Etkisi: 50+ moral = bonus, 50- moral = ceza",
-    guideConEffect: "Kondisyon: %30 altı kondisyon = ciddi performans düşüşü",
-    guideReleaseTitle: "Sözleşme Fesih",
-    guideRelease1: "İstemediğin oyuncuyu serbest bırakabilirsin.",
-    guideRelease2: "Tazminat: Kalan yıl × Yıllık maaş × %50",
-    guideRelease3: "Oyuncu serbest oyuncu olur.",
-    guideTacticsTitle: "Taktik Sistemi (Detaylı)",
-    guideForm433: "4-3-3: Dengeli, kanat ağırlıklı.",
-    guideForm442: "4-4-2: Klasik, güvenli.",
-    guideForm4231: "4-2-3-1: Orta saha kontrolü.",
-    guideForm352: "3-5-2: Orta saha dominantı.",
-    guideForm532: "5-3-2: Savunmacı.",
-    guideForm4141: "4-1-4-1: Su sızdırmaz savunma.",
-    guideStylePoss: "Topa Sahip Ol (Tiki-Taka): \"Top bizdeyse gol yemeyiz.\" Kısa paslarla rakibi koşturur. Sadece Yüksek Vizyonlu orta sahalarla çalışır. Sabırla boşluk arar.",
-    guideStyleCounter: "Kontra Atak (Klopp-Style): Geride bekle, topu kap ve 3 saniyede kaleye git. Hızlı kanatlarınız yoksa işe yaramaz. Büyük takımları devirmenin ilacıdır.",
-    guideStylePress: "Gegenpress (Yüksek Pres): Rakip sahada amansız baskı. Topu kaybedince 5 saniye içinde geri kazanmaya çalışır. DİKKAT: Oyuncular 70. dakikada biter!",
-    guideStyleBus: "Otobüsü Çek (Catenaccio): 11 kişiyle tamamen savunma. Sadece beraberlik veya şans golü arıyorsan kullan.",
-    guideStyleBal: "Dengeli: Risk almadan oyunun akışına göre hareket eder. Takımına güvenmiyorsan en güvenli liman.",
-    guideWidthNarrow: "Dar: Oyunu merkeze yığar. Göbekten delici koşular (Through Ball) arar. 4-1-2-1-2 (Diamond) için ideal.",
-    guideWidthWide: "Geniş: Kanatları otoban gibi kullanır. Çizgiye inip orta (Cross) açmayı hedefler. Kule forvetiniz varsa bunu seçin!",
+    guideSquad1: "• Oyuncuları İlk 11, Yedek veya Rezerv olarak ayarla.",
+    guideSquad2: "🔄 Oyuncuyu tıkla ve başka biriyle değiştir.",
+    guideSquad3: "📍 Diziliş seçerek farklı formasyonlar dene.",
+    guideOvrCalcTitle: "📊 OVR (Overall Rating) Nasıl Hesaplanır?",
+    guidePosMatch: "• Pozisyon Uyumu: Doğru pozisyonda oynayan oyuncu daha yüksek OVR gösterir.",
+    guideMoraleEffect: "• Moral Etkisi: 50+ moral = bonus, 50- moral = ceza",
+    guideConEffect: "• Kondisyon: %30 altı kondisyon = ciddi performans düşüşü",
+    guideReleaseTitle: "❌ Sözleşme Fesih",
+    guideRelease1: "• İstemediğin oyuncuyu serbest bırakabilirsin.",
+    guideRelease2: "• Tazminat: Kalan yıl × Yıllık maaş × %50",
+    guideRelease3: "• Oyuncu serbest oyuncu olur.",
+    guideTacticsTitle: "Taktik Sistemi (Detaylı Analiz)",
 
     // --- DEEP DIVE TACTICS (USER MANUAL EXACT TEXT) ---
-    guideDeepPassTitle: "📐 Taktiksel Analiz Raporu: Genişlik ve Pas",
+    guideDeepPassTitle: "📐 Taktiksel Analiz: Pas ve Genişlik (GÜNCEL)",
     guideDeepPassContent: `1. Pas Stili (Passing Style)
-Bu ayar sadece "topu nasıl atıyorlar" değil, oyuncuların tüm karar mekanizmasını değiştiriyor. Çok merak ettiğin Kısa Pas ve Direkt Pas arasındaki farklar aslında uçurum gibi.
+⚠️ ÖNEMLİ NOT: "Kısa Pas" (Short Passing) seçeneği, takımların şut çekmesini engellediği ve oyunu kilitlediği için oyun motorundan KALDIRILMIŞTIR.
 
-A. Kısa Pas (Short Passing)
-"Top bizde kalsın, acelemiz yok" felsefesi.
-
-Motor İçindeki Etkisi:
-🦶 Kısa Mesiere Aşık Olurlar: Eğer pas atılacak arkadaşı 15 metreden yakınsa, o pasa +30 Puan verilir. (Yapay zeka için devasa bir bonustur, oyuncu kör değilse o pası atar).
-🚫 Uzun Pasa Ceza: Mesafe 15 metreyi geçtiği an puandan düşmeye başlar. Uzun pas atmamak için direnirler.
-🛡️ Risk Yok: Çalım atma isteği -10 Puan azalır. Topu kaybetme riski olan hareketlerden kaçınırlar.
-🧠 Pas Önceliği: Karar verirken pas seçeneğine genel +20 Puan eklenir. Şut veya çalım yerine önce pası düşünürler.
-Ne Zaman Kullanılmalı?:
-• Teknik kapasitesi yüksek, pasör orta sahalara sahipsen.
-• "Topa Sahip Olma" oyunu oynuyorsan.
-• Skoru korurken.
-
-B. Direkt Pas (Direct Passing)
+A. Direkt Pas (Direct Passing)
 "Dikine, hemen kaleye!" felsefesi. Premier Lig stili.
+• 🚀 Havadan Pas Bonusu: Havadan (Aerial) paslara ve ortalara +20 Puan eklenir.
+• 🔫 Şut ve Çalım: Şut (+15) ve Çalım (+10) isteği artar! Bireysel oynamayı severler.
+• 📉 Güvenli Pasa Ceza: Yan pas yapma isteği -10 Puan azaltılır.
+Ne Zaman?: Hızlı forvetler, Fiziksel takım, Kötü zemin, Kontratak.
 
-Motor İçindeki Etkisi:
-🚀 Havadan Pas Bonusu: Havadan (Aerial) paslara ve ortalara +20 Puan eklenir. Oyuncular topu şişirmekten veya uzun vurmaktan çekinmez.
-🔫 Şut ve Çalım: İlginç bir detay; oyuncuların Şut puanı +15, Çalım puanı +10 artar! Yani sadece pas değil, bireysel olarak da kaleye gitmek isterler.
-📉 Güvenli Pasa Ceza: Yan pas yapma isteği -10 Puan azaltılır. "Mıy mıy oynama" denir.
-Ne Zaman Kullanılmalı?:
-• Hızlı forvetlerin varsa (arkaya top atmak için).
-• Fiziksel olarak güçlü bir takımsan.
-• Zemin kötüyse veya rakip baskı yapıyorsa (risk almadan ileri vurmak için).
-• "Kontratak" taktiğiyle mükemmel uyum sağlar.
-
-C. Dengeli (Mixed)
-Standart ayardır.
-
-Ne Olur?: Oyuncular mesafeye bakmaksızın o anki en uygun (en yüksek skorlu) pası seçer. Bazen kısa, bazen uzun oynarlar.
+B. Dengeli (Mixed)
+Standart ayardır. Oyuncular mesafeye bakmaksızın o anki en uygun (en yüksek skorlu) pası seçer.
 
 2. Genişlik (Width)
-Bu ayar takımın sahayı nasıl parsellediğini ve özellikle kanat oyuncularının davranışlarını belirler.
+Bu ayar takımın sahayı nasıl parsellediğini belirler.
 
 A. Dar (Narrow)
 "Göbekten delme" taktiği.
-
-Kodun Sırrı:
-🧱 Merkezden Oyun: Eğer bir oyuncu taç çizgisine yakın DEĞİLSE (yani merkezdeyse), Pas (+15) ve Çalım (+10) bonusu alır.
-Etkisi: Oyuncular oyun merkezde sıkıştığında daha yaratıcı ve aktif olurlar. Kanatlara inmek yerine göbekten verkaç yapmayı denerler.
-Uygun Formasyonlar: 4-1-2-1-2 (Baklava), 4-3-1-2, 5-3-2.
+• 🧱 Merkezden Oyun: Oyuncu merkezdeyse Pas (+15) ve Çalım (+10) bonusu alır.
+• Etkisi: Kanat yerine göbekten verkaç yapmayı denerler.
+• Uygun Formasyonlar: 4-1-2-1-2 (Baklava), 4-3-1-2, 5-3-2.
 
 B. Geniş (Wide)
 "Çizgiye in, ortala" taktiği.
-Kodun Sırrı:
-🏍️ Kanat Akınları: Eğer bir oyuncu kanattaysa (taç çizgisine yakınsa), Çalım atma isteği +20 Puan artar! Kanat oyuncuların adeta birer dribling canavarına dönüşür.
-🎯 Orta (Cross) Bonusu: Eğer oyuncu kanatta ve rakip sahadaysa (3. bölge), Pas (Orta) puanı +15 artar. Çizgiye inip içeri çevirmeye odaklanırlar.
-Uygun Formasyonlar: 4-3-3, 3-4-3, 4-4-2 (Kanatlı).`,
+• 🏍️ Kanat Akınları: Oyuncu kanattaysa Çalım isteği +20 Puan artar!
+• 🎯 Orta (Cross) Bonusu: 3.Bölgede Pas (Orta) puanı +15 artar.
+• Uygun Formasyonlar: 4-3-3, 3-4-3, 4-4-2 (Kanatlı).`,
 
-    guideDeepTempoTitle: "⚡ Taktiksel Analiz Raporu: Tempo ve Savunma",
+    guideDeepTempoTitle: "⚡ Taktiksel Analiz: Tempo ve Savunma",
     guideDeepTempoContent: `1. Tempo (Game Speed)
 A. Yavaş (Slow) - "Satranç"
 • Karar Süresi: x1.4 artar. (Daha çok düşünürler)
 • Top Kaybı: Azalır.
 • Rakip: Yerleşme fırsatı bulur.
-• Kullanım: Skor korurken, teknik takım.
 
 B. Hızlı (Fast) - "Kaos"
 • Karar Süresi: x0.7 azalır! (Panik paslar)
 • Hata Riski: Yüksek.
 • Etkisi: Rakibi bunaltır.
-• Kullanım: Gol lazımsa, rakip yorgunsa.
 
 2. Savunma Hattı (Defensive Line)
 A. Derin (Deep) - "Gömülü"
@@ -477,90 +439,182 @@ B. Önde (High) - "Ofsayt Taktiği"
 • Dezavantaj: Arkaya atılan her top %90 gol pozisyonudur.`,
 
     guideDeepComboTitle: "🛠️ Kritik Kombinasyon Tavsiyeleri",
-    guideDeepComboContent: `Senden önce kodları okuduğum için şu kombinasyonların çok tehlikeli olabileceğini görüyorum:
+    guideDeepComboContent: `⚠️ "Kaos Futbolu (Klopp Stili)":
+Stil: Yüksek Pres + Pas: Direkt + Genişlik: Geniş
+Sonuç: Maç 4-3 biter. Kim kazanır bilemem ama izleyenler çıldırır.
 
-"Tiki-Taka Ustası":
-• Stil: Topa Sahip Olma
-• Pas: Kısa
-• Genişlik: Dar
-• Sonuç: Rakibi topa dokundurtmazsın ama maç 0-0 bitebilir.
+⚠️ "İtalyan Duvarı (Catenaccio)":
+Stil: Kontratak + Pas: Direkt + Genişlik: Dar
+Sonuç: 1-0 olsun bizim olsun.
 
-"Kaos Futbolu (Klopp Stili)":
-• Stil: Yüksek Pres
-• Pas: Direkt
-• Genişlik: Geniş
-• Sonuç: Maç 4-3 biter. Kim kazanır bilemem ama izleyenler çıldırır.
+(Not: Tiki-Taka için gereken 'Kısa Pas' kaldırıldığı için, pas oyunu sevenler 'Dengeli' stili tercih etmelidir.)`,
 
-"İtalyan Duvarı (Catenaccio)":
-• Stil: Kontratak
-• Pas: Direkt
-• Genişlik: Dar (Merkezi kapatmak için)
-• Sonuç: 1-0 olsun bizim olsun.`,
 
-    guideTrainingTitle: "Detaylı Antrenman Sistemi",
-    guideTrainAge: "Gelişim Altın Kuralı: 21 yaş altı uçar, 24-28 arası yürür, 29 üstü durur (ve geriler).",
-    guideTrainLuck: "Her hafta gelişim olmaz! Oyuncunun 'Potansiyeli' ve Tesislerin kalitesi şansı belirler.",
-    guideTrainFocus: "Antrenman Odakları Ne Yapar?",
-    guideTrainFocusBal: "Dengeli: Tüm statları yavaşça artırır. Formu korumak için ideal.",
-    guideTrainFocusAtt: "Hücum: Forvetler için Bitiricilik ve Şut gücünü pompalar.",
-    guideTrainFocusDef: "Savunma: Stoperlerin Pozisyon ve Müdahale gücünü artırır.",
-    guideTrainFocusPhy: "Fiziksel: DİKKAT! Hızı artırır ama sakatlık riskini %50 artırır. Yorgun oyunculara asla yaptırma!",
-    guideTrainFocusTec: "Teknik: Pas ve Vizyon çalışması. Oyun kurucular (Playmaker) için.",
-    guideTrainPosBased: "Mevkiye Özel (PRO): Her oyuncu kendi rolüne göre çalışır. En verimli ama en yorucu moddur.",
+
+
     guideRolesTitle: "Oyuncu Rolleri",
     guideRolesIntro: "Her oyuncu, özelliklerine göre bir role sahiptir. Mesela Hızı düşük bir forveti 'Fırsatçı' oynatamazsın.",
     guideRolePoacher: "Fırsatçı Golcü: Oyun kurulumuna karışmaz, sadece son vuruşu yapar. Hız ve Bitiricilik şart.",
     guideRoleTargetMan: "Kule Forvet (Target Man): Sırtı dönük top saklar, takımı ileri taşır. Fizik ve Pas gerekir.",
     guideRoleFalse9: "Sahte 9: Forvet gibi görünür ama orta sahaya gelip pas dağıtır.",
     guideRolePlaymaker: "Oyun Kurucu: Takımın beyni. Tüm toplar onda toplanır. Yüksek Vizyon olmazsa takım kilitlenir.",
-    guideRoleB2B: "İki Yönlü (Box-to-Box): Hem defansa hem hucüma koşar. 90 dakika ciğersiz gibi koşması (Stamina) gerekir.",
-    guideRoleDestroyer: "Kesici (Destroyer): Tek amacı rakip atağı faul veya müdahaleyle durdurmaktır. Pası zayıftır.",
-    guideRoleStopper: "Stoper: Klasik savunmacı. Topu uzaklaştırır.",
-    guideRoleBallPlaying: "Pasör Stoper: Modern futbolda şart. Geriden oyun kurar, uzun top atar.",
-    guideRoleWingback: "Kanat Bek: Sadece savunmaz, hücuma katılıp orta açar. Hız çok önemlidir.",
-    guideFacilitiesTitle: "Tesisler & Personel",
-    guideStadiumEffect: "Her level = +6.000 kapasite. Daha fazla seyirci = daha fazla bilet geliri.",
-    guideTrainingEffect: "Antrenman Merkezi: Oyuncu gelişim hızı artar.",
-    guideScoutVsAcad: "Scout vs Akademi: Scout daha etkili, önce onu yükselt!",
-    guideMoraleTitle: "Moral Sistemi",
-    guideMoraleXI: "İlk 11: +2 moral",
+    guideTrainingTitle: "🏋️ Antrenman Sistemi (DETAYLI)",
+    guideTrainAge: "⚠️ 28 yaşından büyükler gelişmez!",
+    guideTrainLuck: "Gelişim şansa bağlıdır, garanti değildir.",
+    guideTrainFocus: "Antrenman Odakları (Focus)",
+    guideTrainFocusBal: "Dengeli: Tüm özellikler az miktarda artar.",
+    guideTrainFocusAtt: "Hücum: Bitiricilik, Şut, Dripling artar.",
+    guideTrainFocusDef: "Savunma: Top Kapma, Pozisyon, Güç artar.",
+    guideTrainFocusPhy: "Fiziksel: Hız, Dayanıklılık, Güç artar.",
+    guideTrainFocusTec: "Teknik: Pas, Dripling, Vizyon artar.",
+    guideTrainPosBased: `Targeted Training (NEW!)
+Position-Based training improves attributes specifically for that role.
+
+UZMAN: Gelişim Matematiği
+Motorun içindeki gerçek formüller:
+1. Yaş Faktörü:
+• < 21 Yaş: Gelişim şansı %5 (Çok Hızlı)
+• 21-24 Yaş: Gelişim şansı %3 (Normal)
+• 24-28 Yaş: Gelişim şansı %1 (Yavaş)
+• 28+ Yaş: Gelişim DURUR. Sadece maç oynayarak form tutabilirler.
+• 32+ Yaş: Her hafta %5 ihtimalle özellikleri DÜŞER (Emeklilik yaklaşıyor).
+
+2. Tesis Etkisi:
+• Antrenman Tesisiniz her seviye için şansı %0.5 artırır.
+• Baş Antrenörünüz (Head Coach) her seviye için %0.8 ekstra bonus verir.
+• ÖRNEK: 18 yaşında bir oyuncu, 10. Seviye Tesis ve 5. Seviye Hocayla her hafta %15 ihtimalle güçlenir!
+
+3. Yorgunluk (Condition):
+• Kondisyon < %60: Antrenman verimi YARIYA düşer.
+• Kondisyon < %30: Oyuncu antrenmana çıkmaz, dinlenir.
+• İPUCU: Maçtan sonra oyuncuları "Hafif" idmanda dinlendirmek gelişimi hızlandırabilir!`,
+
+    guideFacilitiesTitle: "🏢 Tesisler & Personel",
+    guideStadiumEffect: `Stadyum
+• Her level = +6.000 kapasite. Daha fazla seyirci = daha fazla bilet geliri.
+
+🏋️ Antrenman Merkezi
+• Antrenman Merkezi: Oyuncu gelişim hızı artar.
+
+UZMAN: Yatırım Getirisi (ROI)
+Bütçenizi batırmadan nasıl büyürsünüz?
+
+1. Bakım Masrafları (Gizli Gider):
+• Formül: (Seviye ^ 1.3) x 2000 €
+• Level 1 Stadyum: Haftalık 2.000 €
+• Level 15 Stadyum: Haftalık ~70.000 € (Korkunç artış!)
+• İPUCU: Geliriniz artmadan tesis basmayın. İflas edersiniz.
+
+2. Stadyum Matematiği:
+• Her koltuk ortalama 15 € bırakır.
+• +2000 Kapasite (1 Upgrade) = Haftalık +30.000 € Ekstra Gelir.
+• Maliyeti (3M €) çıkarması yaklaşık 100 hafta sürer (2 sezon).
+• SONUÇ: Stadyum uzun vadeli yatırımdır. Kısa vadede para kazandırmaz.
+
+3. Akademi vs Scout:
+• Akademi Level 10: Her hafta %5 ihtimalle vasat genç oyuncu (50-60 OVR) gelir.
+• Scout Level 10: Her hafta %10 ihtimalle YETENEKLİ genç (65-80 Potansiyel) bulur.
+• TAVSİYE: Parayı önce Scout'a yatırın. Bulduğu gençleri 5-10 Milyon €'ya satabilirsiniz!`,
+    guideTrainingEffect: "Antrenman Merkezi: Gelişim hızını artırır.",
+    guideScoutVsAcad: "Scout vs Akademi: Scout potansiyeli yüksek oyuncu bulur, Akademi ise bedava oyuncu üretir.",
+
+    guideMoraleTitle: "🧠 Moral Sistemi",
+    guideMoraleXI: "İlk 11: +2 Moral",
     guideMoraleBench: "Yedek: Değişmez",
-    guideMoraleRes75: "Rezerv (75+ OVR): -3 moral!",
-    guideMoraleRes65: "Rezerv (65-75 OVR): -1 moral",
-    guideMoralePerform: "100 Moral: +%5 OVR bonusu. 0 Moral: -%10 OVR ceza!",
-    guideTransferTitle: "Transfer Sistemi",
-    guideTransList: "Transfer listesindeki oyuncular daha ucuza gelir.",
-    guideTransUnlisted: "Transfer listesinde olmayan oyuncular için %20-50 fazla iste.",
-    guideYouthTitle: "Alt Yapı (Ucuz!)",
-    guideYouth1: "Genç oyuncular €50K değerinde gelir.",
-    guideYouth2: "Maaş: Sadece €25K/yıl.",
-    guideFinanceTitle: "Finans Yönetimi",
+    guideMoraleRes75: "Rezerv (75+ OVR): -3 Moral!",
+    guideMoraleRes65: "Rezerv (65-75 OVR): -1 Moral",
+    guideMoralePerform: `Morale directly affects player performance (OVR).
+
+UZMAN: Moral Matematiği
+Moral sadece süs değildir, oyuncunun sahadaki IQ'sunu belirler.
+
+1. Moral Nasıl Düşer?
+• Rezervde Bekleyen Yıldız: Eğer OVR > 75 ise ve oynatmıyorsanız her hafta -3 Moral yer (Yıldız kaprisi).
+• Sıradan Yedek: Eğer OVR 65-75 ise -1 Moral yer.
+• Gençler (<65 OVR): Oynamasalar da üzülmezler (Stabil).
+
+2. Maç İçi Etkisi (Çok Önemli!):
+• 80-100 Moral: Oyuncu %110 performansla oynar. Yanındaki pası kaçırmaz.
+• 40-60 Moral: Normal performans.
+• 0-20 Moral: Oyuncu "Kusursuz" pozisyonda bile golü kaçırır. Kaleci ellerinin arasından topu kaçırır.
+• KRİTİK: Mutsuz yıldız oyuncuyu derbide oynatmak intihardır. Satın gitsin.`,
+
+    guideTransferTitle: "✈️ Transfer Sistemi",
+    guideTransList: "Transfer listesindekiler ucuzdur.",
+    guideTransUnlisted: `📅 Transfer Windows (NEW!)
+• Summer: Weeks 1-8
+• Winter: Weeks 20-24
+
+UZMAN: Pazarlık Sırları
+Yapay zeka nasıl ikna olur?
+
+1. "İsteklilik" (Willingness) Puanı:
+Oyuncunun gelmek istemesi için şu puanın 50'yi geçmesi lazım:
+• Lig Farkı: İngiltere vs Türkiye farkı abartıldığı kadar değil (Max -7 Puan).
+• Takım İtibarı: Her 75 puanlık fark size +1 Puan getirir.
+• Şampiyonlar Ligi: İtibarı artırdığı için dolaylı yoldan etki eder.
+
+2. Parayla İkna Etmek (Maaş Kozu):
+Parayı kullanarak "Hayır"ı "Evet"e çevirin:
+• 1.5x Maaş Teklifi: +25 İsteklilik Puanı.
+• 2.0x Maaş Teklifi: +50 Puan (MAKSİMUM ETKİ).
+• DİKKAT: 3.0x maaş teklif etmek size ekstra puan kazandırmaz! 2.0x tavan sınırdır.
+
+3. Satış Taktiği:
+• Transfer Listesindeki oyuncuya AI takımlar değerinin %100-%150'si kadar teklif yapar.
+• Listede OLMAYAN oyuncuyu almak için değerinin %120-%170'ini ödemek zorundalar.
+• İPUCU: Değerli oyuncunuzu satmak istemiyorsanız listeye koymayın, AI almak için servet ödemek zorunda kalır!`,
+
+    guideYouthTitle: "Genç Akademisi (Bedava!)",
+    guideYouth1: "Gençler 50K € değerle gelir.",
+    guideYouth2: "Maaş: Sadece 25K €/yıl.",
+
+    guideFinanceTitle: "💰 Finans Yönetimi",
     guideSponsorG: "Garantili: Yüksek sabit, düşük bonus. Güvenli.",
     guideSponsorD: "Dengeli: Orta sabit, orta bonus.",
-    guideSponsorR: "Riskli: Düşük sabit, yüksek bonus. Çok kazanırsan kârlı!",
-    guideEuroTitle: "Avrupa Kupaları",
+    guideSponsorR: `Riskli: Düşük sabit, yüksek bonus.
+
+UZMAN: Hileli Finans Taktikleri
+Bütçe açığını kapatmak için legal hileler:
+
+1. "Al-Sat" Döngüsü (Farming):
+• Sezon başı 16-19 yaş arası "Serbest" (Free Agent) oyuncuları toplayın.
+• Maaşları sadece 25-50K € olur.
+• 10 hafta antrenman yaptırıp "Transfer Listesine" koyun.
+• Değerleri 100K € olsa bile kârdasınız. Bedavaya alıp 100K'ya satmak en temiz paradır.
+
+2. Sponsor Kumarı:
+• Eğer şampiyonluğa oynuyorsanız "Riskli" sponsoru seçin. Şampiyonluk bonusu 5M € civarıdır.
+• Eğer orta sıra takımıysanız, "Garantili" sponsoru seçin. Haftalık nakit akışı sizi iflastan korur.
+
+3. Avrupa Geliri:
+• Sadece Kıtalar Arası Kupa'ya katılmak bile 2.5M € ayakbastı parası getirir.
+• Ligde 3. olmak, 1. olmaktan bazen daha kârlıdır (Şampiyonlar Ligi'nde 0 çekmektense, alt kupada 3 tur atlamak daha çok kazandırır).`,
+
+    guideEuroTitle: "🌍 Kıtalar Arası Kupalar",
     guideEuroReq: "Katılım Şartları",
-    guideEuroCL: "Kıtalar Arası Şampiyonlar Kupası: Lig 1. ve 2.si",
+    guideEuroCL: "Şampiyonlar Kupası: Lig 1. ve 2.si",
     guideEuroEL: "Kıtalar Arası Kupa: Lig 3. ve 4.sü",
     guideEuroFormat: "Turnuva Formatı",
-    guideEuroGroups: "Grup aşaması: 4 takımlı gruplar",
+    guideEuroGroups: "Grup Aşaması: 4 takımlı gruplar",
     guideEuroAdv: "İlk 2 eleme turuna geçer",
-    guideEuroKO: "Çeyrek final, yarı final, final",
+    guideEuroKO: "Çeyrek Final, Yarı Final, Final",
     guideEuroSingle: "Tek maç eleme sistemi",
-    guideProTipsTitle: "Pro İpuçları",
+
+    guideProTipsTitle: "🏆 Profesyonel İpuçları",
     guideTipsDos: "Yapılması Gerekenler",
-    guideTipsDo1: "Her pozisyonda en az 2 oyuncu bulundurun.",
-    guideTipsDo2: "Genç oyunculara şans verin - gelişirler!",
-    guideTipsDo3: "Gözlemci ağını önce yükseltin (daha etkili).",
-    guideTipsDo4: "Alt yapı gençlerini satın - çok kârlı!",
-    guideTipsDo5: "Rakibe göre taktik değiştirin.",
-    guideTipsDo6: "Yorgun oyuncuları dinlendirin.",
-    guideTipsDonts: "Kaçınılması Gerekenler",
-    guideTipsDont1: "Yüksek OVR oyuncuları sürekli rezervde tutmayın.",
-    guideTipsDont2: "Bütçenizi aşan transferler yapmayın.",
-    guideTipsDont3: "Tek formasyona bağlı kalmayın.",
-    guideTipsDont4: "Sakatlıkları görmezden gelmeyin.",
-    guideTipsDont5: "Sözleşmelerin bitmesine izin vermeyin.",
+    guideTipsDo1: "• Her pozisyonda en az 2 oyuncu bulundurun.",
+    guideTipsDo2: "• Genç oyunculara şans verin - gelişirler!",
+    guideTipsDo3: "• Gözlemci ağını önce yükseltin (daha etkili).",
+    guideTipsDo4: "• Alt yapı gençlerini satın - çok kârlı!",
+    guideTipsDo5: "• Rakibe göre taktik değiştirin.",
+    guideTipsDo6: "• Yorgun oyuncuları dinlendirin.",
+    guideTipsDonts: "❌ Kaçınılması Gerekenler",
+    guideTipsDont1: "• Yüksek OVR oyuncuları sürekli rezervde tutmayın.",
+    guideTipsDont2: "• Bütçenizi aşan transferler yapmayın.",
+    guideTipsDont3: "• Tek formasyona bağlı kalmayın.",
+    guideTipsDont4: "• Sakatlıkları görmezden gelmeyin.",
+    guideTipsDont5: "• Sözleşmelerin bitmesine izin vermeyin.",
     guideTipsTactical: "Taktik İpuçları",
     guideTipStrong: "Güçlü rakip: Kapalı Savunma + Kontra",
     guideTipWeak: "Zayıf rakip: Yüksek Pres + Topa Sahip Ol",
@@ -609,6 +663,7 @@ B. Önde (High) - "Ofsayt Taktiği"
     confirmDeal: "Anlaşmayı Onayla",
     midTableLabel: "orta sıra",
     championLabel: "şampiyon",
+    // Solo Developer Section
     // Solo Developer Section
     guideSoloDev: "Tek Kişilik Proje",
     guideSoloDevDesc: "Bu oyun tek bir kişi tarafından geliştirilmektedir. Hatalar ve eksik özellikler için anlayışınıza teşekkür ederim!",
@@ -793,5 +848,36 @@ Parayı kullanarak "Hayır"ı "Evet"e çevirin:
     update321Item3Title: "Dinamik Bilet Fiyatları",
     update321Item3Desc: "Bilet fiyatları da lig başarısına göre artıyor. Başarılı ligler = Daha fazla seyirci ilgisi = Daha yüksek bilet.",
     update321Item4Title: "Şampiyon Koruması",
-    update321Item4Desc: "Lig şampiyonu olan takımın itibarı artık ASLA düşmüyor. Şampiyonluk = Minimum +200 itibar garantisi."
+    update321Item4Desc: "Lig şampiyonu olan takımın itibarı artık ASLA düşmüyor. Şampiyonluk = Minimum +200 itibar garantisi.",
+
+    // --- v3.2.5 UPDATE ---
+    update325Title: "Sürüm 3.2.5 – Yenilikler ve Değişiklikler",
+    update325Item1Title: "Maç Motoru ve Oynanış",
+    update325Item1Desc: "• Maç motoru kalibre edildi.\n• Şut üretmediği için Kısa Pas ve Possession taktikleri kaldırıldı.\n• Agresif takımların kart görme olasılığı artırıldı.\n• Şut isabet oranları düşürüldü, çalım/defans güçlendirildi.\n• AI taktikleri kadroya göre yeniden düzenlendi.",
+    update325Item2Title: "Lig ve Turnuva Sistemi",
+    update325Item2Desc: "• Lig sayısı 24’e yükseltildi.\n• Avrupa Kupası yerine Kıtalar Arası Kupa (Intercontinental) getirildi (Her ligden ilk 2 takım).",
+    update325Item3Title: "Yönetim ve Kulüp Sistemi",
+    update325Item3Desc: "• Yönetim güveni düşerse kovulma (Game Over) aktif!\n• Kırmızı kart cezası aktif hale getirildi.\n• İtibar puanları güncellendi.",
+    // Engine Reports & Attributes
+    reportGeneralDev: "Genel Gelişim",
+    attrFinishing: "Bitiricilik",
+    attrDribbling: "Dripling",
+    attrPositioning: "Pozisyon",
+    attrTackling: "Top Kapma",
+    attrStrength: "Güç",
+    attrSpeed: "Hız",
+    attrStamina: "Dayanıklılık",
+    attrPassing: "Pas",
+    attrVision: "Vizyon",
+    attrGoalkeeping: "Kalecilik",
+    attrComposure: "Soğukkanlılık",
+    attrLeadership: "Liderlik",
+    attrDecisions: "Karar Alma",
+
+    moralePlayed: "Maçta oynadı",
+    moraleStarting: "İlk 11'de",
+    moraleBench: "Yedek - stabil",
+    moraleReserve: "Kadro dışı",
+    moraleReserveStar: "Yıldız oyuncu kadro dışı",
+    moraleReserveStable: "Kadro dışı (stabil)"
 };

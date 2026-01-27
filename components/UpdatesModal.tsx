@@ -23,6 +23,16 @@ interface VersionUpdate {
 // Version history - newest first
 const VERSION_HISTORY: VersionUpdate[] = [
     {
+        version: '3.2.5',
+        date: '2026-01-27',
+        titleKey: 'update325Title',
+        items: [
+            { icon: <Activity className="text-blue-400" size={16} />, titleKey: 'update325Item1Title', descKey: 'update325Item1Desc' },
+            { icon: <Trophy className="text-yellow-400" size={16} />, titleKey: 'update325Item2Title', descKey: 'update325Item2Desc' },
+            { icon: <Shield className="text-red-400" size={16} />, titleKey: 'update325Item3Title', descKey: 'update325Item3Desc' },
+        ]
+    },
+    {
         version: '3.2.1',
         date: '2026-01-24',
         titleKey: 'update321Title',

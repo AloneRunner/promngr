@@ -3,7 +3,7 @@ import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupSta
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
 import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
-import { simulateTick } from '../services/engine';
+import { simulateTick, getActiveEngine } from '../services/engine';
 import { soundManager } from '../services/soundManager';
 
 interface MatchCenterProps {
@@ -119,6 +119,37 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [showTacticsModal, setShowTacticsModal] = useState(false);
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
     const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
+
+    // --- HELPER LOGGING ---
+    useEffect(() => {
+        // Log tactics when component mounts (match starts/resumes)
+        const engine = getActiveEngine();
+        if (engine && engine.logCurrentTactics) {
+            engine.logCurrentTactics();
+        }
+    }, []);
+
+    // Also log when speed changes (resume from pause)
+    useEffect(() => {
+        if (speed > 0) {
+            const engine = getActiveEngine();
+            if (engine && engine.logCurrentTactics) {
+                engine.logCurrentTactics();
+            }
+        }
+    }, [speed]);
+
+    // NEW: Log Full Analysis at Minute 90
+    const analysisLogged = useRef(false);
+    useEffect(() => {
+        if (match.currentMinute >= 90 && !analysisLogged.current) {
+            analysisLogged.current = true;
+            const engine = getActiveEngine();
+            if (engine && engine.logMatchAnalysis) {
+                engine.logMatchAnalysis();
+            }
+        }
+    }, [match.currentMinute]);
 
     // NEW: Set Piece Indicator - Shows what's happening (FOUL, FREE_KICK, CORNER, etc.)
     const [setPieceIndicator, setSetPieceIndicator] = useState<{ type: string, message: string } | null>(null);
@@ -1303,13 +1334,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <Settings className="text-emerald-500" /> Management
                         </h2>
 
-                        {/* DEBUG: Side Toggle for Friendly Matches */}
-                        {(match.isFriendly || true) && (
-                            <div className="flex bg-slate-800 rounded-lg p-1 gap-1 mx-4">
-                                <button onClick={() => setManagedSide('HOME')} className={`px-3 py-1 rounded text-xs font-bold transition-colors ${managedSide === 'HOME' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>Home ({homeTeam.shortName})</button>
-                                <button onClick={() => setManagedSide('AWAY')} className={`px-3 py-1 rounded text-xs font-bold transition-colors ${managedSide === 'AWAY' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>Away ({awayTeam.shortName})</button>
-                            </div>
-                        )}
+
 
                         <button onClick={() => { setShowTacticsModal(false); setSpeed(1); }} className="bg-red-600 hover:bg-red-500 text-white p-2 rounded">
                             <X size={20} />

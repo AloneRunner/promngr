@@ -1,7 +1,7 @@
 
 import { TeamTactic, TacticType, TacticalMatchRecord } from '../types';
 
-export type PresetKey = 'Gegenpress' | 'TikiTaka' | 'CounterAttack' | 'ParkTheBus' | 'WingPlay' | 'Catenaccio';
+export type PresetKey = 'Gegenpress' | 'CounterAttack' | 'ParkTheBus' | 'WingPlay' | 'Catenaccio';
 
 export interface TacticalPreset {
     name: string;
@@ -23,19 +23,8 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
             marking: 'Zonal' // Defaulting to Zonal as specific marking type isn't fully in UI yet but good for backend
         }
     },
-    'TikiTaka': {
-        name: 'Tiki-Taka',
-        description: 'Patient, short passing game focused on retaining possession.',
-        tactic: {
-            style: 'Possession',
-            aggression: 'Normal',
-            tempo: 'Slow',
-            width: 'Narrow',
-            defensiveLine: 'High',
-            passingStyle: 'Short',
-            marking: 'Zonal'
-        }
-    },
+    // TikiTaka REMOVED per user request
+
     'CounterAttack': {
         name: 'Rapid Counter',
         description: 'Soak up pressure and break fast with direct passing.',
@@ -116,13 +105,8 @@ export const validateTactic = (tactic: TeamTactic): TacticWarning[] => {
         });
     }
 
-    // Example 2: Possession (Short Passing) but Fast Tempo (Rush mistakes)
-    if (tactic.style === 'Possession' && tactic.tempo === 'Fast') {
-        warnings.push({
-            type: 'WARNING',
-            message: 'Possession style works best with slower tempo to retain control.'
-        });
-    }
+    // TikiTaka warning logic removed
+
 
     // Example 3: Park The Bus with High Line (Suicide)
     if (tactic.style === 'ParkTheBus' && tactic.defensiveLine === 'High') {

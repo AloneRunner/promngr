@@ -111,10 +111,11 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                     <div className="bg-slate-900/50 p-3 rounded mt-3">
                         <p className="text-yellow-400 font-bold mb-2">⚠️ {t.guideBoardEffectTitle || 'Board Confidence Effects:'}</p>
                         <ul className="text-sm space-y-1 text-slate-300">
-                            <li>• {t.guideWinEffect || 'Win: +3 confidence'}</li>
-                            <li>• {t.guideDrawEffect || 'Draw: +0 confidence'}</li>
-                            <li>• {t.guideLossEffect || 'Loss: -5 confidence'}</li>
-                            <li>• {t.guideFireWarning || 'Below 30%: You get fired!'}</li>
+                            <li>{t.guideWinEffect || 'Win: +3 confidence'}</li>
+                            <li>{t.guideDrawEffect || 'Draw: +0 confidence'}</li>
+                            <li>{t.guideLossEffect || 'Loss: -5 confidence'}</li>
+                            <li className="font-bold text-red-400">{t.guideFireWarning || 'Below 30%: You get fired!'}</li>
+                            <li className="font-bold text-amber-400 mt-2">{t.guideDerbyNote || 'Derbies count double!'}</li>
                         </ul>
                     </div>
                 </div>

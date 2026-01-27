@@ -421,7 +421,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     <div className="grid grid-cols-3 gap-1 mt-0.5">
                                         {[
                                             { value: 'Balanced', label: t.styleBalanced || 'Balanced' },
-                                            { value: 'Possession', label: t.stylePossession || 'Possession' },
+                                            // { value: 'Possession', label: t.stylePossession || 'Possession' },
                                             { value: 'Counter', label: t.styleCounter || 'Counter' },
                                             { value: 'HighPress', label: t.styleHighPress || 'High Press' },
                                             { value: 'ParkTheBus', label: t.styleParkTheBus || 'Park Bus' }
@@ -451,7 +451,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
                                         <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                            <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button>
+                                            {/* <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button> */}
                                             <button onClick={() => handleTacticChange('passingStyle', 'Mixed')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.passingStyle || 'Mixed') === 'Mixed' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Mix'}</button>
                                             <button onClick={() => handleTacticChange('passingStyle', 'Direct')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Direct' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticDirect}</button>
                                         </div>

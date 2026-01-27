@@ -319,16 +319,15 @@ export const calculateTransferWillingness = (
         const currentWage = player.wage || 1000;
         const wageMultiplier = offeredWage / currentWage;
 
-        // Unified Wage Impact (Max +35)
-        if (wageMultiplier >= 2.5) {
-            willingness += 35; // Irresistible offer
-        } else if (wageMultiplier >= 2.0) {
-            willingness += 30; // Huge boost
+        // Unified Wage Impact (Exact User Request)
+        if (wageMultiplier >= 2.0) {
+            willingness += 50; // MAX EFFECT (+50 Pts)
         } else if (wageMultiplier >= 1.5) {
-            willingness += 15; // Significant boost
+            willingness += 25; // Significant boost (+25 Pts)
         } else if (wageMultiplier < 0.9) {
             willingness -= 25; // Lowball penalty
         }
+
     }
 
     // 5. Age Factor & "Retirement League" Appeal
@@ -729,7 +728,8 @@ export const autoPickLineup = (
     preferredFormation?: TacticType,
     archetype?: CoachArchetype,
     customPositions?: Record<string, { x: number, y: number }>,
-    currentStarters?: Player[]
+    currentStarters?: Player[],
+    maxStarters: number = 11 // Default to full team
 ): { formation: TacticType } => {
     const formation = preferredFormation || TacticType.T_442;
 
@@ -833,6 +833,85 @@ export const autoPickLineup = (
         for (let i = 0; i < structure.DEF; i++) slotRequirements.push(Position.DEF);
         for (let i = 0; i < structure.MID; i++) slotRequirements.push(Position.MID);
         for (let i = 0; i < structure.FWD; i++) slotRequirements.push(Position.FWD);
+    }
+
+    // CRITICAL FIX: RED CARD LIMIT (SMART SLOT REMOVAL)
+    // If we can only play with X players (e.g. 10 due to red card), we must remove slots.
+    // Instead of blindly removing FWDs (pop from end), we should remove the slot 
+    // corresponding to the missing player's position (Deficit Calculation).
+    if (slotRequirements.length > maxStarters) {
+        const removeCount = slotRequirements.length - maxStarters;
+
+        // 1. Calculate Availability & Deficits
+        const available = players.filter(p => (p.weeksInjured || 0) === 0 && (p.matchSuspension || 0) === 0);
+
+        // Helper to normalize position for counting
+        const getPos = (p: Player): Position => {
+            const posStr = p.position as string;
+            if (['KL', 'GK'].includes(posStr)) return Position.GK;
+            if (['STP', 'SĞB', 'SLB', 'SW', 'DEF', 'CB', 'RB', 'LB', 'RWB', 'LWB'].includes(posStr)) return Position.DEF;
+            if (['MDO', 'MO', 'MOO', 'MID', 'CDM', 'CM', 'CAM', 'RM', 'LM'].includes(posStr)) return Position.MID;
+            return Position.FWD;
+        };
+
+        const availableCounts = {
+            [Position.GK]: available.filter(p => getPos(p) === Position.GK).length,
+            [Position.DEF]: available.filter(p => getPos(p) === Position.DEF).length,
+            [Position.MID]: available.filter(p => getPos(p) === Position.MID).length,
+            [Position.FWD]: available.filter(p => getPos(p) === Position.FWD).length,
+        };
+
+        // Count what the formation WANTS
+        const currentCounts = {
+            [Position.GK]: slotRequirements.filter(r => r === Position.GK).length,
+            [Position.DEF]: slotRequirements.filter(r => r === Position.DEF).length,
+            [Position.MID]: slotRequirements.filter(r => r === Position.MID).length,
+            [Position.FWD]: slotRequirements.filter(r => r === Position.FWD).length,
+        };
+
+        // Deficit = Needed - Have (Positive value means we are missing players for this role)
+        const deficits = {
+            [Position.GK]: Math.max(0, currentCounts[Position.GK] - availableCounts[Position.GK]),
+            [Position.DEF]: Math.max(0, currentCounts[Position.DEF] - availableCounts[Position.DEF]),
+            [Position.MID]: Math.max(0, currentCounts[Position.MID] - availableCounts[Position.MID]),
+            [Position.FWD]: Math.max(0, currentCounts[Position.FWD] - availableCounts[Position.FWD]),
+        };
+
+        for (let i = 0; i < removeCount; i++) {
+            let targetPos = Position.FWD; // Default sacrifice
+            let foundDeficit = false;
+
+            // Priority 1: Remove slot where we have a DEFICIT (Missing player)
+            // Order doesn't matter much if deficit exists, but let's check FWD->MID->DEF->GK
+            const checkOrder = [Position.FWD, Position.MID, Position.DEF, Position.GK];
+
+            for (const pos of checkOrder) {
+                if (deficits[pos] > 0) {
+                    targetPos = pos;
+                    foundDeficit = true;
+                    // Decrease deficit since we are removing the requirement
+                    deficits[pos]--;
+                    break;
+                }
+            }
+
+            // Priority 2: If no deficit (e.g. simple 10-man tactic adjustment), sacrifice from back to front
+            if (!foundDeficit) {
+                if (currentCounts[Position.FWD] > 0) targetPos = Position.FWD;
+                else if (currentCounts[Position.MID] > 0) targetPos = Position.MID;
+                else if (currentCounts[Position.DEF] > 0) targetPos = Position.DEF;
+            }
+
+            // Remove the LAST instance of this position requirement
+            const idx = slotRequirements.lastIndexOf(targetPos);
+            if (idx !== -1) {
+                slotRequirements.splice(idx, 1);
+                currentCounts[targetPos]--;
+            } else {
+                // Fallback (should rarely happen)
+                slotRequirements.pop();
+            }
+        }
     }
 
     // Debug log removed for production
@@ -1028,9 +1107,14 @@ export const generateWorld = (leagueId: string): GameState => {
             let specificTactic: TeamTactic;
             if (TEAM_TACTICAL_PROFILES[rt.name]) {
                 specificTactic = JSON.parse(JSON.stringify(TEAM_TACTICAL_PROFILES[rt.name]));
+                // BALANCING: Prevent AI from starting match with 'Aggressive' to avoid early red card RNG
+                // They can switch to it dynamically later if losing (MatchEngine logic)
+                if (specificTactic.aggression === 'Aggressive') {
+                    specificTactic.aggression = 'Normal';
+                }
             } else {
                 // Default generic tactic if no profile found
-                specificTactic = { formation: TacticType.T_442, style: 'Possession', aggression: 'Normal', tempo: 'Normal', width: 'Balanced', defensiveLine: 'Balanced', passingStyle: 'Mixed', marking: 'Zonal' };
+                specificTactic = { formation: TacticType.T_442, style: 'Balanced', aggression: 'Normal', tempo: 'Normal', width: 'Balanced', defensiveLine: 'Balanced', passingStyle: 'Mixed', marking: 'Zonal' };
             }
 
             // Adjust required players based on formation
@@ -1195,6 +1279,7 @@ export const generateWorld = (leagueId: string): GameState => {
 
 
 let activeEngine: MatchEngine | null = null;
+export const getActiveEngine = () => activeEngine;
 
 export const initializeMatch = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) => {
     activeEngine = new MatchEngine(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
@@ -1761,6 +1846,21 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                 const repDiff = opponentRep - team.reputation;
                 let change = 0;
 
+                // Check Context (Derby, Cup, etc.)
+                const rivals = DERBY_RIVALS[team.name] || [];
+                const isDerby = rivals.includes(opponent.name);
+
+                // European Match Check
+                const isEuropeanMatch = (gameState.europeanCup && (
+                    gameState.europeanCup.groups?.some(g => g.matches.some(em => em.id === m.id)) ||
+                    gameState.europeanCup.knockoutMatches?.some(em => em.id === m.id)
+                ));
+
+                // Multipliers
+                let importanceMultiplier = 1.0;
+                if (isDerby) importanceMultiplier = 2.0; // Derbies count double!
+                if (isEuropeanMatch) importanceMultiplier = 1.5; // European glory matters
+
                 if (won) {
                     // Win = Board is happy
                     if (repDiff > 500) change = 6;        // Beat much stronger team = +6
@@ -1784,17 +1884,32 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     if (goalsAgainst - goalsFor >= 3) change -= 2;
                 }
 
+                // Apply Multiplier
+                change = Math.round(change * importanceMultiplier);
+
                 // Consecutive losses streak check
                 const recentLosses = (team.recentForm || []).slice(-3).filter(r => r === 'L').length;
                 if (recentLosses >= 3) change -= 3; // Extra -3 for 3+ consecutive losses
 
-                const newConfidence = Math.max(0, Math.min(100, (team.boardConfidence || 70) + change));
+                // BUG FIX: Handle 0 correctly (don't fallback to 70 if it's 0)
+                const currentConfidence = team.boardConfidence !== undefined ? team.boardConfidence : 70;
+                const newConfidence = Math.max(0, Math.min(100, currentConfidence + change));
+
+                // FIRING LOGIC
+                if (newConfidence < 30) {
+                    gameState.isGameOver = true;
+                    gameState.gameOverReason = 'FIRED';
+                }
 
                 // Record history
                 if (change !== 0) {
                     const resultText = won ? 'Galibiyet' : drew ? 'Beraberlik' : 'Mağlubiyet';
-                    const score = won || drew ? `${goalsFor}-${goalsAgainst}` : `${goalsFor}-${goalsAgainst}`;
-                    const reason = `${opponent.name} ${resultText} (${score})`;
+                    const score = `${goalsFor}-${goalsAgainst}`;
+                    let reason = `${opponent.name} ${resultText} (${score})`;
+
+                    if (isDerby) reason += ' 🔥 (Derbi)';
+                    if (isEuropeanMatch) reason += ' 🇪🇺 (Avrupa)';
+
                     const history = team.confidenceHistory || [];
                     history.push({ week: gameState.currentWeek, change, reason, newValue: newConfidence });
                     // Keep only last 20 entries
@@ -1924,20 +2039,20 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             if (p.playedThisWeek) {
                 // Player played this week (started or came on as sub) - morale boost!
                 newMorale = Math.min(100, newMorale + 2);
-                moraleReason = 'Maçta oynadı';
+                moraleReason = t.moralePlayed;
             } else if (p.lineup === 'STARTING') {
                 // Lineup says starting but didn't play? (Edge case - shouldn't happen normally)
                 newMorale = Math.min(100, newMorale + 2);
-                moraleReason = 'İlk 11\'de';
+                moraleReason = t.moraleStarting;
             } else if (p.lineup === 'BENCH') {
                 // On bench and didn't play - neutral (they're ready to play)
-                moraleReason = 'Yedek - stabil';
+                moraleReason = t.moraleBench;
                 // newMorale stays same
             } else {
                 // RESERVE - Kadro dışı AND didn't play this week
                 if (p.overall > 75) {
                     newMorale = Math.max(0, newMorale - 3);
-                    moraleReason = 'Yıldız oyuncu kadro dışı';
+                    moraleReason = t.moraleReserveStar;
                     if (newMorale < 40 && Math.random() > 0.8) {
                         newMessages.push({
                             id: uuid(),
@@ -1952,10 +2067,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 } else if (p.overall > 65) {
                     // Orta seviye oyuncular hafif moral düşüşü
                     newMorale = Math.max(0, newMorale - 1);
-                    moraleReason = 'Kadro dışı';
+                    moraleReason = t.moraleReserve;
                 } else {
                     // 65 altı oyuncular stabil (genç/düşük seviye)
-                    moraleReason = 'Kadro dışı (stabil)';
+                    moraleReason = t.moraleReserveStable;
                 }
             }
 
@@ -1979,15 +2094,25 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         let newOverall = p.overall;
         let newAttributes = { ...p.attributes };
 
-        // Young players develop based on team's training level or general potential curve
+        // Young players develop based on exact age brackets (User Request)
         if (p.age < 28 && p.overall < p.potential) {
-            let developmentChance = 0.03; // Base chance
+            let developmentChance = 0.01; // Base
+
+            // 1. Age Factor (Exact User Math)
+            if (p.age < 21) developmentChance = 0.05; // 5% (Very Fast)
+            else if (p.age < 24) developmentChance = 0.03; // 3% (Normal)
+            else if (p.age < 28) developmentChance = 0.01; // 1% (Slow)
+
             let trainingBoost: (keyof typeof newAttributes)[] = [];
 
             if (isUserPlayer && userTeam) {
                 const headCoachLevel = userTeam.staff?.headCoachLevel || 1;
                 const trainingLevel = userTeam.facilities?.trainingLevel || 1;
-                developmentChance = 0.04 + (headCoachLevel * 0.015) + (trainingLevel * 0.01);
+
+                // 2. Facility Effect: +0.5% per Training Level, +0.8% per Coach Level
+                // Convert percentage to probability (0.5% = 0.005)
+                const facilityBonus = (trainingLevel * 0.005) + (headCoachLevel * 0.008);
+                developmentChance += facilityBonus;
 
                 // Training Focus affects which attributes improve
                 const focus = userTeam.trainingFocus || 'BALANCED';
@@ -2024,11 +2149,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 if (isUserPlayer && trainingBoost.length > 0 && Math.random() < 0.5) {
                     const attrToBoost = trainingBoost[Math.floor(Math.random() * trainingBoost.length)];
                     newAttributes[attrToBoost] = Math.min(99, (newAttributes[attrToBoost] || 50) + 1);
-                    // Turkish attribute names
+                    // Localized attribute names
                     const attrNames: Record<string, string> = {
-                        finishing: 'Bitiricilik', dribbling: 'Dripling', positioning: 'Pozisyon',
-                        tackling: 'Top Kapma', strength: 'Güç', speed: 'Hız',
-                        stamina: 'Dayanıklılık', passing: 'Pas', vision: 'Vizyon'
+                        finishing: t.attrFinishing, dribbling: t.attrDribbling, positioning: t.attrPositioning,
+                        tackling: t.attrTackling, strength: t.attrStrength, speed: t.attrSpeed,
+                        stamina: t.attrStamina, passing: t.attrPassing, vision: t.attrVision,
+                        goalkeeping: t.attrGoalkeeping, composure: t.attrComposure, leadership: t.attrLeadership, decisions: t.attrDecisions
                     };
                     boostedAttr = attrNames[attrToBoost] || attrToBoost;
                 }
@@ -2038,7 +2164,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     if (boostedAttr) {
                         report.push(`⬆️ ${p.firstName} ${p.lastName}: ${boostedAttr} +1${focusLabel}`);
                     } else {
-                        report.push(`⬆️ ${p.firstName} ${p.lastName}: Genel Gelişim${focusLabel}`);
+                        report.push(`⬆️ ${p.firstName} ${p.lastName}: ${t.reportGeneralDev}${focusLabel}`);
                     }
                 }
             }
@@ -3176,7 +3302,9 @@ export const processSeasonEnd = (gameState: GameState) => {
     const leagueMult = getLeagueMultiplier(userTeam?.leagueId || 'tr');
 
     // Base prizes for Turkish league, scaled for others
-    const basePrizes = [15000000, 8000000, 5000000, 3000000]; // Top 4 (was 50M, 25M, 15M, 10M)
+    // Base prizes for Turkish league, scaled for others
+    // REVISED: 10M Base for Champion (requests ~10M TR, ~35M EN)
+    const basePrizes = [10000000, 6000000, 4000000, 2000000]; // Top 4
     const prizeDistribution = basePrizes.map(p => Math.floor(p * leagueMult));
 
     let updatedTeams = sensitiveSortedTeams.map((t, _globalIndex) => {
@@ -4056,7 +4184,226 @@ export const simulateAIGlobalCupMatches = (
         const homePlayers = players.filter(p => p.teamId === match.homeTeamId);
         const awayPlayers = players.filter(p => p.teamId === match.awayTeamId);
 
-        updatedCup = simulateGlobalCupMatch(updatedCup, match.id, homeTeam, awayTeam, homePlayers, awayPlayers);
+        // Calculate Attendance for Cup Match (Use existing helper if available, or simplified logic)
+        // High stakes matches have high attendance
+        const attendancePct = Math.min(1.0, 0.7 + (homeTeam.reputation / 20000) + (awayTeam.reputation / 20000) + (Math.random() * 0.2));
+        // Bonus for late stages
+        const stageBonus = match.stage === 'SEMI' || match.stage === 'FINAL' ? 0.2 : match.stage === 'QUARTER' ? 0.1 : 0;
+        const finalAttendancePct = Math.min(1.0, attendancePct + stageBonus);
+
+        const tempMatch: Match = {
+            id: match.id,
+            week: match.week || 99,
+            homeTeamId: match.homeTeamId,
+            awayTeamId: match.awayTeamId,
+            homeScore: 0,
+            awayScore: 0,
+            events: [],
+            isPlayed: false,
+            date: Date.now(),
+            attendance: finalAttendancePct, // Pass attendance to simulation
+            currentMinute: 0,
+            weather: 'Clear',
+            timeOfDay: 'Evening',
+            stats: undefined
+        };
+
+        const result = simulateFullMatch(tempMatch, homeTeam, awayTeam, homePlayers, awayPlayers);
+
+        updatedCup = {
+            ...updatedCup,
+            groups: updatedCup.groups?.map(g => ({
+                ...g,
+                matches: g.matches.map(m => m.id === match.id ? { ...m, isPlayed: true, homeScore: result.homeScore, awayScore: result.awayScore, events: result.events } : m),
+                standings: g.standings // Updated below
+            })),
+            knockoutMatches: updatedCup.knockoutMatches?.map(m => m.id === match.id ? { ...m, isPlayed: true, homeScore: result.homeScore, awayScore: result.awayScore, events: result.events, winnerId: result.homeScore > result.awayScore ? result.homeTeamId : result.awayTeamId } : m) || []
+        };
+        // Re-sync match object with result for local logic
+        match.homeScore = result.homeScore;
+        match.awayScore = result.awayScore;
+        match.isPlayed = true;
+
+        if (updatedCup.groups && match.stage === 'GROUP') {
+            // Groups require manual standing update as simulateFullMatch doesn't touch cup state
+            const group = updatedCup.groups.find(g => g.matches.some(m => m.id === match.id));
+            if (group) {
+                const updateTeamStats = (teamId: string, scored: number, conceded: number) => {
+                    const stats = group.standings.find(s => s.teamId === teamId);
+                    if (stats) {
+                        stats.played++;
+                        stats.gf += scored;
+                        stats.ga += conceded;
+                        if (scored > conceded) { stats.won++; stats.points += 3; }
+                        else if (scored === conceded) { stats.drawn++; stats.points += 1; }
+                        else { stats.lost++; }
+                    }
+                };
+                updateTeamStats(match.homeTeamId, match.homeScore, match.awayScore);
+                updateTeamStats(match.awayTeamId, match.awayScore, match.homeScore);
+
+                // Sort
+                group.standings.sort((a, b) => b.points - a.points || (b.gf - b.ga) - (a.gf - a.ga));
+            }
+        }
+
+
+        // === GLOBAL CUP REPUTATION UPDATE FOR AI TEAMS ===
+        // Find the played match
+        let playedMatch: GlobalCupMatch | undefined;
+        if (updatedCup.groups) {
+            for (const g of updatedCup.groups) {
+                const m = g.matches.find(x => x.id === match.id);
+                if (m) { playedMatch = m; break; }
+            }
+        }
+        if (!playedMatch && updatedCup.knockoutMatches) {
+            playedMatch = updatedCup.knockoutMatches.find(x => x.id === match.id);
+        }
+
+        if (playedMatch && playedMatch.isPlayed) {
+            const homeWon = playedMatch.homeScore > playedMatch.awayScore;
+            const awayWon = playedMatch.awayScore > playedMatch.homeScore;
+            const isDraw = playedMatch.homeScore === playedMatch.awayScore;
+
+            // Home team reputation change
+            if (homeWon) {
+                const repDiff = awayTeam.reputation - homeTeam.reputation;
+                let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
+                repBonus = Math.min(40, repBonus);
+
+                if (playedMatch.stage === 'QUARTER') repBonus += 10;
+                else if (playedMatch.stage === 'SEMI') repBonus += 20;
+                else if (playedMatch.stage === 'FINAL') repBonus += 50;
+
+                updatedTeams = updatedTeams.map(t =>
+                    t.id === homeTeam.id
+                        ? { ...t, reputation: Math.min(10000, t.reputation + repBonus) }
+                        : t
+                );
+            } else if (!isDraw) {
+                // Home team lost
+                const repPenalty = Math.min(15, Math.floor((homeTeam.reputation - awayTeam.reputation) / 300));
+                updatedTeams = updatedTeams.map(t =>
+                    t.id === homeTeam.id
+                        ? { ...t, reputation: Math.max(1000, t.reputation - Math.max(5, repPenalty)) }
+                        : t
+                );
+            }
+
+            // Away team reputation change
+            if (awayWon) {
+                const repDiff = homeTeam.reputation - awayTeam.reputation;
+                let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
+                repBonus = Math.min(40, repBonus);
+
+                if (playedMatch.stage === 'QUARTER') repBonus += 10;
+                else if (playedMatch.stage === 'SEMI') repBonus += 20;
+                else if (playedMatch.stage === 'FINAL') repBonus += 50;
+
+                updatedTeams = updatedTeams.map(t =>
+                    t.id === awayTeam.id
+                        ? { ...t, reputation: Math.min(10000, t.reputation + repBonus) }
+                        : t
+                );
+            } else if (!isDraw) {
+                // Away team lost
+                const repPenalty = Math.min(15, Math.floor((awayTeam.reputation - homeTeam.reputation) / 300));
+                updatedTeams = updatedTeams.map(t =>
+                    t.id === awayTeam.id
+                        ? { ...t, reputation: Math.max(1000, t.reputation - Math.max(5, repPenalty)) }
+                        : t
+                );
+            }
+        }
+
+
+        // === FINANCIAL REWARDS (CASH PRIZE & TICKETS) ===
+        // 1. Ticket Revenue
+        // Champions League Ticket Price: ~€60 avg (Higher than league)
+        // Final: Neutral venue (Shared 50/50)
+        // Others: Home team takes 100%
+
+        const isFinal = match.stage === 'FINAL';
+        // Base Stadium Capacity (Level 1=5000, +6000 per level)
+        const getCapacity = (team: Team) => 5000 + (team.facilities.stadiumLevel - 1) * 6000;
+
+        // Ticket Price based on Stage
+        let ticketPrice = 50; // Group
+        if (match.stage === 'ROUND_16') ticketPrice = 60;
+        else if (match.stage === 'QUARTER') ticketPrice = 75;
+        else if (match.stage === 'SEMI') ticketPrice = 100;
+        else if (match.stage === 'FINAL') ticketPrice = 150; // Expensive final tickets!
+
+        const homeCapacity = getCapacity(homeTeam);
+        // Using the calculated attendancePct from earlier (re-calculating simply here as local var is lost in loop scope unless passed)
+        const attPct = Math.min(1.0, 0.7 + (homeTeam.reputation / 20000) + (awayTeam.reputation / 20000) + (match.stage === 'FINAL' ? 0.3 : 0));
+        const attendanceCount = Math.floor(homeCapacity * attPct);
+
+        const totalGateReceipts = Math.floor(attendanceCount * ticketPrice);
+
+        // 2. Prize Money (Performance Based)
+        // Group Win: 2.8M, Draw: 900k
+        // Round Progression Bonuses calculated at END of stage usually, but we can give instant win rewards here
+
+        let homePrize = 0;
+        let awayPrize = 0;
+
+        // Match Performance Prizes (Group Stage)
+        if (match.stage === 'GROUP') {
+            if (match.homeScore > match.awayScore) homePrize += 2800000; // Win
+            else if (match.awayScore > match.homeScore) awayPrize += 2800000; // Win
+            else {
+                homePrize += 900000; // Draw
+                awayPrize += 900000;
+            }
+        }
+
+        // Progression Prizes (Knockout Wins/Advancement)
+        // Awarded effectively on 'Winning' the knockout tie (simplified: winning the match for single-leg)
+        if (match.stage !== 'GROUP' && match.winnerId) {
+            // Prize for QUALIFYING to the NEXT round (awarded now)
+            // R16 Winners -> Get QF Prize (10.6M)
+            // QF Winners -> Get SF Prize (12.5M)
+            // SF Winners -> Get Final Prize (15.5M)
+            // Final Winner -> Get Cup Bonus (4.5M) + Champion Title
+
+            let progressPrize = 0;
+            if (match.stage === 'ROUND_16') progressPrize = 10600000;
+            else if (match.stage === 'QUARTER') progressPrize = 12500000;
+            else if (match.stage === 'SEMI') progressPrize = 15500000;
+            else if (match.stage === 'FINAL') progressPrize = 4500000; // Winner Bonus
+
+            if (match.winnerId === homeTeam.id) homePrize += progressPrize;
+            else awayPrize += progressPrize;
+        }
+
+        // Apply Finances to Teams
+        updatedTeams = updatedTeams.map(t => {
+            if (t.id === homeTeam.id) {
+                const gateMoney = isFinal ? (totalGateReceipts / 2) : totalGateReceipts;
+                return { ...t, budget: t.budget + gateMoney + homePrize };
+            }
+            if (t.id === awayTeam.id) {
+                const gateMoney = isFinal ? (totalGateReceipts / 2) : 0; // Away team gets nothing unless final
+                return { ...t, budget: t.budget + gateMoney + awayPrize };
+            }
+            return t;
+        });
+
+        // NOTIFICATION FOR USER (If involved)
+        if (homeTeam.id === userTeamId || awayTeam.id === userTeamId) {
+            const userIsHome = homeTeam.id === userTeamId;
+            const myPrize = userIsHome ? homePrize : awayPrize;
+            const myGate = userIsHome ? (isFinal ? totalGateReceipts / 2 : totalGateReceipts) : (isFinal ? totalGateReceipts / 2 : 0);
+
+            if (myPrize > 0 || myGate > 0) {
+                // We rely on updatedTeams generic budget update, but maybe show a toast or log?
+                // Existing finance report will catch 'lastWeekIncome' but this is direct budget injection
+                // Ideally we update financials.lastWeekIncome too?
+                // For now, let's trust the budget update.
+            }
+        }
     });
 
     // Check for advancement
