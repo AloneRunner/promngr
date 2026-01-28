@@ -2,7 +2,7 @@
 export const GOZTEPE_SQUAD = [
   {
     ad: "M. Lise",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Polonya",
     mevki: "KL",
     reyting: 73,
@@ -13,7 +13,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "A. Dennise",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Nijerya",
     mevki: "MO",
     reyting: 70,
@@ -24,7 +24,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "E. Bekiroglu",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 70,
@@ -35,7 +35,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Helitonn",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Brezilya",
     mevki: "STP",
     reyting: 68,
@@ -46,7 +46,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "I. Koybashy",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 67,
@@ -57,7 +57,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "A. Ildyze",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 67,
@@ -68,7 +68,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "T. Altikardes",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 67,
@@ -79,7 +79,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Jandersun",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Brezilya",
     mevki: "SNT",
     reyting: 67,
@@ -90,7 +90,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "S. Polatt",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 68,
@@ -101,7 +101,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "Y. Yilmi",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "KL",
     reyting: 66,
@@ -112,7 +112,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "O. Demirky",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 65,
@@ -123,7 +123,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "B. Kurtt",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "STP",
     reyting: 64,
@@ -134,7 +134,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "M. Yavuze",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 63,
@@ -145,7 +145,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "E. Demirky",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SĞB",
     reyting: 62,
@@ -156,7 +156,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "A. Karatash",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SLB",
     reyting: 61,
@@ -167,7 +167,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "A. Santoz",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Arjantin",
     mevki: "MDO",
     reyting: 60,
@@ -178,7 +178,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "L. Martines",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Portekiz",
     mevki: "MDO",
     reyting: 59,
@@ -189,7 +189,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "P. Sylva",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Brezilya",
     mevki: "MDO",
     reyting: 58,
@@ -200,7 +200,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "M. Kayya",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "MO",
     reyting: 57,
@@ -211,7 +211,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "H. Polatt",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "MOO",
     reyting: 62,
@@ -222,7 +222,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "O. Demirky",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 61,
@@ -233,7 +233,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "O. Aktash",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SĞO",
     reyting: 61,
@@ -244,7 +244,7 @@ export const GOZTEPE_SQUAD = [
   },
   {
     ad: "O. Ozere",
-    takim: "Izmir Göz",
+    takim: "Izmir Goz",
     uyruk: "Türkiye",
     mevki: "SLO",
     reyting: 60,

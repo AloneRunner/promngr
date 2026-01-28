@@ -10,7 +10,8 @@ import {
     TacticType,
     TeamTactic,
     TeamMentality,
-    PlayerPersonality
+    PlayerPersonality,
+    LineupStatus
 } from '../types';
 
 // --- UTILS ---
@@ -179,8 +180,8 @@ const applyStatFloor = (stat: number, floor: number = 40): number => {
 // --- CONSTANTS ---
 export const TICKS_PER_MINUTE = 60; // ~3 seconds per minute at 1x speed (50ms per tick)
 
-const MAX_PLAYER_SPEED = 1.2;  // 1.0 → 1.2 (biraz hızlandı, ~37 km/h)
-const MAX_BALL_SPEED = 4.0;    // 3.5 → 4.0 (daha dinamik şutlar/paslar)
+const MAX_PLAYER_SPEED = 1.10;  // 1.15 -> 1.10 (Slowed down for more realistic ball-to-player speed ratio)
+const MAX_BALL_SPEED = 4.2;    // 4.0 -> 4.2 (Faster ball relative to players)
 const BALL_FRICTION = 0.96;
 const BALL_AIR_DRAG = 0.98;
 const GRAVITY = 0.20;          // 0.18 → 0.20 (daha gerçekçi düşüş, havadan paslar çok uzun kalmıyordu)
@@ -431,6 +432,7 @@ export class MatchEngine {
     private _cachedHomeStarters: Player[] = [];
     private _cachedAwayStarters: Player[] = [];
     private _starterCacheValid: boolean = false;
+    private _statsLogged: boolean = false;
 
     constructor(match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) {
         this.match = match;
@@ -443,6 +445,27 @@ export class MatchEngine {
         this.userTeamId = userTeamId || null;
 
         this.internalMinute = match.currentMinute;
+
+        // === 11-PLAYER LIMIT SAFEGUARD ===
+        // Ensure strictly max 11 starters per team to prevent '12 players' bug
+        const filterRestToBench = (players: Player[]) => {
+            let startersCount = 0;
+            return players.map(p => {
+                if (p.lineup === 'STARTING') {
+                    startersCount++;
+                    if (startersCount > 11) {
+                        console.warn(`⚠️ SAFEGUARD: Player ${p.lastName} forced to BENCH (Max 11 starters exceeded)`);
+                        return { ...p, lineup: 'BENCH' as LineupStatus, lineupIndex: 99 };
+                    }
+                }
+                return p;
+            });
+        };
+
+        this.homePlayers = filterRestToBench(this.homePlayers);
+        this.awayPlayers = filterRestToBench(this.awayPlayers);
+        // Update allPlayers reference with sanitized lists
+        this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
 
         // Only initialize STARTING players on the pitch
         this.initializeTactics(this.homePlayers.filter(p => p.lineup === 'STARTING'), this.homeTeam.tactic);
@@ -503,9 +526,76 @@ export class MatchEngine {
         const homeAvg = Math.round(homeStarters.reduce((sum, p) => sum + p.overall, 0) / homeStarters.length);
         const awayAvg = Math.round(awayStarters.reduce((sum, p) => sum + p.overall, 0) / awayStarters.length);
 
-        console.log(`\n🏟️ MAÇ BAŞLIYOR: ${homeTeam.name} vs ${awayTeam.name}`);
-        console.log(`📊 TAKIM GÜÇLERİ: ${homeTeam.name} (${homeAvg} OVR) vs ${awayTeam.name} (${awayAvg} OVR) | Fark: ${Math.abs(homeAvg - awayAvg)}`);
-        console.log(`⚙️ TAKTİKLER: ${homeTeam.name} [${homeTeam.tactic.formation}, ${homeTeam.tactic.aggression}, ${homeTeam.tactic.style}] vs ${awayTeam.name} [${awayTeam.tactic.formation}, ${awayTeam.tactic.aggression}, ${awayTeam.tactic.style}]`);
+        console.log(`\n🏟️ MATCH START: ${homeTeam.name} vs ${awayTeam.name}`);
+
+        const logTeamTactic = (team: Team, avg: number, side: 'HOME' | 'AWAY') => {
+            console.log(`\n== ${side}: ${team.name} (Avg OVR: ${avg}) ==`);
+            console.log(`Formation: ${team.tactic.formation}`);
+            console.log(`Mentality: ${team.tactic.mentality || 'BALANCED'}`);
+            console.log(`Style: ${team.tactic.style}`);
+            console.log(`Detailed Instructions:`);
+            console.log(`- Aggression: ${team.tactic.aggression}`);
+            console.log(`- Tempo: ${team.tactic.tempo}`);
+            console.log(`- Width: ${team.tactic.width}`);
+            console.log(`- Defensive Line: ${team.tactic.defensiveLine}`);
+            console.log(`- Passing Style: ${team.tactic.passingStyle}`);
+            console.log(`- Marking: ${team.tactic.marking}`);
+        };
+
+        logTeamTactic(homeTeam, homeAvg, 'HOME');
+        logTeamTactic(awayTeam, awayAvg, 'AWAY');
+        console.log('\n----------------------------------------');
+    }
+
+    public logCurrentTactics() {
+        if (!this.homeTeam || !this.awayTeam) return;
+
+        console.log(`\n📋 CURRENT TACTICAL STATE (Minute ${this.internalMinute})`);
+
+        const log = (team: Team, side: 'HOME' | 'AWAY') => {
+            console.log(`\n== ${side}: ${team.name} ==`);
+            console.log(`Style: ${team.tactic.style} | Mentality: ${team.tactic.mentality || 'BALANCED'}`);
+            console.log(`Formation: ${team.tactic.formation}`);
+            console.log(`Pass: ${team.tactic.passingStyle} | Tempo: ${team.tactic.tempo} | Width: ${team.tactic.width}`);
+            console.log(`Def: ${team.tactic.defensiveLine} | Mark: ${team.tactic.marking} | Press: ${team.tactic.aggression}`);
+        };
+
+        log(this.homeTeam, 'HOME');
+        log(this.awayTeam, 'AWAY');
+        console.log('----------------------------------------\n');
+    }
+
+    public logMatchAnalysis() {
+        console.log(`\n📊 FULL MATCH ANALYSIS REPORT (90')`);
+        console.log(`----------------------------------------`);
+        console.log(`${this.homeTeam.name} ${this.match.homeScore} - ${this.match.awayScore} ${this.awayTeam.name}`);
+
+        // Possession
+        const totalTicks = this.possessionTicks.home + this.possessionTicks.away;
+        const homePoss = totalTicks > 0 ? Math.round((this.possessionTicks.home / totalTicks) * 100) : 50;
+        const awayPoss = 100 - homePoss;
+        console.log(`Possession: ${homePoss}% - ${awayPoss}%`);
+
+        // Shots & xG
+        console.log(`Shots: ${this.match.stats.homeShots} (${this.match.stats.homeOnTarget}) - ${this.match.stats.awayShots} (${this.match.stats.awayOnTarget})`);
+        console.log(`xG: ${this.match.stats.homeXG.toFixed(2)} - ${this.match.stats.awayXG.toFixed(2)}`);
+
+        // Tactical Summary
+        console.log(`\n== TACTICAL MATCHUP ==`);
+        console.log(`HOME (${this.homeTeam.tactic.style}): Formation ${this.homeTeam.tactic.formation}, Mentality ${this.homeTeam.tactic.mentality || 'N/A'}`);
+        console.log(`AWAY (${this.awayTeam.tactic.style}): Formation ${this.awayTeam.tactic.formation}, Mentality ${this.awayTeam.tactic.mentality || 'N/A'}`);
+
+        // Analysis
+        console.log(`\n== AI INSIGHTS ==`);
+        if (Math.abs(homePoss - 50) > 10) {
+            const dominant = homePoss > 50 ? 'HOME' : 'AWAY';
+            console.log(`- ${dominant} team dominated possession. Check if opponent is 'ParkTheBus' or pressing ineffective.`);
+        }
+        if (this.match.stats.homeShots > 15 || this.match.stats.awayShots > 15) {
+            console.log(`- High shot count detected. Check 'Shot Spam' tuning if conversion rate is low.`);
+        }
+
+        console.log(`----------------------------------------\n`);
     }
 
     private initializeTactics(players: Player[], tactic: TeamTactic) {
@@ -848,6 +938,21 @@ export class MatchEngine {
             }
         }
 
+        // BALANCING: Dynamic Aggression for Desperate Teams
+        // If losing late, get aggressive (risk fouls for ball recovery)
+        if (this.internalMinute >= 75 && scoreDiff <= -1) {
+            if (team.tactic.aggression !== 'Aggressive') {
+                team.tactic.aggression = 'Aggressive';
+                tacticChanged = true;
+                this.traceLog.push(`AI AGRESİFLİK: ${team.name} artık AGRESİF oynuyor! (Risk aldı, Gol Lazım!)`);
+            }
+        } else if (scoreDiff >= 0 && team.tactic.aggression === 'Aggressive' && newMentality !== TeamMentality.ALL_OUT_ATTACK) {
+            // If we caught up or took lead, maybe calm down?
+            team.tactic.aggression = 'Normal';
+            tacticChanged = true;
+            this.traceLog.push(`AI SAKİNLEŞME: ${team.name} normale döndü.`);
+        }
+
         // Only change if different from current
         if (newMentality !== currentMentality) {
             if (isHome) {
@@ -1172,6 +1277,25 @@ export class MatchEngine {
         this.sim.awayMentality = this.awayMentality;
     }
 
+    public logMatchStats() {
+        if (this._statsLogged) return;
+        this._statsLogged = true;
+
+        const h = this.homeTeam;
+        const a = this.awayTeam;
+        const s = this.match.stats;
+
+        console.log(`\n🏁 FULL TIME STATS: ${h.name} ${this.match.homeScore} - ${this.match.awayScore} ${a.name}`);
+        console.log(`---------------------------------------------------------------`);
+        console.log(`METRIC             ${h.name.substring(0, 15).padEnd(15)} | ${a.name.substring(0, 15).padEnd(15)}`);
+        console.log(`---------------------------------------------------------------`);
+        console.log(`Possession:        ${(s.homePossession || 50)}%            | ${(s.awayPossession || 50)}%`);
+        console.log(`Expected Goals(xG):${(s.homeXG || 0).toFixed(2)}            | ${(s.awayXG || 0).toFixed(2)}`);
+        console.log(`Shots (On Target): ${s.homeShots} (${s.homeOnTarget})            | ${s.awayShots} (${s.awayOnTarget})`);
+        console.log(`Saves:             ${s.homeSaves || 0}                 | ${s.awaySaves || 0}`);
+        console.log(`---------------------------------------------------------------\n`);
+    }
+
     public step() {
         this.traceLog = [];
         this.tickCount++;
@@ -1186,6 +1310,10 @@ export class MatchEngine {
             if (this.internalMinute % 15 === 0 || this.internalMinute === 45 || this.internalMinute === 90) {
                 const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
                 console.log(`⏱️ ${this.internalMinute}' | Top: (${this.sim.ball.x.toFixed(0)},${this.sim.ball.y.toFixed(0)}) hız:${ballSpeed.toFixed(2)} | Sahip: ${this.sim.ball.ownerId ? this.getPlayer(this.sim.ball.ownerId)?.lastName || 'YOK' : 'Sahipsiz'}`);
+
+                if (this.internalMinute >= 90) {
+                    this.logMatchStats();
+                }
             }
 
             // AI substitution check every 5 minutes for non-user teams
@@ -1533,8 +1661,8 @@ export class MatchEngine {
 
 
                         // BASE CHANCE: Temel kurtarış şansı
-                        // NERF: 28 → 25 → 22 → 20 → 17 → 14 → 12 (Kullanıcı zevki için!)
-                        let baseSaveChance = 12;
+                        // NERF: 28 → 25 → 22 → 20 → 17 → 14 → 12 → 10 (Genel kaleci zayıflatması)
+                        let baseSaveChance = 10;
 
                         // PlayStyles (Özel Yetenekler) Etkisi
                         if (gk.playStyles?.includes("Kedi Refleks") || gk.playStyles?.includes("Kedi Refleks+")) {
@@ -1544,7 +1672,7 @@ export class MatchEngine {
                             baseSaveChance += 20;
                         }
 
-                        const saveChance = baseSaveChance + (effectiveGKing * 0.8) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
+                        const saveChance = baseSaveChance + (effectiveGKing * 0.78) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
 
                         // Şans faktörü (Zar atıyoruz)
                         const saveRoll = Math.random() * 100;
@@ -1554,7 +1682,7 @@ export class MatchEngine {
 
                             // Topu tutacak mı yoksa çelecek mi?
                             const catchRoll = Math.random();
-                            const catchThreshold = 0.5 * gkFatigueMods.composure; // %50 şansla tutar (stamina etkili)
+                            const catchThreshold = 0.4 * gkFatigueMods.composure; // %40 şansla tutar (nerf: daha çok sektirme)
 
                             if (catchRoll < catchThreshold && ballSpeed < 3.5) {
                                 // YAPIŞTIRDI (Catch)
@@ -2042,10 +2170,10 @@ export class MatchEngine {
             if (spaceObstacles.length === 0) dribbleScore += 50; // Open space!
             else dribbleScore -= (spaceObstacles.length * 25); // Reduced penalty (was 30)
 
-            // IMPROVED DRIBBLING IMPACT - Linear scaling from 60+
-            // 60 dribble = +0, 70 = +15, 80 = +30, 85 = +37.5, 100 = +60
+            // IMPROVED DRIBBLING IMPACT - Linear scaling from 60+ (BUFFED)
+            // 60 dribble = +0, 70 = +18, 80 = +36, 85 = +45, 100 = +72
             if (p.attributes.dribbling > 60) {
-                dribbleScore += ((p.attributes.dribbling - 60) * 1.5);
+                dribbleScore += ((p.attributes.dribbling - 60) * 1.8);
             }
             if (pressure > 0) dribbleScore -= (pressure * 15);
 
@@ -2094,29 +2222,35 @@ export class MatchEngine {
 
             // === TACTIC EFFECTS ===
             // 1. PASSING STYLE EFFECT
-            if (tactic.passingStyle === 'Short') {
-                passScore += 20; // Prefer passing
-                dribbleScore -= 10; // Less risky dribbling
-            } else if (tactic.passingStyle === 'Direct') {
+            // TIKI-TAKA DRIBBLE LOGIC REMOVED
+            if (tactic.passingStyle === 'Direct') {
                 shootScore += 15; // More direct attempts
                 dribbleScore += 10; // More aggressive
                 passScore -= 10; // Fewer safe passes
             }
             // 'Mixed' = no change
 
-            // 2. STYLE EFFECT (Possession/Counter/HighPress/ParkTheBus/Balanced)
-            if (tactic.style === 'Possession') {
-                passScore += 25; // Keep the ball
-                dribbleScore -= 15; // Less risky
-                shootScore -= 20; // Fewer speculative shots
-            } else if (tactic.style === 'Counter') {
+            // 'Mixed' = no change
+
+            // 2. STYLE EFFECT - POSSESSION FIX (Sabır!)
+            // 'Possession' removed - treated as 'Balanced'
+
+            if (tactic.style === 'Counter') {
                 // Counter - quick decisions when have ball
                 if (isInAttackingThird) {
                     shootScore += 25; // Shoot quickly in attack
                     dribbleScore += 15; // Drive forward
                 }
+                if (distToGoal < 16) shootScore += 20;
+
             } else if (tactic.style === 'HighPress') {
-                shootScore += 10; // More aggressive
+                // HighPress Tune: Was shooting too much (Shot Spam)
+                // Reduced aggression on bad shots
+                if (shotOpenness > 0.6) {
+                    shootScore += 10; // Only boost if reasonably open
+                } else {
+                    shootScore -= 10; // Penalty if blocked, look for pass instead
+                }
                 dribbleScore += 10; // Push forward
             } else if (tactic.style === 'ParkTheBus') {
                 passScore += 20; // Keep it safe
@@ -2396,10 +2530,8 @@ export class MatchEngine {
             let groundScore = score;
             if (groundRisk > 50) groundScore -= 200;
 
-            if (tactic.passingStyle === 'Short') {
-                if (d < 15) groundScore += 30;
-                else groundScore -= (d - 15);
-            }
+            // TIKI-TAKA LOGIC REMOVED - Fallback to standard
+            // if (tactic.passingStyle === 'Short') { ... }
 
             if (groundScore > currentBestScore) {
                 currentBestScore = groundScore;
@@ -2429,6 +2561,12 @@ export class MatchEngine {
                     let throughScore = score + 40;
                     if (throughRisk > 50) throughScore -= 200;
                     if (p.attributes.vision > 70) throughScore += 20;
+
+                    // POSSESSION STYLE: Killer Pass Bonus!
+                    // If playing possession, we WANT to slice them open
+                    if (tactic.style === 'Possession' && dist(throughTx, throughTy, goalX, 50) < 30) {
+                        throughScore += 30;
+                    }
 
                     if (throughScore > currentBestScore) {
                         currentBestScore = throughScore;
@@ -2653,10 +2791,46 @@ export class MatchEngine {
                     simP.state = 'IDLE';
                 }
             }
+        } else if (role === Position.MID && teamHasBall && tactic.style === 'Possession') {
+            // === POSSESSION MIDFIELDER "LATE RUNS" ===
+            // This is the missing link! Mids must attack space
+            const ballX = this.sim.ball.x;
+            const distToBall = dist(simP.x, simP.y, ballX, ballY);
+            const isInAttackingThird = isHome ? (ballX > 65) : (ballX < 35);
+
+            // Only run if close enough to be effective, but not ON TOP of the ball
+            if (isInAttackingThird && distToBall < 35 && distToBall > 5) {
+                // Break lines! 
+                const runDepth = 15;
+                targetX = isHome ? offsideLineX + runDepth : offsideLineX - runDepth;
+
+                // Find empty channel (Y) - Opposite to ball Y to stretch play
+                // If ball is left (y < 50), run right channel
+                const channelY = simP.y < 50 ? 35 : 65;
+                targetY = channelY;
+
+                speedMod = MAX_PLAYER_SPEED * 0.9;
+                simP.state = 'RUN';
+
+                // Chance to call for pass if open
+                if (Math.random() < 0.02) this.emitTeamSignal(p, 'CALL');
+            } else {
+                // Fallback to standard positioning if not running
+                const baseTargetX = isHome ? base.x : (100 - base.x);
+                const baseTargetY = isHome ? base.y : (100 - base.y);
+                targetX = baseTargetX;
+                targetY = baseTargetY;
+
+                // Apply width
+                const widthOffset = tactic.width === 'Wide' ? 1.25 : tactic.width === 'Narrow' ? 0.75 : 1.0;
+                targetY = 50 + (targetY - 50) * widthOffset;
+
+                simP.state = 'IDLE';
+            }
         } else {
             // DEF / MID / GK (Field Player logic mostly)
             // === CUSTOM POSITION TUTARLILIĞI ===
-            // Base offset kullanıcının belirlediği pozisyonu temsil ediyor
+            // Base offset kullanıcının belirlediği pozisyonu temsil ediyor - COPY OF STANDARD LOGIC START
             const baseTargetX = isHome ? base.x : (100 - base.x);
             const baseTargetY = isHome ? base.y : (100 - base.y);
             targetX = baseTargetX;
@@ -2779,6 +2953,14 @@ export class MatchEngine {
                 // 1. Calculate ideal position based on formation
                 // === CUSTOM POSITION KORUNMASI (SAVUNMA) ===
                 let idealX = isHome ? base.x : (100 - base.x);
+
+                // FIX: Orta sahaların defans hattına gömülmesini engelle (6-7 kişilik defans oluşmaması için)
+                // Midfielders should stay in front of the penalty box (approx 22-25 units)
+                if (role === Position.MID) {
+                    if (isHome && idealX < 24) idealX = 24;
+                    if (!isHome && idealX > 76) idealX = 76;
+                }
+
                 let idealY = isHome ? base.y : (100 - base.y);
 
                 // Custom pozisyon varsa Y ekseninde daha sadık kal
@@ -2977,7 +3159,7 @@ export class MatchEngine {
 
                     // Mevcut pressing mantığı (forvet takibi yoksa)
                     if (!closestThreatToMe && this.isClosestTeammateToBall(p)) {
-                        const pressDist = isDangerZone ? 25 : 18;
+                        const pressDist = isDangerZone ? 35 : 22;
                         if (distToBall < pressDist) shouldPress = true;
                     }
 
@@ -3374,6 +3556,7 @@ export class MatchEngine {
                         description: 'Santra',
                         teamId: this.homeTeam.id
                     });
+                    this.match.awayScore++; // Update internal score state
                     return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.awayTeam.name}`, teamId: this.awayTeam.id, playerId: scorerId || undefined };
                 }
                 if (outRight) {
@@ -3388,6 +3571,7 @@ export class MatchEngine {
                         description: 'Santra',
                         teamId: this.awayTeam.id
                     });
+                    this.match.homeScore++; // Update internal score state
                     return { minute: this.internalMinute, type: MatchEventType.GOAL, description: `GOL! ${scorer ? scorer.lastName : this.homeTeam.name}`, teamId: this.homeTeam.id, playerId: scorerId || undefined };
                 }
             }
@@ -3499,7 +3683,8 @@ export class MatchEngine {
         const distToT = Math.sqrt(dx * dx + dy * dy);
 
         // Pas hatası: Passing stat + composure + decisions etkili
-        let errorMargin = (100 - pasStat) * 0.005;
+        // BUFF: General passing accuracy increased by 10% (0.9 multiplier)
+        let errorMargin = ((100 - pasStat) * 0.005) * 0.9;
 
         // Composure: Baskı altında pas kalitesi
         errorMargin *= (1 + (1 - composure / 100) * 0.3);
@@ -3626,7 +3811,9 @@ export class MatchEngine {
         let accuracyPenalty = 0;
         const currentSpeed = Math.sqrt(this.sim.players[p.id].vx ** 2 + this.sim.players[p.id].vy ** 2);
 
-        if (currentSpeed > MAX_PLAYER_SPEED * 0.85) accuracyPenalty = 0.20;
+        // SPEED PENALTY INCREASED
+        if (currentSpeed > MAX_PLAYER_SPEED * 0.5) accuracyPenalty += 0.15;
+        if (currentSpeed > MAX_PLAYER_SPEED * 0.85) accuracyPenalty += 0.25;
 
         // === FINISHING STAT - DOĞRU FORMÜL ===
         // Eski formül: spread = (100 - fin) * 0.003
@@ -3635,30 +3822,56 @@ export class MatchEngine {
         // Yeni kademeli sistem - DÜŞÜK SPREAD = İSABETLİ
         // Elite finisher'lar (95+) çok isabetli, zayıflar çok kötü
 
+        // === NERFED SHOOTING ACCURACY (SPREAD INCREASED) ===
+        // More realistic spread values (higher = less accurate)
         let baseSpread: number;
         if (fin >= 95) {
-            // Elite finishers (Holland 96, etc.) - ÇOOOK isabetli
-            // 95 = 0.015, 96 = 0.012, 97 = 0.009, 98 = 0.006, 99 = 0.003, 100 = 0
-            baseSpread = (100 - fin) * 0.003;
+            // Elite (Holland): 0.04 -> 0.06
+            baseSpread = 0.06 + (100 - fin) * 0.005;
         } else if (fin >= 85) {
-            // Kaliteli finishers (Osimheno 88, etc.)
-            // 85 = 0.040, 88 = 0.032, 90 = 0.027, 94 = 0.017
-            baseSpread = 0.015 + (95 - fin) * 0.0025;
+            // Good (Osimheno): 0.08 -> 0.12
+            baseSpread = 0.12 + (95 - fin) * 0.005;
         } else if (fin >= 70) {
-            // Ortalama bitiricilik
-            // 70 = 0.09, 75 = 0.073, 80 = 0.056, 84 = 0.043
-            baseSpread = 0.04 + (85 - fin) * 0.0033;
+            // Average: 0.15 -> 0.20
+            baseSpread = 0.20 + (85 - fin) * 0.008;
         } else if (fin >= 50) {
-            // Zayıf bitiricilik
-            // 50 = 0.17, 60 = 0.13, 69 = 0.094
-            baseSpread = 0.09 + (70 - fin) * 0.004;
+            // Poor: 0.25 -> 0.35
+            baseSpread = 0.35 + (70 - fin) * 0.01;
         } else {
-            // Çok kötü bitiricilik (defans, kaleci vb.)
-            // 40 = 0.22, 30 = 0.27, 20 = 0.32
-            baseSpread = 0.17 + (50 - fin) * 0.005;
+            // Bad: 0.40 -> 0.60
+            baseSpread = 0.60 + (50 - fin) * 0.015;
         }
 
         let spread = baseSpread + accuracyPenalty;
+
+        // === DEFENSIVE PRESSURE (BASKI ETKİSİ) ===
+        // Yakındaki savunmacılar şut isabetini bozar
+        let pressureMod = 1.0;
+        const defendingPlayers = isHome ? this.awayPlayers : this.homePlayers;
+        // 5 birim içinde (yaklaşık 3-4 metre) kaç savunmacı var?
+        const nearbyDefenders = defendingPlayers.filter(e => {
+            const ePos = this.sim.players[e.id];
+            return ePos && dist(ePos.x, ePos.y, pos.x, pos.y) < 5.0;
+        });
+
+        if (nearbyDefenders.length > 0) {
+            // Baskı altındaki şutlar çok daha isabetsiz olur
+            // "Pressure Handling" özelliği varsa daha az etkilenir
+            const pressureResist = (p.personality?.pressureHandling || 0.5);
+            // Örnek: 0.8 resist -> 0.2 etki, 0.2 resist -> 0.8 etki
+            const impact = 1.0 - (pressureResist * 0.5);
+
+            pressureMod += (nearbyDefenders.length * 0.35 * impact);
+            console.log(`🛡️ Baskı: ${nearbyDefenders.length} defans, Mod: ${pressureMod.toFixed(2)}`);
+        }
+        spread *= pressureMod;
+
+        // === DISTANCE PENALTY (UZAKTAN ŞUT CEZASI) ===
+        // Uzaktan şutlar çok daha zor isabet etmeli
+        if (distToGoal > 25) {
+            const extraDist = distToGoal - 25;
+            spread *= (1.0 + (extraDist * 0.04)); // Her metre için %4 hata payı artışı
+        }
 
         // Decisions: Yorgun oyuncu kötü karar verir (spread artar)
         spread *= (1 + (1 - fatigueMods.decisions) * 0.5);
@@ -3743,6 +3956,53 @@ export class MatchEngine {
         this.traceLog.push(`${p.lastName} şut çekti!`);
     }
 
+    private handleRedCardTactics(teamId: string, lostPosition: Position) {
+        // Only for AI (user manages their own red cards)
+        if (teamId === this.userTeamId) return;
+
+        const isHome = teamId === this.homeTeam.id;
+        const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
+
+        // If no subs left, we can't do much
+        if (subsMade >= this.MAX_SUBS) return;
+
+        // If we lost a DEFENDER or GOALKEEPER, we MUST fill that gap to prevent easy goals
+        if (lostPosition === Position.DEF || lostPosition === Position.GK) {
+            const bench = (isHome ? this.homePlayers : this.awayPlayers)
+                .filter(p => p.lineup === 'BENCH' && !this.substitutedOutPlayerIds.has(p.id));
+
+            // Find a replacement on bench (same position preferred)
+            const replacement = bench.find(p => {
+                const role = normalizePos(p);
+                return role === lostPosition; // Find a new DEF/GK
+            });
+
+            if (replacement) {
+                // We need to sacrifice someone.
+                // Sacrifice the worst performing FWD or MID
+                const starters = (isHome ? this.homePlayers : this.awayPlayers)
+                    .filter(p => p.lineup === 'STARTING' && this.sim.players[p.id]); // Must be on pitch
+
+                // Prioritize sacrificing FWD, then MID
+                let sacrifice: Player | undefined = starters
+                    .filter(p => this.playerRoles[p.id] === Position.FWD)
+                    .sort((a, b) => (this.playerStates[a.id]?.currentStamina || 0) - (this.playerStates[b.id]?.currentStamina || 0))[0];
+
+                if (!sacrifice) {
+                    sacrifice = starters
+                        .filter(p => this.playerRoles[p.id] === Position.MID)
+                        .sort((a, b) => (this.playerStates[a.id]?.currentStamina || 0) - (this.playerStates[b.id]?.currentStamina || 0))[0];
+                }
+
+                if (sacrifice) {
+                    // Correct signature: playerIn (Object), playerOutId (String), isAI (Boolean)
+                    this.substitutePlayer(replacement, sacrifice.id, true);
+                    this.traceLog.push(`AI TAKTİK: Kırmızı kart sonrası ${sacrifice.lastName} çıktı, ${replacement.lastName} girdi.`);
+                }
+            }
+        }
+    }
+
     private actionTackle(defender: Player, attacker: Player) {
         if (!attacker) return;
 
@@ -3756,7 +4016,8 @@ export class MatchEngine {
         const defIsGK = defender.position === Position.GK;
         const defFatigueMods = getAllFatigueModifiers(defState.currentStamina, defIsGK);
 
-        let effectiveDef = applyStatFloor(defender.attributes.tackling, 45) * defFatigueMods.tackling;
+        // BUFF: General Defense Quality +10% (was +5%)
+        let effectiveDef = (applyStatFloor(defender.attributes.tackling, 45) * defFatigueMods.tackling) * 1.10;
         const defStrength = applyStatFloor(defender.attributes.strength, 40) * defFatigueMods.strength;
         // Aggression is raw, others are floor-scaled
         const defAggression = defender.attributes.aggression * defFatigueMods.aggression;
@@ -3779,7 +4040,8 @@ export class MatchEngine {
         const attIsGK = attacker.position === Position.GK;
         const attFatigueMods = getAllFatigueModifiers(attState.currentStamina, attIsGK);
 
-        let effectiveDri = attacker.attributes.dribbling * attFatigueMods.dribbling;
+        // BUFF: General Dribbling Quality +5%
+        let effectiveDri = (attacker.attributes.dribbling * attFatigueMods.dribbling) * 1.05;
         const attStrength = attacker.attributes.strength * attFatigueMods.strength;
         const attComposure = attacker.attributes.composure * attFatigueMods.composure;
         const attSpeed = attacker.attributes.speed * attFatigueMods.speed;
@@ -3800,11 +4062,16 @@ export class MatchEngine {
             riskFactor = 0.6;
         }
 
+        // TACTICAL BUFF: "Park The Bus" Defense is unbreakable
+        if (tactic.style === 'ParkTheBus') effectiveDef *= 1.3;
+        // TACTICAL BUFF: "High Press" Defense is messy but aggressive
+        if (tactic.style === 'HighPress') effectiveDef *= 1.1;
+
         const decisionPenalty = Math.max(0.7, defDecisions / 100);
-        // TACKLE BALANCE: Hücumcular artık daha zor top kaybeder
-        // DEF: 0.5→0.45 (nerf), ATT: 0.3→0.4 (buff) = Hücumcular %15 daha güçlü
-        const rollD = effectiveDef * (Math.random() + 0.45) * decisionPenalty;
-        const rollA = effectiveDri * (Math.random() + 0.4);
+        // TACKLE BALANCE v2: Savunma güçlendirildi
+        // DEF: 0.45→0.55 (buff), ATT: 0.40→0.35 (nerf) = Defans %20 daha etkili
+        const rollD = effectiveDef * (Math.random() + 0.55) * decisionPenalty;
+        const rollA = effectiveDri * (Math.random() + 0.35);
 
         if (rollD > rollA) {
             // Başarılı Müdahale
@@ -3831,10 +4098,10 @@ export class MatchEngine {
         } else {
             // Müdahale Başarısız - Çalım Yedi veya FAUL!
 
-            // === FOUL DETECTION ===
+            // === FOUL DETECTION (BALANCED v2) ===
             // Faul şansı agresifliğe ve başarısızlığa bağlı
-            // REDUCED from 0.25 to 0.15 - was too frequent
-            const foulChance = riskFactor * 0.15; // Safe: %9, Normal: %15, Aggressive: %27
+            // BALANCED: Safe: %7, Normal: %12, Aggressive: %22
+            const foulChance = riskFactor * 0.12;
             const isFoul = Math.random() < foulChance;
 
             if (isFoul) {
@@ -3850,26 +4117,55 @@ export class MatchEngine {
 
                 // Card chance: based on aggression and how bad the foul is
                 const cardRoll = Math.random();
-                const yellowChance = riskFactor * 0.08; // REDUCED: Safe: 4.8%, Normal: 8%, Aggressive: 14.4%
-                const redChance = riskFactor * 0.005; // REDUCED: Safe: 0.3%, Normal: 0.5%, Aggressive: 0.9%
+                // BALANCED CARD RATES v2:
+                // Safe: Yellow 10%, Red 1%
+                // Normal: Yellow 20%, Red 3%
+                // Aggressive: Yellow 35%, Red 8% (Still risky!)
+
+                let yellowChance = 0.20;
+                let redChance = 0.03;
+
+                if (tactic.aggression === 'Aggressive') {
+                    yellowChance = 0.35;
+                    redChance = 0.08; // High risk - caydırıcı ama makul
+                } else if (tactic.aggression === 'Safe') {
+                    yellowChance = 0.10;
+                    redChance = 0.01;
+                }
 
                 let cardEvent: MatchEvent | null = null;
 
-                if (cardRoll < redChance) {
-                    // RED CARD!
+                // Check for Second Yellow Card
+                const hasYellow = this.match.events.some(e => e.type === MatchEventType.CARD_YELLOW && e.playerId === defender.id) ||
+                    this.pendingEvents.some(e => e.type === MatchEventType.CARD_YELLOW && e.playerId === defender.id);
+
+                if (cardRoll < redChance || (cardRoll < yellowChance && hasYellow)) {
+                    // RED CARD! (Direct or Second Yellow)
+                    const isSecondYellow = cardRoll >= redChance;
+
                     cardEvent = {
                         minute: this.internalMinute,
                         type: MatchEventType.CARD_RED,
-                        description: `Kırmızı Kart! ${defender.lastName}`,
+                        description: isSecondYellow ? `Kırmızı Kart! (Çift Sarı) ${defender.lastName}` : `Kırmızı Kart! ${defender.lastName}`,
                         teamId: defender.teamId,
                         playerId: defender.id
                     };
+
+                    // UI INDICATOR FIX: Mark as suspended immediately
+                    defender.matchSuspension = 1;
+
                     // Remove player from pitch completely
                     defender.lineup = 'RESERVE';
+
                     // CRITICAL FIX: Also remove from simulation to prevent ghost player!
                     delete this.sim.players[defender.id];
                     delete this.playerStates[defender.id];
-                    this.traceLog.push(`🟥 ${defender.lastName} KIRMIZI KART!`);
+
+                    this.traceLog.push(isSecondYellow ? `🟥 ${defender.lastName} ÇİFT SARIDAN KIRMIZI!` : `🟥 ${defender.lastName} KIRMIZI KART!`);
+
+                    // AI TACTICAL RESPONSE: Sacrifice Attacker for Defender if needed
+                    this.handleRedCardTactics(defender.teamId, normalizePos(defender));
+
                 } else if (cardRoll < yellowChance) {
                     // YELLOW CARD
                     cardEvent = {

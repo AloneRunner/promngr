@@ -13,10 +13,11 @@ interface ClubManagementProps {
     onResign: () => void;
     onUpgradeStaff?: (role: keyof TeamStaff) => void;
     onUpgradeFacility?: (type: 'stadium' | 'training' | 'academy') => void;
+    onDowngradeFacility?: (type: 'stadium' | 'training' | 'academy') => void;
     onPlayerClick?: (player: Player) => void;
 }
 
-export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff, onUpgradeFacility, onPlayerClick }) => {
+export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t, onPromoteYouth, onResign, onUpgradeStaff, onUpgradeFacility, onDowngradeFacility, onPlayerClick }) => {
     const [tab, setTab] = useState<'FINANCE' | 'FACILITIES' | 'ACADEMY' | 'STAFF'>('FINANCE');
 
     const totalWages = players.reduce((sum, p) => sum + p.wage, 0);
@@ -477,6 +478,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
+
+                        {/* Downgrade Button (New) */}
+                        {team.facilities.stadiumLevel > 1 && (
+                            <button
+                                onClick={() => onDowngradeFacility && confirm(t.downgradeConfirm || "Are you sure? This will reduce capacity and maintenance.") && onDowngradeFacility('stadium')}
+                                className="w-full mt-2 py-1 bg-slate-700 hover:bg-red-900/40 text-slate-400 hover:text-red-400 text-xs border border-slate-600 hover:border-red-500/30 rounded flex items-center justify-center gap-1 transition-colors"
+                            >
+                                <TrendingDown size={12} /> {t.downgrade || 'Downgrade'} (-€50k)
+                            </button>
+                        )}
                     </div>
 
                     {/* Training Centre - IMPROVED with upgrade info */}
@@ -543,6 +554,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
+
+                        {/* Downgrade Button (New) */}
+                        {team.facilities.trainingLevel > 1 && (
+                            <button
+                                onClick={() => onDowngradeFacility && confirm(t.downgradeConfirm || "Are you sure? This will reduce training quality and maintenance.") && onDowngradeFacility('training')}
+                                className="w-full mt-2 py-1 bg-slate-700 hover:bg-red-900/40 text-slate-400 hover:text-red-400 text-xs border border-slate-600 hover:border-red-500/30 rounded flex items-center justify-center gap-1 transition-colors"
+                            >
+                                <TrendingDown size={12} /> {t.downgrade || 'Downgrade'} (-€50k)
+                            </button>
+                        )}
                     </div>
 
                     {/* Youth Academy - IMPROVED with upgrade info */}
@@ -614,7 +635,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
             )}
 
             {

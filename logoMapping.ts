@@ -11,6 +11,9 @@ export const LEAGUE_LOGOS: Record<string, string> = {
     'ucl': '/assets/logos/leagues/ucl.jpg',
     'ar': '/assets/logos/leagues/liga-profesional.jpg',
     'br': '/assets/logos/leagues/serie-a.png',
+    'in': '/assets/logos/leagues/india_logo.jpg',
+    'cr': '/assets/logos/leagues/costarica_logo.jpg',
+    'tn': '/assets/logos/leagues/tunisia_logo.jpg',
 };
 
 // Team Logos - mapped by team name (as used in LEAGUE_PRESETS)
@@ -18,7 +21,7 @@ export const TEAM_LOGOS: Record<string, string> = {
     // 🇹🇷 Süper Lig
     'Galata Lions': '/assets/logos/teams/tr/galata-lions.jpg',
     'Istanbul Yellows': '/assets/logos/teams/tr/istanbul-yellows.jpg',
-    'Besikta Eagles': '/assets/logos/teams/tr/besikta-eagles.jpg',
+    'Istanbul Eagles': '/assets/logos/teams/tr/besikta-eagles.jpg',
     'Trabzon Storm': '/assets/logos/teams/tr/trabzon-storm.jpg',
     'Basak City': '/assets/logos/teams/tr/basak-city.jpg',
     'Samsun Red': '/assets/logos/teams/tr/samsun-red.jpg',
@@ -29,7 +32,7 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Antalya Scorpions': '/assets/logos/teams/tr/antalya-scorpions.jpg',
     'Kayseri Stars': '/assets/logos/teams/tr/kayseri-stars.jpg',
     'Alanya Sun': '/assets/logos/teams/tr/alanya-sun.jpg',
-    'Izmir Göz': '/assets/logos/teams/tr/izmir-goz.jpg',
+    'Izmir Goz': '/assets/logos/teams/tr/izmir-goz.jpg',
     'Eyup Violet': '/assets/logos/teams/tr/eyup-violet.jpg',
     'Karagumruk Black': '/assets/logos/teams/tr/karagumruk-black.jpg',
     'Kocaeli Gulf': '/assets/logos/teams/tr/kocaeli-gulf.jpg',
@@ -167,6 +170,63 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Cordoba Glory': '/assets/logos/teams/ar/cordoba-glory.jpg',
     'Victoria Tigers': '/assets/logos/teams/ar/victoria-tigers.jpg',
 
+    // 🇹🇳 Tunisia (Ligue 1 Pro)
+    'Zarzis Olive': '/assets/logos/teams/tn/zarzis-olive.jpg',
+    'Sfax Zebra': '/assets/logos/teams/tn/sfax-zebra.jpg',
+    'Tunis Gold': '/assets/logos/teams/tn/tunis-gold.jpg',
+    'Bardo Green': '/assets/logos/teams/tn/bardo-green.jpg',
+    'Kairouan Historic': '/assets/logos/teams/tn/kairouan-historic.jpg',
+    'Gabes Oasis': '/assets/logos/teams/tn/gabes-oasis.jpg',
+    'Sousse Stars': '/assets/logos/teams/tn/sousse-stars.jpg',
+    'Soliman Future': '/assets/logos/teams/tn/soliman-future.jpg',
+    'Omrane Build': '/assets/logos/teams/tn/omrane-build.jpg',
+    'Beja Storks': '/assets/logos/teams/tn/beja-storks.jpg',
+    'Marsa Beach': '/assets/logos/teams/tn/marsa-beach.jpg',
+    'Metlaoui Mines': '/assets/logos/teams/tn/metlaoui-mines.jpg',
+    'Ben Guerdane Riders': '/assets/logos/teams/tn/ben-guerdane-riders.jpg',
+    'Tunis Red-Whites': '/assets/logos/teams/tn/tunis-red-whites.jpg',
+    'Bizerte Sharks': '/assets/logos/teams/tn/bizerte-sharks.jpg',
+    'Monastir Blue': '/assets/logos/teams/tn/monastir-blue.jpg',
+
+    // 🇨🇷 Costa Rica (Primera División)
+    'San Jose Purple': '/assets/logos/teams/cr/san-jose-purple.jpg',
+    'Alajuela Lions': '/assets/logos/teams/cr/alajuela-lions.jpg',
+    'Heredia Red-Yellow': '/assets/logos/teams/cr/heredia-red-yellow.jpg',
+    'Cartago Blues': '/assets/logos/teams/cr/cartago-blues.jpg',
+    'San Isidro Warriors': '/assets/logos/teams/cr/san-isidro-warriors.jpg',
+    'San Carlos Bulls': '/assets/logos/teams/cr/san-carlos-bulls.jpg',
+    'Puntarenas Sharks': '/assets/logos/teams/cr/puntarenas-sharks.jpg',
+    'Guadalupe Blue': '/assets/logos/teams/cr/guadalupe-blue.jpg',
+    'Sporting Jose': '/assets/logos/teams/cr/sporting-jose.jpg',
+
+    // 🇮🇳 India (Indian Super League)
+    'Varanasi Holy': '/assets/logos/teams/in/varanasi-holy.jpg',
+    'Goa Gaurs': '/assets/logos/teams/in/goa-gaurs.jpg',
+    'Odisha Juggernauts': '/assets/logos/teams/in/odisha-juggernauts.jpg',
+    'Kolkata Mariners': '/assets/logos/teams/in/kolkata-mariners.jpg',
+    'Delhi Capital': '/assets/logos/teams/in/delhi-capital.jpg',
+    'Bangalore Blues': '/assets/logos/teams/in/bangalore-blues.jpg',
+    'East Bengal Torch': '/assets/logos/teams/in/east-bengal-torch.jpg',
+    'Highland United': '/assets/logos/teams/in/highland-united.jpg',
+    'Steel City Red': '/assets/logos/teams/in/steel-city-red.jpg',
+    'Chennai Titans': '/assets/logos/teams/in/chennai-titans.jpg',
+    'Kolkata Black-White': '/assets/logos/teams/in/kolkata-black-white.jpg',
+    'Kerala Tuskers': '/assets/logos/teams/in/kerala-tuskers.jpg',
+    'Mumbai Islanders': '/assets/logos/teams/in/mumbai-islanders.jpg',
+    'Punjab Lions': '/assets/logos/teams/in/punjab-lions.jpg',
+
+    // 🇺🇾 Uruguay (Campeonato Uruguayo)
+    'Montevideo Tricolor': '/assets/logos/teams/uy/montevideo-tricolor.jpg',
+    'Montevideo Coal': '/assets/logos/teams/uy/montevideo-coal.jpg',
+    'Belvedere Blue': '/assets/logos/teams/uy/belvedere-blue.jpg',
+    'Parque Violet': '/assets/logos/teams/uy/parque-violet.jpg',
+
+    // 🇨🇱 Chile (Campeonato Nacional)
+    'Santiago Chiefs': '/assets/logos/teams/cl/santiago-chiefs.jpg',
+    'Santiago Scholars': '/assets/logos/teams/cl/santiago-scholars.jpg',
+    'Santiago Crusaders': '/assets/logos/teams/cl/santiago-crusaders.jpg',
+    'Desert Miners': '/assets/logos/teams/cl/desert-miners.jpg',
+
     // --- Brazil Série A ---
     'São Paulo Palms': '/assets/logos/teams/br/sao-paulo-palms.jpg',
     'Rio Flames': '/assets/logos/teams/br/rio-flames.jpg',
@@ -189,6 +249,69 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Bragança Bulls': '/assets/logos/teams/br/braganca-bulls.jpg',
     'Porto Alegre Reds': '/assets/logos/teams/br/porto-alegre-reds.jpg',
     'Curitiba Storm': '/assets/logos/teams/br/curitiba-storm.jpg',
+
+    // 🇺🇸 North American League (USA)
+    'Atlanta Stripes': '/assets/logos/teams/us/atlanta-stripes.jpg',
+    'Toronto Reds': '/assets/logos/teams/us/toronto-reds.jpg',
+    'Seattle Emeralds': '/assets/logos/teams/us/seattle-emeralds.jpg',
+    'Galaxy Stars': '/assets/logos/teams/us/galaxy-stars.jpg',
+    'New York Energy': '/assets/logos/teams/us/new-york-energy.jpg',
+    'Los Angeles Gold': '/assets/logos/teams/us/los-angeles-gold.jpg',
+    'Miami Vice': '/assets/logos/teams/us/miami-vice.jpg',
+
+    // 🇦🇺 A-League Men (Australia)
+    'Sydney FC': '/assets/logos/teams/au/sydney-fc.jpg',
+    'Melbourne Victory': '/assets/logos/teams/au/melbourne-victory.jpg',
+    'Melbourne City': '/assets/logos/teams/au/melbourne-city.jpg',
+    'Central Coast Mariners': '/assets/logos/teams/au/central-coast-mariners.jpg',
+    'Western Sydney': '/assets/logos/teams/au/western-sydney.jpg',
+    'Brisbane Roar': '/assets/logos/teams/au/brisbane-roar.jpg',
+
+    // 🇲🇦 Botola Pro (Morocco)
+    'Casablanca Reds': '/assets/logos/teams/ma/casablanca-reds.jpg',
+    'AS FAR': '/assets/logos/teams/ma/as-far.jpg',
+    'Casablanca Eagles': '/assets/logos/teams/ma/casablanca-eagles.jpg',
+
+    // 🇯🇲 Caribbean Super League
+    'Trinbago Riders FC': '/assets/logos/teams/cb/trinbago-riders-fc.jpg',
+    'Cibao Orange FC': '/assets/logos/teams/cb/cibao-orange-fc.jpg',
+    'Kingston Bay United': '/assets/logos/teams/cb/kingston-bay-united.jpg',
+
+    // 🇿🇦 Premier Soccer League (South Africa)
+    'Soweto Chiefs': '/assets/logos/teams/za/soweto-chiefs.jpg',
+    'Pretoria Brazilians': '/assets/logos/teams/za/pretoria-brazilians.jpg',
+    'Soweto Pirates': '/assets/logos/teams/za/soweto-pirates.jpg',
+    'Cape Town City': '/assets/logos/teams/za/cape-town-city.jpg',
+
+    // 🇰🇷 K League 1 (South Korea)
+    'Ulsan Tigers': '/assets/logos/teams/kr/ulsan-tigers.jpg',
+    'Jeonju Motors': '/assets/logos/teams/kr/jeonju-motors.jpg',
+    'Seoul City': '/assets/logos/teams/kr/seoul-city.jpg',
+
+    // 🇯🇵 J1 League (Japan)
+    'Kawasaki Frontale': '/assets/logos/teams/jp/kawasaki-frontale.jpg',
+    'Vissel Kobe': '/assets/logos/teams/jp/vissel-kobe.jpg',
+    'Kashima Antlers': '/assets/logos/teams/jp/kashima-antlers.jpg',
+    'Yokohama F. Marinos': '/assets/logos/teams/jp/yokohama-f-marinos.jpg',
+    'Gamba Osaka': '/assets/logos/teams/jp/gamba-osaka.jpg',
+
+    // 🇨🇴 Liga BetPlay (Colombia)
+    'Medellin Green': '/assets/logos/teams/co/medellin-green.jpg',
+    'Barranquilla Sharks': '/assets/logos/teams/co/barranquilla-sharks.jpg',
+    'Bogota Cardinals': '/assets/logos/teams/co/bogota-cardinals.jpg',
+    'Bogota Blues': '/assets/logos/teams/co/bogota-blues.jpg',
+    'Cali Devils': '/assets/logos/teams/co/cali-devils.jpg',
+
+    // 🇪🇬 Egyptian Premier League (Egypt)
+    'Cairo Red Devils': '/assets/logos/teams/eg/cairo-red-devils.jpg',
+    'Cairo Knights': '/assets/logos/teams/eg/cairo-knights.jpg',
+    'Pyramids FC': '/assets/logos/teams/eg/pyramids-fc.jpg',
+
+    // 🇸🇦 Saudi Pro League (Saudi Arabia)
+    'Riyadh Blue Waves': '/assets/logos/teams/sa/riyadh-blue-waves.jpg',
+    'Jeddah Tigers': '/assets/logos/teams/sa/jeddah-tigers.jpg',
+    'Jeddah Green': '/assets/logos/teams/sa/jeddah-green.jpg',
+    'Riyadh Knights': '/assets/logos/teams/sa/riyadh-knights.jpg',
 };
 
 // Default fallback logo for teams without custom logos

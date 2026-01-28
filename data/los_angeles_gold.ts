@@ -1,0 +1,200 @@
+export const LOS_ANGELES_GOLD_SQUAD = [
+    {
+        ad: "D. Bouama",
+        takim: "Los Angeles Gold",
+        uyruk: "Gabon",
+        mevki: "SLK",
+        reyting: 80,
+        yas: 29,
+        ana_ozellikler: { hiz: 88, sut: 82, pas: 72, dribbling: 84, defans: 45, fizik: 76 },
+        detaylar: { bitiricilik: 84, sprint: 88, guc: 78 },
+        oyun_tarzlari: ["Golcü Kanat", "Hızlı"]
+    },
+    {
+        ad: "H. Llores",
+        takim: "Los Angeles Gold",
+        uyruk: "Fransa",
+        mevki: "KL",
+        reyting: 79,
+        yas: 37,
+        ana_ozellikler: { hiz: 45, sut: 20, pas: 65, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 82, liderlik: 90, pozisyon: 84 },
+        oyun_tarzlari: ["Lider", "Refleks Ustası"]
+    },
+    {
+        ad: "M. Bogusk",
+        takim: "Los Angeles Gold",
+        uyruk: "Polonya",
+        mevki: "MOO",
+        reyting: 76,
+        yas: 22,
+        ana_ozellikler: { hiz: 78, sut: 74, pas: 76, dribbling: 78, defans: 55, fizik: 72 },
+        detaylar: { uzaktan_sut: 80, yaraticilik: 78 },
+        oyun_tarzlari: ["Uzaktan Şutör"]
+    },
+    {
+        ad: "I. Sánches",
+        takim: "Los Angeles Gold",
+        uyruk: "İspanya",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 33,
+        ana_ozellikler: { hiz: 55, sut: 60, pas: 80, dribbling: 72, defans: 76, fizik: 70 },
+        detaylar: { vizyon: 82, kisa_pas: 84, sakinlik: 85 },
+        oyun_tarzlari: ["Maestro"]
+    },
+    {
+        ad: "A. Lomg",
+        takim: "Los Angeles Gold",
+        uyruk: "ABD",
+        mevki: "STP",
+        reyting: 74,
+        yas: 31,
+        ana_ozellikler: { hiz: 72, sut: 40, pas: 65, dribbling: 60, defans: 75, fizik: 78 },
+        detaylar: { kafa_isabeti: 80, markaj: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Murilo",
+        takim: "Los Angeles Gold",
+        uyruk: "Kolombiya",
+        mevki: "STP",
+        reyting: 74,
+        yas: 30,
+        ana_ozellikler: { hiz: 70, sut: 35, pas: 60, dribbling: 55, defans: 76, fizik: 82 },
+        detaylar: { guc: 86, agresiflik: 84 },
+        oyun_tarzlari: ["Savaşçı"]
+    },
+    {
+        ad: "R. Hollinghead",
+        takim: "Los Angeles Gold",
+        uyruk: "ABD",
+        mevki: "SĞB",
+        reyting: 73,
+        yas: 33,
+        ana_ozellikler: { hiz: 72, sut: 65, pas: 72, dribbling: 70, defans: 72, fizik: 74 },
+        detaylar: { cok_yonluluk: 85 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "O. Compus",
+        takim: "Los Angeles Gold",
+        uyruk: "Meksika",
+        mevki: "SLB",
+        reyting: 72,
+        yas: 21,
+        ana_ozellikler: { hiz: 82, sut: 60, pas: 70, dribbling: 74, defans: 68, fizik: 68 },
+        detaylar: { potansiyel: 82 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "T. Atuesto",
+        takim: "Los Angeles Gold",
+        uyruk: "Kolombiya",
+        mevki: "MO",
+        reyting: 75,
+        yas: 27,
+        ana_ozellikler: { hiz: 70, sut: 68, pas: 78, dribbling: 75, defans: 70, fizik: 72 },
+        detaylar: { oyun_kurma: 80 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Oliviera",
+        takim: "Los Angeles Gold",
+        uyruk: "Uruguay",
+        mevki: "SĞK",
+        reyting: 73,
+        yas: 22,
+        ana_ozellikler: { hiz: 86, sut: 68, pas: 65, dribbling: 76, defans: 45, fizik: 70 },
+        detaylar: { hizlanma: 88, caliskanlik: 80 },
+        oyun_tarzlari: ["Seri"]
+    },
+    {
+        ad: "K. Kamora",
+        takim: "Los Angeles Gold",
+        uyruk: "Sierra Leone",
+        mevki: "SNT",
+        reyting: 72,
+        yas: 39,
+        ana_ozellikler: { hiz: 55, sut: 76, pas: 65, dribbling: 65, defans: 35, fizik: 78 },
+        detaylar: { kafa_isabeti: 82, tecrube: 95 },
+        oyun_tarzlari: ["Hedef Adam"]
+    },
+    {
+        ad: "T. Tillmen",
+        takim: "Los Angeles Gold",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 74,
+        yas: 25,
+        ana_ozellikler: { hiz: 74, sut: 70, pas: 74, dribbling: 76, defans: 65, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "S. Palencía",
+        takim: "Los Angeles Gold",
+        uyruk: "İspanya",
+        mevki: "SĞB",
+        reyting: 71,
+        yas: 28,
+        ana_ozellikler: { hiz: 74, sut: 55, pas: 70, dribbling: 70, defans: 70, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "E. Segur",
+        takim: "Los Angeles Gold",
+        uyruk: "Kolombiya",
+        mevki: "STP",
+        reyting: 72,
+        yas: 27,
+        ana_ozellikler: { hiz: 68, sut: 35, pas: 68, dribbling: 60, defans: 74, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "N. Ordaz",
+        takim: "Los Angeles Gold",
+        uyruk: "Meksika",
+        mevki: "SNT",
+        reyting: 68,
+        yas: 20,
+        ana_ozellikler: { hiz: 76, sut: 68, pas: 60, dribbling: 70, defans: 30, fizik: 65 },
+        detaylar: { potansiyel: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Martínes",
+        takim: "Los Angeles Gold",
+        uyruk: "Venezuela",
+        mevki: "MOO",
+        reyting: 70,
+        yas: 18,
+        ana_ozellikler: { hiz: 80, sut: 65, pas: 70, dribbling: 74, defans: 40, fizik: 60 },
+        detaylar: { potansiyel: 84 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "A. Hasel",
+        takim: "Los Angeles Gold",
+        uyruk: "Kanada",
+        mevki: "KL",
+        reyting: 68,
+        yas: 25,
+        ana_ozellikler: { hiz: 40, sut: 15, pas: 55, dribbling: 20, defans: 20, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Müllar",
+        takim: "Los Angeles Gold",
+        uyruk: "Almanya",
+        mevki: "MO",
+        reyting: 69,
+        yas: 23,
+        ana_ozellikler: { hiz: 70, sut: 60, pas: 72, dribbling: 68, defans: 60, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

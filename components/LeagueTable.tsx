@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Team, Player, Translation, LeagueHistoryEntry } from '../types';
+import { LEAGUE_PRESETS } from '../constants';
 import { Trophy, Target, Award, Crown, History, Eye } from 'lucide-react';
 
 interface LeagueTableProps {
@@ -77,16 +78,21 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
         return 'bg-slate-700 text-slate-400';
     }
 
-    const leagues = [
-        { id: 'tr', name: '🇹🇷 Süper Lig' },
-        { id: 'en', name: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League' },
-        { id: 'es', name: '🇪🇸 La Liga' },
-        { id: 'it', name: '🇮🇹 Serie A' },
-        { id: 'fr', name: '🇫🇷 Ligue 1' },
-        { id: 'de', name: '🇩🇪 Bundesliga' },
-        { id: 'ar', name: '🇦🇷 Liga Profesional' },
-        { id: 'br', name: '🇧🇷 Série A' },
-    ];
+    // Flag mapping for all 24 leagues
+    const getFlag = (id: string) => {
+        const flags: Record<string, string> = {
+            'tr': '🇹🇷', 'en': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'es': '🇪🇸', 'it': '🇮🇹', 'fr': '🇫🇷', 'de': '🇩🇪',
+            'ar': '🇦🇷', 'br': '🇧🇷', 'us': '🇺🇸', 'mx': '🇲🇽', 'sa': '🇸🇦', 'eg': '🇪🇬',
+            'jp': '🇯🇵', 'kr': '🇰🇷', 'au': '🇦🇺', 'za': '🇿🇦', 'ma': '🇲🇦', 'car': '🇯🇲',
+            'co': '🇨🇴', 'cl': '🇨🇱', 'uy': '🇺🇾', 'tn': '🇹🇳', 'cr': '🇨🇷', 'in': '🇮🇳'
+        };
+        return flags[id] || '🏳️';
+    };
+
+    const leagues = LEAGUE_PRESETS.map(preset => ({
+        id: preset.id,
+        name: `${getFlag(preset.id)} ${preset.name}`
+    }));
 
     return (
         <div className="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700 animate-fade-in min-h-[500px]">
@@ -422,51 +428,86 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                                         : 'bg-slate-800/50 border-slate-700'
                                                         }`}
                                                 >
-                                                    <div className="flex flex-col md:flex-row md:items-center gap-4">
-                                                        {/* Season & Champion */}
-                                                        <div className="flex items-center gap-4 flex-1">
-                                                            <div className="text-center">
-                                                                <div className="text-2xl font-black text-slate-500">{entry.season}</div>
-                                                                <div className="text-[9px] text-slate-600 uppercase">{t.season}</div>
-                                                            </div>
-
-                                                            <div className="flex items-center gap-3">
-                                                                <div
-                                                                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white border-2 ${isUserChampion ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.6)]' : 'border-yellow-500/50'
-                                                                        }`}
-                                                                    style={{ backgroundColor: entry.championColor }}
-                                                                >
-                                                                    <Crown size={18} fill="currentColor" className="text-yellow-200" />
+                                                    <div className="flex flex-col gap-4">
+                                                        <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                                            {/* Season & Champion */}
+                                                            <div className="flex items-center gap-4 flex-1">
+                                                                <div className="text-center">
+                                                                    <div className="text-2xl font-black text-slate-500">{entry.season}</div>
+                                                                    <div className="text-[9px] text-slate-600 uppercase">{t.season}</div>
                                                                 </div>
-                                                                <div>
-                                                                    <div className="text-[10px] text-slate-500 uppercase">{t.champion}</div>
-                                                                    <div className={`font-bold ${isUserChampion ? 'text-yellow-400' : 'text-white'}`}>
-                                                                        {entry.championName}
-                                                                        {isUserChampion && <span className="ml-2 text-xs">🏆</span>}
+
+                                                                <div className="flex items-center gap-3">
+                                                                    <div
+                                                                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white border-2 ${isUserChampion ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.6)]' : 'border-yellow-500/50'
+                                                                            }`}
+                                                                        style={{ backgroundColor: entry.championColor }}
+                                                                    >
+                                                                        <Crown size={18} fill="currentColor" className="text-yellow-200" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className="text-[10px] text-slate-500 uppercase">{t.champion}</div>
+                                                                        <div className={`font-bold ${isUserChampion ? 'text-yellow-400' : 'text-white'}`}>
+                                                                            {entry.championName}
+                                                                            {isUserChampion && <span className="ml-2 text-xs">🏆</span>}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+                                                            {/* Stats Grid */}
+                                                            <div className="grid grid-cols-3 gap-3 text-xs md:gap-6">
+                                                                <div className="text-center md:text-left">
+                                                                    <div className="text-slate-500 text-[10px] uppercase">{t.runnerUp}</div>
+                                                                    <div className="font-semibold text-slate-300 truncate max-w-[80px]">{entry.runnerUpName}</div>
+                                                                </div>
+                                                                <div className="text-center md:text-left">
+                                                                    <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
+                                                                        <Target size={10} /> {t.scorerKing}
+                                                                    </div>
+                                                                    <div className="font-semibold text-emerald-400 truncate max-w-[80px]">{entry.topScorer}</div>
+                                                                </div>
+                                                                <div className="text-center md:text-left">
+                                                                    <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
+                                                                        <Award size={10} /> {t.assistKing}
+                                                                    </div>
+                                                                    <div className="font-semibold text-blue-400 truncate max-w-[80px]">{entry.topAssister}</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
 
-                                                        {/* Stats Grid */}
-                                                        <div className="grid grid-cols-3 gap-3 text-xs md:gap-6">
-                                                            <div className="text-center md:text-left">
-                                                                <div className="text-slate-500 text-[10px] uppercase">{t.runnerUp}</div>
-                                                                <div className="font-semibold text-slate-300 truncate max-w-[80px]">{entry.runnerUpName}</div>
+                                                        {/* European & Super Cup Winners (If applicable) */}
+                                                        {(entry.championsLeagueWinner || entry.europaLeagueWinner || entry.superCupWinner) && (
+                                                            <div className="pt-3 mt-1 border-t border-slate-700/50 grid grid-cols-3 gap-2">
+                                                                {entry.championsLeagueWinner && (
+                                                                    <div className="bg-slate-900/40 rounded p-2 flex items-center gap-2">
+                                                                        <span className="text-lg">🏆</span>
+                                                                        <div>
+                                                                            <div className="text-[9px] text-slate-500 uppercase">Elite Cup</div>
+                                                                            <div className="text-xs font-bold text-slate-300 truncate">{entry.championsLeagueWinner}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                {entry.europaLeagueWinner && (
+                                                                    <div className="bg-slate-900/40 rounded p-2 flex items-center gap-2">
+                                                                        <span className="text-lg">🟠</span>
+                                                                        <div>
+                                                                            <div className="text-[9px] text-slate-500 uppercase">Challenge Cup</div>
+                                                                            <div className="text-xs font-bold text-slate-300 truncate">{entry.europaLeagueWinner}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                {entry.superCupWinner && (
+                                                                    <div className="bg-slate-900/40 rounded p-2 flex items-center gap-2">
+                                                                        <span className="text-lg">🌟</span>
+                                                                        <div>
+                                                                            <div className="text-[9px] text-slate-500 uppercase">Super Cup</div>
+                                                                            <div className="text-xs font-bold text-slate-300 truncate">{entry.superCupWinner}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                            <div className="text-center md:text-left">
-                                                                <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
-                                                                    <Target size={10} /> {t.scorerKing}
-                                                                </div>
-                                                                <div className="font-semibold text-emerald-400 truncate max-w-[80px]">{entry.topScorer}</div>
-                                                            </div>
-                                                            <div className="text-center md:text-left">
-                                                                <div className="text-slate-500 text-[10px] uppercase flex items-center gap-1 justify-center md:justify-start">
-                                                                    <Award size={10} /> {t.assistKing}
-                                                                </div>
-                                                                <div className="font-semibold text-blue-400 truncate max-w-[80px]">{entry.topAssister}</div>
-                                                            </div>
-                                                        </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             );

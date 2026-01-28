@@ -1,5 +1,6 @@
-
+﻿
 import { GALATASARAY_SQUAD } from './data/galatasaray';
+
 import { FENERBAHCE_SQUAD } from './data/fenerbahce';
 import { BESIKTAS_SQUAD } from './data/besiktas';
 import { TRABZONSPOR_SQUAD } from './data/trabzonspor';
@@ -98,6 +99,23 @@ import { REIMS_ROYALS_SQUAD } from './data/reims';
 import { MONTPELLIER_ORANGE_SQUAD } from './data/montpellier';
 import { BREST_PIRATES_SQUAD } from './data/brest';
 import { SAINT_GREEN_SQUAD } from './data/saintetienne';
+import {
+    TUNIS_BLOOD_GOLD_SQUAD, CLUB_AFRICAIN_SQUAD, SOUSSE_STARS_SQUAD, SFAX_ZEBRA_SQUAD,
+    MONASTIR_BLUE_SQUAD, BARDO_GREEN_SQUAD, BIZERTE_SHARKS_SQUAD, BEJA_STORKS_SQUAD,
+    METLAOUI_MINES_SQUAD, BEN_GUERDANE_RIDERS_SQUAD, MARSA_BEACH_SQUAD, ZARZIS_OLIVE_SQUAD,
+    KAIROUAN_HISTORIC_SQUAD, OMRANE_BUILD_SQUAD, SOLIMAN_FUTURE_SQUAD, GABES_OASIS_SQUAD
+} from './data/tunisia_teams';
+import {
+    SAN_JOSE_PURPLE_SQUAD, ALAJUELA_LIONS_SQUAD, HEREDIA_RED_YELLOW_SQUAD, CARTAGO_BLUES_SQUAD,
+    SAN_CARLOS_BULLS_SQUAD, SAN_ISIDRO_WARRIORS_SQUAD, PUNTARENAS_SHARKS_SQUAD, SPORTING_JOSE_SQUAD,
+    LIBERIA_GOLD_SQUAD, GUADALUPE_BLUE_SQUAD
+} from './data/costa_rica_teams';
+import {
+    KOLKATA_MARINERS_SQUAD, MUMBAI_ISLANDERS_SQUAD, EAST_BENGAL_TORCH_SQUAD, KERALA_TUSKERS_SQUAD,
+    GOA_GAURS_SQUAD, BANGALORE_BLUES_SQUAD, ODISHA_JUGGERNAUTS_SQUAD, CHENNAI_TITANS_SQUAD,
+    HIGHLAND_UNITED_SQUAD, STEEL_CITY_RED_SQUAD, PUNJAB_LIONS_SQUAD, KOLKATA_BLACK_WHITE_SQUAD,
+    DELHI_CAPITAL_SQUAD, VARANASI_HOLY_SQUAD
+} from './data/india_teams';
 import { ANGERS_BLACKWHITES_SQUAD } from './data/angers';
 
 import { BAYERN_MUNICH_SQUAD } from './data/bayern_munich';
@@ -172,10 +190,268 @@ import { CHAPECO_EAGLES_SQUAD } from './data/chapeco_eagles';
 import { MIRASSOL_SUNS_SQUAD } from './data/mirassol_suns';
 import { BELEM_LIONS_SQUAD } from './data/belem_lions';
 
+// North America (CONCACAF)
+import { MIAMI_VICE_SQUAD } from './data/miami_vice';
+import { GALAXY_STARS_SQUAD } from './data/galaxy_stars';
+import { MEXICO_EAGLES_SQUAD } from './data/mexico_eagles';
+
+import { SEATTLE_EMERALDS_SQUAD } from './data/seattle_emeralds';
+import { LOS_ANGELES_GOLD_SQUAD } from './data/los_angeles_gold';
+import { NEW_YORK_CITY_BLUE_SQUAD } from './data/new_york_city_blue';
+import { NEW_YORK_ENERGY_SQUAD } from './data/new_york_energy';
+import { GUADALAJARA_GOATS_SQUAD } from './data/guadalajara_goats';
+import { MEXICO_CITY_CEMENT_SQUAD } from './data/mexico_city_cement';
+import { MONTERREY_TIGERS_SQUAD } from './data/monterrey_tigers';
+import { MONTERREY_RAYS_SQUAD } from './data/monterrey_rays';
+import { TORONTO_REDS_SQUAD } from './data/toronto_reds';
+import { ATLANTA_STRIPES_SQUAD } from './data/atlanta_stripes';
+import { CHICAGO_FIREMEN_SQUAD } from './data/chicago_firemen';
+import { VANCOUVER_VILLAGE_SQUAD } from './data/vancouver_village';
+import { MONTREAL_IMPACT_SQUAD } from './data/montreal_impact';
+import { PHILADELPHIA_UNION_SQUAD } from './data/philadelphia_union';
+import { COLUMBUS_CREW_SQUAD } from './data/columbus_crew';
+import { PORTLAND_TIMBERS_SQUAD } from './data/portland_timbers';
+import { SALT_LAKE_ROYALS_SQUAD } from './data/salt_lake_royals';
+import { HOUSTON_SPACE_SQUAD } from './data/houston_space';
+import { DALLAS_BURN_SQUAD } from './data/dallas_burn';
+import { KANSAS_CITY_WIZARDS_SQUAD } from './data/kansas_city_wizards';
+import { SAN_JOSE_QUAKES_SQUAD } from './data/san_jose_quakes';
+import { ORLANDO_LIONS_SQUAD } from './data/orlando_lions';
+import { CINCINNATI_ROYALS_SQUAD } from './data/cincinnati_royals';
+import { ST_LOUIS_SPIRIT_SQUAD } from './data/st_louis_spirit';
+import { NASHVILLE_MUSIC_SQUAD } from './data/nashville_music';
+import { AUSTIN_VERDES_SQUAD } from './data/austin_verdes';
+import { CHARLOTTE_CROWNS_SQUAD } from './data/charlotte_crowns';
+
+// Asia (AFC)
+import { RIYADH_BLUE_WAVES_SQUAD } from './data/riyadh_blue_waves';
+import { RIYADH_KNIGHTS_SQUAD } from './data/riyadh_knights';
+import { KOBE_CRIMSONS_SQUAD } from './data/kobe_crimsons';
+import { ULSAN_TIGERS_SQUAD } from './data/ulsan_tigers';
+import { JEDDAH_GREEN_SQUAD } from './data/jeddah_green';
+import { JEDDAH_TIGERS_SQUAD } from './data/jeddah_tigers';
+import { RIYADH_YOUTH_SQUAD } from './data/riyadh_youth';
+import { DAMMAM_COMMANDOS_SQUAD } from './data/dammam_commandos';
+import { YOKOHAMA_MARINERS_SQUAD } from './data/yokohama_mariners';
+import { KAWASAKI_FRONT_SQUAD } from './data/kawasaki_front';
+import { URAWA_REDS_SQUAD } from './data/urawa_reds';
+import { HIROSHIMA_ARCHERS_SQUAD } from './data/hiroshima_archers';
+import { JEONJU_MOTORS_SQUAD } from './data/jeonju_motors';
+import { POHANG_STEELERS_SQUAD } from './data/pohang_steelers';
+import { SEOUL_CITY_SQUAD } from './data/seoul_city';
+import { MELBOURNE_VICTORY_SQUAD } from './data/melbourne_victory';
+import { SYDNEY_SKY_BLUES_SQUAD } from './data/sydney_sky_blues';
+import { CITY_OF_MELBOURNE_SQUAD } from './data/city_of_melbourne';
+import { SHANGHAI_PORT_SQUAD } from './data/shanghai_port';
+import { DOHA_SADD_SQUAD } from './data/doha_sadd';
+import { TEHRAN_REDS_SQUAD } from './data/tehran_reds';
+import { BURIRAM_THUNDER_SQUAD } from './data/buriram_thunder';
+
+// Africa (CAF)
+import { CAIRO_RED_DEVILS_SQUAD } from './data/cairo_red_devils';
+import { CASABLANCA_REDS_SQUAD } from './data/casablanca_reds';
+import { PRETORIA_BRAZILIANS_SQUAD } from './data/pretoria_brazilians';
+import { CAIRO_KNIGHTS_SQUAD } from './data/cairo_knights';
+import { GIZA_PYRAMIDS_SQUAD } from './data/giza_pyramids';
+import { CASABLANCA_EAGLES_SQUAD } from './data/casablanca_eagles';
+// North Africa & Others
+import { ORANGE_BERKANE_SQUAD } from './data/orange_berkane';
+import { SOWETO_PIRATES_SQUAD } from './data/soweto_pirates';
+import { SOWETO_CHIEFS_SQUAD } from './data/soweto_chiefs';
+import { ALGIERS_UNION_SQUAD } from './data/algiers_union';
+import { LUBUMBASHI_RAVENS_SQUAD } from './data/lubumbashi_ravens';
+import { DAR_LIONS_SQUAD } from './data/dar_lions';
+import { DAR_CITIZENS_SQUAD } from './data/dar_citizens';
+import { ABIDJAN_YELLOWS_SQUAD } from './data/abidjan_yellows';
+import { ABA_ELEPHANTS_SQUAD } from './data/aba_elephants';
+
+// Premier Soccer League (South Africa) (2026 Expansion)
+import { STELLENBOSCH_FC_SQUAD } from './data/stellenbosch_fc';
+import { SUPERSPORT_UNITED_SQUAD } from './data/supersport_united';
+import { CAPE_TOWN_CITY_SQUAD } from './data/cape_town_city';
+import { SEKHUKHUNE_UNITED_SQUAD } from './data/sekhukhune_united';
+import { TS_GALAXY_SQUAD } from './data/ts_galaxy';
+import { AMAZULU_FC_SQUAD } from './data/amazulu_fc';
+import { POLOKWANE_CITY_SQUAD } from './data/polokwane_city';
+import { GOLDEN_ARROWS_SQUAD } from './data/golden_arrows';
+
+// Botola Pro (Morocco) (2026 Expansion)
+import { AS_FAR_SQUAD } from './data/as_far';
+import { FUS_RABAT_SQUAD } from './data/fus_rabat';
+import { MAGHREB_DE_FES_SQUAD } from './data/maghreb_de_fes';
+import { OLYMPIC_SAFI_SQUAD } from './data/olympic_safi';
+import { UNION_TOUARGA_SQUAD } from './data/union_touarga';
+import { HASSANIA_AGADIR_SQUAD } from './data/hassania_agadir';
+import { DIFAA_EL_JADIDI_SQUAD } from './data/difaa_el_jadidi';
+import { COD_MEKNES_SQUAD } from './data/cod_meknes';
+
+// Caribbean Super League (2026 Expansion)
+import { KINGSTON_BAY_UNITED_SQUAD } from './data/kingston_bay_united';
+import { MONTEGO_BAY_WAVES_SQUAD } from './data/montego_bay_waves';
+import { ST_LUCIA_KINGS_FC_SQUAD } from './data/st_lucia_kings_fc';
+import { CAVALIER_TOWN_FC_SQUAD } from './data/cavalier_town_fc';
+import { PORT_OF_SPAIN_WARRIORS_SQUAD } from './data/port_of_spain_warriors';
+import { TRINBAGO_RIDERS_FC_SQUAD } from './data/trinbago_riders_fc';
+import { SAN_JUAN_STRIKERS_SQUAD } from './data/san_juan_strikers';
+import { CIBAO_ORANGE_FC_SQUAD } from './data/cibao_orange';
+import { OM_UNIVERSITY_SQUAD } from './data/om_university';
+import { ATLANTICO_BLUE_STARS_SQUAD } from './data/atlantico_blue_stars';
+import { PORT_AU_PRINCE_AC_SQUAD } from './data/port_au_prince_ac';
+import { CAVALY_SC_SQUAD } from './data/cavaly_sc';
+import { BARBADOS_ROYAL_CLUB_SQUAD } from './data/barbados_royal_club';
+import { WEYMOUTH_WALES_FC_SQUAD } from './data/weymouth_wales_fc';
+import { GUYANA_AMAZON_FC_SQUAD } from './data/guyana_amazon_fc';
+import { WESTERN_TIGERS_SC_SQUAD } from './data/western_tigers_sc';
+
+// Colombia Liga Dimayor (2026 Expansion)
+import { MEDELLIN_GREEN_SQUAD } from './data/medellin_green';
+import { BOGOTA_BLUES_SQUAD } from './data/bogota_blues';
+import { CALI_DEVILS_SQUAD } from './data/cali_devils';
+import { BARRANQUILLA_SHARKS_SQUAD } from './data/barranquilla_sharks';
+import { BOGOTA_CARDINALS_SQUAD } from './data/bogota_cardinals';
+import { MEDELLIN_RED_SQUAD } from './data/medellin_red';
+import { CALI_SUGAR_SQUAD } from './data/cali_sugar';
+import { IBAGUE_GOLD_SQUAD } from './data/ibague_gold';
+import { MANIZALES_WHITE_SQUAD } from './data/manizales_white';
+import { BUCARAMANGA_LEOPARDS_SQUAD } from './data/bucaramanga_leopards';
+import { PEREIRA_WOLVES_SQUAD } from './data/pereira_wolves';
+import { PASTO_VOLCANO_SQUAD } from './data/pasto_volcano';
+import { BOGOTA_FORT_SQUAD } from './data/bogota_fort';
+import { RIONEGRO_EAGLES_SQUAD } from './data/rionegro_eagles';
+import { CUCUTA_BORDER_SQUAD } from './data/cucuta_border';
+import { TUNJA_CHECKERS_SQUAD } from './data/tunja_checkers';
+
+// Chile Primera División (2026 Expansion)
+import { SANTIAGO_CHIEFS_SQUAD } from './data/santiago_chiefs';
+import { SANTIAGO_SCHOLARS_SQUAD } from './data/santiago_scholars';
+import { SANTIAGO_CRUSADERS_SQUAD } from './data/santiago_crusaders';
+import { DESERT_MINERS_SQUAD } from './data/desert_miners';
+import { SANTIAGO_GREEN_SQUAD } from './data/santiago_green';
+import { VINA_GOLD_SQUAD } from './data/vina_gold';
+import { COQUIMBO_PIRATES_SQUAD } from './data/coquimbo_pirates';
+import { TALCAHUANO_STEEL_SQUAD } from './data/talcahuano_steel';
+import { CALERA_RED_SQUAD } from './data/calera_red';
+import { SERENA_GARNET_SQUAD } from './data/serena_garnet';
+import { RANCAGUA_CELESTE_SQUAD } from './data/rancagua_celeste';
+import { SANTIAGO_TRICOLOR_SQUAD } from './data/santiago_tricolor';
+import { CHILLAN_RED_SQUAD } from './data/chillan_red';
+import { CONCEPCION_PURPLE_SQUAD } from './data/concepcion_purple';
+import { CONCEPCION_UNI_SQUAD } from './data/concepcion_uni';
+import { LIMACHE_RED_SQUAD } from './data/limache_red';
+
+// Uruguay Primera División (2026 Expansion)
+import { MONTEVIDEO_TRICOLOR_SQUAD } from './data/montevideo_tricolor';
+import { MONTEVIDEO_COAL_SQUAD } from './data/montevideo_coal';
+import { BELVEDERE_BLUE_SQUAD } from './data/belvedere_blue';
+import { PARQUE_VIOLET_SQUAD } from './data/parque_violet';
+import { JARDINES_STRIPED_SQUAD } from './data/jardines_striped';
+import { PRADO_BOHEMIANS_SQUAD } from './data/prado_bohemians';
+import { MONTEVIDEO_TAILORS_SQUAD } from './data/montevideo_tailors';
+import { MONTEVIDEO_PIONEERS_SQUAD } from './data/montevideo_pioneers';
+import { MONTEVIDEO_LIGHTBLUE_SQUAD } from './data/montevideo_lightblue';
+import { VILLA_ALBICELESTE_SQUAD } from './data/villa_albiceleste';
+import { MELO_BLUE_SQUAD } from './data/melo_blue';
+import { PALERMO_REDBLUE_SQUAD } from './data/palermo_redblue';
+import { MALDONADO_REDGREEN_SQUAD } from './data/maldonado_redgreen';
+import { PEDRENSES_BLUE_SQUAD } from './data/pedrenses_blue';
+import { GAUCHOS_GOLD_SQUAD } from './data/gauchos_gold';
+import { SAYAGO_GREEN_SQUAD } from './data/sayago_green';
+
+// Saudi Pro League (2026 Expansion)
+import { AL_QADSIAH_SQUAD } from './data/al_qadsiah';
+import { AL_TAAWOUN_SQUAD } from './data/al_taawoun';
+import { AL_KHALEEJ_SQUAD } from './data/al_khaleej';
+import { NEOM_SC_SQUAD } from './data/neom_sc';
+import { AL_FATEH_SQUAD } from './data/al_fateh';
+import { AL_HAZEM_SQUAD } from './data/al_hazem';
+import { AL_KHOLOOD_SQUAD } from './data/al_kholood';
+import { AL_FAYHA_SQUAD } from './data/al_fayha';
+import { DAMAC_FC_SQUAD } from './data/damac_fc';
+import { AL_RIYADH_SQUAD } from './data/al_riyadh';
+import { AL_OKHDOOD_SQUAD } from './data/al_okhdood';
+import { AL_NAJMA_SQUAD } from './data/al_najma';
+
+// Egyptian Premier League (2026 Expansion)
+import { CLEOPATRA_FC_SQUAD } from './data/cleopatra_fc';
+import { WADI_DEGLA_SQUAD } from './data/wadi_degla';
+import { EL_MASRY_SQUAD } from './data/el_masry';
+import { ZED_FC_SQUAD } from './data/zed_fc';
+import { ENPPI_SQUAD } from './data/enppi';
+import { SMOUHA_SQUAD } from './data/smouha';
+import { PETROJET_SQUAD } from './data/petrojet';
+import { EL_GOUNA_SQUAD } from './data/el_gouna';
+import { BANK_EL_AHLY_SQUAD } from './data/bank_el_ahly';
+import { MODERN_SPORT_SQUAD } from './data/modern_sport';
+import { GHAZL_EL_MAHALLA_SQUAD } from './data/ghazl_el_mahalla';
+import { EL_MOKAWLOON_SQUAD } from './data/el_mokawloon';
+import { HARRAS_EL_HODOUD_SQUAD } from './data/harras_el_hodoud';
+import { PHARCO_FC_SQUAD } from './data/pharco_fc';
+import { TALAEA_EL_GAISH_SQUAD } from './data/talaea_el_gaish';
+import { KAHRABA_ISMAILIA_SQUAD } from './data/kahraba_ismailia';
+import { ISMAILY_SC_SQUAD } from './data/ismaily_sc';
+import { ITTIHAD_ALEXANDRIA_SQUAD } from './data/ittihad_alexandria';
+
+// Liga MX (2026 Expansion)
+import { TOLUCA_DEVILS_SQUAD } from './data/toluca_devils';
+import { TIJUANA_DOGS_SQUAD } from './data/tijuana_dogs';
+import { JUAREZ_BRAVES_SQUAD } from './data/juarez_braves';
+import { PACHUCA_GOPHERS_SQUAD } from './data/pachuca_gophers';
+import { MEXICO_CITY_PUMAS_SQUAD } from './data/mexico_city_pumas';
+import { LAGUNA_WARRIORS_SQUAD } from './data/laguna_warriors';
+import { QUERETARO_ROOSTERS_SQUAD } from './data/queretaro_roosters';
+import { NECAXA_LIGHTNING_SQUAD } from './data/necaxa_lightning';
+import { GUADALAJARA_FOXES_SQUAD } from './data/guadalajara_foxes';
+import { SAN_LUIS_ATHLETICS_SQUAD } from './data/san_luis_athletics';
+import { MAZATLAN_CANNONS_SQUAD } from './data/mazatlan_cannons';
+import { LEON_EMERALDS_SQUAD } from './data/leon_emeralds';
+import { PUEBLA_SASHES_SQUAD } from './data/puebla_sashes';
+
+// J1 League (2026 Expansion)
+import { KASHIMA_ANTLERS_SQUAD } from './data/kashima_antlers';
+import { MITO_HOLLYHOCK_SQUAD } from './data/mito_hollyhock';
+import { JEF_UNITED_CHIBA_SQUAD } from './data/jef_united_chiba';
+import { KASHIWA_REYSOL_SQUAD } from './data/kashiwa_reysol';
+import { FC_TOKYO_SQUAD } from './data/fc_tokyo';
+import { TOKYO_VERDY_SQUAD } from './data/tokyo_verdy';
+import { MACHIDA_ZELVIA_SQUAD } from './data/machida_zelvia';
+import { SHIMIZU_SPULSE_SQUAD } from './data/shimizu_spulse';
+import { NAGOYA_GRAMPUS_SQUAD } from './data/nagoya_grampus';
+import { KYOTO_SANGA_SQUAD } from './data/kyoto_sanga';
+import { GAMBA_OSAKA_SQUAD } from './data/gamba_osaka';
+import { CEREZO_OSAKA_SQUAD } from './data/cerezo_osaka';
+import { FAGIANO_OKAYAMA_SQUAD } from './data/fagiano_okayama';
+import { SANFRECCE_HIROSHIMA_SQUAD } from './data/sanfrecce_hiroshima';
+import { AVISPA_FUKUOKA_SQUAD } from './data/avispa_fukuoka';
+import { VVAREN_NAGASAKI_SQUAD } from './data/vvaren_nagasaki';
+
+// K League 1 (2026 Expansion)
+import { DAEJEON_HANA_SQUAD } from './data/daejeon_hana';
+import { GANGWON_FC_SQUAD } from './data/gangwon_fc';
+import { JEJU_SK_SQUAD } from './data/jeju_sk';
+import { GIMCHEON_SANGMU_SQUAD } from './data/gimcheon_sangmu';
+import { FC_ANYANG_SQUAD } from './data/fc_anyang';
+import { BUCHEON_FC_SQUAD } from './data/bucheon_fc';
+import { INCHEON_UNITED_SQUAD } from './data/incheon_united';
+import { GWANGJU_FC_SQUAD } from './data/gwangju_fc';
+
+// A-League Men (2026 Expansion)
+import { CENTRAL_COAST_MARINERS_SQUAD } from './data/central_coast_mariners';
+import { WELLINGTON_PHOENIX_SQUAD } from './data/wellington_phoenix';
+import { AUCKLAND_FC_SQUAD } from './data/auckland_fc';
+import { MACARTHUR_FC_SQUAD } from './data/macarthur_fc';
+import { WS_WANDERERS_SQUAD } from './data/ws_wanderers';
+import { ADELAIDE_UNITED_SQUAD } from './data/adelaide_united';
+import { BRISBANE_ROAR_SQUAD } from './data/brisbane_roar';
+import { WESTERN_UNITED_SQUAD } from './data/western_united';
+import { NEWCASTLE_JETS_SQUAD } from './data/newcastle_jets';
+import { PERTH_GLORY_SQUAD } from './data/perth_glory';
+
 import { TeamTactic, TacticType } from './types';
+export { TRANSLATIONS } from './locales';
 
 export const TICKET_PRICE = 50; // Base price, adjusted by league
 
+// Realistic ticket prices by league (in EUR) - Average prices
 // Realistic ticket prices by league (in EUR) - Average prices
 export const LEAGUE_TICKET_PRICES: Record<string, number> = {
     'tr': 18,     // Turkey average €18 (range €10-30)
@@ -186,117 +462,173 @@ export const LEAGUE_TICKET_PRICES: Record<string, number> = {
     'fr': 40,     // France average €40 (range €25-70)
     'ar': 15,     // Argentina average €15 (range €8-25)
     'br': 12,     // Brazil average €12 (range €5-20)
+    'na': 40,     // USA/MLS average €40
+    'jp': 25,     // Japan average €25
+    'kr': 20,     // South Korea average €20
+    'au': 30,     // Australia average €30
+    'sa': 20,     // Saudi Arabia average €20
+    'mx': 15,     // Mexico average €15
+    'cl': 12,     // Chile average €12
+    'uy': 12,     // Uruguay average €12
+    'co': 10,     // Colombia average €10
+    'ma': 8,      // Morocco average €8
+    'za': 8,      // South Africa average €8
+    'eg': 5,      // Egypt average €5
+    'car': 5,     // Caribbean average €5
     'default': 25
 };
 
 // Attendance rates by league (base rates, can go to 100% for derbies/big games)
 export const LEAGUE_ATTENDANCE_RATES: Record<string, { min: number; max: number }> = {
-    'tr': { min: 0.50, max: 0.95 },   // Turkey: 50-95% (100% for derbies)
-    'en': { min: 0.85, max: 1.00 },   // England: 85-100%
-    'es': { min: 0.65, max: 0.95 },   // Spain: 65-95%
-    'it': { min: 0.60, max: 0.90 },   // Italy: 60-90%
-    'de': { min: 0.88, max: 1.00 },   // Germany: 88-100%
-    'fr': { min: 0.70, max: 0.95 },   // France: 70-95%
-    'ar': { min: 0.60, max: 0.98 },   // Argentina: 60-98% (High passion)
-    'br': { min: 0.65, max: 0.98 },   // Brazil: 65-98% (High passion)
+    'tr': { min: 0.50, max: 0.95 },   // Turkey
+    'en': { min: 0.85, max: 1.00 },   // England
+    'es': { min: 0.65, max: 0.95 },   // Spain
+    'it': { min: 0.60, max: 0.90 },   // Italy
+    'de': { min: 0.88, max: 1.00 },   // Germany
+    'fr': { min: 0.70, max: 0.95 },   // France
+    'ar': { min: 0.60, max: 0.98 },   // Argentina
+    'br': { min: 0.65, max: 0.98 },   // Brazil
+    'na': { min: 0.70, max: 0.95 },   // USA
+    'jp': { min: 0.60, max: 0.90 },   // Japan
+    'kr': { min: 0.50, max: 0.85 },   // Korea
+    'au': { min: 0.40, max: 0.80 },   // Australia
+    'sa': { min: 0.30, max: 0.95 },   // Saudi (High variance)
+    'mx': { min: 0.60, max: 0.95 },   // Mexico
+    'cl': { min: 0.50, max: 0.90 },   // Chile
+    'uy': { min: 0.50, max: 0.90 },   // Uruguay
+    'co': { min: 0.50, max: 0.90 },   // Colombia
+    'ma': { min: 0.50, max: 0.95 },   // Morocco
+    'za': { min: 0.40, max: 0.85 },   // South Africa
+    'eg': { min: 0.40, max: 0.95 },   // Egypt
+    'car': { min: 0.30, max: 0.80 },  // Caribbean
     'default': { min: 0.50, max: 0.80 }
 };
 
-// Derby rivals for 100% attendance matches
-export const DERBY_RIVALS: Record<string, string[]> = {
-    'Galata Lions': ['Istanbul Yellows', 'Besiktas Eagles', 'Trabzon Storm'],
-    'Istanbul Yellows': ['Galata Lions', 'Besiktas Eagles', 'Trabzon Storm'],
-    'Besiktas Eagles': ['Galata Lions', 'Istanbul Yellows', 'Trabzon Storm'],
-    'Trabzon Storm': ['Galata Lions', 'Istanbul Yellows', 'Besiktas Eagles'],
-    'Merseyside Reds': ['Merseyside Blues', 'Manchester Devils', 'Manchester Skyblues'],
-    'Manchester Devils': ['Manchester Skyblues', 'Merseyside Reds', 'Yorkshire Whites'],
-    'Manchester Skyblues': ['Manchester Devils', 'Merseyside Reds'],
-    'London Cannons': ['North London Whites', 'London Blue Lions'],
-    'North London Whites': ['London Cannons', 'London Blue Lions'],
-    'London Blue Lions': ['London Cannons', 'North London Whites'],
-    'Madrid Blancos': ['Madrid Indios', 'Catalonia Blau'],
-    'Catalonia Blau': ['Madrid Blancos', 'Espanyol Parrots'],
-    'Madrid Indios': ['Madrid Blancos'],
-    'Inter Lombardia': ['Milano Devils', 'Piemonte Zebras'],
-    'Milano Devils': ['Inter Lombardia', 'Piemonte Zebras'],
-    'Piemonte Zebras': ['Inter Lombardia', 'Milano Devils'],
-    'Roma Gladiators': ['Latium Eagles'],
-    'Latium Eagles': ['Roma Gladiators'],
-    'Buenos Aires Millionaires': ['La Boca Xeneizes', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
-    'La Boca Xeneizes': ['Buenos Aires Millionaires', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
-    'Avellaneda Racers': ['Avellaneda Devils', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
-    'Avellaneda Devils': ['Avellaneda Racers', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
-    'Rosario Canallas': ['Rosario Lepers'],
-    'Rosario Lepers': ['Rosario Canallas'],
-    'La Plata Lions': ['La Plata Wolves'],
-    'La Plata Wolves': ['La Plata Lions'],
-    // Brazilian Derbies
-    'São Paulo Palms': ['São Paulo Warriors', 'São Paulo Tigers', 'Santos Beach'],
-    'São Paulo Warriors': ['São Paulo Palms', 'São Paulo Tigers', 'Santos Beach'],
-    'São Paulo Tigers': ['São Paulo Palms', 'São Paulo Warriors', 'Santos Beach'],
-    'Santos Beach': ['São Paulo Palms', 'São Paulo Warriors', 'São Paulo Tigers'],
-    'Rio Flames': ['Rio Sailors', 'Rio Star', 'Rio Waves'],
-    'Rio Sailors': ['Rio Flames', 'Rio Star', 'Rio Waves'],
-    'Rio Star': ['Rio Flames', 'Rio Sailors', 'Rio Waves'],
-    'Rio Waves': ['Rio Flames', 'Rio Sailors', 'Rio Star'],
-    'Porto Alegre Blues': ['Porto Alegre Reds'],
-    'Porto Alegre Reds': ['Porto Alegre Blues'],
-    'Belo Horizonte Cruisers': ['Belo Horizonte Miners'],
-    'Belo Horizonte Miners': ['Belo Horizonte Cruisers'],
-    'Curitiba Storm': ['Curitiba Greens'],
-    'Curitiba Greens': ['Curitiba Storm']
-};
+
 
 export const NAMES_DB: any = {
     // 🇹🇷 Turkey (Süper Lig)
     'Turkey': {
-        first: ['Emre', 'Burak', 'Mert', 'Can', 'Oğuz', 'Alper', 'Serkan', 'Baran', 'Kaan', 'Efe', 'Yiğit', 'Umut', 'Furkan', 'Tolga', 'Kerem', 'Batuhan', 'Deniz', 'Arda', 'Taha', 'Samet'],
-        last: ['Yıldız', 'Demir', 'Şahin', 'Kaya', 'Aydın', 'Koç', 'Aksoy', 'Özkan', 'Çelik', 'Güneş', 'Arslan', 'Polat', 'Erdem', 'Yalçın', 'Karaca', 'Öztürk', 'Kılıç', 'Uçar', 'Bozkurt', 'Tunç']
+        first: ['Emre', 'Burak', 'Mert', 'Can', 'Oğuz', 'Alper', 'Serkan', 'Baran', 'Kaan', 'Efe',
+            'Yiğit', 'Umut', 'Furkan', 'Tolga', 'Kerem', 'Batuhan', 'Deniz', 'Arda', 'Taha', 'Samet',
+            'Ahmet', 'Mehmet', 'Mustafa', 'Ali', 'Hüseyin', 'Hasan', 'İbrahim', 'İsmail', 'Osman', 'Yusuf',
+            'Ömer', 'Murat', 'Fatih', 'Hakan', 'Cem', 'Onur', 'Gökhan', 'Volkan', 'Selçuk', 'Uğur',
+            'Halil', 'Orhan', 'Sinan', 'Metin', 'Adem', 'Ferhat', 'Cihan', 'Eren', 'Enes', 'Yasin',
+            'Yunus', 'Emir', 'Sarp', 'Doruk', 'Rüzgar', 'Çınar', 'Bora', 'Toprak', 'Kuzey', 'Ayaz'],
+        last: ['Yıldız', 'Demir', 'Şahin', 'Kaya', 'Aydın', 'Koç', 'Aksoy', 'Özkan', 'Çelik', 'Güneş',
+            'Arslan', 'Polat', 'Erdem', 'Yalçın', 'Karaca', 'Öztürk', 'Kılıç', 'Uçar', 'Bozkurt', 'Tunç',
+            'Yılmaz', 'Korkmaz', 'Çetin', 'Aslan', 'Can', 'Şen', 'Yavuz', 'Turan', 'Avcı', 'Bulut',
+            'Şimşek', 'Kaplan', 'Yüksel', 'Ünal', 'Taş', 'Aktaş', 'Güler', 'Sarı', 'Duman', 'Bayram',
+            'Tekin', 'Kurt', 'Özer', 'Soylu', 'Eroğlu', 'Çakır', 'Keskin', 'Kocaman', 'Sönmez', 'Erdoğan']
     },
     // 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England (Premier League)
     'England': {
-        first: ['Jack', 'Harry', 'Oliver', 'George', 'Charlie', 'Alfie', 'Archie', 'Freddie', 'Leo', 'Oscar', 'Henry', 'Thomas', 'Finley', 'Theo', 'Isaac', 'Lucas', 'Max', 'Reuben', 'Edward', 'Samuel'],
-        last: ['Smith', 'Johnson', 'Taylor', 'Brown', 'Williams', 'Jones', 'Davis', 'Wilson', 'Evans', 'Thomas', 'Clarke', 'Lewis', 'Walker', 'Hall', 'Allen', 'Wright', 'Green', 'Baker', 'Adams', 'Cooper']
+        first: ['Jack', 'Harry', 'Oliver', 'George', 'Charlie', 'Alfie', 'Archie', 'Freddie', 'Leo', 'Oscar',
+            'Henry', 'Thomas', 'Finley', 'Theo', 'Isaac', 'Lucas', 'Max', 'Reuben', 'Edward', 'Samuel',
+            'James', 'William', 'Alexander', 'Daniel', 'Benjamin', 'Joseph', 'Adam', 'Jacob', 'Mohammed', 'Ethan',
+            'Joshua', 'Mason', 'Harrison', 'Harvey', 'Tommy', 'Arthur', 'Jude', 'Louie', 'Teddy', 'Arlo',
+            'Sebastian', 'Rory', 'Elijah', 'Toby', 'Matthew', 'Lewis', 'Elliot', 'Ryan', 'Nathan', 'Caleb'],
+        last: ['Smith', 'Johnson', 'Taylor', 'Brown', 'Williams', 'Jones', 'Davis', 'Wilson', 'Evans', 'Thomas',
+            'Clarke', 'Lewis', 'Walker', 'Hall', 'Allen', 'Wright', 'Green', 'Baker', 'Adams', 'Cooper',
+            'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris',
+            'Rogers', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Richardson', 'Cox',
+            'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly']
     },
     // 🇪🇸 Spain (La Liga)
     'Spain': {
-        first: ['Alejandro', 'Javier', 'Diego', 'Pablo', 'Miguel', 'Carlos', 'Sergio', 'Luis', 'Andrés', 'Juan', 'Manuel', 'Álvaro', 'David', 'Rubén', 'Marcos', 'Raúl', 'Iker', 'Hugo', 'Antonio', 'Iván'],
-        last: ['García', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Rodríguez', 'Pérez', 'Gómez', 'Torres', 'Ramírez', 'Díaz', 'Morales', 'Ortega', 'Navarro', 'Castro', 'Herrera', 'Molina', 'Vega', 'León', 'Rivas']
+        first: ['Alejandro', 'Javier', 'Diego', 'Pablo', 'Miguel', 'Carlos', 'Sergio', 'Luis', 'Andrés', 'Juan',
+            'Manuel', 'Álvaro', 'David', 'Rubén', 'Marcos', 'Raúl', 'Iker', 'Hugo', 'Antonio', 'Iván',
+            'Adrián', 'Mario', 'Jorge', 'José', 'Francisco', 'Alberto', 'Pedro', 'Jesús', 'Daniel', 'Víctor',
+            'Roberto', 'Eduardo', 'Enrique', 'Fernando', 'Ricardo', 'Santiago', 'Rafael', 'Óscar', 'Ramón', 'Vicente',
+            'Gabriel', 'Ignacio', 'Alfonso', 'Salvador', 'Félix', 'César', 'Arturo', 'Emilio', 'Héctor', 'Julián'],
+        last: ['García', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Rodríguez', 'Pérez', 'Gómez', 'Torres', 'Ramírez',
+            'Díaz', 'Morales', 'Ortega', 'Navarro', 'Castro', 'Herrera', 'Molina', 'Vega', 'León', 'Rivas',
+            'González', 'Ruiz', 'Alonso', 'Hernández', 'Jiménez', 'Moreno', 'Muñoz', 'Romero', 'Álvarez', 'Castillo',
+            'Gutiérrez', 'Rubio', 'Marín', 'Serrano', 'Iglesias', 'Medina', 'Garrido', 'Cortes', 'Lozano', 'Cano',
+            'Prieto', 'Mendez', 'Cruz', 'Calvo', 'Gallego', 'Vidal', 'Guerrero', 'Moya', 'Reyes', 'Pascual']
     },
     // 🇮🇹 Italy (Serie A)
     'Italy': {
-        first: ['Luca', 'Matteo', 'Alessandro', 'Marco', 'Francesco', 'Davide', 'Simone', 'Andrea', 'Giuseppe', 'Stefano', 'Fabio', 'Riccardo', 'Enrico', 'Daniele', 'Nicola', 'Gabriele', 'Tommaso', 'Paolo', 'Roberto', 'Mauro'],
-        last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'Mancini', 'Moretti', 'Rizzo', 'Lombardi', 'Barbieri', 'De Luca', 'Costa']
+        first: ['Luca', 'Matteo', 'Alessandro', 'Marco', 'Francesco', 'Davide', 'Simone', 'Andrea', 'Giuseppe', 'Stefano',
+            'Fabio', 'Riccardo', 'Enrico', 'Daniele', 'Nicola', 'Gabriele', 'Tommaso', 'Paolo', 'Roberto', 'Mauro',
+            'Lorenzo', 'Leonardo', 'Mattia', 'Edoardo', 'Filippo', 'Federico', 'Pietro', 'Giovanni', 'Antonio', 'Michele',
+            'Claudio', 'Giorgio', 'Massimo', 'Vincenzo', 'Salvatore', 'Luigi', 'Giacomo', 'Alberto', 'Dario', 'Gianluca',
+            'Alessio', 'Cristiano', 'Emanuele', 'Fabrizio', 'Giulio', 'Marcello', 'Maurizio', 'Niccolò', 'Raffaele', 'Umberto'],
+        last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco',
+            'Bruno', 'Gallo', 'Conti', 'Mancini', 'Moretti', 'Rizzo', 'Lombardi', 'Barbieri', 'De Luca', 'Costa',
+            'Giordano', 'Mancini', 'Rinaldi', 'Caruso', 'Ferrara', 'Galli', 'Martini', 'Leone', 'Longo', 'Gentile',
+            'Martinelli', 'Vitale', 'Serrano', 'Marchetti', 'Sorrentino', 'Coppola', 'Monti', 'Palmieri', 'Bernardi', 'Pellegrini',
+            'Ruggiero', 'De Santis', 'Orlando', 'Damico', 'Negri', 'Villa', 'Parisi', 'Conte', 'Farina', 'Silvestri']
     },
     // 🇫🇷 France (Ligue 1)
     'France': {
-        first: ['Lucas', 'Hugo', 'Nathan', 'Louis', 'Jules', 'Léo', 'Arthur', 'Théo', 'Maxime', 'Enzo', 'Clément', 'Antoine', 'Adrien', 'Paul', 'Baptiste', 'Romain', 'Mathis', 'Tom', 'Alexandre', 'Evan'],
-        last: ['Martin', 'Bernard', 'Dubois', 'Moreau', 'Laurent', 'Lefebvre', 'Simon', 'Michel', 'Garcia', 'Petit', 'Rousseau', 'Henry', 'Faure', 'Noël', 'Chevalier', 'André', 'Robin', 'Blanchard', 'Colin', 'Giraud']
+        first: ['Lucas', 'Hugo', 'Nathan', 'Louis', 'Jules', 'Léo', 'Arthur', 'Théo', 'Maxime', 'Enzo',
+            'Clément', 'Antoine', 'Adrien', 'Paul', 'Baptiste', 'Romain', 'Mathis', 'Tom', 'Alexandre', 'Evan',
+            'Gabriel', 'Raphaël', 'Maël', 'Noé', 'Adam', 'Liam', 'Sacha', 'Aaron', 'Ethan', 'Gabin',
+            'Pierre', 'Nicolas', 'Julien', 'Guillaume', 'François', 'Benoît', 'Vincent', 'Sébastien', 'Christophe', 'Jérôme',
+            'Kevin', 'Anthony', 'Dylan', 'Jordan', 'Quentin', 'Axel', 'Valentin', 'Rémi', 'Loïc', 'Cédric'],
+        last: ['Martin', 'Bernard', 'Dubois', 'Moreau', 'Laurent', 'Lefebvre', 'Simon', 'Michel', 'Garcia', 'Petit',
+            'Rousseau', 'Henry', 'Faure', 'Noël', 'Chevalier', 'André', 'Robin', 'Blanchard', 'Colin', 'Giraud',
+            'Robert', 'Richard', 'Durand', 'Leroy', 'Morel', 'Fournier', 'Girard', 'Bonnet', 'Dupont', 'Lambert',
+            'Fontaine', 'Roux', 'Vincent', 'Gauthier', 'Perrin', 'Boyer', 'Mercier', 'Blanc', 'Guerin', 'Muller',
+            'Clement', 'Morin', 'Nicolas', 'Vidal', 'Sanchez', 'Adam', 'Lemaire', 'Brunet', 'Leclerc', 'Meunier']
     },
     // 🇩🇪 Germany (Bundesliga)
     'Germany': {
-        first: ['Leon', 'Elias', 'Noah', 'Finn', 'Jonas', 'Paul', 'Emil', 'Luca', 'Max', 'Felix', 'Moritz', 'Tim', 'Julian', 'Niklas', 'Ben', 'Theo', 'Erik', 'David', 'Fabian', 'Linus'],
-        last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Braun']
+        first: ['Leon', 'Elias', 'Noah', 'Finn', 'Jonas', 'Paul', 'Emil', 'Luca', 'Max', 'Felix',
+            'Moritz', 'Tim', 'Julian', 'Niklas', 'Ben', 'Theo', 'Erik', 'David', 'Fabian', 'Linus',
+            'Lukas', 'Maximilian', 'Jakob', 'Anton', 'Oskar', 'Philipp', 'Alexander', 'Johannes', 'Simon', 'Jan',
+            'Hannes', 'Mats', 'Lenny', 'Mika', 'Henry', 'Liam', 'Jonathan', 'Samuel', 'Florian', 'Daniel',
+            'Tobias', 'Patrick', 'Christian', 'Sebastian', 'Marcel', 'Kevin', 'Dennis', 'Dominik', 'Marvin', 'Nico'],
+        last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer',
+            'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Braun',
+            'Krüger', 'Hofmann', 'Hartmann', 'Lange', 'Schmitt', 'Werner', 'Schmitz', 'Krause', 'Meier', 'Lehmann',
+            'Schmid', 'Schulze', 'Maier', 'Köhler', 'Herrmann', 'König', 'Walter', 'Mayer', 'Huber', 'Kaiser',
+            'Fuchs', 'Peters', 'Lang', 'Scholz', 'Möller', 'Weiss', 'Jung', 'Hahn', 'Keller', 'Vogel']
     },
     // 🇳🇱 Netherlands
     'Netherlands': {
-        first: ['Daan', 'Sven', 'Lars', 'Bram', 'Milan', 'Luuk', 'Thijs', 'Joost', 'Ruben', 'Bas'],
-        last: ['de Vries', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'de Jong', 'Smit', 'Meijer', 'Bos', 'van den Berg']
+        first: ['Daan', 'Sven', 'Lars', 'Bram', 'Milan', 'Luuk', 'Thijs', 'Joost', 'Ruben', 'Bas',
+            'Sem', 'Lucas', 'Levi', 'Finn', 'Sam', 'Mees', 'Noud', 'Adam', 'Liam', 'James',
+            'Thomas', 'Jesse', 'Stijn', 'Floris', 'Julian', 'Jasper', 'Teun', 'Gijs', 'Max', 'Tim',
+            'Koen', 'Sander', 'Mark', 'Paul', 'Rik', 'Martijn', 'Stefan', 'Jeroen', 'Wouter', 'Michiel'],
+        last: ['de Vries', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'de Jong', 'Smit', 'Meijer', 'Bos', 'van den Berg',
+            'de Groot', 'Mulder', 'de Boer', 'Peters', 'Hendriks', 'van Leeuwen', 'Dekker', 'Brouwer', 'de Wit', 'Dijkstra',
+            'Smits', 'de Graaf', 'van der Meer', 'van der Linden', 'Kok', 'Jacobs', 'de Haan', 'Vermeulen', 'van den Heuvel', 'van der Veen',
+            'van de Ven', 'Hoekstra', 'Maas', 'Verhoeven', 'Koster', 'van Dam', 'van der Wal', 'Prins', 'Blom', 'Huisman']
     },
     // 🇧🇷 Brazil
     'Brazil': {
-        first: ['João', 'Lucas', 'Gabriel', 'Thiago', 'Rafael', 'Pedro', 'Mateus', 'Bruno', 'Diego', 'Vinicius'],
-        last: ['Silva', 'Souza', 'Oliveira', 'Costa', 'Lima', 'Santos', 'Almeida', 'Ferreira', 'Pereira', 'Rodrigues']
+        first: ['João', 'Lucas', 'Gabriel', 'Thiago', 'Rafael', 'Pedro', 'Mateus', 'Bruno', 'Diego', 'Vinicius',
+            'Arthur', 'Bernardo', 'Heitor', 'Davi', 'Lorenzo', 'Théo', 'Pedro', 'Gabriel', 'Enzo', 'Matheus',
+            'Lucas', 'Benjamin', 'Nicolas', 'Guilherme', 'Rafael', 'Joaquim', 'Samuel', 'Enzo', 'João', 'Felipe',
+            'Gustavo', 'Murilo', 'Isaac', 'Henrique', 'Anthony', 'Eduardo', 'Daniel', 'Vitor', 'Noah', 'Leonardo'],
+        last: ['Silva', 'Souza', 'Oliveira', 'Costa', 'Lima', 'Santos', 'Almeida', 'Ferreira', 'Pereira', 'Rodrigues',
+            'Alves', 'Araujo', 'Barbosa', 'Barros', 'Batista', 'Borges', 'Campos', 'Cardoso', 'Carvalho', 'Castro',
+            'Cavalcanti', 'Correia', 'Cunha', 'Dias', 'Duarte', 'Freitas', 'Gomes', 'Gonçalves', 'Lima', 'Lopes',
+            'Machado', 'Marques', 'Martins', 'Medeiros', 'Melo', 'Mendes', 'Miranda', 'Monteiro', 'Moraes', 'Moreira']
     },
     // 🇷🇺 Russia
     'Russia': {
-        first: ['Ivan', 'Dmitry', 'Alexey', 'Nikita', 'Egor', 'Andrey', 'Sergey', 'Pavel', 'Mikhail', 'Artem'],
-        last: ['Ivanov', 'Smirnov', 'Kuznetsov', 'Popov', 'Volkov', 'Petrov', 'Sokolov', 'Lebedev', 'Kozlov', 'Novikov']
+        first: ['Ivan', 'Dmitry', 'Alexey', 'Nikita', 'Egor', 'Andrey', 'Sergey', 'Pavel', 'Mikhail', 'Artem',
+            'Alexander', 'Maxim', 'Vladimir', 'Igor', 'Oleg', 'Roman', 'Konstantin', 'Yuri', 'Denis', 'Anton',
+            'Ilya', 'Kirill', 'Victor', 'Stepan', 'Fedor', 'Grigory', 'Lev', 'Leonid', 'Matvey', 'Daniil',
+            'Timofey', 'Arseny', 'Gleb', 'Mark', 'Makar', 'Yaroslav', 'Vladislav', 'Semyon', 'Vadim', 'Boris'],
+        last: ['Ivanov', 'Smirnov', 'Kuznetsov', 'Popov', 'Volkov', 'Petrov', 'Sokolov', 'Lebedev', 'Kozlov', 'Novikov',
+            'Morozov', 'Solovyov', 'Vasilyev', 'Zaitsev', 'Pavlov', 'Semenov', 'Golubev', 'Vinogradov', 'Bogdanov', 'Vorobyov',
+            'Fedorov', 'Mikhailov', 'Belyaev', 'Tarasov', 'Belov', 'Komarov', 'Orlov', 'Kiselev', 'Makarov', 'Andreev',
+            'Kovalev', 'Ilyin', 'Gusev', 'Titov', 'Kuzmin', 'Kudryavtsev', 'Baranov', 'Kulikov', 'Alexeev', 'Stepanov']
     },
     // 🇸🇪 Sweden
     'Sweden': {
-        first: ['Erik', 'Axel', 'Emil', 'Viktor', 'Gustav', 'Oscar', 'Liam', 'Hugo', 'Anton', 'Felix'],
-        last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Berg', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson']
+        first: ['Erik', 'Axel', 'Emil', 'Viktor', 'Gustav', 'Oscar', 'Liam', 'Hugo', 'Anton', 'Felix',
+            'William', 'Lucas', 'Noah', 'Elias', 'Oliver', 'Leo', 'Adam', 'Filip', 'Alexander', 'Isak',
+            'Ludvig', 'Vincent', 'Arvid', 'Nils', 'Theo', 'Charlie', 'Walter', 'Edvin', 'Albin', 'Melvin',
+            'Joel', 'Sebastian', 'Jonathan', 'Marcus', 'Simon', 'Linus', 'Rasmus', 'Max', 'David', 'Pontus'],
+        last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Berg', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson',
+            'Gustafsson', 'Pettersson', 'Jonsson', 'Jansson', 'Hansson', 'Bengtsson', 'Jönsson', 'Lindberg', 'Jakobsson', 'Magnusson',
+            'Olofsson', 'Lindström', 'Lindqvist', 'Lindgren', 'Axelsson', 'Bergström', 'Lundberg', 'Lundgren', 'Lind', 'Berglund',
+            'Sandberg', 'Ekström', 'Sjöberg', 'Nyström', 'Hedlund', 'Henriksson', 'Ali', 'Mohamed', 'Ahmed', 'Hassan']
     },
     // 🌍 World (fallback for Europe, etc.)
     'World': {
@@ -307,43 +639,105 @@ export const NAMES_DB: any = {
     'Europe': {
         first: ['Jack', 'Leo', 'Lucas', 'Max', 'Oliver', 'Noah', 'Liam', 'Oscar', 'Theo', 'Henry', 'Marco', 'Pierre', 'Hans', 'Antonio', 'Stefan'],
         last: ['Smith', 'Johnson', 'Garcia', 'Müller', 'Martin', 'Rossi', 'Silva', 'Nielsen', 'Jansen', 'Andersson', 'Ferrari', 'Bernard', 'Schmidt', 'Lopez', 'Costa']
+    },
+    // 🇯🇵 Japan
+    'Japan': {
+        first: ['Hiroto', 'Ren', 'Yuto', 'Sota', 'Minato', 'Haruto', 'Riku', 'Yito', 'Aoto', 'Hinata', 'Kaito', 'Itsuki', 'Asahi', 'Daiki', 'Takumi', 'Yuki', 'Kenta', 'Sho', 'Ryo', 'Tsubasa'],
+        last: ['Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamada', 'Sasaki', 'Yamaguchi', 'Saito', 'Matsumoto', 'Inoue', 'Kimura', 'Hayashi', 'Shimizu']
+    },
+    // 🇰🇷 South Korea
+    'South Korea': {
+        first: ['Min-jun', 'Seo-jun', 'Do-yun', 'Si-woo', 'Ji-ho', 'Ha-joon', 'Ye-jun', 'Hyun-woo', 'Ji-hu', 'Sang-hoon', 'Dong-hyuk', 'Min-su', 'Sung-min', 'Jun-ho', 'Kyung-soo'],
+        last: ['Kim', 'Lee', 'Park', 'Choi', 'Jung', 'Kang', 'Cho', 'Yoon', 'Jang', 'Lim', 'Han', 'Oh', 'Seo', 'Shin', 'Kwon', 'Hwang', 'Ahn', 'Song', 'Jeon', 'Hong']
+    },
+    // 🇸🇦 Saudi Arabia
+    'Saudi Arabia': {
+        first: ['Mohammed', 'Ahmed', 'Ali', 'Omar', 'Yousef', 'Abdullah', 'Fahad', 'Salman', 'Abdulrahman', 'Khalid', 'Sultan', 'Nawaf', 'Salem', 'Yasser', 'Hamad', 'Ibrahim', 'Saud', 'Faisal', 'Majed', 'Sami'],
+        last: ['Al-Dawsari', 'Al-Shahrani', 'Al-Faraj', 'Al-Muwallad', 'Al-Owais', 'Al-Ghannam', 'Al-Buraikan', 'Al-Najei', 'Al-Amri', 'Al-Bulaihi', 'Al-Malki', 'Al-Khaibari', 'Al-Hassan', 'Al-Shehri', 'Al-Abid', 'Al-Jassim', 'Al-Harbi', 'Al-Zaqarq', 'Al-Otaibi', 'Al-Qahtani']
+    },
+    // 🇪🇬 Egypt
+    'Egypt': {
+        first: ['Mohamed', 'Ahmed', 'Mahmoud', 'Omar', 'Youssef', 'Ibrahim', 'Mostafa', 'Ali', 'Hassan', 'Hussein', 'Amr', 'Tarek', 'Karim', 'Ramadan', 'Sherif', 'Emam', 'Zizo', 'Shikabala', 'Afsha', 'Kahraba'],
+        last: ['Salah', 'Elneny', 'Trezeguet', 'Marmoush', 'Hegazi', 'El-Shenawy', 'Fathy', 'Hamdy', 'Abdelmonem', 'Ashour', 'El-Sulaya', 'Sherif', 'Mohsen', 'Sobhi', 'Hafez', 'Gaber', 'Rabia', 'Koka', 'Sayed', 'Hamym']
+    },
+    // 🇲🇦 Morocco
+    'Morocco': {
+        first: ['Achraf', 'Hakim', 'Yassine', 'Sofyan', 'Noussair', 'Romain', 'Amine', 'Selim', 'Nayef', 'Yahya', 'Azzedine', 'Abderrazak', 'Munir', 'Jawad', 'Bilal', 'Zakaria', 'Ayoub', 'Soufiane', 'Anas', 'Brahim'],
+        last: ['Hakimi', 'Ziyech', 'Bounou', 'Amrabat', 'Mazraoui', 'Saiss', 'Aguerd', 'En-Nesyri', 'Boufal', 'Ounahi', 'Hamdallah', 'El Kaabi', 'El Yamiq', 'Attiyat Allah', 'Aboukhlal', 'Harit', 'Ezzalzouli', 'Amallah', 'Cheddira', 'Tissoudali']
+    },
+    // 🇿🇦 South Africa
+    'South Africa': {
+        first: ['Percy', 'Themba', 'Ronwen', 'Teboho', 'Thapelo', 'Sphelele', 'Mothobi', 'Khuliso', 'Grant', 'Aubrey', 'Sipho', 'Bongani', 'Keagan', 'Lyle', 'Thulani', 'Sibusiso', 'Siyanda', 'Innocent', 'Evidence', 'Zakhele'],
+        last: ['Tau', 'Zwane', 'Williams', 'Mokoena', 'Morena', 'Mkhulise', 'Mvala', 'Mudau', 'Kekana', 'Modiba', 'Xulu', 'Hlatshwayo', 'Dolly', 'Foster', 'Serero', 'Vilakazi', 'Mabasa', 'Lepasa', 'Maela', 'Sibisi']
+    },
+    // 🇨🇴 Colombia
+    'Colombia': {
+        first: ['Luis', 'James', 'Radamel', 'Juan', 'David', 'Davinson', 'Yerry', 'Mateus', 'Wilmar', 'Jefferson', 'Rafael', 'Camilo', 'Jhon', 'Daniel', 'Santiago', 'Jorge', 'Kevin', 'Carlos', 'Andrés', 'Sebastián'],
+        last: ['Díaz', 'Rodríguez', 'Falcao', 'Cuadrado', 'Ospina', 'Sánchez', 'Mina', 'Uribe', 'Barrios', 'Lerma', 'Borré', 'Vargas', 'Lucumí', 'Muñoz', 'Arias', 'Carrascal', 'Sinisterra', 'Asprilla', 'Duran', 'Cuesta']
+    },
+    // 🇨🇱 Chile
+    'Chile': {
+        first: ['Alexis', 'Arturo', 'Claudio', 'Gary', 'Mauricio', 'Charles', 'Erick', 'Eduardo', 'Gabriel', 'Ben', 'Guillermo', 'Paulo', 'Brayan', 'Felipe', 'Víctor', 'Marcelino', 'Diego', 'Esteban', 'Jean', 'Francisco'],
+        last: ['Sánchez', 'Vidal', 'Bravo', 'Medel', 'Isla', 'Aránguiz', 'Pulgar', 'Vargas', 'Suazo', 'Brereton', 'Maripán', 'Díaz', 'Cortés', 'Méndez', 'Dávila', 'Núñez', 'Valdés', 'Pavez', 'Meneses', 'Sierralta']
+    },
+    // 🇮🇳 India
+    'India': {
+        first: ['Sunil', 'Gurpreet', 'Sandesh', 'Anirudh', 'Sahal', 'Lallianzuala', 'Brandon', 'Liston', 'Manvir', 'Rahul', 'Pritam', 'Subhasish', 'Amrinder', 'Jeakson', 'Suresh', 'Udanta', 'Ashique', 'Chinglensana', 'Narender', 'Vishal'],
+        last: ['Chhetri', 'Singh', 'Jhingan', 'Thapa', 'Samad', 'Chhangte', 'Fernandes', 'Colaco', 'Bheke', 'Bose', 'Wangjam', 'Kuruniyan', 'Kottam', 'Gahlowt', 'Kaith', 'Poojary', 'Mishra', 'Kumar', 'Yadav', 'Rai']
+    },
+    // 🇹🇳 Tunisia
+    'Tunisia': {
+        first: ['Youssef', 'Wahbi', 'Ali', 'Ferjani', 'Ellyes', 'Dylan', 'Montassar', 'Aissa', 'Mohamed', 'Anis', 'Seifeddine', 'Hamza', 'Naïm', 'Issam', 'Bechir', 'Wajdi', 'Taha', 'Haythem', 'Ghailene', 'Fakhreddine'],
+        last: ['Msakni', 'Khazri', 'Maaloul', 'Sassi', 'Skhiri', 'Bronn', 'Talbi', 'Laidouni', 'Dräger', 'Ben Slimane', 'Jaziri', 'Mathlouthi', 'Sliti', 'Jebali', 'Ben Said', 'Kechrida', 'Khenissi', 'Jouini', 'Chaalali', 'Ben Youssef']
+    },
+    // 🇨🇷 Costa Rica
+    'Costa Rica': {
+        first: ['Keylor', 'Joel', 'Bryan', 'Celso', 'Francisco', 'Kendall', 'Óscar', 'Yeltsin', 'Jewison', 'Anthony', 'Manfred', 'Brandon', 'Juan', 'Pablo', 'Aaron', 'Keysher', 'Gerson', 'Julio', 'Kevin', 'Fernán'],
+        last: ['Navas', 'Campbell', 'Ruiz', 'Borges', 'Calvo', 'Waston', 'Duarte', 'Tejeda', 'Bennette', 'Contreras', 'Ugalde', 'Aguilera', 'Vargas', 'Arboine', 'Suárez', 'Fuller', 'Torres', 'Cascante', 'Chamorro', 'Faerron']
+    },
+    // 🇺🇾 Uruguay
+    'Uruguay': {
+        first: ['Luis', 'Edinson', 'Federico', 'Darwin', 'Ronald', 'José', 'Rodrigo', 'Matías', 'Manuel', 'Sergio', 'Giorgian', 'Facundo', 'Nicolás', 'Maxi', 'Sebastián', 'Lucas', 'Nahitan', 'Fernando', 'Guillermo', 'Agustín'],
+        last: ['Suárez', 'Cavani', 'Valverde', 'Núñez', 'Araújo', 'Giménez', 'Bentancur', 'Vecino', 'Ugarte', 'Rochet', 'De Arrascaeta', 'Pellistri', 'De la Cruz', 'Olivera', 'Viña', 'Coates', 'Nández', 'Muslera', 'Varela', 'Torreira']
+    },
+    // 🇲🇽 Mexico
+    'Mexico': {
+        first: ['Hirving', 'Guillermo', 'Edson', 'Raúl', 'Santiago', 'Jesús', 'Héctor', 'Andrés', 'César', 'Orbelín', 'Luis', 'Jorge', 'Kevin', 'Henry', 'Uriel', 'Roberto', 'Johan', 'Julián', 'Erick', 'Carlos'],
+        last: ['Lozano', 'Ochoa', 'Álvarez', 'Jiménez', 'Giménez', 'Corona', 'Herrera', 'Guardado', 'Montes', 'Pineda', 'Romo', 'Sánchez', 'Chávez', 'Martín', 'Antuna', 'Alvarado', 'Vásquez', 'Quiñones', 'Gutiérrez', 'Rodríguez']
+    },
+    // 🌎 North America (Generic for USA/Canada)
+    'North America': {
+        first: ['Christian', 'Weston', 'Giovanni', 'Tyler', 'Sergiño', 'Timothy', 'Yunus', 'Brenden', 'Matt', 'Walker', 'Miles', 'Antonee', 'Alphonso', 'Jonathan', 'Cyle', 'Ismaël', 'Stephen', 'Tajon', 'Richie', 'Kamal'],
+        last: ['Pulisic', 'McKennie', 'Reyna', 'Adams', 'Dest', 'Weah', 'Musah', 'Aaronson', 'Turner', 'Zimmerman', 'Robinson', 'Davies', 'David', 'Larin', 'Koné', 'Eustáquio', 'Buchanan', 'Laryea', 'Miller', 'Osorio']
+    },
+    // 🌴 Caribbean (Generic)
+    'Caribbean': {
+        first: ['Leon', 'Michail', 'Bobby', 'Andre', 'Demarai', 'Ethan', 'Damion', 'Shamar', 'Kemar', 'Dexter', 'Levi', 'Kaheem', 'Reon', 'Daniel', 'Joevin', 'Aubrey', 'Omari', 'Kevon', 'Nathaniel', 'Sheraldo'],
+        last: ['Bailey', 'Antonio', 'Decordova-Raid', 'Blake', 'Gray', 'Pinnock', 'Lowe', 'Nicholson', 'Lawrence', 'Lembikisa', 'Garcia', 'Parris', 'Moore', 'Phillips', 'Jones', 'David', 'Hutchinson', 'Lambert', 'Mendez-Laing', 'Bacuna']
+    },
+    // 🇦🇺 Australia (Uses mostly English names but can add specific ones)
+    'Australia': {
+        first: ['Mathew', 'Harry', 'Aaron', 'Jackson', 'Riley', 'Kye', 'Aziz', 'Martin', 'Mitchell', 'Craig', 'Ajdin', 'Jamie', 'Connor', 'Garang', 'Nestory', 'Marco', 'Bruno', 'Keanu', 'Cameron', 'Jordan'],
+        last: ['Ryan', 'Souttar', 'Mooy', 'Irvine', 'McGree', 'Rowles', 'Behich', 'Boyle', 'Duke', 'Goodwin', 'Hrustić', 'Maclaren', 'Metcalfe', 'Kuol', 'Irankunda', 'Tilio', 'Fornaroli', 'Baccus', 'Devlin', 'Bos']
     }
 };
 
 // --- REAL WORLD TACTICAL PROFILES ---
 export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
-    "Istanbul Yellows": {
-        formation: TacticType.T_4231,
-        style: 'HighPress',
-        aggression: 'Aggressive',
-        tempo: 'Fast',
-        width: 'Wide',
-        defensiveLine: 'High',
-        passingStyle: 'Direct',
-        marking: 'Zonal'
-    },
-    "Galata Lions": {
-        formation: TacticType.T_433,
-        style: 'Possession',
+    // Default Tactic (Fallback)
+    "Default": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
         aggression: 'Normal',
         tempo: 'Normal',
-        width: 'Wide',
+        width: 'Balanced',
         defensiveLine: 'Balanced',
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Besiktas Eagles": {
-        formation: TacticType.T_4231,
-        style: 'HighPress',
-        aggression: 'Aggressive',
-        tempo: 'Normal',
-        width: 'Balanced',
-        defensiveLine: 'Balanced',
-        passingStyle: 'Direct',
-        marking: 'Man Mark'
-    },
-    "Trabzon Storm": {
-        formation: TacticType.T_433,
+
+    "Aba Elephants": {
+        formation: TacticType.T_442,
         style: 'Counter',
         aggression: 'Normal',
         tempo: 'Fast',
@@ -352,25 +746,396 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Direct',
         marking: 'Zonal'
     },
-    "Basak City": {
-        formation: TacticType.T_4231,
-        style: 'Possession',
-        aggression: 'Safe',
-        tempo: 'Slow',
+    "Abidjan Yellows": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
         width: 'Balanced',
-        defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Konya Green": {
+    "Adelaide United": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Fateh": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Fayha": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Al-Hazem": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Khaleej": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Kholood": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Najma": {
         formation: TacticType.T_442,
-        style: 'Defensive',
-        aggression: 'Aggressive',
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Al-Okhdood": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Al-Qadsiah": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Riyadh": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Al-Taawoun": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Alajuelense": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Alanya Sun": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Algiers Reds": {
+        formation: TacticType.T_4141,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Algiers Union": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "AmaZulu FC": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Angers Black-Whites": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "London Cannons": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "AS FAR": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Birmingham Villans": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bergamo United": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Atlanta Stripes": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Atlántico Blue Stars": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
         tempo: 'Slow',
         width: 'Narrow',
         defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Auckland FC": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Augsburg Falcons": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
         passingStyle: 'Direct',
-        marking: 'Man Mark'
+        marking: 'Zonal'
+    },
+    "Austin Verdes": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "AJ Burgundy": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Avellaneda Devils": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Avellaneda Racers": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Avispa Fukuoka": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+
+    "Apex Predators": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Omega Strikers": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Istanbul Yellows": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Galata Lions": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Istanbul Eagles": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Trabzon Storm": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Basak City": {
+        formation: TacticType.T_442,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Konya Green": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
     },
     "Rize Tea": {
         formation: TacticType.T_433,
@@ -385,7 +1150,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
     "Samsun Red": {
         formation: TacticType.T_4231,
         style: 'HighPress',
-        aggression: 'Aggressive',
+        aggression: 'Normal',
         tempo: 'Fast',
         width: 'Wide',
         defensiveLine: 'Balanced',
@@ -393,47 +1158,17 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         marking: 'Zonal'
     },
     "Antep Falcons": {
-        formation: TacticType.T_532,
-        style: 'ParkTheBus',
-        aggression: 'Aggressive',
-        tempo: 'Slow',
-        width: 'Narrow',
-        defensiveLine: 'Deep',
-        passingStyle: 'LongBall',
-        marking: 'Man Mark'
-    },
-    "Alanya Sun": {
         formation: TacticType.T_4231,
-        style: 'Possession',
+        style: 'Balanced',
         aggression: 'Normal',
         tempo: 'Normal',
-        width: 'Wide',
-        defensiveLine: 'Balanced',
-        passingStyle: 'Short',
-        marking: 'Zonal'
-    },
-    "Antalya Scorpions": {
-        formation: TacticType.T_433,
-        style: 'Counter',
-        aggression: 'Normal',
-        tempo: 'Fast',
-        width: 'Wide',
-        defensiveLine: 'Balanced',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Eyup Violet": {
         formation: TacticType.T_4231,
-        style: 'Possession',
-        aggression: 'Normal',
-        tempo: 'Normal',
-        width: 'Balanced',
-        defensiveLine: 'Balanced',
-        passingStyle: 'Short',
-        marking: 'Zonal'
-    },
-    "Ankara Youth": {
-        formation: TacticType.T_442,
         style: 'Balanced',
         aggression: 'Normal',
         tempo: 'Normal',
@@ -442,10 +1177,20 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Goztepe Goz": {
+    "Ankara Youth": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Izmir Goz": {
         formation: TacticType.T_4231,
         style: 'Counter',
-        aggression: 'Aggressive',
+        aggression: 'Normal',
         tempo: 'Normal',
         width: 'Wide',
         defensiveLine: 'Balanced',
@@ -453,13 +1198,13 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         marking: 'Zonal'
     },
     "Karagumruk Black": {
-        formation: TacticType.T_433,
-        style: 'Possession',
+        formation: TacticType.T_4231,
+        style: 'Balanced',
         aggression: 'Normal',
         tempo: 'Normal',
-        width: 'Wide',
-        defensiveLine: 'High',
-        passingStyle: 'Short',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Kasimpasa Navy": {
@@ -474,15 +1219,191 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
     },
     "Kayseri Stars": {
         formation: TacticType.T_4231,
-        style: 'Defensive',
-        aggression: 'Aggressive',
+        style: 'Balanced',
+        aggression: 'Normal',
         tempo: 'Normal',
-        width: 'Narrow',
-        defensiveLine: 'Balanced',
+        width: 'Wide',
+        defensiveLine: 'Deep',
         passingStyle: 'Mixed',
-        marking: 'Man Mark'
+        marking: 'Zonal'
     },
     "Kocaeli Gulf": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    // Global Giants Tactics
+    "Manchester Skyblues": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Merseyside Reds": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Madrid Blancos": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Catalonia Blau": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    // Italy Giants
+    "Inter Lombardia": {
+        formation: TacticType.T_352,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Milano Devils": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Piemonte Zebras": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Napoli Blues": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    // Germany Giants
+    "Munich Red": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    // France Giants
+    "Paris Red-Blue": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+
+    // Alphabetically Added Teams (A-D)
+    "Daejeon Hana Citizen": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Dallas Burn": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Damac FC": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Dammam Commandos": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Dar Citizens": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Dar Lions": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Desert Miners": {
         formation: TacticType.T_442,
         style: 'ParkTheBus',
         aggression: 'Normal',
@@ -491,35 +1412,3908 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         defensiveLine: 'Deep',
         passingStyle: 'LongBall',
         marking: 'Zonal'
+    },
+    "Difaâ El Jadidi": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Doha Sadd": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Westphalia Yellows": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Banfield Drills": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Bank El Ahly": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Barbados Royal Club": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Barracas Truckers": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Barranquilla Sharks": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bucaramanga Leopards": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Bucheon FC 1995": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bologna Redblues": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "London Blue Lions": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Chicago Firemen": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Chillan Red": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cibao Orange FC": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cincinnati Royals": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Citadel Saints": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "City of Melbourne": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cleopatra FC": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Club Africain": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "COD Meknès": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Columbus Crew": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Como Lakers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Concepción Purple": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Concepción Uni": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Coquimbo Pirates": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Cordoba Glory": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cordoba Pirates": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Cordoba Tall": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Crystal Glaziers": {
+        formation: TacticType.T_343,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Cucuta Border": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Curitiba Greens": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Curitiba Storm": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "San Jose Purple": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Alajuela Lions": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Heredia Red-Yellow": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cartago Blues": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "San Carlos Bulls": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "San Isidro Warriors": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Puntarenas Sharks": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Sporting Jose": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Leverkusen Red": {
+        formation: TacticType.T_343,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Liberia Gold": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Guadalupe Blue": {
+        formation: TacticType.T_4231,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Central Coast Mariners": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cerezo Osaka": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Challengers United": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Chapecó Eagles": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Charlotte Crowns": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Atlantico Blue Stars": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Augsburg FC": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Belém Lions": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Belo Horizonte Cruisers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Belo Horizonte Miners": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Belvedere Blue": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bilbao Lions": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bizerte Sharks": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bochum Blue": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Boedo Saints": {
+        formation: TacticType.T_4231,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Bogotá Blues": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bogotá Cardinals": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bogotá Fort": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bragança Bulls": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bremen River": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Brest Pirates": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Brighton Seagulls": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Brisbane Roar": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Buenos Aires Millionaires": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Buenos Aires Storm": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Buriram Thunder": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cagliari Islanders": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Cairo Knights": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cairo Red Devils": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Calera Red": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Cali Devils": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cali Sugar": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Canary Yellows": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cape Town City": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Casablanca Eagles": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Casablanca Reds": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Castilla Violet": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cavalier Town FC": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Cavaly SC": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Antalya Scorpions": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "El Gouna": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "El Masry": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "El Mokawloon": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Enppi": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Espanyol Parrots": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Fagiano Okayama": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "FC Anyang": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "FC Tokyo": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Florence Viola": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Frankfurt Eagles": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Freiburg Forest": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "FUS Rabat": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Galaxy Stars": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Gamba Osaka": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Gangwon FC": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Gauchos Gold": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Genoa Griffins": {
+        formation: TacticType.T_352,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Ghazl El Mahalla": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Gimcheon Sangmu": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Girona Reds": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Giza Pyramids": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Gladbach Foals": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Golden Arrows": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Guadalajara Foxes": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Guadalajara Goats": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Guyana Amazon FC": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Gwangju FC": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Lancashire Clarets": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Merseyside Blues": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "South Madrid Blues": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "West London Whites": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+
+    // Alphabetically Added Teams (I-K)
+    "Ibague Gold": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Incheon United": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+
+    "Ismaily SC": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Ittihad Alexandria": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Jardines Striped": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Jeddah Green": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Jeddah Tigers": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "JEF United Chiba": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Jeju SK": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Jeonju Motors": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Juarez Braves": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Junin Warriors": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+
+    "Kahraba Ismailia": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Kansas City Wizards": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+
+    "Kashima Antlers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kashiwa Reysol": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+
+    // Additional Teams (K-L)
+    "Kawasaki Front": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kingston Bay United": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Kobe Crimsons": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Cathedral City": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kyoto Sanga": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "La Boca Xeneizes": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "La Plata Lions": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "La Plata Wolves": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Laguna Warriors": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Lanus Granate": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Latium Eagles": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Lecce Wolves": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Yorkshire Whites": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Leipzig Bulls": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Lens Gold": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Leon Emeralds": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kolkata Mariners": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Mumbai Islanders": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "East Bengal Torch": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kerala Tuskers": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Goa Gaurs": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bangalore Blues": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Odisha Juggernauts": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Chennai Titans": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Highland United": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Steel City Red": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Punjab Lions": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Kolkata Black-White": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Delhi Capital": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Varanasi Holy": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Harras El Hodoud": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Hassania Agadir": {
+        formation: TacticType.T_4141,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Heidenheim Red-Blue": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Hiroshima Archers": {
+        formation: TacticType.T_343,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Hoffenheim FC": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Houston Space": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Lille Dogs": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Limache Red": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Los Angeles Gold": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Lubumbashi Ravens": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+
+    // Additional Teams (Y-Z)
+    "Yellow Submarines": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Safe',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Yokohama Mariners": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Zed FC": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+
+    // Additional Teams (V-W)
+    "WS Wanderers": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "West Midlands Wolves": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Wolfsburg Green": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Weymouth Wales FC": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "East London Hammers": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Western United": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Western Tigers SC": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Wellington Phoenix": {
+        formation: TacticType.T_442,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Wadi Degla": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "V-Varen Nagasaki": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Vitoria Foxes": {
+        formation: TacticType.T_4231,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Viña Gold": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Villa Albiceleste": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Vigo Sky Blues": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Victoria Tigers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Verona Mastiffs": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Venice Gondoliers": {
+        formation: TacticType.T_352,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Velez Fort": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Varela Hawks": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Vancouver Village": {
+        formation: TacticType.T_343,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Vallecano Lightning": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Valencia Bats": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+
+    // Additional Teams (T-U)
+    "Bardo Green": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Beja Storks": {
+        formation: TacticType.T_451,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Ben Guerdane Riders": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Berlin Iron": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Esperance Tunis": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Gabes Oasis": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kairouan Historic": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Marsa Beach": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Metlaoui Mines": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Monastir Blue": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "North London Whites": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Omrane Build": {
+        formation: TacticType.T_451,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Sfax Zebra": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Soliman Future": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Sousse Stars": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "TS Galaxy": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Toronto Reds": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Toulouse Violets": {
+        formation: TacticType.T_343,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Trinbago Riders FC": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tucuman Giants": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Tunis Gold": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tunis Red-Whites": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Tunja Checkers": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Udine Friuli": {
+        formation: TacticType.T_352,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Ulsan Tigers": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Union Touarga": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Urawa Reds": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Zarzis Olive": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tokyo Verdy": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Toluca Devils": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Torino Bulls": {
+        formation: TacticType.T_352,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "SuperSport United": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Sydney Sky Blues": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tala'ea El Gaish": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Talcahuano Steel": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Tehran Reds": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tijuana Dogs": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Lyon Kids": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+
+    // Additional Teams (S-Range)
+    "Wearside Black Cats": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Stuttgart White-Reds": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Alsace Blue": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Hamburg Pirates": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Stellenbosch FC": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "St. Lucia Kings FC": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "St. Louis Spirit": {
+        formation: TacticType.T_442,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Soweto Chiefs": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Smouha": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Shimizu S-Pulse": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Shanghai Port": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Seville GreenWhites": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Nervion Red-Whites": {
+        formation: TacticType.T_442,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Serena Garnet": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Seoul City": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Sekhukhune United": {
+        formation: TacticType.T_451,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Seattle Emeralds": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Sayago Green": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Sassuolo Greenblacks": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Saprissa": {
+        formation: TacticType.T_343,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "São Paulo Warriors": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "São Paulo Tigers": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "São Paulo Palms": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    }
+    ,
+
+    // Additional Teams (S-T Batch + God Mode)
+    "Santos Beach": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Santiago Chiefs": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Santiago Crusaders": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Santiago Scholars": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Santiago Green": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Santiago Tricolor": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Santiago Railways": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    }
+    ,
+
+    // Additional Teams (R-S Batch)
+    "Santa Fe Union": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Sanfrecce Hiroshima": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "San Sebastian Blue": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "San Luis Athletics": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "San Juan Strikers": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "San Jose Quakes": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Saint-Green": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Saavedra Squids": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Salvador Victory": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Salvador Bay": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Salt Lake Royals": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Rosario Lepers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Short',
+        marking: 'ManToMan'
+    },
+    "Rosario Canallas": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Roma Gladiators": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    }
+    ,
+
+    // Additional Teams (P-R Batch - Filtered)
+    "Queretaro Roosters": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Puebla Sashes": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Pretoria Brazilians": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Polokwane City": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Pohang Steelers": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Philadelphia Union": {
+        formation: TacticType.T_442,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Prado Bohemians": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Porto Alegre Reds": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Porto Alegre Blues": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Portland Timbers": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Port of Spain Warriors": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Port-au-Prince AC": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Riyadh Youth": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Riyadh Knights": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Riyadh Blue Waves": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Rionegro Eagles": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Rio Waves": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Rio Star": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Rio Sailors": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Rio Flames": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Riestra Energizers": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Rancagua Celeste": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Brittany Red": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    }
+    ,
+
+    // Additional Teams (O-Z Final Batch - Heavy Filter)
+    "Orlando Lions": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Orange Berkane": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "O&M University": {
+        formation: TacticType.T_541,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Olympic Safi": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Petrojet": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Perth Glory": {
+        formation: TacticType.T_442,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Pereira Wolves": {
+        formation: TacticType.T_352,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Pedrenses Blue": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Paternal Bugs": {
+        formation: TacticType.T_343,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Pasto Volcano": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'Zonal'
+    },
+    "Parque Violet": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Parma Crusaders": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Paris Blue": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Pamplona Bulls": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Palermo RedBlue": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Pachuca Gophers": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Principality Red": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Pyramids FC": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Reims Royals": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Riviera Eagles": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Forest Archers": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "South Coast Cherries": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Soweto Pirates": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Sydney FC": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Tyneside Magpies": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Urawa Red Diamonds": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Vissel Kobe": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "West London Bees": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Yokohama F. Marinos": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    }
+    ,
+
+    // Additional Teams (M-N Batch)
+    "Modern Sport": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Mito HollyHock": {
+        formation: TacticType.T_442,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Mirassol Suns": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Miami Vice": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Mexico Eagles": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Mexico City Pumas": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Monza Speed": {
+        formation: TacticType.T_352,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'ManToMan'
+    },
+    "Montreal Impact": {
+        formation: TacticType.T_343,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Montpellier Orange": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Montevideo Tricolor": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Montevideo Tailors": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Montevideo Pioneers": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Montevideo LightBlue": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Montevideo Coal": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Monterrey Tigers": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Monterrey Rays": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Montego Bay Waves": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Nagoya Grampus": {
+        formation: TacticType.T_343,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Nantes Yellows": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Nashville Music": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Necaxa Lightning": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "NEOM SC": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "New York City Blue": {
+        formation: TacticType.T_433,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "New York Energy": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Newcastle Jets": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    }
+    ,
+
+    // FINAL 29 TEAMS - Completed!
+    "Bogota Blues": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Bogota Cardinals": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Bogota Fort": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Concepcion Purple": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Concepcion Uni": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Hoffen Blue": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Mainz Carnival": {
+        formation: TacticType.T_343,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Mallorca Islanders": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Manchester Devils": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Marseille Blue": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Madrid Indios": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Ismaily": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Maghreb de Fès": {
+        formation: TacticType.T_4231,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Jeju United": {
+        formation: TacticType.T_4231,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Kawasaki Frontale": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Machida Zelvia": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Balanced',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Macarthur FC": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Melbourne City": {
+        formation: TacticType.T_433,
+        style: 'WingPlay',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Short',
+        marking: 'Zonal'
+    },
+    "Melbourne Victory": {
+        formation: TacticType.T_4231,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Manizales White": {
+        formation: TacticType.T_532,
+        style: 'ParkTheBus',
+        aggression: 'Normal',
+        tempo: 'Slow',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'LongBall',
+        marking: 'ManToMan'
+    },
+    "Mar del Plata Sharks": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Medellin Green": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Medellin Red": {
+        formation: TacticType.T_433,
+        style: 'HighPress',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'High',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Melo Blue": {
+        formation: TacticType.T_442,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Mendoza Blues": {
+        formation: TacticType.T_442,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Mendoza Wines": {
+        formation: TacticType.T_4231,
+        style: 'Balanced',
+        aggression: 'Normal',
+        tempo: 'Normal',
+        width: 'Balanced',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Mixed',
+        marking: 'Zonal'
+    },
+    "Maldonado RedGreen": {
+        formation: TacticType.T_433,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
+    },
+    "Mazatlan Cannons": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Narrow',
+        defensiveLine: 'Deep',
+        passingStyle: 'Direct',
+        marking: 'ManToMan'
+    },
+    "Mexico City Cement": {
+        formation: TacticType.T_532,
+        style: 'Counter',
+        aggression: 'Normal',
+        tempo: 'Fast',
+        width: 'Wide',
+        defensiveLine: 'Balanced',
+        passingStyle: 'Direct',
+        marking: 'Zonal'
     }
 };
 
 export const LEAGUE_PRESETS = [
     {
-        id: 'tr', name: 'Süper Lig', country: 'Turkey', foreignPlayerChance: 0.5, playerNationality: 'Turkey',
+        id: 'tr', name: 'Süper Lig', country: 'Turkey', foreignPlayerChance: 0.5, playerNationality: 'Turkey', matchFormat: 'double-round',
         realTeams: [
-            { name: "Galata Lions", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 8000, budget: 50000000, stadiumCapacity: 52000 },
-            { name: "Istanbul Yellows", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7800, budget: 45000000, stadiumCapacity: 47000 },
-            { name: "Besiktas Eagles", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 7600, budget: 35000000, stadiumCapacity: 42000 },
-            { name: "Trabzon Storm", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 7000, budget: 25000000, stadiumCapacity: 41000 },
-            { name: "Basak City", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 6500, budget: 20000000, stadiumCapacity: 17000 },
-            { name: "Samsun Red", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 15000000, stadiumCapacity: 33000 },
-            { name: "Konya Green", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 12000000, stadiumCapacity: 42000 },
-            { name: "Kasimpasa Navy", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5800, budget: 10000000, stadiumCapacity: 14000 },
-            { name: "Rize Tea", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 5800, budget: 10000000, stadiumCapacity: 15000 },
-            { name: "Antep Falcons", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5700, budget: 9000000, stadiumCapacity: 35000 },
-            { name: "Antalya Scorpions", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5900, budget: 11000000, stadiumCapacity: 33000 },
-            { name: "Kayseri Stars", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5700, budget: 9500000, stadiumCapacity: 32000 },
-            { name: "Alanya Sun", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 5800, budget: 10000000, stadiumCapacity: 10000 },
-            { name: "Goztepe Goz", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5800, budget: 10000000, stadiumCapacity: 20000 },
-            { name: "Eyup Violet", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5600, budget: 8500000, stadiumCapacity: 5000 },
-            { name: "Karagumruk Black", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5600, budget: 9000000, stadiumCapacity: 15000 },
-            { name: "Kocaeli Gulf", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 5500, budget: 8000000, stadiumCapacity: 34000 },
-            { name: "Ankara Youth", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5500, budget: 8000000, stadiumCapacity: 19000 }
+            { name: "Galata Lions", city: "Istanbul", primaryColor: "#A90432", secondaryColor: "#FDB912", reputation: 7100, budget: 65000000, stadiumCapacity: 52000 },
+            { name: "Istanbul Yellows", city: "Istanbul", primaryColor: "#002d72", secondaryColor: "#f4e04d", reputation: 7000, budget: 60000000, stadiumCapacity: 47000 },
+            { name: "Istanbul Eagles", city: "Istanbul", primaryColor: "#000000", secondaryColor: "#ffffff", reputation: 6800, budget: 45000000, stadiumCapacity: 42000 },
+            { name: "Trabzon Storm", city: "Trabzon", primaryColor: "#800000", secondaryColor: "#87CEEB", reputation: 6200, budget: 30000000, stadiumCapacity: 41000 },
+            { name: "Basak City", city: "Istanbul", primaryColor: "#E25920", secondaryColor: "#182A4A", reputation: 5800, budget: 25000000, stadiumCapacity: 17000 },
+            { name: "Samsun Red", city: "Samsun", primaryColor: "#CC0000", secondaryColor: "#FFFFFF", reputation: 5400, budget: 18000000, stadiumCapacity: 33000 },
+            { name: "Konya Green", city: "Konya", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 5200, budget: 15000000, stadiumCapacity: 42000 },
+            { name: "Kasimpasa Navy", city: "Istanbul", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5000, budget: 12000000, stadiumCapacity: 14000 },
+            { name: "Rize Tea", city: "Rize", primaryColor: "#008000", secondaryColor: "#0000FF", reputation: 4900, budget: 12000000, stadiumCapacity: 15000 },
+            { name: "Antep Falcons", city: "Gaziantep", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4800, budget: 11000000, stadiumCapacity: 35000 },
+            { name: "Antalya Scorpions", city: "Antalya", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5100, budget: 14000000, stadiumCapacity: 33000 },
+            { name: "Kayseri Stars", city: "Kayseri", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 4800, budget: 11000000, stadiumCapacity: 32000 },
+            { name: "Alanya Sun", city: "Alanya", primaryColor: "#FFA500", secondaryColor: "#008000", reputation: 4900, budget: 12000000, stadiumCapacity: 10000 },
+            { name: "Izmir Goz", city: "Izmir", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 5200, budget: 15000000, stadiumCapacity: 20000 },
+            { name: "Eyup Violet", city: "Istanbul", primaryColor: "#800080", secondaryColor: "#FFFF00", reputation: 5000, budget: 20000000, stadiumCapacity: 14500 }, // High budget scaling
+            { name: "Karagumruk Black", city: "Istanbul", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4700, budget: 10000000, stadiumCapacity: 15000 },
+            { name: "Kocaeli Gulf", city: "Kocaeli", primaryColor: "#008000", secondaryColor: "#000000", reputation: 4600, budget: 9000000, stadiumCapacity: 34000 },
+            { name: "Ankara Youth", city: "Ankara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4500, budget: 9000000, stadiumCapacity: 19000 }
         ]
     },
     {
-        id: 'en', name: 'Premier League', country: 'England', foreignPlayerChance: 0.7, playerNationality: 'England',
+        id: 'en', name: 'Premier League', country: 'England', foreignPlayerChance: 0.7, playerNationality: 'England', matchFormat: 'double-round',
         realTeams: [
             { name: "Merseyside Reds", city: "Liverpool", primaryColor: "#C8102E", secondaryColor: "#F6EB61", reputation: 9000, budget: 150000000, stadiumCapacity: 61000 },
             { name: "Manchester Skyblues", city: "Manchester", primaryColor: "#6CABDD", secondaryColor: "#1C2C5B", reputation: 9200, budget: 180000000, stadiumCapacity: 53000 },
@@ -528,73 +5322,73 @@ export const LEAGUE_PRESETS = [
             { name: "Manchester Devils", city: "Manchester", primaryColor: "#DA291C", secondaryColor: "#FBE122", reputation: 8800, budget: 140000000, stadiumCapacity: 75000 },
             { name: "North London Whites", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#132257", reputation: 8500, budget: 90000000, stadiumCapacity: 62000 },
             { name: "Tyneside Magpies", city: "Newcastle", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 8400, budget: 110000000, stadiumCapacity: 52000 },
-            { name: "Birmingham Villans", city: "Birmingham", primaryColor: "#670E36", secondaryColor: "#95B600", reputation: 8000, budget: 70000000, stadiumCapacity: 42000 },
-            { name: "East London Hammers", city: "London", primaryColor: "#7A263A", secondaryColor: "#1BB1E7", reputation: 7800, budget: 60000000, stadiumCapacity: 62000 },
-            { name: "Brighton Seagulls", city: "Brighton", primaryColor: "#0057B8", secondaryColor: "#FFFFFF", reputation: 7700, budget: 55000000, stadiumCapacity: 32000 },
-            { name: "West Midlands Wolves", city: "Wolverhampton", primaryColor: "#FDB913", secondaryColor: "#000000", reputation: 7600, budget: 50000000, stadiumCapacity: 32000 },
-            { name: "Merseyside Blues", city: "Liverpool", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 7600, budget: 45000000, stadiumCapacity: 40000 },
-            { name: "West London Whites", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 40000000, stadiumCapacity: 25000 },
-            { name: "West London Bees", city: "London", primaryColor: "#E30613", secondaryColor: "#FFFFFF", reputation: 7400, budget: 35000000, stadiumCapacity: 17000 },
-            { name: "Crystal Glaziers", city: "London", primaryColor: "#1B458F", secondaryColor: "#C4122E", reputation: 7400, budget: 35000000, stadiumCapacity: 26000 },
-            { name: "Forest Archers", city: "Nottingham", primaryColor: "#DD0000", secondaryColor: "#FFFFFF", reputation: 7300, budget: 30000000, stadiumCapacity: 30000 },
-            { name: "South Coast Cherries", city: "Bournemouth", primaryColor: "#DA291C", secondaryColor: "#000000", reputation: 7200, budget: 28000000, stadiumCapacity: 11000 },
-            { name: "Wearside Black Cats", city: "Sunderland", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 7100, budget: 25000000, stadiumCapacity: 49000 },
-            { name: "Yorkshire Whites", city: "Leeds", primaryColor: "#FFFFFF", secondaryColor: "#003399", reputation: 7200, budget: 30000000, stadiumCapacity: 37000 },
-            { name: "Lancashire Clarets", city: "Burnley", primaryColor: "#6C1D45", secondaryColor: "#99D6EA", reputation: 7000, budget: 22000000, stadiumCapacity: 22000 }
+            { name: "Birmingham Villans", city: "Birmingham", primaryColor: "#670E36", secondaryColor: "#95B600", reputation: 7500, budget: 70000000, stadiumCapacity: 42000 },
+            { name: "East London Hammers", city: "London", primaryColor: "#7A263A", secondaryColor: "#1BB1E7", reputation: 7200, budget: 60000000, stadiumCapacity: 62000 },
+            { name: "Brighton Seagulls", city: "Brighton", primaryColor: "#0057B8", secondaryColor: "#FFFFFF", reputation: 7100, budget: 55000000, stadiumCapacity: 32000 },
+            { name: "West Midlands Wolves", city: "Wolverhampton", primaryColor: "#FDB913", secondaryColor: "#000000", reputation: 6800, budget: 50000000, stadiumCapacity: 32000 },
+            { name: "Merseyside Blues", city: "Liverpool", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 6800, budget: 45000000, stadiumCapacity: 40000 },
+            { name: "West London Whites", city: "London", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 6600, budget: 40000000, stadiumCapacity: 25000 },
+            { name: "West London Bees", city: "London", primaryColor: "#E30613", secondaryColor: "#FFFFFF", reputation: 6500, budget: 35000000, stadiumCapacity: 17000 },
+            { name: "Crystal Glaziers", city: "London", primaryColor: "#1B458F", secondaryColor: "#C4122E", reputation: 6500, budget: 35000000, stadiumCapacity: 26000 },
+            { name: "Forest Archers", city: "Nottingham", primaryColor: "#DD0000", secondaryColor: "#FFFFFF", reputation: 6400, budget: 30000000, stadiumCapacity: 30000 },
+            { name: "South Coast Cherries", city: "Bournemouth", primaryColor: "#DA291C", secondaryColor: "#000000", reputation: 6300, budget: 28000000, stadiumCapacity: 11000 },
+            { name: "Wearside Black Cats", city: "Sunderland", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 6000, budget: 25000000, stadiumCapacity: 49000 },
+            { name: "Yorkshire Whites", city: "Leeds", primaryColor: "#FFFFFF", secondaryColor: "#003399", reputation: 6200, budget: 30000000, stadiumCapacity: 37000 },
+            { name: "Lancashire Clarets", city: "Burnley", primaryColor: "#6C1D45", secondaryColor: "#99D6EA", reputation: 6000, budget: 22000000, stadiumCapacity: 22000 }
         ]
     },
     {
-        id: 'es', name: 'La Liga', country: 'Spain', foreignPlayerChance: 0.6, playerNationality: 'Spain',
+        id: 'es', name: 'La Liga', country: 'Spain', foreignPlayerChance: 0.6, playerNationality: 'Spain', matchFormat: 'double-round',
         realTeams: [
             { name: "Madrid Blancos", city: "Madrid", primaryColor: "#FFFFFF", secondaryColor: "#FEBE10", reputation: 9300, budget: 170000000, stadiumCapacity: 81044 },
             { name: "Catalonia Blau", city: "Barcelona", primaryColor: "#A50044", secondaryColor: "#004D98", reputation: 9100, budget: 110000000, stadiumCapacity: 99354 },
-            { name: "Madrid Indios", city: "Madrid", primaryColor: "#CB3524", secondaryColor: "#1D2855", reputation: 8800, budget: 90000000, stadiumCapacity: 68456 },
-            { name: "Nervion Red-Whites", city: "Seville", primaryColor: "#FFFFFF", secondaryColor: "#D4001F", reputation: 8200, budget: 60000000, stadiumCapacity: 43883 },
-            { name: "Valencia Bats", city: "Valencia", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 8000, budget: 50000000, stadiumCapacity: 49430 },
-            { name: "Mallorca Islanders", city: "Palma", primaryColor: "#E20613", secondaryColor: "#000000", reputation: 7500, budget: 30000000, stadiumCapacity: 23142 },
-            { name: "Girona Reds", city: "Girona", primaryColor: "#CE1126", secondaryColor: "#FFFFFF", reputation: 7800, budget: 40000000, stadiumCapacity: 13450 },
-            { name: "Vallecano Lightning", city: "Madrid", primaryColor: "#FFFFFF", secondaryColor: "#CE1126", reputation: 7400, budget: 25000000, stadiumCapacity: 14708 },
-            { name: "Vitoria Foxes", city: "Vitoria-Gasteiz", primaryColor: "#005EB8", secondaryColor: "#FFFFFF", reputation: 7300, budget: 22000000, stadiumCapacity: 19840 },
-            { name: "San Sebastian Blue", city: "San Sebastian", primaryColor: "#0067B1", secondaryColor: "#FFFFFF", reputation: 8300, budget: 65000000, stadiumCapacity: 39500 },
-            { name: "Bilbao Lions", city: "Bilbao", primaryColor: "#EE2523", secondaryColor: "#FFFFFF", reputation: 8400, budget: 70000000, stadiumCapacity: 53289 },
-            { name: "Seville GreenWhites", city: "Seville", primaryColor: "#0BB363", secondaryColor: "#FFFFFF", reputation: 8100, budget: 55000000, stadiumCapacity: 60721 },
-            { name: "Yellow Submarines", city: "Villarreal", primaryColor: "#F5E216", secondaryColor: "#005187", reputation: 8200, budget: 60000000, stadiumCapacity: 23500 },
-            { name: "Vigo Sky Blues", city: "Vigo", primaryColor: "#8AC3EE", secondaryColor: "#FFFFFF", reputation: 7600, budget: 35000000, stadiumCapacity: 29000 },
-            { name: "Pamplona Bulls", city: "Pamplona", primaryColor: "#DA291C", secondaryColor: "#16315C", reputation: 7500, budget: 30000000, stadiumCapacity: 23576 },
-            { name: "South Madrid Blues", city: "Getafe", primaryColor: "#005999", secondaryColor: "#FFFFFF", reputation: 7400, budget: 28000000, stadiumCapacity: 17000 },
-            { name: "Espanyol Parrots", city: "Barcelona", primaryColor: "#007FC8", secondaryColor: "#FFFFFF", reputation: 7500, budget: 32000000, stadiumCapacity: 40000 },
-            { name: "Challengers United", city: "Spain", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000, stadiumCapacity: 15000 },
-            { name: "Canary Yellows", city: "Las Palmas", primaryColor: "#FFE400", secondaryColor: "#005BAC", reputation: 7200, budget: 18000000, stadiumCapacity: 32400 },
-            { name: "Castilla Violet", city: "Valladolid", primaryColor: "#6A0DAD", secondaryColor: "#FFFFFF", reputation: 7000, budget: 15000000, stadiumCapacity: 28012 }
+            { name: "Madrid Indios", city: "Madrid", primaryColor: "#CB3524", secondaryColor: "#1D2855", reputation: 8500, budget: 90000000, stadiumCapacity: 68456 },
+            { name: "Nervion Red-Whites", city: "Seville", primaryColor: "#FFFFFF", secondaryColor: "#D4001F", reputation: 7000, budget: 60000000, stadiumCapacity: 43883 },
+            { name: "Valencia Bats", city: "Valencia", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 6800, budget: 50000000, stadiumCapacity: 49430 },
+            { name: "Mallorca Islanders", city: "Palma", primaryColor: "#E20613", secondaryColor: "#000000", reputation: 6200, budget: 30000000, stadiumCapacity: 23142 },
+            { name: "Girona Reds", city: "Girona", primaryColor: "#CE1126", secondaryColor: "#FFFFFF", reputation: 6500, budget: 40000000, stadiumCapacity: 13450 },
+            { name: "Vallecano Lightning", city: "Madrid", primaryColor: "#FFFFFF", secondaryColor: "#CE1126", reputation: 6000, budget: 25000000, stadiumCapacity: 14708 },
+            { name: "Vitoria Foxes", city: "Vitoria-Gasteiz", primaryColor: "#005EB8", secondaryColor: "#FFFFFF", reputation: 5900, budget: 22000000, stadiumCapacity: 19840 },
+            { name: "San Sebastian Blue", city: "San Sebastian", primaryColor: "#0067B1", secondaryColor: "#FFFFFF", reputation: 7200, budget: 65000000, stadiumCapacity: 39500 },
+            { name: "Bilbao Lions", city: "Bilbao", primaryColor: "#EE2523", secondaryColor: "#FFFFFF", reputation: 7300, budget: 70000000, stadiumCapacity: 53289 },
+            { name: "Seville GreenWhites", city: "Seville", primaryColor: "#0BB363", secondaryColor: "#FFFFFF", reputation: 6900, budget: 55000000, stadiumCapacity: 60721 },
+            { name: "Yellow Submarines", city: "Villarreal", primaryColor: "#F5E216", secondaryColor: "#005187", reputation: 7100, budget: 60000000, stadiumCapacity: 23500 },
+            { name: "Vigo Sky Blues", city: "Vigo", primaryColor: "#8AC3EE", secondaryColor: "#FFFFFF", reputation: 6200, budget: 35000000, stadiumCapacity: 29000 },
+            { name: "Pamplona Bulls", city: "Pamplona", primaryColor: "#DA291C", secondaryColor: "#16315C", reputation: 6100, budget: 30000000, stadiumCapacity: 23576 },
+            { name: "South Madrid Blues", city: "Getafe", primaryColor: "#005999", secondaryColor: "#FFFFFF", reputation: 6000, budget: 28000000, stadiumCapacity: 17000 },
+            { name: "Espanyol Parrots", city: "Barcelona", primaryColor: "#007FC8", secondaryColor: "#FFFFFF", reputation: 6000, budget: 32000000, stadiumCapacity: 40000 },
+            { name: "Challengers United", city: "Spain", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 5800, budget: 15000000, stadiumCapacity: 15000 },
+            { name: "Canary Yellows", city: "Las Palmas", primaryColor: "#FFE400", secondaryColor: "#005BAC", reputation: 5900, budget: 18000000, stadiumCapacity: 32400 },
+            { name: "Castilla Violet", city: "Valladolid", primaryColor: "#6A0DAD", secondaryColor: "#FFFFFF", reputation: 5800, budget: 15000000, stadiumCapacity: 28012 }
         ]
     },
     {
-        id: 'it', name: 'Italian Calcio', country: 'Italy', foreignPlayerChance: 0.6, playerNationality: 'Italy',
+        id: 'it', name: 'Italian Calcio', country: 'Italy', foreignPlayerChance: 0.6, playerNationality: 'Italy', matchFormat: 'double-round',
         realTeams: [
             { name: "Inter Lombardia", city: "Milan", primaryColor: "#001EA6", secondaryColor: "#000000", reputation: 9000, budget: 95000000, stadiumCapacity: 75817 },
             { name: "Milano Devils", city: "Milan", primaryColor: "#FB090B", secondaryColor: "#000000", reputation: 8800, budget: 70000000, stadiumCapacity: 75817 },
             { name: "Piemonte Zebras", city: "Turin", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 9100, budget: 110000000, stadiumCapacity: 41507 },
-            { name: "Napoli Blues", city: "Naples", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 8600, budget: 60000000, stadiumCapacity: 54726 },
-            { name: "Roma Gladiators", city: "Rome", primaryColor: "#8E1F2F", secondaryColor: "#F0BC42", reputation: 8400, budget: 55000000, stadiumCapacity: 70634 },
-            { name: "Latium Eagles", city: "Rome", primaryColor: "#87D8F7", secondaryColor: "#FFFFFF", reputation: 8200, budget: 50000000, stadiumCapacity: 70634 },
-            { name: "Bergamo United", city: "Bergamo", primaryColor: "#000000", secondaryColor: "#005CAB", reputation: 8300, budget: 45000000, stadiumCapacity: 21747 },
-            { name: "Florence Viola", city: "Florence", primaryColor: "#482E92", secondaryColor: "#FFFFFF", reputation: 8000, budget: 40000000, stadiumCapacity: 43147 },
-            { name: "Bologna Redblues", city: "Bologna", primaryColor: "#A21C26", secondaryColor: "#1A2F48", reputation: 7800, budget: 30000000, stadiumCapacity: 36462 },
-            { name: "Torino Bulls", city: "Turin", primaryColor: "#8A1E03", secondaryColor: "#FFFFFF", reputation: 7600, budget: 25000000, stadiumCapacity: 27958 },
-            { name: "Sassuolo Greenblacks", city: "Sassuolo", primaryColor: "#00A752", secondaryColor: "#000000", reputation: 7400, budget: 20000000, stadiumCapacity: 21525 },
-            { name: "Udine Friuli", city: "Udine", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7200, budget: 18000000, stadiumCapacity: 25144 },
-            { name: "Genoa Griffins", city: "Genoa", primaryColor: "#A21C26", secondaryColor: "#001A4C", reputation: 7400, budget: 22000000, stadiumCapacity: 36599 },
-            { name: "Lecce Wolves", city: "Lecce", primaryColor: "#FFF200", secondaryColor: "#DA291C", reputation: 7000, budget: 15000000, stadiumCapacity: 31533 },
-            { name: "Verona Mastiffs", city: "Verona", primaryColor: "#003399", secondaryColor: "#FDB913", reputation: 7100, budget: 16000000, stadiumCapacity: 31045 },
-            { name: "Parma Crusaders", city: "Parma", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 7500, budget: 25000000, stadiumCapacity: 22352 },
-            { name: "Cagliari Islanders", city: "Cagliari", primaryColor: "#001A4C", secondaryColor: "#A21C26", reputation: 7100, budget: 18000000, stadiumCapacity: 16416 },
-            { name: "Como Lakers", city: "Como", primaryColor: "#003B7E", secondaryColor: "#FFFFFF", reputation: 7200, budget: 22000000, stadiumCapacity: 13602 },
-            { name: "Monza Speed", city: "Monza", primaryColor: "#F0F0F0", secondaryColor: "#E31837", reputation: 7000, budget: 16000000, stadiumCapacity: 15039 },
-            { name: "Venice Gondoliers", city: "Venice", primaryColor: "#FF6600", secondaryColor: "#006633", reputation: 6800, budget: 12000000, stadiumCapacity: 11150 }
+            { name: "Napoli Blues", city: "Naples", primaryColor: "#003090", secondaryColor: "#FFFFFF", reputation: 7800, budget: 60000000, stadiumCapacity: 54726 },
+            { name: "Roma Gladiators", city: "Rome", primaryColor: "#8E1F2F", secondaryColor: "#F0BC42", reputation: 7600, budget: 55000000, stadiumCapacity: 70634 },
+            { name: "Latium Eagles", city: "Rome", primaryColor: "#87D8F7", secondaryColor: "#FFFFFF", reputation: 7400, budget: 50000000, stadiumCapacity: 70634 },
+            { name: "Bergamo United", city: "Bergamo", primaryColor: "#000000", secondaryColor: "#005CAB", reputation: 7500, budget: 45000000, stadiumCapacity: 21747 },
+            { name: "Florence Viola", city: "Florence", primaryColor: "#482E92", secondaryColor: "#FFFFFF", reputation: 7000, budget: 40000000, stadiumCapacity: 43147 },
+            { name: "Bologna Redblues", city: "Bologna", primaryColor: "#A21C26", secondaryColor: "#1A2F48", reputation: 6500, budget: 30000000, stadiumCapacity: 36462 },
+            { name: "Torino Bulls", city: "Turin", primaryColor: "#8A1E03", secondaryColor: "#FFFFFF", reputation: 6200, budget: 25000000, stadiumCapacity: 27958 },
+            { name: "Sassuolo Greenblacks", city: "Sassuolo", primaryColor: "#00A752", secondaryColor: "#000000", reputation: 6000, budget: 20000000, stadiumCapacity: 21525 },
+            { name: "Udine Friuli", city: "Udine", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 5900, budget: 18000000, stadiumCapacity: 25144 },
+            { name: "Genoa Griffins", city: "Genoa", primaryColor: "#A21C26", secondaryColor: "#001A4C", reputation: 6200, budget: 22000000, stadiumCapacity: 36599 },
+            { name: "Lecce Wolves", city: "Lecce", primaryColor: "#FFF200", secondaryColor: "#DA291C", reputation: 5800, budget: 15000000, stadiumCapacity: 31533 },
+            { name: "Verona Mastiffs", city: "Verona", primaryColor: "#003399", secondaryColor: "#FDB913", reputation: 5800, budget: 16000000, stadiumCapacity: 31045 },
+            { name: "Parma Crusaders", city: "Parma", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 6100, budget: 25000000, stadiumCapacity: 22352 },
+            { name: "Cagliari Islanders", city: "Cagliari", primaryColor: "#001A4C", secondaryColor: "#A21C26", reputation: 5700, budget: 18000000, stadiumCapacity: 16416 },
+            { name: "Como Lakers", city: "Como", primaryColor: "#003B7E", secondaryColor: "#FFFFFF", reputation: 6000, budget: 22000000, stadiumCapacity: 13602 },
+            { name: "Monza Speed", city: "Monza", primaryColor: "#F0F0F0", secondaryColor: "#E31837", reputation: 5900, budget: 16000000, stadiumCapacity: 15039 },
+            { name: "Venice Gondoliers", city: "Venice", primaryColor: "#FF6600", secondaryColor: "#006633", reputation: 5800, budget: 12000000, stadiumCapacity: 11150 }
         ]
     },
     {
-        id: 'fr', name: 'Ligue 1', country: 'France', foreignPlayerChance: 0.7, playerNationality: 'France',
+        id: 'fr', name: 'Ligue 1', country: 'France', foreignPlayerChance: 0.7, playerNationality: 'France', matchFormat: 'double-round',
         realTeams: [
             { name: "Paris Red-Blue", city: "Paris", primaryColor: "#004170", secondaryColor: "#DA291C", reputation: 9100, budget: 200000000, stadiumCapacity: 47929 },
             { name: "Marseille Blue", city: "Marseille", primaryColor: "#FFFFFF", secondaryColor: "#00AEEF", reputation: 8500, budget: 60000000, stadiumCapacity: 67394 },
@@ -617,7 +5411,7 @@ export const LEAGUE_PRESETS = [
         ]
     },
     {
-        id: 'de', name: 'Bundesliga', country: 'Germany', foreignPlayerChance: 0.5, playerNationality: 'Germany',
+        id: 'de', name: 'Bundesliga', country: 'Germany', foreignPlayerChance: 0.5, playerNationality: 'Germany', matchFormat: 'double-round',
         realTeams: [
             { name: "Munich Red", city: "Munich", primaryColor: "#DC052D", secondaryColor: "#FFFFFF", reputation: 9100, budget: 130000000, stadiumCapacity: 75024 },
             { name: "Westphalia Yellows", city: "Dortmund", primaryColor: "#FDE100", secondaryColor: "#000000", reputation: 8600, budget: 85000000, stadiumCapacity: 81365 },
@@ -631,7 +5425,7 @@ export const LEAGUE_PRESETS = [
             { name: "Augsburg Falcons", city: "Augsburg", primaryColor: "#FFFFFF", secondaryColor: "#005D47", reputation: 7100, budget: 22000000, stadiumCapacity: 30660 },
             { name: "Cathedral City", city: "Cologne", primaryColor: "#FFFFFF", secondaryColor: "#D60019", reputation: 7300, budget: 30000000, stadiumCapacity: 50000 },
             { name: "Frankfurt Eagles", city: "Frankfurt", primaryColor: "#E1000F", secondaryColor: "#000000", reputation: 7800, budget: 45000000, stadiumCapacity: 51500 },
-            { name: "Gladbach Foals", city: "Mönchengladbach", primaryColor: "#FFFFFF", secondaryColor: "#00603C", reputation: 7600, budget: 38000000, stadiumCapacity: 54057 },
+            { name: "Gladbach Foals", city: "Moenchengladbach", primaryColor: "#FFFFFF", secondaryColor: "#00603C", reputation: 7600, budget: 38000000, stadiumCapacity: 54057 },
             { name: "Bremen River", city: "Bremen", primaryColor: "#00A86B", secondaryColor: "#FFFFFF", reputation: 7500, budget: 32000000, stadiumCapacity: 42100 },
             { name: "Mainz Carnival", city: "Mainz", primaryColor: "#C3002F", secondaryColor: "#FFFFFF", reputation: 7300, budget: 28000000, stadiumCapacity: 33305 },
             { name: "Hamburg Pirates", city: "Hamburg", primaryColor: "#8B4513", secondaryColor: "#FFFFFF", reputation: 7200, budget: 25000000, stadiumCapacity: 29546 },
@@ -700,17 +5494,406 @@ export const LEAGUE_PRESETS = [
             { name: "Mirassol Suns", city: "Mirassol", primaryColor: "#FDB913", secondaryColor: "#008000", reputation: 7000, budget: 15000000, stadiumCapacity: 15000 },
             { name: "Belém Lions", city: "Belém", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 6800, budget: 9000000, stadiumCapacity: 16200 }
         ]
+    },
+    {
+        id: 'na', name: 'North American League', country: 'USA', foreignPlayerChance: 0.5, playerNationality: 'North America',
+        logo: '/assets/logos/leagues/usa_logo.jpg',
+        matchFormat: 'single-round',
+        realTeams: [
+            { name: "Miami Vice", city: "Miami", primaryColor: "#F496BE", secondaryColor: "#000000", reputation: 6700, budget: 85000000, stadiumCapacity: 21000 }, // Messi & Friends
+            { name: "Galaxy Stars", city: "Los Angeles", primaryColor: "#FFFFFF", secondaryColor: "#00245D", reputation: 6000, budget: 55000000, stadiumCapacity: 27000 },
+            { name: "Seattle Emeralds", city: "Seattle", primaryColor: "#5D9732", secondaryColor: "#0033A0", reputation: 5800, budget: 40000000, stadiumCapacity: 68000 },
+            { name: "Los Angeles Gold", city: "Los Angeles", primaryColor: "#000000", secondaryColor: "#C39E6C", reputation: 5900, budget: 50000000, stadiumCapacity: 22000 },
+            { name: "New York City Blue", city: "New York", primaryColor: "#6CACE4", secondaryColor: "#00205B", reputation: 5700, budget: 45000000, stadiumCapacity: 30000 },
+            { name: "New York Energy", city: "New York", primaryColor: "#ED1E36", secondaryColor: "#FFFFFF", reputation: 5500, budget: 38000000, stadiumCapacity: 25000 },
+            { name: "Toronto Reds", city: "Toronto", primaryColor: "#AB1E2D", secondaryColor: "#3F4743", reputation: 5400, budget: 36000000, stadiumCapacity: 30000 },
+            { name: "Atlanta Stripes", city: "Atlanta", primaryColor: "#80000A", secondaryColor: "#221F1F", reputation: 5600, budget: 40000000, stadiumCapacity: 71000 },
+            { name: "Chicago Firemen", city: "Chicago", primaryColor: "#FF0000", secondaryColor: "#011D44", reputation: 5300, budget: 32000000, stadiumCapacity: 61500 },
+            { name: "Vancouver Village", city: "Vancouver", primaryColor: "#00245E", secondaryColor: "#9CC2E5", reputation: 5200, budget: 30000000, stadiumCapacity: 22120 },
+            { name: "Montreal Impact", city: "Montreal", primaryColor: "#0033A1", secondaryColor: "#000000", reputation: 5200, budget: 30000000, stadiumCapacity: 19619 },
+            { name: "Philadelphia Union", city: "Philadelphia", primaryColor: "#071B2C", secondaryColor: "#B2985F", reputation: 5400, budget: 35000000, stadiumCapacity: 18500 },
+            { name: "Columbus Crew", city: "Columbus", primaryColor: "#FEF200", secondaryColor: "#000000", reputation: 5500, budget: 36000000, stadiumCapacity: 20371 },
+            { name: "Portland Timbers", city: "Portland", primaryColor: "#004812", secondaryColor: "#EAE70F", reputation: 5400, budget: 34000000, stadiumCapacity: 25218 },
+            { name: "Salt Lake Royals", city: "Salt Lake City", primaryColor: "#B30838", secondaryColor: "#012B5C", reputation: 5200, budget: 32000000, stadiumCapacity: 20213 },
+            { name: "Houston Space", city: "Houston", primaryColor: "#FF6B00", secondaryColor: "#000000", reputation: 5200, budget: 32000000, stadiumCapacity: 22039 },
+            { name: "Dallas Burn", city: "Dallas", primaryColor: "#BF0D3E", secondaryColor: "#00205B", reputation: 5200, budget: 32000000, stadiumCapacity: 20500 },
+            { name: "Kansas City Wizards", city: "Kansas City", primaryColor: "#91B0D5", secondaryColor: "#002A5C", reputation: 5300, budget: 33000000, stadiumCapacity: 18467 },
+            { name: "San Jose Quakes", city: "San Jose", primaryColor: "#000000", secondaryColor: "#0067B1", reputation: 5100, budget: 30000000, stadiumCapacity: 18000 },
+            { name: "Orlando Lions", city: "Orlando", primaryColor: "#612B9B", secondaryColor: "#FDE302", reputation: 5400, budget: 34000000, stadiumCapacity: 25500 },
+            { name: "Cincinnati Royals", city: "Cincinnati", primaryColor: "#F05323", secondaryColor: "#171C2C", reputation: 5400, budget: 36000000, stadiumCapacity: 26000 },
+            { name: "St. Louis Spirit", city: "St. Louis", primaryColor: "#E9004C", secondaryColor: "#0F1823", reputation: 5300, budget: 34000000, stadiumCapacity: 22500 },
+            { name: "Nashville Music", city: "Nashville", primaryColor: "#ECE81A", secondaryColor: "#1F1646", reputation: 5300, budget: 35000000, stadiumCapacity: 30000 },
+            { name: "Austin Verdes", city: "Austin", primaryColor: "#00B140", secondaryColor: "#000000", reputation: 5300, budget: 35000000, stadiumCapacity: 20738 },
+            { name: "Charlotte Crowns", city: "Charlotte", primaryColor: "#0085CA", secondaryColor: "#000000", reputation: 5200, budget: 35000000, stadiumCapacity: 38000 }
+        ]
+    },
+    {
+        id: 'mx', name: 'Liga MX', country: 'Mexico', foreignPlayerChance: 0.4, playerNationality: 'Mexico',
+        logo: '/assets/logos/leagues/mexico_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Toluca Devils", city: "Toluca", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5400, budget: 35000000, stadiumCapacity: 25000 },
+            { name: "Monterrey Tigers", city: "Monterrey", primaryColor: "#FDB913", secondaryColor: "#005596", reputation: 6000, budget: 55000000, stadiumCapacity: 42000 },
+            { name: "Mexico City Cement", city: "Mexico City", primaryColor: "#00519E", secondaryColor: "#FFFFFF", reputation: 5800, budget: 45000000, stadiumCapacity: 87000 },
+            { name: "Mexico Eagles", city: "Mexico City", primaryColor: "#F5E216", secondaryColor: "#001E62", reputation: 6000, budget: 50000000, stadiumCapacity: 87000 },
+            { name: "Monterrey Rays", city: "Monterrey", primaryColor: "#092246", secondaryColor: "#FFFFFF", reputation: 5900, budget: 52000000, stadiumCapacity: 53500 },
+            { name: "Guadalajara Goats", city: "Guadalajara", primaryColor: "#E30613", secondaryColor: "#002758", reputation: 6000, budget: 48000000, stadiumCapacity: 46000 },
+            { name: "Tijuana Dogs", city: "Tijuana", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5000, budget: 25000000, stadiumCapacity: 27000 },
+            { name: "Juarez Braves", city: "Juárez", primaryColor: "#00FF00", secondaryColor: "#000000", reputation: 4800, budget: 20000000, stadiumCapacity: 19000 },
+            { name: "Pachuca Gophers", city: "Pachuca", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5300, budget: 30000000, stadiumCapacity: 27000 },
+            { name: "Mexico City Pumas", city: "Mexico City", primaryColor: "#D4AF37", secondaryColor: "#000080", reputation: 5500, budget: 35000000, stadiumCapacity: 58000 },
+            { name: "Laguna Warriors", city: "Torreón", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 5200, budget: 28000000, stadiumCapacity: 30000 },
+            { name: "Queretaro Roosters", city: "Querétaro", primaryColor: "#000080", secondaryColor: "#000000", reputation: 4700, budget: 18000000, stadiumCapacity: 33000 },
+            { name: "Necaxa Lightning", city: "Aguascalientes", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4800, budget: 20000000, stadiumCapacity: 23000 },
+            { name: "Guadalajara Foxes", city: "Guadalajara", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5100, budget: 25000000, stadiumCapacity: 55000 },
+            { name: "San Luis Athletics", city: "San Luis Potosí", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4600, budget: 15000000, stadiumCapacity: 25000 },
+            { name: "Mazatlan Cannons", city: "Mazatlán", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4500, budget: 14000000, stadiumCapacity: 20000 },
+            { name: "Leon Emeralds", city: "León", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 5200, budget: 30000000, stadiumCapacity: 31000 },
+            { name: "Puebla Sashes", city: "Puebla", primaryColor: "#FFFFFF", secondaryColor: "#000080", reputation: 4800, budget: 20000000, stadiumCapacity: 51000 }
+        ]
+    },
+    {
+        id: 'sa', name: 'Saudi Pro League', country: 'Saudi Arabia', foreignPlayerChance: 0.7, playerNationality: 'Saudi Arabia',
+        logo: '/assets/logos/leagues/saudi_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Riyadh Blue Waves", city: "Riyadh", primaryColor: "#0055A5", secondaryColor: "#FFFFFF", reputation: 8000, budget: 150000000, stadiumCapacity: 68000 },
+            { name: "Riyadh Knights", city: "Riyadh", primaryColor: "#FFFF00", secondaryColor: "#0000CC", reputation: 7900, budget: 140000000, stadiumCapacity: 25000 },
+            { name: "Jeddah Green", city: "Jeddah", primaryColor: "#006400", secondaryColor: "#FFFFFF", reputation: 7600, budget: 100000000, stadiumCapacity: 62000 },
+            { name: "Jeddah Tigers", city: "Jeddah", primaryColor: "#FFF200", secondaryColor: "#000000", reputation: 7800, budget: 110000000, stadiumCapacity: 62000 },
+            { name: "Riyadh Youth", city: "Riyadh", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 6900, budget: 45000000, stadiumCapacity: 22000 },
+            { name: "Al-Qadsiah", city: "Khobar", primaryColor: "#800000", secondaryColor: "#FFFF00", reputation: 7400, budget: 85000000, stadiumCapacity: 15000 },
+            { name: "Al-Taawoun", city: "Buraidah", primaryColor: "#FFFF00", secondaryColor: "#0000FF", reputation: 6500, budget: 35000000, stadiumCapacity: 25000 },
+            { name: "Dammam Commandos", city: "Dammam", primaryColor: "#007A33", secondaryColor: "#C8102E", reputation: 6800, budget: 55000000, stadiumCapacity: 35000 },
+            { name: "Al-Khaleej", city: "Saihat", primaryColor: "#FFFF00", secondaryColor: "#008000", reputation: 5500, budget: 22000000, stadiumCapacity: 10000 },
+            { name: "NEOM SC", city: "Tabuk", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 60000000, stadiumCapacity: 12000 },
+            { name: "Al-Fateh", city: "Al-Hasa", primaryColor: "#009900", secondaryColor: "#FFFFFF", reputation: 5800, budget: 25000000, stadiumCapacity: 20000 },
+            { name: "Al-Hazem", city: "Ar Rass", primaryColor: "#FF0000", secondaryColor: "#FFFF00", reputation: 5200, budget: 15000000, stadiumCapacity: 7000 },
+            { name: "Al-Kholood", city: "Ar Rass", primaryColor: "#800000", secondaryColor: "#FFFFFF", reputation: 5100, budget: 12000000, stadiumCapacity: 7000 },
+            { name: "Al-Fayha", city: "Al Majma'ah", primaryColor: "#FF6600", secondaryColor: "#0000FF", reputation: 5500, budget: 18000000, stadiumCapacity: 7000 },
+            { name: "Damac FC", city: "Khamis Mushait", primaryColor: "#800000", secondaryColor: "#FFFF00", reputation: 5400, budget: 16000000, stadiumCapacity: 20000 },
+            { name: "Al-Riyadh", city: "Riyadh", primaryColor: "#000000", secondaryColor: "#DF0024", reputation: 5300, budget: 14000000, stadiumCapacity: 15000 },
+            { name: "Al-Okhdood", city: "Najran", primaryColor: "#87CEEB", secondaryColor: "#FFFFFF", reputation: 5200, budget: 13000000, stadiumCapacity: 15000 },
+            { name: "Al-Najma", city: "Unaizah", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4800, budget: 8000000, stadiumCapacity: 5000 }
+        ]
+    },
+    {
+        id: 'eg', name: 'Egyptian Premier League', country: 'Egypt', foreignPlayerChance: 0.2, playerNationality: 'Egypt',
+        logo: '/assets/logos/leagues/egypt_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Cleopatra FC", city: "Giza", primaryColor: "#800000", secondaryColor: "#D4AF37", reputation: 5000, budget: 30000000, stadiumCapacity: 15000 },
+            { name: "Pyramids FC", city: "Cairo", primaryColor: "#000080", secondaryColor: "#87CEEB", reputation: 5800, budget: 50000000, stadiumCapacity: 30000 },
+            { name: "Cairo Red Devils", city: "Cairo", primaryColor: "#D21616", secondaryColor: "#FFFFFF", reputation: 6200, budget: 45000000, stadiumCapacity: 75000 },
+            { name: "Wadi Degla", city: "Cairo", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4800, budget: 15000000, stadiumCapacity: 22000 },
+            { name: "Cairo Knights", city: "Cairo", primaryColor: "#FFFFFF", secondaryColor: "#D21616", reputation: 6000, budget: 40000000, stadiumCapacity: 75000 },
+            { name: "El Masry", city: "Port Said", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 5000, budget: 15000000, stadiumCapacity: 18000 },
+            { name: "Zed FC", city: "Giza", primaryColor: "#000000", secondaryColor: "#00FF00", reputation: 4600, budget: 18000000, stadiumCapacity: 10000 },
+            { name: "Enppi", city: "Cairo", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 4700, budget: 14000000, stadiumCapacity: 16000 },
+            { name: "Smouha", city: "Alexandria", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4800, budget: 13000000, stadiumCapacity: 22000 },
+            { name: "Petrojet", city: "Suez", primaryColor: "#FF0000", secondaryColor: "#0000FF", reputation: 4500, budget: 10000000, stadiumCapacity: 27000 },
+            { name: "El Gouna", city: "El Gouna", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 4400, budget: 9000000, stadiumCapacity: 12000 },
+            { name: "Bank El Ahly", city: "Cairo", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4500, budget: 16000000, stadiumCapacity: 18000 },
+            { name: "Modern Sport", city: "Cairo", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4600, budget: 15000000, stadiumCapacity: 12000 },
+            { name: "Ghazl El Mahalla", city: "El Mahalla", primaryColor: "#00FFFF", secondaryColor: "#000000", reputation: 4300, budget: 6000000, stadiumCapacity: 20000 },
+            { name: "El Mokawloon", city: "Cairo", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4400, budget: 8000000, stadiumCapacity: 35000 },
+            { name: "Harras El Hodoud", city: "Alexandria", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4200, budget: 5000000, stadiumCapacity: 22000 },
+            { name: "Ismaily", city: "Ismailia", primaryColor: "#FFFF00", secondaryColor: "#0000FF", reputation: 4900, budget: 10000000, stadiumCapacity: 18500 },
+            { name: "Ittihad Alexandria", city: "Alexandria", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4800, budget: 11000000, stadiumCapacity: 22000 }
+        ]
+    },
+    {
+        id: 'jp', name: 'J1 League', country: 'Japan', foreignPlayerChance: 0.3, playerNationality: 'Japan',
+        logo: '/assets/logos/leagues/japan_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Kashima Antlers", city: "Kashima", primaryColor: "#B50029", secondaryColor: "#000000", reputation: 5800, budget: 45000000, stadiumCapacity: 40728 },
+            { name: "Gamba Osaka", city: "Suita", primaryColor: "#003399", secondaryColor: "#000000", reputation: 5700, budget: 42000000, stadiumCapacity: 39694 },
+            { name: "Urawa Red Diamonds", city: "Saitama", primaryColor: "#E6002D", secondaryColor: "#000000", reputation: 6100, budget: 50000000, stadiumCapacity: 63700 }, // Existing
+            { name: "Kawasaki Frontale", city: "Kawasaki", primaryColor: "#2EA7E0", secondaryColor: "#000000", reputation: 5950, budget: 48000000, stadiumCapacity: 26232 }, // Existing
+            { name: "Yokohama F. Marinos", city: "Yokohama", primaryColor: "#003399", secondaryColor: "#E60012", reputation: 6050, budget: 52000000, stadiumCapacity: 72327 }, // Existing
+            { name: "Vissel Kobe", city: "Kobe", primaryColor: "#950029", secondaryColor: "#FFFFFF", reputation: 6200, budget: 55000000, stadiumCapacity: 30132 }, // Existing
+            { name: "Sanfrecce Hiroshima", city: "Hiroshima", primaryColor: "#3F186D", secondaryColor: "#FFFFFF", reputation: 5700, budget: 38000000, stadiumCapacity: 36894 }, // Existing -> Updated Data
+            { name: "FC Tokyo", city: "Chofu", primaryColor: "#003399", secondaryColor: "#E60012", reputation: 5500, budget: 40000000, stadiumCapacity: 49970 },
+            { name: "Cerezo Osaka", city: "Osaka", primaryColor: "#F49AC1", secondaryColor: "#00205B", reputation: 5500, budget: 38000000, stadiumCapacity: 24481 },
+            { name: "Nagoya Grampus", city: "Nagoya", primaryColor: "#DA291C", secondaryColor: "#FDB913", reputation: 5400, budget: 35000000, stadiumCapacity: 45000 },
+            { name: "Kashiwa Reysol", city: "Kashiwa", primaryColor: "#FFF200", secondaryColor: "#000000", reputation: 5200, budget: 30000000, stadiumCapacity: 15349 },
+            { name: "Tokyo Verdy", city: "Chofu", primaryColor: "#006934", secondaryColor: "#FFFFFF", reputation: 5000, budget: 22000000, stadiumCapacity: 49970 },
+            { name: "Machida Zelvia", city: "Machida", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 5100, budget: 25000000, stadiumCapacity: 15489 },
+            { name: "Kyoto Sanga", city: "Kyoto", primaryColor: "#741B7C", secondaryColor: "#FFFFFF", reputation: 4900, budget: 20000000, stadiumCapacity: 21600 },
+            { name: "Avispa Fukuoka", city: "Fukuoka", primaryColor: "#003399", secondaryColor: "#A4A8AC", reputation: 4900, budget: 18000000, stadiumCapacity: 22563 },
+            { name: "JEF United Chiba", city: "Chiba", primaryColor: "#FFFF00", secondaryColor: "#009933", reputation: 4700, budget: 15000000, stadiumCapacity: 19781 },
+            { name: "V-Varen Nagasaki", city: "Nagasaki", primaryColor: "#003399", secondaryColor: "#F26522", reputation: 4600, budget: 14000000, stadiumCapacity: 20246 },
+            { name: "Shimizu S-Pulse", city: "Shizuoka", primaryColor: "#FFA500", secondaryColor: "#003399", reputation: 4800, budget: 25000000, stadiumCapacity: 20248 },
+            { name: "Mito HollyHock", city: "Mito", primaryColor: "#003399", secondaryColor: "#FFFFFF", reputation: 4400, budget: 10000000, stadiumCapacity: 12000 },
+            { name: "Fagiano Okayama", city: "Okayama", primaryColor: "#B50029", secondaryColor: "#003399", reputation: 4500, budget: 12000000, stadiumCapacity: 20000 }
+        ]
+    },
+    {
+        id: 'kr', name: 'K League 1', country: 'South Korea', foreignPlayerChance: 0.3, playerNationality: 'South Korea',
+        logo: '/assets/logos/leagues/korea_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Ulsan Tigers", city: "Ulsan", primaryColor: "#003280", secondaryColor: "#FFCC00", reputation: 5900, budget: 45000000, stadiumCapacity: 44102 }, // Existing (Updated Name)
+            { name: "Jeonju Motors", city: "Jeonju", primaryColor: "#009900", secondaryColor: "#000080", reputation: 6000, budget: 48000000, stadiumCapacity: 42477 }, // Existing
+            { name: "Pohang Steelers", city: "Pohang", primaryColor: "#000000", secondaryColor: "#FF0000", reputation: 5700, budget: 35000000, stadiumCapacity: 17443 }, // Existing
+            { name: "Seoul City", city: "Seoul", primaryColor: "#000000", secondaryColor: "#FF0000", reputation: 5600, budget: 38000000, stadiumCapacity: 66704 }, // Existing
+            { name: "Daejeon Hana Citizen", city: "Daejeon", primaryColor: "#4B0082", secondaryColor: "#800000", reputation: 5400, budget: 32000000, stadiumCapacity: 40535 },
+            { name: "Gimcheon Sangmu", city: "Gimcheon", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5300, budget: 15000000, stadiumCapacity: 25000 },
+            { name: "Gangwon FC", city: "Gangwon", primaryColor: "#FF6600", secondaryColor: "#FFFFFF", reputation: 5200, budget: 18000000, stadiumCapacity: 13500 },
+            { name: "Jeju United", city: "Seogwipo", primaryColor: "#FF6600", secondaryColor: "#000000", reputation: 5300, budget: 20000000, stadiumCapacity: 29791 },
+            { name: "Incheon United", city: "Incheon", primaryColor: "#0000FF", secondaryColor: "#000000", reputation: 5100, budget: 18000000, stadiumCapacity: 20891 },
+            { name: "Gwangju FC", city: "Gwangju", primaryColor: "#FFFF00", secondaryColor: "#DA291C", reputation: 5200, budget: 16000000, stadiumCapacity: 10007 },
+            { name: "FC Anyang", city: "Anyang", primaryColor: "#4B0082", secondaryColor: "#FFFFFF", reputation: 4800, budget: 12000000, stadiumCapacity: 17143 },
+            { name: "Bucheon FC 1995", city: "Bucheon", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4700, budget: 10000000, stadiumCapacity: 34456 }
+        ]
+    },
+    {
+        id: 'au', name: 'A-League Men', country: 'Australia', foreignPlayerChance: 0.4, playerNationality: 'Australia',
+        logo: '/assets/logos/leagues/aleague_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Central Coast Mariners", city: "Gosford", primaryColor: "#FFFF00", secondaryColor: "#000080", reputation: 5300, budget: 15000000, stadiumCapacity: 20059 },
+            { name: "Wellington Phoenix", city: "Wellington", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 5000, budget: 12000000, stadiumCapacity: 34500 },
+            { name: "Auckland FC", city: "Auckland", primaryColor: "#000000", secondaryColor: "#0000FF", reputation: 4800, budget: 20000000, stadiumCapacity: 25000 },
+            { name: "Sydney FC", city: "Sydney", primaryColor: "#87CEEB", secondaryColor: "#000080", reputation: 5500, budget: 25000000, stadiumCapacity: 45500 }, // Existing
+            { name: "Melbourne Victory", city: "Melbourne", primaryColor: "#000080", secondaryColor: "#FFFFFF", reputation: 5600, budget: 28000000, stadiumCapacity: 30050 }, // Existing
+            { name: "Melbourne City", city: "Melbourne", primaryColor: "#87CEEB", secondaryColor: "#FFFFFF", reputation: 5700, budget: 40000000, stadiumCapacity: 30050 }, // Existing (Corrected Name)
+            { name: "Macarthur FC", city: "Campbelltown", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 4900, budget: 14000000, stadiumCapacity: 17500 },
+            { name: "WS Wanderers", city: "Parramatta", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5400, budget: 22000000, stadiumCapacity: 30000 },
+            { name: "Adelaide United", city: "Adelaide", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5200, budget: 16000000, stadiumCapacity: 16500 },
+            { name: "Brisbane Roar", city: "Brisbane", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 5100, budget: 15000000, stadiumCapacity: 52500 },
+            { name: "Western United", city: "Melbourne", primaryColor: "#008000", secondaryColor: "#000000", reputation: 4800, budget: 14000000, stadiumCapacity: 15000 },
+            { name: "Newcastle Jets", city: "Newcastle", primaryColor: "#0000FF", secondaryColor: "#D4AF37", reputation: 4700, budget: 10000000, stadiumCapacity: 33000 },
+            { name: "Perth Glory", city: "Perth", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4800, budget: 13000000, stadiumCapacity: 20500 },
+
+
+        ]
+    },
+    {
+        id: 'za', name: 'Premier Soccer League', country: 'South Africa', foreignPlayerChance: 0.4, playerNationality: 'South Africa',
+        logo: '/assets/logos/leagues/psl_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Pretoria Brazilians", city: "Pretoria", primaryColor: "#FFFF00", secondaryColor: "#000080", reputation: 5600, budget: 35000000, stadiumCapacity: 51762 }, // Existing
+            { name: "Soweto Pirates", city: "Soweto", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 5400, budget: 25000000, stadiumCapacity: 37139 }, // Existing
+            { name: "Soweto Chiefs", city: "Soweto", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 5300, budget: 22000000, stadiumCapacity: 94736 }, // Existing
+            { name: "Stellenbosch FC", city: "Stellenbosch", primaryColor: "#800000", secondaryColor: "#FFD700", reputation: 5000, budget: 12000000, stadiumCapacity: 15000 },
+            { name: "SuperSport United", city: "Pretoria", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5100, budget: 15000000, stadiumCapacity: 28900 },
+            { name: "Cape Town City", city: "Cape Town", primaryColor: "#0000FF", secondaryColor: "#FFFF00", reputation: 5000, budget: 14000000, stadiumCapacity: 55000 },
+            { name: "Sekhukhune United", city: "Polokwane", primaryColor: "#800000", secondaryColor: "#FFFFFF", reputation: 4800, budget: 10000000, stadiumCapacity: 45264 },
+            { name: "TS Galaxy", city: "Kameelrivier", primaryColor: "#000000", secondaryColor: "#FF0000", reputation: 4700, budget: 8000000, stadiumCapacity: 43500 },
+            { name: "AmaZulu FC", city: "Durban", primaryColor: "#006400", secondaryColor: "#FFFFFF", reputation: 4900, budget: 11000000, stadiumCapacity: 56000 },
+            { name: "Polokwane City", city: "Polokwane", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4600, budget: 6000000, stadiumCapacity: 45264 },
+            { name: "Golden Arrows", city: "Durban", primaryColor: "#008000", secondaryColor: "#FFFF00", reputation: 4700, budget: 7000000, stadiumCapacity: 12000 }
+        ]
+    },
+    {
+        id: 'ma', name: 'Botola Pro', country: 'Morocco', foreignPlayerChance: 0.3, playerNationality: 'Morocco',
+        logo: '/assets/logos/leagues/botola_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Casablanca Eagles", city: "Casablanca", primaryColor: "#006400", secondaryColor: "#FFFFFF", reputation: 6000, budget: 30000000, stadiumCapacity: 45000 },
+            { name: "Casablanca Reds", city: "Casablanca", primaryColor: "#E60000", secondaryColor: "#FFFFFF", reputation: 6000, budget: 32000000, stadiumCapacity: 45000 },
+            { name: "Orange Berkane", city: "Berkane", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 5500, budget: 20000000, stadiumCapacity: 10000 },
+            { name: "AS FAR", city: "Rabat", primaryColor: "#000000", secondaryColor: "#008000", reputation: 5800, budget: 25000000, stadiumCapacity: 52000 },
+            { name: "FUS Rabat", city: "Rabat", primaryColor: "#FFFFFF", secondaryColor: "#FF0000", reputation: 5200, budget: 15000000, stadiumCapacity: 15000 },
+            { name: "Maghreb de Fès", city: "Fes", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4800, budget: 10000000, stadiumCapacity: 45000 },
+            { name: "Olympic Safi", city: "Safi", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4700, budget: 9000000, stadiumCapacity: 15000 },
+            { name: "Union Touarga", city: "Rabat", primaryColor: "#FFFF00", secondaryColor: "#008000", reputation: 4600, budget: 8000000, stadiumCapacity: 12000 },
+            { name: "Hassania Agadir", city: "Agadir", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4700, budget: 9500000, stadiumCapacity: 45480 },
+            { name: "Difaâ El Jadidi", city: "El Jadida", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4600, budget: 8500000, stadiumCapacity: 15000 },
+            { name: "COD Meknès", city: "Meknès", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4500, budget: 7000000, stadiumCapacity: 20000 }
+        ]
+    },
+    {
+        id: 'car', name: 'Caribbean Super League', country: 'Jamaica', foreignPlayerChance: 0.5, playerNationality: 'Caribbean',
+        logo: '/assets/logos/leagues/caribbean_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            // Jamaica
+            { name: "Kingston Bay United", city: "Kingston", primaryColor: "#000000", secondaryColor: "#FFFF00", reputation: 5500, budget: 5000000, stadiumCapacity: 35000 },
+            { name: "Montego Bay Waves", city: "Montego Bay", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5300, budget: 4500000, stadiumCapacity: 20000 },
+            { name: "St. Lucia Kings FC", city: "Castries", primaryColor: "#000080", secondaryColor: "#FFFF00", reputation: 5000, budget: 3500000, stadiumCapacity: 15000 },
+            { name: "Cavalier Town FC", city: "Kingston", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 5200, budget: 4000000, stadiumCapacity: 10000 },
+            // Trinidad & Tobago
+            { name: "Port of Spain Warriors", city: "Port of Spain", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 3900, budget: 2200000, stadiumCapacity: 23000 },
+            { name: "Trinbago Riders FC", city: "Port of Spain", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4000, budget: 2500000, stadiumCapacity: 25000 },
+            { name: "San Juan Strikers", city: "San Juan", primaryColor: "#008000", secondaryColor: "#FFFF00", reputation: 3500, budget: 1000000, stadiumCapacity: 8000 },
+            // Dominican Republic
+            { name: "Cibao Orange FC", city: "Santiago", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4100, budget: 2800000, stadiumCapacity: 10000 },
+            { name: "O&M University", city: "Santo Domingo", primaryColor: "#000080", secondaryColor: "#D4AF37", reputation: 3600, budget: 1200000, stadiumCapacity: 15000 },
+            { name: "Atlántico Blue Stars", city: "Puerto Plata", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 3500, budget: 900000, stadiumCapacity: 5000 },
+            // Haiti
+            { name: "Port-au-Prince AC", city: "Port-au-Prince", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 3700, budget: 800000, stadiumCapacity: 15000 },
+            { name: "Cavaly SC", city: "Léogâne", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 3600, budget: 600000, stadiumCapacity: 10000 },
+            // Barbados
+            { name: "Barbados Royal Club", city: "Bridgetown", primaryColor: "#0000FF", secondaryColor: "#FFFF00", reputation: 3400, budget: 500000, stadiumCapacity: 12000 },
+            { name: "Weymouth Wales FC", city: "Bridgetown", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 3400, budget: 450000, stadiumCapacity: 8000 },
+            // Guyana
+            { name: "Guyana Amazon FC", city: "Georgetown", primaryColor: "#008000", secondaryColor: "#FFFF00", reputation: 3500, budget: 600000, stadiumCapacity: 15000 },
+            { name: "Western Tigers SC", city: "Georgetown", primaryColor: "#000000", secondaryColor: "#FDB913", reputation: 3400, budget: 500000, stadiumCapacity: 5000 }
+        ]
+    },
+    {
+        id: 'co', name: 'Liga BetPlay (Colombia)', country: 'Colombia', foreignPlayerChance: 0.2, playerNationality: 'Colombia',
+        logo: '/assets/logos/leagues/colombia_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Medellin Green", city: "Medellin", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 5200, budget: 15000000, stadiumCapacity: 40000 },
+            { name: "Bogota Blues", city: "Bogota", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5100, budget: 14000000, stadiumCapacity: 36000 },
+            { name: "Cali Devils", city: "Cali", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5000, budget: 12000000, stadiumCapacity: 35000 },
+            { name: "Barranquilla Sharks", city: "Barranquilla", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4900, budget: 13000000, stadiumCapacity: 46000 },
+            { name: "Bogota Cardinals", city: "Bogota", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4800, budget: 10000000, stadiumCapacity: 36000 },
+            { name: "Medellin Red", city: "Medellin", primaryColor: "#FF0000", secondaryColor: "#0000FF", reputation: 4800, budget: 10000000, stadiumCapacity: 40000 },
+            { name: "Cali Sugar", city: "Cali", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4700, budget: 9000000, stadiumCapacity: 52000 },
+            { name: "Ibague Gold", city: "Ibague", primaryColor: "#800000", secondaryColor: "#FFD700", reputation: 4600, budget: 8000000, stadiumCapacity: 28000 },
+            { name: "Manizales White", city: "Manizales", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 4500, budget: 7000000, stadiumCapacity: 28000 },
+            { name: "Bucaramanga Leopards", city: "Bucaramanga", primaryColor: "#FFFF00", secondaryColor: "#008000", reputation: 4400, budget: 6000000, stadiumCapacity: 25000 },
+            { name: "Pereira Wolves", city: "Pereira", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 4400, budget: 6000000, stadiumCapacity: 30000 },
+            { name: "Pasto Volcano", city: "Pasto", primaryColor: "#FF0000", secondaryColor: "#FFFF00", reputation: 4300, budget: 5000000, stadiumCapacity: 20000 },
+            { name: "Bogota Fort", city: "Bogota", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4200, budget: 4000000, stadiumCapacity: 8000 },
+            { name: "Rionegro Eagles", city: "Rionegro", primaryColor: "#DAA520", secondaryColor: "#000000", reputation: 4300, budget: 5000000, stadiumCapacity: 10000 },
+            { name: "Cucuta Border", city: "Cucuta", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4400, budget: 5500000, stadiumCapacity: 40000 },
+            { name: "Tunja Checkers", city: "Tunja", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 4200, budget: 4000000, stadiumCapacity: 20000 }
+        ]
+    },
+    {
+        id: 'cl', name: 'Campeonato Nacional (Chile)', country: 'Chile', foreignPlayerChance: 0.3, playerNationality: 'Chile',
+        logo: '/assets/logos/leagues/chile_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Santiago Chiefs", city: "Santiago", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 6600, budget: 28000000, stadiumCapacity: 47000 },
+            { name: "Santiago Scholars", city: "Santiago", primaryColor: "#0000FF", secondaryColor: "#FF0000", reputation: 6500, budget: 25000000, stadiumCapacity: 48000 },
+            { name: "Santiago Crusaders", city: "Santiago", primaryColor: "#FFFFFF", secondaryColor: "#0000FF", reputation: 6200, budget: 18000000, stadiumCapacity: 14000 },
+            { name: "Desert Miners", city: "El Salvador", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4700, budget: 9000000, stadiumCapacity: 12000 },
+            { name: "Santiago Green", city: "Santiago", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4600, budget: 8000000, stadiumCapacity: 12000 },
+            { name: "Viña Gold", city: "Viña del Mar", primaryColor: "#FFD700", secondaryColor: "#0000FF", reputation: 4600, budget: 7500000, stadiumCapacity: 22000 },
+            { name: "Coquimbo Pirates", city: "Coquimbo", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4500, budget: 7000000, stadiumCapacity: 18000 },
+            { name: "Talcahuano Steel", city: "Talcahuano", primaryColor: "#000000", secondaryColor: "#0000FF", reputation: 4500, budget: 6500000, stadiumCapacity: 10000 },
+            { name: "Calera Red", city: "La Calera", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4400, budget: 6000000, stadiumCapacity: 9000 },
+            { name: "Serena Garnet", city: "La Serena", primaryColor: "#800000", secondaryColor: "#FFFFFF", reputation: 4300, budget: 5000000, stadiumCapacity: 18000 },
+            { name: "Rancagua Celeste", city: "Rancagua", primaryColor: "#00FFFF", secondaryColor: "#000000", reputation: 4600, budget: 8000000, stadiumCapacity: 13000 },
+            { name: "Santiago Tricolor", city: "Santiago", primaryColor: "#FF0000", secondaryColor: "#008000", reputation: 4600, budget: 8500000, stadiumCapacity: 8000 },
+            { name: "Chillan Red", city: "Chillán", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4500, budget: 7000000, stadiumCapacity: 12000 },
+            { name: "Concepcion Purple", city: "Concepción", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4300, budget: 5000000, stadiumCapacity: 30000 },
+            { name: "Concepcion Uni", city: "Concepción", primaryColor: "#FFFF00", secondaryColor: "#0000FF", reputation: 4400, budget: 6000000, stadiumCapacity: 30000 },
+            { name: "Limache Red", city: "Limache", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 4200, budget: 4000000, stadiumCapacity: 5000 }
+        ]
+    },
+    {
+        id: 'uy', name: 'Campeonato Uruguayo', country: 'Uruguay', foreignPlayerChance: 0.2, playerNationality: 'Uruguay',
+        logo: '/assets/logos/leagues/uruguay_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Montevideo Tricolor", city: "Montevideo", primaryColor: "#FFFFFF", secondaryColor: "#000080", reputation: 6800, budget: 30000000, stadiumCapacity: 34000 },
+            { name: "Montevideo Coal", city: "Montevideo", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 6800, budget: 30000000, stadiumCapacity: 40000 },
+            { name: "Belvedere Blue", city: "Montevideo", primaryColor: "#000000", secondaryColor: "#0000FF", reputation: 4900, budget: 14000000, stadiumCapacity: 10000 },
+            { name: "Parque Violet", city: "Montevideo", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4800, budget: 12000000, stadiumCapacity: 12000 },
+            { name: "Jardines Striped", city: "Montevideo", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 4700, budget: 10000000, stadiumCapacity: 18000 },
+            { name: "Prado Bohemians", city: "Montevideo", primaryColor: "#FFFFFF", secondaryColor: "#000000", reputation: 4600, budget: 9000000, stadiumCapacity: 11000 },
+            { name: "Montevideo Tailors", city: "Montevideo", primaryColor: "#FF0000", secondaryColor: "#008000", reputation: 4500, budget: 8000000, stadiumCapacity: 5000 },
+            { name: "Montevideo Pioneers", city: "Montevideo", primaryColor: "#0000FF", secondaryColor: "#FF0000", reputation: 4200, budget: 5000000, stadiumCapacity: 5000 },
+            { name: "Montevideo LightBlue", city: "Montevideo", primaryColor: "#00BFFF", secondaryColor: "#FFFFFF", reputation: 4600, budget: 15000000, stadiumCapacity: 14000 }, // City Group
+            { name: "Villa Albiceleste", city: "Montevideo", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4500, budget: 6000000, stadiumCapacity: 25000 },
+            { name: "Melo Blue", city: "Melo", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4400, budget: 5000000, stadiumCapacity: 8000 },
+            { name: "Palermo RedBlue", city: "Montevideo", primaryColor: "#FF0000", secondaryColor: "#0000FF", reputation: 4300, budget: 4000000, stadiumCapacity: 8000 },
+            { name: "Maldonado RedGreen", city: "Maldonado", primaryColor: "#FF0000", secondaryColor: "#008000", reputation: 4500, budget: 7000000, stadiumCapacity: 22000 },
+            { name: "Pedrenses Blue", city: "Las Piedras", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4300, budget: 4500000, stadiumCapacity: 12000 },
+            { name: "Gauchos Gold", city: "Montevideo", primaryColor: "#FFFF00", secondaryColor: "#FF0000", reputation: 4400, budget: 5500000, stadiumCapacity: 8000 },
+            { name: "Sayago Green", city: "Montevideo", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4500, budget: 6500000, stadiumCapacity: 8000 }
+        ]
+    },
+    {
+        id: 'tn', name: 'Ligue 1 Pro', country: 'Tunisia', foreignPlayerChance: 0.3, playerNationality: 'Tunisia',
+        logo: '/assets/logos/leagues/tunisia_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Tunis Gold", city: "Tunis", primaryColor: "#FFD700", secondaryColor: "#FF0000", reputation: 6000, budget: 15000000, stadiumCapacity: 60000 },
+            { name: "Tunis Red-Whites", city: "Tunis", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5800, budget: 12000000, stadiumCapacity: 60000 },
+            { name: "Sousse Stars", city: "Sousse", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 5600, budget: 10000000, stadiumCapacity: 28000 },
+            { name: "Sfax Zebra", city: "Sfax", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 5500, budget: 9000000, stadiumCapacity: 18000 },
+            { name: "Monastir Blue", city: "Monastir", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5200, budget: 7000000, stadiumCapacity: 20000 },
+            { name: "Bardo Green", city: "Tunis", primaryColor: "#008000", secondaryColor: "#FF0000", reputation: 5300, budget: 8000000, stadiumCapacity: 15000 },
+            { name: "Bizerte Sharks", city: "Bizerte", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4800, budget: 5000000, stadiumCapacity: 15000 },
+            { name: "Beja Storks", city: "Beja", primaryColor: "#FF0000", secondaryColor: "#FFFFFF", reputation: 4600, budget: 4000000, stadiumCapacity: 10000 },
+            { name: "Metlaoui Mines", city: "Metlaoui", primaryColor: "#FFD700", secondaryColor: "#FF0000", reputation: 4500, budget: 3500000, stadiumCapacity: 8000 },
+            { name: "Ben Guerdane Riders", city: "Ben Guerdane", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4400, budget: 3000000, stadiumCapacity: 5000 },
+            { name: "Marsa Beach", city: "La Marsa", primaryColor: "#008000", secondaryColor: "#FFFF00", reputation: 4500, budget: 3500000, stadiumCapacity: 6000 },
+            { name: "Zarzis Olive", city: "Zarzis", primaryColor: "#FFFF00", secondaryColor: "#0000FF", reputation: 4300, budget: 2500000, stadiumCapacity: 7000 },
+            { name: "Kairouan Historic", city: "Kairouan", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4200, budget: 2000000, stadiumCapacity: 15000 },
+            { name: "Omrane Build", city: "Tunis", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4000, budget: 1500000, stadiumCapacity: 3000 },
+            { name: "Soliman Future", city: "Soliman", primaryColor: "#008000", secondaryColor: "#FFFFFF", reputation: 4100, budget: 1800000, stadiumCapacity: 3000 },
+            { name: "Gabes Oasis", city: "Gabès", primaryColor: "#008000", secondaryColor: "#FF0000", reputation: 4100, budget: 1800000, stadiumCapacity: 10000 }
+        ]
+    },
+    {
+        id: 'cr', name: 'Primera División', country: 'Costa Rica', foreignPlayerChance: 0.3, playerNationality: 'Costa Rica',
+        logo: '/assets/logos/leagues/costarica_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "San Jose Purple", city: "San José", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 5500, budget: 8000000, stadiumCapacity: 23112 },
+            { name: "Alajuela Lions", city: "Alajuela", primaryColor: "#FF0000", secondaryColor: "#000000", reputation: 5400, budget: 7500000, stadiumCapacity: 17895 },
+            { name: "Heredia Red-Yellow", city: "Heredia", primaryColor: "#FF0000", secondaryColor: "#FFFF00", reputation: 5300, budget: 7000000, stadiumCapacity: 8700 },
+            { name: "Cartago Blues", city: "Cartago", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5000, budget: 5000000, stadiumCapacity: 13500 },
+            { name: "San Carlos Bulls", city: "San Carlos", primaryColor: "#FF0000", secondaryColor: "#0000FF", reputation: 4800, budget: 4000000, stadiumCapacity: 5600 },
+            { name: "San Isidro Warriors", city: "San Isidro", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4600, budget: 3000000, stadiumCapacity: 6000 },
+            { name: "Puntarenas Sharks", city: "Puntarenas", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4500, budget: 2500000, stadiumCapacity: 4105 },
+            { name: "Sporting Jose", city: "San José", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 4400, budget: 2000000, stadiumCapacity: 3000 },
+            { name: "Liberia Gold", city: "Liberia", primaryColor: "#FFFF00", secondaryColor: "#000000", reputation: 4300, budget: 1800000, stadiumCapacity: 6500 },
+            { name: "Guadalupe Blue", city: "San José", primaryColor: "#0000FF", secondaryColor: "#FFFF00", reputation: 4200, budget: 1500000, stadiumCapacity: 2000 }
+        ]
+    },
+    {
+        id: 'in', name: 'Indian Super League', country: 'India', foreignPlayerChance: 0.4, playerNationality: 'India',
+        logo: '/assets/logos/leagues/india_logo.jpg',
+        matchFormat: 'double-round',
+        realTeams: [
+            { name: "Kolkata Mariners", city: "Kolkata", primaryColor: "#006400", secondaryColor: "#800000", reputation: 5200, budget: 12000000, stadiumCapacity: 85000 },
+            { name: "Mumbai Islanders", city: "Mumbai", primaryColor: "#87CEEB", secondaryColor: "#FFFFFF", reputation: 5300, budget: 15000000, stadiumCapacity: 18000 }, // City Group
+            { name: "East Bengal Torch", city: "Kolkata", primaryColor: "#FF0000", secondaryColor: "#FFFF00", reputation: 5100, budget: 10000000, stadiumCapacity: 85000 },
+            { name: "Kerala Tuskers", city: "Kochi", primaryColor: "#FFFF00", secondaryColor: "#0000FF", reputation: 5200, budget: 11000000, stadiumCapacity: 60000 },
+            { name: "Goa Gaurs", city: "Goa", primaryColor: "#FFA500", secondaryColor: "#0000FF", reputation: 5000, budget: 9000000, stadiumCapacity: 19000 },
+            { name: "Bangalore Blues", city: "Bengaluru", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 5100, budget: 11500000, stadiumCapacity: 25810 },
+            { name: "Odisha Juggernauts", city: "Bhubaneswar", primaryColor: "#800080", secondaryColor: "#000000", reputation: 4900, budget: 8500000, stadiumCapacity: 15000 },
+            { name: "Chennai Titans", city: "Chennai", primaryColor: "#0000FF", secondaryColor: "#FFFF00", reputation: 4800, budget: 8000000, stadiumCapacity: 40000 },
+            { name: "Highland United", city: "Guwahati", primaryColor: "#FFFFFF", secondaryColor: "#FF0000", reputation: 4700, budget: 7000000, stadiumCapacity: 25000 },
+            { name: "Steel City Red", city: "Jamshedpur", primaryColor: "#FF0000", secondaryColor: "#0000FF", reputation: 4700, budget: 7500000, stadiumCapacity: 24424 },
+            { name: "Punjab Lions", city: "Mohali", primaryColor: "#FFA500", secondaryColor: "#FFFFFF", reputation: 4600, budget: 6000000, stadiumCapacity: 26000 },
+            { name: "Kolkata Black-White", city: "Kolkata", primaryColor: "#000000", secondaryColor: "#FFFFFF", reputation: 4500, budget: 5000000, stadiumCapacity: 15000 },
+            { name: "Delhi Capital", city: "New Delhi", primaryColor: "#0000FF", secondaryColor: "#FFFFFF", reputation: 4400, budget: 4500000, stadiumCapacity: 20000 },
+            { name: "Varanasi Holy", city: "Varanasi", primaryColor: "#FFA500", secondaryColor: "#000000", reputation: 4300, budget: 4000000, stadiumCapacity: 12000 }
+        ]
     }
 ];
 
-
-
 const ALL_SQUADS = [
+    // --- TURKEY ---
     GALATASARAY_SQUAD, FENERBAHCE_SQUAD, BESIKTAS_SQUAD, TRABZONSPOR_SQUAD,
     BASAKSEHIR_SQUAD, SAMSUNSPOR_SQUAD, KONYASPOR_SQUAD, KASIMPASA_SQUAD,
     RIZESPOR_SQUAD, GAZIANTEP_SQUAD, ANTALYASPOR_SQUAD, KAYSERISPOR_SQUAD,
     ALANYASPOR_SQUAD, GOZTEPE_SQUAD, EYUPSPOR_SQUAD, KARAGUMRUK_SQUAD,
     KOCAELISPOR_SQUAD, GENCLERBIRLIGI_SQUAD,
+
+    // --- NEW LEAGUES ---
+    // Tunisia
+    TUNIS_BLOOD_GOLD_SQUAD, CLUB_AFRICAIN_SQUAD, SOUSSE_STARS_SQUAD, SFAX_ZEBRA_SQUAD,
+    MONASTIR_BLUE_SQUAD, BARDO_GREEN_SQUAD, BIZERTE_SHARKS_SQUAD, BEJA_STORKS_SQUAD,
+    METLAOUI_MINES_SQUAD, BEN_GUERDANE_RIDERS_SQUAD, MARSA_BEACH_SQUAD, ZARZIS_OLIVE_SQUAD,
+    KAIROUAN_HISTORIC_SQUAD, OMRANE_BUILD_SQUAD, SOLIMAN_FUTURE_SQUAD, GABES_OASIS_SQUAD,
+
+    // Costa Rica
+    SAN_JOSE_PURPLE_SQUAD, ALAJUELA_LIONS_SQUAD, HEREDIA_RED_YELLOW_SQUAD, CARTAGO_BLUES_SQUAD,
+    SAN_CARLOS_BULLS_SQUAD, SAN_ISIDRO_WARRIORS_SQUAD, PUNTARENAS_SHARKS_SQUAD, SPORTING_JOSE_SQUAD,
+    LIBERIA_GOLD_SQUAD, GUADALUPE_BLUE_SQUAD,
+
+    // India
+    KOLKATA_MARINERS_SQUAD, MUMBAI_ISLANDERS_SQUAD, EAST_BENGAL_TORCH_SQUAD, KERALA_TUSKERS_SQUAD,
+    GOA_GAURS_SQUAD, BANGALORE_BLUES_SQUAD, ODISHA_JUGGERNAUTS_SQUAD, CHENNAI_TITANS_SQUAD,
+    HIGHLAND_UNITED_SQUAD, STEEL_CITY_RED_SQUAD, PUNJAB_LIONS_SQUAD, KOLKATA_BLACK_WHITE_SQUAD,
+    DELHI_CAPITAL_SQUAD, VARANASI_HOLY_SQUAD,
+
+    // --- EUROPE GIANTS & RESERVES ---
     INTER_LOMBARDIA_SQUAD, MILANO_DEVILS_SQUAD, PIEMONTE_ZEBRAS_SQUAD, NAPOLI_BLUES_SQUAD, ROMA_GLADIATORS_SQUAD,
     BERGAMO_UNITED_SQUAD, LATIUM_EAGLES_SQUAD, FLORENCE_VIOLA_SQUAD, BOLOGNA_REDBLUES_SQUAD,
     TORINO_BULLS_SQUAD, COMO_LAKERS_SQUAD, GENOA_GRIFFINS_SQUAD, UDINE_FRIULI_SQUAD, PARMA_CRUSADERS_SQUAD,
@@ -725,11 +5908,13 @@ const ALL_SQUADS = [
     MADRID_BLANCOS_SQUAD, CATALONIA_BLAUGRANA_SQUAD, MADRID_INDIOS_SQUAD, BILBAO_LIONS_SQUAD,
     SAN_SEBASTIAN_SQUAD, YELLOW_SUBMARINES_SQUAD, SEVILLE_GREENWHITES_SQUAD, GIRONA_REDS_SQUAD,
     SEVILLA_NERVION_SQUAD, VALENCIA_BATS_SQUAD, VIGO_SKY_BLUES_SQUAD, VALLECANO_LIGHTNING_SQUAD,
-    CANARY_YELLOWS_SQUAD, CASTILLA_VIOLET_SQUAD,
-    // Reserves
+    CANARY_YELLOWS_SQUAD, CASTILLA_VIOLET_SQUAD, MALLORCA_ISLANDERS_SQUAD, PAMPLONA_BULLS_SQUAD,
+    GETAFE_BLUES_SQUAD, VITORIA_FOXES_SQUAD, ESPANYOL_PARROTS_SQUAD,
     MADRID_BLANCOS_RESERVES, CATALONIA_BLAUGRANA_RESERVES, MADRID_INDIOS_RESERVES,
     SAN_SEBASTIAN_RESERVES, YELLOW_SUBMARINES_RESERVES, SEVILLE_GREENWHITES_RESERVES,
     GIRONA_REDS_RESERVES, VALENCIA_BATS_RESERVES,
+
+    // --- FRANCE & GERMANY ---
     PARIS_SAINT_SQUAD, MARSEILLE_BLUE_SQUAD, LYON_KIDS_SQUAD, MONACO_RED_SQUAD,
     LILLE_DOGS_SQUAD, RENNES_RED_SQUAD, NICE_EAGLES_SQUAD, LENS_GOLD_SQUAD,
     PARIS_FC_SQUAD, NANTES_FC_SQUAD, STRASBOURG_FC_SQUAD, AUXERRE_AJ_SQUAD,
@@ -740,6 +5925,8 @@ const ALL_SQUADS = [
     UNION_BERLIN_FC_SQUAD, AUGSBURG_FC_SQUAD, KOLN_FC_SQUAD,
     FRANKFURT_EAGLES_SQUAD, GLADBACH_FOALS_SQUAD, BREMEN_RIVER_SQUAD, MAINZ_CARNIVAL_SQUAD,
     HAMBURG_PIRATES_SQUAD, HEIDENHEIM_REDBLUE_SQUAD, BOCHUM_BLUE_SQUAD,
+
+    // --- SOUTH AMERICA ---
     LA_PLATA_WOLVES_SQUAD, VELEZ_FORT_SQUAD, AVELLANEDA_DEVILS_SQUAD, ROSARIO_LEPERS_SQUAD,
     BANFIELD_DRILLS_SQUAD, CORDOBA_GLORY_SQUAD, MENDOZA_BLUES_SQUAD, MENDOZA_WINES_SQUAD,
     TUCUMAN_GIANTS_SQUAD, BUENOS_AIRES_STORM_SQUAD, SANTA_FE_UNION_SQUAD, VARELA_HAWKS_SQUAD,
@@ -748,2386 +5935,268 @@ const ALL_SQUADS = [
     BUENOS_AIRES_MILLIONAIRES_SQUAD, CORDOBA_TALL_SQUAD, LA_PLATA_LIONS_SQUAD, CORDOBA_PIRATES_SQUAD,
     PATERNAL_BUGS_SQUAD, ROSARIO_CANALLAS_SQUAD, LA_BOCA_XENEIZES_SQUAD, AVELLANEDA_RACERS_SQUAD,
     LANUS_GRANATE_SQUAD, VICTORIA_TIGERS_SQUAD, SANTIAGO_RAILWAYS_SQUAD,
-    // Brazilian Série A
     SAO_PAULO_PALMS_SQUAD, RIO_FLAMES_SQUAD, BELO_HORIZONTE_CRUISERS_SQUAD, RIO_SAILORS_SQUAD,
     RIO_STAR_SQUAD, SAO_PAULO_WARRIORS_SQUAD, SANTOS_BEACH_SQUAD, RIO_WAVES_SQUAD,
     SALVADOR_BAY_SQUAD, PORTO_ALEGRE_BLUES_SQUAD, BELO_HORIZONTE_MINERS_SQUAD, SAO_PAULO_TIGERS_SQUAD,
     PORTO_ALEGRE_REDS_SQUAD, CURITIBA_STORM_SQUAD, BRAGANCA_BULLS_SQUAD, SALVADOR_VICTORY_SQUAD,
-    CURITIBA_GREENS_SQUAD, CHAPECO_EAGLES_SQUAD, MIRASSOL_SUNS_SQUAD, BELEM_LIONS_SQUAD
+    CURITIBA_GREENS_SQUAD, CHAPECO_EAGLES_SQUAD, MIRASSOL_SUNS_SQUAD, BELEM_LIONS_SQUAD,
+
+    // --- NORTH AMERICA ---
+    MIAMI_VICE_SQUAD, GALAXY_STARS_SQUAD, MEXICO_EAGLES_SQUAD, SEATTLE_EMERALDS_SQUAD,
+    LOS_ANGELES_GOLD_SQUAD, NEW_YORK_CITY_BLUE_SQUAD, NEW_YORK_ENERGY_SQUAD, GUADALAJARA_GOATS_SQUAD,
+    MEXICO_CITY_CEMENT_SQUAD, MONTERREY_TIGERS_SQUAD, MONTERREY_RAYS_SQUAD, TORONTO_REDS_SQUAD,
+    ATLANTA_STRIPES_SQUAD, CHICAGO_FIREMEN_SQUAD, VANCOUVER_VILLAGE_SQUAD, MONTREAL_IMPACT_SQUAD,
+    PHILADELPHIA_UNION_SQUAD, COLUMBUS_CREW_SQUAD, PORTLAND_TIMBERS_SQUAD, SALT_LAKE_ROYALS_SQUAD,
+    HOUSTON_SPACE_SQUAD, DALLAS_BURN_SQUAD, KANSAS_CITY_WIZARDS_SQUAD, SAN_JOSE_QUAKES_SQUAD,
+    ORLANDO_LIONS_SQUAD, CINCINNATI_ROYALS_SQUAD, ST_LOUIS_SPIRIT_SQUAD, NASHVILLE_MUSIC_SQUAD,
+    AUSTIN_VERDES_SQUAD, CHARLOTTE_CROWNS_SQUAD,
+
+    // --- ASIA & OCEANIA (Mükerrerlerden arındırıldı) ---
+    SHANGHAI_PORT_SQUAD, DOHA_SADD_SQUAD, TEHRAN_REDS_SQUAD, BURIRAM_THUNDER_SQUAD,
+
+    // --- AFRICA ---
+    GIZA_PYRAMIDS_SQUAD, ALGIERS_UNION_SQUAD, LUBUMBASHI_RAVENS_SQUAD, DAR_LIONS_SQUAD,
+    DAR_CITIZENS_SQUAD, ABIDJAN_YELLOWS_SQUAD, ABA_ELEPHANTS_SQUAD,
+
+    // --- SAUDI ---
+    AL_QADSIAH_SQUAD, AL_TAAWOUN_SQUAD, AL_KHALEEJ_SQUAD, NEOM_SC_SQUAD,
+    AL_FATEH_SQUAD, AL_HAZEM_SQUAD, AL_KHOLOOD_SQUAD, AL_FAYHA_SQUAD,
+    DAMAC_FC_SQUAD, AL_RIYADH_SQUAD, AL_OKHDOOD_SQUAD, AL_NAJMA_SQUAD,
+    RIYADH_BLUE_WAVES_SQUAD, RIYADH_KNIGHTS_SQUAD, JEDDAH_GREEN_SQUAD,
+    JEDDAH_TIGERS_SQUAD, RIYADH_YOUTH_SQUAD, DAMMAM_COMMANDOS_SQUAD,
+
+    // --- EGYPT ---
+    CLEOPATRA_FC_SQUAD, WADI_DEGLA_SQUAD, EL_MASRY_SQUAD, ZED_FC_SQUAD,
+    ENPPI_SQUAD, SMOUHA_SQUAD, PETROJET_SQUAD, EL_GOUNA_SQUAD,
+    BANK_EL_AHLY_SQUAD, MODERN_SPORT_SQUAD, GHAZL_EL_MAHALLA_SQUAD,
+    EL_MOKAWLOON_SQUAD, HARRAS_EL_HODOUD_SQUAD, PHARCO_FC_SQUAD,
+    TALAEA_EL_GAISH_SQUAD, KAHRABA_ISMAILIA_SQUAD, ISMAILY_SC_SQUAD,
+    ITTIHAD_ALEXANDRIA_SQUAD, CAIRO_RED_DEVILS_SQUAD, CAIRO_KNIGHTS_SQUAD,
+
+    // --- LIGA MX ---
+    TOLUCA_DEVILS_SQUAD, TIJUANA_DOGS_SQUAD, JUAREZ_BRAVES_SQUAD,
+    PACHUCA_GOPHERS_SQUAD, MEXICO_CITY_PUMAS_SQUAD, LAGUNA_WARRIORS_SQUAD,
+    QUERETARO_ROOSTERS_SQUAD, NECAXA_LIGHTNING_SQUAD, GUADALAJARA_FOXES_SQUAD,
+    SAN_LUIS_ATHLETICS_SQUAD, MAZATLAN_CANNONS_SQUAD, LEON_EMERALDS_SQUAD,
+    PUEBLA_SASHES_SQUAD,
+
+    // --- JAPAN ---
+    KASHIMA_ANTLERS_SQUAD, MITO_HOLLYHOCK_SQUAD, JEF_UNITED_CHIBA_SQUAD,
+    KASHIWA_REYSOL_SQUAD, FC_TOKYO_SQUAD, TOKYO_VERDY_SQUAD, MACHIDA_ZELVIA_SQUAD,
+    SHIMIZU_SPULSE_SQUAD, NAGOYA_GRAMPUS_SQUAD, KYOTO_SANGA_SQUAD,
+    GAMBA_OSAKA_SQUAD, CEREZO_OSAKA_SQUAD, FAGIANO_OKAYAMA_SQUAD,
+    SANFRECCE_HIROSHIMA_SQUAD, AVISPA_FUKUOKA_SQUAD, VVAREN_NAGASAKI_SQUAD,
+    KOBE_CRIMSONS_SQUAD, YOKOHAMA_MARINERS_SQUAD, KAWASAKI_FRONT_SQUAD, URAWA_REDS_SQUAD,
+
+    // --- KOREA ---
+    DAEJEON_HANA_SQUAD, GANGWON_FC_SQUAD, JEJU_SK_SQUAD, GIMCHEON_SANGMU_SQUAD,
+    FC_ANYANG_SQUAD, BUCHEON_FC_SQUAD, INCHEON_UNITED_SQUAD, GWANGJU_FC_SQUAD,
+    ULSAN_TIGERS_SQUAD, JEONJU_MOTORS_SQUAD, POHANG_STEELERS_SQUAD, SEOUL_CITY_SQUAD,
+
+    // --- AUSTRALIA ---
+    CENTRAL_COAST_MARINERS_SQUAD, WELLINGTON_PHOENIX_SQUAD, AUCKLAND_FC_SQUAD,
+    SYDNEY_SKY_BLUES_SQUAD, MELBOURNE_VICTORY_SQUAD, CITY_OF_MELBOURNE_SQUAD,
+    MACARTHUR_FC_SQUAD, WS_WANDERERS_SQUAD, ADELAIDE_UNITED_SQUAD,
+    BRISBANE_ROAR_SQUAD, WESTERN_UNITED_SQUAD, NEWCASTLE_JETS_SQUAD, PERTH_GLORY_SQUAD,
+
+    // --- RSA & MOROCCO ---
+    STELLENBOSCH_FC_SQUAD, SUPERSPORT_UNITED_SQUAD, CAPE_TOWN_CITY_SQUAD,
+    SEKHUKHUNE_UNITED_SQUAD, TS_GALAXY_SQUAD, AMAZULU_FC_SQUAD,
+    POLOKWANE_CITY_SQUAD, GOLDEN_ARROWS_SQUAD,
+    PRETORIA_BRAZILIANS_SQUAD, SOWETO_PIRATES_SQUAD, SOWETO_CHIEFS_SQUAD,
+    AS_FAR_SQUAD, FUS_RABAT_SQUAD, MAGHREB_DE_FES_SQUAD, OLYMPIC_SAFI_SQUAD,
+    UNION_TOUARGA_SQUAD, HASSANIA_AGADIR_SQUAD, DIFAA_EL_JADIDI_SQUAD, COD_MEKNES_SQUAD,
+    CASABLANCA_REDS_SQUAD, CASABLANCA_EAGLES_SQUAD, ORANGE_BERKANE_SQUAD,
+
+    // --- CARIBBEAN ---
+    KINGSTON_BAY_UNITED_SQUAD, MONTEGO_BAY_WAVES_SQUAD, ST_LUCIA_KINGS_FC_SQUAD, CAVALIER_TOWN_FC_SQUAD,
+    PORT_OF_SPAIN_WARRIORS_SQUAD, TRINBAGO_RIDERS_FC_SQUAD, SAN_JUAN_STRIKERS_SQUAD,
+    CIBAO_ORANGE_FC_SQUAD, OM_UNIVERSITY_SQUAD, ATLANTICO_BLUE_STARS_SQUAD,
+    PORT_AU_PRINCE_AC_SQUAD, CAVALY_SC_SQUAD,
+    BARBADOS_ROYAL_CLUB_SQUAD, WEYMOUTH_WALES_FC_SQUAD,
+    GUYANA_AMAZON_FC_SQUAD, WESTERN_TIGERS_SC_SQUAD,
+
+    // --- LATAM ---
+    MEDELLIN_GREEN_SQUAD, BOGOTA_BLUES_SQUAD, CALI_DEVILS_SQUAD, BARRANQUILLA_SHARKS_SQUAD,
+    BOGOTA_CARDINALS_SQUAD, MEDELLIN_RED_SQUAD, CALI_SUGAR_SQUAD, IBAGUE_GOLD_SQUAD,
+    MANIZALES_WHITE_SQUAD, BUCARAMANGA_LEOPARDS_SQUAD, PEREIRA_WOLVES_SQUAD, PASTO_VOLCANO_SQUAD,
+    BOGOTA_FORT_SQUAD, RIONEGRO_EAGLES_SQUAD, CUCUTA_BORDER_SQUAD, TUNJA_CHECKERS_SQUAD,
+    SANTIAGO_CHIEFS_SQUAD, SANTIAGO_SCHOLARS_SQUAD, SANTIAGO_CRUSADERS_SQUAD, DESERT_MINERS_SQUAD,
+    SANTIAGO_GREEN_SQUAD, VINA_GOLD_SQUAD, COQUIMBO_PIRATES_SQUAD, TALCAHUANO_STEEL_SQUAD,
+    CALERA_RED_SQUAD, SERENA_GARNET_SQUAD, RANCAGUA_CELESTE_SQUAD, SANTIAGO_TRICOLOR_SQUAD,
+    CHILLAN_RED_SQUAD, CONCEPCION_PURPLE_SQUAD, CONCEPCION_UNI_SQUAD, LIMACHE_RED_SQUAD,
+    MONTEVIDEO_TRICOLOR_SQUAD, MONTEVIDEO_COAL_SQUAD, BELVEDERE_BLUE_SQUAD, PARQUE_VIOLET_SQUAD,
+    JARDINES_STRIPED_SQUAD, PRADO_BOHEMIANS_SQUAD, MONTEVIDEO_TAILORS_SQUAD, MONTEVIDEO_PIONEERS_SQUAD,
+    MONTEVIDEO_LIGHTBLUE_SQUAD, VILLA_ALBICELESTE_SQUAD, MELO_BLUE_SQUAD, PALERMO_REDBLUE_SQUAD,
+    MALDONADO_REDGREEN_SQUAD, PEDRENSES_BLUE_SQUAD, GAUCHOS_GOLD_SQUAD, SAYAGO_GREEN_SQUAD,
+
+    // SUPER TEAMS
+    // SUPER_TEAM_A_SQUAD, SUPER_TEAM_B_SQUAD
 ];
 
 export const REAL_PLAYERS: any[] = ALL_SQUADS.flat();
 
 
 // Shared English translations to be used as default/placeholder
+
+
+
 const EN_TRANSLATIONS = {
-    dashboard: "Dashboard", news: "News", squad: "Squad", training: "Training", market: "Market", club: "Club", standings: "Standings", matchDay: "Match Day",
-    managerWelcome: "Welcome back, Manager of {name}", dashboardDesc: "Your team is awaiting your instructions.",
-    playNextMatch: "Play Next Match", quickDerby: "Quick Derby", boardConfidence: "Board Confidence", boardMessage: "We are pleased with your progress.",
-    inbox: "Inbox", noMessages: "No new messages.", week: "Week",
-    tactics: "Tactics", formation: "Formation", aggression: "Aggression", safe: "Safe", normal: "Normal", aggressive: "Aggressive",
-    startingXI: "Starting XI", bench: "Bench", reserves: "Reserves",
-    pos: "Pos", team: "Team", age: "Age", value: "Value", wage: "Wage",
-    playFriendly: "Play Friendly", selectTeam: "Select Team",
-    welcomeTitle: "Welcome, Manager", welcomeDesc: "The club has high expectations.", signContract: "Sign Contract",
-    finances: "Finances", facilities: "Facilities", youthAcademy: "Youth Academy", resign: "Resign",
-    clubBudget: "Club Budget", projectedWeekly: "Projected Weekly Balance",
-    lastWeekReport: "Last Week Report", income: "Income", expenses: "Expenses",
-    stadium: "Stadium", condition: "Condition", level: "Level", maintenance: "Maintenance",
-    infrastructure: "Infrastructure", trainingCenter: "Training Center", academy: "Academy",
-    scoutReport: "Scout Report", promotePlayer: "Promote", academyEmpty: "No candidates available.",
-    efficiency: "Efficiency", coachNote: "Coach's Note",
-    staff: "Staff",
-    gateReceiptsDetail: "Gate Receipts Detail",
-    stadiumCapacity: "Stadium Capacity",
-    ticketPrice: "Ticket Price",
-    lastMatchAttendance: "Last Match Attendance (Est.)",
-    people: "people",
-    occupancy: "Occupancy",
-    maintenanceDetail: "Maintenance Breakdown",
-    totalMaintenance: "Total Maintenance",
-    highestEarners: "Highest Wage Earners",
-    totalWages: "Total Wage Bill",
-    reputationHistory: "Reputation History",
-    confidenceHistory: "Board Confidence History",
-    noChangesYet: "No changes yet",
-    weekShort: "W",
-    rec: "Rec", grw: "Grw", intensityLight: "Light", intensityNormal: "Normal", intensityHeavy: "Heavy",
-    onTarget: "On Target", xg: "xG", selectBenchFirst: "Select a bench player first.", pitch: "Pitch",
-    matchStatusAttack: "Attacking", matchStatusDefense: "Defending", kickoff: "Kickoff",
-    fullTime: "Full Time", initializing: "Initializing...",
-    goals: "Goals", assists: "Assists", apps: "Apps",
-    leagueTable: "League Table", topScorers: "Top Scorers", topAssists: "Top Assists",
-    champion: "Champion", pts: "Pts", p: "P", w: "W", d: "D", l: "L", gd: "GD",
-    buy: "Buy", soldFor: "sold for", offerAccepted: "Offer accepted.", offerReceived: "Transfer Offer",
-    acceptOffer: "Accept", rejectOffer: "Reject",
-    renewContract: "Renew Contract", contractExtended: "Contract Extended", notEnoughFunds: "Not enough funds.",
-    successfullySigned: "Successfully signed", promotedToSenior: "promoted to senior squad.",
-    assistantManager: "Assistant Manager", clubHealth: "Club Health", squadReady: "Squad is ready.",
-    criticalIssues: "Critical Issues", warnings: "Warnings", suggestions: "Suggestions", autoFix: "Auto Fix", close: "Close",
-    worldRankings: "World Rankings", globalDb: "Global Player Database", searchPlayer: "Search Player...",
-    rank: "Rank", nat: "Nat", ovrInfo: "OVR is weighted by position.",
-    base: "Base", attack: "Attack", defense: "Defense",
-    width: "Width", passingStyle: "Passing Style", tempo: "Tempo", defensiveLine: "Defensive Line", marking: "Marking",
-    tacticNarrow: "Narrow", tacticWide: "Wide", tacticShort: "Short", tacticDirect: "Direct", tacticDeep: "Deep", tacticHigh: "High", tacticZonal: "Zonal", tacticManMark: "Man Mark",
-    tempoSlow: "Slow", tempoFast: "Fast",
-    clickHelp: "Click player to swap/select", dragHelp: "Drag to adjust position", autoSortHelp: "Auto-Sort to fix positions",
-    selected: "Selected", selectToStart: "Select players to start",
-
-    attributes: "Attributes", technical: "Technical", physical: "Physical", mental: "Mental",
-    scoutSummary: "Scout Summary", contract: "Contract", yearsLeft: "Years Left", transferList: "Transfer List", removeFromList: "Remove from List",
-    injured: "Injured", suspended: "Suspended",
-    leagueTurkey: "Süper Lig", leagueEngland: "Premier League", leagueSpain: "La Liga", selectLeague: "Select League", reputation: "Reputation",
-    startNewSeason: "Starting New Season", startMatch: "Start Match",
-    resignConfirm: "Are you sure you want to resign? Progress will be lost.",
-    weeklyReport: "Weekly Report",
-    trainingReport: "Training Report",
-    unhappyPlayer: "Unhappy Player",
-    unhappyPlayerDesc: "{name} is unhappy with the lack of game time.",
-    trainingIntensityReport: "Team trained with {intensity} intensity. Recovery: +{recovery}%",
-    financeReport: "Finance Report",
-    financeReportProfit: "This week the club budget closed with €{amount} profit.",
-    financeReportLoss: "This week the club budget closed with €{amount} loss.",
-    currentBalance: "Current balance: €{amount}",
-    completeSquad: "Complete Squad",
-    gameGuide: "Game Guide",
-    fixtures: "Fixtures",
-    prevWeek: "Previous Week",
-    nextWeek: "Next Week",
-    saveAndExit: "Save & Exit",
-
-    noMatchToday: "No match scheduled for today",
-    noMatchInfo: "Advance the week from the dashboard or check fixtures.",
-    returnToDashboard: "Return to Dashboard",
-    clickSwap: "Click to swap",
-    dragAdjust: "Drag to adjust",
-    con: "CON",
-    mor: "MOR",
-
-    // News Center
-    lastNews: "Latest News regarding your club.",
-    deleteRead: "Delete Read",
-    deleteAll: "Delete All",
-    urgent: "URGENT",
-    detail: "Detail",
-    accept: "Accept",
-    reject: "Reject",
-    deleteMessage: "Delete Message",
-
-    // Player Interaction
-    chooseTopic: "Choose a topic to discuss with the player.",
-    praisePerformance: "Praise Performance",
-    praiseDesc: "Boost morale if playing well.",
-    criticizeForm: "Criticize Form",
-    criticizeDesc: "Demand better results. Risky.",
-    encourage: "Encourage",
-    encourageDesc: "Help with confidence issues.",
-    praisePlayer: "Praise",
-    criticizePlayer: "Criticize",
-    motivatePlayer: "Motivate",
-    calmTone: "Calm Tone",
-    passionateTone: "Passionate Tone",
-
-    // Dynamic Messages (Engine)
-    transferNewsSubject: "📰 Transfer News",
-    transferSignedBody: "{team} has signed {position} {name} from {fromTeam} for €{amount}M.",
-    transferOfferSubject: "💰 {team} wants {name}!",
-    transferOfferBody: "{team} has made an unsolicited offer of €{amount}M for {name}. They really want this player!",
-    injurySubject: "🏥 {name} Injured!",
-    injuryBody: "{name} sustained an injury during training. Expected recovery: {weeks} week(s).",
-    youthProspectSubject: "🌟 Youth Prospect Found!",
-    youthProspectBody: "Your scouts have discovered {name} ({position}, {age}). Overall: {overall}, Potential: {potential}",
-
-    // Training Center Localization
-    orangeTeam: "Orange Team",
-    blueTeam: "Blue Team", orange: "Orange", blue: "Blue",
-    selectPlayer: "Select Player", avg: "Avg", motm: "Man of the Match",
-    trainingMatchSetup: "Training Match Setup", needMorePlayers: "Need {count} more fit players",
-    setupMatch: "Setup Training Match", newMatch: "New Match",
-    trainingMatch: "Training Match",
-    trainingMatchDesc: "Create two teams from your squad and watch them play!",
-    playing: "Playing...",
-    seasonComplete: "Season Complete!",
-    seasonOver: "The season has ended.",
-    leagueChampion: "League Champion",
-    points: "Points",
-    // Stats & Scout
-    attrPace: "Pace", attrShoot: "Shoot", attrPass: "Pass", attrDribble: "Dribble", attrDefense: "Defense", attrPhys: "Physical",
-    consistency: "Consistency", bigMatches: "Big Games", injuryRisk: "Injury Risk",
-    veryConsistent: "Very Consistent", inconsistent: "Inconsistent", average: "Average",
-    lovesBigGames: "Loves Big Games", nervous: "Nervous", stable: "Stable",
-    injuryProne: "Injury Prone", resilient: "Resilient",
-    playstyles: "Playstyles",
-    simulateMatch: "Simulate Match", simulating: "Simulating...", quickSimResult: "Match Result",
-    managerOverview: "Manager Overview",
-    // Negotiation
-    negotiationOpen: "We are open to selling {name}. His market value is {value}. What is your offer?",
-    negotiationUnlisted: [
-        "{name} is NOT for sale. It would take a massive offer to change our mind.",
-        "We have no intention of selling {name}. He is key to our plans.",
-        "The player is happy here. We will only listen to exceptional offers."
-    ],
-    negotiationAccept: "We accept your offer. It's a fair price.",
-    negotiationAcceptUnlisted: "This offer is too good to refuse. We accept.",
-    negotiationCounter: "That is too low. We want {amount}.",
-    negotiationReject: [
-        "As I said, he is not for sale.",
-        "This is a waste of time.",
-        "Nowhere near enough."
-    ],
-    negotiationRejectUnlisted: [
-        "That offer is insulting.",
-        "You need to do much better.",
-        "Is that a joke?"
-    ],
-    negotiationWalkout: "We are done talking. The negotiation is over.",
-    negotiationInsistSuccess: "Fine. Since you are persistent, we will accept this price.",
-    negotiationInsistFail: "Your persistence is annoying. We are ending negotiations immediately!",
-    makeOffer: "Make Offer",
-    insist: "Insist",
-    confirmTransfer: "Confirm Transfer",
-    dealAgreed: "Deal Agreed!",
-    negotiationFailed: "Negotiation Failed",
-    negotiationFailedDesc: "The club has withdrawn from talks.",
-    insufficientFunds: "Insufficient Funds",
-    currentValue: "Current Value",
-    patience: "Patience",
-    insistHelp: "Pressure the club (High Risk)",
-    jobOffers: "Job Offers",
-    terminateContract: "Release Player",
-    terminateConfirm: "Release {name}? Severance: €{cost}K",
-    playerReleased: "Player has been released.",
-
-    // GameGuide Translations
-    guideAbout: "About the Game",
-    guideBasics: "Game Basics",
-    guideSquad: "Squad Management",
-    guideTactics: "Tactics (Detailed)",
-    guideTraining: "Training System",
-    guideFacilities: "Facilities & Staff",
-    guideMorale: "Morale System",
-    guideTransfers: "Transfer System",
-    guideFinance: "Financial Management",
-    guideEuropean: "European Cups",
-    guideTips: "Pro Tips",
-
-    guideUnderDev: "Under Development!",
-    guideUnderDevDesc: "This game is actively being developed. User feedback is directly reflected in the game. Contact us for bugs or suggestions!",
-    guideDifferent: "What Makes Us Different?",
-    guideDifferentDesc: "Unlike other manager games, we don't overwhelm users with stats. An easy-to-learn, hard-to-master game that even casual football fans can enjoy.",
-    guideSimple: "Simple and clear interface",
-    guideFast: "Fast match simulation",
-    guideMobile: "Mobile-first design",
-    guideLiveEngine: "Live Match Engine",
-    guideLiveEngineDesc: "Most manager games (FM, Top Eleven etc.) pre-calculate matches and show you highlights. The 'scenario' is already written.",
-    guideOurEngine: "Our engine is different!",
-    guideEvery50ms: "Every 50ms (20 times per second):",
-    guide22Players: "22 player positions are calculated",
-    guideAIDecides: "AI decides (shoot, pass, or dribble?)",
-    guideBallPhysics: "Ball physics are simulated",
-    guideUnpredictable: "Real-time, unpredictable matches!",
-    guide2D25D: "2D vs 2.5D View",
-    guide2DDesc: "Classic bird's eye view. Ideal for tactical analysis. See the entire pitch.",
-    guide25DDesc: "Perspective view. More cinematic, like a TV broadcast.",
-    guideChangeView: "Change view during match from top right!",
-    // Assistant Coach
-    assistantCoach: "Assistant Coach",
-    coachRookie: "Rookie",
-    coachExperienced: "Experienced",
-    coachExpert: "Expert",
-    coachMaster: "Master",
-    matches: "matches",
-    opponentAnalysis: "Opponent Analysis",
-    style: "Style",
-    myRecommendation: "My Recommendation",
-    against: "against",
-    tryThis: "try this!",
-    reasonPressure: "Pressure breaks defensive setups",
-    reasonCounter: "Counter-attacks beat high press",
-    reasonPressWin: "Pressing wins the ball back",
-    reasonControl: "Control prevents counter-attacks",
-    reasonPressBalanced: "Pressing is effective against balanced teams",
-    tacticsRecord: "record vs this style",
-    winRate: "win rate",
-    needMoreExperience: "Need More Experience",
-    needMoreMatchesDesc: "I need at least 5 matches to give advice. We've played {count} so far.",
-    pastMatches: "Past Encounters",
-    season: "Season",
-    understood: "Got It",
-    // UI Labels for LeagueTable, ManagerProfile, PlayerModal
-    rating: "Rating",
-    history: "History",
-    player: "Player",
-    noStatsYet: "No stats recorded yet.",
-    notEnoughMatches: "Not enough matches played yet.",
-    trophyCabinet: "Trophy Cabinet",
-    championship: "Championship",
-    runnerUp: "Runner-up",
-    seasonHistory: "Season History",
-    noHistoryYet: "No history yet. Complete a season!",
-    scorerKing: "Top Scorer",
-    assistKing: "Top Assister",
-    cards: "Cards",
-    form: "Form",
-    // GameGuide Details
-    guideBasicsTitle: "Game Basics",
-    guideBasics1: "You are the manager of a football team in this game.",
-    guideBasics2: "A league match is played every week. Champion is determined at the end of the season.",
-    guideBasics3: "Goal: Championship, European cups and growing the club.",
-    guideBasics4: "The game saves automatically. Use 'Save and Exit' for a safe exit.",
-    guideBasics5: "If Board Confidence drops, you might be fired!",
-    guideBoardEffectTitle: "Board Confidence Effects:",
-    guideWinEffect: "Win: +3 confidence",
-    guideDrawEffect: "Draw: +0 confidence",
-    guideLossEffect: "Loss: -5 confidence",
-    guideFireWarning: "Below 30%: You get fired!",
-    guideSquadTitle: "Squad Management",
-    guideSquad1: "Set players as Starting XI, Bench, or Reserves.",
-    guideSquad2: "Click a player to swap with another.",
-    guideSquad3: "Try different formations by selecting a layout.",
-    guideOvrCalcTitle: "How is OVR (Overall Rating) Calculated?",
-    guidePosMatch: "Position Match: Players in correct positions show higher OVR.",
-    guideMoraleEffect: "Morale Effect: 50+ morale = bonus, 50- morale = penalty.",
-    guideConEffect: "Condition: Below 30% condition = serious performance drop.",
-    guideReleaseTitle: "Contract Termination",
-    guideRelease1: "You can release unwanted players.",
-    guideRelease2: "Compensation: Remaining Years × Annual Wage × 50%",
-    guideRelease3: "The player becomes a free agent.",
-    guideTacticsTitle: "Tactics System (Detailed)",
-    guideForm433: "4-3-3: Balanced, wing-heavy.",
-    guideForm442: "4-4-2: Classic, safe.",
-    guideForm4231: "4-2-3-1: Midfield control.",
-    guideForm352: "3-5-2: Midfield dominant.",
-    guideForm532: "5-3-2: Defensive.",
-    guideForm4141: "4-1-4-1: Solid defense.",
-    guideStylePoss: "Possession: Ball retention, short passing, patient attack. Needs strong midfield.",
-    guideStyleCounter: "Counter: Defend and fast break. Needs fast forwards and midfielders.",
-    guideStylePress: "HighPress: High pressure, suffocate opponent. Requires high stamina!",
-    guideStyleBus: "ParkTheBus: 11-man defense, wait for counter. Effective against big teams.",
-    guideStyleBal: "Balanced: A bit of everything. A safe choice.",
-    guideWidthNarrow: "Narrow: Play through middle. Ideal for central players.",
-    guideWidthWide: "Wide: Use the wings. Requires fast wingers.",
-    guideTrainingTitle: "Training System",
-    guideTrainAge: "Only players under 28 can develop!",
-    guideTrainLuck: "Development is luck-based - not guaranteed every week.",
-    guideTrainFocus: "Training Focuses",
-    guideTrainFocusBal: "Balanced: Equal chance for all attributes.",
-    guideTrainFocusAtt: "Attack: Finishing, Shooting, Dribbling improves.",
-    guideTrainFocusDef: "Defense: Tackling, Positioning, Strength improves.",
-    guideTrainFocusPhy: "Physical: Pace, Stamina, Strength improves.",
-    guideTrainFocusTec: "Technical: Passing, Dribbling, Vision improves.",
-    guideTrainPosBased: "By Position (NEW!): Automatically based on role.",
-    guideFacilitiesTitle: "Facilities & Staff",
-    guideStadiumEffect: "Each level = +6,000 capacity. More fans = more ticket revenue.",
-    guideTrainingEffect: "Training Center: Increases player growth speed and potential reach chance.",
-    guideScoutVsAcad: "Scout vs Academy: Scouts are more effective for finding potential, upgrade them first!",
-    guideMoraleTitle: "Morale System",
-    guideMoraleXI: "Starting XI: +2 morale",
-    guideMoraleBench: "Bench: No change",
-    guideMoraleRes75: "Reserve (75+ OVR): -3 morale!",
-    guideMoraleRes65: "Reserve (65-75 OVR): -1 morale",
-    guideMoralePerform: "100 Morale: +5% OVR bonus. 0 Morale: -10% OVR penalty!",
-    guideTransferTitle: "Transfer System",
-    guideTransList: "Players on transfer list are cheaper.",
-    guideTransUnlisted: "Expect to pay 20-50% more for unlisted players.",
-    guideYouthTitle: "Youth Academy (Cheap!)",
-    guideYouth1: "Young players come at €50K value.",
-    guideYouth2: "Wage: Only €25K/year.",
-    guideFinanceTitle: "Finance Management",
-    guideSponsorG: "Guaranteed: High fixed, low bonus. Safe.",
-    guideSponsorD: "Balanced: Mid fixed, mid bonus.",
-    guideSponsorR: "Risky: Low fixed, high bonus. Profitable if you win!",
-    // European Cups
-    guideEuroTitle: "European Cups",
-    guideEuroReq: "Participation Requirements",
-    guideEuroCL: "Champions League: 1st and 2nd in League",
-    guideEuroEL: "UEFA Europa League: 3rd and 4th in League",
-    guideEuroFormat: "Tournament Format",
-    guideEuroGroups: "Group Stage: groups of 4 teams",
-    guideEuroAdv: "Top 2 advance to knockout stage",
-    guideEuroKO: "Quarter-final, semi-final, final",
-    guideEuroSingle: "Single-leg knockout system",
-    // Pro Tips
-    guideProTipsTitle: "Pro Tips",
-    guideTipsDos: "Dos",
-    guideTipsDo1: "Have at least 2 players in every position.",
-    guideTipsDo2: "Give young players a chance - they develop!",
-    guideTipsDo3: "Upgrade the Scout first (it's more effective).",
-    guideTipsDo4: "Sell youth academy prospects - very profitable!",
-    guideTipsDo5: "Change tactics according to the opponent.",
-    guideTipsDo6: "Rest your tired players.",
-    guideTipsDonts: "Don'ts",
-    guideTipsDont1: "Don't keep high OVR players in reserves constantly.",
-    guideTipsDont2: "Don't make transfers exceeding your budget.",
-    guideTipsDont3: "Don't stick to only one formation.",
-    guideTipsDont4: "Don't ignore injuries.",
-    guideTipsDont5: "Don't let contracts expire.",
-    guideTipsTactical: "Tactical Tips",
-    guideTipStrong: "Strong Opponent: ParkTheBus + Counter",
-    guideTipWeak: "Weak Opponent: HighPress + Possession",
-    guideTipWinning: "When Winning: Safe aggression",
-    guideTipLosing: "When Losing: Aggressive + Fast tempo",
-    // Manager Profile
-    managerProfile: "Manager Profile",
-    currentTeam: "Current Team",
-    weeklySalary: "Weekly Salary",
-    leagueTitle: "League Title",
-    championsLeague: "Champions League",
-    uefaCup: "UEFA Cup",
-    superCup: "Super Cup",
-    careerHistory: "Career History",
-    noCareerYet: "No career history yet. Complete your first season!",
-    prizeMoneyInfo: "Trophy Prizes Info",
-    roundOf16ToQF: "Round of 16 → Quarter Final",
-    qfToSF: "Quarter Final → Semi Final",
-    sfToFinal: "Semi Final → Final",
-    championshipPrize: "Championship",
-    totalPrize: "Total",
-    // Facilities
-    stadiumLevel: "Stadium Level",
-    seats: "Seats",
-    currentSeats: "Current",
-    newSeats: "New",
-    maintIncrease: "Maintenance increase",
-    upgrade: "Upgrade",
-    trainingCenterLevel: "Training Level",
-    playerDevSpeed: "Player Development Speed",
-    currentBonus: "Current bonus",
-    newBonus: "New bonus",
-    academyLevel: "Academy Level",
-    youthQuality: "Youth Quality",
-    scoutNetwork: "Scout Network",
-    scoutReportDesc: "Scouts find young talents worldwide. These players come from other clubs' youth systems.",
-    // Staff
-    staffAssistant: "Assistant Coach",
-    staffAssistantDesc: "Increases training efficiency and tactical harmony.",
-    staffScout: "Head Scout",
-    staffScoutDesc: "Finds better youth talents, reveals hidden attributes.",
-    staffPhysio: "Head Physio",
-    staffPhysioDesc: "Speeds up injury recovery, reduces fatigue accumulation.",
-    fitnessPerWeek: "fitness/week",
-    discoveryChance: "discovery chance",
-    // Playstyles
-    psRocket: "Rocket",
-    psQuick: "Quick",
-    psFinesse: "Finesse Shot",
-    psTrickster: "Trickster",
-    psPoacher: "Poacher",
-    // OpponentPreview & Match UI
-    easyOpponent: "Easy Opponent",
-    balancedMatch: "Balanced Match",
-    hardOpponent: "Hard Opponent",
-    squadStrength: "Squad Strength",
-    prestige: "Prestige",
-    last5Matches: "Last 5 Matches",
-    noMatchesYet: "No matches yet",
-    keyPlayers: "Key Players",
-    squadDistribution: "Squad Distribution",
-    startMatchBtn: "Start Match!",
-    goBack: "Go Back",
-    backToProfiles: "Back to Profiles",
-    // TeamManagement Morale
-    playingXIBonus: "Playing in Starting XI (+2/week)",
-    benchStable: "On bench (stable - ready to play)",
-    reserveStarPenalty: "Reserve, star player (-3/week)",
-    reserveMediumPenalty: "Reserve (-1/week)",
-    reserveStable: "Reserve (stable)",
-    lastMoraleChanges: "Last Morale Changes",
-    // AssistantCoach
-    playStyle: "Play Style",
-    aggressiveness: "Aggressiveness",
-    slow: "Slow",
-    fast: "Fast",
-    // Manager Profile Page
-    managerProfileTitle: "Manager Profile",
-    currentTeamLabel: "Current Team",
-    weeklySalaryLabel: "Weekly Salary",
-    seasonLabel: "Season",
-    trophyCabinetTitle: "Trophy Cabinet",
-    trophyCount: "trophies",
-    leagueTitleLabel: "League Title",
-    championsLeagueLabel: "Champions League",
-    uefaCupLabel: "UEFA Cup",
-    superCupLabel: "Super Cup",
-    careerHistoryTitle: "Career History",
-    noCareerHistoryYet: "No career history yet. Complete your first season!",
-    positionLabel: "Position",
-    trophiesLabel: "Trophies",
-    cupPrizeInfoTitle: "Cup Prize Info",
-    roundOf16ToQFLabel: "Round of 16 → Quarter-Final",
-    qfToSFLabel: "Quarter-Final → Semi-Final",
-    sfToFinalLabel: "Semi-Final → Final",
-    championshipLabel: "Championship",
-    totalLabel: "Total",
-    // Facilities Page
-    currentLabel: "Current",
-    newLabel: "New",
-    maintIncreaseLabel: "Maintenance increase",
-    upgradeBtn: "Upgrade",
-    progressLabel: "Progress",
-    qualityLabel: "Quality",
-    stadiumName: "Stadium",
-    seatsLabel: "Seats",
-    trainingFacility: "Training Facility",
-    performanceCenter: "Performance Center",
-    playerDevelopment: "Player Development",
-    developmentSpeed: "development speed",
-    youthAcademyFacility: "Youth Academy",
-    nextGenAcademy: "Next Gen Academy",
-    betterYouthLabel: "better youth",
-    youthQualityLabel: "youth quality",
-    scoutNetworkLabel: "Scout Network",
-    // Staff Page
-    assistantCoachTitle: "Assistant Coach",
-    assistantCoachDesc: "Increases training efficiency and tactical harmony.",
-    headScoutTitle: "Head Scout",
-    headScoutDesc: "Finds better youth talents, reveals hidden attributes.",
-    headPhysioTitle: "Head Physio",
-    headPhysioDesc: "Speeds up injury recovery, reduces fatigue accumulation.",
-    levelLabel: "Level",
-    trainingEfficiency: "training efficiency",
-    youthDiscoveryChance: "youth discovery chance",
-    conditionPerWeek: "condition/week",
-    // Training Page
-    trainingBalanced: "Balanced",
-    trainingBalancedDesc: "Maintains overall condition and form.",
-    trainingAttack: "Attack",
-    trainingAttackDesc: "Improves Finishing and Passing.",
-    trainingDefense: "Defense",
-    trainingDefenseDesc: "Improves Tackling and Positioning.",
-    trainingPhysical: "Physical",
-    trainingPhysicalDesc: "Increases Speed and Strength. Fatigue risk.",
-    trainingTechnical: "Technical",
-    trainingTechnicalDesc: "Improves Dribbling and Vision.",
-    trainingPositionBased: "Position Based",
-    trainingPositionBasedDesc: "Each player trains according to their position.",
-    trainingTip: "Balance rest and development. Heavy training improves players quickly but reduces rest.",
-    trainingMatchTitle: "Training Match",
-    prepareMatch: "Prepare Match",
-    upgradeTrainingTip: "Upgrade Training Facilities from Club menu to increase weekly player development.",
-    // Transfer Market Filters
-    filterAll: "All",
-    filterListed: "Listed",
-    filterUnlisted: "Not Listed",
-    filterFree: "Free",
-    // Tactic Labels
-    tacticBalanced: "Balanced",
-    tacticPossession: "Possession",
-    tacticCounter: "Counter",
-    tacticHighPress: "High Press",
-    tacticParkTheBus: "Park The Bus",
-    // Assistant Coach Advice
-    myTacticalAdvice: "My Tactical Advice",
-    generalAdvice: "General advice",
-    withStyle: "with",
-    playWith: "play",
-    vsTacticStats: "vs {tactic} tactic:",
-    adviceWingPressure: "Wing pressure will force the middle",
-    adviceMidfieldControl: "Tight midfield control",
-    adviceUseWings: "You'll bypass through the wings",
-    adviceTwoStrikers: "Two strikers will apply pressure",
-    adviceExtraDefense: "Extra defensive support needed",
-    adviceMarkPlaymaker: "You'll mark the playmaker",
-    adviceMidfieldSuperiority: "Midfield superiority",
-    adviceUseWingsNarrow: "Use the wings, they play narrow",
-    advicePlayWide: "Play wide, attack the flanks",
-    adviceBePatient: "Be patient, wait for gaps",
-    adviceQuickCounter: "Quick counter on long balls",
-    advicePressOnLoss: "Press immediately on ball loss",
-    adviceKeepPossession: "Keep possession, avoid counters",
-    adviceControlledPress: "Controlled pressing will be effective",
-    adviceBalancedApproach: "Balanced approach is safest",
-    coachNoteText: "Setting the focus to {focus} will help shape the team's identity. Use Light intensity after tough matches to recover condition.",
-    // Cup Round Labels - Deleted duplicates
-    // App.tsx Messages
-    clParticipationSubject: "European Cup Participation",
-    clParticipationBody: "🏆 You are participating in the Champions League!",
-    elParticipationBody: "🥈 You are participating in the UEFA Cup!",
-    clDrawSubject: "🏆 Champions League Draw!",
-    clDrawQualifiedBody: "Your team has qualified for the Champions League! Quarter-final matchups are set.",
-    clDrawNotQualifiedBody: "Champions League has started. Unfortunately, your team did not qualify this season.",
-    clInvitationSubject: "🏆 Champions League Invitation!",
-    clInvitationBody: "As {team}, you have qualified for the Champions League!",
-    elInvitationSubject: "⚽ UEFA Europa League Invitation!",
-    elInvitationBody: "As {team}, you have qualified for the UEFA Europa League!",
-    jobWelcomeSubject: "🏆 Welcome to {team}!",
-    jobWelcomeBody: "You have started as the new manager of {team}. Your weekly salary: €{salary}",
-    returnToProfileConfirm: "Progress will be saved. Are you sure you want to return to profile selector?",
-    // Sponsors
-    sponsorTitle: "Sponsor Selection",
-    sponsorSelect: "Select your seasonal main sponsor.",
-    minYearly: "Min/Year",
-    champYearly: "Champ/Year",
-    seasonEndBonuses: "Season End Bonuses",
-    riskyWarning: "⚠️ Warning: Income is very low in a bad season! But huge rewards if you become champion!",
-    guaranteedNote: "✓ Safe: Fixed high income regardless of results",
-    selectedLabel: "Selected:",
-    selectSponsorLabel: "Select a sponsor",
-    confirmDeal: "Confirm Deal",
-    midTableLabel: "mid-table",
-    championLabel: "champion"
 };
 
-const FR_TRANSLATIONS = {
-    dashboard: "Tableau de bord", news: "Actualités", squad: "Effectif", training: "Entraînement", market: "Marché", club: "Club", standings: "Classement", matchDay: "Jour de match",
-    managerWelcome: "Bon retour, Manager de {name}", dashboardDesc: "Votre équipe attend vos instructions.",
-    playNextMatch: "Jouer le prochain match", quickDerby: "Derby rapide", boardConfidence: "Confiance de la direction", boardMessage: "Nous sommes satisfaits de vos progrès.",
-    inbox: "Boîte de réception", noMessages: "Pas de nouveaux messages.", week: "Semaine",
-    tactics: "Tactiques", formation: "Formation", aggression: "Agressivité", safe: "Prudent", normal: "Normal", aggressive: "Agressif",
-    startingXI: "Onze de départ", bench: "Remplaçants", reserves: "Réserves",
-    pos: "Pos", team: "Équipe", age: "Âge", value: "Valeur", wage: "Salaire",
-    playFriendly: "Match amical", selectTeam: "Choisir équipe",
-    welcomeTitle: "Bienvenue, Manager", welcomeDesc: "Le club a de grandes attentes.", signContract: "Signer contrat",
-    finances: "Finances", facilities: "Installations", youthAcademy: "Centre de formation", resign: "Démissionner",
-    clubBudget: "Budget du club", projectedWeekly: "Solde hebdomadaire prévu",
-    lastWeekReport: "Rapport de la semaine", income: "Revenus", expenses: "Dépenses",
-    stadium: "Stade", condition: "Condition", level: "Niveau", maintenance: "Entretien",
-    infrastructure: "Infrastructure", trainingCenter: "Centre d'entraînement", academy: "Académie",
-    scoutReport: "Rapport du recruteur", promotePlayer: "Promouvoir", academyEmpty: "Aucun candidat disponible.",
-    efficiency: "Efficacité", coachNote: "Note du coach",
-    staff: "Personnel",
-    gateReceiptsDetail: "Détail de la billetterie",
-    stadiumCapacity: "Capacité du stade",
-    ticketPrice: "Prix du billet",
-    lastMatchAttendance: "Affluence dernier match (Est.)",
-    people: "personnes",
-    occupancy: "Occupation",
-    maintenanceDetail: "Détail de l'entretien",
-    totalMaintenance: "Entretien total",
-    highestEarners: "Plus hauts salaires",
-    totalWages: "Masse salariale totale",
-    reputationHistory: "Historique de réputation",
-    confidenceHistory: "Historique de confiance",
-    noChangesYet: "Pas encore de changements",
-    weekShort: "S",
-    rec: "Réc", grw: "Cro", intensityLight: "Léger", intensityNormal: "Normal", intensityHeavy: "Intense",
-    onTarget: "Cadré", xg: "xG", selectBenchFirst: "Sélectionnez un remplaçant d'abord.", pitch: "Terrain",
-    matchStatusAttack: "Attaque", matchStatusDefense: "Défense", kickoff: "Coup d'envoi",
-    fullTime: "Fin du match", initializing: "Initialisation...",
-    goals: "Buts", assists: "Passes", apps: "Matchs",
-    leagueTable: "Classement", topScorers: "Buteurs", topAssists: "Passeurs",
-    champion: "Champion", pts: "Pts", p: "J", w: "G", d: "N", l: "P", gd: "Diff",
-    buy: "Acheter", soldFor: "vendu pour", offerAccepted: "Offre acceptée.", offerReceived: "Offre de transfert",
-    acceptOffer: "Accepter", rejectOffer: "Refuser",
-    renewContract: "Renouveler contrat", contractExtended: "Contrat prolongé", notEnoughFunds: "Fonds insuffisants.",
-    successfullySigned: "Signé avec succès", promotedToSenior: "promu en équipe première.",
-    assistantManager: "Entraîneur adjoint", clubHealth: "Santé du club", squadReady: "L'effectif est prêt.",
-    criticalIssues: "Problèmes critiques", warnings: "Avertissements", suggestions: "Suggestions", autoFix: "Auto-réparation", close: "Fermer",
-    worldRankings: "Classement mondial", globalDb: "Base de données joueurs", searchPlayer: "Chercher joueur...",
-    rank: "Rang", nat: "Nat", ovrInfo: "L'OVR dépend de la position.",
-    base: "Base", attack: "Attaque", defense: "Défense",
-    width: "Largeur", passingStyle: "Style de passe", tempo: "Tempo", defensiveLine: "Ligne défensive", marking: "Marquage",
-    tacticNarrow: "Étroit", tacticWide: "Large", tacticShort: "Court", tacticDirect: "Direct", tacticDeep: "Bas", tacticHigh: "Haut", tacticZonal: "Zone", tacticManMark: "Individuel",
-    tempoSlow: "Lent", tempoFast: "Rapide",
-    clickHelp: "Cliquer pour échanger", dragHelp: "Glisser pour ajuster", autoSortHelp: "Tri automatique",
-    selected: "Sélectionné:", selectToStart: "Sélectionner pour démarrer",
-    attributes: "Attributs", technical: "Technique", physical: "Physique", mental: "Mental",
-    scoutSummary: "Résumé du scout", contract: "Contrat", yearsLeft: "Années restantes", transferList: "Liste de transferts", removeFromList: "Retirer de la liste",
-    injured: "Blessé", suspended: "Suspendu",
-    leagueTurkey: "Süper Lig", leagueEngland: "Premier League", leagueSpain: "La Liga", selectLeague: "Choisir la ligue", reputation: "Réputation",
-    startNewSeason: "Début de saison", startMatch: "Démarrer match",
-    resignConfirm: "Voulez-vous vraiment démissionner ? La progression sera perdue.",
-    weeklyReport: "Rapport hebdomadaire",
-    trainingReport: "Rapport d'entraînement",
-    unhappyPlayer: "Joueur mécontent",
-    unhappyPlayerDesc: "{name} est mécontent de son manque de temps de jeu.",
-    trainingIntensityReport: "L'équipe s'est entraînée avec une intensité {intensity}. Récupération: +{recovery}%",
-    financeReport: "Rapport financier",
-    financeReportProfit: "Le budget a clôturé avec un profit de €{amount}.",
-    financeReportLoss: "Le budget a clôturé avec une perte de €{amount}.",
-    currentBalance: "Solde actuel: €{amount}",
-    completeSquad: "Compléter l'effectif",
-    gameGuide: "Guide du jeu",
-    fixtures: "Calendrier",
-    prevWeek: "Semaine préc.",
-    nextWeek: "Semaine suiv.",
-    saveAndExit: "Enregistrer et quitter",
-    noMatchToday: "Aucun match prévu aujourd'hui",
-    noMatchInfo: "Avancez la semaine ou consultez le calendrier.",
-    returnToDashboard: "Retour au tableau de bord",
-    clickSwap: "Cliquer pour changer",
-    dragAdjust: "Glisser pour ajuster",
-    con: "CON", mor: "MOR",
-    lastNews: "Dernières nouvelles de votre club.",
-    deleteRead: "Supprimer lus", deleteAll: "Supprimer tout",
-    urgent: "URGENTE", detail: "Détail",
-    accept: "Accepter", reject: "Refuser", deleteMessage: "Supprimer message",
-    chooseTopic: "Choisissez un sujet de discussion.",
-    praisePerformance: "Féliciter performance", praiseDesc: "Booste le moral si le joueur joue bien.",
-    criticizeForm: "Critiquer la forme", criticizeDesc: "Exiger de meilleurs résultats. Risqué.",
-    encourage: "Encourager", encourageDesc: "Aider avec les problèmes de confiance.",
-    praisePlayer: "Féliciter", criticizePlayer: "Critiquer", motivatePlayer: "Motiver",
-    calmTone: "Ton calme", passionateTone: "Ton passionné",
-    transferNewsSubject: "📰 Nouvelles transferts",
-    transferSignedBody: "{team} a signé {position} {name} de {fromTeam} pour €{amount}M.",
-    transferOfferSubject: "💰 {team} veut {name}!",
-    transferOfferBody: "{team} a fait une offre de €{amount}M pour {name}. Ils veulent vraiment ce joueur!",
-    injurySubject: "🏥 {name} Blessé!",
-    injuryBody: "{name} s'est blessé à l'entraînement. Récupération prévue: {weeks} semaine(s).",
-    youthProspectSubject: "🌟 Nouveau talent!",
-    youthProspectBody: "Vos recruteurs ont découvert {name} ({position}, {age}). OVR: {overall}, Potentiel: {potential}",
-    orangeTeam: "Équipe Orange", blueTeam: "Équipe Bleue", orange: "Orange", blue: "Bleu",
-    selectPlayer: "Choisir joueur", avg: "Moy", motm: "Homme du match",
-    trainingMatchSetup: "Configuration match d'entraînement", needMorePlayers: "Besoin de {count} joueurs en forme",
-    setupMatch: "Préparer entraînement", newMatch: "Nouveau match",
-    trainingMatch: "Match d'entraînement",
-    trainingMatchDesc: "Créez deux équipes et regardez-les jouer!",
-    playing: "En cours...", seasonComplete: "Saison terminée!", seasonOver: "La saison est finie.",
-    leagueChampion: "Champion de la Ligue", points: "Points",
-    attrPace: "Vitesse", attrShoot: "Tir", attrPass: "Passe", attrDribble: "Dribble", attrDefense: "Défense", attrPhys: "Physique",
-    consistency: "Régularité", bigMatches: "Grands matchs", injuryRisk: "Risque de blessure",
-    veryConsistent: "Très régulier", inconsistent: "Irrégulier", average: "Moyen",
-    lovesBigGames: "Adore les grands matchs", nervous: "Nerveux", stable: "Stable",
-    injuryProne: "Fragile", resilient: "Résistant",
-    playstyles: "Styles de jeu", simulateMatch: "Simuler le match", simulating: "Simulation...", quickSimResult: "Résultat du match",
-    managerOverview: "Vue d'ensemble manager",
-    negotiationOpen: "Nous sommes prêts à vendre {name}. Sa valeur est de {value}. Quelle est votre offre ?",
-    negotiationUnlisted: ["{name} n'est PAS à vendre.", "Nous ne comptons pas vendre {name}.", "Le joueur est heureux ici."],
-    negotiationAccept: "Nous acceptons votre offre. C'est un prix juste.",
-    negotiationAcceptUnlisted: "Cette offre est trop belle pour être refusée. Accepté.",
-    negotiationCounter: "C'est trop bas. Nous voulons {amount}.",
-    negotiationWalkout: "La discussion est terminée. Négociation rompue.",
-    negotiationInsistSuccess: "Très bien. Puisque vous insistez, nous acceptons ce prix.",
-    negotiationInsistFail: "Votre insistance est agaçante. Nous arrêtons tout!",
-    makeOffer: "Faire une offre", insist: "Insister", confirmTransfer: "Confirmer transfert", dealAgreed: "Accord conclu!",
-    negotiationFailed: "Négociation échouée", insufficientFunds: "Fonds insuffisants",
-    currentValue: "Valeur actuelle", patience: "Patience", insistHelp: "Mettre la pression (Risqué)", jobOffers: "Offres d'emploi",
-    terminateContract: "Libérer joueur", terminateConfirm: "Libérer {name} ? Indemnité: €{cost}K", playerReleased: "Joueur libéré.",
-    guideAbout: "À propos du jeu", guideBasics: "Bases du jeu", guideSquad: "Gestion de l'effectif", guideTactics: "Tactiques (Détails)",
-    guideTraining: "Système d'entraînement", guideFacilities: "Installations", guideMorale: "Système de moral",
-    guideTransfers: "Système de transferts", guideFinance: "Gestion financière", guideEuropean: "Coupes d'Europe", guideTips: "Conseils Pro",
-    guideUnderDev: "En développement!",
-    guideLiveEngine: "Moteur de match en direct",
-    guide2D25D: "Vue 2D vs 2.5D",
-    assistantCoach: "Entraîneur adjoint", coachRookie: "Débutant", coachExperienced: "Expérimenté", coachExpert: "Expert", coachMaster: "Maître",
-    matches: "matchs", opponentAnalysis: "Analyse de l'adversaire", style: "Style", myRecommendation: "Ma recommandation",
-    against: "contre", tryThis: "essayez ça!",
-    tacticsRecord: "bilan vs ce style", winRate: "taux de victoire", needMoreExperience: "Besoin d'expérience",
-    needMoreMatchesDesc: "J'ai besoin d'au moins 5 matchs pour conseiller. Nous en avons fait {count}.",
-    pastMatches: "Rencontres passées", season: "Saison", understood: "Compris",
-    rating: "Note", history: "Historique", player: "Joueur", noStatsYet: "Aucune stat enregistrée.",
-    trophyCabinet: "Palmarès", championship: "Championnat", runnerUp: "Deuxième",
-    seasonHistory: "Historique des saisons", scorerKing: "Meilleur buteur", assistKing: "Meilleur passeur",
-    cards: "Cartons", form: "Forme",
-    managerProfile: "Profil Manager", currentTeam: "Équipe actuelle", weeklySalary: "Salaire hebdo",
-    leagueTitle: "Titre de Ligue", championsLeague: "Ligue des Champions", uefaCup: "Coupe UEFA", superCup: "Super Coupe",
-    stadiumLevel: "Niveau du stade", seats: "Places", upgrade: "Améliorer",
-    trainingCenterLevel: "Niveau entraînement", youthQuality: "Qualité jeunes", scoutNetwork: "Réseau de recrutement",
-    staffAssistant: "Coach Adjoint", staffScout: "Chef Recruteur", staffPhysio: "Chef Kiné",
-    psRocket: "Fusée", psQuick: "Rapide", psFinesse: "Tir en finesse", psTrickster: "Technicien", psPoacher: "Renard",
-    easyOpponent: "Adversaire facile", balancedMatch: "Match équilibré", hardOpponent: "Adversaire coriace",
-    squadStrength: "Force de l'effectif", prestige: "Prestige", last5Matches: "5 derniers matchs",
-    startMatchBtn: "Démarrer match!", goBack: "Retour",
-    trainingBalanced: "Équilibré", trainingAttack: "Attaque", trainingDefense: "Défense",
-    trainingPhysical: "Physique", trainingTechnical: "Technique", trainingPositionBased: "Par position",
-    coachNoteText: "L'accent sur {focus} aidera à forger l'identité de l'équipe.",
-    sponsorTitle: "Sélection du sponsor", sponsorSelect: "Choisissez votre sponsor principal pour la saison.",
-    minYearly: "Min/An", champYearly: "Champ/An", seasonEndBonuses: "Primes de fin de saison",
-    riskyWarning: "⚠️ Attention: Revenus faibles en cas de mauvaise saison! Mais gros bonus en cas de titre!",
-    guaranteedNote: "✓ Sûr: Revenu fixe élevé peu importe les résultats",
-    selectedLabel: "Sélectionné:", selectSponsorLabel: "Choisir un sponsor", confirmDeal: "Confirmer l'accord",
-    midTableLabel: "milieu de tableau", championLabel: "champion"
+// --- DERBY RIVALS (GÜNCELLENMİŞ TEK LİSTE) ---
+// Bu liste dosyanın en sonunda sadece BİR KEZ bulunmalıdır.
+
+export const DERBY_RIVALS: Record<string, string[]> = {
+    // --- TURKEY ---
+    'Galata Lions': ['Istanbul Yellows', 'Istanbul Eagles', 'Trabzon Storm'],
+    'Istanbul Yellows': ['Galata Lions', 'Istanbul Eagles', 'Trabzon Storm'],
+    'Istanbul Eagles': ['Galata Lions', 'Istanbul Yellows', 'Trabzon Storm'],
+    'Trabzon Storm': ['Galata Lions', 'Istanbul Yellows', 'Istanbul Eagles'],
+
+    // --- ENGLAND ---
+    'Merseyside Reds': ['Merseyside Blues', 'Manchester Devils', 'Manchester Skyblues'],
+    'Manchester Devils': ['Manchester Skyblues', 'Merseyside Reds', 'Yorkshire Whites'],
+    'Manchester Skyblues': ['Manchester Devils', 'Merseyside Reds'],
+    'London Cannons': ['North London Whites', 'London Blue Lions'],
+    'North London Whites': ['London Cannons', 'London Blue Lions'],
+    'London Blue Lions': ['London Cannons', 'North London Whites'],
+
+    // --- SPAIN ---
+    'Madrid Blancos': ['Madrid Indios', 'Catalonia Blau'],
+    'Catalonia Blau': ['Madrid Blancos', 'Espanyol Parrots'],
+    'Madrid Indios': ['Madrid Blancos'],
+    'Seville GreenWhites': ['Nervion Red-Whites'],
+    'Nervion Red-Whites': ['Seville GreenWhites'],
+    'San Sebastian Blue': ['Bilbao Lions'],
+    'Bilbao Lions': ['San Sebastian Blue'],
+
+    // --- ITALY ---
+    'Inter Lombardia': ['Milano Devils', 'Piemonte Zebras'],
+    'Milano Devils': ['Inter Lombardia', 'Piemonte Zebras'],
+    'Piemonte Zebras': ['Inter Lombardia', 'Milano Devils', 'Torino Bulls'],
+    'Torino Bulls': ['Piemonte Zebras'],
+    'Roma Gladiators': ['Latium Eagles'],
+    'Latium Eagles': ['Roma Gladiators'],
+    'Genoa Griffins': ['Sampdoria Blue'],
+
+    // --- GERMANY ---
+    'Munich Red': ['Westphalia Yellows', 'Berlin Iron'], // Klassiker
+    'Westphalia Yellows': ['Munich Red', 'Bochum Blue'], // Ruhr derbisi (Schalke yoksa Bochum)
+    'Hamburg Pirates': ['Bremen River'], // Nordderby
+
+    // --- FRANCE ---
+    'Paris Red-Blue': ['Marseille Blue'], // Le Classique
+    'Marseille Blue': ['Paris Red-Blue', 'Lyon Kids'],
+    'Lyon Kids': ['Saint-Green', 'Marseille Blue'], // Rhone-Alpes Derby
+
+    // --- ARGENTINA ---
+    'Buenos Aires Millionaires': ['La Boca Xeneizes', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
+    'La Boca Xeneizes': ['Buenos Aires Millionaires', 'Avellaneda Racers', 'Avellaneda Devils', 'Boedo Saints'],
+    'Avellaneda Racers': ['Avellaneda Devils', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
+    'Avellaneda Devils': ['Avellaneda Racers', 'La Boca Xeneizes', 'Buenos Aires Millionaires'],
+    'Rosario Canallas': ['Rosario Lepers'],
+    'Rosario Lepers': ['Rosario Canallas'],
+    'La Plata Lions': ['La Plata Wolves'],
+    'La Plata Wolves': ['La Plata Lions'],
+
+    // --- BRAZIL ---
+    'São Paulo Palms': ['São Paulo Warriors', 'São Paulo Tigers', 'Santos Beach'],
+    'São Paulo Warriors': ['São Paulo Palms', 'São Paulo Tigers', 'Santos Beach'],
+    'São Paulo Tigers': ['São Paulo Palms', 'São Paulo Warriors', 'Santos Beach'],
+    'Santos Beach': ['São Paulo Palms', 'São Paulo Warriors', 'São Paulo Tigers'],
+    'Rio Flames': ['Rio Sailors', 'Rio Star', 'Rio Waves'],
+    'Rio Sailors': ['Rio Flames', 'Rio Star', 'Rio Waves'],
+    'Rio Star': ['Rio Flames', 'Rio Sailors', 'Rio Waves'],
+    'Rio Waves': ['Rio Flames', 'Rio Sailors', 'Rio Star'],
+    'Porto Alegre Blues': ['Porto Alegre Reds'],
+    'Porto Alegre Reds': ['Porto Alegre Blues'],
+    'Belo Horizonte Cruisers': ['Belo Horizonte Miners'],
+    'Belo Horizonte Miners': ['Belo Horizonte Cruisers'],
+    'Curitiba Storm': ['Curitiba Greens'],
+    'Curitiba Greens': ['Curitiba Storm'],
+
+    // --- SAUDI ARABIA (Fake Names Updated) ---
+    'Riyadh Blue Waves': ['Riyadh Knights', 'Jeddah Tigers', 'Jeddah Green', 'Riyadh Youth'],
+    'Riyadh Knights': ['Riyadh Blue Waves', 'Jeddah Tigers', 'Riyadh Youth'],
+    'Jeddah Tigers': ['Riyadh Blue Waves', 'Riyadh Knights', 'Jeddah Green'],
+    'Jeddah Green': ['Jeddah Tigers', 'Riyadh Blue Waves'],
+
+    // --- EGYPT (Fake Names Updated) ---
+    'Cairo Red Devils': ['Cairo Knights', 'Pyramids FC'],
+    'Cairo Knights': ['Cairo Red Devils', 'Pyramids FC'],
+    'Pyramids FC': ['Cairo Red Devils', 'Cairo Knights'],
+    'Ittihad Alexandria': ['Smouha', 'Harras El Hodoud'], // Alexandria Derby
+
+    // --- MOROCCO (Fake Names Updated) ---
+    'Casablanca Eagles': ['Casablanca Reds', 'AS FAR'],
+    'Casablanca Reds': ['Casablanca Eagles', 'AS FAR'],
+    'AS FAR': ['Casablanca Eagles', 'Casablanca Reds', 'FUS Rabat'],
+    'FUS Rabat': ['AS FAR'],
+
+    // --- SOUTH AFRICA (Fake Names Updated) ---
+    'Pretoria Brazilians': ['Soweto Pirates', 'Soweto Chiefs', 'SuperSport United'], // Pretoria Derby
+    'Soweto Pirates': ['Soweto Chiefs', 'Pretoria Brazilians'], // Soweto Derby
+    'Soweto Chiefs': ['Soweto Pirates', 'Pretoria Brazilians'],
+    'SuperSport United': ['Pretoria Brazilians'],
+
+    // --- JAPAN ---
+    'Urawa Red Diamonds': ['Gamba Osaka', 'FC Tokyo'],
+    'Gamba Osaka': ['Cerezo Osaka', 'Urawa Red Diamonds'], // Osaka Derby
+    'Cerezo Osaka': ['Gamba Osaka'],
+    'FC Tokyo': ['Tokyo Verdy', 'Kawasaki Frontale'], // Tokyo Derby & Tamagawa Classico
+    'Tokyo Verdy': ['FC Tokyo'],
+    'Kawasaki Frontale': ['FC Tokyo', 'Yokohama F. Marinos'],
+    'Yokohama F. Marinos': ['Kawasaki Frontale'],
+
+    // --- SOUTH KOREA (Fake Names Updated) ---
+    'Seoul City': ['Ulsan Tigers', 'Jeonju Motors', 'Incheon United'], // Gyeongin Derby (Incheon)
+    'Ulsan Tigers': ['Jeonju Motors', 'Seoul City', 'Pohang Steelers'],
+    'Jeonju Motors': ['Ulsan Tigers', 'Seoul City'],
+    'Pohang Steelers': ['Ulsan Tigers'], // Donghaean Derby
+    'Incheon United': ['Seoul City'],
+
+    // --- AUSTRALIA ---
+    'Sydney FC': ['WS Wanderers', 'Melbourne Victory'], // Sydney Derby & The Big Blue
+    'WS Wanderers': ['Sydney FC'],
+    'Melbourne Victory': ['Melbourne City', 'Sydney FC', 'Adelaide United'], // Melbourne Derby & The Big Blue & Original Rivalry
+    'Melbourne City': ['Melbourne Victory'],
+    'Adelaide United': ['Melbourne Victory'],
+
+    // --- USA ---
+    'Los Angeles Gold': ['Galaxy Stars'], // El Trafico
+    'Galaxy Stars': ['Los Angeles Gold', 'San Jose Quakes'],
+    'New York City Blue': ['New York Energy'], // Hudson River Derby
+    'New York Energy': ['New York City Blue'],
+    'Seattle Emeralds': ['Portland Timbers', 'Vancouver Village'], // Cascadia Cup
+    'Portland Timbers': ['Seattle Emeralds', 'Vancouver Village'],
+    'Vancouver Village': ['Seattle Emeralds', 'Portland Timbers'],
+    'Miami Vice': ['Orlando Lions'], // Florida Derby
+    'Orlando Lions': ['Miami Vice'],
+
+    // --- MEXICO ---
+    'Mexico Eagles': ['Guadalajara Goats', 'Mexico City Pumas', 'Mexico City Cement'], // Super Clasico & Capital Derbies
+    'Guadalajara Goats': ['Mexico Eagles', 'Guadalajara Foxes'], // Tapatio Derby
+    'Guadalajara Foxes': ['Guadalajara Goats'],
+    'Monterrey Tigers': ['Monterrey Rays'], // Regio Derby
+    'Monterrey Rays': ['Monterrey Tigers'],
+    'Mexico City Cement': ['Mexico Eagles', 'Mexico City Pumas'],
+    'Mexico City Pumas': ['Mexico Eagles', 'Mexico City Cement'],
+
+    // --- CHILE ---
+    'Santiago Chiefs': ['Santiago Scholars', 'Santiago Crusaders'], // Superclásico
+    'Santiago Scholars': ['Santiago Chiefs', 'Santiago Crusaders'], // Universitario
+    'Santiago Crusaders': ['Santiago Chiefs', 'Santiago Scholars'],
+
+    // --- URUGUAY ---
+    'Montevideo Coal': ['Montevideo Tricolor'], // Superclásico Uruguayo
+    'Montevideo Tricolor': ['Montevideo Coal'],
+
+    // --- COLOMBIA ---
+    'Medellin Green': ['Medellin Red', 'Cali Devils', 'Bogota Blues'], // El Clásico Paisa & Others
+    'Medellin Red': ['Medellin Green'],
+    'Bogota Blues': ['Bogota Cardinals', 'Medellin Green', 'Cali Sugar'], // Clásico Capitalino
+    'Bogota Cardinals': ['Bogota Blues'],
+    'Cali Sugar': ['Cali Devils', 'Bogota Blues'], // Clásico Vallecaucano
+    'Cali Devils': ['Cali Sugar', 'Medellin Green']
 };
-
-const RU_TRANSLATIONS = {
-    dashboard: "Панель", news: "Новости", squad: "Состав", training: "Тренировка", market: "Рынок", club: "Клуб", standings: "Таблица", matchDay: "День матча",
-    managerWelcome: "С возвращением, менеджер {name}", dashboardDesc: "Ваша команда ждет указаний.",
-    playNextMatch: "Следующий матч", quickDerby: "Быстрое дерби", boardConfidence: "Доверие руководства", boardMessage: "Мы довольны вашими успехами.",
-    inbox: "Входящие", noMessages: "Новых сообщений нет.", week: "Неделя",
-    tactics: "Тактика", formation: "Схема", aggression: "Агрессия", safe: "Осторожно", normal: "Нормально", aggressive: "Агрессивно",
-    startingXI: "Основа", bench: "Запасные", reserves: "Резерв",
-    pos: "Поз", team: "Команда", age: "Возраст", value: "Цена", wage: "Зарплата",
-    playFriendly: "Товарищеский матч", selectTeam: "Выбрать команду",
-    welcomeTitle: "Добро пожаловать, тренер", welcomeDesc: "Клуб возлагает на вас большие надежды.", signContract: "Подписать контракт",
-    finances: "Финансы", facilities: "Инфраструктура", youthAcademy: "Академия", resign: "Уйти в отставку",
-    clubBudget: "Бюджет клуба", projectedWeekly: "Прогноз баланса за неделю",
-    lastWeekReport: "Отчет за неделю", income: "Доходы", expenses: "Расходы",
-    stadium: "Стадион", condition: "Состояние", level: "Уровень", maintenance: "Обслуживание",
-    infrastructure: "Инфраструктура", trainingCenter: "Тренировочный центр", academy: "Академия",
-    scoutReport: "Отчет скаута", promotePlayer: "В первую команду", academyEmpty: "Нет кандидатов.",
-    efficiency: "Эффективность", coachNote: "Заметка тренера",
-    staff: "Персонал",
-    gateReceiptsDetail: "Доходы от билетов",
-    stadiumCapacity: "Вместимость стадиона",
-    ticketPrice: "Цена билета",
-    lastMatchAttendance: "Зрители последнего матча (прибл.)",
-    people: "чел.",
-    occupancy: "Заполняемость",
-    maintenanceDetail: "Расходы на обслуживание",
-    totalMaintenance: "Всего на обслуживание",
-    highestEarners: "Самые высокие зарплаты",
-    totalWages: "Зарплатный фонд",
-    reputationHistory: "История репутации",
-    confidenceHistory: "История доверия",
-    noChangesYet: "Изменений пока нет",
-    weekShort: "Н",
-    rec: "Вос", grw: "Рост", intensityLight: "Легкая", intensityNormal: "Нормальная", intensityHeavy: "Тяжелая",
-    onTarget: "В створ", xg: "xG", selectBenchFirst: "Сначала выберите игрока запаса.", pitch: "Поле",
-    matchStatusAttack: "Атака", matchStatusDefense: "Оборона", kickoff: "Начало матча",
-    fullTime: "Матч окончен", initializing: "Инициализация...",
-    goals: "Голы", assists: "Пасы", apps: "Матчи",
-    leagueTable: "Турнирная таблица", topScorers: "Бомбардиры", topAssists: "Ассистенты",
-    champion: "Чемпион", pts: "Очки", p: "И", w: "В", d: "Н", l: "П", gd: "РМ",
-    buy: "Купить", soldFor: "продан за", offerAccepted: "Предложение принято.", offerReceived: "Трансферное предложение",
-    acceptOffer: "Принять", rejectOffer: "Отклонить",
-    renewContract: "Продлить контракт", contractExtended: "Контракт продлен", notEnoughFunds: "Недостаточно средств.",
-    successfullySigned: "Контракт подписан", promotedToSenior: "переведен в основной состав.",
-    assistantManager: "Ассистент", clubHealth: "Состояние клуба", squadReady: "Состав готов.",
-    criticalIssues: "Критические проблемы", warnings: "Предупреждения", suggestions: "Советы", autoFix: "Автоисправление", close: "Закрыть",
-    worldRankings: "Мировой рейтинг", globalDb: "База игроков", searchPlayer: "Поиск игрока...",
-    rank: "Ранг", nat: "Нац", ovrInfo: "OVR зависит от позиции.",
-    base: "База", attack: "Атака", defense: "Оборона",
-    width: "Ширина", passingStyle: "Стиль паса", tempo: "Темп", defensiveLine: "Линия обороны", marking: "Опека",
-    tacticNarrow: "Узко", tacticWide: "Широко", tacticShort: "Короткий", tacticDirect: "Прямой", tacticDeep: "Глубоко", tacticHigh: "Высоко", tacticZonal: "Зональная", tacticManMark: "Персональная",
-    tempoSlow: "Медленно", tempoFast: "Быстро",
-    clickHelp: "Нажмите для обмена", dragHelp: "Перетащите для позиции", autoSortHelp: "Автосортировка",
-    selected: "Выбрано:", selectToStart: "Выберите для начала",
-    attributes: "Характеристики", technical: "Техника", physical: "Физика", mental: "Ментальность",
-    scoutSummary: "Обзор скаута", contract: "Контракт", yearsLeft: "Лет осталось", transferList: "Трансферный лист", removeFromList: "Убрать из списка",
-    injured: "Травмирован", suspended: "Дисквалифицирован",
-    leagueTurkey: "Суперлига", leagueEngland: "Премьер-лига", leagueSpain: "Ла Лига", selectLeague: "Выбрать лигу", reputation: "Репутация",
-    startNewSeason: "Начать сезон", startMatch: "Начать матч",
-    resignConfirm: "Вы уверены, что хотите уйти? Прогресс будет потерян.",
-    weeklyReport: "Отчет за неделю",
-    trainingReport: "Отчет о тренировках",
-    unhappyPlayer: "Недовольный игрок",
-    unhappyPlayerDesc: "{name} недоволен отсутствием игровой практики.",
-    trainingIntensityReport: "Интенсивность тренировок: {intensity}. Восстановление: +{recovery}%",
-    financeReport: "Финансовый отчет",
-    financeReportProfit: "Прибыль за неделю: €{amount}.",
-    financeReportLoss: "Убыток за неделю: €{amount}.",
-    currentBalance: "Баланс: €{amount}",
-    completeSquad: "Заполнить состав",
-    gameGuide: "Руководство",
-    fixtures: "Календарь",
-    prevWeek: "Пред. неделя",
-    nextWeek: "След. неделя",
-    saveAndExit: "Сохранить и выйти",
-    noMatchToday: "Сегодня матчей нет",
-    noMatchInfo: "Продолжите неделю или проверьте календарь.",
-    returnToDashboard: "Вернуться в панель",
-    clickSwap: "Нажмите для обмена",
-    dragAdjust: "Перетащите для позиции",
-    con: "ФИЗ", mor: "МОР",
-    lastNews: "Последние новости клуба.",
-    deleteRead: "Удалить прочитанные", deleteAll: "Удалить все",
-    urgent: "СРОЧНО", detail: "Подробности",
-    accept: "Принять", reject: "Отклонить", deleteMessage: "Удалить сообщение",
-    chooseTopic: "Выберите тему для разговора.",
-    praisePerformance: "Похвалить за игру", praiseDesc: "Повышает мораль при хорошей игре.",
-    criticizeForm: "Критиковать форму", criticizeDesc: "Потребовать лучших результатов. Рискованно.",
-    encourage: "Поддержать", encourageDesc: "Помочь обрести уверенность.",
-    praisePlayer: "Похвалить", criticizePlayer: "Критиковать", motivatePlayer: "Мотивировать",
-    calmTone: "Спокойно", passionateTone: "Эмоционально",
-    transferNewsSubject: "📰 Трансферные новости",
-    transferSignedBody: "{team} подписывает {name} ({position}) из {fromTeam} за €{amount}M.",
-    transferOfferSubject: "💰 {team} хочет купить {name}!",
-    transferOfferBody: "{team} предлагает €{amount}M за {name}. Они очень хотят этого игрока!",
-    injurySubject: "🏥 Травма: {name}!",
-    injuryBody: "{name} получил травму на тренировке. Срок восстановления: {weeks} нед.",
-    youthProspectSubject: "🌟 Молодой талант!",
-    youthProspectBody: "Скауты нашли {name} ({position}, {age}). OVR: {overall}, Потенциал: {potential}",
-    orangeTeam: "Оранжевые", blueTeam: "Синие", orange: "Оранжевые", blue: "Синие",
-    selectPlayer: "Выбрать игрока", avg: "Ср.", motm: "Игрок матча",
-    trainingMatchSetup: "Настройка тренировочного матча", needMorePlayers: "Нужно еще {count} здоровых игроков",
-    setupMatch: "Настроить матч", newMatch: "Новый матч",
-    trainingMatch: "Тренировочный матч",
-    trainingMatchDesc: "Создайте две команды и смотрите их игру!",
-    playing: "Играем...", seasonComplete: "Сезон окончен!", seasonOver: "Сезон завершен.",
-    leagueChampion: "Чемпион лиги", points: "Очков",
-    attrPace: "Скорость", attrShoot: "Удары", attrPass: "Пасы", attrDribble: "Дриблинг", attrDefense: "Защита", attrPhys: "Физика",
-    consistency: "Стабильность", bigMatches: " Важные матчи", injuryRisk: "Риск травм",
-    veryConsistent: "Очень стабилен", inconsistent: "Нестабилен", average: "Средне",
-    lovesBigGames: "Любит важные матчи", nervous: "Нервничает", stable: "Спокоен",
-    injuryProne: "Травматичен", resilient: "Стойкий",
-    playstyles: "Стили игры", simulateMatch: "Симуляция", simulating: "Идет расчет...", quickSimResult: "Результат матча",
-    managerOverview: "Обзор менеджера",
-    negotiationOpen: "Мы готовы продать {name}. Цена: {value}. Ваше предложение?",
-    negotiationUnlisted: ["{name} НЕ продается.", "Мы не планируем продавать {name}.", "Игрок счастлив у нас."],
-    negotiationAccept: "Мы принимаем предложение. Это честная цена.",
-    negotiationAcceptUnlisted: "От такого предложения невозможно отказаться. Принято.",
-    negotiationCounter: "Это слишком мало. Мы хотим {amount}.",
-    negotiationWalkout: "Переговоры окончены. Мы уходим.",
-    negotiationInsistSuccess: "Ладно. Раз вы так настаиваете, мы согласны.",
-    negotiationInsistFail: "Ваша настойчивость раздражает. Переговоры прекращены!",
-    makeOffer: "Сделать предложение", insist: "Настаивать", confirmTransfer: "Подтвердить", dealAgreed: "Договорились!",
-    negotiationFailed: "Переговоры провалены", insufficientFunds: "Недостаточно средств",
-    currentValue: "Тек. цена", patience: "Терпение", insistHelp: "Надавить на клуб (Риск)", jobOffers: "Работа",
-    terminateContract: "Расторгнуть контракт", terminateConfirm: "Уволить {name}? Компенсация: €{cost}K", playerReleased: "Игрок уволен.",
-    guideAbout: "Об игре", guideBasics: "Основы", guideSquad: "Управление составом", guideTactics: "Тактика (подробно)",
-    guideTraining: "Система тренировок", guideFacilities: "Инфраструктура", guideMorale: "Мораль",
-    guideTransfers: "Трансферы", guideFinance: "Финансы", guideEuropean: "Еврокубки", guideTips: "Советы профи",
-    guideUnderDev: "В разработке!",
-    guideLiveEngine: "Движок матча",
-    guide2D25D: "Вид 2D vs 2.5D",
-    assistantCoach: "Ассистент", coachRookie: "Новичок", coachExperienced: "Опытный", coachExpert: "Эксперт", coachMaster: "Мастер",
-    matches: "матчей", opponentAnalysis: "Анализ соперника", style: "Стиль", myRecommendation: "Мой совет",
-    against: "против", tryThis: "попробуйте это!",
-    tacticsRecord: "статистика против стиля", winRate: "побед", needMoreExperience: "Нужно больше опыта",
-    needMoreMatchesDesc: "Мне нужно хотя бы 5 матчей, чтобы давать советы. Мы сыграли {count}.",
-    pastMatches: "Прошлые встречи", season: "Сезон", understood: "Понятно",
-    rating: "Рейтинг", history: "История", player: "Игрок", noStatsYet: "Статистики пока нет.",
-    trophyCabinet: "Трофеи", championship: "Чемпионат", runnerUp: "Второе место",
-    seasonHistory: "История сезонов", scorerKing: "Лучший бомбардир", assistKing: "Лучший ассистент",
-    cards: "Карточки", form: "Форма",
-    managerProfile: "Профиль менеджера", currentTeam: "Тек. команда", weeklySalary: "Зарплата в нед.",
-    leagueTitle: "Титул лиги", championsLeague: "Лига Чемпионов", uefaCup: "Кубок УЕФА", superCup: "Суперкубок",
-    stadiumLevel: "Уровень стадиона", seats: "Мест", upgrade: "Улучшить",
-    trainingCenterLevel: "Уровень тренировок", youthQuality: "Качество молодежи", scoutNetwork: "Скаутская сеть",
-    staffAssistant: "Ассистент", staffScout: "Гл. скаут", staffPhysio: "Гл. врач",
-    psRocket: "Ракета", psQuick: "Быстрый", psFinesse: "Техничный удар", psTrickster: "Технарь", psPoacher: "Голеадор",
-    easyOpponent: "Легкий соперник", balancedMatch: "Равный матч", hardOpponent: "Сильный соперник",
-    squadStrength: "Сила состава", prestige: "Престиж", last5Matches: "Посл. 5 матчей",
-    startMatchBtn: "Начать матч!", goBack: "Назад",
-    trainingBalanced: "Баланс", trainingAttack: "Атака", trainingDefense: "Защита",
-    trainingPhysical: "Физика", trainingTechnical: "Техника", trainingPositionBased: "По позиции",
-    coachNoteText: "Акцент на {focus} поможет сформировать стиль команды.",
-    sponsorTitle: "Выбор спонсора", sponsorSelect: "Выберите главного спонсора на сезон.",
-    minYearly: "Мин/Год", champYearly: "Чемп/Год", seasonEndBonuses: "Бонусы в конце сезона",
-    riskyWarning: "⚠️ Внимание: Низкий доход при плохом сезоне! Но огромные бонусы за чемпионство!",
-    guaranteedNote: "✓ Надежно: Высокий фиксированный доход независимо от результатов",
-    selectedLabel: "Выбрано:", selectSponsorLabel: "Выбрать спонсора", confirmDeal: "Подтвердить сделку",
-    midTableLabel: "середняк", championLabel: "чемпион"
-};
-
-export const TRANSLATIONS: Record<string, any> = {
-    en: EN_TRANSLATIONS,
-    fr: FR_TRANSLATIONS,
-    ru: RU_TRANSLATIONS,
-    tr: {
-        dashboard: "Panel", news: "Haberler", squad: "Kadro", training: "Antrenman", market: "Pazar", club: "Kulüp", standings: "Puan Durumu", matchDay: "Maç Günü",
-        managerWelcome: "Tekrar Hoşgeldin, {name} Teknik Direktörü", dashboardDesc: "Takımın talimatlarını bekliyor.",
-        playNextMatch: "Sonraki Maçı Oyna", quickDerby: "Hızlı Derbi", boardConfidence: "Yönetim Güveni", boardMessage: "Gidişattan memnunuz.",
-        inbox: "Gelen Kutusu", noMessages: "Yeni mesaj yok.", week: "Hafta",
-        tactics: "Taktikler", formation: "Diziliş", aggression: "Agresiflik", safe: "Temkinli", normal: "Normal", aggressive: "Agresif",
-        startingXI: "İlk 11", bench: "Yedekler", reserves: "Rezerv",
-        pos: "Poz", team: "Takım", age: "Yaş", value: "Değer", wage: "Maaş",
-        playFriendly: "Dostluk Maçı", selectTeam: "Takım Seç",
-        welcomeTitle: "Hoşgeldin Hocam", welcomeDesc: "Kulübün beklentileri yüksek.", signContract: "Sözleşme İmzala",
-        finances: "Finans", facilities: "Tesisler", youthAcademy: "Altyapı", resign: "İstifa Et",
-        clubBudget: "Kulüp Bütçesi", projectedWeekly: "Tahmini Haftalık Bakiye",
-        lastWeekReport: "Geçen Haftanın Raporu", income: "Gelir", expenses: "Gider",
-        stadium: "Stadyum", condition: "Durum", level: "Seviye", maintenance: "Bakım",
-        infrastructure: "Altyapı", trainingCenter: "Antrenman Merkezi", academy: "Akademi",
-        scoutReport: "Gözlemci Raporu", promotePlayer: "A Takıma Çıkar", academyEmpty: "Aday oyuncu yok.",
-        efficiency: "Verimlilik", coachNote: "Antrenör Notu",
-        staff: "Personel",
-        gateReceiptsDetail: "Tribün Geliri Detayı",
-        stadiumCapacity: "Stadyum Kapasitesi",
-        ticketPrice: "Bilet Fiyatı",
-        lastMatchAttendance: "Son Maç Seyircisi (Tahmini)",
-        people: "kişi",
-        occupancy: "Doluluk",
-        maintenanceDetail: "Bakım Giderleri Detayı",
-        totalMaintenance: "Toplam Bakım",
-        highestEarners: "En Yüksek Maaşlı Oyuncular",
-        totalWages: "Toplam Maaş Gideri",
-        reputationHistory: "İtibar Geçmişi",
-        confidenceHistory: "Yönetim Güveni Geçmişi",
-        noChangesYet: "Henüz değişiklik yok",
-        weekShort: "H",
-        rec: "Din", grw: "Gel", intensityLight: "Hafif", intensityNormal: "Normal", intensityHeavy: "Ağır",
-        onTarget: "İsabetli", xg: "Gol Beklentisi", selectBenchFirst: "Önce yedek oyuncu seçin.", pitch: "Saha",
-        matchStatusAttack: "Hücum", matchStatusDefense: "Savunma", kickoff: "Başlama Vuruşu",
-        fullTime: "Maç Sonu", initializing: "Hazırlanıyor...",
-        goals: "Gol", assists: "Asist", apps: "Maç",
-        leagueTable: "Puan Durumu", topScorers: "Gol Krallığı", topAssists: "Asist Krallığı",
-        champion: "Şampiyon", pts: "P", p: "O", w: "G", d: "B", l: "M", gd: "AV",
-        buy: "Satın Al", soldFor: "satıldı:", offerAccepted: "Teklif kabul edildi.", offerReceived: "Transfer Teklifi",
-        acceptOffer: "Kabul Et", rejectOffer: "Reddet",
-        renewContract: "Sözleşme Yenile", contractExtended: "Sözleşme Uzatıldı", notEnoughFunds: "Yetersiz bakiye.",
-        successfullySigned: "Başarıyla transfer edildi:", promotedToSenior: "A takıma yükseldi:",
-        assistantManager: "Yardımcı Antrenör", clubHealth: "Kulüp Sağlığı", squadReady: "Kadro hazır.",
-        criticalIssues: "Kritik Sorunlar", warnings: "Uyarılar", suggestions: "Öneriler", autoFix: "Otomatik Düzelt", close: "Kapat",
-        worldRankings: "Dünya Sıralaması", globalDb: "Küresel Oyuncu Veritabanı", searchPlayer: "Oyuncu Ara...",
-        rank: "Sıra", nat: "uyr", ovrInfo: "Reyting pozisyona göredir.",
-        base: "Temel", attack: "Hücum", defense: "Savunma",
-        width: "Genişlik", passingStyle: "Pas Stili", tempo: "Tempo", defensiveLine: "Defans Hattı", marking: "Markaj",
-        tacticNarrow: "Dar", tacticWide: "Geniş", tacticShort: "Kısa", tacticDirect: "Direkt", tacticDeep: "Derin", tacticHigh: "Önde", tacticZonal: "Alan", tacticManMark: "Adam Adama",
-        tempoSlow: "Yavaş", tempoFast: "Hızlı",
-        clickHelp: "Değiştirmek için tıkla", dragHelp: "Pozisyonu sürükle", autoSortHelp: "Otomatik diziliş",
-        selected: "Seçilen", selectToStart: "Başlamak için oyuncu seç",
-
-        attributes: "Özellikler", technical: "Teknik", physical: "Fiziksel", mental: "Zihinsel",
-        scoutSummary: "Gözlemci Özeti", contract: "Sözleşme", yearsLeft: "Yıl Kaldı", transferList: "Transfer Listesi", removeFromList: "Listeden Çıkar",
-        injured: "Sakat", suspended: "Cezalı",
-        leagueTurkey: "Süper Lig", leagueEngland: "Premier League", leagueSpain: "La Liga", selectLeague: "Lig Seçin", reputation: "İtibar",
-        startNewSeason: "Yeni Sezon Başlıyor", startMatch: "Maçı Başlat",
-        resignConfirm: "İstifa etmek istediğine emin misin? İlerleme kaybolacak.",
-        weeklyReport: "Haftalık Rapor",
-        trainingReport: "Antrenman Raporu",
-        unhappyPlayer: "Mutsuz Oyuncu",
-        unhappyPlayerDesc: "{name} az süre aldığı için mutsuz.",
-        trainingIntensityReport: "Takım {intensity} yoğunlukta çalıştı. Yenilenme: +%{recovery}",
-        financeReport: "Finansal Rapor",
-        financeReportProfit: "Bu hafta kulüp ekonomisi €{amount} kar ile kapattı.",
-        financeReportLoss: "Bu hafta kulüp ekonomisi €{amount} zarar ile kapattı.",
-        currentBalance: "Mevcut bakiye: €{amount}",
-        completeSquad: "Kadro Tamamla",
-        gameGuide: "Oyun Rehberi",
-        fixtures: "Fikstür",
-        prevWeek: "Önceki Hafta",
-        nextWeek: "Sonraki Hafta",
-
-        saveAndExit: "Kaydet ve Çık",
-        noMatchToday: "Bugün planlı maç yok",
-        noMatchInfo: "Panelden haftayı ilerletin veya fikstüre bakın.",
-        returnToDashboard: "Panele Dön",
-        clickSwap: "Değiştir",
-        dragAdjust: "Pozisyon",
-        con: "KND",
-        mor: "MOR",
-
-        // News Center
-        lastNews: "Kulübünüzle ilgili son haberler.",
-        deleteRead: "Okunanları Sil",
-        deleteAll: "Hepsini Sil",
-        urgent: "ACİL",
-        detail: "Detay",
-        accept: "Kabul",
-        reject: "Red",
-        deleteMessage: "Mesajı Sil",
-
-        // Player Interaction
-        chooseTopic: "Oyuncuyla konuşmak için bir konu seçin.",
-        praisePerformance: "Performansı Öv",
-        praiseDesc: "İyi oynuyorsa moralini artırır.",
-        criticizeForm: "Formunu Eleştir",
-        criticizeDesc: "Daha iyi sonuçlar iste. Riskli.",
-        encourage: "Motive Et",
-        encourageDesc: "Özgüven sorunlarına yardımcı ol.",
-        praisePlayer: "Öv",
-        criticizePlayer: "Eleştir",
-        motivatePlayer: "Motive Et",
-        calmTone: "Sakin Ton",
-        passionateTone: "Tutkulu Ton",
-
-        // Dynamic Messages (Engine)
-        transferNewsSubject: "📰 Transfer Haberi",
-        transferSignedBody: "{team}, {fromTeam} takımından {position} {name} oyuncusunu €{amount}M karşılığında transfer etti.",
-        transferOfferSubject: "💰 {team}, {name} oyuncusunu istiyor!",
-        transferOfferBody: "{team}, {name} için €{amount}M teklif yaptı. Bu oyuncuyu gerçekten istiyorlar!",
-        injurySubject: "🏥 {name} Sakatlandı!",
-        injuryBody: "{name} antrenmanda sakatlık geçirdi. Beklenen iyileşme süresi: {weeks} hafta.",
-        youthProspectSubject: "🌟 Genç Yetenek Bulundu!",
-        youthProspectBody: "Gözlemcileriniz {name} ({position}, {age}) isminde bir oyuncu keşfetti. Güç: {overall}, Potansiyel: {potential}",
-
-        // Training Center Localization
-        orangeTeam: "Turuncu Takım",
-        blueTeam: "Mavi Takım", orange: "Turuncu", blue: "Mavi",
-        selectPlayer: "Oyuncu Seçin", avg: "Ort", motm: "Maçın Adamı",
-        trainingMatchSetup: "Antrenman Maçı - Takım Seçimi", needMorePlayers: "{count} fit oyuncu daha gerekli",
-        setupMatch: "Antrenman Maçı Kur", newMatch: "Yeni Maç",
-        trainingMatch: "Antrenman Maçı",
-        trainingMatchDesc: "Kadronuzdan iki takım oluşturun ve maçı izleyin!",
-        minPlayersWarning: "Her takımda en az 7 oyuncu olmalı",
-        playing: "Oynanıyor...",
-        seasonComplete: "Sezon Tamamlandı!",
-        seasonOver: "Sezon sona erdi.",
-        leagueChampion: "Lig Şampiyonu",
-        points: "Puan",
-        // Stats & Scout
-        attrPace: "Hız", attrShoot: "Şut", attrPass: "Pas", attrDribble: "Drib", attrDefense: "Defans", attrPhys: "Fizik",
-        consistency: "İstikrar", bigMatches: "Büyük Maçlar", injuryRisk: "Sakatlık Riski",
-        veryConsistent: "Çok İstikrarlı", inconsistent: "İstikrarsız", average: "Ortalama",
-        lovesBigGames: "Büyük Maç Sever", nervous: "Gergin", stable: "Dengeli",
-        injuryProne: "Sakatlığa Yatkın", resilient: "Dayanıklı",
-        playstyles: "Oyun Stilleri",
-        simulateMatch: "Maçı Simüle Et", simulating: "Hesaplanıyor...", quickSimResult: "Maç Sonucu",
-        managerOverview: "Teknik Direktör Paneli",
-        // Negotiation
-        negotiationOpen: "{name} için tekliflere açığız. Piyasa değeri {value}. Teklifiniz nedir?",
-        negotiationUnlisted: [
-            "{name} satılık DEĞİL. Fikrimizi değiştirmek için çok büyük bir teklif gerekir.",
-            "{name} takım planlarımız için kilit bir oyuncu. Satmayı düşünmüyoruz.",
-            "Oyuncu burada mutlu. Sadece reddedilemeyecek teklifleri dinleriz."
-        ],
-        negotiationAccept: "Teklifinizi kabul ediyoruz. Adil bir fiyat.",
-        negotiationAcceptUnlisted: "Bu teklif reddedilemeyecek kadar iyi. Kabul ediyoruz.",
-        negotiationCounter: "Bu çok düşük. İsteğimiz {amount}.",
-        negotiationReject: [
-            "Dediğim gibi, satılık değil.",
-            "Zamanımızı harcıyorsun.",
-            "Yeterli olmaya yakın bile değil."
-        ],
-        negotiationRejectUnlisted: [
-            "Bu teklif hakaret gibi.",
-            "Çok daha iyisini yapmalısın.",
-            "Şaka mı yapıyorsun?"
-        ],
-        negotiationWalkout: "Konuşacak bir şey kalmadı. Görüşme bitti.",
-        negotiationInsistSuccess: "Pekala. Madem bu kadar ısrarcısın, kabul ediyoruz.",
-        negotiationInsistFail: "Israrın can sıkmaya başladı. Görüşmeleri derhal sonlandırıyoruz!",
-        makeOffer: "Teklif Yap",
-        insist: "Israr Et",
-        confirmTransfer: "Transferi Onayla",
-        dealAgreed: "Anlaşma Sağlandı!",
-        negotiationFailed: "Görüşme Başarısız",
-        negotiationFailedDesc: "Kulüp masadan kalktı.",
-        insufficientFunds: "Yetersiz Bakiye",
-        currentValue: "Piyasa Değeri",
-        patience: "Sabır",
-        insistHelp: "Kulübü zorla (Yüksek Risk)",
-        jobOffers: "İş Teklifleri",
-        terminateContract: "Oyuncuyu Serbest Bırak",
-        terminateConfirm: "{name} oyuncusunu serbest bırak? Tazminat: €{cost}K",
-        playerReleased: "Oyuncu serbest bırakıldı.",
-
-        // GameGuide Translations - Türkçe
-        guideAbout: "Oyun Hakkında",
-        guideBasics: "Oyun Temelleri",
-        guideSquad: "Kadro Yönetimi",
-        guideTactics: "Taktik Sistemi (Detaylı)",
-        guideTraining: "Antrenman Sistemi",
-        guideFacilities: "Tesisler & Personel",
-        guideMorale: "Moral Sistemi",
-        guideTransfers: "Transfer Sistemi",
-        guideFinance: "Finans Yönetimi",
-        guideEuropean: "Avrupa Kupaları",
-        guideTips: "Pro İpuçları",
-
-        guideUnderDev: "Geliştirme Aşamasında!",
-        guideUnderDevDesc: "Bu oyun aktif olarak geliştirilmektedir. Kullanıcılardan gelen geri bildirimler doğrudan oyuna yansıtılmaktadır. Hata veya öneri için bizimle iletişime geçebilirsiniz!",
-        guideDifferent: "Farkımız Ne?",
-        guideDifferentDesc: "Diğer menajerlik oyunlarının aksine, kullanıcıyı bilgi ve istatistiklerle boğmuyoruz. Futbola ilgisi az olan insanların bile zevk alacağı, öğrenmesi kolay ama ustalaşması zor bir oyun sunuyoruz.",
-        guideSimple: "Sade ve anlaşılır arayüz",
-        guideFast: "Hızlı maç simülasyonu",
-        guideMobile: "Mobil öncelikli tasarım",
-        guideLiveEngine: "Canlı Maç Motoru",
-        guideLiveEngineDesc: "Çoğu menajerlik oyunu (FM, Top Eleven vb.) maçı önceden hesaplar ve size sadece önemli anları gösterir. Maç 'senaryosu' zaten yazılmıştır.",
-        guideOurEngine: "Bizim motorumuz farklı!",
-        guideEvery50ms: "Her 50ms'de (saniyede 20 kez):",
-        guide22Players: "22 oyuncunun pozisyonları hesaplanır",
-        guideAIDecides: "Yapay zeka karar verir (şut mu, pas mı, çalım mı?)",
-        guideBallPhysics: "Top fiziği simüle edilir",
-        guideUnpredictable: "Gerçek zamanlı, öngörülemez maçlar!",
-        guide2D25D: "2D vs 2.5D Görünüm",
-        guide2DDesc: "Klasik kuş bakışı. Taktik analiz için ideal. Tüm sahayı görürsün.",
-        guide25DDesc: "Perspektif görünüm. Daha sinematik ve TV yayını hissi verir.",
-        guideChangeView: "Maç sırasında sağ üstten değiştirebilirsin!",
-        // Assistant Coach
-        assistantCoach: "Yardımcı Antrenör",
-        coachRookie: "Çaylak",
-        coachExperienced: "Deneyimli",
-        coachExpert: "Uzman",
-        coachMaster: "Usta",
-        matches: "maç",
-        opponentAnalysis: "Rakip Analizi",
-        style: "Stil",
-        myRecommendation: "Tavsiyem",
-        against: "karşısında",
-        tryThis: "dene!",
-        reasonPressure: "Baskı savunmayı kırar",
-        reasonCounter: "Kontra baskıyı alt eder",
-        reasonPressWin: "Baskı top kazandırır",
-        reasonControl: "Kontrol kontraya izin vermez",
-        reasonPressBalanced: "Baskı dengeli takımlara karşı etkili",
-        tacticsRecord: "bu stile karşı",
-        winRate: "kazanma",
-        needMoreExperience: "Deneyim Gerekli",
-        needMoreMatchesDesc: "Tavsiye verebilmem için en az 5 maç gerekli. Şu an {count} maç oynadık.",
-        pastMatches: "Geçmiş Karşılaşmalar",
-        season: "Sezon",
-        understood: "Anladım",
-        // UI Labels for LeagueTable, ManagerProfile, PlayerModal
-        rating: "Puan",
-        history: "Geçmiş",
-        player: "Oyuncu",
-        noStatsYet: "Henüz istatistik yok.",
-        notEnoughMatches: "Henüz yeterli maç oynanmadı.",
-        trophyCabinet: "Kupa Dolabı",
-        championship: "Şampiyonluk",
-        runnerUp: "İkincilik",
-        seasonHistory: "Sezon Geçmişi",
-        noHistoryYet: "Henüz geçmiş yok. Bir sezon tamamlayın!",
-        scorerKing: "Gol Kralı",
-        assistKing: "Asist Kralı",
-        cards: "Kartlar",
-        form: "Form",
-        // GameGuide Details
-        guideBasicsTitle: "Oyun Temelleri",
-        guideBasics1: "Bu oyunda bir futbol takımının teknik direktörüsün.",
-        guideBasics2: "Her hafta bir lig maçı oynanır. Sezon sonunda şampiyon belirlenir.",
-        guideBasics3: "Hedef: Şampiyonluk, Avrupa kupaları ve kulübü büyütmek.",
-        guideBasics4: "Oyun otomatik kaydedilir. \"Kaydet ve Çık\" ile güvenli çıkış yap.",
-        guideBasics5: "Yönetim güveni düşerse kovulabilirsin!",
-        guideBoardEffectTitle: "Yönetim Güveni Etkileri:",
-        guideWinEffect: "Galibiyet: +3 güven",
-        guideDrawEffect: "Beraberlik: +0 güven",
-        guideLossEffect: "Mağlubiyet: -5 güven",
-        guideFireWarning: "%30 altına düşersen kovulursun!",
-        guideSquadTitle: "Kadro Yönetimi",
-        guideSquad1: "Oyuncuları İlk 11, Yedek veya Rezerv olarak ayarla.",
-        guideSquad2: "Oyuncuyu tıkla ve başka biriyle değiştir.",
-        guideSquad3: "Diziliş seçerek farklı formasyonlar dene.",
-        guideOvrCalcTitle: "OVR (Overall Rating) Nasıl Hesaplanır?",
-        guidePosMatch: "Pozisyon Uyumu: Doğru pozisyonda oynayan oyuncu daha yüksek OVR gösterir.",
-        guideMoraleEffect: "Moral Etkisi: 50+ moral = bonus, 50- moral = ceza",
-        guideConEffect: "Kondisyon: 30% altı kondisyon = ciddi performans düşüşü",
-        guideReleaseTitle: "Sözleşme Fesih",
-        guideRelease1: "İstemediğin oyuncuyu serbest bırakabilirsin.",
-        guideRelease2: "Tazminat: Kalan yıl × Yıllık maaş × %50",
-        guideRelease3: "Oyuncu serbest oyuncu olur.",
-        guideTacticsTitle: "Taktik Sistemi (Detaylı)",
-        guideForm433: "4-3-3: Dengeli, kanat ağırlıklı.",
-        guideForm442: "4-4-2: Klasik, güvenli.",
-        guideForm4231: "4-2-3-1: Orta saha kontrolü.",
-        guideForm352: "3-5-2: Orta saha dominantı.",
-        guideForm532: "5-3-2: Savunmacı.",
-        guideForm4141: "4-1-4-1: Su sızdırmaz savunma.",
-        guideStylePoss: "Possession: Top tutma, kısa pas, sabırlı atak. Güçlü orta saha gerektirir.",
-        guideStyleCounter: "Counter: Savunup hızlı kontra. Hızlı forvetler ve orta sahalar gerektirir.",
-        guideStylePress: "HighPress: Yüksek baskı, rakibi kendi yarısında boğ. Yüksek stamina gerektirir!",
-        guideStyleBus: "ParkTheBus: 11 adam savunma, kontra bekle. Büyük takımlara karşı etkili.",
-        guideStyleBal: "Balanced: Her şeyden biraz. Güvenli seçim.",
-        guideWidthNarrow: "Dar: Ortadan oyna. İç oyuncular için ideal.",
-        guideWidthWide: "Geniş: Kanatları kullan. Hızlı kanat oyuncuları gerektirir.",
-        guideTrainingTitle: "Antrenman Sistemi",
-        guideTrainAge: "Sadece 28 yaş altı oyuncular gelişebilir!",
-        guideTrainLuck: "Gelişim şansa bağlıdır - her hafta garantili değil.",
-        guideTrainFocus: "Antrenman Odakları",
-        guideTrainFocusBal: "Dengeli: Tüm özellikler eşit şans.",
-        guideTrainFocusAtt: "Hücum: Bitiricilik, Şut, Dribling gelişir.",
-        guideTrainFocusDef: "Savunma: Müdahale, Pozisyon, Güç gelişir.",
-        guideTrainFocusPhy: "Fiziksel: Hız, Dayanıklılık, Güç gelişir.",
-        guideTrainFocusTec: "Teknik: Pas, Dribling, Vizyon gelişir.",
-        guideTrainPosBased: "Mevkiye Göre (YENİ!): Otomatik pozisyon bazlı.",
-        guideFacilitiesTitle: "Tesisler & Personel",
-        guideStadiumEffect: "Her level = +6.000 kapasite. Daha fazla seyirci = daha fazla bilet geliri.",
-        guideTrainingEffect: "Antrenman Merkezi: Oyuncu gelişim hızı artar.",
-        guideScoutVsAcad: "Scout vs Akademi: Scout daha etkili, önce onu yükselt!",
-        guideMoraleTitle: "Moral Sistemi",
-        guideMoraleXI: "İlk 11: +2 moral",
-        guideMoraleBench: "Yedek: Değişmez",
-        guideMoraleRes75: "Rezerv (75+ OVR): -3 moral!",
-        guideMoraleRes65: "Rezerv (65-75 OVR): -1 moral",
-        guideMoralePerform: "100 Moral: +%5 OVR bonus. 0 Moral: -%10 OVR ceza!",
-        guideTransferTitle: "Transfer Sistemi",
-        guideTransList: "Transfer listesindeki oyuncular daha ucuza gelir.",
-        guideTransUnlisted: "Transfer listesinde olmayan oyuncular için %20-50 fazla iste.",
-        guideYouthTitle: "Alt Yapı (Ucuz!)",
-        guideYouth1: "Genç oyuncular €50K değerinde gelir.",
-        guideYouth2: "Maaş: Sadece €25K/yıl.",
-        guideFinanceTitle: "Finans Yönetimi",
-        guideSponsorG: "Garantili: Yüksek sabit, düşük bonus. Güvenli.",
-        guideSponsorD: "Dengeli: Orta sabit, orta bonus.",
-        guideSponsorR: "Riskli: Düşük sabit, yüksek bonus. Çok kazanırsan karlı!",
-        // European Cups
-        guideEuroTitle: "Avrupa Kupaları",
-        guideEuroReq: "Katılım Şartları",
-        guideEuroCL: "Şampiyonlar Ligi: Lig 1. ve 2.si",
-        guideEuroEL: "UEFA Avrupa Ligi: Lig 3. ve 4.sü",
-        guideEuroFormat: "Turnuva Formatı",
-        guideEuroGroups: "Grup aşaması: 4 takımlı gruplar",
-        guideEuroAdv: "İlk 2 eleme turuna geçer",
-        guideEuroKO: "Çeyrek final, yarı final, final",
-        guideEuroSingle: "Tek maç eleme sistemi",
-        // Pro Tips
-        guideProTipsTitle: "Pro İpuçları",
-        guideTipsDos: "Yapılması Gerekenler",
-        guideTipsDo1: "Her pozisyonda en az 2 oyuncu bulundur.",
-        guideTipsDo2: "Genç oyunculara şans ver - gelişirler!",
-        guideTipsDo3: "Scout'u önce yükselt (daha etkili).",
-        guideTipsDo4: "Alt yapı gençlerini sat - çok karlı!",
-        guideTipsDo5: "Rakibe göre taktik değiştir.",
-        guideTipsDo6: "Yorgun oyuncuları dinlendir.",
-        guideTipsDonts: "Kaçınılması Gerekenler",
-        guideTipsDont1: "Yüksek OVR oyuncuları sürekli rezervde tutma.",
-        guideTipsDont2: "Bütçeni aşan transferler yapma.",
-        guideTipsDont3: "Tek formasyona bağlı kalma.",
-        guideTipsDont4: "Sakatlıkları görmezden gelme.",
-        guideTipsDont5: "Sözleşmelerin bitmesine izin verme.",
-        guideTipsTactical: "Taktik İpuçları",
-        guideTipStrong: "Güçlü rakip: ParkTheBus + Counter",
-        guideTipWeak: "Zayıf rakip: HighPress + Possession",
-        guideTipWinning: "Önde skorken: Safe agresiflik",
-        guideTipLosing: "Gerideyken: Aggressive + Hızlı tempo",
-        // Manager Profile
-        managerProfile: "Menajer Profili",
-        currentTeam: "Mevcut Takım",
-        weeklySalary: "Haftalık Maaş",
-        leagueTitle: "Lig Şampiyonluğu",
-        championsLeague: "Şampiyonlar Ligi",
-        uefaCup: "UEFA Cup",
-        superCup: "Süper Kupa",
-        careerHistory: "Kariyer Geçmişi",
-        noCareerYet: "Henüz kariyer geçmişi yok. İlk sezonunuzu tamamlayın!",
-        prizeMoneyInfo: "Kupa Ödülleri Bilgisi",
-        roundOf16ToQF: "Son 16 → Çeyrek Final",
-        qfToSF: "Çeyrek Final → Yarı Final",
-        sfToFinal: "Yarı Final → Final",
-        championshipPrize: "Şampiyonluk",
-        totalPrize: "Toplam",
-        // Facilities
-        stadiumLevel: "Stadyum Seviyesi",
-        seats: "Koltuk",
-        currentSeats: "Mevcut",
-        newSeats: "Yeni",
-        maintIncrease: "Bakım artışı",
-        upgrade: "Yükselt",
-        trainingCenterLevel: "Antrenman Seviyesi",
-        playerDevSpeed: "Oyuncu Gelişim Hızı",
-        currentBonus: "Mevcut bonus",
-        newBonus: "Yeni bonus",
-        academyLevel: "Akademi Seviyesi",
-        youthQuality: "Genç Kalitesi",
-        scoutNetwork: "Scout Ağı",
-        scoutReportDesc: "Scoutlar dünya genelinde genç yetenekler bulur.",
-        // Staff
-        staffAssistant: "Yardımcı Antrenör",
-        staffAssistantDesc: "Antrenman verimliliğini ve taktik uyumu artırır.",
-        staffScout: "Baş Scout",
-        staffScoutDesc: "Daha iyi genç yetenekler bulur, gizli özellikleri ortaya çıkarır.",
-        staffPhysio: "Baş Sağlıkçı",
-        staffPhysioDesc: "Sakatlık iyileşmesini hızlandırır, yorgunluk birikimini azaltır.",
-        fitnessPerWeek: "kondisyon/hafta",
-        discoveryChance: "keşif şansı",
-        // Playstyles
-        psRocket: "Roket",
-        psQuick: "Hızlı",
-        psFinesse: "Parantez Şut",
-        psTrickster: "Hokkabaz",
-        psPoacher: "Fırsatçı",
-        // OpponentPreview & Match UI
-        easyOpponent: "Kolay Rakip",
-        balancedMatch: "Dengeli Maç",
-        hardOpponent: "Zorlu Rakip",
-        squadStrength: "Kadro Gücü",
-        prestige: "Prestij",
-        last5Matches: "Son 5 Maç",
-        noMatchesYet: "Henüz maç yok",
-        keyPlayers: "Dikkat Edilmesi Gerekenler",
-        squadDistribution: "Kadro Dağılımı",
-        startMatchBtn: "Maça Başla!",
-        goBack: "Geri Dön",
-        backToProfiles: "Profillere Dön",
-        // TeamManagement Morale
-        playingXIBonus: "11'de oynuyor (+2/hafta)",
-        benchStable: "Yedek (stabil - oyuna girecek)",
-        reserveStarPenalty: "Kadro dışı, yıldız oyuncu (-3/hafta)",
-        reserveMediumPenalty: "Kadro dışı (-1/hafta)",
-        reserveStable: "Kadro dışı (stabil)",
-        lastMoraleChanges: "Son Moral Değişimleri",
-        // AssistantCoach
-        playStyle: "Oyun Stili",
-        aggressiveness: "Agresiflik",
-        slow: "Yavaş",
-        fast: "Hızlı",
-        // Manager Profile Page
-        managerProfileTitle: "Menajer Profili",
-        currentTeamLabel: "Şu anki Takım",
-        weeklySalaryLabel: "Haftalık Maaş",
-        seasonLabel: "Sezon",
-        trophyCabinetTitle: "Kupa Kabinesi",
-        trophyCount: "kupa",
-        leagueTitleLabel: "Lig Şampiyonluğu",
-        championsLeagueLabel: "Şampiyonlar Ligi",
-        uefaCupLabel: "UEFA Cup",
-        superCupLabel: "Süper Kupa",
-        careerHistoryTitle: "Kariyer Geçmişi",
-        noCareerHistoryYet: "Henüz kariyer geçmişi yok. İlk sezonunuzu tamamlayın!",
-        positionLabel: "Sıra",
-        trophiesLabel: "Kupalar",
-        cupPrizeInfoTitle: "Kupa Ödülleri Bilgisi",
-        roundOf16ToQFLabel: "Son 16 → Çeyrek Final",
-        qfToSFLabel: "Çeyrek Final → Yarı Final",
-        sfToFinalLabel: "Yarı Final → Final",
-        championshipLabel: "Şampiyonluk",
-        totalLabel: "Toplam",
-        // Facilities Page
-        currentLabel: "Mevcut",
-        newLabel: "Yeni",
-        maintIncreaseLabel: "Bakım artışı",
-        upgradeBtn: "Yükselt",
-        progressLabel: "Progress",
-        qualityLabel: "Kalite",
-        stadiumName: "Stadyum",
-        seatsLabel: "Koltuk",
-        trainingFacility: "Antrenman Tesisi",
-        performanceCenter: "Performans Merkezi",
-        playerDevelopment: "Oyuncu Gelişimi",
-        developmentSpeed: "gelişim hızı",
-        youthAcademyFacility: "Altyapı Akademisi",
-        nextGenAcademy: "Yeni Nesil Akademi",
-        betterYouthLabel: "daha kaliteli gençler",
-        youthQualityLabel: "genç kalitesi",
-        scoutNetworkLabel: "Keşif Ağı",
-        // Staff Page
-        assistantCoachTitle: "Yardımcı Antrenör",
-        assistantCoachDesc: "Antrenman verimliliğini ve taktik uyumu artırır.",
-        headScoutTitle: "Baş Scout",
-        headScoutDesc: "Daha iyi genç yetenekler bulur, gizli özellikleri ortaya çıkarır.",
-        headPhysioTitle: "Baş Fizyoterapist",
-        headPhysioDesc: "Sakatlık iyileşmesini hızlandırır, yorgunluk birikimini azaltır.",
-        levelLabel: "Seviye",
-        trainingEfficiency: "antrenman verimliliği",
-        youthDiscoveryChance: "genç keşif şansı",
-        conditionPerWeek: "kondisyon/hafta",
-        // Transfer Market Filters
-        filterAll: "Tümü",
-        filterListed: "Satılık",
-        filterUnlisted: "Değil",
-        filterFree: "Serbest",
-        // Tactic Labels
-        tacticBalanced: "Dengeli",
-        tacticPossession: "Topa Sahip Ol",
-        tacticCounter: "Kontra Atak",
-        tacticHighPress: "Yüksek Pres",
-        tacticParkTheBus: "Kapalı Savunma",
-        // Assistant Coach Advice
-        // Assistant Coach - Deleted duplicates
-        // Training Focus - Deleted duplicates
-        // Cup Round - Deleted duplicates
-
-        // Sponsors
-        sponsorSafe1Desc: "🏦 Banka sponsoru - Stabil ve garantili gelir",
-        sponsorSafe2Desc: "📱 Telekomünikasyon - Güvenilir anlaşma",
-        sponsorBalanced1Desc: "⚡ Enerji içeceği - Dengeli risk/kazanç",
-        sponsorBalanced2Desc: "👟 Spor ekipmanları - Performansa dayalı",
-        sponsorRisky1Desc: "🎰 Kripto girişim - Şampiyonluk hedefle!",
-        sponsorRisky2Desc: "🎲 Bahis şirketi - Kazanırsan büyük kazan!",
-        sponsorRisky3Desc: "🚀 Tech startup - Başarı primi odaklı",
-        tierGuaranteed: "GARANTİLİ",
-        tierBalanced: "DENGELİ",
-        tierRisky: "RİSKLİ",
-        // weeklyIncome, winBonus removed (duplicates)
-        minYearly: "Min/Yıl",
-        champYearly: "Şampiyon/Yıl",
-        seasonEndBonuses: "Sezon Sonu Primleri",
-        riskyWarning: "⚠️ Dikkat: Kötü sezonda gelir çok düşük! Ama şampiyon olursan büyük ödül!",
-        guaranteedNote: "✓ Güvenli: Sonuç ne olursa olsun sabit yüksek gelir",
-        selectedLabel: "Seçilen:",
-        selectSponsorLabel: "Bir sponsor seçin",
-        confirmDeal: "Anlaşmayı Onayla",
-        midTableLabel: "orta sıra",
-        championLabel: "şampiyon"
-    },
-    es: {
-        dashboard: "Panel", news: "Noticias", squad: "Plantilla", training: "Entrenamiento", market: "Mercado", club: "Club", standings: "Clasificación", matchDay: "Día de Partido",
-        managerWelcome: "Bienvenido, Técnico de {name}", dashboardDesc: "Tu equipo espera tus instrucciones.",
-        playNextMatch: "Jugar Próximo Partido", quickDerby: "Derbi Rápido", boardConfidence: "Confianza de la Directiva", boardMessage: "Estamos satisfechos con tu progreso.",
-        inbox: "Bandeja de Entrada", noMessages: "No hay mensajes nuevos.", week: "Semana",
-        tactics: "Tácticas", formation: "Formación", aggression: "Agresividad", safe: "Seguro", normal: "Normal", aggressive: "Agresivo",
-        startingXI: "Once Inicial", bench: "Banquillo", reserves: "Reservas",
-        pos: "Pos", team: "Equipo", age: "Edad", value: "Valor", wage: "Salario",
-        playFriendly: "Partido Amistoso", selectTeam: "Seleccionar Equipo",
-        welcomeTitle: "Bienvenido, Entrenador", welcomeDesc: "El club tiene altas expectativas.", signContract: "Firmar Contrato",
-        finances: "Finanzas", facilities: "Instalaciones", youthAcademy: "Cantera", resign: "Dimitir",
-        clubBudget: "Presupuesto", projectedWeekly: "Balance Semanal Proyectado",
-        lastWeekReport: "Informe de la Semana", income: "Ingresos", expenses: "Gastos",
-        stadium: "Estadio", condition: "Condición", level: "Nivel", maintenance: "Mantenimiento",
-        infrastructure: "Infraestructura", trainingCenter: "Centro de Entrenamiento", academy: "Academia",
-        scoutReport: "Informe de Ojeadores", promotePlayer: "Promocionar", academyEmpty: "No hay candidatos disponibles.",
-        efficiency: "Eficiencia", coachNote: "Nota del Entrenador",
-        staff: "Personal",
-        gateReceiptsDetail: "Detalle de Taquilla",
-        stadiumCapacity: "Capacidad del Estadio",
-        ticketPrice: "Precio de Entrada",
-        lastMatchAttendance: "Asistencia Último Partido (Est.)",
-        people: "personas",
-        occupancy: "Ocupación",
-        maintenanceDetail: "Desglose de Mantenimiento",
-        totalMaintenance: "Mantenimiento Total",
-        highestEarners: "Salarios Más Altos",
-        totalWages: "Masa Salarial Total",
-        reputationHistory: "Historial de Reputación",
-        confidenceHistory: "Historial de Confianza",
-        noChangesYet: "Sin cambios aún",
-        weekShort: "S",
-        rec: "Rec", grw: "Cre", intensityLight: "Ligera", intensityNormal: "Normal", intensityHeavy: "Intensa",
-        onTarget: "A Puerta", xg: "xG", selectBenchFirst: "Selecciona primero un suplente.", pitch: "Campo",
-        matchStatusAttack: "Atacando", matchStatusDefense: "Defendiendo", kickoff: "Saque Inicial",
-        fullTime: "Final", initializing: "Iniciando...",
-        goals: "Goles", assists: "Asistencias", apps: "Partidos",
-        leagueTable: "Clasificación", topScorers: "Goleadores", topAssists: "Asistencias",
-        champion: "Campeón", pts: "Pts", p: "PJ", w: "PG", d: "PE", l: "PP", gd: "DG",
-        buy: "Comprar", soldFor: "vendido por", offerAccepted: "Oferta aceptada.", offerReceived: "Oferta de Traspaso",
-        acceptOffer: "Aceptar", rejectOffer: "Rechazar",
-        renewContract: "Renovar Contrato", contractExtended: "Contrato Renovado", notEnoughFunds: "Fondos insuficientes.",
-        successfullySigned: "Fichado con éxito", promotedToSenior: "promocionado al primer equipo.",
-        assistantManager: "Asistente Técnico", clubHealth: "Salud del Club", squadReady: "Plantilla lista.",
-        criticalIssues: "Problemas Críticos", warnings: "Advertencias", suggestions: "Sugerencias", autoFix: "Auto-Corregir", close: "Cerrar",
-        worldRankings: "Ranking Mundial", globalDb: "Base de Datos Global", searchPlayer: "Buscar Jugador...",
-        rank: "Pos", nat: "Nac", ovrInfo: "La Media varía según la posición.",
-        base: "Base", attack: "Ataque", defense: "Defensa",
-        width: "Amplitud", passingStyle: "Estilo de Pase", tempo: "Tempo", defensiveLine: "Línea Defensiva", marking: "Marcaje",
-        tacticNarrow: "Estrecho", tacticWide: "Amplio", tacticShort: "Corto", tacticDirect: "Directo", tacticDeep: "Bajo", tacticHigh: "Alto", tacticZonal: "Zonal", tacticManMark: "Individual",
-        tempoSlow: "Lento", tempoFast: "Rápido",
-        clickHelp: "Clic para cambiar/seleccionar", dragHelp: "Arrastra para ajustar", autoSortHelp: "Auto-ordenar posiciones",
-        selected: "Seleccionado:", selectToStart: "Selecciona para Iniciar",
-
-        attributes: "Atributos", technical: "Técnico", physical: "Físico", mental: "Mental",
-        scoutSummary: "Resumen del Ojeador", contract: "Contrato", yearsLeft: "Años Restantes", transferList: "Lista de Transferibles", removeFromList: "Quitar de Lista",
-        injured: "Lesionado", suspended: "Sancionado",
-        leagueTurkey: "Süper Lig", leagueEngland: "Premier League", leagueSpain: "La Liga", selectLeague: "Seleccionar Liga", reputation: "Reputación",
-        startNewSeason: "Iniciando Nueva Temporada", startMatch: "Iniciar Partido",
-        resignConfirm: "¿Seguro que quieres dimitir? Se perderá el progreso.",
-        weeklyReport: "Informe Semanal",
-        trainingReport: "Informe de Entrenamiento",
-        unhappyPlayer: "Jugador Descontento",
-        unhappyPlayerDesc: "{name} está descontento por la falta de minutos.",
-        trainingIntensityReport: "El equipo entrenó con intensidad {intensity}. Recuperación: +{recovery}%",
-        financeReport: "Informe Financiero",
-        financeReportProfit: "Esta semana el club tuvo un beneficio de €{amount}.",
-        financeReportLoss: "Esta semana el club tuvo una pérdida de €{amount}.",
-        currentBalance: "Balance actual: €{amount}",
-        completeSquad: "Plantilla Completa",
-        gameGuide: "Guía del Juego",
-        fixtures: "Calendario",
-        prevWeek: "Semana Anterior",
-        nextWeek: "Próxima Semana",
-        saveAndExit: "Guardar y Salir",
-        noMatchToday: "No hay partido programado hoy",
-        noMatchInfo: "Avanza la semana desde el panel o revisa el calendario.",
-        returnToDashboard: "Volver al Panel",
-        clickSwap: "Clic para cambiar",
-        dragAdjust: "Arrastrar para ajustar",
-        con: "CON",
-        mor: "MOR",
-        lastNews: "Últimas noticias sobre tu club.",
-        deleteRead: "Borrar Leídos",
-        deleteAll: "Borrar Todo",
-        urgent: "URGENTE",
-        detail: "Detalle",
-        accept: "Aceptar",
-        reject: "Rechazar",
-        deleteMessage: "Borrar Mensaje",
-        chooseTopic: "Elige un tema para hablar con el jugador.",
-        praisePerformance: "Elogiar Rendimiento",
-        praiseDesc: "Mejora la moral si juega bien.",
-        criticizeForm: "Criticar Forma",
-        criticizeDesc: "Exigir mejores resultados. Arriesgado.",
-        encourage: "Animar",
-        encourageDesc: "Ayuda con problemas de confianza.",
-        praisePlayer: "Elogiar",
-        criticizePlayer: "Criticar",
-        motivatePlayer: "Motivar",
-        calmTone: "Tono Calmado",
-        passionateTone: "Tono Apasionado",
-        transferNewsSubject: "📰 Noticias de Fichajes",
-        transferSignedBody: "{team} ha fichado al {position} {name} del {fromTeam} por €{amount}M.",
-        transferOfferSubject: "💰 ¡{team} quiere a {name}!",
-        transferOfferBody: "{team} ha hecho una oferta de €{amount}M por {name}. ¡Realmente quieren a este jugador!",
-        injurySubject: "🏥 ¡{name} Lesionado!",
-        injuryBody: "{name} sufrió una lesión en entrenamiento. Recuperación esperada: {weeks} semana(s).",
-        youthProspectSubject: "🌟 ¡Talento Juvenil Descubierto!",
-        youthProspectBody: "Tus ojeadores han descubierto a {name} ({position}, {age}). Media: {overall}, Potencial: {potential}",
-        orangeTeam: "Equipo Naranja",
-        blueTeam: "Equipo Azul", orange: "Naranja", blue: "Azul",
-        selectPlayer: "Seleccionar Jugador", avg: "Med", motm: "Jugador del Partido",
-        trainingMatchSetup: "Configurar Partido de Entrenamiento", needMorePlayers: "Necesitas {count} jugadores más",
-        setupMatch: "Preparar Partido", newMatch: "Nuevo Partido",
-        trainingMatch: "Partido de Entrenamiento",
-        trainingMatchDesc: "¡Crea dos equipos de tu plantilla y míralos jugar!",
-        playing: "Jugando...",
-        seasonComplete: "¡Temporada Completada!",
-        seasonOver: "La temporada ha terminado.",
-        leagueChampion: "Campeón de Liga",
-        points: "Puntos",
-        attrPace: "Ritmo", attrShoot: "Tiro", attrPass: "Pase", attrDribble: "Regate", attrDefense: "Defensa", attrPhys: "Físico",
-        consistency: "Consistencia", bigMatches: "Grandes Partidos", injuryRisk: "Riesgo de Lesión",
-        veryConsistent: "Muy Consistente", inconsistent: "Inconsistente", average: "Promedio",
-        lovesBigGames: "Le Encantan los Grandes Partidos", nervous: "Nervioso", stable: "Estable",
-        injuryProne: "Propenso a Lesiones", resilient: "Resistente",
-        playstyles: "Estilos de Juego",
-        simulateMatch: "Simular Partido", simulating: "Simulando...", quickSimResult: "Resultado del Partido",
-        managerOverview: "Panel del Entrenador",
-        negotiationOpen: "Estamos dispuestos a vender a {name}. Su valor de mercado es {value}. ¿Cuál es tu oferta?",
-        negotiationUnlisted: [
-            "{name} NO está en venta. Haría falta una oferta enorme para cambiar de opinión.",
-            "No tenemos intención de vender a {name}. Es clave en nuestros planes.",
-            "El jugador está feliz aquí. Solo escucharemos ofertas excepcionales."
-        ],
-        negotiationAccept: "Aceptamos tu oferta. Es un precio justo.",
-        negotiationAcceptUnlisted: "Esta oferta es demasiado buena para rechazarla. Aceptamos.",
-        negotiationCounter: "Eso es muy bajo. Queremos {amount}.",
-        negotiationReject: [
-            "Como ya dije, no está en venta.",
-            "Esto es una pérdida de tiempo.",
-            "Ni de cerca es suficiente."
-        ],
-        negotiationRejectUnlisted: [
-            "Esa oferta es insultante.",
-            "Necesitas mejorar mucho más.",
-            "¿Es una broma?"
-        ],
-        negotiationWalkout: "No hay más que hablar. La negociación ha terminado.",
-        negotiationInsistSuccess: "Vale. Ya que insistes tanto, aceptaremos este precio.",
-        negotiationInsistFail: "Tu insistencia empieza a molestar. ¡Terminamos las negociaciones!",
-        makeOffer: "Hacer Oferta",
-        insist: "Insistir",
-        confirmTransfer: "Confirmar Traspaso",
-        dealAgreed: "¡Acuerdo Cerrado!",
-        negotiationFailed: "Negociación Fallida",
-        negotiationFailedDesc: "El club se ha retirado de las conversaciones.",
-        insufficientFunds: "Fondos Insuficientes",
-        currentValue: "Valor Actual",
-        patience: "Paciencia",
-        insistHelp: "Presionar al club (Alto Riesgo)",
-        jobOffers: "Ofertas de Trabajo",
-
-        // GameGuide Translations - Español
-        guideAbout: "Sobre el Juego",
-        guideBasics: "Fundamentos del Juego",
-        guideSquad: "Gestión de Plantilla",
-        guideTactics: "Sistema Táctico (Detallado)",
-        guideTraining: "Sistema de Entrenamiento",
-        guideFacilities: "Instalaciones y Personal",
-        guideMorale: "Sistema de Moral",
-        guideTransfers: "Sistema de Fichajes",
-        guideFinance: "Gestión Financiera",
-        guideEuropean: "Copas Europeas",
-        guideTips: "Consejos Pro",
-
-        guideUnderDev: "¡En Desarrollo!",
-        guideUnderDevDesc: "Este juego está en desarrollo activo. Los comentarios de los usuarios se reflejan directamente. ¡Contáctanos para errores o sugerencias!",
-        guideDifferent: "¿Qué nos hace diferentes?",
-        guideDifferentDesc: "A diferencia de otros juegos de manager, no abrumamos con estadísticas. Un juego fácil de aprender pero difícil de dominar que incluso los fans casuales pueden disfrutar.",
-        guideSimple: "Interfaz simple y clara",
-        guideFast: "Simulación de partidos rápida",
-        guideMobile: "Diseño móvil primero",
-        guideLiveEngine: "Motor de Partido en Vivo",
-        guideLiveEngineDesc: "La mayoría de juegos de manager (FM, Top Eleven etc.) pre-calculan los partidos y te muestran los momentos importantes. El 'guión' ya está escrito.",
-        guideOurEngine: "¡Nuestro motor es diferente!",
-        guideEvery50ms: "Cada 50ms (20 veces por segundo):",
-        guide22Players: "Se calculan las posiciones de 22 jugadores",
-        guideAIDecides: "La IA decide (¿disparar, pasar o regatear?)",
-        guideBallPhysics: "Se simula la física del balón",
-        guideUnpredictable: "¡Partidos en tiempo real e impredecibles!",
-        guide2D25D: "Vista 2D vs 2.5D",
-        guide2DDesc: "Vista clásica desde arriba. Ideal para análisis táctico. Ves todo el campo.",
-        guide25DDesc: "Vista en perspectiva. Más cinematográfica, como una transmisión de TV.",
-        guideChangeView: "¡Cambia la vista durante el partido desde arriba a la derecha!",
-        // Assistant Coach
-        assistantCoach: "Asistente Técnico",
-        coachRookie: "Novato",
-        coachExperienced: "Experimentado",
-        coachExpert: "Experto",
-        coachMaster: "Maestro",
-        matches: "partidos",
-        opponentAnalysis: "Análisis del Rival",
-        style: "Estilo",
-        myRecommendation: "Mi Recomendación",
-        against: "contra",
-        tryThis: "¡prueba esto!",
-        reasonPressure: "La presión rompe defensas",
-        reasonCounter: "Los contras vencen la presión alta",
-        reasonPressWin: "Presionar recupera el balón",
-        reasonControl: "El control evita contraataques",
-        reasonPressBalanced: "La presión es efectiva contra equipos equilibrados",
-        tacticsRecord: "récord vs este estilo",
-        winRate: "victorias",
-        needMoreExperience: "Necesito Más Experiencia",
-        needMoreMatchesDesc: "Necesito al menos 5 partidos para aconsejar. Hemos jugado {count} hasta ahora.",
-        pastMatches: "Encuentros Anteriores",
-        season: "Temporada",
-        understood: "Entendido",
-        // UI Labels for LeagueTable, ManagerProfile, PlayerModal
-        rating: "Valoración",
-        history: "Historial",
-        player: "Jugador",
-        noStatsYet: "Aún no hay estadísticas.",
-        notEnoughMatches: "Aún no hay suficientes partidos.",
-        trophyCabinet: "Vitrina de Trofeos",
-        championship: "Campeonato",
-        runnerUp: "Subcampeón",
-        seasonHistory: "Historial de Temporadas",
-        noHistoryYet: "Aún no hay historial. ¡Completa una temporada!",
-        scorerKing: "Máximo Goleador",
-        assistKing: "Máximo Asistente",
-        cards: "Tarjetas",
-        form: "Forma",
-        // GameGuide Details
-        guideBasicsTitle: "Fundamentos del Juego",
-        guideBasics1: "Eres el director técnico de un equipo de fútbol.",
-        guideBasics2: "Se juega un partido de liga cada semana. El campeón se decide al final de la temporada.",
-        guideBasics3: "Objetivo: Campeonato, copas europeas y hacer crecer al club.",
-        guideBasics4: "El juego se guarda automáticamente. Usa 'Guardar y Salir'.",
-        guideBasics5: "Si la confianza de la directiva cae, ¡puedes ser despedido!",
-        guideBoardEffectTitle: "Efectos de Confianza:",
-        guideWinEffect: "Victoria: +3 confianza",
-        guideDrawEffect: "Empate: +0 confianza",
-        guideLossEffect: "Derrota: -5 confianza",
-        guideFireWarning: "Menos del 30%: ¡Despedido!",
-        guideSquadTitle: "Gestión de Plantilla",
-        guideSquad1: "Asigna jugadores como Once Inicial, Suplentes o Reservas.",
-        guideSquad2: "Haz clic en un jugador para intercambiarlo.",
-        guideSquad3: "Prueba diferentes formaciones seleccionando un diseño.",
-        guideOvrCalcTitle: "¿Cómo se calcula la Media (OVR)?",
-        guidePosMatch: "Ajuste de Posición: Los jugadores en su posición correcta rinden más.",
-        guideMoraleEffect: "Efecto de Moral: 50+ moral = bono, 50- moral = penalización.",
-        guideConEffect: "Condición: Menos del 30% = caída seria del rendimiento.",
-        guideReleaseTitle: "Rescisión de Contrato",
-        guideRelease1: "Puedes liberar jugadores no deseados.",
-        guideRelease2: "Compensación: Años restantes × Salario anual × 50%",
-        guideRelease3: "El jugador se convierte en agente libre.",
-        guideTacticsTitle: "Sistema Táctico (Detallado)",
-        guideForm433: "4-3-3: Equilibrado, énfasis en bandas.",
-        guideForm442: "4-4-2: Clásico, seguro.",
-        guideForm4231: "4-2-3-1: Control del mediocampo.",
-        guideForm352: "3-5-2: Dominio del mediocampo.",
-        guideForm532: "5-3-2: Defensivo.",
-        guideForm4141: "4-1-4-1: Defensa sólida.",
-        guideStylePoss: "Posesión: Mantener el balón, pases cortos. Requiere buen mediocampo.",
-        guideStyleCounter: "Contra: Defensa y salida rápida. Requiere delanteros veloces.",
-        guideStylePress: "Presión Alta: Presión constante. ¡Requiere mucha resistencia!",
-        guideStyleBus: "Autobús: Defensa total. Efectivo contra equipos grandes.",
-        guideStyleBal: "Equilibrado: Un poco de todo. Una opción segura.",
-        guideWidthNarrow: "Estrecho: Jugar por el centro. Ideal para jugadores centrales.",
-        guideWidthWide: "Ancho: Usar las bandas. Requiere extremos rápidos.",
-        guideTrainingTitle: "Sistema de Entrenamiento",
-        guideTrainAge: "¡Solo los jugadores menores de 28 años pueden progresar!",
-        guideTrainLuck: "El desarrollo es aleatorio - no garantizado cada semana.",
-        guideTrainFocus: "Enfoques de Entrenamiento",
-        guideTrainFocusBal: "Equilibrado: Igual probabilidad para todos los atributos.",
-        guideTrainFocusAtt: "Ataque: Mejora Definición, Tiro y Regate.",
-        guideTrainFocusDef: "Defensa: Mejora Entrada, Posicionamiento y Fuerza.",
-        guideTrainFocusPhy: "Físico: Mejora Velocidad, Resistencia y Fuerza.",
-        guideTrainFocusTec: "Técnico: Mejora Pase, Regate y Visión.",
-        guideTrainPosBased: "Por Posición (¡NUEVO!): Automático según el rol.",
-        guideFacilitiesTitle: "Instalaciones y Personal",
-        guideStadiumEffect: "Cada nivel = +6,000 capacidad. Más aficionados = más ingresos por entradas.",
-        guideTrainingEffect: "Centro de Entrenamiento: Aumenta la velocidad de desarrollo del jugador.",
-        guideScoutVsAcad: "Ojeador vs Academia: ¡Los ojeadores son más efectivos, mejóralos primero!",
-        guideMoraleTitle: "Sistema de Moral",
-        guideMoraleXI: "Once Inicial: +2 moral",
-        guideMoraleBench: "Suplente: Sin cambios",
-        guideMoraleRes75: "Reserva (75+ OVR): -3 moral!",
-        guideMoraleRes65: "Reserva (65-75 OVR): -1 moral",
-        guideMoralePerform: "100 Moral: +5% bono de OVR. 0 Moral: -10% penalización.",
-        guideTransferTitle: "Sistema de Fichajes",
-        guideTransList: "Los jugadores en lista de transferencias son más baratos.",
-        guideTransUnlisted: "Espera pagar 20-50% más por jugadores no listados.",
-        guideYouthTitle: "Academia de Jóvenes (¡Barato!)",
-        guideYouth1: "Los jóvenes vienen con valor de €50K.",
-        guideYouth2: "Salario: Solo €25K/año.",
-        guideFinanceTitle: "Gestión Financiera",
-        guideSponsorG: "Garantizado: Fijo alto, bono bajo. Seguro.",
-        guideSponsorD: "Equilibrado: Fijo medio, bono medio.",
-        guideSponsorR: "Arriesgado: Fijo bajo, bono alto. ¡Rentable si ganas!",
-        // European Cups
-        guideEuroTitle: "Copas Europeas",
-        guideEuroReq: "Requisitos de Participación",
-        guideEuroCL: "Champions League: 1º y 2º de la Liga",
-        guideEuroEL: "UEFA Europa League: 3º y 4º de la Liga",
-        guideEuroFormat: "Formato del Torneo",
-        guideEuroGroups: "Fase de Grupos: grupos de 4 equipos",
-        guideEuroAdv: "Los 2 mejores pasan a eliminatorias",
-        guideEuroKO: "Cuartos, semifinal, final",
-        guideEuroSingle: "Sistema de eliminación a partido único",
-        // Pro Tips
-        guideProTipsTitle: "Consejos Pro",
-        guideTipsDos: "Qué Hacer",
-        guideTipsDo1: "Ten al menos 2 jugadores por posición.",
-        guideTipsDo2: "Da minutos a los jóvenes - ¡evolucionan!",
-        guideTipsDo3: "Mejora al Ojeador primero (es más efectivo).",
-        guideTipsDo4: "Vende canteranos - ¡es muy rentable!",
-        guideTipsDo5: "Cambia la táctica según el rival.",
-        guideTipsDo6: "Da descanso a los jugadores cansados.",
-        guideTipsDonts: "Qué Evitar",
-        guideTipsDont1: "No dejes a jugadores con media alta en reservas.",
-        guideTipsDont2: "No hagas fichajes que superen tu presupuesto.",
-        guideTipsDont3: "No te limites a una sola formación.",
-        guideTipsDont4: "No ignores las lesiones.",
-        guideTipsDont5: "No dejes que los contratos expiren.",
-        guideTipsTactical: "Consejos Tácticos",
-        guideTipStrong: "Rival Fuerte: Autobús + Contra",
-        guideTipWeak: "Rival Débil: Presión Alta + Posesión",
-        guideTipWinning: "Ganando: Agresividad Segura",
-        guideTipLosing: "Perdiendo: Agresivo + Tempo Rápido",
-        // Manager Profile
-        managerProfile: "Perfil del Mánager",
-        currentTeam: "Equipo Actual",
-        weeklySalary: "Salario Semanal",
-        leagueTitle: "Título de Liga",
-        championsLeague: "Champions League",
-        uefaCup: "UEFA Cup",
-        superCup: "Supercopa",
-        careerHistory: "Historial de Carrera",
-        noCareerYet: "Aún no hay historial. ¡Completa tu primera temporada!",
-        prizeMoneyInfo: "Información de Premios",
-        roundOf16ToQF: "Octavos → Cuartos",
-        qfToSF: "Cuartos → Semifinal",
-        sfToFinal: "Semifinal → Final",
-        championshipPrize: "Campeonato",
-        totalPrize: "Total",
-        // Facilities
-        stadiumLevel: "Nivel del Estadio",
-        seats: "Asientos",
-        currentSeats: "Actual",
-        newSeats: "Nuevo",
-        maintIncrease: "Aumento de mantenimiento",
-        upgrade: "Mejorar",
-        trainingCenterLevel: "Nivel de Entrenamiento",
-        playerDevSpeed: "Velocidad de Desarrollo",
-        currentBonus: "Bono actual",
-        newBonus: "Nuevo bono",
-        academyLevel: "Nivel de Academia",
-        youthQuality: "Calidad de Juveniles",
-        scoutNetwork: "Red de Ojeadores",
-        scoutReportDesc: "Los ojeadores encuentran talentos en todo el mundo de otras canteras.",
-        // Staff
-        staffAssistant: "Asistente Técnico",
-        staffAssistantDesc: "Aumenta la eficiencia del entrenamiento y armonía táctica.",
-        staffScout: "Jefe de Ojeadores",
-        staffScoutDesc: "Encuentra mejores talentos, revela atributos ocultos.",
-        staffPhysio: "Fisioterapista Jefe",
-        staffPhysioDesc: "Acelera recuperación de lesiones, reduce fatiga.",
-        fitnessPerWeek: "condición/semana",
-        discoveryChance: "probabilidad de hallazgo",
-        // Playstyles
-        psRocket: "Cohete",
-        psQuick: "Rápido",
-        psFinesse: "Tiro con Rosca",
-        psTrickster: "Malabarista",
-        psPoacher: "Cazagoles",
-        // OpponentPreview & Match UI
-        easyOpponent: "Rival Fácil",
-        balancedMatch: "Partido Equilibrado",
-        hardOpponent: "Rival Difícil",
-        squadStrength: "Fuerza del Equipo",
-        prestige: "Prestigio",
-        last5Matches: "Últimos 5 Partidos",
-        noMatchesYet: "Sin partidos aún",
-        keyPlayers: "Jugadores Clave",
-        squadDistribution: "Distribución del Equipo",
-        startMatchBtn: "¡Iniciar Partido!",
-        goBack: "Volver",
-        backToProfiles: "Volver a Perfiles",
-        // TeamManagement Morale
-        playingXIBonus: "Jugando en el once (+2/semana)",
-        benchStable: "En el banquillo (estable)",
-        reserveStarPenalty: "Reserva, estrella (-3/semana)",
-        reserveMediumPenalty: "Reserva (-1/semana)",
-        reserveStable: "Reserva (estable)",
-        lastMoraleChanges: "Últimos Cambios de Moral",
-        // AssistantCoach
-        playStyle: "Estilo de Juego",
-        aggressiveness: "Agresividad",
-        slow: "Lento",
-        fast: "Rápido",
-        // Manager Profile Page
-        managerProfileTitle: "Perfil del Técnico",
-        currentTeamLabel: "Equipo Actual",
-        weeklySalaryLabel: "Salario Semanal",
-        seasonLabel: "Temporada",
-        trophyCabinetTitle: "Vitrina de Trofeos",
-        trophyCount: "trofeos",
-        leagueTitleLabel: "Título de Liga",
-        championsLeagueLabel: "Champions League",
-        uefaCupLabel: "UEFA Cup",
-        superCupLabel: "Supercopa",
-        careerHistoryTitle: "Historial de Carrera",
-        noCareerHistoryYet: "Aún no hay historial. ¡Completa tu primera temporada!",
-        positionLabel: "Posición",
-        trophiesLabel: "Trofeos",
-        cupPrizeInfoTitle: "Premios de Copa",
-        roundOf16ToQFLabel: "Octavos → Cuartos",
-        qfToSFLabel: "Cuartos → Semifinal",
-        sfToFinalLabel: "Semifinal → Final",
-        championshipLabel: "Campeonato",
-        totalLabel: "Total",
-        // Facilities Page
-        currentLabel: "Actual",
-        newLabel: "Nuevo",
-        maintIncreaseLabel: "Aumento de mantenimiento",
-        upgradeBtn: "Mejorar",
-        progressLabel: "Progreso",
-        qualityLabel: "Calidad",
-        stadiumName: "Estadio",
-        seatsLabel: "Asientos",
-        trainingFacility: "Centro de Entrenamiento",
-        performanceCenter: "Centro de Rendimiento",
-        playerDevelopment: "Desarrollo de Jugadores",
-        developmentSpeed: "velocidad de desarrollo",
-        youthAcademyFacility: "Academia Juvenil",
-        nextGenAcademy: "Academia Nueva Generación",
-        betterYouthLabel: "mejores juveniles",
-        youthQualityLabel: "calidad juvenil",
-        scoutNetworkLabel: "Red de Ojeadores",
-        // Staff Page
-        assistantCoachTitle: "Asistente Técnico",
-        assistantCoachDesc: "Aumenta la eficiencia del entrenamiento y armonía táctica.",
-        headScoutTitle: "Jefe de Ojeadores",
-        headScoutDesc: "Encuentra mejores talentos, revela atributos ocultos.",
-        headPhysioTitle: "Fisioterapeuta Jefe",
-        headPhysioDesc: "Acelera recuperación de lesiones, reduce fatiga.",
-        levelLabel: "Nivel",
-        trainingEfficiency: "eficiencia de entrenamiento",
-        youthDiscoveryChance: "probabilidad de hallazgo",
-        conditionPerWeek: "condición/semana",
-        // Transfer Market Filters
-        filterAll: "Todos",
-        filterListed: "En venta",
-        filterUnlisted: "No listado",
-        filterFree: "Libre",
-        // Tactic Labels
-        tacticBalanced: "Equilibrado",
-        tacticPossession: "Posesión",
-        tacticCounter: "Contraataque",
-        tacticHighPress: "Presión Alta",
-        tacticParkTheBus: "Cerrar el Bus",
-        // Assistant Coach Advice
-        // Assistant Coach - Deleted duplicates
-        // Training Focus - Deleted duplicates
-        // Cup Round - Deleted duplicates
-
-        // Sponsors
-        sponsorSafe1Desc: "🏦 Patrocinador bancario - Ingresos estables y garantizados",
-        sponsorSafe2Desc: "📱 Telecomunicaciones - Acuerdo confiable",
-        sponsorBalanced1Desc: "⚡ Bebida energética - Riesgo/recompensa equilibrado",
-        sponsorBalanced2Desc: "👟 Equipamiento deportivo - Basado en rendimiento",
-        sponsorRisky1Desc: "🎰 Startup cripto - ¡Apunta al campeonato!",
-        sponsorRisky2Desc: "🎲 Casa de apuestas - ¡Gana a lo grande si tienes éxito!",
-        sponsorRisky3Desc: "🚀 Tech startup - Centrado en bonos de éxito",
-        tierGuaranteed: "GARANTIZADO",
-        tierBalanced: "EQUILIBRADO",
-        tierRisky: "ARRIESGADO",
-        // weeklyIncome, winBonus removed (duplicates)
-        minYearly: "Min/Año",
-        champYearly: "Camp/Año",
-        seasonEndBonuses: "Bonos Fin de Temporada",
-        riskyWarning: "⚠️ Advertencia: ¡Ingresos muy bajos en una mala temporada! ¡Pero grandes recompensas si eres campeón!",
-        guaranteedNote: "✓ Seguro: Ingresos altos fijos sin importar los resultados",
-        selectedLabel: "Seleccionado:",
-        selectSponsorLabel: "Selecciona un patrocinador",
-        confirmDeal: "Confirmar Acuerdo",
-        midTableLabel: "mitad de tabla",
-        championLabel: "campeón"
-    },
-    id: {
-        dashboard: "Dasbor", news: "Berita", squad: "Skuad", training: "Latihan", market: "Bursa Transfer", club: "Klub", standings: "Klasemen", matchDay: "Hari Pertandingan",
-        managerWelcome: "Selamat datang kembali, Manajer {name}", dashboardDesc: "Tim Anda sedang menunggu instruksi Anda.",
-        playNextMatch: "Mainkan Pertandingan Berikutnya", quickDerby: "Derbi Cepat", boardConfidence: "Kepercayaan Manajemen", boardMessage: "Kami senang dengan kemajuan Anda.",
-        inbox: "Kotak Masuk", noMessages: "Tidak ada pesan baru.", week: "Minggu",
-        tactics: "Taktik", formation: "Formasi", aggression: "Agresi", safe: "Aman", normal: "Normal", aggressive: "Agresif",
-        startingXI: "Starting XI", bench: "Cadangan", reserves: "Reserse",
-        pos: "Pos", team: "Tim", age: "Usia", value: "Nilai", wage: "Gaji",
-        playFriendly: "Pertandingan Persahabatan", selectTeam: "Pilih Tim",
-        welcomeTitle: "Selamat Datang, Manajer", welcomeDesc: "Klub memiliki ekspektasi tinggi.", signContract: "Tanda Tangani Kontrak",
-        finances: "Keuangan", facilities: "Fasilitas", youthAcademy: "Akademi Muda", resign: "Mengundurkan Diri",
-        clubBudget: "Anggaran Klub", projectedWeekly: "Proyeksi Saldo Mingguan",
-        lastWeekReport: "Laporan Minggu Lalu", income: "Pendapatan", expenses: "Pengeluaran",
-        stadium: "Stadion", condition: "Kondisi", level: "Level", maintenance: "Pemeliharaan",
-        infrastructure: "Infrastruktur", trainingCenter: "Pusat Pelatihan", academy: "Akademi",
-        scoutReport: "Laporan Pemandu Bakat", promotePlayer: "Promosikan", academyEmpty: "Tidak ada kandidat tersedia.",
-        efficiency: "Efisiensi", coachNote: "Catatan Pelatih",
-        staff: "Staf",
-        gateReceiptsDetail: "Detail Tiket Masuk",
-        stadiumCapacity: "Kapasitas Stadion",
-        ticketPrice: "Harga Tiket",
-        lastMatchAttendance: "Penonton Pertandingan Terakhir (Estimasi)",
-        people: "orang",
-        occupancy: "Okupansi",
-        maintenanceDetail: "Rincian Biaya Pemeliharaan",
-        totalMaintenance: "Total Pemeliharaan",
-        highestEarners: "Penerima Gaji Tertinggi",
-        totalWages: "Total Anggaran Gaji",
-        reputationHistory: "Riwayat Reputasi",
-        confidenceHistory: "Riwayat Kepercayaan Manajemen",
-        noChangesYet: "Belum ada perubahan",
-        weekShort: "M",
-        rec: "Pul", grw: "Tumb", intensityLight: "Ringan", intensityNormal: "Normal", intensityHeavy: "Berat",
-        onTarget: "Tepat Sasaran", xg: "xG", selectBenchFirst: "Pilih pemain cadangan terlebih dahulu.", pitch: "Lapangan",
-        matchStatusAttack: "Menyerang", matchStatusDefense: "Bertahan", kickoff: "Kickoff",
-        fullTime: "Waktu Penuh", initializing: "Menginisialisasi...",
-        goals: "Gol", assists: "Assist", apps: "Main",
-        leagueTable: "Klasemen Liga", topScorers: "Pencetak Gol Terbanyak", topAssists: "Assist Terbanyak",
-        champion: "Juara", pts: "Poin", p: "M", w: "M", d: "S", l: "K", gd: "SG",
-        buy: "Beli", soldFor: "terjual seharga", offerAccepted: "Tawaran diterima.", offerReceived: "Tawaran Transfer",
-        acceptOffer: "Terima", rejectOffer: "Tolak",
-        renewContract: "Perbarui Kontrak", contractExtended: "Kontrak Diperpanjang", notEnoughFunds: "Dana tidak mencukupi.",
-        successfullySigned: "Berhasil merekrut", promotedToSenior: "dipromosikan ke skuad utama.",
-        assistantManager: "Asisten Manajer", clubHealth: "Kesehatan Klub", squadReady: "Skuad siap.",
-        criticalIssues: "Masalah Kritis", warnings: "Peringatan", suggestions: "Saran", autoFix: "Perbaiki Otomatis", close: "Tutup",
-        worldRankings: "Peringkat Dunia", globalDb: "Database Pemain Global", searchPlayer: "Cari Pemain...",
-        rank: "Peringkat", nat: "Wng", ovrInfo: "OVR disesuaikan berdasarkan posisi.",
-        base: "Dasar", attack: "Serangan", defense: "Bertahan",
-        width: "Lebar", passingStyle: "Gaya Operan", tempo: "Tempo", defensiveLine: "Garis Pertahanan", marking: "Penjagaan",
-        tacticNarrow: "Sempit", tacticWide: "Lebar", tacticShort: "Pendek", tacticDirect: "Langsung", tacticDeep: "Dalam", tacticHigh: "Tinggi", tacticZonal: "Zonal", tacticManMark: "Man Mark",
-        tempoSlow: "Lambat", tempoFast: "Cepat",
-        clickHelp: "Klik pemain untuk tukar/pilih", dragHelp: "Seret untuk menyesuaikan posisi", autoSortHelp: "Urutkan Otomatis untuk posisi",
-        selected: "Dipilih:", selectToStart: "Pilih untuk Memulai",
-
-        attributes: "Atribut", technical: "Teknis", physical: "Fisik", mental: "Mental",
-        scoutSummary: "Ringkasan Pemandu Bakat", contract: "Kontrak", yearsLeft: "Sisa Tahun", transferList: "Daftar Transfer", removeFromList: "Hapus dari Daftar",
-        injured: "Cedera", suspended: "Sanksi",
-        leagueTurkey: "Süper Lig", leagueEngland: "Premier League", leagueSpain: "La Liga", selectLeague: "Pilih Liga", reputation: "Reputasi",
-        startNewSeason: "Memulai Musim Baru", startMatch: "Mulai Pertandingan",
-        resignConfirm: "Apakah Anda yakin ingin mengundurkan diri? Progres akan hilang.",
-        weeklyReport: "Laporan Mingguan",
-        trainingReport: "Laporan Latihan",
-        unhappyPlayer: "Pemain Tidak Puas",
-        unhappyPlayerDesc: "{name} tidak puas karena kurangnya waktu bermain.",
-        trainingIntensityReport: "Tim berlatih dengan intensitas {intensity}. Pemulihan: +{recovery}%",
-        financeReport: "Laporan Keuangan",
-        financeReportProfit: "Minggu ini anggaran klub ditutup dengan keuntungan €{amount}.",
-        financeReportLoss: "Minggu ini anggaran klub ditutup dengan kerugian €{amount}.",
-        currentBalance: "Saldo saat ini: €{amount}",
-        completeSquad: "Lengkapi Skuad",
-        gameGuide: "Panduan Game",
-        fixtures: "Jadwal",
-        prevWeek: "Minggu Sebelumnya",
-        nextWeek: "Minggu Berikutnya",
-        saveAndExit: "Simpan & Keluar",
-        noMatchToday: "Tidak ada pertandingan hari ini",
-        noMatchInfo: "Lanjutkan minggu dari dasbor atau periksa jadwal.",
-        returnToDashboard: "Kembali ke Dasbor",
-        clickSwap: "Klik untuk tukar",
-        dragAdjust: "Seret untuk sesuaikan",
-        con: "KND",
-        mor: "MOR",
-        // News Center
-        lastNews: "Berita terbaru mengenai klub Anda.",
-        deleteRead: "Hapus yang Dibaca",
-        deleteAll: "Hapus Semua",
-        urgent: "PENTING",
-        detail: "Detail",
-        accept: "Terima",
-        reject: "Tolak",
-        deleteMessage: "Hapus Pesan",
-        // Player Interaction
-        chooseTopic: "Pilih topik untuk dibicarakan dengan pemain.",
-        praisePerformance: "Puji Performa",
-        praiseDesc: "Tingkatkan moral jika bermain bagus.",
-        criticizeForm: "Kritik Performa",
-        criticizeDesc: "Tuntut hasil yang lebih baik. Berisiko.",
-        encourage: "Berikan Semangat",
-        encourageDesc: "Bantu masalah kepercayaan diri.",
-        praisePlayer: "Puji",
-        criticizePlayer: "Kritik",
-        motivatePlayer: "Motivasi",
-        calmTone: "Nada Tenang",
-        passionateTone: "Nada Bersemangat",
-        // Dynamic Messages (Engine)
-        transferNewsSubject: "📰 Berita Transfer",
-        transferSignedBody: "{team} telah merekrut {position} {name} dari {fromTeam} seharga €{amount}M.",
-        transferOfferSubject: "💰 {team} menginginkan {name}!",
-        transferOfferBody: "{team} telah mengajukan tawaran sebesar €{amount}M untuk {name}. Mereka sangat menginginkan pemain ini!",
-        injurySubject: "🏥 {name} Cedera!",
-        injuryBody: "{name} mengalami cedera saat latihan. Estimasi pemulihan: {weeks} minggu.",
-        youthProspectSubject: "🌟 Prospek Muda Ditemukan!",
-        youthProspectBody: "Pemandu bakat Anda telah menemukan {name} ({position}, {age}). Overall: {overall}, Potensi: {potential}",
-        // Training Center Localization
-        orangeTeam: "Tim Oranye",
-        blueTeam: "Tim Biru", orange: "Oranye", blue: "Biru",
-        selectPlayer: "Pilih Pemain", avg: "Rata", motm: "Man of the Match",
-        trainingMatchSetup: "Persiapan Pertandingan Latihan", needMorePlayers: "Butuh {count} pemain bugar lagi",
-        setupMatch: "Siapkan Latihan", newMatch: "Pertandingan Baru",
-        trainingMatch: "Pertandingan Latihan",
-        trainingMatchDesc: "Buat dua tim dari skuad Anda dan saksikan mereka bermain!",
-        playing: "Bermain...",
-        seasonComplete: "Musim Selesai!",
-        seasonOver: "Musim telah berakhir.",
-        leagueChampion: "Juara Liga",
-        points: "Poin",
-        // Stats & Scout
-        attrPace: "Kecepatan", attrShoot: "Tembakan", attrPass: "Operan", attrDribble: "Giring", attrDefense: "Bertahan", attrPhys: "Fisik",
-        consistency: "Konsistensi", bigMatches: "Laga Besar", injuryRisk: "Risiko Cedera",
-        veryConsistent: "Sangat Konsisten", inconsistent: "Tidak Konsisten", average: "Rata-rata",
-        lovesBigGames: "Suka Laga Besar", nervous: "Gugup", stable: "Stabil",
-        injuryProne: "Rentan Cedera", resilient: "Tangguh",
-        playstyles: "Gaya Bermain",
-        simulateMatch: "Simulasi Pertandingan", simulating: "Menyimulasikan...", quickSimResult: "Hasil Pertandingan",
-        managerOverview: "Ikhtisar Manajer",
-        // Negotiation
-        negotiationOpen: "Kami terbuka untuk menjual {name}. Nilai pasarnya adalah {value}. Apa tawaran Anda?",
-        negotiationUnlisted: [
-            "{name} TIDAK untuk dijual. Dibutuhkan tawaran besar untuk mengubah pikiran kami.",
-            "Kami tidak berniat menjual {name}. Dia kunci rencana kami.",
-            "Pemain senang di sini. Kami hanya akan mendengarkan tawaran luar biasa."
-        ],
-        negotiationAccept: "Kami menerima tawaran Anda. Ini harga yang adil.",
-        negotiationAcceptUnlisted: "Tawaran ini terlalu bagus untuk ditolak. Kami menerima.",
-        negotiationCounter: "Itu terlalu rendah. Kami menginginkan {amount}.",
-        negotiationReject: [
-            "Seperti yang saya katakan, dia tidak dijual.",
-            "Ini membuang-buang waktu.",
-            "Jauh dari cukup."
-        ],
-        negotiationRejectUnlisted: [
-            "Tawaran itu menghina.",
-            "Anda perlu memberikan yang jauh lebih baik.",
-            "Apakah itu bercanda?"
-        ],
-        negotiationWalkout: "Pembicaraan selesai. Negosiasi berakhir.",
-        negotiationInsistSuccess: "Baiklah. Karena Anda gigih, kami akan menerima harga ini.",
-        negotiationInsistFail: "Kegigihan Anda mengganggu. Kami mengakhiri negosiasi sekarang!",
-        makeOffer: "Berikan Tawaran",
-        insist: "Desak",
-        confirmTransfer: "Konfirmasi Transfer",
-        dealAgreed: "Kesepakatan Tercapai!",
-        negotiationFailed: "Negosiasi Gagal",
-        negotiationFailedDesc: "Klub telah menarik diri dari pembicaraan.",
-        insufficientFunds: "Dana Tidak Cukup",
-        currentValue: "Nilai Saat Ini",
-        patience: "Kesabaran",
-        insistHelp: "Tekan klub (Risiko Tinggi)",
-        jobOffers: "Tawaran Pekerjaan",
-        terminateContract: "Lepas Pemain",
-        terminateConfirm: "Lepas {name}? Pesangon: €{cost}K",
-        playerReleased: "Pemain telah dilepas.",
-        // GameGuide Translations
-        guideAbout: "Tentang Game",
-        guideBasics: "Dasar Permainan",
-        guideSquad: "Manajemen Skuad",
-        guideTactics: "Taktik (Detail)",
-        guideTraining: "Sistem Latihan",
-        guideFacilities: "Fasilitas & Staf",
-        guideMorale: "Sistem Moral",
-        guideTransfers: "Sistem Transfer",
-        guideFinance: "Manajemen Keuangan",
-        guideEuropean: "Piala Eropa",
-        guideTips: "Tips Pro",
-        guideUnderDev: "Dalam Pengembangan!",
-        guideUnderDevDesc: "Game ini sedang aktif dikembangkan. Umpan balik pengguna langsung tercermin dalam game. Hubungi kami untuk bug atau saran!",
-        guideDifferent: "Apa yang Membuat Kami Berbeda?",
-        guideDifferentDesc: "Berbeda dengan game manajer lainnya, kami tidak membebani pengguna dengan statistik. Game yang mudah dipelajari, sulit dikuasai.",
-        guideSimple: "Antarmuka sederhana dan jelas",
-        guideFast: "Simulasi pertandingan cepat",
-        guideMobile: "Desain mengutamakan ponsel",
-        guideLiveEngine: "Live Match Engine",
-        guideLiveEngineDesc: "Kebanyakan game manajer menghitung pertandingan sebelumnya. Mesin kami berbeda!",
-        guideOurEngine: "Mesin kami berbeda!",
-        guideEvery50ms: "Setiap 50ms (20 kali per detik):",
-        guide22Players: "Posisi 22 pemain dihitung",
-        guideAIDecides: "AI memutuskan (tembak, oper, atau giring?)",
-        guideBallPhysics: "Fisika bola disimulasikan",
-        guideUnpredictable: "Pertandingan waktu nyata yang tidak terduga!",
-        guide2D25D: "Tampilan 2D vs 2.5D",
-        guide2DDesc: "Tampilan klasik dari atas. Ideal untuk analisis taktik.",
-        guide25DDesc: "Tampilan perspektif. Lebih sinematik, seperti siaran TV.",
-        guideChangeView: "Ubah tampilan selama pertandingan dari pojok kanan atas!",
-        // GameGuide Details
-        guideBasicsTitle: "Dasar Permainan",
-        guideBasics1: "Anda adalah direktur teknis tim sepak bola dalam game ini.",
-        guideBasics2: "Pertandingan liga dimainkan setiap minggu. Juara ditentukan di akhir musim.",
-        guideBasics3: "Target: Juara, piala Eropa, dan membesarkan klub.",
-        guideBasics4: "Game menyimpan otomatis. Gunakan 'Simpan & Keluar' untuk keluar aman.",
-        guideBasics5: "Jika Kepercayaan Manajemen turun, Anda bisa dipecat!",
-        guideBoardEffectTitle: "Efek Kepercayaan Manajemen:",
-        guideWinEffect: "Menang: +3 kepercayaan",
-        guideDrawEffect: "Seri: +0 kepercayaan",
-        guideLossEffect: "Kalah: -5 kepercayaan",
-        guideFireWarning: "Di bawah 30%: Anda dipecat!",
-        guideSquadTitle: "Manajemen Skuad",
-        guideSquad1: "Atur pemain sebagai Starting XI, Cadangan, atau Reserse.",
-        guideSquad2: "Klik pemain untuk menukar dengan yang lain.",
-        guideSquad3: "Coba formasi berbeda dengan memilih tata letak.",
-        guideOvrCalcTitle: "Bagaimana OVR Dihitung?",
-        guidePosMatch: "Kesesuaian Posisi: Pemain di posisi yang benar menunjukkan OVR lebih tinggi.",
-        guideMoraleEffect: "Efek Moral: 50+ moral = bonus, 50- moral = penalti.",
-        guideConEffect: "Kondisi: Di bawah 30% kondisi = penurunan performa serius.",
-        guideReleaseTitle: "Pemutusan Kontrak",
-        guideRelease1: "Anda bisa melepas pemain yang tidak diinginkan.",
-        guideRelease2: "Kompensasi: Sisa Tahun × Gaji Tahunan × 50%",
-        guideRelease3: "Pemain menjadi agen bebas.",
-        guideTacticsTitle: "Sistem Taktik (Detail)",
-        guideForm433: "4-3-3: Seimbang, fokus sayap.",
-        guideForm442: "4-4-2: Klasik, aman.",
-        guideForm4231: "4-2-3-1: Kontrol gelandang.",
-        guideForm352: "3-5-2: Dominasi gelandang.",
-        guideForm532: "5-3-2: Bertahan.",
-        guideForm4141: "4-1-4-1: Pertahanan solid.",
-        guideStylePoss: "Possession: Penguasaan bola, operan pendek. Butuh gelandang kuat.",
-        guideStyleCounter: "Counter: Bertahan dan serangan balik cepat. Butuh penyerang cepat.",
-        guideStylePress: "HighPress: Tekanan tinggi. Membutuhkan stamina tinggi!",
-        guideStyleBus: "ParkTheBus: Pertahanan 11 orang, tunggu kontra. Efektif melawan tim besar.",
-        guideStyleBal: "Balanced: Sedikit dari semuanya. Pilihan aman.",
-        guideWidthNarrow: "Sempit: Bermain lewat tengah. Ideal untuk pemain sentral.",
-        guideWidthWide: "Lebar: Gunakan sayap. Butuh winger cepat.",
-        guideTrainingTitle: "Sistem Latihan",
-        guideTrainAge: "Hanya pemain di bawah 28 tahun yang bisa berkembang!",
-        guideTrainLuck: "Perkembangan berbasis keberuntungan - tidak dijamin setiap minggu.",
-        guideTrainFocus: "Fokus Latihan",
-        guideTrainFocusBal: "Seimbang: Peluang sama untuk semua atribut.",
-        guideTrainFocusAtt: "Serangan: Finishing, Tembakan, Dribbling meningkat.",
-        guideTrainFocusDef: "Bertahan: Tackling, Posisi, Kekuatan meningkat.",
-        guideTrainFocusPhy: "Fisik: Kecepatan, Stamina, Kekuatan meningkat.",
-        guideTrainFocusTec: "Teknis: Operan, Dribbling, Visi meningkat.",
-        guideTrainPosBased: "Berdasarkan Posisi (BARU!): Otomatis berdasarkan peran.",
-        guideFacilitiesTitle: "Fasilitas & Staf",
-        guideStadiumEffect: "Setiap level = +6.000 kapasitas. Lebih banyak penonton = lebih banyak pendapatan tiket.",
-        guideTrainingEffect: "Pusat Latihan: Meningkatkan kecepatan perkembangan pemain.",
-        guideScoutVsAcad: "Pemandu vs Akademi: Pemandu lebih efektif untuk menemukan potensi, tingkatkan dulu!",
-        guideMoraleTitle: "Sistem Moral",
-        guideMoraleXI: "Starting XI: +2 moral",
-        guideMoraleBench: "Cadangan: Tidak ada perubahan",
-        guideMoraleRes75: "Reserse (75+ OVR): -3 moral!",
-        guideMoraleRes65: "Reserse (65-75 OVR): -1 moral",
-        guideMoralePerform: "100 Moral: +5% bonus OVR. 0 Moral: -10% penalti OVR!",
-        guideTransferTitle: "Sistem Transfer",
-        guideTransList: "Pemain di daftar transfer lebih murah.",
-        guideTransUnlisted: "Bayar 20-50% lebih untuk pemain tidak terdaftar.",
-        guideYouthTitle: "Akademi Muda (Murah!)",
-        guideYouth1: "Pemain muda datang dengan nilai €50K.",
-        guideYouth2: "Gaji: Hanya €25K/tahun.",
-        guideFinanceTitle: "Manajemen Keuangan",
-        guideSponsorG: "Dijamin: Tetap tinggi, bonus rendah. Aman.",
-        guideSponsorD: "Seimbang: Tetap sedang, bonus sedang.",
-        guideSponsorR: "Berisiko: Tetap rendah, bonus tinggi. Menguntungkan jika menang!",
-        // European Cups
-        guideEuroTitle: "Piala Eropa",
-        guideEuroReq: "Syarat Partisipasi",
-        guideEuroCL: "Champions League: Peringkat 1 & 2 Liga",
-        guideEuroEL: "UEFA Europa League: Peringkat 3 & 4 Liga",
-        guideEuroFormat: "Format Turnamen",
-        guideEuroGroups: "Babak Grup: grup berisi 4 tim",
-        guideEuroAdv: "2 teratas maju ke babak gugur",
-        guideEuroKO: "Perempat final, semi final, final",
-        guideEuroSingle: "Sistem gugur pertandingan tunggal",
-        // Pro Tips
-        guideProTipsTitle: "Tips Pro",
-        guideTipsDos: "Hal yang Harus Dilakukan",
-        guideTipsDo1: "Miliki setidaknya 2 pemain di setiap posisi.",
-        guideTipsDo2: "Beri kesempatan pemain muda - mereka akan berkembang!",
-        guideTipsDo3: "Tingkatkan Pemandu Bakat dulu (lebih efektif).",
-        guideTipsDo4: "Jual pemain akademi - sangat menguntungkan!",
-        guideTipsDo5: "Ubah taktik sesuai dengan lawan.",
-        guideTipsDo6: "Istirahatkan pemain yang lelah.",
-        guideTipsDonts: "Hal yang Harus Dihindari",
-        guideTipsDont1: "Jangan biarkan pemain OVR tinggi di cadangan terus.",
-        guideTipsDont2: "Jangan beli pemain melebihi anggaran.",
-        guideTipsDont3: "Jangan terpaku pada satu formasi saja.",
-        guideTipsDont4: "Jangan abaikan cedera.",
-        guideTipsDont5: "Jangan biarkan kontrak habis.",
-        guideTipsTactical: "Tips Taktis",
-        guideTipStrong: "Lawan Kuat: ParkTheBus + Counter",
-        guideTipWeak: "Lawan Lemah: HighPress + Possession",
-        guideTipWinning: "Saat Menang: Agresi Aman",
-        guideTipLosing: "Saat Kalah: Agresif + Tempo Cepat",
-        // Assistant Coach
-        assistantCoach: "Asisten Pelatih",
-        coachRookie: "Pemula",
-        coachExperienced: "Berpengalaman",
-        coachExpert: "Ahli",
-        coachMaster: "Master",
-        matches: "pertandingan",
-        opponentAnalysis: "Analisis Lawan",
-        style: "Gaya",
-        myRecommendation: "Rekomendasi Saya",
-        against: "melawan",
-        tryThis: "coba ini!",
-        reasonPressure: "Tekanan mematahkan pertahanan",
-        reasonCounter: "Serangan balik mengalahkan tekanan tinggi",
-        reasonPressWin: "Tekanan memenangkan bola kembali",
-        reasonControl: "Kontrol mencegah serangan balik",
-        reasonPressBalanced: "Tekanan efektif melawan tim seimbang",
-        tacticsRecord: "rekor vs gaya ini",
-        winRate: "tingkat kemenangan",
-        needMoreExperience: "Butuh Lebih Banyak Pengalaman",
-        needMoreMatchesDesc: "Saya butuh setidaknya 5 pertandingan untuk memberi saran. Kita baru bermain {count}.",
-        pastMatches: "Pertemuan Sebelumnya",
-        season: "Musim",
-        understood: "Mengerti",
-        // Manager Profile
-        managerProfile: "Profil Manajer",
-        currentTeam: "Tim Saat Ini",
-        rating: "Peringkat",
-        weeklySalary: "Gaji Mingguan",
-        trophyCabinet: "Lemari Trofi",
-        leagueTitle: "Gelar Liga",
-        championsLeague: "Champions League",
-        uefaCup: "UEFA Cup",
-        superCup: "Piala Super",
-        careerHistory: "Riwayat Karier",
-        noCareerYet: "Belum ada riwayat karier. Selesaikan musim pertama Anda!",
-        prizeMoneyInfo: "Info Hadiah Trofi",
-        roundOf16ToQF: "16 Besar → Perempat Final",
-        qfToSF: "Perempat Final → Semi Final",
-        sfToFinal: "Semi Final → Final",
-        championshipPrize: "Juara",
-        totalPrize: "Total",
-        // Facilities
-        stadiumLevel: "Level Stadion",
-        seats: "Kursi",
-        currentSeats: "Saat ini",
-        newSeats: "Baru",
-        maintIncrease: "Kenaikan pemeliharaan",
-        upgrade: "Tingkatkan",
-        trainingCenterLevel: "Level Latihan",
-        playerDevSpeed: "Kecepatan Perkembangan Pemain",
-        currentBonus: "Bonus saat ini",
-        newBonus: "Bonus baru",
-        academyLevel: "Level Akademi",
-        youthQuality: "Kualitas Pemain Muda",
-        scoutNetwork: "Jaringan Pemandu Bakat",
-        scoutReportDesc: "Pemandu bakat menemukan talenta muda dari seluruh dunia.",
-        // Staff
-        staffAssistant: "Asisten Pelatih",
-        staffAssistantDesc: "Meningkatkan efisiensi latihan dan harmoni taktik.",
-        staffScout: "Kepala Pemandu Bakat",
-        staffScoutDesc: "Menemukan bakat muda terbaik, mengungkap atribut tersembunyi.",
-        staffPhysio: "Kepala Fisioterapis",
-        staffPhysioDesc: "Mempercepat pemulihan cedera, mengurangi kelelahan.",
-        fitnessPerWeek: "kondisi/minggu",
-        discoveryChance: "peluang penemuan",
-        // UI Labels
-        history: "Riwayat",
-        player: "Pemain",
-        noStatsYet: "Belum ada statistik.",
-        notEnoughMatches: "Belum cukup pertandingan dimainkan.",
-        championship: "Juara",
-        runnerUp: "Runner-up",
-        seasonHistory: "Riwayat Musim",
-        noHistoryYet: "Belum ada riwayat. Selesaikan satu musim!",
-        scorerKing: "Pencetak Gol Terbanyak",
-        assistKing: "Assist Terbanyak",
-        cards: "Kartu",
-        form: "Form",
-        // OpponentPreview & Match UI
-        easyOpponent: "Lawan Mudah",
-        balancedMatch: "Pertandingan Seimbang",
-        hardOpponent: "Lawan Sulit",
-        squadStrength: "Kekuatan Skuad",
-        prestige: "Prestise",
-        last5Matches: "5 Pertandingan Terakhir",
-        noMatchesYet: "Belum ada pertandingan",
-        keyPlayers: "Pemain Kunci",
-        squadDistribution: "Distribusi Skuad",
-        startMatchBtn: "Mulai Pertandingan!",
-        goBack: "Kembali",
-        backToProfiles: "Kembali ke Profil",
-        // TeamManagement Morale
-        playingXIBonus: "Bermain di Starting XI (+2/minggu)",
-        benchStable: "Di bangku cadangan (stabil)",
-        reserveStarPenalty: "Cadangan, pemain bintang (-3/minggu)",
-        reserveMediumPenalty: "Cadangan (-1/minggu)",
-        reserveStable: "Cadangan (stabil)",
-        lastMoraleChanges: "Perubahan Moral Terakhir",
-        // AssistantCoach
-        playStyle: "Gaya Bermain",
-        aggressiveness: "Agresivitas",
-        slow: "Lambat",
-        fast: "Cepat",
-        // Manager Profile Page
-        managerProfileTitle: "Profil Manajer",
-        currentTeamLabel: "Tim Saat Ini",
-        weeklySalaryLabel: "Gaji Mingguan",
-        seasonLabel: "Musim",
-        trophyCabinetTitle: "Lemari Trofi",
-        trophyCount: "trofi",
-        leagueTitleLabel: "Juara Liga",
-        championsLeagueLabel: "Liga Champions",
-        uefaCupLabel: "Piala UEFA",
-        superCupLabel: "Piala Super",
-        careerHistoryTitle: "Riwayat Karir",
-        noCareerHistoryYet: "Belum ada riwayat karir. Selesaikan musim pertama Anda!",
-        positionLabel: "Posisi",
-        trophiesLabel: "Trofi",
-        cupPrizeInfoTitle: "Info Hadiah Piala",
-        roundOf16ToQFLabel: "16 Besar → Perempat Final",
-        qfToSFLabel: "Perempat Final → Semifinal",
-        sfToFinalLabel: "Semifinal → Final",
-        championshipLabel: "Kejuaraan",
-        totalLabel: "Total",
-        // Facilities Page
-        currentLabel: "Saat ini",
-        newLabel: "Baru",
-        maintIncreaseLabel: "Kenaikan pemeliharaan",
-        upgradeBtn: "Tingkatkan",
-        progressLabel: "Progress",
-        qualityLabel: "Kualitas",
-        stadiumName: "Stadion",
-        seatsLabel: "Kursi",
-        trainingFacility: "Fasilitas Latihan",
-        performanceCenter: "Pusat Performa",
-        playerDevelopment: "Pengembangan Pemain",
-        developmentSpeed: "kecepatan perkembangan",
-        youthAcademyFacility: "Akademi Muda",
-        nextGenAcademy: "Akademi Generasi Baru",
-        betterYouthLabel: "pemuda lebih baik",
-        youthQualityLabel: "kualitas pemuda",
-        scoutNetworkLabel: "Jaringan Scout",
-        // Staff Page
-        assistantCoachTitle: "Asisten Pelatih",
-        assistantCoachDesc: "Meningkatkan efisiensi latihan dan harmoni taktik.",
-        headScoutTitle: "Kepala Scout",
-        headScoutDesc: "Menemukan bakat muda terbaik, mengungkap atribut tersembunyi.",
-        headPhysioTitle: "Kepala Fisioterapis",
-        headPhysioDesc: "Mempercepat pemulihan cedera, mengurangi kelelahan.",
-        levelLabel: "Level",
-        trainingEfficiency: "efisiensi latihan",
-        youthDiscoveryChance: "peluang penemuan pemuda",
-        conditionPerWeek: "kondisi/minggu",
-        // Transfer Market Filters
-        filterAll: "Semua",
-        filterListed: "Dijual",
-        filterUnlisted: "Tidak Dijual",
-        filterFree: "Bebas",
-        // Tactic Labels
-        tacticBalanced: "Seimbang",
-        tacticPossession: "Penguasaan Bola",
-        tacticCounter: "Serangan Balik",
-        tacticHighPress: "Tekanan Tinggi",
-        tacticParkTheBus: "Bertahan Total",
-        // Assistant Coach Advice
-        // Assistant Coach - Deleted duplicates
-        // Training Focus - Deleted duplicates
-        // Cup Round - Deleted duplicates
-
-        // Sponsors
-        sponsorSafe1Desc: "🏦 Sponsor bank - Pendapatan stabil dan terjamin",
-        sponsorSafe2Desc: "📱 Telekomunikasi - Kesepakatan yang andal",
-        sponsorBalanced1Desc: "⚡ Minuman energi - Risiko/imbalan seimbang",
-        sponsorBalanced2Desc: "👟 Peralatan olahraga - Berbasis kinerja",
-        sponsorRisky1Desc: "🎰 Startup kripto - Bertujuan untuk kejuaraan!",
-        sponsorRisky2Desc: "🎲 Perusahaan taruhan - Menang besar jika Anda berhasil!",
-        sponsorRisky3Desc: "🚀 Tech startup - Fokus pada bonus kesuksesan",
-        tierGuaranteed: "TERJAMIN",
-        tierBalanced: "SEIMBANG",
-        tierRisky: "BERISIKO",
-        // weeklyIncome, winBonus removed (duplicates)
-        minYearly: "Min/Tahun",
-        champYearly: "Juara/Tahun",
-        seasonEndBonuses: "Bonus Akhir Musim",
-        riskyWarning: "⚠️ Peringatan: Pendapatan sangat rendah di musim buruk! Tapi hadiah besar jika Anda menjadi juara!",
-        guaranteedNote: "✓ Aman: Pendapatan tinggi tetap terlepas dari hasil",
-        selectedLabel: "Dipilih:",
-        selectSponsorLabel: "Pilih sponsor",
-        confirmDeal: "Konfirmasi Kesepakatan",
-        midTableLabel: "papan tengah",
-        championLabel: "juara"
-    },
-};
-

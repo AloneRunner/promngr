@@ -1,0 +1,200 @@
+export const MEXICO_CITY_CEMENT_SQUAD = [
+    {
+        ad: "U. Antuno",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "SĞK",
+        reyting: 78,
+        yas: 26,
+        ana_ozellikler: { hiz: 90, sut: 72, pas: 70, dribbling: 82, defans: 40, fizik: 65 },
+        detaylar: { sprint: 92, hizlanma: 90, dripling: 84 },
+        oyun_tarzlari: ["Sprint Ustası", "Hızlı Kanat"]
+    },
+    {
+        ad: "C. Rodrígues",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "MDO",
+        reyting: 77,
+        yas: 27,
+        ana_ozellikler: { hiz: 70, sut: 74, pas: 80, dribbling: 76, defans: 72, fizik: 74 },
+        detaylar: { vizyon: 82, pas: 82, uzaktan_sut: 78 },
+        oyun_tarzlari: ["Oyun Kurucu", "Uzaktan Şutör"]
+    },
+    {
+        ad: "I. Riviro",
+        takim: "Mexico City Cement",
+        uyruk: "Uruguay",
+        mevki: "MDO",
+        reyting: 76,
+        yas: 32,
+        ana_ozellikler: { hiz: 72, sut: 70, pas: 74, dribbling: 72, defans: 76, fizik: 78 },
+        detaylar: { liderlik: 86, cok_yonluluk: 88, agresiflik: 84 },
+        oyun_tarzlari: ["Lider", "Savaşçı"]
+    },
+    {
+        ad: "W. Ditto",
+        takim: "Mexico City Cement",
+        uyruk: "Kolombiya",
+        mevki: "STP",
+        reyting: 76,
+        yas: 26,
+        ana_ozellikler: { hiz: 78, sut: 40, pas: 65, dribbling: 60, defans: 78, fizik: 82 },
+        detaylar: { guc: 86, hizlanma: 76, top_kapma: 78 },
+        oyun_tarzlari: ["Hızlı Stoper", "Güçlü"]
+    },
+    {
+        ad: "K. Mierr",
+        takim: "Mexico City Cement",
+        uyruk: "Kolombiya",
+        mevki: "KL",
+        reyting: 75,
+        yas: 23,
+        ana_ozellikler: { hiz: 55, sut: 30, pas: 70, dribbling: 40, defans: 20, fizik: 72 },
+        detaylar: { ayak_hakimiyeti: 78, refleks: 76 },
+        oyun_tarzlari: ["Libero Kaleci"]
+    },
+    {
+        ad: "G. Giakoumakis",
+        takim: "Mexico City Cement",
+        uyruk: "Yunanistan",
+        mevki: "SNT",
+        reyting: 77,
+        yas: 29,
+        ana_ozellikler: { hiz: 74, sut: 78, pas: 60, dribbling: 68, defans: 30, fizik: 80 },
+        detaylar: { bitiricilik: 82, guc: 84, kafa_isabeti: 80 },
+        oyun_tarzlari: ["Golcü", "Güçlü Forvet"]
+    },
+    {
+        ad: "G. Pioví",
+        takim: "Mexico City Cement",
+        uyruk: "Arjantin",
+        mevki: "STP",
+        reyting: 74,
+        yas: 29,
+        ana_ozellikler: { hiz: 68, sut: 60, pas: 76, dribbling: 65, defans: 74, fizik: 74 },
+        detaylar: { oyun_kurma: 82, uzun_pas: 80 },
+        oyun_tarzlari: ["Pasör Stoper"]
+    },
+    {
+        ad: "R. Rotondí",
+        takim: "Mexico City Cement",
+        uyruk: "Arjantin",
+        mevki: "SLK",
+        reyting: 74,
+        yas: 27,
+        ana_ozellikler: { hiz: 82, sut: 70, pas: 72, dribbling: 76, defans: 60, fizik: 72 },
+        detaylar: { caliskanlik: 86, orta_acma: 75 },
+        oyun_tarzlari: ["Çalışkan"]
+    },
+    {
+        ad: "L. Faravelli",
+        takim: "Mexico City Cement",
+        uyruk: "Arjantin",
+        mevki: "MO",
+        reyting: 75,
+        yas: 31,
+        ana_ozellikler: { hiz: 68, sut: 72, pas: 78, dribbling: 76, defans: 65, fizik: 68 },
+        detaylar: { oyun_kurma: 80, teknik: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Candido",
+        takim: "Mexico City Cement",
+        uyruk: "Uruguay",
+        mevki: "SLB",
+        reyting: 73,
+        yas: 29,
+        ana_ozellikler: { hiz: 78, sut: 60, pas: 72, dribbling: 72, defans: 68, fizik: 70 },
+        detaylar: { orta_acma: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Sepúlveda",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "SNT",
+        reyting: 72,
+        yas: 28,
+        ana_ozellikler: { hiz: 76, sut: 72, pas: 65, dribbling: 70, defans: 35, fizik: 74 },
+        detaylar: { kafa_isabeti: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Salcedo",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "STP",
+        reyting: 73,
+        yas: 30,
+        ana_ozellikler: { hiz: 65, sut: 35, pas: 65, dribbling: 60, defans: 75, fizik: 78 },
+        detaylar: { agresiflik: 85, tecrube: 82 },
+        oyun_tarzlari: ["Savaşçı"]
+    },
+    {
+        ad: "J. Huescaz",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "SĞB",
+        reyting: 71,
+        yas: 20,
+        ana_ozellikler: { hiz: 84, sut: 60, pas: 70, dribbling: 74, defans: 65, fizik: 65 },
+        detaylar: { potansiyel: 82, bindirme: 78 },
+        oyun_tarzlari: ["Genç Yetenek", "Ofansif Bek"]
+    },
+    {
+        ad: "E. Liro",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "MDO",
+        reyting: 73,
+        yas: 24,
+        ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 74, fizik: 72 },
+        detaylar: { top_kapma: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Gudino",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "KL",
+        reyting: 70,
+        yas: 28,
+        ana_ozellikler: { hiz: 40, sut: 15, pas: 55, dribbling: 20, defans: 20, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Levi",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "SNT",
+        reyting: 64,
+        yas: 17,
+        ana_ozellikler: { hiz: 75, sut: 65, pas: 55, dribbling: 68, defans: 25, fizik: 60 },
+        detaylar: { potansiyel: 84 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    },
+    {
+        ad: "A. Gutiérrez",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "MO",
+        reyting: 70,
+        yas: 22,
+        ana_ozellikler: { hiz: 72, sut: 62, pas: 70, dribbling: 70, defans: 60, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "R. Guerrera",
+        takim: "Mexico City Cement",
+        uyruk: "Meksika",
+        mevki: "STP",
+        reyting: 68,
+        yas: 20,
+        ana_ozellikler: { hiz: 68, sut: 30, pas: 60, dribbling: 55, defans: 70, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

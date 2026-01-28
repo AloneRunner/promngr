@@ -3,7 +3,7 @@ import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupSta
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
 import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
-import { simulateTick } from '../services/engine';
+import { simulateTick, getActiveEngine } from '../services/engine';
 import { soundManager } from '../services/soundManager';
 
 interface MatchCenterProps {
@@ -16,7 +16,7 @@ interface MatchCenterProps {
     onFinish: (matchId: string) => void;
     onInstantFinish: (matchId: string) => void;
     onSubstitute: (playerInId: string, playerOutId: string) => void;
-    onUpdateTactic: (tactic: TeamTactic) => void;
+    onUpdateTactic: (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }, targetTeamId?: string) => void;
     onAutoFix: () => void;
     userTeamId: string;
     t: Translation;
@@ -120,6 +120,37 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
     const lastGoalCount = useRef({ home: 0, away: 0 }); // Track goal count to detect new goals
 
+    // --- HELPER LOGGING ---
+    useEffect(() => {
+        // Log tactics when component mounts (match starts/resumes)
+        const engine = getActiveEngine();
+        if (engine && engine.logCurrentTactics) {
+            engine.logCurrentTactics();
+        }
+    }, []);
+
+    // Also log when speed changes (resume from pause)
+    useEffect(() => {
+        if (speed > 0) {
+            const engine = getActiveEngine();
+            if (engine && engine.logCurrentTactics) {
+                engine.logCurrentTactics();
+            }
+        }
+    }, [speed]);
+
+    // NEW: Log Full Analysis at Minute 90
+    const analysisLogged = useRef(false);
+    useEffect(() => {
+        if (match.currentMinute >= 90 && !analysisLogged.current) {
+            analysisLogged.current = true;
+            const engine = getActiveEngine();
+            if (engine && engine.logMatchAnalysis) {
+                engine.logMatchAnalysis();
+            }
+        }
+    }, [match.currentMinute]);
+
     // NEW: Set Piece Indicator - Shows what's happening (FOUL, FREE_KICK, CORNER, etc.)
     const [setPieceIndicator, setSetPieceIndicator] = useState<{ type: string, message: string } | null>(null);
 
@@ -137,6 +168,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // NEW: Landscape Detection (for wide phones like Samsung A51)
     const [isLandscape, setIsLandscape] = useState(false);
     const [isSmallLandscape, setIsSmallLandscape] = useState(false); // Wide phone landscape (not tablet)
+
+    // DEBUG: Managed Side (Home/Away)
+    const [managedSide, setManagedSide] = useState<'HOME' | 'AWAY'>('HOME');
+
+    // Sync managed side to user team initially
+    useEffect(() => {
+        setManagedSide(userTeamId === awayTeam.id ? 'AWAY' : 'HOME');
+    }, [userTeamId, awayTeam.id]);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1271,8 +1310,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.restore();
     };
 
-    const myTeam = userTeamId === homeTeam.id ? homeTeam : awayTeam;
-    const myPlayers = userTeamId === homeTeam.id ? homePlayers : awayPlayers;
+    const myTeam = managedSide === 'HOME' ? homeTeam : awayTeam;
+    const myPlayers = managedSide === 'HOME' ? homePlayers : awayPlayers;
     const statusText = match.liveData?.lastActionText || 'Waiting...';
 
     // Merge live stamina data into players for the management view
@@ -1294,6 +1333,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                             <Settings className="text-emerald-500" /> Management
                         </h2>
+
+
+
                         <button onClick={() => { setShowTacticsModal(false); setSpeed(1); }} className="bg-red-600 hover:bg-red-500 text-white p-2 rounded">
                             <X size={20} />
                         </button>
@@ -1302,7 +1344,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <TeamManagement
                             team={myTeam}
                             players={livePlayers}
-                            onUpdateTactic={onUpdateTactic}
+                            onUpdateTactic={(tactic) => onUpdateTactic(tactic, { minute: match.currentMinute, score: { home: match.homeScore, away: match.awayScore } }, myTeam.id)}
                             onPlayerClick={onPlayerClick}
                             onUpdateLineup={(id, status) => { }}
                             onSwapPlayers={onSubstitute}
@@ -1313,7 +1355,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             <Users size={16} /> Note: Changes apply instantly. Stamina affects player ratings live.
                         </div>
                     </div>
-                </div>
+                </div >
             )}
 
             {/* TOP BAR: SCOREBOARD (Hidden on small landscape) */}
@@ -1321,7 +1363,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
                     <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
+                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
                     </div>
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{homeTeam.name}</h1>
@@ -1355,7 +1397,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{awayTeam.name}</h1>
                     </div>
                     <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" />
+                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
                     </div>
                 </div>
             </div>
@@ -1473,8 +1515,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <>
                             {/* Left Side - Home Team */}
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-r from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
-                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
-                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" />
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
+                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession || 50}%</div>
@@ -1483,8 +1525,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                             {/* Right Side - Away Team */}
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-l from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
-                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5">
-                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" />
+                                <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
+                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession || 50}%</div>

@@ -1,0 +1,200 @@
+export const NEW_YORK_CITY_BLUE_SQUAD = [
+    {
+        ad: "S. Rodrigaz",
+        takim: "New York City Blue",
+        uyruk: "Uruguay",
+        mevki: "MOO",
+        reyting: 77,
+        yas: 24,
+        ana_ozellikler: { hiz: 82, sut: 74, pas: 78, dribbling: 84, defans: 50, fizik: 65 },
+        detaylar: { vizyon: 80, ceviklik: 86, frikik: 78 },
+        oyun_tarzlari: ["Oyun Kurucu", "Teknik"]
+    },
+    {
+        ad: "T. Martens",
+        takim: "New York City Blue",
+        uyruk: "Brezilya",
+        mevki: "STP",
+        reyting: 76,
+        yas: 29,
+        ana_ozellikler: { hiz: 70, sut: 40, pas: 72, dribbling: 65, defans: 78, fizik: 78 },
+        detaylar: { oyun_kurma: 76, top_kesme: 78 },
+        oyun_tarzlari: ["Defans Şefi"]
+    },
+    {
+        ad: "M. Frees",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "KL",
+        reyting: 74,
+        yas: 25,
+        ana_ozellikler: { hiz: 45, sut: 20, pas: 65, dribbling: 25, defans: 20, fizik: 74 },
+        detaylar: { refleks: 78, birebir: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Perks",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 75,
+        yas: 26,
+        ana_ozellikler: { hiz: 65, sut: 65, pas: 78, dribbling: 74, defans: 72, fizik: 76 },
+        detaylar: { pas: 80, sogukkanlilik: 78 },
+        oyun_tarzlari: ["Pasör"]
+    },
+    {
+        ad: "J. Sonds",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 23,
+        ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 68, defans: 75, fizik: 74 },
+        detaylar: { top_kapma: 76, markaj: 75 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "H. Volf",
+        takim: "New York City Blue",
+        uyruk: "Avusturya",
+        mevki: "SĞK",
+        reyting: 73,
+        yas: 25,
+        ana_ozellikler: { hiz: 80, sut: 70, pas: 74, dribbling: 76, defans: 45, fizik: 65 },
+        detaylar: { yaraticilik: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Bakrer",
+        takim: "New York City Blue",
+        uyruk: "Cezayir",
+        mevki: "SNT",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 84, sut: 72, pas: 60, dribbling: 70, defans: 30, fizik: 74 },
+        detaylar: { sprint: 86 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "T. Grey",
+        takim: "New York City Blue",
+        uyruk: "Jamaika",
+        mevki: "SĞB",
+        reyting: 71,
+        yas: 28,
+        ana_ozellikler: { hiz: 86, sut: 55, pas: 65, dribbling: 70, defans: 68, fizik: 72 },
+        detaylar: { hizlanma: 88, bindirme: 75 },
+        oyun_tarzlari: ["Hızlı Bek"]
+    },
+    {
+        ad: "K. O'Tola",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "SLB",
+        reyting: 70,
+        yas: 24,
+        ana_ozellikler: { hiz: 76, sut: 55, pas: 68, dribbling: 70, defans: 68, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "B. Riso",
+        takim: "New York City Blue",
+        uyruk: "Norveç",
+        mevki: "STP",
+        reyting: 72,
+        yas: 26,
+        ana_ozellikler: { hiz: 65, sut: 50, pas: 70, dribbling: 60, defans: 72, fizik: 76 },
+        detaylar: { sol_ayak: 80, uzun_pas: 74 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Pereo",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "MO",
+        reyting: 70,
+        yas: 23,
+        ana_ozellikler: { hiz: 72, sut: 65, pas: 70, dribbling: 70, defans: 65, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Haack",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "STP",
+        reyting: 68,
+        yas: 22,
+        ana_ozellikler: { hiz: 68, sut: 35, pas: 60, dribbling: 55, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Moralez",
+        takim: "New York City Blue",
+        uyruk: "Arjantin",
+        mevki: "MOO",
+        reyting: 73,
+        yas: 37,
+        ana_ozellikler: { hiz: 60, sut: 70, pas: 80, dribbling: 76, defans: 40, fizik: 50 },
+        detaylar: { vizyon: 84, tecrube: 90 },
+        oyun_tarzlari: ["Tecrübeli"]
+    },
+    {
+        ad: "A. Martínes",
+        takim: "New York City Blue",
+        uyruk: "Kosta Rika",
+        mevki: "SNT",
+        reyting: 71,
+        yas: 24,
+        ana_ozellikler: { hiz: 80, sut: 70, pas: 60, dribbling: 72, defans: 30, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Jassen",
+        takim: "New York City Blue",
+        uyruk: "ABD",
+        mevki: "SĞK",
+        reyting: 67,
+        yas: 22,
+        ana_ozellikler: { hiz: 76, sut: 60, pas: 65, dribbling: 68, defans: 45, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Barroza",
+        takim: "New York City Blue",
+        uyruk: "Arjantin",
+        mevki: "KL",
+        reyting: 69,
+        yas: 27,
+        ana_ozellikler: { hiz: 40, sut: 15, pas: 60, dribbling: 20, defans: 20, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Ilenick",
+        takim: "New York City Blue",
+        uyruk: "Slovenya",
+        mevki: "SĞB",
+        reyting: 69,
+        yas: 19,
+        ana_ozellikler: { hiz: 80, sut: 50, pas: 65, dribbling: 68, defans: 65, fizik: 68 },
+        detaylar: { potansiyel: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Fernándes",
+        takim: "New York City Blue",
+        uyruk: "Arjantin",
+        mevki: "SLK",
+        reyting: 70,
+        yas: 20,
+        ana_ozellikler: { hiz: 82, sut: 65, pas: 68, dribbling: 74, defans: 40, fizik: 62 },
+        detaylar: { potansiyel: 80 },
+        oyun_tarzlari: ["Genç Yetenek"]
+    }
+];
