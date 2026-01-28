@@ -3961,13 +3961,17 @@ export const simulateGlobalCupMatch = (
     match.awayScore = result.awayScore;
     match.events = result.events;
     match.isPlayed = true;
+    console.log('[DEBUG ENGINE] Match Simulated. Score:', match.homeScore, '-', match.awayScore);
 
     // Handle Group Stage Point Updates
     if (match.stage === 'GROUP' && group) {
+        console.log('[DEBUG ENGINE] Updating Group Standings for Group:', group.name);
+
         // Update Standings helper
         const updateTeamStats = (teamId: string, scored: number, conceded: number) => {
             const stats = group!.standings.find(s => s.teamId === teamId);
             if (stats) {
+                console.log('[DEBUG ENGINE] Updating stats for team:', teamId, 'Old Played:', stats.played);
                 stats.played++;
                 stats.gf += scored;
                 stats.ga += conceded;
@@ -3981,6 +3985,9 @@ export const simulateGlobalCupMatch = (
                 } else {
                     stats.lost++;
                 }
+                console.log('[DEBUG ENGINE] New Played:', stats.played, 'Points:', stats.points);
+            } else {
+                console.warn('[DEBUG ENGINE] Team stats NOT found in group standings for:', teamId);
             }
         };
 
@@ -3996,7 +4003,6 @@ export const simulateGlobalCupMatch = (
             return b.gf - a.gf;
         });
     }
-
     // Handle Knockout Extra Time / Pens (Simple implementation for now)
     if (match.stage !== 'GROUP' && match.stage) {
         let homeScore = match.homeScore;

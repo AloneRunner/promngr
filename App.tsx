@@ -1393,20 +1393,39 @@ const App: React.FC = () => {
                     return false;
                 };
 
-                if (updateMatchInList(newMatches)) {
-                    return { ...prev, matches: newMatches };
-                } else if (newEuropeanCup) {
-                    // Flatten cup matches for update lookups
-                    const groupMatches = newEuropeanCup.groups?.flatMap(g => g.matches) || [];
-                    const knockoutMatches = newEuropeanCup.knockoutMatches || [];
+                // CRITICAL FIX: Check CUPS FIRST before league!
+                // This prevents cup matches from ever being treated as league matches
 
-                    // Try updating in groups first (by reference since we copied the top object but not deep array)
-                    // Actually, since we need to update the state immutably deeply, this helper is slightly tricky.
-                    // But 'updateMatchInList' mutates the array passed to it.
-                    // The array 'groupMatches' is a brand new array created by flatMap, so mutating it WON'T work for groups.
-                    // We need a specific strategy for groups.
+                // STEP 1: Check Super Cup FIRST
+                if (prev.superCup && prev.superCup.match && prev.superCup.match.id === match.id) {
+                    const calculatedAttendance = calculateMatchAttendance(homeTeam, awayTeam, {
+                        isDerby: false,
+                        isEuropeanMatch: true,
+                        isChampionsLeague: true
+                    });
 
-                    // Let's create a custom updater for the cup structure
+                    return {
+                        ...prev,
+                        superCup: {
+                            ...prev.superCup,
+                            match: {
+                                ...prev.superCup.match,
+                                attendance: calculatedAttendance,
+                                events: match.events || [],
+                                stats: match.stats || { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
+                                liveData: {
+                                    ballHolderId: null,
+                                    pitchZone: 50,
+                                    lastActionText: 'Kickoff',
+                                    simulation: initialSimulation
+                                } as any
+                            }
+                        }
+                    };
+                }
+
+                // STEP 2: Check European Cup
+                if (newEuropeanCup) {
                     let matchFound = false;
                     let updatedGroups = newEuropeanCup.groups ? [...newEuropeanCup.groups] : [];
                     let updatedKnockout = newEuropeanCup.knockoutMatches ? [...newEuropeanCup.knockoutMatches] : [];
@@ -1434,13 +1453,12 @@ const App: React.FC = () => {
                     }
                 }
 
-                // Same logical fix for Europa League (if needed, but user mentioned Elite Cup mostly)
+                // STEP 3: Check Europa League
                 if (newEuropaLeague) {
                     let matchFound = false;
                     let updatedGroups = newEuropaLeague.groups ? [...newEuropaLeague.groups] : [];
                     let updatedKnockout = newEuropaLeague.knockoutMatches ? [...newEuropaLeague.knockoutMatches] : [];
 
-                    // check groups
                     updatedGroups = updatedGroups.map(group => {
                         const groupMatchIndex = group.matches.findIndex(m => m.id === match.id);
                         if (groupMatchIndex !== -1) {
@@ -1462,32 +1480,9 @@ const App: React.FC = () => {
                     }
                 }
 
-                if (prev.superCup && prev.superCup.match && prev.superCup.match.id === match.id) {
-                    // === SUPER CUP FIX (Prevent Freeze) ===
-                    const calculatedAttendance = calculateMatchAttendance(homeTeam, awayTeam, {
-                        isDerby: false,
-                        isEuropeanMatch: true,
-                        isChampionsLeague: true // Super Cup gets premium attendance
-                    });
-
-                    return {
-                        ...prev,
-                        superCup: {
-                            ...prev.superCup,
-                            match: {
-                                ...prev.superCup.match,
-                                attendance: calculatedAttendance,
-                                events: match.events || [],
-                                stats: match.stats || { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
-                                liveData: {
-                                    ballHolderId: null,
-                                    pitchZone: 50,
-                                    lastActionText: 'Kickoff',
-                                    simulation: initialSimulation
-                                } as any
-                            }
-                        }
-                    };
+                // STEP 4: Only check league if not a cup match
+                if (updateMatchInList(newMatches)) {
+                    return { ...prev, matches: newMatches };
                 }
 
                 return prev;
@@ -1887,51 +1882,56 @@ const App: React.FC = () => {
     };
 
     const executeMatchUpdate = (prevState: GameState, matchId: string, simulateToEnd: boolean = false): GameState => {
-        let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+        // CRITICAL FIX: Check CUPS FIRST before league!
+        // This prevents cup matches from ever being treated as league matches
         let isCupMatch = false;
         let cupType: 'europeanCup' | 'europaLeague' | 'superCup' | null = null;
         let cupMatch: Match | undefined;
+        let matchIndex = -1;
 
-        // Search in Cups if not in League
-        if (matchIndex === -1) {
-            // Check Global Cup (Groups & Knockout)
-            if (prevState.europeanCup) {
-                // Check Groups
-                if (prevState.europeanCup.groups) {
-                    for (const group of prevState.europeanCup.groups) {
-                        const m = group.matches.find(m => m.id === matchId);
-                        if (m) {
-                            matchIndex = 0; // Placeholder
-                            isCupMatch = true;
-                            cupType = 'europeanCup';
-                            cupMatch = m as unknown as Match;
-                            break;
-                        }
-                    }
-                }
-                // Check Knockout
-                if (!cupMatch && prevState.europeanCup.knockoutMatches) {
-                    const m = prevState.europeanCup.knockoutMatches.find(m => m.id === matchId);
+
+
+        // STEP 1: Check Super Cup FIRST
+        if (prevState.superCup?.match?.id === matchId) {
+            isCupMatch = true;
+            cupType = 'superCup';
+            cupMatch = prevState.superCup.match as unknown as Match;
+
+        }
+
+        // STEP 2: Check European Cup (Groups & Knockout)
+        if (!cupMatch && prevState.europeanCup) {
+            // Check Groups
+            if (prevState.europeanCup.groups) {
+                for (const group of prevState.europeanCup.groups) {
+                    const m = group.matches.find(m => m.id === matchId);
                     if (m) {
-                        matchIndex = 0;
                         isCupMatch = true;
                         cupType = 'europeanCup';
                         cupMatch = m as unknown as Match;
+
+                        break;
                     }
                 }
-                // Legacy Fallback - Removed
             }
+            // Check Knockout
+            if (!cupMatch && prevState.europeanCup.knockoutMatches) {
+                const m = prevState.europeanCup.knockoutMatches.find(m => m.id === matchId);
+                if (m) {
+                    isCupMatch = true;
+                    cupType = 'europeanCup';
+                    cupMatch = m as unknown as Match;
 
-            // Europe League Deprecated - Removed logic
-
-            // === SUPER CUP MATCH LOOKUP ===
-            if (!cupMatch && prevState.superCup && prevState.superCup.match && prevState.superCup.match.id === matchId) {
-                matchIndex = 0;
-                isCupMatch = true;
-                cupType = 'superCup';
-                cupMatch = prevState.superCup.match as unknown as Match;
+                }
             }
         }
+
+        // STEP 3: Only check league if NOT a cup match
+        if (!isCupMatch) {
+            matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+
+        }
+
 
         if (matchIndex === -1 && !cupMatch) return prevState;
 
@@ -2048,42 +2048,46 @@ const App: React.FC = () => {
                     return p;
                 });
 
-                // Update teams immutably
-                const updatedTeams = prevState.teams.map(team => {
-                    if (team.id === homeTeam.id) {
-                        return {
-                            ...team,
-                            stats: {
-                                ...team.stats,
-                                played: team.stats.played + 1,
-                                won: team.stats.won + (ptsHome === 3 ? 1 : 0),
-                                drawn: team.stats.drawn + (ptsHome === 1 ? 1 : 0),
-                                lost: team.stats.lost + (ptsHome === 0 ? 1 : 0),
-                                gf: team.stats.gf + hScore,
-                                ga: team.stats.ga + aScore,
-                                points: team.stats.points + ptsHome
-                            },
-                            recentForm: [...(team.recentForm || []), hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
-                        };
-                    }
-                    if (team.id === awayTeam.id) {
-                        return {
-                            ...team,
-                            stats: {
-                                ...team.stats,
-                                played: team.stats.played + 1,
-                                won: team.stats.won + (ptsAway === 3 ? 1 : 0),
-                                drawn: team.stats.drawn + (ptsAway === 1 ? 1 : 0),
-                                lost: team.stats.lost + (ptsAway === 0 ? 1 : 0),
-                                gf: team.stats.gf + aScore,
-                                ga: team.stats.ga + hScore,
-                                points: team.stats.points + ptsAway
-                            },
-                            recentForm: [...(team.recentForm || []), aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
-                        };
-                    }
-                    return team;
-                });
+                // Update teams immutably - ONLY FOR LEAGUE MATCHES!
+                // Cup matches should NOT update league stats!
+                let updatedTeams = prevState.teams;
+                if (!isCupMatch) {
+                    updatedTeams = prevState.teams.map(team => {
+                        if (team.id === homeTeam.id) {
+                            return {
+                                ...team,
+                                stats: {
+                                    ...team.stats,
+                                    played: team.stats.played + 1,
+                                    won: team.stats.won + (ptsHome === 3 ? 1 : 0),
+                                    drawn: team.stats.drawn + (ptsHome === 1 ? 1 : 0),
+                                    lost: team.stats.lost + (ptsHome === 0 ? 1 : 0),
+                                    gf: team.stats.gf + hScore,
+                                    ga: team.stats.ga + aScore,
+                                    points: team.stats.points + ptsHome
+                                },
+                                recentForm: [...(team.recentForm || []), hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
+                            };
+                        }
+                        if (team.id === awayTeam.id) {
+                            return {
+                                ...team,
+                                stats: {
+                                    ...team.stats,
+                                    played: team.stats.played + 1,
+                                    won: team.stats.won + (ptsAway === 3 ? 1 : 0),
+                                    drawn: team.stats.drawn + (ptsAway === 1 ? 1 : 0),
+                                    lost: team.stats.lost + (ptsAway === 0 ? 1 : 0),
+                                    gf: team.stats.gf + aScore,
+                                    ga: team.stats.ga + hScore,
+                                    points: team.stats.points + ptsAway
+                                },
+                                recentForm: [...(team.recentForm || []), aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L'].slice(-5) as ('W' | 'D' | 'L')[]
+                            };
+                        }
+                        return team;
+                    });
+                }
 
                 // === SAVE TO CORRECT LOCATION BASED ON CUP TYPE ===
                 if (cupType === 'superCup' && prevState.superCup) {
@@ -2115,9 +2119,16 @@ const App: React.FC = () => {
 
                 // Europa League Deprecated - removed
 
-                let newMatches = [...prevState.matches];
-                newMatches[matchIndex] = simulated;
-                return { ...prevState, matches: newMatches, teams: updatedTeams, players: updatedPlayers };
+                // CRITICAL: Only save to league matches if this is NOT a cup match
+                // Cup matches have matchIndex=0 as placeholder, don't let them overwrite league[0]
+                if (!isCupMatch && matchIndex !== -1) {
+                    let newMatches = [...prevState.matches];
+                    newMatches[matchIndex] = simulated;
+                    return { ...prevState, matches: newMatches, teams: updatedTeams, players: updatedPlayers };
+                }
+
+                // If we reach here for a cup match, something went wrong - return unchanged
+                return prevState;
             }
 
             // Non-friendly match without full simulation (shouldn't happen often)
@@ -2359,12 +2370,6 @@ const App: React.FC = () => {
                         const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
                         const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
 
-                        // Game Over Check
-                        if (newConfidence <= 0) {
-                            handleGameOver('FIRED');
-                            return prevGameState; // Stop update to show game over
-                        }
-
                         // ========== RECORD HISTORY ==========
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
                         const score = `${userScore}-${oppScore}`;
@@ -2408,9 +2413,41 @@ const App: React.FC = () => {
                         return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any }, players: updatedPlayers, teams: teamsWithBonus };
                     }
 
-                    let newMatches = [...prevState.matches];
-                    newMatches[matchIndex] = currentMatch;
-                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                    // Save European Cup match separately
+                    if (cupType === 'europeanCup' && prevState.europeanCup) {
+                        const cup = prevState.europeanCup;
+                        let updatedGroups = cup.groups;
+                        let updatedKnockouts = cup.knockoutMatches;
+
+                        // Update in groups
+                        if (updatedGroups) {
+                            updatedGroups = updatedGroups.map(g => ({
+                                ...g,
+                                matches: g.matches.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m)
+                            }));
+                        }
+                        // Update in knockouts
+                        if (updatedKnockouts) {
+                            updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m);
+                        }
+
+                        return {
+                            ...prevState,
+                            europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts },
+                            teams: teamsWithBonus,
+                            players: updatedPlayers
+                        };
+                    }
+
+                    // CRITICAL: Only save to league matches if this is NOT a cup match
+                    if (!isCupMatch && matchIndex !== -1) {
+                        let newMatches = [...prevState.matches];
+                        newMatches[matchIndex] = currentMatch;
+                        return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                    }
+
+                    // If we reach here for a cup match, something went wrong - return unchanged
+                    return prevState;
                 }
             }
         }
@@ -2420,9 +2457,39 @@ const App: React.FC = () => {
             return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any } };
         }
 
-        let newMatches = [...prevState.matches];
-        newMatches[matchIndex] = currentMatch;
-        return { ...prevState, matches: newMatches };
+        // European Cup match updates (ongoing, not finished)
+        if (cupType === 'europeanCup' && prevState.europeanCup) {
+            const cup = prevState.europeanCup;
+            let updatedGroups = cup.groups;
+            let updatedKnockouts = cup.knockoutMatches;
+
+            // Update in groups
+            if (updatedGroups) {
+                updatedGroups = updatedGroups.map(g => ({
+                    ...g,
+                    matches: g.matches.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m)
+                }));
+            }
+            // Update in knockouts
+            if (updatedKnockouts) {
+                updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m);
+            }
+
+            return {
+                ...prevState,
+                europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts }
+            };
+        }
+
+        // CRITICAL: Only save to league matches if this is NOT a cup match
+        if (!isCupMatch && matchIndex !== -1) {
+            let newMatches = [...prevState.matches];
+            newMatches[matchIndex] = currentMatch;
+            return { ...prevState, matches: newMatches };
+        }
+
+        // If we reach here for a cup match, return unchanged
+        return prevState;
     };
 
 
@@ -3191,12 +3258,22 @@ const App: React.FC = () => {
         setGameState(prevState => {
             if (!prevState) return null;
 
-            // Determine where the match is
-            // Determine where the match is
-            let matchType: 'LEAGUE' | 'CL_GROUP' | 'CL_KNOCKOUT' | 'EL_GROUP' | 'EL_KNOCKOUT' | 'SUPER_CUP' = 'LEAGUE';
-            let matchIndex = prevState.matches.findIndex(m => m.id === matchId);
-            let groupIndex = -1; // To track which group
 
+
+            // CRITICAL FIX: Check CUPS FIRST before league!
+            // This prevents cup matches from ever being treated as league matches
+            let matchType: 'LEAGUE' | 'CL_GROUP' | 'CL_KNOCKOUT' | 'EL_GROUP' | 'EL_KNOCKOUT' | 'SUPER_CUP' = 'LEAGUE';
+            let matchIndex = -1;
+            let groupIndex = -1;
+
+            // STEP 1: Check Super Cup FIRST
+            if (prevState.superCup?.match?.id === matchId) {
+                matchIndex = 0; // Super Cup has only one match
+                matchType = 'SUPER_CUP';
+
+            }
+
+            // STEP 2: Check European Cup (Groups & Knockout)
             if (matchIndex === -1 && prevState.europeanCup) {
                 // Check Groups
                 if (prevState.europeanCup.groups) {
@@ -3207,6 +3284,7 @@ const App: React.FC = () => {
                             matchIndex = idx;
                             groupIndex = i;
                             matchType = 'CL_GROUP';
+
                             break;
                         }
                     }
@@ -3214,10 +3292,14 @@ const App: React.FC = () => {
                 // Check Knockouts
                 if (matchIndex === -1 && prevState.europeanCup.knockoutMatches) {
                     matchIndex = prevState.europeanCup.knockoutMatches.findIndex(m => m.id === matchId);
-                    if (matchIndex !== -1) matchType = 'CL_KNOCKOUT';
+                    if (matchIndex !== -1) {
+                        matchType = 'CL_KNOCKOUT';
+
+                    }
                 }
             }
 
+            // STEP 3: Check Europa League
             if (matchIndex === -1 && prevState.europaLeague) {
                 // Check Groups
                 if (prevState.europaLeague.groups) {
@@ -3240,10 +3322,11 @@ const App: React.FC = () => {
                 }
             }
 
-            // === SUPER CUP CHECK ===
-            if (matchIndex === -1 && prevState.superCup?.match?.id === matchId) {
-                matchIndex = 0; // Super Cup has only one match
-                matchType = 'SUPER_CUP';
+            // STEP 4: Only check league if NOT a cup match
+            if (matchIndex === -1) {
+                matchIndex = prevState.matches.findIndex(m => m.id === matchId);
+
+                // matchType is already 'LEAGUE' by default
             }
 
             if (matchIndex === -1) return prevState;
@@ -3610,13 +3693,10 @@ const App: React.FC = () => {
 
         let currentState = gameState;
 
-        // 1. Identify Match
-        const match = currentState.matches.find(m => m.id === activeMatchId);
-
-        // Check Cups if not found in League
-        // Check Cups if not found in League
+        // CRITICAL: Check CUPS FIRST, regardless of whether match exists in league array
+        // If a cup match accidentally exists in both places, we want cup logic to win
         let clMatch: Match | undefined;
-        if (!match && currentState.europeanCup && currentState.europeanCup.isActive) {
+        if (currentState.europeanCup && currentState.europeanCup.isActive) {
             const cup = currentState.europeanCup;
             // Search in groups
             if (cup.groups) {
@@ -3631,9 +3711,11 @@ const App: React.FC = () => {
             }
         }
 
-        const elMatch = null;
-        const superCupMatch = !match && !clMatch && currentState.superCup?.match?.id === activeMatchId ? currentState.superCup.match : null;
+        const superCupMatch = currentState.superCup?.match?.id === activeMatchId ? currentState.superCup.match : null;
         const activeCupMatch = clMatch;
+
+        // Only check league matches if NOT a cup match
+        const match = (!activeCupMatch && !superCupMatch) ? currentState.matches.find(m => m.id === activeMatchId) : undefined;
 
         // --- SUPER CUP MATCH HANDLING ---
         if (superCupMatch && currentState.superCup) {
@@ -3787,10 +3869,41 @@ const App: React.FC = () => {
 
                 // Try update in groups
                 if (updatedGroups) {
-                    updatedGroups = updatedGroups.map(g => ({
-                        ...g,
-                        matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
-                    }));
+                    updatedGroups = updatedGroups.map(g => {
+                        const hasMatch = g.matches.some(m => m.id === activeMatchId);
+                        if (!hasMatch) return g;
+
+                        // FIX: Correctly update standings for LIVE matches
+                        let newStandings = [...g.standings];
+                        const updateStat = (tId: string, gf: number, ga: number) => {
+                            const idx = newStandings.findIndex(s => s.teamId === tId);
+                            if (idx !== -1) {
+                                const s = { ...newStandings[idx] };
+                                s.played++;
+                                s.gf += gf;
+                                s.ga += ga;
+                                if (gf > ga) { s.won++; s.points += 3; }
+                                else if (gf === ga) { s.drawn++; s.points += 1; }
+                                else { s.lost++; }
+                                newStandings[idx] = s;
+                            }
+                        };
+
+                        updateStat(updatedCupMatch.homeTeamId, updatedCupMatch.homeScore, updatedCupMatch.awayScore);
+                        updateStat(updatedCupMatch.awayTeamId, updatedCupMatch.awayScore, updatedCupMatch.homeScore);
+
+                        // Sort
+                        newStandings.sort((a, b) => {
+                            if (b.points !== a.points) return b.points - a.points;
+                            return (b.gf - b.ga) - (a.gf - a.ga);
+                        });
+
+                        return {
+                            ...g,
+                            standings: newStandings,
+                            matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
+                        };
+                    });
                 }
                 // Try update in knockouts
                 if (updatedKnockouts) {
@@ -3812,10 +3925,41 @@ const App: React.FC = () => {
                 let updatedMatches = cup.matches;
 
                 if (updatedGroups) {
-                    updatedGroups = updatedGroups.map(g => ({
-                        ...g,
-                        matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
-                    }));
+                    updatedGroups = updatedGroups.map(g => {
+                        const hasMatch = g.matches.some(m => m.id === activeMatchId);
+                        if (!hasMatch) return g;
+
+                        // FIX: Correctly update standings for LIVE matches
+                        let newStandings = [...g.standings];
+                        const updateStat = (tId: string, gf: number, ga: number) => {
+                            const idx = newStandings.findIndex(s => s.teamId === tId);
+                            if (idx !== -1) {
+                                const s = { ...newStandings[idx] };
+                                s.played++;
+                                s.gf += gf;
+                                s.ga += ga;
+                                if (gf > ga) { s.won++; s.points += 3; }
+                                else if (gf === ga) { s.drawn++; s.points += 1; }
+                                else { s.lost++; }
+                                newStandings[idx] = s;
+                            }
+                        };
+
+                        updateStat(updatedCupMatch.homeTeamId, updatedCupMatch.homeScore, updatedCupMatch.awayScore);
+                        updateStat(updatedCupMatch.awayTeamId, updatedCupMatch.awayScore, updatedCupMatch.homeScore);
+
+                        // Sort
+                        newStandings.sort((a, b) => {
+                            if (b.points !== a.points) return b.points - a.points;
+                            return (b.gf - b.ga) - (a.gf - a.ga);
+                        });
+
+                        return {
+                            ...g,
+                            standings: newStandings,
+                            matches: g.matches.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m)
+                        };
+                    });
                 }
                 if (updatedKnockouts) {
                     updatedKnockouts = updatedKnockouts.map(m => m.id === activeMatchId ? updatedCupMatch as unknown as typeof m : m);
