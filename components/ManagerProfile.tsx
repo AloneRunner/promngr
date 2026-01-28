@@ -17,33 +17,46 @@ const formatMoney = (amount: number): string => {
 };
 
 // Cup prize info - function to get localized cup data
-const getCupPrizes = (t: any) => ({
-    championsLeague: {
-        name: t.championsLeagueLabel || 'Champions League',
-        rounds: [
-            { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 5000000 },
-            { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 7500000 },
-            { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 12500000 },
-            { round: t.championshipLabel || 'Championship', prize: 25000000 }
-        ],
-        total: 50000000
-    },
-    uefaCup: {
-        name: t.uefaCupLabel || 'UEFA Cup',
-        rounds: [
-            { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 2500000 },
-            { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 3750000 },
-            { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 6250000 },
-            { round: t.championshipLabel || 'Championship', prize: 12500000 }
-        ],
-        total: 25000000
-    },
-    superCup: {
-        name: t.superCupLabel || 'Super Cup',
-        rounds: [{ round: t.championshipLabel || 'Championship', prize: 25000000 }],
-        total: 25000000
+const getCupPrizes = (t: any, gameState: GameState) => {
+    const prizes: any = {};
+
+    // Always include Champions League (user confirmed existence)
+    if (gameState.europeanCup || true) { // Defaulting strictly to CL as main cup
+        prizes.championsLeague = {
+            name: t.championsLeagueLabel || 'Champions League',
+            rounds: [
+                { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 9600000 },
+                { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 10600000 },
+                { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 12500000 },
+                { round: t.championshipLabel || 'Championship', prize: 20000000 }
+            ],
+            total: 52700000
+        };
     }
-});
+
+    if (gameState.europaLeague) {
+        prizes.uefaCup = {
+            name: t.europaLeagueLabel || 'Europa League',
+            rounds: [
+                { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 4800000 },
+                { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 5300000 },
+                { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 6250000 },
+                { round: t.championshipLabel || 'Championship', prize: 10000000 }
+            ],
+            total: 26350000
+        };
+    }
+
+    if (gameState.superCup) {
+        prizes.superCup = {
+            name: t.superCupLabel || 'Super Cup',
+            rounds: [{ round: t.championshipLabel || 'Championship', prize: 5000000 }],
+            total: 5000000
+        };
+    }
+
+    return prizes;
+};
 
 export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userTeam, t, onBack }) => {
     const rating = gameState.managerRating || 50;
@@ -152,21 +165,25 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                             <div className="text-gray-400 text-sm">{t.championsLeagueLabel || 'Champions League'}</div>
                         </div>
 
-                        {/* UEFA Cup */}
-                        <div className="bg-gradient-to-b from-orange-900/40 to-orange-950/40 rounded-xl p-4 
-                                      text-center border border-orange-600/30">
-                            <div className="text-4xl mb-2">🥈</div>
-                            <div className="text-orange-400 font-bold text-2xl">{trophies.uefaCupTitles}</div>
-                            <div className="text-gray-400 text-sm">UEFA Cup</div>
-                        </div>
+                        {/* Europa League - Only show if exists */}
+                        {gameState.europaLeague && (
+                            <div className="bg-gradient-to-b from-orange-900/40 to-orange-950/40 rounded-xl p-4 
+                                          text-center border border-orange-600/30">
+                                <div className="text-4xl mb-2">🥈</div>
+                                <div className="text-orange-400 font-bold text-2xl">{trophies.uefaCupTitles}</div>
+                                <div className="text-gray-400 text-sm">{t.europaLeagueLabel || 'Europa League'}</div>
+                            </div>
+                        )}
 
-                        {/* Super Cup */}
-                        <div className="bg-gradient-to-b from-purple-900/40 to-purple-950/40 rounded-xl p-4 
-                                      text-center border border-purple-600/30">
-                            <div className="text-4xl mb-2">⭐</div>
-                            <div className="text-purple-400 font-bold text-2xl">{trophies.superCupTitles}</div>
-                            <div className="text-gray-400 text-sm">{t.superCupLabel || 'Super Cup'}</div>
-                        </div>
+                        {/* Super Cup - Only show if exists */}
+                        {gameState.superCup && (
+                            <div className="bg-gradient-to-b from-purple-900/40 to-purple-950/40 rounded-xl p-4 
+                                          text-center border border-purple-600/30">
+                                <div className="text-4xl mb-2">⭐</div>
+                                <div className="text-purple-400 font-bold text-2xl">{trophies.superCupTitles}</div>
+                                <div className="text-gray-400 text-sm">{t.superCupLabel || 'Super Cup'}</div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -210,7 +227,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                                 <div className="flex items-center justify-center gap-1">
                                                     {entry.leagueChampion && <span title="Lig Şampiyonu">🏆</span>}
                                                     {entry.championsLeagueWinner && <span title="CL Şampiyonu">🌟</span>}
-                                                    {entry.uefaCupWinner && <span title="UEFA Cup Şampiyonu">🥈</span>}
+                                                    {entry.uefaCupWinner && <span title={t.europaLeagueWinnerTitle || "Europa League Şampiyonu"}>🥈</span>}
                                                     {entry.superCupWinner && <span title="Süper Kupa">⭐</span>}
                                                     {!entry.leagueChampion && !entry.championsLeagueWinner &&
                                                         !entry.uefaCupWinner && !entry.superCupWinner && (
@@ -231,7 +248,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                     <h2 className="text-xl font-bold text-white mb-4">💰 {t.cupPrizeInfoTitle || 'Cup Prize Info'}</h2>
 
                     <div className="grid md:grid-cols-3 gap-4">
-                        {Object.entries(getCupPrizes(t)).map(([key, cup]) => (
+                        {Object.entries(getCupPrizes(t, gameState)).map(([key, cup]: [string, any]) => (
                             <div key={key} className="bg-slate-700/50 rounded-xl p-4">
                                 <h3 className="font-bold text-white mb-3">{cup.name}</h3>
                                 <div className="space-y-2">

@@ -5,17 +5,17 @@ export const FENERBAHCE_SQUAD = [
     takim: "Istanbul Yellows",
     uyruk: "Türkiye",
     mevki: "SĞK",
-    reyting: 86,
+    reyting: 81,
     yas: 21,
-    ana_ozellikler: { hiz: 86, sut: 86, pas: 86, dribbling: 86, defans: 80, fizik: 86 },
+    ana_ozellikler: { hiz: 82, sut: 80, pas: 81, dribbling: 82, defans: 72, fizik: 78 },
     detaylar: {
-      hizlanma: 86, sprint: 86, pozisyon: 85, bitiricilik: 86, sut_gucu: 86,
-      uzaktan_sut: 85, vizyon: 84, orta_acma: 84, kisa_pas: 85, uzun_pas: 84,
-      ceviklik: 86, denge: 86, reaksiyon: 85, top_kontrol: 86, dribbling: 86,
-      sogukkanlilik: 85, top_kesme: 80, defansif_farkindalik: 80, ayakta_mudahale: 80,
-      kayarak_mudahale: 80, ziplama: 86, dayaniklilik: 86, guc: 86, agresiflik: 85
+      hizlanma: 82, sprint: 82, pozisyon: 80, bitiricilik: 80, sut_gucu: 81,
+      uzaktan_sut: 79, vizyon: 79, orta_acma: 79, kisa_pas: 80, uzun_pas: 78,
+      ceviklik: 82, denge: 81, reaksiyon: 80, top_kontrol: 82, dribbling: 82,
+      sogukkanlilik: 79, top_kesme: 72, defansif_farkindalik: 72, ayakta_mudahale: 72,
+      kayarak_mudahale: 70, ziplama: 78, dayaniklilik: 80, guc: 78, agresiflik: 79
     },
-    oyun_tarzlari: ["Amansız+", "Çabuk Adım+", "Ezber Bozan+", "Keskin Pas+", "Kuvvetli Şut+", "Plase Şut+", "Seri+", "Teknik+", "Yaratıcı+"]
+    oyun_tarzlari: ["Amansız+", "Çabuk Adım+", "Ezber Bozan", "Keskin Pas", "Plase Şut", "Seri", "Teknik"]
   },
   {
     ad: "E. Edersun",

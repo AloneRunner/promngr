@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './constants';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, TacticalChange } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateMatchAttendance, initializeEngine, getEngineState } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, performSubstitution, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -2354,7 +2354,16 @@ const App: React.FC = () => {
                         const recentLosses = (userTeam.recentForm || []).slice(-3).filter(r => r === 'L').length;
                         if (recentLosses >= 3) confidenceChange -= 3;
 
-                        const newConfidence = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confidenceChange));
+
+                        // BUG FIX: Handle 0 correctly (don't fallback to 70 if it's 0)
+                        const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
+                        const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
+
+                        // Game Over Check
+                        if (newConfidence <= 0) {
+                            handleGameOver('FIRED');
+                            return prevGameState; // Stop update to show game over
+                        }
 
                         // ========== RECORD HISTORY ==========
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
@@ -2593,8 +2602,15 @@ const App: React.FC = () => {
                 let updatedState = { ...gameState };
 
                 if (clMatch && gameState.europeanCup) {
-                    const updatedCup = simulateGlobalCupMatch(gameState.europeanCup, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers);
+                    const { updatedCup, updatedHomeTeam, updatedAwayTeam } = simulateGlobalCupMatch(gameState.europeanCup, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers);
                     updatedState.europeanCup = updatedCup;
+
+                    // Update Teams state with new Budget and Reputation
+                    updatedState.teams = updatedState.teams.map(t => {
+                        if (t.id === updatedHomeTeam.id) return updatedHomeTeam;
+                        if (t.id === updatedAwayTeam.id) return updatedAwayTeam;
+                        return t;
+                    });
 
                     // Find the played match to show result
                     let playedCupMatch: Match | undefined;
@@ -2612,84 +2628,7 @@ const App: React.FC = () => {
                     if (playedCupMatch) {
                         alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
 
-                        // === GLOBAL CUP REPUTATION UPDATE (BOTH TEAMS) ===
-                        // Update reputation for BOTH teams based on match result
-                        const homeWon = playedCupMatch.homeScore > playedCupMatch.awayScore;
-                        const awayWon = playedCupMatch.awayScore > playedCupMatch.homeScore;
-                        const isDraw = playedCupMatch.homeScore === playedCupMatch.awayScore;
 
-                        let teamsToUpdate: Array<{ teamId: string, repChange: number, reason: string }> = [];
-
-                        // Home team reputation change
-                        if (homeWon) {
-                            const repDiff = awayTeam.reputation - homeTeam.reputation;
-                            let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
-                            repBonus = Math.min(40, repBonus);
-
-                            if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
-                            else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
-                            else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
-
-                            teamsToUpdate.push({
-                                teamId: homeTeam.id,
-                                repChange: repBonus,
-                                reason: `🏆 Global Cup: ${awayTeam.name} (G)`
-                            });
-                        } else if (!isDraw) {
-                            // Home team lost
-                            const repPenalty = Math.min(15, Math.floor((homeTeam.reputation - awayTeam.reputation) / 300));
-                            teamsToUpdate.push({
-                                teamId: homeTeam.id,
-                                repChange: -Math.max(5, repPenalty),
-                                reason: `🏆 Global Cup: ${awayTeam.name} (M)`
-                            });
-                        }
-
-                        // Away team reputation change
-                        if (awayWon) {
-                            const repDiff = homeTeam.reputation - awayTeam.reputation;
-                            let repBonus = 20 + Math.max(0, Math.floor(repDiff / 200));
-                            repBonus = Math.min(40, repBonus);
-
-                            if ((playedCupMatch as any).stage === 'QUARTER') repBonus += 10;
-                            else if ((playedCupMatch as any).stage === 'SEMI') repBonus += 20;
-                            else if ((playedCupMatch as any).stage === 'FINAL') repBonus += 50;
-
-                            teamsToUpdate.push({
-                                teamId: awayTeam.id,
-                                repChange: repBonus,
-                                reason: `🏆 Global Cup: ${homeTeam.name} (G)`
-                            });
-                        } else if (!isDraw) {
-                            // Away team lost
-                            const repPenalty = Math.min(15, Math.floor((awayTeam.reputation - homeTeam.reputation) / 300));
-                            teamsToUpdate.push({
-                                teamId: awayTeam.id,
-                                repChange: -Math.max(5, repPenalty),
-                                reason: `🏆 Global Cup: ${homeTeam.name} (M)`
-                            });
-                        }
-
-                        // Apply reputation changes to updatedState.teams
-                        updatedState.teams = updatedState.teams.map(t => {
-                            const update = teamsToUpdate.find(u => u.teamId === t.id);
-                            if (update) {
-                                const newRep = Math.max(1000, Math.min(10000, t.reputation + update.repChange));
-                                const history = [...(t.reputationHistory || [])];
-                                history.push({
-                                    week: updatedState.currentWeek,
-                                    change: update.repChange,
-                                    reason: update.reason,
-                                    newValue: newRep
-                                });
-                                return {
-                                    ...t,
-                                    reputation: newRep,
-                                    reputationHistory: history.slice(-20)
-                                };
-                            }
-                            return t;
-                        });
                     }
                 }
                 // Europa League Deprecated - logic removed
@@ -3914,42 +3853,92 @@ const App: React.FC = () => {
                 const userIsHome = updatedCupMatch.homeTeamId === updatedState.userTeamId;
                 const userScore = userIsHome ? updatedCupMatch.homeScore : updatedCupMatch.awayScore;
                 const oppScore = userIsHome ? updatedCupMatch.awayScore : updatedCupMatch.homeScore;
-                const won = userScore > oppScore || (updatedCupMatch as any).winnerId === updatedState.userTeamId;
 
-                const repDiff = opponent.reputation - userTeam.reputation;
+                const userWon = userScore > oppScore || (updatedCupMatch as any).winnerId === userTeam.id;
 
-                let repChange = 0;
+                // Calculate Rewards (Budget + Reputation) via Engine
+                // We use currentState.europeanCup (or europaLeague) depending on cupType
+                const currentCup = cupType === 'europeanCup' ? updatedState.europeanCup : updatedState.europaLeague;
+
+                const rewards = calculateCupRewards(
+                    currentCup!,
+                    updatedCupMatch.id,
+                    userTeam.id === updatedCupMatch.homeTeamId ? userTeam : opponent,
+                    userTeam.id === updatedCupMatch.awayTeamId ? userTeam : opponent,
+                    updatedCupMatch.homeScore,
+                    updatedCupMatch.awayScore,
+                    (updatedCupMatch as any).winnerId
+                );
+
+                const { updatedHomeTeam, updatedAwayTeam } = rewards;
+
+                // Determine User's reward details
+                const userRewards = userIsHome ? rewards.rewardDetails.home : rewards.rewardDetails.away;
+                const newUserTeamState = userIsHome ? updatedHomeTeam : updatedAwayTeam;
+
+                const repChange = userRewards.repChange;
+
+                // ENHANCED BOARD CONFIDENCE (User Request)
+                // Cups matter more now! Win = +5, Draw = +2, Loss = -2
                 let confChange = 0;
+                if (userWon) confChange = 5;
+                else if (userScore === oppScore) confChange = 2; // Draw
+                else confChange = -2;
 
-                if (won) {
-                    repChange = repDiff > 500 ? 15 : repDiff > 0 ? 10 : 6;
-                    confChange = repDiff > 500 ? 6 : repDiff > 0 ? 4 : 3;
-                } else {
-                    repChange = repDiff < -500 ? -12 : repDiff < 0 ? -6 : -3;
-                    confChange = repDiff < -500 ? -6 : repDiff < 0 ? -4 : -2;
-                }
+                const newConf = Math.min(100, Math.max(0, userTeam.boardConfidence + confChange));
 
-                const newRep = Math.max(1000, Math.min(10000, userTeam.reputation + repChange));
-                const newConf = Math.max(0, Math.min(100, (userTeam.boardConfidence || 70) + confChange));
-
+                // History Logging with Details
                 const cupName = cupType === 'europeanCup' ? ' CL' : ' UEL';
-                const resultText = won ? 'G' : 'M';
+                const resultText = userWon ? 'G' : (userScore === oppScore ? 'B' : 'M'); // G/B/M for TR (Win/Draw/Loss)
                 const score = `${userScore}-${oppScore}`;
+                const prizeStr = (userRewards.budgetChange / 1000000).toFixed(1);
+
+                const detailStr = `[Rep: ${repChange > 0 ? '+' : ''}${repChange}, Prize: €${prizeStr}M]`;
+                const historyReason = `${cupName}: ${opponent.name} (${resultText}) ${score} ${detailStr}`;
 
                 const repHistory = [...(userTeam.reputationHistory || [])];
-                repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${score}`, newValue: newRep });
+                repHistory.push({ week: updatedState.currentWeek, change: repChange, reason: historyReason, newValue: newUserTeamState.reputation });
 
                 const confHistory = [...(userTeam.confidenceHistory || [])];
-                confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${cupName}: ${opponent.name} (${resultText}) ${score}`, newValue: newConf });
+                confHistory.push({ week: updatedState.currentWeek, change: confChange, reason: `${cupName}: ${opponent.name} (${resultText})`, newValue: newConf });
 
-                updatedState.teams = updatedState.teams.map(t =>
-                    t.id === userTeam.id
-                        ? { ...t, reputation: newRep, boardConfidence: newConf, reputationHistory: repHistory.slice(-20), confidenceHistory: confHistory.slice(-20) }
-                        : t
-                );
+                updatedState.teams = updatedState.teams.map(t => {
+                    if (t.id === updatedHomeTeam.id) {
+                        return {
+                            ...updatedHomeTeam,
+                            boardConfidence: (t.id === userTeam.id) ? newConf : t.boardConfidence,
+                            reputationHistory: (t.id === userTeam.id) ? repHistory.slice(-20) : t.reputationHistory,
+                            confidenceHistory: (t.id === userTeam.id) ? confHistory.slice(-20) : t.confidenceHistory,
+                            // Update financials for visibility
+                            financials: (t.id === userTeam.id) ? {
+                                ...t.financials,
+                                lastWeekIncome: {
+                                    ...t.financials.lastWeekIncome,
+                                    winBonus: (t.financials.lastWeekIncome.winBonus || 0) + (userRewards.budgetChange || 0)
+                                }
+                            } : t.financials
+                        };
+                    }
+                    if (t.id === updatedAwayTeam.id) {
+                        return {
+                            ...updatedAwayTeam,
+                            boardConfidence: (t.id === userTeam.id) ? newConf : t.boardConfidence,
+                            reputationHistory: (t.id === userTeam.id) ? repHistory.slice(-20) : t.reputationHistory,
+                            confidenceHistory: (t.id === userTeam.id) ? confHistory.slice(-20) : t.confidenceHistory,
+                            financials: (t.id === userTeam.id) ? {
+                                ...t.financials,
+                                lastWeekIncome: {
+                                    ...t.financials.lastWeekIncome,
+                                    winBonus: (t.financials.lastWeekIncome.winBonus || 0) + (userRewards.budgetChange || 0)
+                                }
+                            } : t.financials
+                        };
+                    }
+                    return t;
+                });
             }
 
-            setGameState(currentState);
+            setGameState(updatedState);
             setView('dashboard');
             setActiveMatchId(null);
             setPendingMatch(null);
@@ -4229,6 +4218,38 @@ const App: React.FC = () => {
     };
 
     // Show Profile Selector if requested
+
+    // Game Over Check
+    if (gameState && gameState.isGameOver) {
+        return (
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+                <div className="bg-slate-800 p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-slate-700">
+                    <div className="w-24 h-24 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/50 animate-pulse">
+                        <LogOut size={48} className="text-red-500" />
+                    </div>
+
+                    <h1 className="text-3xl font-bold text-white mb-2">{t.gameOver || 'GAME OVER'}</h1>
+                    <p className="text-red-400 font-bold text-lg mb-6 uppercase tracking-widest">{gameState.gameOverReason === 'FIRED' ? (t.fired || 'YOU HAVE BEEN SACKED!') : gameState.gameOverReason}</p>
+
+                    <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5 mb-8 text-slate-300 text-sm leading-relaxed">
+                        {t.firedMessage || 'The board has lost confidence in your ability to manage the club. Security will escort you out of the building immediately.'}
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            setGameState(null);
+                            setShowProfileSelector(true);
+                        }}
+                        className="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-900/40 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    >
+                        <LogOut size={20} />
+                        {t.returnToMenu || 'Return to Menu'}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     if (showProfileSelector) {
 
         // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========

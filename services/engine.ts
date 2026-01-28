@@ -1892,11 +1892,16 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                 if (recentLosses >= 3) change -= 3; // Extra -3 for 3+ consecutive losses
 
                 // BUG FIX: Handle 0 correctly (don't fallback to 70 if it's 0)
+                // If it's undefined, start at 70. If it's valid (even 0), usage it.
                 const currentConfidence = team.boardConfidence !== undefined ? team.boardConfidence : 70;
                 const newConfidence = Math.max(0, Math.min(100, currentConfidence + change));
 
+                team.boardConfidence = newConfidence;
+
                 // FIRING LOGIC
-                if (newConfidence < 30) {
+                // STRICT CHECK: IF CONFIDENCE DROPS BELOW 1, YOU ARE FIRED immediately
+                if (newConfidence <= 0) {
+                    // Force firing immediately
                     gameState.isGameOver = true;
                     gameState.gameOverReason = 'FIRED';
                 }
@@ -2408,19 +2413,33 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     if (userTeam) {
         const scoutLevel = userTeam.staff?.scoutLevel || 1;
         const academyLevel = userTeam.facilities?.academyLevel || 1;
-        // NERF: 1% base + 0.3% per scout + 0.2% per academy (max ~6% at lvl 10/10)
-        const youthChance = 0.01 + (scoutLevel * 0.003) + (academyLevel * 0.002);
+        // BALANCE: ~15% chance at max levels (approx 7-8 players per season)
+        // Base 1% + 5% (Scout) + 8% (Academy) = ~14% max
+        const youthChance = 0.01 + (scoutLevel * 0.005) + (academyLevel * 0.0035);
 
         if (Math.random() < youthChance && (userTeam.youthCandidates?.length || 0) < 5) {
-            // Generate a youth player with potential based on scoutLevel
+            // Generate a youth player
             const positions: Position[] = [Position.GK, Position.DEF, Position.DEF, Position.MID, Position.MID, Position.FWD];
             const pos = positions[Math.floor(Math.random() * positions.length)];
-            // NERF: Base overall 40-55 instead of 45-60
-            const baseOverall = 40 + Math.floor(Math.random() * 15);
-            // NERF: Potential bonus max +4 instead of +30
-            const potentialBonus = Math.floor((scoutLevel + academyLevel) / 5);
-            // NERF: Potential range narrowed - harder to get 85+ potential
-            const potential = Math.min(95, baseOverall + 15 + Math.floor(Math.random() * 10) + potentialBonus);
+
+            // BALANCE: Overall scales with Academy (Tiered)
+            // Lvl 1: 40-55 (Avg 47)
+            // Lvl 25: 55-70 (Avg 62) -> Usable reserves with room to grow
+            const baseOverall = 40 + Math.floor(Math.random() * 15) + Math.floor(academyLevel * 0.6);
+
+            // BALANCE: Potential depends on Scout+Academy but capped
+            // Base: OVR + 10..25 (Random)
+            // Bonus: (Scout * 1.0) + (Academy * 0.4) -> Max +20
+            // Max Theory: 70 + 25 + 20 = 115 (Clamped to 90)
+            const potentialBonus = (scoutLevel * 1.0) + (academyLevel * 0.4);
+            const rawPotential = baseOverall + 10 + Math.floor(Math.random() * 15) + potentialBonus;
+
+            // USER REQUEST: STRICT CAP at 90 (No 94-99 "God Mode" players)
+            // "En fazla 85-90 arası bulsun"
+            let potential = Math.min(90, rawPotential);
+
+            // Ensure potential isn't lower than overall
+            potential = Math.max(potential, baseOverall);
 
             // === FIX: League-based nationality ===
             const nationalityPools: Record<string, string[]> = {
@@ -3895,7 +3914,7 @@ export const simulateGlobalCupMatch = (
     awayTeam: Team,
     homePlayers: Player[],
     awayPlayers: Player[]
-): GlobalCup => {
+): { updatedCup: GlobalCup, updatedHomeTeam: Team, updatedAwayTeam: Team } => {
     // Find match in Groups OR Knockouts
     let match: GlobalCupMatch | undefined;
     let group: GlobalCupGroup | undefined;
@@ -3916,7 +3935,7 @@ export const simulateGlobalCupMatch = (
         match = cup.knockoutMatches.find(m => m.id === matchId);
     }
 
-    if (!match || match.isPlayed) return cup;
+    if (!match || match.isPlayed) return { updatedCup: cup, updatedHomeTeam: homeTeam, updatedAwayTeam: awayTeam };
 
     // Simulate Match
     const tempMatch: Match = {
@@ -4019,8 +4038,151 @@ export const simulateGlobalCupMatch = (
         }
     }
 
-    // Check if stage is complete and advance if needed
-    return advanceGlobalCupStage(cup);
+    // Check for advancement
+    const nextCup = advanceGlobalCupStage(cup);
+
+    // === REPUTATION & BUDGET REWARDS ===
+    const rewards = calculateCupRewards(cup, match.id, homeTeam, awayTeam, match.homeScore, match.awayScore, match.winnerId);
+
+    return { updatedCup: nextCup, updatedHomeTeam: rewards.updatedHomeTeam, updatedAwayTeam: rewards.updatedAwayTeam };
+};
+
+// Helper: Calculate Cup Rewards (Reputation & Budget)
+// UPDATED: Now returns detailed breakdown for history logs
+export const calculateCupRewards = (
+    cup: GlobalCup,
+    matchId: string,
+    homeTeam: Team,
+    awayTeam: Team,
+    homeScore: number,
+    awayScore: number,
+    winnerId?: string
+): {
+    updatedHomeTeam: Team,
+    updatedAwayTeam: Team,
+    rewardDetails: {
+        home: { repChange: number, budgetChange: number, description: string },
+        away: { repChange: number, budgetChange: number, description: string }
+    }
+} => {
+    // Locate match to determine stage
+    let match: any;
+    if (cup.groups) {
+        for (const g of cup.groups) {
+            match = g.matches.find(m => m.id === matchId);
+            if (match) break;
+        }
+    }
+    if (!match && cup.knockoutMatches) {
+        match = cup.knockoutMatches.find(m => m.id === matchId);
+    }
+
+    const stage = match?.stage || 'GROUP'; // Default
+
+    // 1. Determine Winner
+    const homeWon = homeScore > awayScore;
+    const awayWon = awayScore > homeScore;
+    const isDraw = homeScore === awayScore;
+
+    // 2. Clone teams to update
+    const updatedHomeTeam = { ...homeTeam };
+    const updatedAwayTeam = { ...awayTeam };
+
+    // 3. Reputation Updates (Dynamic Formula x3 - User Request)
+    // Max Loss: 45. Max Gain: ~60. Base Win: 30.
+    const calculateDynamicChange = (myRep: number, oppRep: number, result: 'WIN' | 'LOSS' | 'DRAW'): number => {
+        const diff = oppRep - myRep; // Positive if opponent is stronger
+
+        if (result === 'WIN') {
+            // Base 25 + (Diff / 100). 
+            // If beating stronger (+1000 diff) -> 25 + 10 = 35.
+            // If beating weaker (-1000 diff) -> 25 - 10 = 15.
+            const change = 25 + (diff / 100);
+            return Math.min(60, Math.max(10, Math.floor(change))) + (stage !== 'GROUP' ? 5 : 0); // Bonus for knockouts
+        } else if (result === 'LOSS') {
+            // Base -15.
+            // If losing to stronger (+1000 diff) -> -15 + 10 = -5 (Less penalty).
+            // If losing to weaker (-1000 diff) -> -15 - 10 = -25 (More penalty).
+            const change = -20 + (diff / 100);
+            // Cap loss at -45 (User Request)
+            return Math.max(-45, Math.min(-5, Math.floor(change)));
+        } else {
+            // Draw
+            // If stronger team draws -> Small penalty.
+            // If weaker team draws -> Small gain.
+            const change = (diff / 200); // +5 for drawing vs +1000 rep team
+            return Math.min(15, Math.max(-10, Math.floor(change)));
+        }
+    };
+
+    const homeRepChange = calculateDynamicChange(homeTeam.reputation, awayTeam.reputation, homeWon ? 'WIN' : (awayWon ? 'LOSS' : 'DRAW'));
+    const awayRepChange = calculateDynamicChange(awayTeam.reputation, homeTeam.reputation, awayWon ? 'WIN' : (homeWon ? 'LOSS' : 'DRAW'));
+
+    // Apply reputation update
+    updatedHomeTeam.reputation = Math.min(10000, Math.max(1000, updatedHomeTeam.reputation + homeRepChange));
+    updatedAwayTeam.reputation = Math.min(10000, Math.max(1000, updatedAwayTeam.reputation + awayRepChange));
+
+    // 4. Financial Rewards
+    const isFinal = stage === 'FINAL';
+    const getCapacity = (team: Team) => 5000 + (team.facilities.stadiumLevel - 1) * 6000;
+
+    // Ticket Price (Dynamic based on stage)
+    let ticketPrice = 50;
+    if (stage === 'ROUND_16') ticketPrice = 60;
+    else if (stage === 'QUARTER') ticketPrice = 75;
+    else if (stage === 'SEMI') ticketPrice = 100;
+    else if (stage === 'FINAL') ticketPrice = 150;
+
+    const homeCapacity = getCapacity(homeTeam);
+    const attPct = Math.min(1.0, 0.7 + (homeTeam.reputation / 20000) + (awayTeam.reputation / 20000) + (stage === 'FINAL' ? 0.3 : 0));
+    const attendanceCount = Math.floor(homeCapacity * attPct);
+    const totalGateReceipts = Math.floor(attendanceCount * ticketPrice);
+
+    // Prize Money (Accumulates)
+    let homePrize = 0;
+    let awayPrize = 0;
+
+    if (stage === 'GROUP') {
+        if (homeWon) homePrize += 2800000;
+        else if (awayWon) awayPrize += 2800000;
+        else { homePrize += 900000; awayPrize += 900000; }
+    }
+
+    // Knockout Prizes (Qualification Bonus - added to WINNER)
+    if (stage !== 'GROUP' && winnerId) {
+        let progressPrize = 0;
+        if (stage === 'ROUND_16') progressPrize = 9600000;
+        else if (stage === 'QUARTER') progressPrize = 10600000;
+        else if (stage === 'SEMI') progressPrize = 12500000;
+        else if (stage === 'FINAL') progressPrize = 20000000; // Winner Bonus
+
+        if (winnerId === homeTeam.id) homePrize += progressPrize;
+        else awayPrize += progressPrize;
+    }
+
+    // Apply Finances
+    const gateMoneyHome = isFinal ? (totalGateReceipts / 2) : totalGateReceipts;
+    const gateMoneyAway = isFinal ? (totalGateReceipts / 2) : 0;
+
+    updatedHomeTeam.budget += (gateMoneyHome + homePrize);
+    updatedAwayTeam.budget += (gateMoneyAway + awayPrize);
+
+    return {
+        updatedHomeTeam,
+        updatedAwayTeam,
+        rewardDetails: {
+            home: {
+                repChange: homeRepChange,
+                budgetChange: (gateMoneyHome + homePrize),
+                description: `${stage === 'GROUP' ? 'Group Match' : stage} vs ${awayTeam.name}`
+            },
+            away: {
+                repChange: awayRepChange,
+                budgetChange: (gateMoneyAway + awayPrize),
+                description: `${stage === 'GROUP' ? 'Group Match' : stage} vs ${homeTeam.name}`
+            }
+        }
+    };
 };
 
 // Helper: Get League ID

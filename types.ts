@@ -305,6 +305,7 @@ export interface JobOffer {
 }
 
 export interface GameState {
+    dataVersion?: string; // Track data version for migrations (e.g. "3.2.2")
     currentWeek: number; currentSeason: number; userTeamId: string; leagueId: string;
     teams: Team[]; players: Player[]; matches: Match[]; isSimulating: boolean;
     messages: Message[];

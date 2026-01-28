@@ -5667,9 +5667,7 @@ export const LEAGUE_PRESETS = [
             { name: "Newcastle Jets", city: "Newcastle", primaryColor: "#0000FF", secondaryColor: "#D4AF37", reputation: 4700, budget: 10000000, stadiumCapacity: 33000 },
             { name: "Perth Glory", city: "Perth", primaryColor: "#800080", secondaryColor: "#FFFFFF", reputation: 4800, budget: 13000000, stadiumCapacity: 20500 },
 
-            // SUPER TEAMS
-            { name: "Apex Predators", city: "Mount Olympus", primaryColor: "#000000", secondaryColor: "#GOLD", reputation: 9999, budget: 999999999, stadiumCapacity: 99999 },
-            { name: "Omega Strikers", city: "Valhalla", primaryColor: "#FFFFFF", secondaryColor: "#SILVER", reputation: 9999, budget: 999999999, stadiumCapacity: 99999 }
+
         ]
     },
     {

@@ -5,15 +5,15 @@ export const BESIKTAS_SQUAD = [
     takim: "Istanbul Eagles",
     uyruk: "Türkiye",
     mevki: "MDO",
-    reyting: 86,
+    reyting: 81,
     yas: 21,
-    ana_ozellikler: { hiz: 86, sut: 86, pas: 86, dribbling: 84, defans: 83, fizik: 85 },
+    ana_ozellikler: { hiz: 80, sut: 78, pas: 81, dribbling: 79, defans: 79, fizik: 80 },
     detaylar: {
-      ucma: 70, top_kontrol: 86, vurus: 84, pozisyon: 82, refleks: 70,
-      hizlanma: 85, sprint: 84, reaksiyon: 85, sogukkanlilik: 84, ziplama: 82, guc: 85,
-      top_kesme: 83, defansif_farkindalik: 83, ayakta_mudahale: 83, kayarak_mudahale: 82
+      ucma: 65, top_kontrol: 80, vurus: 78, pozisyon: 77, refleks: 65,
+      hizlanma: 80, sprint: 79, reaksiyon: 80, sogukkanlilik: 79, ziplama: 77, guc: 80,
+      top_kesme: 79, defansif_farkindalik: 79, ayakta_mudahale: 78, kayarak_mudahale: 77
     },
-    oyun_tarzlari: ["Engel+", "Güçlü+", "Hava Hakimi+", "Kayarak Müdahale+", "Sezgili+", "Top Kesici+", "Yakın Markaj+"]
+    oyun_tarzlari: ["Engel", "Güçlü", "Hava Hakimi", "Kayarak Müdahale", "Sezgili", "Top Kesici", "Yakın Markaj"]
   },
   {
     ad: "O. Kokcu",

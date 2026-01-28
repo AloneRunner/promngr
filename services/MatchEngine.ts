@@ -1672,7 +1672,7 @@ export class MatchEngine {
                             baseSaveChance += 20;
                         }
 
-                        const saveChance = baseSaveChance + (effectiveGKing * 0.8) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
+                        const saveChance = baseSaveChance + (effectiveGKing * 0.78) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
 
                         // Şans faktörü (Zar atıyoruz)
                         const saveRoll = Math.random() * 100;
@@ -2953,6 +2953,14 @@ export class MatchEngine {
                 // 1. Calculate ideal position based on formation
                 // === CUSTOM POSITION KORUNMASI (SAVUNMA) ===
                 let idealX = isHome ? base.x : (100 - base.x);
+
+                // FIX: Orta sahaların defans hattına gömülmesini engelle (6-7 kişilik defans oluşmaması için)
+                // Midfielders should stay in front of the penalty box (approx 22-25 units)
+                if (role === Position.MID) {
+                    if (isHome && idealX < 24) idealX = 24;
+                    if (!isHome && idealX > 76) idealX = 76;
+                }
+
                 let idealY = isHome ? base.y : (100 - base.y);
 
                 // Custom pozisyon varsa Y ekseninde daha sadık kal
@@ -3815,28 +3823,55 @@ export class MatchEngine {
         // Elite finisher'lar (95+) çok isabetli, zayıflar çok kötü
 
         // === NERFED SHOOTING ACCURACY (SPREAD INCREASED) ===
+        // More realistic spread values (higher = less accurate)
         let baseSpread: number;
         if (fin >= 95) {
-            // Elite (Holland): 0.005 -> 0.040 (Still good but can miss)
-            baseSpread = 0.04 + (100 - fin) * 0.005;
+            // Elite (Holland): 0.04 -> 0.06
+            baseSpread = 0.06 + (100 - fin) * 0.005;
         } else if (fin >= 85) {
-            // Good (Osimheno): 0.020 -> 0.080
-            baseSpread = 0.08 + (95 - fin) * 0.005;
+            // Good (Osimheno): 0.08 -> 0.12
+            baseSpread = 0.12 + (95 - fin) * 0.005;
         } else if (fin >= 70) {
-            // Average: 0.05 -> 0.15
-            baseSpread = 0.15 + (85 - fin) * 0.006;
+            // Average: 0.15 -> 0.20
+            baseSpread = 0.20 + (85 - fin) * 0.008;
         } else if (fin >= 50) {
-            // Poor: 0.10 -> 0.25
-            baseSpread = 0.25 + (70 - fin) * 0.008;
+            // Poor: 0.25 -> 0.35
+            baseSpread = 0.35 + (70 - fin) * 0.01;
         } else {
-            // Bad: 0.20 -> 0.40
-            baseSpread = 0.40 + (50 - fin) * 0.01;
+            // Bad: 0.40 -> 0.60
+            baseSpread = 0.60 + (50 - fin) * 0.015;
         }
 
         let spread = baseSpread + accuracyPenalty;
 
-        // BUFF REMOVED: General shooting accuracy NOT increased
-        // spread *= 0.9; -> REMOVED
+        // === DEFENSIVE PRESSURE (BASKI ETKİSİ) ===
+        // Yakındaki savunmacılar şut isabetini bozar
+        let pressureMod = 1.0;
+        const defendingPlayers = isHome ? this.awayPlayers : this.homePlayers;
+        // 5 birim içinde (yaklaşık 3-4 metre) kaç savunmacı var?
+        const nearbyDefenders = defendingPlayers.filter(e => {
+            const ePos = this.sim.players[e.id];
+            return ePos && dist(ePos.x, ePos.y, pos.x, pos.y) < 5.0;
+        });
+
+        if (nearbyDefenders.length > 0) {
+            // Baskı altındaki şutlar çok daha isabetsiz olur
+            // "Pressure Handling" özelliği varsa daha az etkilenir
+            const pressureResist = (p.personality?.pressureHandling || 0.5);
+            // Örnek: 0.8 resist -> 0.2 etki, 0.2 resist -> 0.8 etki
+            const impact = 1.0 - (pressureResist * 0.5);
+
+            pressureMod += (nearbyDefenders.length * 0.35 * impact);
+            console.log(`🛡️ Baskı: ${nearbyDefenders.length} defans, Mod: ${pressureMod.toFixed(2)}`);
+        }
+        spread *= pressureMod;
+
+        // === DISTANCE PENALTY (UZAKTAN ŞUT CEZASI) ===
+        // Uzaktan şutlar çok daha zor isabet etmeli
+        if (distToGoal > 25) {
+            const extraDist = distToGoal - 25;
+            spread *= (1.0 + (extraDist * 0.04)); // Her metre için %4 hata payı artışı
+        }
 
         // Decisions: Yorgun oyuncu kötü karar verir (spread artar)
         spread *= (1 + (1 - fatigueMods.decisions) * 0.5);

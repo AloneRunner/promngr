@@ -922,5 +922,9 @@ How to cover budget deficits:
     moraleBench: "Bench (Neutral)",
     moraleReserve: "Reserves",
     moraleReserveStar: "Star Player in Reserves",
-    moraleReserveStable: "Reserves (Stable)"
+    moraleReserveStable: "Reserves (Stable)",
+    gameOver: "GAME OVER",
+    fired: "YOU HAVE BEEN SACKED!",
+    firedMessage: "The board has lost confidence in your ability to manage the club. Security will escort you out of the building immediately.",
+    returnToMenu: "Return to Main Menu"
 };

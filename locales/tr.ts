@@ -879,5 +879,9 @@ Parayı kullanarak "Hayır"ı "Evet"e çevirin:
     moraleBench: "Yedek - stabil",
     moraleReserve: "Kadro dışı",
     moraleReserveStar: "Yıldız oyuncu kadro dışı",
-    moraleReserveStable: "Kadro dışı (stabil)"
+    moraleReserveStable: "Kadro dışı (stabil)",
+    gameOver: "OYUN BİTTİ",
+    fired: "KOVULDUN!",
+    firedMessage: "Yönetim performansından memnun değil ve görevine son verildi. Güvenlik binadan çıkmana eşlik edecek.",
+    returnToMenu: "Ana Menüye Dön"
 };
