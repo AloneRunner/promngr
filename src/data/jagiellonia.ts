@@ -1,0 +1,170 @@
+export const JAGIELLONIA_SQUAD = [
+    {
+        ad: "Z. Alm",
+        takim: "Jagiellonia",
+        uyruk: "Sırbistan",
+        mevki: "KL",
+        reyting: 72,
+        yas: 30,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 60, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 75 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Skr",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 70,
+        yas: 24,
+        ana_ozellikler: { hiz: 65, sut: 35, pas: 60, dribbling: 50, defans: 72, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Die",
+        takim: "Jagiellonia",
+        uyruk: "İspanya",
+        mevki: "STP",
+        reyting: 71,
+        yas: 27,
+        ana_ozellikler: { hiz: 62, sut: 35, pas: 65, dribbling: 55, defans: 74, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Sac",
+        takim: "Jagiellonia",
+        uyruk: "Çekya",
+        mevki: "SĞB",
+        reyting: 69,
+        yas: 25,
+        ana_ozellikler: { hiz: 76, sut: 55, pas: 66, dribbling: 68, defans: 66, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Lew",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "SLB",
+        reyting: 68,
+        yas: 19,
+        ana_ozellikler: { hiz: 78, sut: 50, pas: 62, dribbling: 66, defans: 64, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: [],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "T. Rom",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "MDO",
+        reyting: 73,
+        yas: 32,
+        ana_ozellikler: { hiz: 60, sut: 62, pas: 72, dribbling: 66, defans: 74, fizik: 76 },
+        detaylar: { liderlik: 80 },
+        oyun_tarzlari: ["Lider"]
+    },
+    {
+        ad: "N. Nen",
+        takim: "Jagiellonia",
+        uyruk: "Portekiz",
+        mevki: "MDO",
+        reyting: 71,
+        yas: 28,
+        ana_ozellikler: { hiz: 68, sut: 65, pas: 74, dribbling: 70, defans: 68, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Ima",
+        takim: "Jagiellonia",
+        uyruk: "İspanya",
+        mevki: "MOO",
+        reyting: 75,
+        yas: 33,
+        ana_ozellikler: { hiz: 74, sut: 78, pas: 76, dribbling: 75, defans: 40, fizik: 65 },
+        detaylar: { bitiricilik: 80, teknik: 78 },
+        oyun_tarzlari: ["Fırsatçı", "Yaratıcı"],
+        yetenek: "Star"
+    },
+    {
+        ad: "D. Mar",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "SĞK",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 84, sut: 68, pas: 66, dribbling: 74, defans: 45, fizik: 66 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "N. Han",
+        takim: "Jagiellonia",
+        uyruk: "Norveç",
+        mevki: "SLK",
+        reyting: 73,
+        yas: 24,
+        ana_ozellikler: { hiz: 82, sut: 72, pas: 68, dribbling: 76, defans: 45, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: ["Kanat Forvet"]
+    },
+    {
+        ad: "A. Pul",
+        takim: "Jagiellonia",
+        uyruk: "Angola",
+        mevki: "SNT",
+        reyting: 74,
+        yas: 26,
+        ana_ozellikler: { hiz: 80, sut: 75, pas: 62, dribbling: 72, defans: 35, fizik: 80 },
+        detaylar: { guc: 82, bitiricilik: 76 },
+        oyun_tarzlari: ["Güçlü Forvet"],
+        yetenek: "Star"
+    },
+    {
+        ad: "K. Ibe",
+        takim: "Jagiellonia",
+        uyruk: "Fransa",
+        mevki: "SNT",
+        reyting: 70,
+        yas: 25,
+        ana_ozellikler: { hiz: 78, sut: 70, pas: 55, dribbling: 66, defans: 30, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Kub",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "MDO",
+        reyting: 69,
+        yas: 26,
+        ana_ozellikler: { hiz: 65, sut: 60, pas: 68, dribbling: 64, defans: 70, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Hal",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 68,
+        yas: 21,
+        ana_ozellikler: { hiz: 64, sut: 30, pas: 58, dribbling: 50, defans: 70, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "S. Abr",
+        takim: "Jagiellonia",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 67,
+        yas: 22,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 67 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

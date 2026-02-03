@@ -1,0 +1,172 @@
+export const SPARTA_PRAGUE_SQUAD = [
+    {
+        ad: "P. Vin",
+        takim: "Sparta Prague",
+        uyruk: "Danimarka",
+        mevki: "KL",
+        reyting: 75,
+        yas: 27,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 62, dribbling: 30, defans: 20, fizik: 72 },
+        detaylar: { refleks: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "F. Pan",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "STP",
+        reyting: 74,
+        yas: 27,
+        ana_ozellikler: { hiz: 62, sut: 35, pas: 60, dribbling: 50, defans: 76, fizik: 78 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Vit",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "STP",
+        reyting: 73,
+        yas: 21,
+        ana_ozellikler: { hiz: 65, sut: 35, pas: 62, dribbling: 55, defans: 74, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: [],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "A. Pre",
+        takim: "Sparta Prague",
+        uyruk: "Ekvador",
+        mevki: "SĞB",
+        reyting: 76,
+        yas: 26,
+        ana_ozellikler: { hiz: 82, sut: 60, pas: 70, dribbling: 74, defans: 70, fizik: 72 },
+        detaylar: { dayaniklilik: 82, hiz: 84 },
+        oyun_tarzlari: ["Süratli"],
+        yetenek: "Star"
+    },
+    {
+        ad: "J. Zel",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "SLB",
+        reyting: 74,
+        yas: 30,
+        ana_ozellikler: { hiz: 78, sut: 60, pas: 68, dribbling: 70, defans: 68, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Kai",
+        takim: "Sparta Prague",
+        uyruk: "Finlandiya",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 25,
+        ana_ozellikler: { hiz: 68, sut: 65, pas: 74, dribbling: 72, defans: 70, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "Q. Lac",
+        takim: "Sparta Prague",
+        uyruk: "Arnavutluk",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 28,
+        ana_ozellikler: { hiz: 70, sut: 68, pas: 76, dribbling: 74, defans: 66, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "V. Bir",
+        takim: "Sparta Prague",
+        uyruk: "Sırbistan",
+        mevki: "MOO",
+        reyting: 78,
+        yas: 26,
+        ana_ozellikler: { hiz: 85, sut: 78, pas: 76, dribbling: 82, defans: 45, fizik: 70 },
+        detaylar: { hiz: 86, bitiricilik: 78, teknik: 82 },
+        oyun_tarzlari: ["Süratli", "Yaratıcı", "Golcü"],
+        yetenek: "Star"
+    },
+    {
+        ad: "L. Har",
+        takim: "Sparta Prague",
+        uyruk: "Slovakya",
+        mevki: "SĞK",
+        reyting: 78,
+        yas: 28,
+        ana_ozellikler: { hiz: 84, sut: 80, pas: 75, dribbling: 80, defans: 45, fizik: 72 },
+        detaylar: { hiz: 85, sut: 82, bitiricilik: 80 },
+        oyun_tarzlari: ["Süratli", "Golcü", "Uzaktan Şutçu"],
+        yetenek: "Star"
+    },
+    {
+        ad: "E. Cob",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "SLK",
+        reyting: 73,
+        yas: 21,
+        ana_ozellikler: { hiz: 82, sut: 65, pas: 66, dribbling: 74, defans: 40, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Kuc",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "SNT",
+        reyting: 76,
+        yas: 27,
+        ana_ozellikler: { hiz: 78, sut: 78, pas: 65, dribbling: 70, defans: 40, fizik: 80 },
+        detaylar: { bitiricilik: 80, guc: 82 },
+        oyun_tarzlari: ["Golcü", "Güçlü Forvet"],
+        yetenek: "Star"
+    },
+    {
+        ad: "I. Olat",
+        takim: "Sparta Prague",
+        uyruk: "Nijerya",
+        mevki: "SNT",
+        reyting: 74,
+        yas: 25,
+        ana_ozellikler: { hiz: 85, sut: 72, pas: 60, dribbling: 72, defans: 35, fizik: 76 },
+        detaylar: { hiz: 88 },
+        oyun_tarzlari: ["Süratli"]
+    },
+    {
+        ad: "L. Sad",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "MO",
+        reyting: 72,
+        yas: 27,
+        ana_ozellikler: { hiz: 70, sut: 65, pas: 72, dribbling: 70, defans: 60, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Sor",
+        takim: "Sparta Prague",
+        uyruk: "Danimarka",
+        mevki: "STP",
+        reyting: 72,
+        yas: 29,
+        ana_ozellikler: { hiz: 58, sut: 35, pas: 62, dribbling: 55, defans: 74, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "V. Vor",
+        takim: "Sparta Prague",
+        uyruk: "Çekya",
+        mevki: "KL",
+        reyting: 70,
+        yas: 25,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

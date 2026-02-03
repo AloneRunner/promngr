@@ -1,0 +1,170 @@
+export const POGON_SZCZECIN_SQUAD = [
+    {
+        ad: "V. Coj",
+        takim: "Pogon Szczecin",
+        uyruk: "Romanya",
+        mevki: "KL",
+        reyting: 72,
+        yas: 26,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 60, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 75 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "B. Zech",
+        takim: "Pogon Szczecin",
+        uyruk: "Avusturya",
+        mevki: "STP",
+        reyting: 72,
+        yas: 33,
+        ana_ozellikler: { hiz: 60, sut: 35, pas: 62, dribbling: 55, defans: 74, fizik: 74 },
+        detaylar: { liderlik: 74 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Mal",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 70,
+        yas: 28,
+        ana_ozellikler: { hiz: 64, sut: 35, pas: 60, dribbling: 50, defans: 72, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Wah",
+        takim: "Pogon Szczecin",
+        uyruk: "İsveç",
+        mevki: "SĞB",
+        reyting: 71,
+        yas: 25,
+        ana_ozellikler: { hiz: 78, sut: 55, pas: 65, dribbling: 68, defans: 66, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Kou",
+        takim: "Pogon Szczecin",
+        uyruk: "Yunanistan",
+        mevki: "SLB",
+        reyting: 71,
+        yas: 28,
+        ana_ozellikler: { hiz: 76, sut: 50, pas: 66, dribbling: 66, defans: 66, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "F. Ult",
+        takim: "Pogon Szczecin",
+        uyruk: "Norveç",
+        mevki: "MDO",
+        reyting: 70,
+        yas: 28,
+        ana_ozellikler: { hiz: 65, sut: 60, pas: 70, dribbling: 66, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Gor",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "MDO",
+        reyting: 69,
+        yas: 21,
+        ana_ozellikler: { hiz: 72, sut: 62, pas: 70, dribbling: 68, defans: 65, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "V. Bic",
+        takim: "Pogon Szczecin",
+        uyruk: "Ermenistan",
+        mevki: "MOO",
+        reyting: 73,
+        yas: 27,
+        ana_ozellikler: { hiz: 78, sut: 74, pas: 72, dribbling: 76, defans: 50, fizik: 66 },
+        detaylar: { teknik: 76 },
+        oyun_tarzlari: ["Yaratıcı"]
+    },
+    {
+        ad: "M. Wed",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "SĞK",
+        reyting: 70,
+        yas: 22,
+        ana_ozellikler: { hiz: 80, sut: 65, pas: 65, dribbling: 72, defans: 40, fizik: 64 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Gro",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "SLK",
+        reyting: 76,
+        yas: 35,
+        ana_ozellikler: { hiz: 82, sut: 75, pas: 76, dribbling: 80, defans: 45, fizik: 65 },
+        detaylar: { hiz: 85, teknik: 80, liderlik: 85, bitiricilik: 76 },
+        oyun_tarzlari: ["Süratli", "Kanat Forvet", "Lider"],
+        yetenek: "Star"
+    },
+    {
+        ad: "E. Kou",
+        takim: "Pogon Szczecin",
+        uyruk: "Yunanistan",
+        mevki: "SNT",
+        reyting: 75,
+        yas: 26,
+        ana_ozellikler: { hiz: 76, sut: 80, pas: 65, dribbling: 72, defans: 35, fizik: 76 },
+        detaylar: { bitiricilik: 82 },
+        oyun_tarzlari: ["Golcü"],
+        yetenek: "Star"
+    },
+    {
+        ad: "A. Par",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "SNT",
+        reyting: 69,
+        yas: 19,
+        ana_ozellikler: { hiz: 78, sut: 70, pas: 60, dribbling: 68, defans: 30, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: [],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "R. Kur",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "MO",
+        reyting: 68,
+        yas: 33,
+        ana_ozellikler: { hiz: 55, sut: 68, pas: 72, dribbling: 66, defans: 60, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "D. Lon",
+        takim: "Pogon Szczecin",
+        uyruk: "Slovenya",
+        mevki: "STP",
+        reyting: 67,
+        yas: 20,
+        ana_ozellikler: { hiz: 62, sut: 30, pas: 55, dribbling: 50, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Kam",
+        takim: "Pogon Szczecin",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 68,
+        yas: 20,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

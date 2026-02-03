@@ -4,7 +4,7 @@ import { Player, Team, Position, TacticType, Translation, TeamTactic, LineupStat
 import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, ShieldAlert, MessageSquare, ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset } from '../services/MatchEngine';
-import { autoPickLineup as smartAutoPick, analyzeClubHealth } from '../services/engine';
+import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation } from '../services/engine';
 import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey } from '../services/tactics';
 import { AssistantReport } from './AssistantReport';
 import { PlayerInteractionModal } from './PlayerInteractionModal';
@@ -47,6 +47,9 @@ const getAttributeClass = (val: number) => {
 };
 
 const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole, t }: PlayerRowProps) => {
+    // Safety check for player data
+    if (!player || !player.attributes) return null;
+
     const isSelected = selectedPlayerId === player.id;
     // === OVR CONSISTENCY FIX ===
     // Always calculate effective rating with condition - even for bench/reserve players
@@ -195,11 +198,12 @@ interface TeamManagementProps {
     onMovePlayer?: (playerId: string, direction: 'UP' | 'DOWN') => void;
     onAutoFix?: () => void;
     onPlayerMoraleChange?: (playerId: string, moraleChange: number, reason: string) => void;
+    matchStatus?: { minute: number; score: { home: number; away: number }; isHome: boolean };
     t: Translation;
 }
 
 export const TeamManagement: React.FC<TeamManagementProps> = ({
-    team, players, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, t
+    team, players, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, matchStatus, t
 }) => {
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [tacticTab, setTacticTab] = useState<'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
@@ -210,10 +214,24 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const pitchRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        let newAdvice: AssistantAdvice[] = [];
+
+        // 1. Static Club Health
         const healthAdvice = analyzeClubHealth(team, players);
+        newAdvice = [...newAdvice, ...healthAdvice];
+
+        // 2. Tactic Validation
         const tacticWarnings = validateTactic(team.tactic);
-        setAdvice([...healthAdvice, ...tacticWarnings]);
-    }, [team, players]);
+        newAdvice = [...newAdvice, ...tacticWarnings];
+
+        // 3. In-Match Situational Advice
+        if (matchStatus) {
+            const situationAdvice = analyzeMatchSituation(matchStatus, team.tactic);
+            newAdvice = [...situationAdvice, ...newAdvice]; // Put critical situational advice first? Or keep mixed?
+        }
+
+        setAdvice(newAdvice);
+    }, [team, players, matchStatus]);
 
     const starters = players.filter(p => p.lineup === 'STARTING').sort((a, b) => (a.lineupIndex || 0) - (b.lineupIndex || 0));
     const bench = players.filter(p => p.lineup === 'BENCH').sort((a, b) => (a.lineupIndex || 0) - (b.lineupIndex || 0));

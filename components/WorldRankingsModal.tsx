@@ -104,54 +104,54 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in p-4 text-white">
-            <div className="bg-slate-900 border border-slate-700/50 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-                {/* Header */}
-                <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center shrink-0">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
-                            <Globe className="text-emerald-400" size={24} />
+            <div className="bg-slate-900 border border-slate-700/50 rounded-2xl w-full max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+                {/* Header - Compact */}
+                <div className="p-3 sm:p-4 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center shrink-0">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                            <Globe className="text-emerald-400" size={18} />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-white">World Rankings</h2>
-                            <p className="text-slate-400 text-xs">Global Statistics & Records</p>
+                            <h2 className="text-lg sm:text-xl font-bold text-white">World Rankings</h2>
+                            <p className="text-slate-400 text-[10px] sm:text-xs">Global Statistics & Records</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors">
-                        <X size={24} />
+                    <button onClick={onClose} className="p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors">
+                        <X size={20} />
                     </button>
                 </div>
 
-                {/* Tabs & Search */}
-                <div className="p-4 border-b border-slate-800 bg-slate-800/30 flex flex-col sm:flex-row gap-4 justify-between items-center shrink-0">
-                    <div className="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700 overflow-x-auto max-w-full">
+                {/* Tabs & Search - Compact */}
+                <div className="p-2 sm:p-3 border-b border-slate-800 bg-slate-800/30 flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between items-center shrink-0">
+                    <div className="flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700 overflow-x-auto max-w-full">
                         <button
                             onClick={() => setActiveTab('clubs')}
-                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'clubs' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                            className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${activeTab === 'clubs' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
                         >
-                            <Trophy size={16} /> Clubs
+                            <Trophy size={14} /> Clubs
                         </button>
                         <button
                             onClick={() => setActiveTab('players')}
-                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'players' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                            className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${activeTab === 'players' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
                         >
-                            <Users size={16} /> Players
+                            <Users size={14} /> Players
                         </button>
                         <button
                             onClick={() => setActiveTab('leagues')}
-                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'leagues' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                            className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${activeTab === 'leagues' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
                         >
-                            <Map size={16} /> Leagues
+                            <Map size={14} /> Leagues
                         </button>
                     </div>
 
-                    <div className="relative w-full sm:w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+                    <div className="relative w-full sm:w-48">
+                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
                         <input
                             type="text"
-                            placeholder={activeTab === 'clubs' ? "Search clubs..." : activeTab === 'players' ? "Search players..." : "Search leagues..."}
+                            placeholder={activeTab === 'clubs' ? "Search..." : activeTab === 'players' ? "Search..." : "Search..."}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                            className="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 pl-8 pr-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all"
                         />
                     </div>
                 </div>
@@ -244,48 +244,48 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                     )}
 
                     {activeTab === 'leagues' && (
-                        <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-950 text-slate-400 text-xs uppercase font-bold sticky top-0 z-10 shadow-lg">
+                        <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead className="bg-slate-950 text-slate-400 text-[10px] sm:text-xs uppercase font-bold sticky top-0 z-10 shadow-lg">
                                 <tr>
-                                    <th className="p-4 text-center w-16">Rank</th>
-                                    <th className="p-4">League</th>
-                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y1</th>
-                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y2</th>
-                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y3</th>
-                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y4</th>
-                                    <th className="p-2 text-center text-slate-500 font-mono hidden sm:table-cell">Y5</th>
-                                    <th className="p-4 text-right text-emerald-400">Total Score</th>
-                                    <th className="p-4 text-right hidden lg:table-cell">Total Value</th>
+                                    <th className="p-2 sm:p-3 text-center w-10 sm:w-14">Rank</th>
+                                    <th className="p-2 sm:p-3">League</th>
+                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y1</th>
+                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y2</th>
+                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y3</th>
+                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y4</th>
+                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y5</th>
+                                    <th className="p-2 sm:p-3 text-right text-emerald-400">Total</th>
+                                    <th className="p-2 sm:p-3 text-right hidden lg:table-cell">Value</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
                                 {rankedLeagues.map((league) => (
                                     <tr key={league.id} className="hover:bg-slate-800/30 transition-colors group">
-                                        <td className={`p-4 text-center font-bold text-lg ${getRankColor(league.rank)}`}>
+                                        <td className={`p-2 sm:p-3 text-center font-bold text-sm sm:text-base ${getRankColor(league.rank)}`}>
                                             #{league.rank}
                                         </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                                        <td className="p-2 sm:p-3">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-md flex items-center justify-center font-bold bg-slate-800 text-slate-300 border border-slate-700 text-[10px] sm:text-xs">
                                                     {league.country.substring(0, 2).toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <div className="font-bold text-white group-hover:text-purple-400 transition-colors">{league.name}</div>
-                                                    <div className="text-xs text-slate-500">{league.country}</div>
+                                                    <div className="font-bold text-white group-hover:text-purple-400 transition-colors text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">{league.name}</div>
+                                                    <div className="text-[10px] sm:text-xs text-slate-500 hidden sm:block">{league.country}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        {/* 5-Year Coefficients - Hidden on very small screens */}
+                                        {/* 5-Year Coefficients - Now visible on all screens */}
                                         {league.coefficients.map((score, idx) => (
-                                            <td key={idx} className="p-2 text-center font-mono text-slate-400 text-sm hidden sm:table-cell">
+                                            <td key={idx} className="p-1 sm:p-2 text-center font-mono text-slate-400 text-[10px] sm:text-xs">
                                                 {score.toFixed(1)}
                                             </td>
                                         ))}
 
-                                        <td className="p-4 text-right font-mono text-emerald-400 font-bold text-lg">
+                                        <td className="p-2 sm:p-3 text-right font-mono text-emerald-400 font-bold text-sm sm:text-base">
                                             {league.reputation.toFixed(1)}
                                         </td>
-                                        <td className="p-4 text-right font-mono text-slate-300 hidden lg:table-cell">
+                                        <td className="p-2 sm:p-3 text-right font-mono text-slate-300 text-xs hidden lg:table-cell">
                                             €{(league.totalValue / 1000000).toFixed(0)}M
                                         </td>
                                     </tr>

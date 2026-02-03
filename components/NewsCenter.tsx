@@ -14,12 +14,13 @@ interface NewsCenterProps {
    onRejectOffer?: (offerId: string) => void;
    onViewPlayer?: (playerId: string) => void;
    t: Translation;
+   initialTab?: MessageTab;
 }
 
-type MessageTab = 'ALL' | 'TRANSFERS' | 'INJURIES' | 'YOUTH' | 'BOARD';
+export type MessageTab = 'ALL' | 'TRANSFERS' | 'INJURIES' | 'YOUTH' | 'BOARD';
 
-export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onViewPlayer, t }) => {
-   const [activeTab, setActiveTab] = useState<MessageTab>('ALL');
+export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onViewPlayer, t, initialTab }) => {
+   const [activeTab, setActiveTab] = useState<MessageTab>(initialTab || 'ALL');
 
    // Filter messages by tab
    const filterMessages = (msgs: Message[]): Message[] => {
@@ -135,8 +136,8 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === tab.id
-                        ? 'bg-slate-700 text-white shadow-md'
-                        : 'bg-transparent text-slate-400 hover:bg-slate-800 hover:text-white'
+                     ? 'bg-slate-700 text-white shadow-md'
+                     : 'bg-transparent text-slate-400 hover:bg-slate-800 hover:text-white'
                      }`}
                >
                   <tab.icon size={14} className={activeTab === tab.id ? tab.color : ''} />

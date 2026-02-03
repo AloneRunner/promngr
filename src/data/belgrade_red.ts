@@ -1,0 +1,172 @@
+export const BELGRADE_RED_SQUAD = [
+    {
+        ad: "O. Glaz",
+        takim: "Belgrade Red",
+        uyruk: "İsrail",
+        mevki: "KL",
+        reyting: 75,
+        yas: 27,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 60, dribbling: 30, defans: 20, fizik: 74 },
+        detaylar: { refleks: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Dra",
+        takim: "Belgrade Red",
+        uyruk: "Avusturya",
+        mevki: "STP",
+        reyting: 76,
+        yas: 33,
+        ana_ozellikler: { hiz: 62, sut: 40, pas: 68, dribbling: 60, defans: 80, fizik: 78 },
+        detaylar: { liderlik: 85 },
+        oyun_tarzlari: [],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "U. Spa",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "STP",
+        reyting: 74,
+        yas: 31,
+        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 55, defans: 76, fizik: 78 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "S. Mij",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "SĞB",
+        reyting: 72,
+        yas: 22,
+        ana_ozellikler: { hiz: 82, sut: 60, pas: 68, dribbling: 72, defans: 66, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Rod",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "SLB",
+        reyting: 73,
+        yas: 33,
+        ana_ozellikler: { hiz: 75, sut: 65, pas: 72, dribbling: 70, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "I. Hwa",
+        takim: "Belgrade Red",
+        uyruk: "Güney Kore",
+        mevki: "MO",
+        reyting: 78,
+        yas: 27,
+        ana_ozellikler: { hiz: 78, sut: 72, pas: 80, dribbling: 78, defans: 68, fizik: 75 },
+        detaylar: { vizyon: 82, dayaniklilik: 90 },
+        oyun_tarzlari: ["Dinamo"],
+        yetenek: "Star"
+    },
+    {
+        ad: "G. Kan",
+        takim: "Belgrade Red",
+        uyruk: "Gabon",
+        mevki: "MO",
+        reyting: 77,
+        yas: 33,
+        ana_ozellikler: { hiz: 65, sut: 78, pas: 82, dribbling: 76, defans: 60, fizik: 72 },
+        detaylar: { teknik: 84 },
+        oyun_tarzlari: ["Oyun Kurucu"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "M. Iva",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "MOO",
+        reyting: 78,
+        yas: 30,
+        ana_ozellikler: { hiz: 76, sut: 75, pas: 80, dribbling: 82, defans: 55, fizik: 70 },
+        detaylar: { teknik: 82 },
+        oyun_tarzlari: ["Yaratıcı"],
+        yetenek: "Star"
+    },
+    {
+        ad: "O. Buk",
+        takim: "Belgrade Red",
+        uyruk: "Gana",
+        mevki: "SĞK",
+        reyting: 76,
+        yas: 25,
+        ana_ozellikler: { hiz: 92, sut: 72, pas: 68, dribbling: 80, defans: 40, fizik: 72 },
+        detaylar: { hiz: 92 },
+        oyun_tarzlari: ["Kanat Forvet"]
+    },
+    {
+        ad: "P. Olay",
+        takim: "Belgrade Red",
+        uyruk: "Nijerya",
+        mevki: "SLK",
+        reyting: 77,
+        yas: 28,
+        ana_ozellikler: { hiz: 84, sut: 75, pas: 70, dribbling: 78, defans: 45, fizik: 75 },
+        detaylar: [],
+        oyun_tarzlari: ["Kanat Forvet"]
+    },
+    {
+        ad: "S. Kat",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "SNT",
+        reyting: 76,
+        yas: 33,
+        ana_ozellikler: { hiz: 68, sut: 82, pas: 72, dribbling: 78, defans: 40, fizik: 75 },
+        detaylar: { bitiricilik: 84 },
+        oyun_tarzlari: ["Fırsatçı"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "C. Ndi",
+        takim: "Belgrade Red",
+        uyruk: "Senegal",
+        mevki: "SNT",
+        reyting: 75,
+        yas: 28,
+        ana_ozellikler: { hiz: 80, sut: 76, pas: 65, dribbling: 72, defans: 40, fizik: 78 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "K. Kra",
+        takim: "Belgrade Red",
+        uyruk: "Fildişi Sahili",
+        mevki: "SNT",
+        reyting: 74,
+        yas: 27,
+        ana_ozellikler: { hiz: 78, sut: 74, pas: 62, dribbling: 70, defans: 40, fizik: 75 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "S. Sta",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "MDO",
+        reyting: 72,
+        yas: 20,
+        ana_ozellikler: { hiz: 70, sut: 60, pas: 72, dribbling: 68, defans: 70, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "Z. Pop",
+        takim: "Belgrade Red",
+        uyruk: "Sırbistan",
+        mevki: "KL",
+        reyting: 70,
+        yas: 35,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Translation } from '../types';
-import { X, Sparkles, ChevronDown, ChevronUp, Heart, Shield, Trophy, Zap, Globe, TrendingDown, CalendarCheck, BookOpen, DollarSign, Activity } from 'lucide-react';
+import { X, Sparkles, ChevronDown, ChevronUp, Heart, Shield, Trophy, Zap, Globe, TrendingDown, CalendarCheck, BookOpen, DollarSign, Activity, Users, Wallet } from 'lucide-react';
 
 interface UpdatesModalProps {
     onClose: () => void;
@@ -22,6 +22,18 @@ interface VersionUpdate {
 
 // Version history - newest first
 const VERSION_HISTORY: VersionUpdate[] = [
+    {
+        version: '3.3',
+        date: '2026-01-31',
+        titleKey: 'update330Title',
+        items: [
+            { icon: <Wallet className="text-emerald-400" size={16} />, titleKey: 'update330Item1Title', descKey: 'update330Item1Desc' },
+            { icon: <Users className="text-blue-400" size={16} />, titleKey: 'update330Item2Title', descKey: 'update330Item2Desc' },
+            { icon: <TrendingDown className="text-yellow-400" size={16} />, titleKey: 'update330Item3Title', descKey: 'update330Item3Desc' },
+            { icon: <Shield className="text-red-400" size={16} />, titleKey: 'update330Item4Title', descKey: 'update330Item4Desc' },
+            { icon: <DollarSign className="text-purple-400" size={16} />, titleKey: 'update330Item5Title', descKey: 'update330Item5Desc' },
+        ]
+    },
     {
         version: '3.2.5',
         date: '2026-01-27',
@@ -69,7 +81,7 @@ const VERSION_HISTORY: VersionUpdate[] = [
 ];
 
 export const UpdatesModal: React.FC<UpdatesModalProps> = ({ onClose, t }) => {
-    const [expandedVersion, setExpandedVersion] = useState<string>('3.2.1');
+    const [expandedVersion, setExpandedVersion] = useState<string>('3.3');
 
     const getTranslation = (key: string): string => {
         return (t as any)[key] || key;

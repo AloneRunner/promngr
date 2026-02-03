@@ -31,7 +31,10 @@ import {
     GlobalCupGroupTeam
 } from '../types';
 
-import { NAMES_DB, LEAGUE_PRESETS, REAL_PLAYERS, TICKET_PRICE, TEAM_TACTICAL_PROFILES, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES, DERBY_RIVALS } from '../constants';
+import { LEAGUE_PRESETS, DERBY_RIVALS } from '../src/data/teams';
+import { REAL_PLAYERS, NAMES_DB } from '../src/data/players';
+import { TICKET_PRICE, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES } from '../src/data/config';
+import { TEAM_TACTICAL_PROFILES } from '../src/data/tactics';
 import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating } from './MatchEngine';
 import { AIService } from './AI';
 
@@ -46,6 +49,19 @@ const BASE_LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
     'de': 2.2,  // Bundesliga
     'it': 2.0,  // Serie A
     'fr': 1.6,  // Ligue 1
+    'pt': 1.5,  // Primeira Liga - Porto/Benfica prestige
+    'nl': 1.8,  // Eredivisie - Ajax/PSV tradition
+    'be': 1.4,  // Belgian Pro League
+    'ch': 1.4,  // Swiss Super League
+    'gr': 1.1,  // Greek Super League
+    'pl': 1.3,  // Ekstraklasa (Poland)
+    'cz': 1.2,  // Fortuna Liga (Czech)
+    'ro': 1.1,  // Romania SuperLiga
+    'hr': 1.2,  // Croatia HNL - Dinamo Zagreb strong
+    'rs': 1.1,  // Serbia SuperLiga
+    'ru': 1.3,  // Russian Premier - St. Petersburg/Moscow
+    'sco': 1.2, // Scotland - Glasgow derbi
+    'at': 1.2,  // Austria Bundesliga
     'ar': 1.2,  // Argentine Primera
     'br': 1.3,  // Brazilian Série A
     'us': 1.8,  // MLS (High wealth)
@@ -54,7 +70,8 @@ const BASE_LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
     'jp': 1.3,  // J-League
     'kr': 1.1,  // K-League
     'au': 1.1,  // A-League
-    'cn': 1.4,  // Chinese Super League (if exists) -> replaced by car/etc? NO, China not in list.
+    'ng': 0.8,  // Nigeria NPFL
+    'id': 0.9,  // Indonesia Liga 1
     'eg': 0.9,  // Egypt
     'za': 0.8,  // South Africa
     'ma': 0.8,  // Morocco
@@ -65,6 +82,15 @@ const BASE_LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
     'cr': 0.6,  // Costa Rica
     'car': 0.5, // Caribbean
     'in': 0.6,  // India
+    'py': 0.7,  // Paraguay
+    'ec': 0.8,  // Ecuador
+    'cn': 1.4,  // Chinese Super League
+    'ke': 0.6,  // Kenya Premier League
+    'sn': 0.6,  // Senegal Premier League
+    'dz': 0.7,  // Ligue 1 Algeria
+    'gh': 0.7,  // Ghana Premier League
+    'ci': 0.7,  // Ivory Coast Premier
+    'my': 0.7,  // Malaysia Liga Super
     'default': 1.0
 };
 
@@ -80,9 +106,22 @@ export let LEAGUE_COEFFICIENTS: Record<string, number[]> = {
     'fr': [8, 12, 13, 16, 11],    // 60.0
     'ar': [10, 9, 9, 11, 10],     // 49.0
     'tr': [3, 7, 12, 12, 5],      // 39.0
+    'pt': [6, 7, 8, 9, 8],        // 38.0 - Porto/Benfica tradition
+    'nl': [7, 8, 9, 10, 9],       // 43.0 - Ajax/PSV heritage
+    'ch': [5, 6, 7, 7, 6],        // 31.0 - decent in Europe
+    'gr': [4, 4, 5, 6, 5],        // 24.0 - Panathinaikos/Olympiakos
+    'be': [4, 5, 6, 7, 6],        // 28.0 - Club Brugge occasional
+    'pl': [4, 5, 6, 7, 6],        // 28.0 - Legia Warsaw
+    'cz': [3, 4, 5, 6, 5],        // 23.0
+    'ro': [3, 3, 4, 5, 4],        // 19.0
+    'hr': [4, 5, 6, 7, 6],        // 28.0 - Dinamo Zagreb strong
+    'rs': [3, 3, 4, 5, 4],        // 19.0
+    'ru': [6, 7, 8, 8, 7],        // 36.0 - despite sanctions
+    'sco': [5, 6, 7, 8, 7],       // 33.0 - Celtic/Rangers
+    'at': [4, 5, 6, 6, 5],        // 26.0
     'us': [3, 3, 4, 4, 4],        // 18.0
     'mx': [3, 3, 4, 4, 4],        // 18.0
-    'sa': [3, 3, 4, 4, 4],        // 18.0
+    'sa': [3, 3, 4, 4, 4],        // 18.0 - new money
     'eg': [3, 3, 4, 4, 4],        // 18.0
     'jp': [3, 3, 4, 4, 4],        // 18.0
     'kr': [3, 3, 4, 4, 4],        // 18.0
@@ -96,6 +135,17 @@ export let LEAGUE_COEFFICIENTS: Record<string, number[]> = {
     'tn': [3, 3, 4, 4, 4],        // 18.0
     'cr': [3, 3, 4, 4, 4],        // 18.0
     'in': [3, 3, 4, 4, 4],        // 18.0
+    'py': [3, 3, 4, 4, 4],        // 18.0
+    'ec': [3, 3, 4, 4, 4],        // 18.0
+    'dz': [3, 3, 4, 4, 4],        // 18.0
+    'gh': [3, 3, 4, 4, 4],        // 18.0
+    'ci': [3, 3, 4, 4, 4],        // 18.0
+    'ke': [3, 3, 4, 4, 4],        // 18.0
+    'sn': [3, 3, 4, 4, 4],        // 18.0
+    'my': [3, 3, 4, 4, 4],        // 18.0
+    'cn': [5, 6, 7, 8, 7],        // 33.0 - growing investment
+    'ng': [3, 3, 4, 4, 4],        // 18.0
+    'id': [3, 3, 4, 4, 4],        // 18.0
     'default': [3, 3, 4, 4, 4]
 };
 
@@ -104,7 +154,10 @@ export let LEAGUE_COEFFICIENTS: Record<string, number[]> = {
 export let LEAGUE_EUROPEAN_BONUS: Record<string, number> = {
     'tr': 0, 'en': 0, 'es': 0, 'de': 0, 'it': 0, 'fr': 0, 'ar': 0, 'br': 0,
     'us': 0, 'mx': 0, 'sa': 0, 'eg': 0, 'jp': 0, 'kr': 0, 'au': 0, 'za': 0,
-    'ma': 0, 'car': 0, 'co': 0, 'cl': 0, 'uy': 0, 'tn': 0, 'cr': 0, 'in': 0
+    'ma': 0, 'car': 0, 'co': 0, 'cl': 0, 'uy': 0, 'tn': 0, 'cr': 0, 'in': 0,
+    'ng': 0, 'id': 0, 'pt': 0, 'nl': 0, 'be': 0, 'ch': 0, 'gr': 0, 'pl': 0,
+    'cz': 0, 'ro': 0, 'hr': 0, 'rs': 0, 'ru': 0, 'sco': 0, 'at': 0, 'py': 0,
+    'ec': 0, 'dz': 0, 'gh': 0, 'ci': 0, 'ke': 0, 'sn': 0, 'my': 0, 'cn': 0
 };
 
 // Get current league multiplier (base + European bonus)
@@ -135,8 +188,12 @@ export const getLeagueBonus = (leagueId: string): number => LEAGUE_EUROPEAN_BONU
 // Base reference: England (~109 points) = 1.0 multiplier, others scale proportionally
 const BASE_COEFFICIENT_VALUES: Record<string, number> = {
     'en': 109, 'it': 91, 'es': 86, 'de': 83, 'fr': 60, 'br': 65, 'ar': 49, 'tr': 39,
+    'pt': 38, 'nl': 43, 'ch': 31, 'gr': 24, 'be': 28, 'pl': 28, 'cz': 23, 'ro': 19,
+    'hr': 28, 'rs': 19, 'ru': 36, 'sco': 33, 'at': 26,
     'us': 18, 'mx': 18, 'sa': 18, 'eg': 18, 'jp': 18, 'kr': 18, 'au': 18, 'za': 18,
     'ma': 18, 'car': 18, 'co': 18, 'cl': 18, 'uy': 18, 'tn': 18, 'cr': 18, 'in': 18,
+    'py': 18, 'ec': 18, 'dz': 18, 'gh': 18, 'ci': 18, 'ke': 18, 'sn': 18, 'my': 18,
+    'cn': 33, 'ng': 18, 'id': 18,
     'default': 18
 };
 
@@ -151,8 +208,8 @@ export const getCoefficientMultiplier = (leagueId: string): number => {
     const ratio = currentTotal / baseValue;
 
     // Apply smooth scaling: ratio 1.0 = 1.0x, ratio 2.0 = 1.5x, ratio 0.5 = 0.75x
-    // Formula: 0.5 + 0.5 * ratio (clamped between 0.5 and 2.0)
-    const multiplier = Math.min(2.0, Math.max(0.5, 0.5 + 0.5 * ratio));
+    // Formula: 0.5 + 0.5 * ratio (clamped between 0.5 and 3.0)
+    const multiplier = Math.min(3.0, Math.max(0.5, 0.5 + 0.5 * ratio));
 
     return multiplier;
 };
@@ -166,16 +223,47 @@ export let BASE_LEAGUE_REPUTATION: Record<string, number> = {
     'it': 85,  // Serie A
     'de': 84,  // Bundesliga
     'fr': 78,  // Ligue 1
+    'pt': 72,  // Primeira Liga - Porto/Benfica prestige
+    'nl': 80,  // Eredivisie - Ajax tradition
+    'be': 65,  // Belgian Pro League
+    'at': 62,  // Austria Bundesliga
     'tr': 62,  // Süper Lig
+    'ru': 65,  // Russian Premier (despite sanctions)
+    'pl': 58,  // Ekstraklasa (Poland)
+    'gr': 60,  // Greek Super League
+    'ch': 68,  // Swiss Super League
+    'cz': 55,  // Fortuna Liga (Czech)
+    'ro': 52,  // Romania SuperLiga
+    'hr': 58,  // Croatia HNL - Dinamo Zagreb strong
+    'rs': 52,  // Serbia SuperLiga
+    'sco': 70, // Scotland - Celtic/Rangers prestige
     'br': 58,  // Série A (Brasil)
+    'ar': 68,  // Argentine Primera (historically strong)
+    'mx': 55,  // Liga MX
+    'sa': 50,  // Saudi Pro League
+    'us': 52,  // MLS
+    'jp': 62,  // J-League
+    'kr': 58,  // K-League
+    'au': 55,  // A-League
     'ma': 46,  // Botola Pro
+    'eg': 48,  // Egyptian Premier League
+    'za': 52,  // South Africa PSL
     'co': 48,  // Colombia
     'cl': 45,  // Chile
     'uy': 47,  // Uruguay
-    'tn': 44,  // Tunisia
+    'py': 38,  // Paraguay
+    'ec': 40,  // Ecuador Liga Pro
     'cr': 38,  // Costa Rica
-    'car': 35, // Caribbean Super League
+    'tn': 44,  // Tunisia
+    'dz': 45,  // Ligue 1 Algeria
+    'ci': 42,  // Ivory Coast Premier
+    'gh': 45,  // Ghana Premier League
+    'ke': 38,  // Kenya Premier League
+    'sn': 40,  // Senegal Premier League
+    'my': 42,  // Malaysia Liga Super
     'in': 35,  // ISL
+    'car': 35, // Caribbean Super League
+    'cn': 50,  // Chinese Super League
     'default': 40
 };
 
@@ -183,7 +271,10 @@ export let BASE_LEAGUE_REPUTATION: Record<string, number> = {
 export let LEAGUE_REPUTATION_BONUS: Record<string, number> = {
     'tr': 0, 'en': 0, 'es': 0, 'de': 0, 'it': 0, 'fr': 0, 'ar': 0, 'br': 0,
     'us': 0, 'mx': 0, 'sa': 0, 'eg': 0, 'jp': 0, 'kr': 0, 'au': 0, 'za': 0,
-    'ma': 0, 'car': 0, 'co': 0, 'cl': 0, 'uy': 0, 'tn': 0, 'cr': 0, 'in': 0
+    'ma': 0, 'car': 0, 'co': 0, 'cl': 0, 'uy': 0, 'tn': 0, 'cr': 0, 'in': 0,
+    'pt': 0, 'nl': 0, 'be': 0, 'ch': 0, 'gr': 0, 'pl': 0, 'cz': 0, 'ro': 0,
+    'hr': 0, 'rs': 0, 'ru': 0, 'sco': 0, 'at': 0, 'py': 0, 'ec': 0, 'dz': 0,
+    'gh': 0, 'ci': 0, 'ke': 0, 'sn': 0, 'my': 0, 'cn': 0
 };
 
 // Initialize engine with saved state
@@ -591,7 +682,7 @@ const mapTurkishPosition = (pos: string | Position): Position => {
     return Position.FWD;
 };
 
-const generatePlayer = (teamId: string, position: Position, nationality: string, ageRange: [number, number], potentialRange: [number, number], realData?: any): Player => {
+const generatePlayer = (teamId: string, position: Position, nationality: string, ageRange: [number, number], potentialRange: [number, number], realData?: any, leagueId?: string): Player => {
     let age = getRandomInt(ageRange[0], ageRange[1]);
     let potential = getRandomInt(potentialRange[0], potentialRange[1]);
     let first, last;
@@ -678,6 +769,15 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
 
     const calculatedOverall = calculateEffectiveRating(tempPlayerForCalc, position);
 
+    // Calculate Wage Scaling based on League Economic Power
+    // This prevents small leagues from paying Premier League wages
+    const leagueMult = leagueId ? getLeagueMultiplier(leagueId) : 1.0;
+    const baseWage = Math.floor((Math.pow(1.13, calculatedOverall - 50) * 100000) * 0.005);
+    const scaledWage = Math.floor(baseWage * (0.8 + (leagueMult * 0.2)));
+
+    // Ensure realistic minimum wages
+    const finalWage = Math.max(250, scaledWage);
+
     return {
         id: uuid(),
         firstName: first,
@@ -704,9 +804,9 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
         // Target: 60 OVR ~€400K, 70 OVR ~€1.5M, 80 OVR ~€5M, 90 OVR ~€15M, 94 OVR ~€25M
         // This matches a €35M starting budget where top players are expensive but achievable
         value: Math.floor((Math.pow(1.13, calculatedOverall - 50) * 100000) * (1 + (potential - calculatedOverall) / 25) * (1 - Math.max(0, age - 26) * 0.025)),
-        // WAGE: ~25% of transfer value yearly (realistic)
-        wage: Math.floor((Math.pow(1.13, calculatedOverall - 50) * 100000) * 0.005),
-        salary: Math.floor((Math.pow(1.13, calculatedOverall - 50) * 100000) * 0.005) * 52, // Yearly salary
+        // WAGE: Scaled by League Economy
+        wage: finalWage,
+        salary: finalWage * 52, // Yearly salary
         contractYears: realData ? 3 : getRandomInt(1, 5),
         morale: 80,
         condition: 100,
@@ -1011,6 +1111,10 @@ export const analyzeClubHealth = (team: Team, players: Player[]): AssistantAdvic
     return advice;
 };
 
+// Cup Weeks: 6, 10, 14, 18, 22 (Groups), 28, 31, 34, 37 (Knockouts), 39 (Super Cup)
+// League fixtures SKIP these weeks so cups and leagues don't clash
+export const CUP_WEEKS = [6, 10, 14, 18, 22, 28, 31, 34, 37, 39];
+
 export const generateSeasonSchedule = (teams: Team[], singleRound: boolean = false): Match[] => {
     const matches: Match[] = [];
     const teamIds = teams.map(t => t.id);
@@ -1020,12 +1124,7 @@ export const generateSeasonSchedule = (teams: Team[], singleRound: boolean = fal
     const half = numTeams / 2;
     const teamList = [...teamIds];
 
-    // Global Cup weeks - synchronized with League Schedule
-    // Cup Weeks: 6, 10, 14, 18, 22 (Groups), 28, 31, 34, 37 (Knockouts)
-    // Total 9 Weeks
-    const CUP_WEEKS = [6, 10, 14, 18, 22, 28, 31, 34, 37];
-
-    // Helper function to get actual week number, skipping cup weeks
+    // Helper function to get actual week number, SKIPPING cup weeks
     const getLeagueWeek = (roundIndex: number): number => {
         let week = roundIndex + 1;
         // Count how many cup weeks we need to skip
@@ -1099,7 +1198,7 @@ export const generateWorld = (leagueId: string): GameState => {
                 let pos = Position.MID;
                 if (star.mevki) pos = mapTurkishPosition(star.mevki);
                 else if (star.position) pos = star.position;
-                const p = generatePlayer(teamId, pos, star.uyruk || star.nationality, [star.yas || star.age, star.yas || star.age], [star.reyting || star.ovr, star.reyting || star.ovr], star);
+                const p = generatePlayer(teamId, pos, star.uyruk || star.nationality, [star.yas || star.age, star.yas || star.age], [star.reyting || star.ovr, star.reyting || star.ovr], star, preset.id);
                 teamPlayers.push(p); players.push(p);
             });
 
@@ -1132,7 +1231,7 @@ export const generateWorld = (leagueId: string): GameState => {
                 for (let i = 0; i < needed; i++) {
                     const nat = Math.random() > preset.foreignPlayerChance ? preset.playerNationality : 'World';
                     const baseOvr = Math.floor(rt.reputation / 115);
-                    const p = generatePlayer(teamId, pos as Position, nat, [18, 34], [baseOvr, baseOvr + 8]);
+                    const p = generatePlayer(teamId, pos as Position, nat, [18, 34], [baseOvr, baseOvr + 8], undefined, preset.id);
                     teamPlayers.push(p); players.push(p);
                 }
             }
@@ -1210,7 +1309,7 @@ export const generateWorld = (leagueId: string): GameState => {
     });
 
     for (let i = 0; i < 50; i++) { // Increased free agents
-        const p = generatePlayer('FREE_AGENT', getRandomItem(Object.values(Position)), 'World', [18, 35], [60, 85]);
+        const p = generatePlayer('FREE_AGENT', getRandomItem(Object.values(Position)), 'World', [18, 35], [60, 95]);
         // Free agent'lara rastgele numara ata (takıma katılınca değişecek)
         p.jerseyNumber = getRandomInt(2, 50);
         players.push(p);
@@ -1345,10 +1444,10 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
     // === TARAFTAR DESTEĞİ & EV SAHİBİ AVANTAJI ===
     // Reputation (itibar) yüksek takımların daha coşkulu taraftarları var
     const homeReputation = homeTeam.reputation || 5000;
-    const fanBoost = Math.min(0.06, (homeReputation / 100000)); // Max +6% bonus (10000 rep = +6%)
+    const fanBoost = Math.min(0.03, (homeReputation / 150000)); // Max +3% bonus (reduced from 6%, divisor 100k->150k)
 
     // Temel ev sahibi avantajı + taraftar desteği
-    let homeAdvantage = 1.08 + fanBoost; // 1.08 + 0.00-0.06 = 1.08-1.14
+    let homeAdvantage = 1.08 + fanBoost; // 1.08 + 0.00-0.03 = 1.08-1.11
 
     // === ŞANS FAKTÖRÜ ===
     // Her maçta %5-15 arası rastgele varyasyon (underdog upset olabilir!)
@@ -1470,14 +1569,15 @@ export const simulateFullMatch = (match: Match, homeTeam: Team, awayTeam: Team, 
         const aRatio = aAttackStrength / Math.max(100, hDefenseStrength);
 
         const powerDiff = Math.abs(homePower.overall - awayPower.overall);
-        // More aggressive: squared power difference for dominance
-        // BUFFED: Stronger teams dominate more (powerDiff / 40, exp 1.6)
+        // BALANCED DOMINANCE: Less aggressive exponent for fairer matches
+        // Reduced from 1.6 to 1.2 and divisor from 40 to 55 for softer power curves
+        // Example: 15 powerDiff now gives 1.13x instead of 1.20x multiplier
         const homeDominance = homePower.overall > awayPower.overall
-            ? 1 + Math.pow(powerDiff / 40, 1.6) // Buff from 1.5 / 50
-            : 1 / (1 + Math.pow(powerDiff / 40, 1.6));
+            ? 1 + Math.pow(powerDiff / 55, 1.2) // Softer curve (was powerDiff/40, exp 1.6)
+            : 1 / (1 + Math.pow(powerDiff / 55, 1.2));
         const awayDominance = awayPower.overall > homePower.overall
-            ? 1 + Math.pow(powerDiff / 40, 1.6)
-            : 1 / (1 + Math.pow(powerDiff / 40, 1.6));
+            ? 1 + Math.pow(powerDiff / 55, 1.2)
+            : 1 / (1 + Math.pow(powerDiff / 55, 1.2));
 
         // Higher base chance but more variance - creates decisive results
         // Buffed base probability slightly (0.18 -> 0.20)
@@ -1560,12 +1660,21 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
     // FIX: Simulate ALL matches for the current week across ALL leagues
     const matchesToSimulate = gameState.matches.filter(m => m.week === currentWeek && !m.isPlayed);
 
+    // 🔥 PERFORMANS OPTİMİZASYONU (Mantık Değişikliği Değil, Hızlandırma)
+    // Her maç için binlerce oyuncuyu tekrar tekrar filtrelemek yerine,
+    // başta bir kez takımlara göre grupluyoruz. Bu işlem süresini ciddi düşürür.
+    const playersByTeam = new Map<string, Player[]>();
+    gameState.players.forEach(p => {
+        if (!playersByTeam.has(p.teamId)) playersByTeam.set(p.teamId, []);
+        playersByTeam.get(p.teamId)?.push(p);
+    });
+
     matchesToSimulate.forEach(m => {
         const home = gameState.teams.find(t => t.id === m.homeTeamId);
         const away = gameState.teams.find(t => t.id === m.awayTeamId);
         if (home && away) {
-            const homePlayers = gameState.players.filter(p => p.teamId === home.id);
-            const awayPlayers = gameState.players.filter(p => p.teamId === away.id);
+            const homePlayers = playersByTeam.get(home.id) || [];
+            const awayPlayers = playersByTeam.get(away.id) || [];
 
             // ========== DYNAMIC AI TACTICS ==========
             // AI analyzes opponent and adjusts tactics accordingly
@@ -1615,7 +1724,9 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             autoPickLineup(awayPlayers, away.tactic.formation);
 
             // ADIL SİMÜLASYON - Sadece takım gücüne göre (torpil yok!)
+            // ⚡ KRİTİK NOKTA: SENİN ORİJİNAL MOTORUN ÇALIŞIYOR
             simulateFullMatch(m, home, away, homePlayers, awayPlayers);
+
             const hScore = m.homeScore; const aScore = m.awayScore;
             const ptsHome = hScore > aScore ? 3 : hScore === aScore ? 1 : 0;
             const ptsAway = aScore > hScore ? 3 : hScore === aScore ? 1 : 0;
@@ -1640,6 +1751,7 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     if (ptsHome === 1) home.budget += 150000;
                 } else if (away.id === gameState.userTeamId) {
                     if (ptsAway === 3) away.budget += 500000;
+
                     if (ptsAway === 1) away.budget += 150000;
                 }
             }
@@ -1745,16 +1857,44 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     const assists = m.events.filter(e => e.type === MatchEventType.GOAL && (e as any).assisterId === p.id).length;
                     rating += (assists * 0.7);
 
+                    // Yellow/Red Card Penalty
+                    const yellowCards = m.events.filter(e => e.type === MatchEventType.CARD_YELLOW && e.playerId === p.id).length;
+                    const redCards = m.events.filter(e => e.type === MatchEventType.CARD_RED && e.playerId === p.id).length;
+                    rating -= (yellowCards * 0.3);
+                    rating -= (redCards * 2.0);
+
                     // Cap
                     rating = Math.max(3.0, Math.min(10.0, rating));
 
-                    // Update Average
+                    // Update Stats
                     if (!p.stats) p.stats = { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0, averageRating: 0 };
+                    p.stats.goals += goals;
+                    p.stats.assists += assists;
+                    p.stats.yellowCards += yellowCards;
+                    p.stats.redCards += redCards;
+
+                    // Update Average Rating
                     const oldAvg = p.stats.averageRating || 6.0;
                     const newAvg = ((oldAvg * oldApps) + rating) / newApps;
 
                     p.stats.appearances = newApps;
                     p.stats.averageRating = parseFloat(newAvg.toFixed(2));
+
+                    // CARD SUSPENSIONS (NEW)
+                    // Red Card = 1 match ban
+                    if (redCards > 0) {
+                        p.matchSuspension = (p.matchSuspension || 0) + 1;
+                    }
+
+                    // Yellow Card Accumulation (2 yellows = 1 match ban)
+                    if (yellowCards > 0) {
+                        // Track season yellow cards separately
+                        const seasonYellows = (p.stats.yellowCards || 0);
+                        // Every 2nd yellow card = suspension
+                        if (seasonYellows % 2 === 0 && seasonYellows > 0) {
+                            p.matchSuspension = (p.matchSuspension || 0) + 1;
+                        }
+                    }
 
                     // Form Update
                     p.form = Math.min(10, Math.max(1, p.form + (rating > 7.0 ? 1 : rating < 5.5 ? -1 : 0)));
@@ -1803,7 +1943,7 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                 }
 
                 // ELO change formula: K * (Actual - Expected) * multiplier
-                let change = Math.round(baseK * (actualResult - expectedOutcome) * 2.5 * giantKillerMultiplier);
+                let change = Math.round(baseK * (actualResult - expectedOutcome) * 1.5 * giantKillerMultiplier);
 
                 // Cap maximum loss at -20 to prevent death spiral
                 if (change < -20) change = -20;
@@ -1863,9 +2003,9 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
 
                 if (won) {
                     // Win = Board is happy
-                    if (repDiff > 500) change = 6;        // Beat much stronger team = +6
-                    else if (repDiff > 0) change = 4;     // Beat stronger team = +4
-                    else change = 2;                       // Beat weaker/equal = +2
+                    if (repDiff > 500) change = 8;        // Beat much stronger team = +8 (was +6)
+                    else if (repDiff > 0) change = 6;     // Beat stronger team = +6 (was +4)
+                    else change = 4;                       // Beat weaker/equal = +4 (was +2)
 
                     // Dominant win bonus
                     if (goalsFor - goalsAgainst >= 3) change += 2;
@@ -1876,12 +2016,12 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                     else change = -1;                      // Normal draw = -1
                 } else {
                     // Loss = Board is unhappy
-                    if (repDiff < -500) change = -8;      // Lost to much weaker = -8 (DISASTER)
-                    else if (repDiff < 0) change = -5;    // Lost to weaker = -5
-                    else change = -3;                      // Lost to stronger/equal = -3
+                    if (repDiff < -500) change = -5;      // Lost to much weaker = -5 (was -8)
+                    else if (repDiff < 0) change = -4;    // Lost to weaker = -4 (was -5)
+                    else change = -2;                      // Lost to stronger/equal = -2 (was -3)
 
                     // Heavy loss penalty
-                    if (goalsAgainst - goalsFor >= 3) change -= 2;
+                    if (goalsAgainst - goalsFor >= 3) change -= 1; // (was -2)
                 }
 
                 // Apply Multiplier
@@ -1889,7 +2029,7 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
 
                 // Consecutive losses streak check
                 const recentLosses = (team.recentForm || []).slice(-3).filter(r => r === 'L').length;
-                if (recentLosses >= 3) change -= 3; // Extra -3 for 3+ consecutive losses
+                if (recentLosses >= 3) change -= 2; // Extra -2 for 3+ consecutive losses (was -3)
 
                 // BUG FIX: Handle 0 correctly (don't fallback to 70 if it's 0)
                 // If it's undefined, start at 70. If it's valid (even 0), usage it.
@@ -1900,10 +2040,17 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
 
                 // FIRING LOGIC
                 // STRICT CHECK: IF CONFIDENCE DROPS BELOW 1, YOU ARE FIRED immediately
+                console.log(`[Board Confidence] ${team.name}: ${currentConfidence} → ${newConfidence} (change: ${change})`);
+
                 if (newConfidence <= 0) {
+                    console.warn(`[FIRING] ${team.name} manager FIRED! Confidence: ${newConfidence}`);
                     // Force firing immediately
                     gameState.isGameOver = true;
                     gameState.gameOverReason = 'FIRED';
+                } else if (newConfidence <= 5) {
+                    console.warn(`[WARNING] ${team.name} manager in danger zone! Confidence: ${newConfidence}%`);
+                    // Warning zone - near firing
+                    // (Logic handled in UI optionally, but we ensure it doesn't fire at >0)
                 }
 
                 // Record history
@@ -1935,9 +2082,23 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
             gameState.teams,
             gameState.players,
             gameState.userTeamId,
-            currentWeek
+            gameState.currentWeek
         );
         gameState.europeanCup = updatedCup;
+        gameState.teams = updatedTeams;
+    }
+
+    // SIMULATE EUROPA LEAGUE MATCHES FOR THIS WEEK (If any) - FIX: Was missing!
+    if (gameState.europaLeague && gameState.europaLeague.isActive) {
+        const { updatedCup, updatedTeams } = simulateAIGlobalCupMatches(
+            gameState.europaLeague,
+            gameState.teams,
+            gameState.players,
+            gameState.userTeamId,
+            gameState.currentWeek,
+            0.4 // EUROPA LEAGUE MULTIPLIER (40% of CL Money)
+        );
+        gameState.europaLeague = updatedCup;
         gameState.teams = updatedTeams;
     }
 
@@ -2190,6 +2351,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             value: (Math.pow(1.12, newOverall - 40) * 15000) * (1 + (p.potential - newOverall) / 15),
             condition: Math.min(100, p.condition + rec),
             weeksInjured: newWeeksInjured,
+            matchSuspension: Math.max(0, (p.matchSuspension || 0) > 0 ? p.matchSuspension - 1 : 0), // Decrement suspension
             morale: newMorale
         }
     });
@@ -2390,12 +2552,80 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
         userTeam.budget += (weeklyIncome - weeklyExpenses);
 
+        // Preserve existing history across weeks
+        const existingUserFinancialHistory = userTeam.financials?.history ? [...userTeam.financials.history] : [];
+        const existingUserSeasonTotals = userTeam.financials?.seasonTotals ? { ...userTeam.financials.seasonTotals } : undefined;
         userTeam.financials = {
             lastWeekIncome: { tickets: ticketIncome, sponsor: sponsorIncome, merchandise, tvRights, transfers: 0, winBonus: 0 },
-            lastWeekExpenses: { wages: weeklyWages, maintenance, academy: academyMaint, transfers: 0 }
+            lastWeekExpenses: { wages: weeklyWages, maintenance, academy: academyMaint, transfers: 0 },
+            seasonTotals: existingUserSeasonTotals,
+            history: existingUserFinancialHistory
         };
 
         const balance = weeklyIncome - weeklyExpenses;
+
+        // Finansal geçmiş kaydı ekle
+
+        const budgetBefore = userTeam.budget - (weeklyIncome - weeklyExpenses);
+        const financialRecord: any = {
+            week: gameState.currentWeek,
+            season: gameState.currentSeason,
+            income: {
+                tickets: ticketIncome,
+                sponsor: sponsorIncome,
+                merchandise,
+                tvRights,
+                transfers: 0,
+                winBonus: 0,
+                total: weeklyIncome
+            },
+            expenses: {
+                wages: weeklyWages,
+                maintenance,
+                academy: academyMaint,
+                transfers: 0,
+                total: weeklyExpenses
+            },
+            balance,
+            budgetBefore,
+            budgetAfter: userTeam.budget
+        };
+
+        if (!userTeam.financials.history) userTeam.financials.history = [];
+        // Upsert: if a cup prize created a record for this week, merge into it.
+        const existingIdx = userTeam.financials.history.findIndex(r => r.week === gameState.currentWeek && r.season === gameState.currentSeason);
+        if (existingIdx >= 0) {
+            const existing = userTeam.financials.history[existingIdx] as any;
+            existing.income.tickets = (existing.income.tickets || 0) + financialRecord.income.tickets;
+            existing.income.sponsor = (existing.income.sponsor || 0) + financialRecord.income.sponsor;
+            existing.income.merchandise = (existing.income.merchandise || 0) + financialRecord.income.merchandise;
+            existing.income.tvRights = (existing.income.tvRights || 0) + financialRecord.income.tvRights;
+            existing.income.transfers = (existing.income.transfers || 0) + financialRecord.income.transfers;
+            existing.income.winBonus = (existing.income.winBonus || 0) + financialRecord.income.winBonus;
+
+            existing.expenses.wages = (existing.expenses.wages || 0) + financialRecord.expenses.wages;
+            existing.expenses.maintenance = (existing.expenses.maintenance || 0) + financialRecord.expenses.maintenance;
+            existing.expenses.academy = (existing.expenses.academy || 0) + financialRecord.expenses.academy;
+            existing.expenses.transfers = (existing.expenses.transfers || 0) + financialRecord.expenses.transfers;
+
+            const incomeTotal = (existing.income.tickets || 0) + (existing.income.sponsor || 0) + (existing.income.merchandise || 0) + (existing.income.tvRights || 0) + (existing.income.transfers || 0) + (existing.income.winBonus || 0) + (existing.income.seasonEnd || 0) + (existing.income.cupPrize || 0);
+            const expenseTotal = (existing.expenses.wages || 0) + (existing.expenses.maintenance || 0) + (existing.expenses.academy || 0) + (existing.expenses.transfers || 0) + (existing.expenses.facilityUpgrade || 0) + (existing.expenses.staffUpgrade || 0);
+            existing.income.total = incomeTotal;
+            existing.expenses.total = expenseTotal;
+            existing.balance = incomeTotal - expenseTotal;
+            existing.budgetBefore = Math.min(existing.budgetBefore ?? budgetBefore, budgetBefore);
+            existing.budgetAfter = userTeam.budget;
+        } else {
+            userTeam.financials.history.push(financialRecord);
+        }
+        // Son 10 kaydı tut
+        if (userTeam.financials.history.length > 10) {
+            userTeam.financials.history = userTeam.financials.history.slice(-10);
+        }
+
+        userTeam.financials.lastWeekIncome = { tickets: ticketIncome, sponsor: sponsorIncome, merchandise, tvRights, transfers: 0, winBonus: 0 };
+        userTeam.financials.lastWeekExpenses = { wages: weeklyWages, maintenance, academy: academyMaint, transfers: 0 };
+
         newMessages.push({
             id: uuid(),
             week: gameState.currentWeek,
@@ -2479,30 +2709,111 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     updatedTeams = updatedTeams.map(team => {
         if (team.id === gameState.userTeamId) return team; // Skip user team
 
+        // === AI TEAM WEEKLY FINANCES ===
+        // Calculate weekly expenses for AI teams (wages, maintenance, staff)
+        const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
+        const totalSalaries = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0);
+        const weeklyWages = totalSalaries / 52;
+
+        const leagueMult = getLeagueMultiplier(team.leagueId || 'tr');
+
+        // Facility maintenance costs
+        const maintenanceDiscount = ['tr', 'fr'].includes(team.leagueId) ? 0.7 : 1.0;
+        const stadiumMaint = Math.pow(team.facilities.stadiumLevel, 1.3) * 2000 * maintenanceDiscount;
+        const trainingMaint = Math.pow(team.facilities.trainingLevel, 1.3) * 1500 * maintenanceDiscount;
+        const academyMaint = Math.pow(team.facilities.academyLevel, 1.3) * 1200 * maintenanceDiscount;
+        const maintenance = (stadiumMaint + trainingMaint + academyMaint) * (0.8 + (leagueMult * 0.2));
+
+        // Staff costs
+        const staffCosts = (
+            Math.pow(team.staff.headCoachLevel, 1.3) * 5000 +
+            Math.pow(team.staff.scoutLevel, 1.3) * 3000 +
+            Math.pow(team.staff.physioLevel, 1.3) * 4000
+        ) * (0.8 + (leagueMult * 0.2));
+
+        // Estimate weekly income for AI (simplified - based on reputation and league)
+        const leaguePosition = gameState.teams
+            .filter(t => t.leagueId === team.leagueId)
+            .sort((a, b) => b.stats.points - a.stats.points)
+            .findIndex(t => t.id === team.id) + 1;
+
+        const baseTvRightsValues: Record<string, number> = {
+            'tr': 320000, 'en': 850000, 'es': 600000, 'it': 500000,
+            'de': 550000, 'fr': 400000, 'ar': 150000, 'br': 200000,
+            'default': 200000
+        };
+        const tvBase = baseTvRightsValues[team.leagueId] || baseTvRightsValues['default'];
+        const positionMultiplier = Math.max(0.5, 1.5 - ((leaguePosition - 1) * 0.05));
+        const repMultiplier = 0.8 + ((team.reputation - 5000) / 10000) * 0.4;
+        const tvRights = Math.floor(tvBase * positionMultiplier * repMultiplier * 1.3);
+
+        // Merchandise and sponsor income
+        const starPlayerBonus = teamPlayers.filter(p => p.overall > 85).length * 5000;
+        const merchandise = Math.floor(((team.reputation * 2) + starPlayerBonus) * (0.7 + (leagueMult * 0.3)) * 1.3);
+        const sponsorIncome = team.sponsor
+            ? Math.floor(team.sponsor.weeklyIncome * 1.3)
+            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3);
+
+        // Ticket income (simplified - AI teams don't track home/away like user)
+        const STADIUM_MIN = 5000;
+        const STADIUM_CAPACITY_PER_LEVEL = 6000;
+        const effectiveCapacity = STADIUM_MIN + (team.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
+        const baseTicketPrice = LEAGUE_TICKET_PRICES[team.leagueId] || LEAGUE_TICKET_PRICES['default'];
+        const avgAttendance = 0.60 + (team.reputation - 5000) / 15000; // 60-93% based on reputation
+        const ticketIncome = Math.floor(effectiveCapacity * baseTicketPrice * Math.max(0.4, Math.min(0.93, avgAttendance)) * 1.3 * 0.5); // Half of weeks are home
+
+        const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
+        const weeklyExpenses = weeklyWages + maintenance + staffCosts;
+
+        // Update AI team budget
+        const budgetBefore = team.budget;
+        team.budget += (weeklyIncome - weeklyExpenses);
+
+        // AI takımları için de finansal kayıt tut
+        if (!team.financials) {
+            team.financials = {
+                lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 },
+                lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 },
+                history: []
+            };
+        }
+
+        const financialRecord: any = {
+            week: gameState.currentWeek,
+            season: gameState.currentSeason,
+            income: {
+                tickets: ticketIncome,
+                sponsor: sponsorIncome,
+                merchandise,
+                tvRights,
+                transfers: 0,
+                winBonus: 0,
+                total: weeklyIncome
+            },
+            expenses: {
+                wages: weeklyWages,
+                maintenance,
+                academy: academyMaint,
+                transfers: 0,
+                total: weeklyExpenses
+            },
+            balance: weeklyIncome - weeklyExpenses,
+            budgetBefore,
+            budgetAfter: team.budget
+        };
+
+        if (!team.financials.history) team.financials.history = [];
+        team.financials.history.push(financialRecord);
+        // Son 10 kaydı tut
+        if (team.financials.history.length > 10) {
+            team.financials.history = team.financials.history.slice(-10);
+        }
+
         // AI Facility Upgrades (SMART: checks ongoing maintenance costs before upgrading)
         const upgradeChance = 0.015 + (team.reputation / 15000); // Reduced: 1.5% base + smaller reputation bonus
 
-        // Calculate current maintenance costs
-        const leagueMult = getLeagueMultiplier(team.leagueId || 'tr');
-        const currentMaint = (
-            Math.pow(team.facilities.stadiumLevel, 1.8) * 4000 +
-            Math.pow(team.facilities.trainingLevel, 1.8) * 3500 +
-            Math.pow(team.facilities.academyLevel, 1.8) * 3000
-        ) * (0.8 + (leagueMult * 0.2));
-
-        // Estimate weekly income for AI
-        const tvBase: Record<string, number> = { 'tr': 180000, 'en': 1500000, 'es': 800000, 'it': 600000, 'de': 700000, 'fr': 500000 };
-        const aiTvRights = (tvBase[team.leagueId] || 200000) * (0.8 + ((team.reputation - 5000) / 10000) * 0.4);
-        const aiMerchandise = team.reputation * 2 * (0.7 + leagueMult * 0.3);
-        const aiSponsor = 50000 * Math.sqrt(leagueMult);
-        const estimatedWeeklyIncome = aiTvRights + aiMerchandise + aiSponsor;
-
-        // Calculate weekly wages
-        const teamPlayers = updatedPlayers.filter(p => p.teamId === team.id);
-        const weeklyWages = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0) / 52;
-
         // SMART CHECK: Only upgrade if budget positive AND weekly income > expenses with 30% buffer
-        const canAffordMaintenance = estimatedWeeklyIncome > (weeklyWages + currentMaint * 1.3);
+        const canAffordMaintenance = weeklyIncome > (weeklyExpenses * 1.3);
         const hasEnoughBudget = team.budget > 8000000; // Increased threshold from 5M to 8M
 
         if (Math.random() < upgradeChance && hasEnoughBudget && canAffordMaintenance && team.budget > 0) {
@@ -2523,20 +2834,20 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             if (targetFacility === 'stadium' && newFacilities.stadiumLevel < 15) { // Max 15 for AI
                 cost = 3000000;
                 const futureMaint = projectedMaint('stadium');
-                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
+                if (team.budget > cost && weeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.stadiumLevel += 1;
                     newFacilities.stadiumCapacity += 2000;
                 }
             } else if (targetFacility === 'training' && newFacilities.trainingLevel < 18) { // Max 18 for AI
                 cost = 2000000;
                 const futureMaint = projectedMaint('training');
-                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
+                if (team.budget > cost && weeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.trainingLevel += 1;
                 }
             } else if (targetFacility === 'academy' && newFacilities.academyLevel < 15) { // Max 15 for AI
                 cost = 1500000;
                 const futureMaint = projectedMaint('academy');
-                if (team.budget > cost && estimatedWeeklyIncome > (weeklyWages + futureMaint * 1.2)) {
+                if (team.budget > cost && weeklyIncome > (weeklyWages + futureMaint * 1.2)) {
                     newFacilities.academyLevel += 1;
                 }
             }
@@ -2567,11 +2878,15 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 const baseOverall = 50 + Math.floor(Math.random() * 10) + academyLevel;
                 const potential = Math.min(95, baseOverall + 15 + Math.floor(Math.random() * 15));
 
-                const youthPlayer = generatePlayer(team.id, pos, 'Europe', [17, 19], [potential, potential]);
+                const youthPlayer = generatePlayer(team.id, pos, 'Europe', [17, 19], [potential, potential], undefined, team.leagueId);
                 youthPlayer.overall = baseOverall;
                 youthPlayer.lineup = 'RESERVE';
                 youthPlayer.lineupIndex = 99;
-                youthPlayer.salary = youthPlayer.value * 0.15; // Approx 15% of value as yearly salary
+
+                // Recalculate salary for youth specifically if needed, but generatePlayer now handles it well.
+                // We'll trust generatePlayer's scaled wage, but ensure it's not too high for a youth player
+                // Youth players usually get ~15% of value, but scaled wage is safer.
+                // Let's rely on the new generatePlayer wage.
 
                 updatedPlayers.push(youthPlayer);
 
@@ -2599,9 +2914,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
             // Calculate AI income (simplified but realistic)
             const leagueMult = getLeagueMultiplier(team.leagueId || 'tr');
-            const tvBase: Record<string, number> = { 'tr': 180000, 'en': 1500000, 'es': 800000, 'it': 600000, 'de': 700000, 'fr': 500000 };
+            // SOLIDARITY MECHANISM: TV Base is now dynamic based on league success/reputation
+            const tvBase = 200000 * leagueMult;
             const repMultiplier = 0.8 + ((team.reputation - 5000) / 10000) * 0.4;
-            const aiTvRights = Math.floor((tvBase[team.leagueId] || 200000) * repMultiplier);
+            const aiTvRights = Math.floor(tvBase * repMultiplier);
             const aiMerchandise = Math.floor(team.reputation * 2 * (0.7 + leagueMult * 0.3));
             const aiSponsor = Math.floor(50000 * Math.sqrt(leagueMult));
 
@@ -2623,6 +2939,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                     .filter(p => p.teamId === team.id && p.lineup !== 'STARTING')
                     .sort((a, b) => a.overall - b.overall);
 
+
                 // Only sell if team has more than 15 players
                 if (aiPlayersToSell.length > 5 && teamPlayers.length > 15) {
                     const playerToSell = aiPlayersToSell[0];
@@ -2640,6 +2957,58 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
         return team;
     });
+
+    // ========== FFP LUXURY TAX SYSTEM ==========
+    // Teams with budget > 100M pay 10% weekly tax on excess
+    // Tax is distributed equally to all teams in the same league (solidarity fund)
+    const LUXURY_TAX_THRESHOLD = 100_000_000; // €100M
+    const LUXURY_TAX_RATE = 0.10 / 52; // 10% annual, paid weekly
+
+    // Track FFP amounts per team for financial reporting
+    const ffpTaxPaid: Record<string, number> = {};
+    const ffpSolidarityReceived: Record<string, number> = {};
+
+    // Group teams by league
+    const leagueTeamMap: Record<string, Team[]> = {};
+    updatedTeams.forEach(t => {
+        const lid = t.leagueId || 'tr';
+        if (!leagueTeamMap[lid]) leagueTeamMap[lid] = [];
+        leagueTeamMap[lid].push(t);
+    });
+
+    // Process each league's solidarity fund
+    Object.keys(leagueTeamMap).forEach(leagueId => {
+        const leagueTeams = leagueTeamMap[leagueId];
+        let solidarityFund = 0;
+
+        // Collect taxes from rich teams
+        leagueTeams.forEach(team => {
+            if (team.budget > LUXURY_TAX_THRESHOLD) {
+                const excess = team.budget - LUXURY_TAX_THRESHOLD;
+                const tax = Math.floor(excess * LUXURY_TAX_RATE);
+                team.budget -= tax;
+                solidarityFund += tax;
+                ffpTaxPaid[team.id] = tax; // Track for finance UI
+            }
+        });
+
+        // Distribute fund equally to all teams in the league
+        if (solidarityFund > 0) {
+            const perTeamShare = Math.floor(solidarityFund / leagueTeams.length);
+            leagueTeams.forEach(team => {
+                team.budget += perTeamShare;
+                ffpSolidarityReceived[team.id] = perTeamShare; // Track for finance UI
+            });
+        }
+    });
+
+    // Update user team's financials with FFP data
+    const userTeamFromUpdated = updatedTeams.find(t => t.id === gameState.userTeamId);
+    if (userTeamFromUpdated && userTeamFromUpdated.financials) {
+        userTeamFromUpdated.financials.lastWeekIncome.ffpSolidarity = ffpSolidarityReceived[userTeamFromUpdated.id] || 0;
+        userTeamFromUpdated.financials.lastWeekExpenses.ffpTax = ffpTaxPaid[userTeamFromUpdated.id] || 0;
+    }
+
 
     // AI Transfer Offers for User's Listed Players
     const newOffers: TransferOffer[] = [];
@@ -2707,9 +3076,24 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     // ========== SMART AI TRANSFER SYSTEM ==========
     // AI teams now: 1) Identify squad weaknesses, 2) Scout appropriate players, 3) Make intelligent offers
 
-    const aiTeams = gameState.teams.filter(t => t.id !== gameState.userTeamId);
+    const allAiTeams = gameState.teams.filter(t => t.id !== gameState.userTeamId);
 
-    aiTeams.forEach(aiTeam => {
+    // THROTTLING: Only process ~15% of teams per week to save CPU (Scaling Fix)
+    // BUT: Always process teams that are in "Crisis" (low squad size)
+    const activeAiTeams = allAiTeams.filter(t => {
+        // Find squad size from updatedPlayers list
+        const squadSize = updatedPlayers.filter(p => p.teamId === t.id).length;
+
+        // Crisis check: Always active if squad is too small
+        if (squadSize < 18) return true;
+
+        // Random selection for others (Rolling Window simulation)
+        return Math.random() < 0.15;
+    });
+
+    // console.log(`[AI Market] Active buyers this week: ${activeAiTeams.length}/${allAiTeams.length}`);
+
+    activeAiTeams.forEach(aiTeam => {
         // Skip if budget too low for transfers
         if (aiTeam.budget < 2000000) return;
 
@@ -2922,7 +3306,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
                 const playerToSell = sellCandidates[0];
 
                 // Find interested buyers
-                const interestedBuyers = aiTeams.filter(t =>
+                const interestedBuyers = allAiTeams.filter(t =>
                     t.id !== aiTeam.id &&
                     t.budget > playerToSell.value * 0.7 &&
                     t.reputation < aiTeam.reputation // Usually sell to smaller clubs
@@ -3019,6 +3403,32 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         });
     });
 
+    // GARBAGE COLLECTION (User Request):
+    // Delete Free Agents who are "Dead Weight" (prevent save bloat)
+    // Run this check periodically (e.g., every 4 weeks)
+    if (gameState.currentWeek % 4 === 0) {
+        const initialCount = updatedPlayers.length;
+
+        // Criteria for deletion:
+        // 1. Unemployed (FREE_AGENT)
+        // 2. Age > 24 (Not young talent)
+        // 3. Overall < 70 (Not useful for any league)
+        // OR
+        // 1. Unemployed
+        // 2. Age > 32 (Retired de-facto)
+        updatedPlayers = updatedPlayers.filter(p => {
+            if (p.teamId !== 'FREE_AGENT') return true; // Keep employed players
+
+            const isDeadWeight = (p.age > 24 && p.overall < 70) || (p.age > 32);
+            return !isDeadWeight;
+        });
+
+        const deletedCount = initialCount - updatedPlayers.length;
+        if (deletedCount > 0) {
+            console.log(`[Garbage Collector] Removed ${deletedCount} useless free agents to save memory.`);
+        }
+    }
+
     return {
         updatedTeams,
         updatedPlayers,
@@ -3031,29 +3441,85 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 }
 
 // ========== SUPER CUP (CL Winner vs UEFA Cup Winner) ==========
+// ========== SUPER CUP (CL Winner vs UEFA Cup Winner) ==========
+// Returns the last scheduled week among league fixtures (dynamic season length support).
+export const getLastLeagueWeek = (matches: Match[]): number => {
+    if (!matches || matches.length === 0) return 38;
+    const leagueMatches = matches.filter(m => {
+        if (m.isFriendly) return false;
+        // Prefer explicit typing
+        if (m.type) return m.type === 'LEAGUE';
+        // Heuristic fallback: league fixtures generally have no competition metadata
+        if (m.competitionId || m.competitionName) return false;
+        return true;
+    });
+    if (leagueMatches.length === 0) return 38;
+    return Math.max(38, ...leagueMatches.map(m => m.week || 0));
+};
+
+// Super Cup is ALWAYS week 39 (fixed calendar slot)
+export const SUPER_CUP_WEEK = 39;
+
 export const generateSuperCup = (gameState: GameState): SuperCup | undefined => {
     const clWinner = gameState.europeanCup?.winnerId;
     const elWinner = gameState.europaLeague?.winnerId;
 
-    if (!clWinner || !elWinner) return undefined;
+    console.log(`[Super Cup] Generating: CL Winner: ${clWinner}, EL Winner: ${elWinner}, Sezon: ${gameState.currentSeason}, Hafta: ${gameState.currentWeek}`);
 
-    return {
+    if (!clWinner || !elWinner) {
+        console.warn(`[Super Cup] Cannot generate - missing winners. CL: ${clWinner}, EL: ${elWinner}`);
+        return undefined;
+    }
+
+    const superCupWeek = SUPER_CUP_WEEK; // Always week 39
+
+    const superCup: SuperCup = {
         season: gameState.currentSeason,
         championsLeagueWinnerId: clWinner,
         uefaCupWinnerId: elWinner,
         match: {
             id: uuid(),
-            stage: 'FINAL', // CHANGED from round to stage
+            stage: 'FINAL',
             homeTeamId: clWinner,
             awayTeamId: elWinner,
             homeScore: 0,
             awayScore: 0,
             isPlayed: false,
-            week: 28 // Play in Week 28 of SAME season (after cup finals at Week 26)
+            week: superCupWeek
         },
         winnerId: undefined,
         isComplete: false
     };
+
+    console.log(`[Super Cup] Generated: ${gameState.teams.find(t => t.id === clWinner)?.name} vs ${gameState.teams.find(t => t.id === elWinner)?.name}`);
+    return superCup;
+};
+
+export const checkAndScheduleSuperCup = (gameState: GameState): GameState => {
+    // 0. CLEANUP PHANTOM SUPER CUPS (Legacy Save Fix)
+    // If Super Cup exists but Champions League winner is not determined yet, it's invalid (from previous save logic).
+    if (gameState.superCup && !gameState.superCup.isComplete) {
+        const clWinner = gameState.europeanCup?.winnerId;
+        const elWinner = gameState.europaLeague?.winnerId;
+        if (!clWinner || !elWinner) {
+            console.log("[Super Cup] Clearing invalid Super Cup (No winners yet)");
+            return { ...gameState, superCup: undefined };
+        }
+    }
+
+    // Super Cup is always week 39 - only start checking from week 38
+    if (gameState.currentWeek < SUPER_CUP_WEEK - 1) return gameState;
+
+    // Schedule as soon as winners exist (week is set dynamically to lastLeagueWeek+1)
+    if (gameState.superCup) return gameState; // Already scheduled
+
+    const superCup = generateSuperCup(gameState);
+    if (!superCup) return gameState;
+
+    // Log for debugging
+    console.log(`[Super Cup] Scheduled for Week ${superCup.match?.week} (Dynamic)`);
+
+    return { ...gameState, superCup };
 };
 
 export const processSeasonEnd = (gameState: GameState) => {
@@ -3069,19 +3535,31 @@ export const processSeasonEnd = (gameState: GameState) => {
         Object.assign(LEAGUE_EUROPEAN_BONUS, gameState.leagueEuropeanBonuses);
     }
 
+    // ========== MARKET INFLATION SYSTEM ==========
+    // Track total economy growth and apply inflation to player values
+    // This prevents late-game "everyone is rich but players are cheap" scenario
+    const INITIAL_TOTAL_BUDGETS = 2_000_000_000; // €2B baseline (approx sum of all teams' starting budgets)
+    const totalLeagueBudgets = gameState.teams.reduce((sum, t) => sum + Math.max(0, t.budget), 0);
+    const inflationMultiplier = Math.max(1.0, Math.min(2.0, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS));
+
+    console.log(`[Season End] Market Inflation: Total Budgets €${(totalLeagueBudgets / 1000000).toFixed(0)}M, Multiplier: ${inflationMultiplier.toFixed(2)}x`);
+
     // 1. Calculate Seasonal Performance (Continental Points)
     // === BALANCED COEFFICIENT SYSTEM (User Requested) ===
     // Win = 3, Draw = 1, Penalties = +1
     // Round Bonuses: R16=+2, QF=+2, SF=+3, Final=+3, Winner=+5
     const leagueSeasonalPoints: Record<string, number> = {};
+    const leagueTeamCounts: Record<string, Set<string>> = {}; // Track unique teams per league
 
-    const processMatchPoints = (m: EuropeanCupMatch | Match, isSuperCup: boolean = false) => {
+    const processMatchPoints = (m: EuropeanCupMatch | Match, isSuperCup: boolean = false, multiplier: number = 1.0) => {
         if (!m.isPlayed) return;
 
         // Find teams
         const home = gameState.teams.find(t => t.id === m.homeTeamId);
         const away = gameState.teams.find(t => t.id === m.awayTeamId);
         if (!home || !away) return;
+
+        console.log(`[COEFF DEBUG] Match: ${home.name} vs ${away.name} | Stage: ${(m as any).stage} | isPlayed: ${m.isPlayed}`);
 
         let homePts = 0;
         let awayPts = 0;
@@ -3099,8 +3577,6 @@ export const processSeasonEnd = (gameState: GameState) => {
         }
 
         // Round Progression Bonuses (Significant)
-        // Add huge bonuses for winning knockout stages to inflate league score
-        // Compatibility: Check 'stage' (new) or 'round' (old)
         const stage = (m as any).stage || (m as any).round;
         if (stage) {
             const winnerId = (m as any).winnerId;
@@ -3108,7 +3584,13 @@ export const processSeasonEnd = (gameState: GameState) => {
             const isAwayWinner = winnerId === away.id;
 
             let bonus = 0;
-            if (stage === 'ROUND_16') bonus = 2;
+            if (stage === 'ROUND_16') {
+                // Bonus for REACHING Round of 16 (Qualifying from groups)
+                bonus = 2;
+                // Both teams get this bonus for qualifying
+                homePts += 2;
+                awayPts += 2;
+            }
             else if (stage === 'QUARTER') bonus = 2;
             else if (stage === 'SEMI') bonus = 3;
             else if (stage === 'FINAL') {
@@ -3129,47 +3611,72 @@ export const processSeasonEnd = (gameState: GameState) => {
             else if (winnerId === away.id) awayPts += 2;
         }
 
+        // Apply Multiplier (New Logic: Elite=1.0, Challenge=1.0)
+        homePts = homePts * multiplier;
+        awayPts = awayPts * multiplier;
+
         // Add to league totals (SUM ONLY - No Average)
         leagueSeasonalPoints[home.leagueId] = (leagueSeasonalPoints[home.leagueId] || 0) + homePts;
         leagueSeasonalPoints[away.leagueId] = (leagueSeasonalPoints[away.leagueId] || 0) + awayPts;
+
+        console.log(`[COEFF DEBUG] ${home.name} earned ${homePts} pts → ${home.leagueId} total: ${leagueSeasonalPoints[home.leagueId]}`);
+        console.log(`[COEFF DEBUG] ${away.name} earned ${awayPts} pts → ${away.leagueId} total: ${leagueSeasonalPoints[away.leagueId]}`);
+
+        // Track unique teams per league
+        if (!leagueTeamCounts[home.leagueId]) leagueTeamCounts[home.leagueId] = new Set();
+        if (!leagueTeamCounts[away.leagueId]) leagueTeamCounts[away.leagueId] = new Set();
+        leagueTeamCounts[home.leagueId].add(home.id);
+        leagueTeamCounts[away.leagueId].add(away.id);
     };
 
     // Process ALL Matches
     // UPDATED: Use proper groups/knockout iteration for Global Cup
     if (gameState.europeanCup) {
         if (gameState.europeanCup.groups) {
-            gameState.europeanCup.groups.forEach(g => g.matches.forEach(m => processMatchPoints(m)));
+            gameState.europeanCup.groups.forEach(g => g.matches.forEach(m => processMatchPoints(m, false, 1.0)));
         }
         if (gameState.europeanCup.knockoutMatches) {
-            gameState.europeanCup.knockoutMatches.forEach(m => processMatchPoints(m));
+            gameState.europeanCup.knockoutMatches.forEach(m => processMatchPoints(m, false, 1.0));
         }
-        // Fallback for legacy .matches if present (unlikely now but good safety)
+        // Fallback for legacy .matches
         if ((gameState.europeanCup as any).matches) {
-            (gameState.europeanCup as any).matches.forEach((m: any) => processMatchPoints(m));
+            (gameState.europeanCup as any).matches.forEach((m: any) => processMatchPoints(m, false, 1.0));
         }
     }
 
-    // Europa League deprecated/empty, skipping check or keeping minimal safu check
-    if (gameState.europaLeague && (gameState.europaLeague as any).matches) {
-        (gameState.europaLeague as any).matches.forEach((m: any) => processMatchPoints(m));
+    // Europa League (Challenge Cup) - Multiplier 1.0 (Same as Elite)
+    if (gameState.europaLeague) {
+        if (gameState.europaLeague.groups) { // Check groups first (New system)
+            gameState.europaLeague.groups.forEach(g => g.matches.forEach(m => processMatchPoints(m, false, 1.0)));
+        }
+        if (gameState.europaLeague.knockoutMatches) {
+            gameState.europaLeague.knockoutMatches.forEach(m => processMatchPoints(m, false, 1.0));
+        }
+        // Fallback for legacy
+        if ((gameState.europaLeague as any).matches) {
+            (gameState.europaLeague as any).matches.forEach((m: any) => processMatchPoints(m, false, 1.0));
+        }
     }
 
-    if (gameState.superCup && gameState.superCup.match) processMatchPoints(gameState.superCup.match, true);
+    // Super Cup (Week 39) - Multiplier 1.0 (Points are small/fixed anyway)
+    if (gameState.superCup && gameState.superCup.match) processMatchPoints(gameState.superCup.match, true, 1.0);
 
     // === 5-YEAR HISTORY UPDATE ===
     // Update global state - SUM ONLY (User Request: No Division)
-    const leagueIdsForHistory = Object.keys(BASE_LEAGUE_REPUTATION).filter(lid => lid !== 'default');
+    // FIX: Use ALL league IDs from gameState, not just BASE_LEAGUE_REPUTATION
+    const leagueIdsForHistory = [...new Set(gameState.teams.map(t => t.leagueId))].filter(lid => lid && lid !== 'default');
 
     leagueIdsForHistory.forEach(lid => {
         // Init if empty
         if (!LEAGUE_COEFFICIENTS[lid]) LEAGUE_COEFFICIENTS[lid] = [5.0, 5.0, 5.0, 5.0, 5.0];
 
-        // Calculate season coefficient
+        // Calculate season coefficient (PURE SUM - No Division)
         const totalPoints = leagueSeasonalPoints[lid] || 0;
 
-        // NO DIVISION: Pure sum of points gained by all teams in the league
-        // This allows a single team (User) to carry the league coefficient
+        // DIRECT SUM: Each league's total points from all participating teams
         const seasonCoeff = Number((totalPoints).toFixed(1));
+
+        console.log(`[COEFF DEBUG] ${lid} → Season Points: ${totalPoints} | History Before: ${LEAGUE_COEFFICIENTS[lid]}`);
 
         // Push NEW season points
         LEAGUE_COEFFICIENTS[lid].push(seasonCoeff);
@@ -3222,16 +3729,63 @@ export const processSeasonEnd = (gameState: GameState) => {
     // Get unique league IDs
     const leagueIds = [...new Set(gameState.teams.map(t => t.leagueId))];
     const leagueNames: Record<string, string> = {
+        // Europe
         'tr': '🇹🇷 Süper Lig',
         'en': '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League',
         'es': '🇪🇸 La Liga',
         'it': '🇮🇹 Serie A',
         'de': '🇩🇪 Bundesliga',
         'fr': '🇫🇷 Ligue 1',
+        'pt': '🇵🇹 Liga Portugal',
+        'nl': '🇳🇱 Eredivisie',
+        'be': '🇧🇪 Pro League',
+        'gr': '🇬🇷 Super League',
+        'ru': '🇷🇺 Premier League',
+        'pl': '🇵🇱 Ekstraklasa',
+        'cz': '🇨🇿 First League',
+        'ro': '🇷🇴 Liga I',
+        'hr': '🇭🇷 HNL',
+        'rs': '🇷🇸 SuperLiga',
+        'ch': '🇨🇭 Super League',
+        'at': '🇦🇹 Bundesliga',
+        'sco': '🏴󠁧󠁢󠁳󠁣󠁴󠁿 Premiership',
+
+        // Americas
         'ar': '🇦🇷 Liga Profesional',
         'br': '🇧🇷 Série A',
-        'pt': '🇵🇹 Liga Portugal',
-        'nl': '🇳🇱 Eredivisie'
+        'mx': '🇲🇽 Liga MX',
+        'us': '🇺🇸 MLS',
+        'cl': '🇨🇱 Primera División',
+        'uy': '🇺🇾 Primera División',
+        'co': '🇨🇴 Categoría Primera A',
+        'py': '🇵🇾 División Profesional',
+        'ec': '🇪🇨 Serie A',
+        'cr': '🇨🇷 Primera División',
+        'car': '🏴‍☠️ Caribbean League',
+
+        // Asia
+        'cn': '🇨🇳 Chinese Super League',
+        'jp': '🇯🇵 J1 League',
+        'kr': '🇰🇷 K League 1',
+        'sa': '🇸🇦 Saudi Pro League',
+        'in': '🇮🇳 Indian Super League',
+        'my': '🇲🇾 Super League',
+        'id': '🇮🇩 Liga 1',
+
+        // Africa
+        'eg': '🇪🇬 Egyptian Premier League',
+        'ma': '🇲🇦 Botola Pro',
+        'za': '🇿🇦 Premier Division',
+        'ng': '🇳🇬 NPFL',
+        'dz': '🇩🇿 Ligue 1',
+        'gh': '🇬🇭 Premier League',
+        'ci': '🇨🇮 Ligue 1',
+        'ke': '🇰🇪 Premier League',
+        'sn': '🇸🇳 Ligue 1',
+        'tn': '🇹🇳 Ligue 1',
+
+        // Oceania
+        'au': '🇦🇺 A-League'
     };
 
     // Create history entry for EACH league
@@ -3411,13 +3965,26 @@ export const processSeasonEnd = (gameState: GameState) => {
 
         const newReputation = Math.max(1000, Math.min(10000, dampedRep)); // Sınır yok
 
+        // Sezon sonu ödülü finansal kayda ekle
+        if (t.financials?.history && t.financials.history.length > 0) {
+            const lastRecord = t.financials.history[t.financials.history.length - 1];
+            if (lastRecord.week === gameState.currentWeek) {
+                lastRecord.income.seasonEnd = prize + sponsorBonus;
+                lastRecord.income.total += prize + sponsorBonus;
+                lastRecord.balance += prize + sponsorBonus;
+                lastRecord.budgetAfter = t.budget + prize + sponsorBonus;
+            }
+        }
+
         return {
             ...t,
             budget: t.budget + prize + sponsorBonus,
             reputation: newReputation,
             stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }, // Reset Stats
             recentForm: [],
-            sponsor: undefined // Reset sponsor for new season
+            sponsor: undefined, // Reset sponsor for new season
+            financials: t.financials ? { ...t.financials, seasonTotals: { transferIncomeThisSeason: 0, transferExpensesThisSeason: 0 } } : undefined, // Reset season transfer totals
+            lastSeasonPosition: leaguePosition // Yeni sezon kupalarında kullanılacak lig pozisyonu
         };
     });
 
@@ -3450,6 +4017,7 @@ export const processSeasonEnd = (gameState: GameState) => {
         // Contract Management
         let contractYears = (p.contractYears || 1) - 1;
         let teamId = p.teamId;
+        let newContractSigned = false; // Track if we need to update salary
 
         if (contractYears <= 0) {
             if (p.teamId === gameState.userTeamId) {
@@ -3466,6 +4034,7 @@ export const processSeasonEnd = (gameState: GameState) => {
                         const targetTeam = betterTeams[Math.floor(Math.random() * Math.min(3, betterTeams.length))];
                         teamId = targetTeam.id;
                         contractYears = 3; // Signs 3-year deal
+                        newContractSigned = true; // NEW CONTRACT = NEW SALARY
                     } else {
                         teamId = 'FREE_AGENT';
                     }
@@ -3476,6 +4045,7 @@ export const processSeasonEnd = (gameState: GameState) => {
                 // AI Logic: Renew key players, release others
                 if (overall > 72) {
                     contractYears = getRandomInt(1, 3); // Auto renew
+                    newContractSigned = true; // NEW CONTRACT = NEW SALARY
                 } else {
                     teamId = 'FREE_AGENT';
                 }
@@ -3484,7 +4054,30 @@ export const processSeasonEnd = (gameState: GameState) => {
 
         // Value update based on new overall/age - use same formula as initial generation
         // This ensures consistency across seasons (MUST match generatePlayer formula with overall-60)
-        const newValue = Math.floor((Math.pow(1.13, overall - 60) * 100000) * (1 - Math.max(0, age - 26) * 0.025));
+        // MARKET INFLATION: Scale value by inflation multiplier (1.0-2.0x based on total economy)
+        const baseValue = Math.floor((Math.pow(1.13, overall - 60) * 100000) * (1 - Math.max(0, age - 26) * 0.025));
+        const newValue = Math.floor(baseValue * inflationMultiplier);
+
+        // CONTRACT-LOCKED SALARY: Salary only updates on NEW CONTRACT, not value changes!
+        // This allows signing young talents at low wages and watching them grow
+
+        let finalSalary = p.salary;
+
+        if (newContractSigned) {
+            // Retrieve team to get league multiplier
+            const team = gameState.teams.find(t => t.id === teamId);
+            const leagueMult = getLeagueMultiplier(team?.leagueId || 'en'); // Default to high wages if unknown (safety)
+
+            // Re-calculate effective overall for accurate wage base (just in case)
+            // Use existing value formula base, but for wage
+            // WAGE FORMULA: Base Wage * (0.8 + (LeagueMult * 0.2))
+            const baseWage = Math.floor((Math.pow(1.13, overall - 50) * 100000) * 0.005);
+            const scaledWage = Math.floor(baseWage * (0.8 + (leagueMult * 0.2)));
+            // Ensure realistic minimum wages
+            const finalWage = Math.max(250, scaledWage);
+
+            finalSalary = finalWage * 52;
+        }
 
         return {
             ...p,
@@ -3492,6 +4085,7 @@ export const processSeasonEnd = (gameState: GameState) => {
             overall,
             potential: Math.max(overall, potential), // Potential shouldn't drop below current? Or maybe it should. Keep it simple.
             value: Math.max(500000, newValue),
+            salary: finalSalary, // Contract-locked salary (only updates on new contract)
             contractYears,
             teamId,
             stats: { goals: 0, assists: 0, yellowCards: 0, redCards: 0, appearances: 0, averageRating: 0 }, // Reset season stats
@@ -3502,7 +4096,7 @@ export const processSeasonEnd = (gameState: GameState) => {
         };
     });
 
-    // Handle Retirements & Regens
+    // Handle Retirements (NO SAME-TEAM REGEN - Use Global Pool Instead)
     const finalPlayers: Player[] = [];
 
     updatedPlayers.forEach(p => {
@@ -3513,31 +4107,79 @@ export const processSeasonEnd = (gameState: GameState) => {
 
         if (shouldRetire) {
             retiredPlayerNames.push(`${p.firstName} ${p.lastName}`);
-
-            // Create Regen
-            // Regen stays in the same team to maintain squad balance
-            if (p.teamId !== 'FREE_AGENT') {
-                const regen = generatePlayer(
-                    p.teamId,
-                    p.position,
-                    p.nationality,
-                    [16, 19], // Age range
-                    // DAMPENED POTENTIAL: Prevent inflation. Default to slightly below current potential (regression to mean).
-                    // Example: 90 pot retiree -> range 80-92. 70 pot retiree -> range 65-75.
-                    [Math.max(65, p.potential - 10), Math.min(99, p.potential + 2)]
-                );
-                // Adjust regen starting overall
-                regen.overall = getRandomInt(55, 70);
-                regen.value = regen.overall * 150000;
-
-                promotedPlayerNames.push(`${regen.firstName} ${regen.lastName} (Regen)`);
-                finalPlayers.push(regen);
-            }
+            // NO REGEN - Player just retires! Global Pool will provide new talents.
         } else {
             // Keep player
             finalPlayers.push(p);
         }
     });
+
+    // ========== GLOBAL YOUTH POOL SYSTEM ==========
+    // Instead of same-team regens, generate a global pool of youth talents from around the world
+    // Teams get picks based on scoutLevel + academyLevel (better infrastructure = better prospects)
+    const YOUTH_POOL_SIZE = 80; // ~3-4 per team average
+    const YOUTH_NATIONALITIES = [
+        'Brazil', 'Argentina', 'France', 'Germany', 'Spain', 'Portugal', 'Netherlands',
+        'Belgium', 'England', 'Italy', 'Nigeria', 'Senegal', 'Morocco', 'Egypt', 'Ghana',
+        'Japan', 'South Korea', 'Australia', 'Mexico', 'Colombia', 'Uruguay', 'Chile',
+        'Turkey', 'Croatia', 'Serbia', 'Poland', 'Czech', 'Austria', 'Switzerland', 'USA'
+    ];
+    const YOUTH_POSITIONS: Position[] = [Position.GK, Position.DEF, Position.MID, Position.FWD];
+
+    // Generate global youth pool
+    const globalYouthPool: Player[] = [];
+    for (let i = 0; i < YOUTH_POOL_SIZE; i++) {
+        const nationality = YOUTH_NATIONALITIES[Math.floor(Math.random() * YOUTH_NATIONALITIES.length)];
+        const position = YOUTH_POSITIONS[Math.floor(Math.random() * YOUTH_POSITIONS.length)];
+        const basePotential = 60 + Math.floor(Math.random() * 35); // 60-94 potential
+
+        const youth = generatePlayer(
+            'YOUTH_POOL', // Temporary team ID
+            position,
+            nationality,
+            [16, 19],
+            [basePotential, Math.min(99, basePotential + 5)]
+        );
+        youth.overall = getRandomInt(50, 65);
+        youth.value = youth.overall * 100000;
+        youth.salary = youth.value * 0.12; // Low youth salary
+        youth.lineup = 'RESERVE';
+        youth.lineupIndex = 99;
+
+        globalYouthPool.push(youth);
+    }
+
+    // Sort pool by potential (best talents first)
+    globalYouthPool.sort((a, b) => b.potential - a.potential);
+
+    // Calculate team picking power (scoutLevel + academyLevel + random factor)
+    const teamPickingPower: { teamId: string; power: number }[] = updatedTeams.map(t => ({
+        teamId: t.id,
+        power: (t.staff?.scoutLevel || 1) * 2 + (t.facilities?.academyLevel || 1) * 1.5 + Math.random() * 5
+    }));
+
+    // Sort by picking power (best scouts pick first)
+    teamPickingPower.sort((a, b) => b.power - a.power);
+
+    // Distribute youth players to teams
+    let youthIndex = 0;
+    teamPickingPower.forEach(({ teamId, power }) => {
+        // Each team gets 1-4 picks based on power (roughly academyLevel/5 + 1)
+        const team = updatedTeams.find(t => t.id === teamId);
+        const academyLevel = team?.facilities?.academyLevel || 1;
+        const picksAllowed = Math.max(1, Math.min(4, Math.floor(academyLevel / 4) + 1));
+
+        for (let pick = 0; pick < picksAllowed && youthIndex < globalYouthPool.length; pick++) {
+            const youth = globalYouthPool[youthIndex];
+            youth.teamId = teamId;
+            finalPlayers.push(youth);
+            promotedPlayerNames.push(`${youth.firstName} ${youth.lastName} (${youth.nationality})`);
+            youthIndex++;
+        }
+    });
+
+    console.log(`[Season End] Global Youth Pool: ${YOUTH_POOL_SIZE} generated, ${youthIndex} distributed to teams`);
+
 
     // 4. FIX: Generate fixtures PER LEAGUE, not all teams mixed!
     const fixtureLeagueIds = [...new Set(updatedTeams.map(t => t.leagueId))];
@@ -3719,6 +4361,13 @@ export const processSeasonEnd = (gameState: GameState) => {
     // Limit to top 6 offers (was 5)
     const limitedOffers = newJobOffers.slice(0, 6);
 
+    // --- SUPER CUP GENERATION ---
+    // --- SUPER CUP GENERATION ---
+    // DISABLED LEGACY LOGIC: Super Cup is now scheduled at the END of the season (Week 39+), not Week 1 of next season.
+    // The winners of Season X play at end of Season X.
+    let superCupMatch: any = undefined; // Use 'any' to satisfy type if needed, or update GameState type if strictly typed
+
+
     // 5. Update Game State
     const newState = {
         ...gameState,
@@ -3728,9 +4377,9 @@ export const processSeasonEnd = (gameState: GameState) => {
         teams: updatedTeams,
         players: finalPlayers,
         matches: allNewMatches,
-        europeanCup: undefined, // Reset cups for new season
-        europaLeague: undefined,
-        superCup: undefined, // Super Cup is played SAME season after cup finals - not carried over
+        europeanCup: generateGlobalCup({ ...gameState, teams: updatedTeams, currentSeason: gameState.currentSeason + 1 } as GameState, 0),
+        europaLeague: generateGlobalCup({ ...gameState, teams: updatedTeams, currentSeason: gameState.currentSeason + 1 } as GameState, 1),
+        superCup: superCupMatch,
         managerRating,
         managerCareerHistory: updatedCareerHistory,
         managerTrophies: updatedTrophies,
@@ -3752,6 +4401,33 @@ export const processSeasonEnd = (gameState: GameState) => {
         leagueEuropeanBonuses: { ...LEAGUE_EUROPEAN_BONUS },
         leagueCoefficientHistory: { ...gameState.leagueCoefficientHistory } // EXPLICIT PERSISTENCE
     };
+
+    // === SAVE FILE HEALTH CHECK (User Request) ===
+    // 1. Trim History Arrays (Memory Optimization)
+    // Keep only last 10 seasons (years) of history, not just last 10 entries.
+    // Each season adds one entry per league (e.g. 48 leagues => 48 entries/season).
+    if (newState.history.length > 0) {
+        const seasons = Array.from(
+            new Set(
+                newState.history
+                    .map(h => h.season)
+                    .filter((s): s is number => typeof s === 'number' && Number.isFinite(s))
+            )
+        ).sort((a, b) => a - b);
+
+        const allowedSeasons = new Set(seasons.slice(-10));
+        if (allowedSeasons.size > 0) {
+            newState.history = newState.history.filter(h => allowedSeasons.has(h.season));
+        }
+    }
+
+    // 2. Trim Player History (Detailed logs)
+    // Keep only last 5 morale entries per player to save JSON space
+    newState.players.forEach(p => {
+        if (p.moraleHistory && p.moraleHistory.length > 5) {
+            p.moraleHistory = p.moraleHistory.slice(-5);
+        }
+    });
 
     return { newState, retired: retiredPlayerNames, promoted: promotedPlayerNames };
 }
@@ -3806,42 +4482,59 @@ export const generateLeagueCup = (gameState: GameState): GlobalCup => {
 // 8 Groups of 6 Teams
 // Top 2 advance to Round of 16
 
-export const generateGlobalCup = (gameState: GameState): GlobalCup => {
+export const generateGlobalCup = (gameState: GameState, tier: number = 0): GlobalCup => {
     const qualifiedTeams: Team[] = [];
-
-    // Get all active league IDs from constants
-    const allLeagueIds = LEAGUE_PRESETS.map(l => l.id);
-
-    allLeagueIds.forEach(leagueId => {
-        const leagueTeams = gameState.teams.filter(t => t.leagueId === leagueId);
-        if (leagueTeams.length < 2) return;
-
-        // Season 1: reputation-based, Season 2+: points-based
-        let sorted: Team[];
-        if (gameState.currentSeason === 1) {
-            sorted = [...leagueTeams].sort((a, b) => b.reputation - a.reputation);
-        } else {
-            sorted = [...leagueTeams].sort((a, b) => {
-                if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
-                return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
-            });
-        }
-
-        // Top 2 from each league qualify
-        qualifiedTeams.push(sorted[0]);
-        if (sorted[1]) qualifiedTeams.push(sorted[1]);
-    });
-
-    // Shuffle for random draw
-    const shuffled = [...qualifiedTeams].sort(() => Math.random() - 0.5);
-    const qualifiedTeamIds = shuffled.map(t => t.id);
-
-    // Create 8 Groups of 6 Teams
     const groups: GlobalCupGroup[] = [];
-    const groupNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-    groupNames.forEach((name, index) => {
-        const groupTeams = qualifiedTeamIds.slice(index * 6, (index + 1) * 6);
+    // Group definitions matching the Regions in teams.ts
+    const groupRegions = ['GROUP_A', 'GROUP_B', 'GROUP_C', 'GROUP_D', 'GROUP_E', 'GROUP_F', 'GROUP_G', 'GROUP_H'];
+    const groupDisplayNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+    groupRegions.forEach((regionId, index) => {
+        const groupName = groupDisplayNames[index];
+        const groupTeams: string[] = [];
+
+        // Find all 6 leagues assigned to this Region/Group
+        const regionLeagues = LEAGUE_PRESETS.filter(l => l.region === regionId);
+
+        console.log(`[Global Cup] Forming Group ${groupName} (Region: ${regionId}) - Leagues found: ${regionLeagues.length}`);
+
+        regionLeagues.forEach(league => {
+            // Get teams from this league
+            const leagueTeams = gameState.teams.filter(t => t.leagueId === league.id);
+            if (leagueTeams.length === 0) return;
+
+            // Sort by points to find top teams
+            // BUGFIX: Sezon sonu puanlar sıfırlanıyor, bu yüzden lastSeasonPosition'ı kullan
+            const sorted = [...leagueTeams].sort((a, b) => {
+                // Önce lastSeasonPosition'ı kontrol et (eğer varsa)
+                const aPos = a.lastSeasonPosition ?? Infinity; // Pozisyon yoksa sona koy
+                const bPos = b.lastSeasonPosition ?? Infinity;
+
+                if (aPos !== bPos) return aPos - bPos; // Pozisyona göre sırala (0=şampiyon)
+
+                // Pozisyon yoksa reputation'a fallback et (geriye uyumluluk)
+                return b.reputation - a.reputation;
+            });
+
+            // Select based on Tier (0 = Champion, 1 = Runner-Up)
+            if (sorted.length > tier) {
+                const selectedTeam = sorted[tier];
+                if (!groupTeams.includes(selectedTeam.id) && !qualifiedTeams.some(t => t.id === selectedTeam.id)) {
+                    groupTeams.push(selectedTeam.id);
+                    qualifiedTeams.push(selectedTeam);
+                    console.log(`[Cup Tier ${tier}] Added ${selectedTeam.name} (${league.id}) to Group ${groupName} (LastSeasonPos: ${selectedTeam.lastSeasonPosition ?? 'N/A'})`);
+                }
+            }
+        });
+
+        // EĞER GRUPTA 6 TAKIM TAMAMLANAMADIYSA (Hata önleyici)
+        if (groupTeams.length < 6) {
+            console.warn(`[Global Cup] Group ${groupName} incomplete. Found: ${groupTeams.length}. Fixing...`);
+            // Eksik yer boş kalsın, simülasyon bunu "BAY" geçecek şekilde ayarlıdır veya
+            // ileride buraya rastgele takım atayabilirsin.
+            // Şimdilik sadece uygulamanın çökmesini engelliyoruz.
+        }
 
         // Initialize Standings
         const standings: GlobalCupGroupTeam[] = groupTeams.map(tid => ({
@@ -3860,34 +4553,41 @@ export const generateGlobalCup = (gameState: GameState): GlobalCup => {
         const matches: GlobalCupMatch[] = [];
         const groupWeeks = [6, 10, 14, 18, 22];
 
-        // Simple Round Robin pairing logic for 6 teams (0-5)
-        const pairings = [
-            [[0, 5], [1, 4], [2, 3]],
-            [[5, 2], [3, 1], [4, 0]],
-            [[5, 4], [0, 3], [1, 2]],
-            [[1, 5], [2, 0], [3, 4]],
-            [[5, 3], [4, 2], [0, 1]]
-        ];
+        // Pairing logic (designed for 6 teams)
+        // If < 6 teams, this might have undefined errors, but we assume strict 48-league structure
+        if (groupTeams.length === 6) {
+            const pairings = [
+                [[0, 5], [1, 4], [2, 3]],
+                [[5, 2], [3, 1], [4, 0]],
+                [[5, 4], [0, 3], [1, 2]],
+                [[1, 5], [2, 0], [3, 4]],
+                [[5, 3], [4, 2], [0, 1]]
+            ];
 
-        pairings.forEach((roundPairs, roundIndex) => {
-            roundPairs.forEach(pair => {
-                matches.push({
-                    id: uuid(),
-                    stage: 'GROUP',
-                    groupName: name,
-                    homeTeamId: groupTeams[pair[0]],
-                    awayTeamId: groupTeams[pair[1]],
-                    homeScore: 0,
-                    awayScore: 0,
-                    isPlayed: false,
-                    week: groupWeeks[roundIndex]
+            pairings.forEach((roundPairs, roundIndex) => {
+                roundPairs.forEach(pair => {
+                    matches.push({
+                        id: uuid(),
+                        stage: 'GROUP',
+                        groupName: groupName,
+                        homeTeamId: groupTeams[pair[0]],
+                        awayTeamId: groupTeams[pair[1]],
+                        homeScore: 0,
+                        awayScore: 0,
+                        isPlayed: false,
+                        events: [], // Initialize events array
+                        stats: { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
+                        week: groupWeeks[roundIndex]
+                    });
                 });
             });
-        });
+        } else {
+            console.warn(`[Global Cup] Group ${groupName} has ${groupTeams.length} teams instead of 6! Skipping match generation.`);
+        }
 
         groups.push({
             id: uuid(),
-            name,
+            name: groupName,
             teams: groupTeams,
             standings,
             matches
@@ -3897,7 +4597,7 @@ export const generateGlobalCup = (gameState: GameState): GlobalCup => {
     return {
         season: gameState.currentSeason,
         isActive: true,
-        qualifiedTeamIds,
+        qualifiedTeamIds: qualifiedTeams.map(t => t.id),
         groups,
         knockoutMatches: [], // Empty initially
         currentStage: 'GROUP', // Start at GROUP stage
@@ -3913,7 +4613,8 @@ export const simulateGlobalCupMatch = (
     homeTeam: Team,
     awayTeam: Team,
     homePlayers: Player[],
-    awayPlayers: Player[]
+    awayPlayers: Player[],
+    prizeMultiplier: number = 1.0
 ): { updatedCup: GlobalCup, updatedHomeTeam: Team, updatedAwayTeam: Team } => {
     // Find match in Groups OR Knockouts
     let match: GlobalCupMatch | undefined;
@@ -4048,7 +4749,7 @@ export const simulateGlobalCupMatch = (
     const nextCup = advanceGlobalCupStage(cup);
 
     // === REPUTATION & BUDGET REWARDS ===
-    const rewards = calculateCupRewards(cup, match.id, homeTeam, awayTeam, match.homeScore, match.awayScore, match.winnerId);
+    const rewards = calculateCupRewards(cup, match.id, homeTeam, awayTeam, match.homeScore, match.awayScore, match.winnerId, prizeMultiplier);
 
     return { updatedCup: nextCup, updatedHomeTeam: rewards.updatedHomeTeam, updatedAwayTeam: rewards.updatedAwayTeam };
 };
@@ -4062,7 +4763,8 @@ export const calculateCupRewards = (
     awayTeam: Team,
     homeScore: number,
     awayScore: number,
-    winnerId?: string
+    winnerId?: string,
+    prizeMultiplier: number = 1.0
 ): {
     updatedHomeTeam: Team,
     updatedAwayTeam: Team,
@@ -4149,18 +4851,18 @@ export const calculateCupRewards = (
     let awayPrize = 0;
 
     if (stage === 'GROUP') {
-        if (homeWon) homePrize += 2800000;
-        else if (awayWon) awayPrize += 2800000;
-        else { homePrize += 900000; awayPrize += 900000; }
+        if (homeWon) homePrize += (2800000 * prizeMultiplier);
+        else if (awayWon) awayPrize += (2800000 * prizeMultiplier);
+        else { homePrize += (900000 * prizeMultiplier); awayPrize += (900000 * prizeMultiplier); }
     }
 
     // Knockout Prizes (Qualification Bonus - added to WINNER)
     if (stage !== 'GROUP' && winnerId) {
         let progressPrize = 0;
-        if (stage === 'ROUND_16') progressPrize = 9600000;
-        else if (stage === 'QUARTER') progressPrize = 10600000;
-        else if (stage === 'SEMI') progressPrize = 12500000;
-        else if (stage === 'FINAL') progressPrize = 20000000; // Winner Bonus
+        if (stage === 'ROUND_16') progressPrize = 9600000 * prizeMultiplier;
+        else if (stage === 'QUARTER') progressPrize = 10600000 * prizeMultiplier;
+        else if (stage === 'SEMI') progressPrize = 12500000 * prizeMultiplier;
+        else if (stage === 'FINAL') progressPrize = 20000000 * prizeMultiplier; // Winner Bonus
 
         if (winnerId === homeTeam.id) homePrize += progressPrize;
         else awayPrize += progressPrize;
@@ -4170,8 +4872,60 @@ export const calculateCupRewards = (
     const gateMoneyHome = isFinal ? (totalGateReceipts / 2) : totalGateReceipts;
     const gateMoneyAway = isFinal ? (totalGateReceipts / 2) : 0;
 
-    updatedHomeTeam.budget += (gateMoneyHome + homePrize);
-    updatedAwayTeam.budget += (gateMoneyAway + awayPrize);
+    const homeDelta = gateMoneyHome + homePrize;
+    const awayDelta = gateMoneyAway + awayPrize;
+
+    const homeBudgetBeforeReward = updatedHomeTeam.budget;
+    const awayBudgetBeforeReward = updatedAwayTeam.budget;
+
+    updatedHomeTeam.budget += homeDelta;
+    updatedAwayTeam.budget += awayDelta;
+
+    // Kupa gelirlerini finansal kayda (aynı hafta/season) ekle; history'yi ASLA sıfırlama.
+    const recordWeek = match?.week ?? 99;
+    const recordSeason = (cup as any)?.season ?? -1;
+
+    const upsertCupIncome = (team: Team, budgetBefore: number, budgetAfter: number, gate: number, prize: number) => {
+        if (!team.financials) {
+            team.financials = {
+                lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 },
+                lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 },
+                history: []
+            };
+        }
+        if (!team.financials.history) team.financials.history = [];
+
+        const history = team.financials.history as any[];
+        const idx = history.findIndex(r => r.week === recordWeek && r.season === recordSeason);
+
+        const ensureRecord = (): any => ({
+            week: recordWeek,
+            season: recordSeason,
+            income: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0, cupPrize: 0, total: 0 },
+            expenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0, total: 0 },
+            balance: 0,
+            budgetBefore,
+            budgetAfter
+        });
+
+        const rec = idx >= 0 ? history[idx] : ensureRecord();
+        rec.income.tickets = (rec.income.tickets || 0) + gate;
+        rec.income.cupPrize = (rec.income.cupPrize || 0) + prize;
+
+        const incomeTotal = (rec.income.tickets || 0) + (rec.income.sponsor || 0) + (rec.income.merchandise || 0) + (rec.income.tvRights || 0) + (rec.income.transfers || 0) + (rec.income.winBonus || 0) + (rec.income.seasonEnd || 0) + (rec.income.cupPrize || 0);
+        const expenseTotal = (rec.expenses.wages || 0) + (rec.expenses.maintenance || 0) + (rec.expenses.academy || 0) + (rec.expenses.transfers || 0) + (rec.expenses.facilityUpgrade || 0) + (rec.expenses.staffUpgrade || 0);
+        rec.income.total = incomeTotal;
+        rec.expenses.total = expenseTotal;
+        rec.balance = incomeTotal - expenseTotal;
+        rec.budgetBefore = Math.min(rec.budgetBefore ?? budgetBefore, budgetBefore);
+        rec.budgetAfter = budgetAfter;
+
+        if (idx < 0) history.push(rec);
+        if (history.length > 10) team.financials.history = history.slice(-10);
+    };
+
+    upsertCupIncome(updatedHomeTeam, homeBudgetBeforeReward, updatedHomeTeam.budget, gateMoneyHome, homePrize);
+    upsertCupIncome(updatedAwayTeam, awayBudgetBeforeReward, updatedAwayTeam.budget, gateMoneyAway, awayPrize);
 
     return {
         updatedHomeTeam,
@@ -4298,6 +5052,8 @@ const createKnockoutMatch = (homeId: string, awayId: string, stage: 'ROUND_16' |
         homeScore: 0,
         awayScore: 0,
         isPlayed: false,
+        events: [],
+        stats: { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
         week: schedule[stage]
     };
 };
@@ -4310,7 +5066,8 @@ export const simulateAIGlobalCupMatches = (
     teams: Team[],
     players: Player[],
     userTeamId: string,
-    currentWeek: number
+    currentWeek: number,
+    prizeMultiplier: number = 1.0 // DEFAULT: Full Champions League Money
 ): { updatedCup: GlobalCup, updatedTeams: Team[] } => {
 
     // Check if any matches need to be played this week
@@ -4442,6 +5199,8 @@ export const simulateAIGlobalCupMatches = (
 
                 if (playedMatch.stage === 'QUARTER') repBonus += 10;
                 else if (playedMatch.stage === 'SEMI') repBonus += 20;
+                if (playedMatch.stage === 'QUARTER') repBonus += 10;
+                else if (playedMatch.stage === 'SEMI') repBonus += 20;
                 else if (playedMatch.stage === 'FINAL') repBonus += 50;
 
                 updatedTeams = updatedTeams.map(t =>
@@ -4449,6 +5208,10 @@ export const simulateAIGlobalCupMatches = (
                         ? { ...t, reputation: Math.min(10000, t.reputation + repBonus) }
                         : t
                 );
+
+                // === COEFFICIENT UPDATE ===
+                awardEuropeanBonus(homeTeam.leagueId, playedMatch.stage === 'GROUP' ? 'group_win' : 'knockout');
+
             } else if (!isDraw) {
                 // Home team lost
                 const repPenalty = Math.min(15, Math.floor((homeTeam.reputation - awayTeam.reputation) / 300));
@@ -4457,6 +5220,9 @@ export const simulateAIGlobalCupMatches = (
                         ? { ...t, reputation: Math.max(1000, t.reputation - Math.max(5, repPenalty)) }
                         : t
                 );
+            } else {
+                // Draw
+                // awardEuropeanBonus(homeTeam.leagueId, 'draw'); // Not supported yet
             }
 
             // Away team reputation change
@@ -4474,6 +5240,10 @@ export const simulateAIGlobalCupMatches = (
                         ? { ...t, reputation: Math.min(10000, t.reputation + repBonus) }
                         : t
                 );
+
+                // === COEFFICIENT UPDATE ===
+                awardEuropeanBonus(awayTeam.leagueId, playedMatch.stage === 'GROUP' ? 'group_win' : 'knockout');
+
             } else if (!isDraw) {
                 // Away team lost
                 const repPenalty = Math.min(15, Math.floor((awayTeam.reputation - homeTeam.reputation) / 300));
@@ -4482,6 +5252,9 @@ export const simulateAIGlobalCupMatches = (
                         ? { ...t, reputation: Math.max(1000, t.reputation - Math.max(5, repPenalty)) }
                         : t
                 );
+            } else {
+                // Draw (Already handled home draw, now away)
+                // awardEuropeanBonus(awayTeam.leagueId, 'draw'); // Not supported
             }
         }
 
@@ -4519,11 +5292,11 @@ export const simulateAIGlobalCupMatches = (
 
         // Match Performance Prizes (Group Stage)
         if (match.stage === 'GROUP') {
-            if (match.homeScore > match.awayScore) homePrize += 2800000; // Win
-            else if (match.awayScore > match.homeScore) awayPrize += 2800000; // Win
+            if (match.homeScore > match.awayScore) homePrize += (2800000 * prizeMultiplier); // Win
+            else if (match.awayScore > match.homeScore) awayPrize += (2800000 * prizeMultiplier); // Win
             else {
-                homePrize += 900000; // Draw
-                awayPrize += 900000;
+                homePrize += (900000 * prizeMultiplier); // Draw
+                awayPrize += (900000 * prizeMultiplier);
             }
         }
 
@@ -4537,10 +5310,10 @@ export const simulateAIGlobalCupMatches = (
             // Final Winner -> Get Cup Bonus (4.5M) + Champion Title
 
             let progressPrize = 0;
-            if (match.stage === 'ROUND_16') progressPrize = 10600000;
-            else if (match.stage === 'QUARTER') progressPrize = 12500000;
-            else if (match.stage === 'SEMI') progressPrize = 15500000;
-            else if (match.stage === 'FINAL') progressPrize = 4500000; // Winner Bonus
+            if (match.stage === 'ROUND_16') progressPrize = 10600000 * prizeMultiplier;
+            else if (match.stage === 'QUARTER') progressPrize = 12500000 * prizeMultiplier;
+            else if (match.stage === 'SEMI') progressPrize = 15500000 * prizeMultiplier;
+            else if (match.stage === 'FINAL') progressPrize = 4500000 * prizeMultiplier; // Winner Bonus
 
             if (match.winnerId === homeTeam.id) homePrize += progressPrize;
             else awayPrize += progressPrize;
@@ -4589,16 +5362,168 @@ export const simulateAIEuropeanCupMatches = simulateAIGlobalCupMatches;
 // ========== UEFA CUP / EUROPA LEAGUE (TIER 2) ==========
 // 3rd and 4th place teams from each of 8 leagues (16 teams total)
 // Europa League deprecated in favor of Global Cup expansion
-export const generateEuropaLeague = (gameState: GameState): GlobalCup => {
-    // Return inactive placeholder
-    return {
-        season: gameState.currentSeason,
-        isActive: false,
-        qualifiedTeamIds: [],
-        groups: [],
-        knockoutMatches: [],
-        currentStage: 'COMPLETE'
+
+// ========== SHARED MATCH RATING LOGIC ==========
+
+export const calculateMatchRatings = (
+    match: Match,
+    homeTeam: Team,
+    awayTeam: Team,
+    homePlayers: Player[],
+    awayPlayers: Player[]
+): { updatedHomePlayers: Player[], updatedAwayPlayers: Player[] } => {
+
+    // Helper to calculate rating for a single player
+    const calculatePlayerRating = (p: Player, isHome: boolean, teamScore: number, oppScore: number, teamWon: boolean, teamLost: boolean, isDraw: boolean, cleanSheet: boolean, teamSaves: number) => {
+        // Base rating
+        let rating = 6.0 + (p.overall / 40) + (Math.random() * 1.5 - 0.5);
+
+        // Result bonus/penalty
+        if (teamWon) rating += 0.5;
+        else if (isDraw) rating += 0.1;
+        else rating -= 0.3;
+
+        // Clean sheet bonus (GK/DEF)
+        if (cleanSheet && (p.position === 'GK' || p.position === 'DEF')) {
+            rating += 0.8;
+        }
+
+        // GK Saves bonus
+        if (p.position === 'GK') {
+            rating += (teamSaves * 0.2);
+        }
+
+        // Goals bonus
+        const goals = match.events.filter((e: MatchEvent) => e.type === MatchEventType.GOAL && e.playerId === p.id).length;
+        rating += (goals * 1.0);
+
+        // Check for Substitutions - if played less than 15 mins, maybe impact is lower? 
+        // For now, simple standard rating.
+
+        // Clamp
+        return Math.max(3.0, Math.min(10.0, rating));
     };
+
+    const homeWon = match.homeScore > match.awayScore;
+    const awayWon = match.awayScore > match.homeScore;
+    const isDraw = match.homeScore === match.awayScore;
+    const homeCleanSheet = match.awayScore === 0;
+    const awayCleanSheet = match.homeScore === 0;
+
+    // Identify players who were substituted OUT (they played but are now potentially BENCH)
+    const substitutedOutIds = new Set<string>();
+    match.events.forEach(e => {
+        if (e.type === MatchEventType.SUB && e.playerOutId) {
+            substitutedOutIds.add(e.playerOutId);
+        }
+    });
+
+    const updatePlayerStats = (p: Player, isHome: boolean) => {
+        // Only rate players who have a lineup status of STARTING or BENCH (if they played?)
+        // The original code only rated STARTING players in some places, but updatedPlayers in simulation includes all.
+        // We need to know who played.
+        // If p.lineup is STARTING, they played.
+        // If p.lineup is BENCH, did they sub in? 
+        // We can check appearances increment logic or just check if they are in the match events as sub-in?
+        // Or cleaner: The calling code (hook) usually updates appearances.
+        // Let's assume passed players are the full squad.
+
+        // Replicating original logic: Only Starters get detailed ratings? 
+        // Original code in handleMatchSync line 1069: if (p.lineup === 'STARTING' || p.lineup === 'BENCH')
+        // But then line 1076: if (p.lineup === 'STARTING') { ... calculation ... }
+        // Rate players who:
+        // 1. Are currently STARTING (played full match or subbed IN)
+        // 2. Were subbed OUT (played part of the match)
+        const played = p.lineup === 'STARTING' || substitutedOutIds.has(p.id);
+
+        if (!played) return p;
+
+        // Live stamina check is done in the hook via engine.getLivePlayerStamina. 
+        // We don't have engine instance here easily unless passed. 
+        // The hook does: updatedPlayers[idx] = { ...updatedPlayers[idx], condition: ... } BEFORE rating.
+        // So we assume condition is already updated in the player object passed here?
+        // No, the hook updates condition THEN calculates rating.
+        // We will just do the stats update here. Condition update remains in hook or we pass it?
+        // Let's stick to stats.
+
+        const oldApps = p.stats.appearances || 0;
+        const newApps = oldApps + 1;
+
+        const rating = calculatePlayerRating(
+            p,
+            isHome,
+            isHome ? match.homeScore : match.awayScore,
+            isHome ? match.awayScore : match.homeScore,
+            isHome ? homeWon : awayWon,
+            isHome ? awayWon : homeWon,
+            isDraw,
+            isHome ? homeCleanSheet : awayCleanSheet,
+            isHome ? (match.stats.homeSaves || 0) : (match.stats.awaySaves || 0)
+        );
+
+        const oldAvg = p.stats.averageRating || 6.0;
+        const newAvg = ((oldAvg * oldApps) + rating) / newApps;
+
+        // Form Update
+        const formChange = rating > 7.0 ? 1 : rating < 5.5 ? -1 : 0;
+        const newForm = Math.min(10, Math.max(1, p.form + formChange));
+
+        return {
+            ...p,
+            stats: {
+                ...p.stats,
+                appearances: newApps,
+                averageRating: parseFloat(newAvg.toFixed(2))
+            },
+            form: newForm
+        };
+    };
+
+    return {
+        updatedHomePlayers: homePlayers.map(p => updatePlayerStats(p, true)),
+        updatedAwayPlayers: awayPlayers.map(p => updatePlayerStats(p, false))
+    };
+};
+
+// === MATCH SITUATION ANALYSIS ===
+export const analyzeMatchSituation = (
+    matchStatus: { minute: number; score: { home: number; away: number }; isHome: boolean },
+    currentTactic: TeamTactic
+): AssistantAdvice[] => {
+    const advice: AssistantAdvice[] = [];
+    const { minute, score, isHome } = matchStatus;
+    const myScore = isHome ? score.home : score.away;
+    const oppScore = isHome ? score.away : score.home;
+    const goalDiff = myScore - oppScore;
+
+    // 1. Late Game - Losing
+    if (minute > 70 && goalDiff < 0) {
+        if (currentTactic.aggression !== 'Aggressive') {
+            advice.push({ type: 'CRITICAL', message: 'Zaman daralıyor! Daha agresif oynamalıyız!' });
+        }
+        if (currentTactic.defensiveLine !== 'High') {
+            advice.push({ type: 'WARNING', message: 'Savunma hattını ileri çıkarmalıyız.' });
+        }
+    }
+
+    // 2. Late Game - Winning Narrowly
+    if (minute > 75 && goalDiff === 1) {
+        if (currentTactic.style !== 'ParkTheBus' && currentTactic.tempo !== 'Slow') {
+            advice.push({ type: 'WARNING', message: 'Skoru korumaya odaklanmalıyız. Oyunu yavaşlatın.' });
+        }
+    }
+
+    // 3. Winning Comfortably
+    if (minute > 60 && goalDiff >= 3) {
+        advice.push({ type: 'INFO', message: 'Maç bizim kontrolümüzde. Yorulan oyuncuları dinlendirmeyi düşün.' });
+    }
+
+    // 4. Early Goal Conceded
+    if (minute < 20 && goalDiff < 0) {
+        advice.push({ type: 'INFO', message: 'Henüz erken, paniğe gerek yok. Planımıza sadık kalalım.' });
+    }
+
+    return advice;
 };
 
 

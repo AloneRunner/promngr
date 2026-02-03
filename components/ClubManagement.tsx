@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Team, Translation, Player, TeamStaff } from '../types';
-import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye, Ticket, Home, Dumbbell } from 'lucide-react';
+import { Building2, TrendingUp, TrendingDown, Users, Wallet, Briefcase, GraduationCap, Star, Tv, ShoppingBag, Hammer, ArrowRight, DoorOpen, UserCog, Stethoscope, Microscope, ClipboardList, Activity, Eye, Ticket, Home, Dumbbell, Shield, Banknote } from 'lucide-react';
 import { TICKET_PRICE, LEAGUE_TICKET_PRICES } from '../constants';
 import { PlayerAvatar } from './PlayerAvatar';
 
@@ -28,8 +28,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
     // Safe access for old save files and new financial object
     const youthCandidates = team.youthCandidates || [];
     const fin = team.financials || {
-        lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 },
-        lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 }
+        lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0, ffpSolidarity: 0 },
+        lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0, ffpTax: 0 }
     };
 
     // Safe access for new staff object
@@ -162,6 +162,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     <FinanceRow icon={ShoppingBag} label={t.merchandise} value={Math.floor(fin.lastWeekIncome.merchandise)} type="income" />
                                     <FinanceRow icon={Tv} label={t.tvRights} value={fin.lastWeekIncome.tvRights} type="income" />
                                     {fin.lastWeekIncome.transfers > 0 && <FinanceRow icon={Users} label={t.playerSales} value={fin.lastWeekIncome.transfers} type="income" />}
+                                    {(fin.lastWeekIncome.ffpSolidarity || 0) > 0 && (
+                                        <FinanceRow icon={Banknote} label={t.ffpSolidarityFund || "FFP Solidarity"} value={fin.lastWeekIncome.ffpSolidarity} type="income" />
+                                    )}
                                 </div>
                             </div>
 
@@ -173,6 +176,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     <FinanceRow icon={Hammer} label={t.maintenance} value={fin.lastWeekExpenses.maintenance} type="expense" />
                                     <FinanceRow icon={GraduationCap} label={t.academy} value={fin.lastWeekExpenses.academy} type="expense" />
                                     {fin.lastWeekExpenses.transfers > 0 && <FinanceRow icon={Users} label={t.transfers} value={fin.lastWeekExpenses.transfers} type="expense" />}
+                                    {(fin.lastWeekExpenses.ffpTax || 0) > 0 && (
+                                        <FinanceRow icon={Shield} label={t.ffpLuxuryTax || "FFP Luxury Tax"} value={fin.lastWeekExpenses.ffpTax} type="expense" />
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -185,11 +191,13 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     (fin.lastWeekIncome.winBonus || 0) +
                                     fin.lastWeekIncome.merchandise +
                                     fin.lastWeekIncome.tvRights +
-                                    fin.lastWeekIncome.transfers;
+                                    fin.lastWeekIncome.transfers +
+                                    (fin.lastWeekIncome.ffpSolidarity || 0);
                                 const totalExpense = fin.lastWeekExpenses.wages +
                                     fin.lastWeekExpenses.maintenance +
                                     fin.lastWeekExpenses.academy +
-                                    fin.lastWeekExpenses.transfers;
+                                    fin.lastWeekExpenses.transfers +
+                                    (fin.lastWeekExpenses.ffpTax || 0);
                                 const netBalance = totalIncome - totalExpense;
                                 const isPositive = netBalance >= 0;
 
@@ -258,6 +266,23 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     </div>
                                     <div className="mt-2 text-xs text-slate-400">
                                         {t.occupancy}: {Math.floor((fin.lastWeekIncome.tickets / ticketPrice) / team.facilities.stadiumCapacity * 100)}%
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Season Transfer Balance */}
+                            {((fin.seasonTotals?.transferIncomeThisSeason || 0) > 0 || (fin.seasonTotals?.transferExpensesThisSeason || 0) > 0) && (
+                                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700">
+                                    <div className="text-[10px] uppercase text-slate-500 mb-2">{t.seasonTransferBalance || 'Season Transfer Balance'}</div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-slate-400">
+                                            <span className="text-emerald-400">+€{(fin.seasonTotals?.transferIncomeThisSeason || 0).toLocaleString()}</span>
+                                            <span className="mx-2">|</span>
+                                            <span className="text-red-400">-€{(fin.seasonTotals?.transferExpensesThisSeason || 0).toLocaleString()}</span>
+                                        </span>
+                                        <span className={`text-sm font-mono font-bold ${(fin.seasonTotals?.transferIncomeThisSeason || 0) - (fin.seasonTotals?.transferExpensesThisSeason || 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                            €{((fin.seasonTotals?.transferIncomeThisSeason || 0) - (fin.seasonTotals?.transferExpensesThisSeason || 0)).toLocaleString()}
+                                        </span>
                                     </div>
                                 </div>
                             )}
@@ -409,6 +434,71 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </div>
                         </div>
                     </div>
+
+                    {/* 📊 MUHASEBE DEFTERİ - Financial History */}
+                    {fin.history && fin.history.length > 0 && (
+                        <div className="fm-panel rounded-xl overflow-hidden">
+                            <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 p-3 border-b border-blue-500/20">
+                                <h3 className="text-sm font-bold text-blue-400 flex items-center gap-2">
+                                    <ClipboardList size={16} /> {t.financialHistory || "Muhasebe Defteri"}
+                                </h3>
+                                <p className="text-[10px] text-slate-400 mt-1">{t.lastWeeksRecords || "Son haftalardaki mali işlemler"}</p>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-xs">
+                                    <thead className="bg-slate-900/50 border-b border-slate-700">
+                                        <tr>
+                                            <th className="p-2 text-left text-slate-400 font-bold">Hafta</th>
+                                            <th className="p-2 text-right text-emerald-400 font-bold">Gelir</th>
+                                            <th className="p-2 text-right text-red-400 font-bold">Gider</th>
+                                            <th className="p-2 text-right text-blue-400 font-bold">Net</th>
+                                            <th className="p-2 text-right text-slate-400 font-bold">Bütçe</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {[...fin.history].reverse().map((record: any, idx: number) => (
+                                            <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                                                <td className="p-2 text-slate-300">
+                                                    <div className="font-bold">H{record.week}</div>
+                                                    <div className="text-[10px] text-slate-500">S{record.season}</div>
+                                                </td>
+                                                <td className="p-2 text-right">
+                                                    <div className="font-mono text-emerald-400 font-bold">+€{(record.income.total / 1000000).toFixed(2)}M</div>
+                                                    <div className="text-[9px] text-slate-500 space-y-0.5 mt-1">
+                                                        {record.income.tickets > 0 && <div>🎫 €{(record.income.tickets / 1000).toFixed(0)}K</div>}
+                                                        {record.income.tvRights > 0 && <div>📺 €{(record.income.tvRights / 1000).toFixed(0)}K</div>}
+                                                        {record.income.sponsor > 0 && <div>💼 €{(record.income.sponsor / 1000).toFixed(0)}K</div>}
+                                                        {(record.income.seasonEnd || 0) > 0 && <div className="text-yellow-400">🏆 €{(record.income.seasonEnd / 1000000).toFixed(1)}M</div>}
+                                                        {(record.income.cupPrize || 0) > 0 && <div className="text-purple-400">🏅 €{(record.income.cupPrize / 1000000).toFixed(1)}M</div>}
+                                                    </div>
+                                                </td>
+                                                <td className="p-2 text-right">
+                                                    <div className="font-mono text-red-400 font-bold">-€{(record.expenses.total / 1000000).toFixed(2)}M</div>
+                                                    <div className="text-[9px] text-slate-500 space-y-0.5 mt-1">
+                                                        {record.expenses.wages > 0 && <div>👥 €{(record.expenses.wages / 1000).toFixed(0)}K</div>}
+                                                        {record.expenses.maintenance > 0 && <div>🔧 €{(record.expenses.maintenance / 1000).toFixed(0)}K</div>}
+                                                        {(record.expenses.facilityUpgrade || 0) > 0 && <div className="text-orange-400">🏗️ €{(record.expenses.facilityUpgrade / 1000000).toFixed(1)}M</div>}
+                                                    </div>
+                                                </td>
+                                                <td className="p-2 text-right">
+                                                    <div className={`font-mono font-bold ${record.balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                        {record.balance >= 0 ? '+' : ''}€{(record.balance / 1000000).toFixed(2)}M
+                                                    </div>
+                                                </td>
+                                                <td className="p-2 text-right">
+                                                    <div className="font-mono text-slate-300">€{(record.budgetAfter / 1000000).toFixed(2)}M</div>
+                                                    <div className="text-[10px] text-slate-500">
+                                                        {record.budgetAfter > record.budgetBefore ? '📈' : '📉'} 
+                                                        {((record.budgetAfter - record.budgetBefore) / 1000000).toFixed(2)}M
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -447,7 +537,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </div>
                                 <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                     <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
-                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.stadiumLevel + 1, 1.8) - Math.pow(team.facilities.stadiumLevel, 1.8)) * 4000).toLocaleString()}/hafta</span>
+                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.stadiumLevel + 1, 1.5) - Math.pow(team.facilities.stadiumLevel, 1.5)) * 4000).toLocaleString()}/hafta</span>
                                 </div>
                             </div>
                         )}
@@ -467,14 +557,14 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             disabled={team.facilities.stadiumLevel >= 15 || (() => {
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                return team.budget < Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                return team.budget < Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.05));
                             })()}
                             className="w-full py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
                             <Hammer size={14} /> {team.facilities.stadiumLevel >= 15 ? 'MAX' : (() => {
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                const cost = Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                const cost = Math.floor(500000 * levelMultiplier * (1 + nextLevel * 0.05));
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
@@ -523,7 +613,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </div>
                                 <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                     <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
-                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.trainingLevel + 1, 1.8) - Math.pow(team.facilities.trainingLevel, 1.8)) * 3500).toLocaleString()}/hafta</span>
+                                    <span className="text-red-400">+€{Math.floor((Math.pow(team.facilities.trainingLevel + 1, 1.4) - Math.pow(team.facilities.trainingLevel, 1.4)) * 3500).toLocaleString()}/hafta</span>
                                 </div>
                             </div>
                         )}
@@ -543,14 +633,14 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             disabled={team.facilities.trainingLevel >= 25 || (() => {
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                return team.budget < Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                return team.budget < Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.05));
                             })()}
                             className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1"
                         >
                             <Hammer size={14} /> {team.facilities.trainingLevel >= 25 ? 'MAX' : (() => {
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                const cost = Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                const cost = Math.floor(300000 * levelMultiplier * (1 + nextLevel * 0.05));
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
@@ -621,14 +711,14 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={team.facilities.academyLevel >= 25 || (() => {
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                        return team.budget < Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                        return team.budget < Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.05));
                                     })()}
                                     className="w-full py-2 md:py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
                                 >
                                     <Hammer size={16} /> {team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : (() => {
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-                                        const cost = Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.1));
+                                        const cost = Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.05));
                                         return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                                     })()}
                                 </button>
@@ -760,7 +850,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     disabled={staff.headCoachLevel >= 10}
                                     className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.headCoachLevel >= 10 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(2, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.headCoachLevel >= 10 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>

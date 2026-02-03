@@ -1,0 +1,170 @@
+export const LECH_POZNAN_SQUAD = [
+    {
+        ad: "B. Mro",
+        takim: "Lech Poznan",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 73,
+        yas: 21,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 60, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Mil",
+        takim: "Lech Poznan",
+        uyruk: "Hırvatistan",
+        mevki: "STP",
+        reyting: 72,
+        yas: 30,
+        ana_ozellikler: { hiz: 62, sut: 35, pas: 60, dribbling: 50, defans: 74, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Bla",
+        takim: "Lech Poznan",
+        uyruk: "Slovenya",
+        mevki: "STP",
+        reyting: 71,
+        yas: 25,
+        ana_ozellikler: { hiz: 64, sut: 35, pas: 62, dribbling: 55, defans: 72, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Per",
+        takim: "Lech Poznan",
+        uyruk: "Portekiz",
+        mevki: "SĞB",
+        reyting: 73,
+        yas: 24,
+        ana_ozellikler: { hiz: 80, sut: 55, pas: 68, dribbling: 70, defans: 66, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "E. And",
+        takim: "Lech Poznan",
+        uyruk: "İsveç",
+        mevki: "SLB",
+        reyting: 72,
+        yas: 21,
+        ana_ozellikler: { hiz: 78, sut: 50, pas: 65, dribbling: 68, defans: 66, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "R. Mur",
+        takim: "Lech Poznan",
+        uyruk: "Polonya",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 24,
+        ana_ozellikler: { hiz: 65, sut: 65, pas: 74, dribbling: 70, defans: 72, fizik: 76 },
+        detaylar: { liderlik: 76 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Kar",
+        takim: "Lech Poznan",
+        uyruk: "İsveç",
+        mevki: "MDO",
+        reyting: 73,
+        yas: 28,
+        ana_ozellikler: { hiz: 68, sut: 62, pas: 72, dribbling: 70, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Sou",
+        takim: "Lech Poznan",
+        uyruk: "Portekiz",
+        mevki: "MOO",
+        reyting: 74,
+        yas: 23,
+        ana_ozellikler: { hiz: 74, sut: 75, pas: 78, dribbling: 80, defans: 40, fizik: 65 },
+        detaylar: { teknik: 80 },
+        oyun_tarzlari: ["Yaratıcı"]
+    },
+    {
+        ad: "A. Ba",
+        takim: "Lech Poznan",
+        uyruk: "Norveç",
+        mevki: "SĞK",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 86, sut: 65, pas: 66, dribbling: 76, defans: 40, fizik: 68 },
+        detaylar: { hiz: 88 },
+        oyun_tarzlari: ["Süratli"],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "D. Hot",
+        takim: "Lech Poznan",
+        uyruk: "Bosna",
+        mevki: "SLK",
+        reyting: 74,
+        yas: 30,
+        ana_ozellikler: { hiz: 78, sut: 72, pas: 76, dribbling: 78, defans: 45, fizik: 65 },
+        detaylar: { teknik: 78 },
+        oyun_tarzlari: ["Oyun Kurucu"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "M. Ish",
+        takim: "Lech Poznan",
+        uyruk: "İsveç",
+        mevki: "SNT",
+        reyting: 77,
+        yas: 31,
+        ana_ozellikler: { hiz: 75, sut: 82, pas: 70, dribbling: 75, defans: 40, fizik: 78 },
+        detaylar: { bitiricilik: 85, liderlik: 88 },
+        oyun_tarzlari: ["Golcü", "Lider"],
+        yetenek: "Star"
+    },
+    {
+        ad: "F. Szy",
+        takim: "Lech Poznan",
+        uyruk: "Polonya",
+        mevki: "SNT",
+        reyting: 71,
+        yas: 22,
+        ana_ozellikler: { hiz: 80, sut: 72, pas: 60, dribbling: 68, defans: 35, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Go",
+        takim: "Lech Poznan",
+        uyruk: "İran",
+        mevki: "MOO",
+        reyting: 70,
+        yas: 25,
+        ana_ozellikler: { hiz: 75, sut: 68, pas: 72, dribbling: 74, defans: 45, fizik: 66 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "B. Sal",
+        takim: "Lech Poznan",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 70,
+        yas: 29,
+        ana_ozellikler: { hiz: 55, sut: 35, pas: 58, dribbling: 50, defans: 74, fizik: 78 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "F. Bed",
+        takim: "Lech Poznan",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 70,
+        yas: 31,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

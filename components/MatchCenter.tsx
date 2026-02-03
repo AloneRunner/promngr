@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupStatus } from '../types';
 import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
+import { TeamLogo } from './TeamLogo';
 import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
 import { simulateTick, getActiveEngine } from '../services/engine';
@@ -220,8 +221,20 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // 1. Initialize & Cleanup
     useEffect(() => {
         // Assign Jersey Numbers
+        console.log('🏟️ MATCH CENTER MOUNTED', {
+            matchId: match.id,
+            homeTeam: homeTeam.name,
+            awayTeam: awayTeam.name,
+            homePlayersCount: homePlayers.length,
+            awayPlayersCount: awayPlayers.length,
+            hasLiveData: !!match.liveData,
+            hasSimulation: !!match.liveData?.simulation,
+            simulationPlayers: match.liveData?.simulation?.players ? Object.keys(match.liveData.simulation.players).length : 0
+        });
+
         let hC = 2, aC = 2;
         [...homePlayers, ...awayPlayers].forEach(p => {
+            // Validate player coordinates
             if (p.jerseyNumber) {
                 playerNumbers.current[p.id] = p.jerseyNumber;
             } else if (p.position === 'GK') {
@@ -623,7 +636,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 z: nextP.z || 0,
                 facing: lerpAngle(prevP.facing || 0, nextP.facing || 0, alpha),
                 stamina: nextP.stamina || 100,
-                state: nextP.state || 'IDLE'
+                state: nextP.state || 'IDLE',
+                signal: nextP.outgoingSignal // Catch signal here (passed from Sim State)
             };
         }).filter(item => item !== null).sort((a, b) => a!.y - b!.y);
 
@@ -636,7 +650,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const num = playerNumbers.current[item.player.id] || 0;
             const hasBall = nextState.ball.ownerId === item.player.id;
 
-            drawPlayer(ctx, item.x, item.y, item.z || 0, item.facing, primary, secondary, num, hasBall, item.player.lastName, item.stamina, item.state);
+            drawPlayer(ctx, item.x, item.y, item.z || 0, item.facing, primary, secondary, num, hasBall, item.player.lastName, item.stamina, item.state, item.signal);
         });
 
         // Draw Ball with Trail Effect
@@ -1071,7 +1085,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx: CanvasRenderingContext2D,
         xPct: number, yPct: number, z: number, facing: number,
         primary: string, secondary: string, num: number,
-        hasBall: boolean, name: string, stamina: number, state: string
+        hasBall: boolean, name: string, stamina: number, state: string,
+        signal?: { type: string, targetId?: string }
     ) => {
         // 2D MODE PLAYER RENDER
         if (viewMode === '2D') {
@@ -1096,6 +1111,49 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(num.toString(), pos.x, pos.y);
+
+            // === SIGNAL EMOJIS (2D) ===
+            if (signal) {
+                let icon = '';
+                if (signal.type === 'CALL') icon = '☝️';
+                else if (signal.type === 'POINT') icon = '👉';
+                else if (signal.type === 'HOLD') icon = '✊';
+
+                if (icon) {
+                    ctx.font = '16px Arial';
+                    // Bounce animation
+                    const bounce = Math.sin(Date.now() / 150) * 3;
+                    ctx.fillText(icon, pos.x, pos.y - 18 + bounce);
+                }
+            }
+
+            // === SIGNAL EMOJIS (2D) ===
+            // This is new: Show signals (Call, Point, Hold)
+            // Need to pass "signal" prop or access logic similar to how we access state
+            // Ideally we need to access: activeEngine?.playerStates[player.id]?.outgoingSignal
+            // But we don't have direct access to 'activeEngine' inside drawPlayer easily unless we pass it.
+            // However, we passed 'state' string.
+            // Let's check how 'state' is passed. It is passed from 'drawPitch'.
+            // Accessing 'nextTickState' inside drawPlayer? No, drawPlayer is called BY drawPitch.
+            // We should modify 'drawPitch' first to extract the signal and pass it to 'drawPlayer'.
+
+            // Wait, I can't modify drawPitch easily without viewing it.
+            // I'll assume I can just use a placeholder here for now or I need to View drawPitch first.
+            // Actually, the user instruction says: // MatchCenter.tsx içinde drawPlayer fonksiyonunun içinde...
+            // It assumes I can get the signal.
+            // But 'drawPlayer' arguments list (see view_code_item in step 1229) is: 
+            // (ctx, xPct, yPct, z, facing, primary, secondary, num, hasBall, name, stamina, state)
+
+            // It does NOT have 'signal'.
+            // I need to modify drawPitch loop to pass 'signal' to 'drawPlayer'.
+            // And then modify 'drawPlayer' signature.
+
+            // This is a 2-step process. 
+            // 1. View 'drawPitch' to see how it calls 'drawPlayer'.
+            // 2. Modify both.
+
+            // Let's abort this Replace for a moment and just View 'drawPitch'.
+
 
             // Name Label (Simple)
             if (hasBall) {
@@ -1211,6 +1269,21 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         // ctx.shadowBlur = 2;
         ctx.fillText(num.toString(), cx, bodyY + 1);
         ctx.shadowBlur = 0;
+
+        // === SIGNAL EMOJIS (2.5D) ===
+        if (signal) {
+            let icon = '';
+            if (signal.type === 'CALL') icon = '✋';
+            else if (signal.type === 'POINT') icon = '👉';
+            else if (signal.type === 'HOLD') icon = '✋🏻';
+
+            if (icon) {
+                ctx.font = `bold ${Math.round(16 * scale)}px Arial`;
+                // Bounce animation
+                const bounce = Math.sin(Date.now() / 150) * 3;
+                ctx.fillText(icon, cx, headY - headRadius - 20 * scale + bounce);
+            }
+        }
 
         // Stamina indicator (small arc under player)
         const staminaColor = stamina > 50 ? '#22c55e' : stamina > 25 ? '#eab308' : '#ef4444';
@@ -1349,6 +1422,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             onUpdateLineup={(id, status) => { }}
                             onSwapPlayers={onSubstitute}
                             onAutoFix={onAutoFix}
+                            matchStatus={{
+                                minute: match.currentMinute,
+                                score: { home: match.homeScore, away: match.awayScore },
+                                isHome: managedSide === 'HOME'
+                            }}
                             t={t}
                         />
                         <div className="mt-4 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded text-yellow-200 text-xs md:text-sm flex items-center gap-2">
@@ -1362,9 +1440,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             <div className={`h-16 md:h-24 bg-slate-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 md:px-8 relative z-20 shrink-0 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 {/* Home Team */}
                 <div className="flex items-center gap-2 md:gap-4 w-1/3">
-                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(homeTeam.name)} alt={homeTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
-                    </div>
+                    <TeamLogo
+                        team={homeTeam}
+                        className="w-10 h-10 md:w-16 md:h-16 rounded-lg border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg"
+                    />
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{homeTeam.name}</h1>
                     </div>
@@ -1396,9 +1475,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full">{awayTeam.name}</h1>
                     </div>
-                    <div className="w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg overflow-hidden">
-                        <img src={getTeamLogo(awayTeam.name)} alt={awayTeam.name} className="w-8 h-8 md:w-12 md:h-12 object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
-                    </div>
+                    <TeamLogo
+                        team={awayTeam}
+                        className="w-10 h-10 md:w-16 md:h-16 rounded-lg border-2 md:border-4 border-slate-600 bg-gradient-to-br from-slate-700 to-slate-800 shadow-lg"
+                    />
                 </div>
             </div>
 
@@ -1516,7 +1596,15 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             {/* Left Side - Home Team */}
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-r from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
                                 <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
-                                    <img src={getTeamLogo(homeTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${homeTeam.primaryColor}">${homeTeam.name.substring(0, 1)}</span>`; }} />
+                                    <img
+                                        src={getTeamLogo(homeTeam?.name || '')}
+                                        alt=""
+                                        className="w-full h-full object-contain"
+                                        onError={(e) => {
+                                            const fallback = (homeTeam?.name || 'H')[0];
+                                            (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${homeTeam?.primaryColor || '#fff'}">${fallback}</span>`;
+                                        }}
+                                    />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession || 50}%</div>
@@ -1526,7 +1614,15 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             {/* Right Side - Away Team */}
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-l from-slate-900/90 to-transparent z-20 pointer-events-none py-2">
                                 <div className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-600 p-0.5 flex items-center justify-center">
-                                    <img src={getTeamLogo(awayTeam.name)} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${awayTeam.primaryColor}">${awayTeam.name.substring(0, 1)}</span>`; }} />
+                                    <img
+                                        src={getTeamLogo(awayTeam?.name || '')}
+                                        alt=""
+                                        className="w-full h-full object-contain"
+                                        onError={(e) => {
+                                            const fallback = (awayTeam?.name || 'A')[0];
+                                            (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: ${awayTeam?.primaryColor || '#fff'}">${fallback}</span>`;
+                                        }}
+                                    />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession || 50}%</div>

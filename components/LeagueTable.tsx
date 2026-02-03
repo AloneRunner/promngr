@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Team, Player, Translation, LeagueHistoryEntry } from '../types';
 import { LEAGUE_PRESETS } from '../constants';
 import { Trophy, Target, Award, Crown, History, Eye } from 'lucide-react';
+import { TeamLogo } from './TeamLogo';
 
 interface LeagueTableProps {
     teams: Team[];
@@ -89,10 +90,29 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
         return flags[id] || '🏳️';
     };
 
-    const leagues = LEAGUE_PRESETS.map(preset => ({
-        id: preset.id,
-        name: `${getFlag(preset.id)} ${preset.name}`
-    }));
+    const REGION_NAMES: Record<string, string> = {
+        'GROUP_A': 'Europe (Elite)',
+        'GROUP_B': 'Europe (Challenger)',
+        'GROUP_C': 'Americas (North)',
+        'GROUP_D': 'Americas (South)',
+        'GROUP_E': 'Asia & Oceania',
+        'GROUP_F': 'Africa',
+        'GROUP_G': 'Rest of World',
+        'GROUP_H': 'Special Leagues'
+    };
+
+    // Group leagues by region
+    const leaguesByRegion = LEAGUE_PRESETS.reduce((acc, preset) => {
+        const region = preset.region || 'GROUP_G';
+        if (!acc[region]) acc[region] = [];
+        acc[region].push({
+            id: preset.id,
+            name: `${getFlag(preset.id)} ${preset.name}`
+        });
+        return acc;
+    }, {} as Record<string, { id: string, name: string }[]>);
+
+    const sortedRegions = Object.keys(leaguesByRegion).sort();
 
     return (
         <div className="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700 animate-fade-in min-h-[500px]">
@@ -101,15 +121,19 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
             <div className="bg-slate-950 p-3 border-b border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Trophy className="text-yellow-500" size={20} />
-                    <span className="font-bold text-lg text-white">{leagues.find(l => l.id === currentLeagueId)?.name || 'League Table'}</span>
+                    <span className="font-bold text-lg text-white">{LEAGUE_PRESETS.find(l => l.id === currentLeagueId)?.name || 'League Table'}</span>
                 </div>
                 <select
                     value={currentLeagueId}
                     onChange={(e) => onSelectLeague(e.target.value)}
                     className="bg-slate-800 text-white text-sm border border-slate-600 rounded px-2 py-1 outline-none focus:border-emerald-500"
                 >
-                    {leagues.map(l => (
-                        <option key={l.id} value={l.id}>{l.name}</option>
+                    {sortedRegions.map(region => (
+                        <optgroup key={region} label={REGION_NAMES[region] || region}>
+                            {leaguesByRegion[region].map(l => (
+                                <option key={l.id} value={l.id}>{l.name}</option>
+                            ))}
+                        </optgroup>
                     ))}
                 </select>
             </div>
@@ -183,7 +207,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                     <td className="px-3 py-3 md:px-6 md:py-4 font-medium">{index + 1}</td>
                                     <td className="px-3 py-3 md:px-6 md:py-4 font-semibold text-white">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: team.primaryColor }}></div>
+                                            <TeamLogo team={team} className="w-6 h-6 shadow-sm" />
                                             <span className="truncate max-w-[120px] md:max-w-none">{team.name}</span>
                                             <Eye className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hidden md:inline" size={14} />
                                         </div>
@@ -230,7 +254,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                             {player.firstName} {player.lastName}
                                         </td>
                                         <td className="px-6 py-4 flex items-center gap-2">
-                                            {team && <div className="w-3 h-3 rounded-full" style={{ backgroundColor: team.primaryColor }}></div>}
+                                            {team ? <TeamLogo team={team} className="w-5 h-5" /> : <div className="w-5 h-5 rounded bg-slate-700"></div>}
                                             {team?.name || 'Free Agent'}
                                         </td>
                                         <td className="px-6 py-4 text-center font-bold text-emerald-400 text-lg">
@@ -274,7 +298,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                         <td className="px-4 py-3 font-semibold text-white">{player.firstName} {player.lastName}</td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: team?.primaryColor }}></div>
+                                                {team && <TeamLogo team={team} className="w-5 h-5" />}
                                                 <span className="text-slate-400 truncate max-w-[100px]">{team?.name}</span>
                                             </div>
                                         </td>
@@ -318,7 +342,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                         <td className="px-4 py-3 font-semibold text-white">{player.firstName} {player.lastName}</td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: team?.primaryColor }}></div>
+                                                {team && <TeamLogo team={team} className="w-5 h-5" />}
                                                 <span className="text-slate-400 truncate max-w-[100px]">{team?.name}</span>
                                             </div>
                                         </td>
@@ -350,16 +374,19 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                     <div className="p-4 space-y-6">
                         {/* User Team Achievements Section */}
                         {(() => {
-                            // Calculate user achievements from history
+                            // Filter history by current league ONLY
+                            const leagueHistory = history.filter(h => h.leagueId === currentLeagueId || !h.leagueId);
+                            
+                            // Calculate user achievements from league history
                             const userTeam = teams.find(t => t.id === (teams[0] as any)?.id); // Will get from props
-                            const userChampionships = history.filter(h => lookupTeams.find(t => t.id === h.championId)?.id === teams.find(t => t.stats)?.id).length;
-                            const userSecondPlaces = history.filter(h => {
+                            const userChampionships = leagueHistory.filter(h => lookupTeams.find(t => t.id === h.championId)?.id === teams.find(t => t.stats)?.id).length;
+                            const userSecondPlaces = leagueHistory.filter(h => {
                                 const sorted = [...lookupTeams].sort((a, b) => b.stats.points - a.stats.points);
                                 return sorted[1]?.id === teams.find(t => t.stats)?.id;
                             }).length;
 
                             // Count how many times user's players were top scorer/assister
-                            const userTopScorerSeasons = history.filter(h => {
+                            const userTopScorerSeasons = leagueHistory.filter(h => {
                                 const playerName = h.topScorer.split(' (')[0];
                                 return leaguePlayers.some(p => `${p.firstName} ${p.lastName}` === playerName);
                             }).length;
@@ -385,7 +412,7 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                                             <div className="text-[10px] text-slate-400 uppercase">{t.scorerKing}</div>
                                         </div>
                                         <div className="bg-slate-900/50 rounded-lg p-3 text-center border border-blue-500/20">
-                                            <div className="text-3xl font-black text-blue-400">{history.length}</div>
+                                            <div className="text-3xl font-black text-blue-400">{leagueHistory.length}</div>
                                             <div className="text-[10px] text-slate-400 uppercase">{t.season}</div>
                                         </div>
                                     </div>
@@ -402,6 +429,14 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
                             {(() => {
                                 // Filter history by current league
                                 const leagueHistory = history.filter(h => h.leagueId === currentLeagueId || !h.leagueId);
+
+                                // DEBUG: Log to console
+                                console.log('[LeagueTable] History Debug:', {
+                                    totalHistory: history.length,
+                                    currentLeagueId,
+                                    leagueHistory: leagueHistory.length,
+                                    allLeagueIds: [...new Set(history.map(h => h.leagueId))]
+                                });
 
                                 if (leagueHistory.length === 0) {
                                     return (

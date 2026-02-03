@@ -1,0 +1,171 @@
+export const VIKTORIA_PLZEN_SQUAD = [
+    {
+        ad: "M. Jed",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "KL",
+        reyting: 74,
+        yas: 21,
+        ana_ozellikler: { hiz: 38, sut: 20, pas: 60, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 78 },
+        oyun_tarzlari: [],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "L. Hej",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "STP",
+        reyting: 73,
+        yas: 34,
+        ana_ozellikler: { hiz: 55, sut: 35, pas: 62, dribbling: 50, defans: 76, fizik: 78 },
+        detaylar: { liderlik: 82 },
+        oyun_tarzlari: ["Lider"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "S. Dweh",
+        takim: "Viktoria Plzen",
+        uyruk: "Liberya",
+        mevki: "STP",
+        reyting: 72,
+        yas: 22,
+        ana_ozellikler: { hiz: 68, sut: 35, pas: 60, dribbling: 55, defans: 72, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Cad",
+        takim: "Viktoria Plzen",
+        uyruk: "Brezilya",
+        mevki: "SLB",
+        reyting: 73,
+        yas: 26,
+        ana_ozellikler: { hiz: 80, sut: 55, pas: 68, dribbling: 72, defans: 66, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Kop",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "SĞB",
+        reyting: 72,
+        yas: 30,
+        ana_ozellikler: { hiz: 76, sut: 55, pas: 65, dribbling: 66, defans: 68, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "L. Kal",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 31,
+        ana_ozellikler: { hiz: 65, sut: 65, pas: 74, dribbling: 70, defans: 72, fizik: 74 },
+        detaylar: { liderlik: 80 },
+        oyun_tarzlari: ["Lider"]
+    },
+    {
+        ad: "L. Cer",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 23,
+        ana_ozellikler: { hiz: 68, sut: 68, pas: 72, dribbling: 70, defans: 68, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Sul",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "MOO",
+        reyting: 77,
+        yas: 23,
+        ana_ozellikler: { hiz: 78, sut: 78, pas: 74, dribbling: 76, defans: 45, fizik: 68 },
+        detaylar: { bitiricilik: 80, teknik: 78 },
+        oyun_tarzlari: ["Golcü", "Yaratıcı"],
+        yetenek: "Star"
+    },
+    {
+        ad: "J. Kopic",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "SĞK",
+        reyting: 73,
+        yas: 33,
+        ana_ozellikler: { hiz: 76, sut: 65, pas: 70, dribbling: 72, defans: 45, fizik: 66 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Mos",
+        takim: "Viktoria Plzen",
+        uyruk: "Kolombiya",
+        mevki: "SLK",
+        reyting: 72,
+        yas: 34,
+        ana_ozellikler: { hiz: 75, sut: 70, pas: 68, dribbling: 74, defans: 40, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Vyd",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "SNT",
+        reyting: 74,
+        yas: 32,
+        ana_ozellikler: { hiz: 80, sut: 76, pas: 65, dribbling: 74, defans: 35, fizik: 70 },
+        detaylar: { bitiricilik: 76, hiz: 82 },
+        oyun_tarzlari: ["Süratli"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "D. Vas",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "SNT",
+        reyting: 71,
+        yas: 25,
+        ana_ozellikler: { hiz: 76, sut: 72, pas: 60, dribbling: 68, defans: 35, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "C. Sou",
+        takim: "Viktoria Plzen",
+        uyruk: "Senegal",
+        mevki: "MOO",
+        reyting: 70,
+        yas: 24,
+        ana_ozellikler: { hiz: 74, sut: 68, pas: 70, dribbling: 72, defans: 50, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "V. Jem",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "STP",
+        reyting: 70,
+        yas: 29,
+        ana_ozellikler: { hiz: 60, sut: 35, pas: 60, dribbling: 50, defans: 72, fizik: 74 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "M. Tvr",
+        takim: "Viktoria Plzen",
+        uyruk: "Çekya",
+        mevki: "KL",
+        reyting: 70,
+        yas: 31,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];
