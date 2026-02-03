@@ -28,32 +28,33 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 50;
 
-  const filteredPlayers = marketPlayers.filter(p => {
-    const posMatch = filterPos === 'ALL' || p.position === filterPos;
+  const filteredPlayers = React.useMemo(() => {
+    return marketPlayers.filter(p => {
+      const posMatch = filterPos === 'ALL' || p.position === filterPos;
 
-    // Status Filter
-    const listMatch = listFilter === 'ALL' ||
-      (listFilter === 'LISTED' && p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
-      (listFilter === 'UNLISTED' && !p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
-      (listFilter === 'FREE' && p.teamId === 'FREE_AGENT');
+      // Status Filter
+      const listMatch = listFilter === 'ALL' ||
+        (listFilter === 'LISTED' && p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
+        (listFilter === 'UNLISTED' && !p.isTransferListed && p.teamId !== 'FREE_AGENT') ||
+        (listFilter === 'FREE' && p.teamId === 'FREE_AGENT');
 
-    // Interest Filter (Approximate: Reputation vs Overall)
-    // Formula: Player OVR <= Normalized Rep + 5 (Lenient)
-    const normalizedRep = userTeam.reputation / 100;
-    const interestMatch = !showInterestedOnly || p.teamId === 'FREE_AGENT' || p.overall <= (normalizedRep + 5);
+      // Interest Filter (Approximate: Reputation vs Overall)
+      const normalizedRep = userTeam.reputation / 100;
+      const interestMatch = !showInterestedOnly || p.teamId === 'FREE_AGENT' || p.overall <= (normalizedRep + 5);
 
-    // Attribute Filter
-    const attrMatch =
-      p.attributes.speed >= minAttributes.speed &&
-      p.attributes.finishing >= minAttributes.finishing &&
-      p.attributes.passing >= minAttributes.passing &&
-      p.attributes.dribbling >= minAttributes.dribbling &&
-      p.attributes.tackling >= minAttributes.tackling;
+      // Attribute Filter
+      const attrMatch =
+        p.attributes.speed >= minAttributes.speed &&
+        p.attributes.finishing >= minAttributes.finishing &&
+        p.attributes.passing >= minAttributes.passing &&
+        p.attributes.dribbling >= minAttributes.dribbling &&
+        p.attributes.tackling >= minAttributes.tackling;
 
-    return posMatch && listMatch && interestMatch && attrMatch;
-  }).sort((a, b) => b.overall - a.overall);
+      return posMatch && listMatch && interestMatch && attrMatch;
+    }).sort((a, b) => b.overall - a.overall);
+  }, [marketPlayers, filterPos, listFilter, showInterestedOnly, minAttributes, userTeam.reputation]);
 
   const totalPages = Math.ceil(filteredPlayers.length / itemsPerPage);
   const displayedPlayers = filteredPlayers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);

@@ -14,6 +14,43 @@ export const LEAGUE_LOGOS: Record<string, string> = {
     'in': '/assets/logos/leagues/india_logo.jpg',
     'cr': '/assets/logos/leagues/costarica_logo.jpg',
     'tn': '/assets/logos/leagues/tunisia_logo.jpg',
+    'ng': '/assets/logos/leagues/nigeria_logo.jpg',
+    'id': '/assets/logos/leagues/indonesia_logo.jpg',
+    'ru': '/assets/logos/leagues/russia_logo.jpg',
+    'dz': '/assets/logos/leagues/algeria_logo.jpg',
+    'pt': '/assets/logos/leagues/portugal_logo.jpg',
+    'nl': '/assets/logos/leagues/netherlands_logo.jpg',
+    'be': '/assets/logos/leagues/belgium_logo.jpg',
+    'my': '/assets/logos/leagues/malaysia_logo.jpg',
+    'ke': '/assets/logos/leagues/kenya_logo.jpg',
+    'sn': '/assets/logos/leagues/senegal_logo.jpg',
+    'ci': '/assets/logos/leagues/ivory_coast_logo.jpg',
+    'ro': '/assets/logos/leagues/romania_logo.jpg',
+    'sco': '/assets/logos/leagues/scotland_logo.jpg',
+    'at': '/assets/logos/leagues/austria_logo.jpg',
+    'ch': '/assets/logos/leagues/switzerland_logo.jpg',
+    'gr': '/assets/logos/leagues/greece_logo.jpg',
+    'hr': '/assets/logos/leagues/croatia_logo.jpg',
+    'rs': '/assets/logos/leagues/serbia_logo.jpg',
+    'cz': '/assets/logos/leagues/czech_logo.jpg',
+    'pl': '/assets/logos/leagues/poland_logo.jpg',
+    'gh': '/assets/logos/leagues/ghana_logo.jpg',
+    'cn': '/assets/logos/leagues/china_logo.jpg',
+    'py': '/assets/logos/leagues/paraguay_logo.jpg',
+    'ec': '/assets/logos/leagues/ecuador_logo.jpg',
+    'jp': '/assets/logos/leagues/japan_logo.jpg',
+    'kr': '/assets/logos/leagues/korea_logo.jpg',
+    'au': '/assets/logos/leagues/aleague_logo.jpg',
+    'eg': '/assets/logos/leagues/egypt_logo.jpg',
+    'ma': '/assets/logos/leagues/botola_logo.jpg',
+    'za': '/assets/logos/leagues/psl_logo.jpg',
+    'car': '/assets/logos/leagues/caribbean_logo.jpg',
+    'co': '/assets/logos/leagues/colombia_logo.jpg',
+    'cl': '/assets/logos/leagues/chile_logo.jpg',
+    'uy': '/assets/logos/leagues/uruguay_logo.jpg',
+    'sa': '/assets/logos/leagues/saudi_logo.jpg',
+    'mx': '/assets/logos/leagues/mexico_logo.jpg',
+    'na': '/assets/logos/leagues/usa_logo.jpg'
 };
 
 // Team Logos - mapped by team name (as used in LEAGUE_PRESETS)
@@ -302,6 +339,32 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Bogota Blues': '/assets/logos/teams/co/bogota-blues.jpg',
     'Cali Devils': '/assets/logos/teams/co/cali-devils.jpg',
 
+    // 🇮🇩 Liga 1 (Indonesia) (Using 'id' code)
+    'Persib Bandung': '/assets/logos/teams/id/persib-bandung.jpg',
+    'Persija Jakarta': '/assets/logos/teams/id/persija-jakarta.jpg',
+    'Borneo FC': '/assets/logos/teams/id/borneo-fc.jpg',
+    'Malut United': '/assets/logos/teams/id/malut-united.jpg',
+    'Persita': '/assets/logos/teams/id/persita.jpg',
+
+    // 🇮🇩 Liga 1 (Indonesia) Batch 2
+    'Persebaya': '/assets/logos/teams/id/persebaya-surabaya.jpg',
+    'PSIM': '/assets/logos/teams/id/psim-yogyakarta.jpg',
+    'Persisam Putra': '/assets/logos/teams/id/persisam-putra.jpg',
+    'Bhayangkara': '/assets/logos/teams/id/bhayangkara-fc.jpg',
+    'Dewa United': '/assets/logos/teams/id/dewa-united.jpg',
+
+    // 🇮🇩 Liga 1 (Indonesia) Batch 3
+    'Persik': '/assets/logos/teams/id/persik-kediri.jpg',
+    'Arema': '/assets/logos/teams/id/arema-fc.jpg',
+    'PSM Makassar': '/assets/logos/teams/id/psm-makassar.jpg',
+    'Madura United': '/assets/logos/teams/id/madura-united.jpg',
+    'PSBS Biak': '/assets/logos/teams/id/psbs-biak.jpg',
+
+    // 🇮🇩 Liga 1 (Indonesia) Batch 4
+    'Persijap Jepara': '/assets/logos/teams/id/persijap-jepara.jpg',
+    'Semen Padang': '/assets/logos/teams/id/semen-padang.jpg',
+    'Persis Solo': '/assets/logos/teams/id/persis-solo.jpg',
+
     // 🇪🇬 Egyptian Premier League (Egypt)
     'Cairo Red Devils': '/assets/logos/teams/eg/cairo-red-devils.jpg',
     'Cairo Knights': '/assets/logos/teams/eg/cairo-knights.jpg',
@@ -312,6 +375,30 @@ export const TEAM_LOGOS: Record<string, string> = {
     'Jeddah Tigers': '/assets/logos/teams/sa/jeddah-tigers.jpg',
     'Jeddah Green': '/assets/logos/teams/sa/jeddah-green.jpg',
     'Riyadh Knights': '/assets/logos/teams/sa/riyadh-knights.jpg',
+
+    // 🇳🇬 NPFL (Nigeria)
+    'Rivers Utd': '/assets/logos/teams/ng/rivers-utd.jpg',
+    'Nasarawa United': '/assets/logos/teams/ng/nasarawa-united.jpg',
+    'Ikorodu City': '/assets/logos/teams/ng/ikorodu-city.jpg',
+    'Abia Warriors': '/assets/logos/teams/ng/abia-warriors.jpg',
+    'Enugu Rangers': '/assets/logos/teams/ng/enugu-rangers.jpg',
+    'Shooting Stars': '/assets/logos/teams/ng/shooting-stars.jpg',
+    'Niger Tornadoes FC': '/assets/logos/teams/ng/niger-tornadoes-fc.jpg',
+    'Bendel Insurance': '/assets/logos/teams/ng/bendel-insurance.jpg',
+    'Warri Wolves FC': '/assets/logos/teams/ng/warri-wolves-fc.jpg',
+    'Katsina Utd': '/assets/logos/teams/ng/katsina-utd.jpg',
+    'Enyimba': '/assets/logos/teams/ng/enyimba.jpg',
+    'Wikki Tourists': '/assets/logos/teams/ng/wikki-tourists.jpg',
+    'Barau FC': '/assets/logos/teams/ng/barau-fc.jpg',
+    'Plateau Utd': '/assets/logos/teams/ng/plateau-utd.jpg',
+    'Remo Stars': '/assets/logos/teams/ng/remo-stars.jpg',
+    'Kano Pillars FC': '/assets/logos/teams/ng/kano-pillars-fc.jpg',
+    'Kwara United': '/assets/logos/teams/ng/kwara-united.jpg',
+    'Bayelsa United FC': '/assets/logos/teams/ng/bayelsa-united-fc.jpg',
+    'El-Kanemi Warriors': '/assets/logos/teams/ng/el-kanemi-warriors.jpg',
+    'Kun Khalifat FC': '/assets/logos/teams/ng/kun-khalifat-fc.jpg',
+
+
 };
 
 // Default fallback logo for teams without custom logos

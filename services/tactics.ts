@@ -132,6 +132,18 @@ export const analyzeUserHistory = (
     formationFilter?: string,
     styleFilter?: string
 ) => {
+    // 0. Safety check
+    if (!history || !Array.isArray(history)) {
+        return {
+            bestFormation: null,
+            bestFormationWinRate: 0,
+            bestFormationMatches: 0,
+            bestStyle: null,
+            bestStyleWinRate: 0,
+            bestStyleMatches: 0
+        };
+    }
+
     // 1. Filter relevant matches
     let relevantMatches = history;
     if (formationFilter) {
@@ -158,32 +170,58 @@ export const analyzeUserHistory = (
     }
 
     // 2. Analyze Performance by USER Tactic used
-    const formationStats: Record<string, { wins: number, total: number }> = {};
-    const styleStats: Record<string, { wins: number, total: number }> = {};
+    const formationStats: Record<string, { wins: number, draws: number, total: number }> = {};
+    const styleStats: Record<string, { wins: number, draws: number, total: number }> = {};
 
     relevantMatches.forEach(m => {
-        const userTactic = m.isUserHome ? m.homeTactic : m.awayTactic;
+        const userTactic = m.userFinalTactic || (m.isUserHome ? m.homeTactic : m.awayTactic);
         const userWon = m.userWon;
+        const isDraw = !userWon && m.homeGoals === m.awayGoals;
 
         // Formation
-        if (!formationStats[userTactic.formation]) formationStats[userTactic.formation] = { wins: 0, total: 0 };
+        if (!formationStats[userTactic.formation]) formationStats[userTactic.formation] = { wins: 0, draws: 0, total: 0 };
         formationStats[userTactic.formation].total++;
         if (userWon) formationStats[userTactic.formation].wins++;
+        if (isDraw) formationStats[userTactic.formation].draws++;
 
         // Style
-        if (!styleStats[userTactic.style]) styleStats[userTactic.style] = { wins: 0, total: 0 };
-        styleStats[userTactic.style].total++;
-        if (userWon) styleStats[userTactic.style].wins++;
+        // Ensure style exists (fallback to Balanced)
+        const style = userTactic.style || 'Balanced';
+        if (!styleStats[style]) styleStats[style] = { wins: 0, draws: 0, total: 0 };
+        styleStats[style].total++;
+        if (userWon) styleStats[style].wins++;
+        if (isDraw) styleStats[style].draws++;
     });
+
+    // Helper to calculate score
+    const calculateScore = (wins: number, draws: number, total: number) => {
+        if (total === 0) return 0;
+        const points = (wins * 3) + (draws * 1);
+        const ppm = points / total;
+        // Logarithmic bonus for experience (more matches = more reliable)
+        // log2(2) = 1, log2(5) = 2.3, log2(10) = 3.3
+        const experienceBonus = Math.log2(total + 1);
+        return ppm * experienceBonus;
+    };
 
     // 3. Find Best
     const sortedFormations = Object.entries(formationStats)
-        .map(([key, val]) => ({ key, winRate: (val.wins / val.total) * 100, total: val.total }))
-        .sort((a, b) => b.winRate - a.winRate || b.total - a.total);
+        .map(([key, val]) => ({
+            key,
+            winRate: (val.wins / val.total) * 100,
+            total: val.total,
+            score: calculateScore(val.wins, val.draws, val.total)
+        }))
+        .sort((a, b) => b.score - a.score || b.total - a.total);
 
     const sortedStyles = Object.entries(styleStats)
-        .map(([key, val]) => ({ key, winRate: (val.wins / val.total) * 100, total: val.total }))
-        .sort((a, b) => b.winRate - a.winRate || b.total - a.total);
+        .map(([key, val]) => ({
+            key,
+            winRate: (val.wins / val.total) * 100,
+            total: val.total,
+            score: calculateScore(val.wins, val.draws, val.total)
+        }))
+        .sort((a, b) => b.score - a.score || b.total - a.total);
 
     const bestFormationData = sortedFormations[0];
     const bestStyleData = sortedStyles[0];

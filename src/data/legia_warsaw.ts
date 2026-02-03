@@ -1,0 +1,171 @@
+export const LEGIA_WARSAW_SQUAD = [
+    {
+        ad: "K. Tob",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 74,
+        yas: 21,
+        ana_ozellikler: { hiz: 40, sut: 20, pas: 62, dribbling: 30, defans: 20, fizik: 70 },
+        detaylar: { refleks: 78 },
+        oyun_tarzlari: [],
+        yetenek: "Genç Yetenek"
+    },
+    {
+        ad: "R. Aug",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 73,
+        yas: 30,
+        ana_ozellikler: { hiz: 60, sut: 35, pas: 62, dribbling: 50, defans: 76, fizik: 78 },
+        detaylar: { liderlik: 78 },
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Kun",
+        takim: "Legia Warsaw",
+        uyruk: "Fransa",
+        mevki: "STP",
+        reyting: 72,
+        yas: 25,
+        ana_ozellikler: { hiz: 64, sut: 35, pas: 62, dribbling: 55, defans: 74, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "P. Wsz",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "SĞB",
+        reyting: 76,
+        yas: 32,
+        ana_ozellikler: { hiz: 82, sut: 65, pas: 74, dribbling: 72, defans: 66, fizik: 74 },
+        detaylar: { dayaniklilik: 85 },
+        oyun_tarzlari: ["Oyun Kurucu"]
+    },
+    {
+        ad: "Y. Rib",
+        takim: "Legia Warsaw",
+        uyruk: "Portekiz",
+        mevki: "SLB",
+        reyting: 73,
+        yas: 27,
+        ana_ozellikler: { hiz: 80, sut: 60, pas: 70, dribbling: 72, defans: 66, fizik: 68 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "J. Eli",
+        takim: "Legia Warsaw",
+        uyruk: "Kolombiya",
+        mevki: "MDO",
+        reyting: 74,
+        yas: 26,
+        ana_ozellikler: { hiz: 72, sut: 62, pas: 74, dribbling: 70, defans: 70, fizik: 76 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "B. Kap",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "MDO",
+        reyting: 75,
+        yas: 27,
+        ana_ozellikler: { hiz: 70, sut: 68, pas: 78, dribbling: 74, defans: 65, fizik: 70 },
+        detaylar: { teknik: 78, vizyon: 80 },
+        oyun_tarzlari: ["Oyun Kurucu"]
+    },
+    {
+        ad: "Josue",
+        takim: "Legia Warsaw",
+        uyruk: "Portekiz",
+        mevki: "MOO",
+        reyting: 78,
+        yas: 33,
+        ana_ozellikler: { hiz: 60, sut: 78, pas: 86, dribbling: 76, defans: 50, fizik: 65 },
+        detaylar: { teknik: 86, vizyon: 90, liderlik: 88, frikik: 85 },
+        oyun_tarzlari: ["Oyun Kurucu", "Duran Top Uzmanı", "Lider"],
+        yetenek: "Star"
+    },
+    {
+        ad: "M. Gua",
+        takim: "Legia Warsaw",
+        uyruk: "İspanya",
+        mevki: "SĞK",
+        reyting: 75,
+        yas: 28,
+        ana_ozellikler: { hiz: 82, sut: 76, pas: 70, dribbling: 78, defans: 40, fizik: 70 },
+        detaylar: { bitiricilik: 78 },
+        oyun_tarzlari: ["Golcü"]
+    },
+    {
+        ad: "L. Luq",
+        takim: "Legia Warsaw",
+        uyruk: "Brezilya",
+        mevki: "SLK",
+        reyting: 74,
+        yas: 25,
+        ana_ozellikler: { hiz: 85, sut: 70, pas: 72, dribbling: 80, defans: 40, fizik: 70 },
+        detaylar: { teknik: 82 },
+        oyun_tarzlari: ["Driblingçi"]
+    },
+    {
+        ad: "T. Pek",
+        takim: "Legia Warsaw",
+        uyruk: "Çekya",
+        mevki: "SNT",
+        reyting: 75,
+        yas: 34,
+        ana_ozellikler: { hiz: 55, sut: 78, pas: 65, dribbling: 64, defans: 35, fizik: 78 },
+        detaylar: { bitiricilik: 80, guc: 82 },
+        oyun_tarzlari: ["Fırsatçı"],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "M. Ros",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "SNT",
+        reyting: 72,
+        yas: 23,
+        ana_ozellikler: { hiz: 76, sut: 74, pas: 60, dribbling: 70, defans: 35, fizik: 72 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "G. Gon",
+        takim: "Legia Warsaw",
+        uyruk: "Japonya",
+        mevki: "MOO",
+        reyting: 70,
+        yas: 29,
+        ana_ozellikler: { hiz: 74, sut: 66, pas: 72, dribbling: 74, defans: 50, fizik: 65 },
+        detaylar: [],
+        oyun_tarzlari: []
+    },
+    {
+        ad: "A. Jed",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "STP",
+        reyting: 71,
+        yas: 36,
+        ana_ozellikler: { hiz: 50, sut: 40, pas: 65, dribbling: 55, defans: 74, fizik: 76 },
+        detaylar: { liderlik: 85 },
+        oyun_tarzlari: [],
+        yetenek: "Tecrübeli"
+    },
+    {
+        ad: "D. Hla",
+        takim: "Legia Warsaw",
+        uyruk: "Polonya",
+        mevki: "KL",
+        reyting: 70,
+        yas: 29,
+        ana_ozellikler: { hiz: 35, sut: 15, pas: 55, dribbling: 25, defans: 18, fizik: 70 },
+        detaylar: [],
+        oyun_tarzlari: []
+    }
+];

@@ -55,9 +55,9 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
     );
 
     // Get opponent's tactics
-    const opponentStyle = opponent.tactic.style || 'Balanced';
-    const opponentFormation = opponent.tactic.formation;
-    const opponentAggression = opponent.tactic.aggression || 'Normal';
+    const opponentStyle = opponent.tactic?.style || 'Balanced';
+    const opponentFormation = opponent.tactic?.formation;
+    const opponentAggression = opponent.tactic?.aggression || 'Normal';
 
     // === HISTORY-BASED ANALYSIS ===
     // Analyze user's past performance against THIS TYPE of opponent

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { EuropeanCup, EuropeanCupMatch, Team, Translation, GlobalCupGroup } from '../types';
 import { Trophy, Star, Crown, ChevronRight, Grid, LayoutTemplate } from 'lucide-react';
+import { getLeagueFlag } from '../src/data/leagueFlags';
 
 interface EuropeanCupViewProps {
     cup: EuropeanCup;
@@ -10,6 +11,7 @@ interface EuropeanCupViewProps {
     t: Translation;
     onPlayMatch: (match: EuropeanCupMatch) => void;
     onClose: () => void;
+    cupName?: string; // Optional override for display title and theme detection
 }
 
 export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
@@ -18,9 +20,10 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
     userTeamId,
     t,
     onPlayMatch,
-    onClose
+    onClose,
+    cupName
 }) => {
-    const [activeTab, setActiveTab] = useState<'groups' | 'bracket'>('bracket');
+    const [activeTab, setActiveTab] = useState<'groups' | 'bracket'>('groups'); // Default to groups to show content immediately
     const getTeam = (id: string) => teams.find(t => t.id === id);
 
     // Safety check for knockout matches
@@ -45,7 +48,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
         return (
             <div
                 key={match.id}
-                className={`bg-slate-800/50 rounded-lg border p-3 ${isUserMatch ? (isChampionsLeague ? 'border-purple-500/50' : 'border-emerald-500/50') : 'border-slate-700'}`}
+                className={`bg-slate-800/50 rounded-lg border p-3 ${isUserMatch ? activeBorder : 'border-slate-700'}`}
             >
                 <div className="flex items-center justify-between gap-2">
                     {/* Home */}
@@ -56,7 +59,8 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                         >
                             {home.name.charAt(0)}
                         </div>
-                        <span className={`text-sm font-bold truncate ${match.winnerId === home.id ? (isChampionsLeague ? 'text-purple-400' : 'text-emerald-400') : 'text-white'}`}>
+                        <span className="text-base shrink-0" title={home.leagueId}>{getLeagueFlag(home.leagueId)}</span>
+                        <span className={`text-sm font-bold truncate ${match.winnerId === home.id ? activeText : 'text-white'}`}>
                             {home.name.length > 8 ? home.name.substring(0, 8) + '.' : home.name}
                         </span>
                     </div>
@@ -74,9 +78,10 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
 
                     {/* Away */}
                     <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
-                        <span className={`text-sm font-bold truncate text-right ${match.winnerId === away.id ? (isChampionsLeague ? 'text-purple-400' : 'text-emerald-400') : 'text-white'}`}>
+                        <span className={`text-sm font-bold truncate text-right ${match.winnerId === away.id ? activeText : 'text-white'}`}>
                             {away.name.length > 8 ? away.name.substring(0, 8) + '.' : away.name}
                         </span>
+                        <span className="text-base shrink-0" title={away.leagueId}>{getLeagueFlag(away.leagueId)}</span>
                         <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                             style={{ backgroundColor: away.primaryColor, color: '#fff' }}
@@ -89,7 +94,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                 {canPlay && (
                     <button
                         onClick={() => onPlayMatch(match)}
-                        className={`w-full mt-2 py-2 bg-gradient-to-r ${isChampionsLeague ? 'from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400' : 'from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400'} text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-1`}
+                        className={`w-full mt-2 py-2 bg-gradient-to-r ${buttonGradient} text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-1`}
                     >
                         <Trophy size={14} /> Maçı Oyna
                     </button>
@@ -101,7 +106,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
     const renderGroup = (group: GlobalCupGroup) => (
         <div key={group.id} className="bg-slate-800/30 rounded-xl border border-slate-700 p-4">
             <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                <Grid size={16} className={isChampionsLeague ? 'text-purple-400' : 'text-emerald-400'} />
+                <Grid size={16} className={iconColor} />
                 {group.name}
             </h3>
             <div className="overflow-x-auto">
@@ -119,9 +124,12 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                             if (!team) return null;
                             return (
                                 <tr key={standing.teamId} className={`border-b border-slate-800 ${i < 2 ? 'bg-white/5' : ''}`}>
-                                    <td className="p-2 font-medium text-white flex items-center gap-2">
-                                        <span className={`text-xs ${i < 2 ? 'text-green-400' : 'text-slate-500'}`}>{i + 1}.</span>
-                                        {team.name}
+                                    <td className="p-2 font-medium text-white">
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-xs ${i < 2 ? 'text-green-400' : 'text-slate-500'}`}>{i + 1}.</span>
+                                            <span className="text-base" title={team.leagueId}>{getLeagueFlag(team.leagueId)}</span>
+                                            <span>{team.name}</span>
+                                        </div>
                                     </td>
                                     <td className="p-2 text-center text-slate-300">{standing.played}</td>
                                     <td className="p-2 text-center font-bold text-white">{standing.points}</td>
@@ -134,17 +142,33 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
         </div>
     );
 
-    const isChampionsLeague = !!cup._generatedForeignTeams; // Should rely on a better flag or context in future
-    // Actually, check if teams are from different leagues? 
-    // For now, reuse legacy detection logic or standard
-    const title = 'GLOBAL CUP'; // Simplified for now
+    // Reset tab when cup changes (Fixes "Previous Screen Data" bug) (Actually React key remounts usually fix this, but safety first)
+    // useEffect(() => setActiveTab('bracket'), [cup]); // Needs useEffect import
 
-    // Theme setup based on type...
-    const themeColor = 'purple';
-    const bgGradient = 'from-purple-900/20 via-slate-900 to-purple-900/20';
-    const textGradient = 'from-purple-400 to-indigo-200';
-    const iconColor = 'text-purple-400';
-    const borderColor = 'border-purple-500/30';
+    // Determine Cup Type
+    // If it has 8 groups of 4, it's likely CL/EL.
+    // Differentiate by checking if we passed a prop or check internal structure.
+    // Hack: We can check if the parent component passed the name, or infer from context.
+    // For now, let's assume if it has 32 teams and is not named 'Europa', it's CL.
+    // Better: Allow 'title' prop or check cup property if available.
+
+    // Use passed cupName if available, else fallback to naive check
+    const normalizedName = (cupName || '').toLowerCase();
+    const isEliteCup = cupName
+        ? (normalizedName.includes('elite') || normalizedName.includes('elit') || normalizedName.includes('champion')) && !normalizedName.includes('challenge') && !normalizedName.includes('meydan')
+        : ((cup as any).name !== 'Europa League');
+
+    const title = cupName || (isEliteCup ? (t.internationalEliteCup || 'International Elite Cup') : (t.internationalChallengeCup || 'International Challenge Cup'));
+
+    // Theme setup
+    const themeColor = isEliteCup ? 'purple' : 'orange';
+    const bgGradient = isEliteCup ? 'from-purple-900/20 via-slate-900 to-purple-900/20' : 'from-orange-900/20 via-slate-900 to-orange-900/20';
+    const textGradient = isEliteCup ? 'from-purple-400 to-indigo-200' : 'from-orange-400 to-amber-200';
+    const iconColor = isEliteCup ? 'text-purple-400' : 'text-orange-400';
+    const borderColor = isEliteCup ? 'border-purple-500/30' : 'border-orange-500/30';
+    const buttonGradient = isEliteCup ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'bg-orange-600 text-white shadow-lg shadow-orange-900/50';
+    const activeBorder = isEliteCup ? 'border-purple-500/50' : 'border-orange-500/50';
+    const activeText = isEliteCup ? 'text-purple-400' : 'text-orange-400';
 
     return (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -159,7 +183,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                         </h1>
                         <Trophy className={iconColor} size={24} />
                     </div>
-                    <p className="text-purple-500/70 text-sm">Sezon {cup.season} • Global Tournament</p>
+                    <p className="text-purple-500/70 text-sm">Sezon {cup.season} • {t.internationalTournament || 'International Tournament'}</p>
 
                     {/* Tabs */}
                     <div className="flex justify-center gap-4 mt-6">

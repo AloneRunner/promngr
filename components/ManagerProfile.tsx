@@ -109,12 +109,15 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                             <div className="text-gray-400 text-sm">{t.currentTeamLabel || 'Current Team'}</div>
                             <div className="flex items-center gap-3 mt-1">
                                 <img
-                                    src={getTeamLogo(userTeam.name)}
-                                    alt={userTeam.name}
+                                    src={getTeamLogo(userTeam?.name || '')}
+                                    alt={userTeam?.name || 'Team'}
                                     className="w-8 h-8 object-contain"
-                                    onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${userTeam.primaryColor}">${userTeam.name.substring(0, 1)}</span>`; }}
+                                    onError={(e) => {
+                                        const fallback = (userTeam?.name || 'T')[0];
+                                        (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${userTeam?.primaryColor || '#fff'}">${fallback}</span>`;
+                                    }}
                                 />
-                                <span className="text-xl font-bold text-white max-w-[200px] truncate">{userTeam.name}</span>
+                                <span className="text-xl font-bold text-white max-w-[200px] truncate">{userTeam?.name || 'Unknown Team'}</span>
                             </div>
 
                             <div className="flex gap-8 mt-4">

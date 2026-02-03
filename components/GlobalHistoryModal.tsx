@@ -27,6 +27,11 @@ export const GlobalHistoryModal: React.FC<GlobalHistoryModalProps> = ({ isOpen, 
         return acc;
     }, {} as Record<number, LeagueHistoryEntry[]>);
 
+    // DEBUG: Log league count
+    console.log('[GlobalHistory] Total history entries:', history.length);
+    console.log('[GlobalHistory] Unique leagues:', [...new Set(history.map(h => h.leagueId))].length);
+    console.log('[GlobalHistory] All leagueIds:', [...new Set(history.map(h => h.leagueId))]);
+
     const sortedSeasons = Object.keys(historyBySeason).map(Number).sort((a, b) => b - a);
 
     const getTeam = (id: string) => teams.find(t => t.id === id);
@@ -74,21 +79,76 @@ export const GlobalHistoryModal: React.FC<GlobalHistoryModalProps> = ({ isOpen, 
                                         <div className="text-3xl font-black text-slate-500">{season}</div>
                                         <div className="text-left">
                                             <div className="text-xs text-slate-400 uppercase tracking-wider">{getTr('seasonSummary')}</div>
-                                            <div className="text-sm text-slate-300 font-medium">{historyBySeason[season].length} {getTr('leaguesRecorded')}</div>
+                                            <div className="text-sm text-slate-300 font-medium">
+                                                {historyBySeason[season].filter(e => e.leagueId !== 'global').length} National Leagues
+                                                {historyBySeason[season].find(e => e.leagueId === 'global') && ' + International Cups'}
+                                            </div>
                                         </div>
                                     </div>
                                     {expandedSeason === season ? <ChevronUp className="text-slate-400" /> : <ChevronDown className="text-slate-400" />}
                                 </button>
 
                                 {expandedSeason === season && (
-                                    <div className="p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 animate-fade-in">
-                                        {historyBySeason[season].map((entry, idx) => {
-                                            const champion = getTeam(entry.championId);
-                                            return (
+                                    <div className="p-4 space-y-4">
+                                        {/* Intercontinental Section - Show First if Available */}
+                                        {historyBySeason[season].find(e => e.leagueId === 'global') && (
+                                            <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border-2 border-purple-500/50 rounded-xl p-4 mb-4">
+                                                <h3 className="text-lg font-bold text-purple-300 mb-4 flex items-center gap-2">
+                                                    <Globe size={20} className="text-purple-400" />
+                                                    🌍 Intercontinental Cups
+                                                </h3>
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    {(() => {
+                                                        const globalEntry = historyBySeason[season].find(e => e.leagueId === 'global');
+                                                        return (
+                                                            <>
+                                                                {/* Elite Cup Winner */}
+                                                                {globalEntry?.championsLeagueWinner && (
+                                                                    <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
+                                                                        <div className="text-xs text-yellow-300 uppercase font-bold mb-2 flex items-center gap-1">
+                                                                            <Trophy size={14} className="text-yellow-400" /> Elite Cup
+                                                                        </div>
+                                                                        <div className="text-white font-bold text-lg">{globalEntry.championsLeagueWinner}</div>
+                                                                        <div className="text-yellow-200 text-xs mt-1">🏆 Champion</div>
+                                                                    </div>
+                                                                )}
+                                                                
+                                                                {/* Challenge Cup Winner */}
+                                                                {globalEntry?.europaLeagueWinner && (
+                                                                    <div className="bg-orange-900/20 border border-orange-500/30 rounded-lg p-3">
+                                                                        <div className="text-xs text-orange-300 uppercase font-bold mb-2 flex items-center gap-1">
+                                                                            <Trophy size={14} className="text-orange-400" /> Challenge Cup
+                                                                        </div>
+                                                                        <div className="text-white font-bold text-lg">{globalEntry.europaLeagueWinner}</div>
+                                                                        <div className="text-orange-200 text-xs mt-1">🟠 Champion</div>
+                                                                    </div>
+                                                                )}
+                                                                
+                                                                {/* Super Cup Winner */}
+                                                                {globalEntry?.superCupWinner && (
+                                                                    <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
+                                                                        <div className="text-xs text-purple-300 uppercase font-bold mb-2 flex items-center gap-1">
+                                                                            <Trophy size={14} className="text-purple-400" /> Super Cup
+                                                                        </div>
+                                                                        <div className="text-white font-bold text-lg">{globalEntry.superCupWinner}</div>
+                                                                        <div className="text-purple-200 text-xs mt-1">🌟 Champion</div>
+                                                                    </div>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* League Championships Grid */}
+                                        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 animate-fade-in">
+                                            {historyBySeason[season].filter(e => e.leagueId !== 'global').map((entry, idx) => {
+                                                const champion = getTeam(entry.championId);
+                                                return (
                                                 <div key={idx} className="bg-slate-900/50 border border-slate-700/50 rounded-lg p-3 hover:border-slate-600 transition-colors">
                                                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-700/50">
                                                         <span className="font-bold text-indigo-400 text-sm">{entry.leagueName}</span>
-                                                        {entry.leagueId === 'tr' && entry.championsLeagueWinner && <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/30">Host</span>}
                                                     </div>
 
                                                     {/* Champion */}
@@ -113,30 +173,10 @@ export const GlobalHistoryModal: React.FC<GlobalHistoryModalProps> = ({ isOpen, 
                                                             <span className="text-emerald-400 truncate max-w-[100px]">{entry.topScorer.split('(')[0]}</span>
                                                         </div>
                                                     </div>
-
-                                                    {/* Cups Display (Only shown on primary entry usually, but checked here) */}
-                                                    {(entry.championsLeagueWinner || entry.europaLeagueWinner || entry.superCupWinner) && (
-                                                        <div className="mt-3 pt-2 border-t border-slate-700/50 grid grid-cols-1 gap-1">
-                                                            {entry.championsLeagueWinner && (
-                                                                <div className="flex items-center gap-2 text-xs">
-                                                                    <span title="Elite Cup">🏆</span> <span className="text-amber-200 font-bold">{entry.championsLeagueWinner}</span>
-                                                                </div>
-                                                            )}
-                                                            {entry.europaLeagueWinner && (
-                                                                <div className="flex items-center gap-2 text-xs">
-                                                                    <span title="Challenge Cup">🟠</span> <span className="text-orange-200 font-bold">{entry.europaLeagueWinner}</span>
-                                                                </div>
-                                                            )}
-                                                            {entry.superCupWinner && (
-                                                                <div className="flex items-center gap-2 text-xs">
-                                                                    <span title="Super Cup">🌟</span> <span className="text-purple-200 font-bold">{entry.superCupWinner}</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
                                                 </div>
                                             );
-                                        })}
+                                            })}
+                                        </div>
                                     </div>
                                 )}
                             </div>
