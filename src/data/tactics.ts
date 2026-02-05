@@ -1,4 +1,4 @@
-Ôªøimport { TeamTactic, TacticType } from '../types';
+import { TeamTactic, TacticType } from '../types';
 export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
     // Default Tactic (Fallback)
     "Default": {
@@ -252,7 +252,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Atl√°ntico Blue Stars": {
+    "Atl·ntico Blue Stars": {
         formation: TacticType.T_532,
         style: 'ParkTheBus',
         aggression: 'Normal',
@@ -689,7 +689,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'LongBall',
         marking: 'Zonal'
     },
-    "Difa√¢ El Jadidi": {
+    "Difa‚ El Jadidi": {
         formation: TacticType.T_4141,
         style: 'Balanced',
         aggression: 'Normal',
@@ -889,7 +889,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "COD Mekn√®s": {
+    "COD MeknËs": {
         formation: TacticType.T_442,
         style: 'Counter',
         aggression: 'Normal',
@@ -919,7 +919,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Concepci√≥n Purple": {
+    "ConcepciÛn Purple": {
         formation: TacticType.T_442,
         style: 'Counter',
         aggression: 'Normal',
@@ -929,7 +929,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'LongBall',
         marking: 'Zonal'
     },
-    "Concepci√≥n Uni": {
+    "ConcepciÛn Uni": {
         formation: TacticType.T_4231,
         style: 'Counter',
         aggression: 'Normal',
@@ -1159,7 +1159,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'LongBall',
         marking: 'Zonal'
     },
-    "Chapec√≥ Eagles": {
+    "ChapecÛ Eagles": {
         formation: TacticType.T_4231,
         style: 'Balanced',
         aggression: 'Normal',
@@ -1199,7 +1199,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Direct',
         marking: 'Zonal'
     },
-    "Bel√©m Lions": {
+    "BelÈm Lions": {
         formation: TacticType.T_442,
         style: 'Balanced',
         aggression: 'Normal',
@@ -1279,7 +1279,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'LongBall',
         marking: 'ManToMan'
     },
-    "Bogot√° Blues": {
+    "Bogot· Blues": {
         formation: TacticType.T_433,
         style: 'Balanced',
         aggression: 'Normal',
@@ -1289,7 +1289,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Bogot√° Cardinals": {
+    "Bogot· Cardinals": {
         formation: TacticType.T_433,
         style: 'Balanced',
         aggression: 'Normal',
@@ -1299,7 +1299,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Bogot√° Fort": {
+    "Bogot· Fort": {
         formation: TacticType.T_532,
         style: 'ParkTheBus',
         aggression: 'Normal',
@@ -1309,7 +1309,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "Bragan√ßa Bulls": {
+    "BraganÁa Bulls": {
         formation: TacticType.T_4231,
         style: 'Balanced',
         aggression: 'Normal',
@@ -2550,7 +2550,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'LongBall',
         marking: 'ManToMan'
     },
-    "Vi√±a Gold": {
+    "ViÒa Gold": {
         formation: TacticType.T_433,
         style: 'Balanced',
         aggression: 'Normal',
@@ -3244,7 +3244,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Direct',
         marking: 'ManToMan'
     },
-    "S√£o Paulo Warriors": {
+    "S„o Paulo Warriors": {
         formation: TacticType.T_433,
         style: 'Counter',
         aggression: 'Normal',
@@ -3254,7 +3254,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Direct',
         marking: 'Zonal'
     },
-    "S√£o Paulo Tigers": {
+    "S„o Paulo Tigers": {
         formation: TacticType.T_4231,
         style: 'WingPlay',
         aggression: 'Normal',
@@ -3264,7 +3264,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Mixed',
         marking: 'Zonal'
     },
-    "S√£o Paulo Palms": {
+    "S„o Paulo Palms": {
         formation: TacticType.T_4231,
         style: 'HighPress',
         aggression: 'Normal',
@@ -3467,7 +3467,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Slow',
         width: 'Narrow',
         defensiveLine: 'Deep',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'ManToMan'
     },
     "Rosario Canallas": {
@@ -3733,7 +3733,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Normal',
         width: 'Balanced',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Orange Berkane": {
@@ -3833,7 +3833,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Normal',
         width: 'Balanced',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Parma Crusaders": {
@@ -4056,7 +4056,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Slow',
         width: 'Wide',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Mexico Eagles": {
@@ -4146,7 +4146,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Normal',
         width: 'Wide',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Montevideo Coal": {
@@ -4319,7 +4319,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Normal',
         width: 'Balanced',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Hoffen Blue": {
@@ -4359,7 +4359,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Fast',
         width: 'Wide',
         defensiveLine: 'High',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Marseille Blue": {
@@ -4379,7 +4379,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Normal',
         width: 'Wide',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Ismaily": {
@@ -4392,7 +4392,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         passingStyle: 'Direct',
         marking: 'Zonal'
     },
-    "Maghreb de F√®s": {
+    "Maghreb de FËs": {
         formation: TacticType.T_4231,
         style: 'Counter',
         aggression: 'Normal',
@@ -4419,7 +4419,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Fast',
         width: 'Wide',
         defensiveLine: 'High',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Machida Zelvia": {
@@ -4449,7 +4449,7 @@ export const TEAM_TACTICAL_PROFILES: Record<string, TeamTactic> = {
         tempo: 'Fast',
         width: 'Wide',
         defensiveLine: 'Balanced',
-        passingStyle: 'Short',
+        passingStyle: 'Mixed',
         marking: 'Zonal'
     },
     "Melbourne Victory": {

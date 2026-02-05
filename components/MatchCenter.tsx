@@ -39,6 +39,18 @@ const PITCH_COLOR_1 = '#1a472a'; // Deep Green
 const PITCH_COLOR_2 = '#235c36'; // Lighter Green
 const LINE_COLOR = 'rgba(255, 255, 255, 0.85)';
 
+// Motor koordinat sistemi sabitleri (105x68 metre)
+const ENGINE_PITCH_LENGTH = 105;
+const ENGINE_PITCH_WIDTH = 68;
+
+// Motor koordinatlarını UI koordinatlarına (0-100) normalize et
+const normalizeCoords = (x: number, y: number): { x: number, y: number } => {
+    return {
+        x: (x / ENGINE_PITCH_LENGTH) * 100,
+        y: (y / ENGINE_PITCH_WIDTH) * 100
+    };
+};
+
 // 2.5D Coordinate Transformation
 const toScreen = (xPct: number, yPct: number, z: number = 0, mode: '2D' | '2.5D' = '2.5D'): { x: number, y: number, groundY: number, scale: number } => {
     if (mode === '2D') {
@@ -218,23 +230,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         awayPlayersRef.current = awayPlayers;
     }, [match, homeTeam, awayTeam, homePlayers, awayPlayers]);
 
-    // 1. Initialize & Cleanup
+    // 0. Update Jersey Numbers on Player Change (Substitutions)
     useEffect(() => {
-        // Assign Jersey Numbers
-        console.log('🏟️ MATCH CENTER MOUNTED', {
-            matchId: match.id,
-            homeTeam: homeTeam.name,
-            awayTeam: awayTeam.name,
-            homePlayersCount: homePlayers.length,
-            awayPlayersCount: awayPlayers.length,
-            hasLiveData: !!match.liveData,
-            hasSimulation: !!match.liveData?.simulation,
-            simulationPlayers: match.liveData?.simulation?.players ? Object.keys(match.liveData.simulation.players).length : 0
-        });
-
         let hC = 2, aC = 2;
         [...homePlayers, ...awayPlayers].forEach(p => {
-            // Validate player coordinates
             if (p.jerseyNumber) {
                 playerNumbers.current[p.id] = p.jerseyNumber;
             } else if (p.position === 'GK') {
@@ -243,6 +242,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 playerNumbers.current[p.id] = p.teamId === homeTeam.id ? hC++ : aC++;
             }
         });
+    }, [homePlayers, awayPlayers, homeTeam.id]);
+
+    // 1. Initialize & Cleanup
+    useEffect(() => {
+        console.log('🏟️ MATCH CENTER MOUNTED', {
+            matchId: match.id,
+            homeTeam: homeTeam.name,
+            awayTeam: awayTeam.name,
+            homePlayersCount: homePlayers.length,
+            awayPlayersCount: awayPlayers.length
+        });
+
 
         // Initialize State
         if (match.liveData?.simulation) {
@@ -629,10 +640,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             const nextP = nextState.players[p.id];
             if (!prevP || !nextP) return null;
 
+            // Motor koordinatlarını UI koordinatlarına normalize et (105x68 → 0-100)
+            const prevNorm = normalizeCoords(prevP.x, prevP.y);
+            const nextNorm = normalizeCoords(nextP.x, nextP.y);
+
             return {
                 player: p,
-                x: lerp(prevP.x, nextP.x, alpha),
-                y: lerp(prevP.y, nextP.y, alpha),
+                x: lerp(prevNorm.x, nextNorm.x, alpha),
+                y: lerp(prevNorm.y, nextNorm.y, alpha),
                 z: nextP.z || 0,
                 facing: lerpAngle(prevP.facing || 0, nextP.facing || 0, alpha),
                 stamina: nextP.stamina || 100,
@@ -657,8 +672,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         const prevBall = prevState.ball;
         const nextBall = nextState.ball;
         if (prevBall && nextBall) {
-            const ballX = lerp(prevBall.x, nextBall.x, alpha);
-            const ballY = lerp(prevBall.y, nextBall.y, alpha);
+            // Motor koordinatlarını UI koordinatlarına normalize et
+            const prevBallNorm = normalizeCoords(prevBall.x, prevBall.y);
+            const nextBallNorm = normalizeCoords(nextBall.x, nextBall.y);
+
+            const ballX = lerp(prevBallNorm.x, nextBallNorm.x, alpha);
+            const ballY = lerp(prevBallNorm.y, nextBallNorm.y, alpha);
             const ballZ = lerp(prevBall.z || 0, nextBall.z || 0, alpha);
 
             // Update ball trail (only when ball is moving fast)
@@ -667,7 +686,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             );
 
             if (ballSpeed > 1.5 && nextBall.ownerId === null && viewMode === '2.5D') {
-                // Add to trail (Only in 2.5D)
+                // Add to trail (Only in 2.5D) - Use normalized coords for trail
                 ballTrail.current.push({ x: ballX, y: ballY, z: ballZ, age: 0 });
                 // Keep only last 8 positions
                 if (ballTrail.current.length > 8) ballTrail.current.shift();

@@ -149,12 +149,12 @@ export const analyzeUserHistory = (
     if (formationFilter) {
         // Look for matches where OPPONENT used this formation
         relevantMatches = relevantMatches.filter(m =>
-            (m.isUserHome ? m.awayTactic.formation : m.homeTactic.formation) === formationFilter
+            (m.isUserHome ? m.awayTactic?.formation : m.homeTactic?.formation) === formationFilter
         );
     }
     if (styleFilter) {
         relevantMatches = relevantMatches.filter(m =>
-            (m.isUserHome ? m.awayTactic.style : m.homeTactic.style) === styleFilter
+            (m.isUserHome ? m.awayTactic?.style : m.homeTactic?.style) === styleFilter
         );
     }
 

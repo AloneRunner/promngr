@@ -476,13 +476,13 @@ export const useMatchSimulation = ({
 
                 // Save Super Cup match separately
                 if (cupType === 'superCup' && prevState.superCup) {
-                        const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
-                            ? simulated.homeTeamId
-                            : simulated.awayScore > simulated.homeScore
-                                ? simulated.awayTeamId
-                                : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
-                        const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
-                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                    const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
+                        ? simulated.homeTeamId
+                        : simulated.awayScore > simulated.homeScore
+                            ? simulated.awayTeamId
+                            : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
+                    const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
+                    return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                 }
 
                 // Save European Cup match separately
@@ -780,13 +780,13 @@ export const useMatchSimulation = ({
                     }
 
                     if (cupType === 'superCup' && prevState.superCup) {
-                            const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
-                                ? currentMatch.homeTeamId
-                                : currentMatch.awayScore > currentMatch.homeScore
-                                    ? currentMatch.awayTeamId
-                                    : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
-                            const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
-                            return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                        const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
+                            ? currentMatch.homeTeamId
+                            : currentMatch.awayScore > currentMatch.homeScore
+                                ? currentMatch.awayTeamId
+                                : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
+                        const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
+                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                     }
 
                     if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -809,7 +809,7 @@ export const useMatchSimulation = ({
         }
 
         if (cupType === 'superCup' && prevState.superCup) {
-                return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
+            return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
         }
 
         if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -1340,10 +1340,10 @@ export const useMatchSimulation = ({
                 if (home && away) {
                     const homeP = checkState.players.filter(p => p.teamId === home.id);
                     const awayP = checkState.players.filter(p => p.teamId === away.id);
-                    
+
                     const result = engine.simulateFullMatch(checkState.superCup.match as any, home, away, homeP, awayP);
                     result.isPlayed = true;
-                    
+
                     const completedSuperCup = {
                         ...checkState.superCup,
                         match: result as any,
@@ -1535,6 +1535,9 @@ export const useMatchSimulation = ({
                         playerId: playerIn.id,
                         playerOutId: playerOut.id
                     };
+
+                    // Sync with Match Engine (Important for visual updates)
+                    engine.performSubstitution(matchId, playerIn, playerOut.id);
                 }
             }
 
@@ -1681,19 +1684,23 @@ export const useMatchSimulation = ({
 
                 // --- Save Tactical Timeline ---
                 let updatedTacticalHistory = prev.tacticalHistory || [];
-                if (tacticalTimeline.length > 0) {
-                    const matchRecord = {
-                        matchId: activeMatch.id,
-                        homeTeamId: activeMatch.homeTeamId,
-                        awayTeamId: activeMatch.awayTeamId,
-                        date: new Date().toISOString(),
-                        timeline: [...tacticalTimeline],
-                        homeScore: activeMatch.homeScore,
-                        awayScore: activeMatch.awayScore
-                    };
-                    // Append the single record
-                    updatedTacticalHistory = [...updatedTacticalHistory, matchRecord as any];
-                }
+
+                // Always save match history for Assistant Coach analysis
+                const tacticalRecord: any = {
+                    matchId: activeMatch.id,
+                    season: prev.currentSeason,
+                    week: prev.currentWeek,
+                    opponentId: isUserHome ? awayTeam.id : homeTeam.id,
+                    isUserHome: isUserHome,
+                    homeTactic: homeTeam.tactic,
+                    awayTactic: awayTeam.tactic,
+                    homeGoals: activeMatch.homeScore,
+                    awayGoals: activeMatch.awayScore,
+                    userWon: (isUserHome && activeMatch.homeScore > activeMatch.awayScore) || (!isUserHome && activeMatch.awayScore > activeMatch.homeScore),
+                    matchDate: Date.now(),
+                    userFinalTactic: isUserHome ? homeTeam.tactic : awayTeam.tactic
+                };
+                updatedTacticalHistory = [...updatedTacticalHistory, tacticalRecord];
 
                 // INJECT CUP REWARDS (Live Match Update - Budget Only)
                 if (activeMatch && (cupType === 'europeanCup' || cupType === 'europaLeague' || cupType === 'superCup')) {

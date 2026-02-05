@@ -524,9 +524,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             top = team.tactic.customPositions[p.id].y;
                             activeRole = getRoleFromX(left);
                         } else {
+                            // getBaseFormationOffset artık motor koordinatları (105x68) döndürüyor
+                            // UI için 0-100 yüzde sistemine çevirmeliyiz
                             const coords = getBaseFormationOffset(team.tactic.formation, presetRole, idx, total);
-                            left = coords.x;
-                            top = coords.y;
+                            left = (coords.x / 105) * 100; // Motor X -> UI %
+                            top = (coords.y / 68) * 100;   // Motor Y -> UI %
                         }
 
                         assignedRoleMap[p.id] = activeRole;
