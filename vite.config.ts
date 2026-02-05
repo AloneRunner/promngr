@@ -18,6 +18,20 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        chunkSizeWarningLimit: 4000, // 4MB threshold (app size warrants this for Turkish league manager)
+        rollupOptions: {
+          output: {
+            // Manual chunk splitting for large modules
+            manualChunks: {
+              // MatchEngine is huge - give it its own chunk
+              'engine-core': ['services/MatchEngine.ts'],
+              // Core dependencies
+              'react-vendor': ['react', 'react-dom']
+            }
+          }
+        }
       }
     };
 });
