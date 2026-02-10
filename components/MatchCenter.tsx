@@ -1436,6 +1436,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <TeamManagement
                             team={myTeam}
                             players={livePlayers}
+                            opponent={managedSide === 'HOME' ? awayTeam : homeTeam}
                             onUpdateTactic={(tactic) => onUpdateTactic(tactic, { minute: match.currentMinute, score: { home: match.homeScore, away: match.awayScore } }, myTeam.id)}
                             onPlayerClick={onPlayerClick}
                             onUpdateLineup={(id, status) => { }}

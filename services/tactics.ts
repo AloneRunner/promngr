@@ -1,7 +1,7 @@
 
 import { TeamTactic, TacticType, TacticalMatchRecord } from '../types';
 
-export type PresetKey = 'Gegenpress' | 'CounterAttack' | 'ParkTheBus' | 'WingPlay' | 'Catenaccio';
+export type PresetKey = 'Gegenpress' | 'CounterAttack' | 'ParkTheBus' | 'WingPlay' | 'Catenaccio' | 'TikiTaka' | 'TotalFootball' | 'FluidCounter' | 'RouteOne';
 
 export interface TacticalPreset {
     name: string;
@@ -14,17 +14,77 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
         name: 'Gegenpress',
         description: 'High intensity pressing to win the ball back immediately.',
         tactic: {
-            style: 'HighPress',
+            style: 'Attacking',
             aggression: 'Aggressive',
             tempo: 'Fast',
             width: 'Balanced',
             defensiveLine: 'High',
             passingStyle: 'Mixed',
-            marking: 'Zonal' // Defaulting to Zonal as specific marking type isn't fully in UI yet but good for backend
+            marking: 'Zonal',
+            pressingIntensity: 'Gegenpress',
+            instructions: ['RoamFromPosition', 'ShootOnSight']
         }
     },
-    // TikiTaka REMOVED per user request
-
+    'TikiTaka': {
+        name: 'Tiki-Taka',
+        description: 'Extreme possession game. Short passing and movement.',
+        tactic: {
+            style: 'Possession',
+            aggression: 'Normal',
+            tempo: 'Slow',
+            width: 'Normal',
+            defensiveLine: 'High',
+            passingStyle: 'Short',
+            marking: 'Zonal',
+            pressingIntensity: 'HighPress',
+            instructions: ['WorkBallIntoBox']
+        }
+    },
+    'TotalFootball': {
+        name: 'Total Football',
+        description: 'Fluid movement where every player attacks and defends.',
+        tactic: {
+            style: 'Attacking',
+            aggression: 'Aggressive',
+            tempo: 'Fast',
+            width: 'Wide',
+            defensiveLine: 'High',
+            passingStyle: 'Short',
+            marking: 'Zonal',
+            pressingIntensity: 'HighPress',
+            instructions: ['RoamFromPosition', 'WorkBallIntoBox']
+        }
+    },
+    'FluidCounter': {
+        name: 'Fluid Counter',
+        description: 'Draw them in, then hit them with pace and movement.',
+        tactic: {
+            style: 'Counter',
+            aggression: 'Normal',
+            tempo: 'Fast',
+            width: 'Balanced',
+            defensiveLine: 'Deep',
+            passingStyle: 'Mixed',
+            marking: 'Zonal',
+            pressingIntensity: 'Balanced',
+            instructions: ['RoamFromPosition']
+        }
+    },
+    'RouteOne': {
+        name: 'Route One',
+        description: 'The quickest way to goal is a straight line. Long balls to the target man.',
+        tactic: {
+            style: 'Direct',
+            aggression: 'Aggressive',
+            tempo: 'Fast',
+            width: 'Narrow',
+            defensiveLine: 'Deep',
+            passingStyle: 'LongBall',
+            marking: 'Man',
+            pressingIntensity: 'StandOff',
+            instructions: ['ShootOnSight']
+        }
+    },
     'CounterAttack': {
         name: 'Rapid Counter',
         description: 'Soak up pressure and break fast with direct passing.',
@@ -35,20 +95,24 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
             width: 'Wide',
             defensiveLine: 'Deep',
             passingStyle: 'Direct',
-            marking: 'Zonal'
+            marking: 'Zonal',
+            pressingIntensity: 'Balanced',
+            instructions: ['ShootOnSight']
         }
     },
     'ParkTheBus': {
         name: 'Park The Bus',
         description: 'Defend with everyone behind the ball. Frustrate the opponent.',
         tactic: {
-            style: 'ParkTheBus',
+            style: 'Defensive',
             aggression: 'Safe',
             tempo: 'Slow',
             width: 'Narrow',
             defensiveLine: 'Deep',
-            passingStyle: 'Direct',
-            marking: 'Man'
+            passingStyle: 'LongBall',
+            marking: 'Man',
+            pressingIntensity: 'StandOff',
+            instructions: []
         }
     },
     'WingPlay': {
@@ -61,20 +125,24 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
             width: 'Wide',
             defensiveLine: 'Balanced',
             passingStyle: 'Mixed',
-            marking: 'Zonal'
+            marking: 'Zonal',
+            pressingIntensity: 'Balanced',
+            instructions: ['WorkBallIntoBox']
         }
     },
     'Catenaccio': {
         name: 'Catenaccio',
         description: 'Classic Italian defense. Very strong defensive organization.',
         tactic: {
-            style: 'Defensive', // Note: Needs to map to available styles or 'Balanced' if 'Defensive' isn't exact
+            style: 'Defensive',
             aggression: 'Aggressive',
             tempo: 'Slow',
             width: 'Narrow',
             defensiveLine: 'Deep',
-            passingStyle: 'Mixed',
-            marking: 'Man'
+            passingStyle: 'LongBall',
+            marking: 'Man',
+            pressingIntensity: 'StandOff',
+            instructions: []
         }
     }
 };
@@ -89,6 +157,29 @@ export const applyPreset = (currentTactic: TeamTactic, presetKey: PresetKey): Te
     };
 };
 
+// Helper: Check if current tactic matches a preset
+export const detectPreset = (tactic: TeamTactic): PresetKey | 'Custom' => {
+    for (const [key, preset] of Object.entries(TACTICAL_PRESETS)) {
+        const p = preset.tactic;
+        if (
+            tactic.style === p.style &&
+            tactic.aggression === p.aggression &&
+            tactic.tempo === p.tempo &&
+            tactic.width === p.width &&
+            tactic.defensiveLine === p.defensiveLine &&
+            tactic.passingStyle === p.passingStyle &&
+            tactic.marking === p.marking &&
+            tactic.pressingIntensity === p.pressingIntensity &&
+            // Check instructions (arrays need manual comparison)
+            tactic.instructions.length === (p.instructions?.length || 0) &&
+            (p.instructions || []).every(i => tactic.instructions.includes(i))
+        ) {
+            return key as PresetKey;
+        }
+    }
+    return 'Custom';
+};
+
 export interface TacticWarning {
     type: 'WARNING' | 'CRITICAL';
     message: string;
@@ -98,21 +189,19 @@ export const validateTactic = (tactic: TeamTactic): TacticWarning[] => {
     const warnings: TacticWarning[] = [];
 
     // Example 1: High Press but Deep Line (Gaps in midfield)
-    if (tactic.style === 'HighPress' && tactic.defensiveLine === 'Deep') {
+    // Check PressingIntensity HighPress or Gegenpress
+    if ((tactic.pressingIntensity === 'HighPress' || tactic.pressingIntensity === 'Gegenpress') && tactic.defensiveLine === 'Deep') {
         warnings.push({
             type: 'CRITICAL',
             message: 'High Press with Deep Line creates massive gaps in midfield!'
         });
     }
 
-    // TikiTaka warning logic removed
-
-
-    // Example 3: Park The Bus with High Line (Suicide)
-    if (tactic.style === 'ParkTheBus' && tactic.defensiveLine === 'High') {
+    // Example 3: Park The Bus (StandOff) with High Line (Suicide)
+    if (tactic.pressingIntensity === 'StandOff' && tactic.defensiveLine === 'High') {
         warnings.push({
             type: 'CRITICAL',
-            message: 'Cannot Park the Bus with a High Defensive Line!'
+            message: 'Cannot play Stand Off defense with a High Defensive Line!'
         });
     }
 
@@ -123,6 +212,38 @@ export const validateTactic = (tactic: TeamTactic): TacticWarning[] => {
             message: 'Counter Attacks require Fast Tempo to be effective.'
         });
     }
+
+    // === NEW VALIDATIONS ===
+
+    // Possession vs Passing Style
+    if (tactic.style === 'Possession' && (tactic.passingStyle === 'LongBall' || tactic.passingStyle === 'Direct')) {
+        warnings.push({
+            type: 'WARNING',
+            message: 'Possession style works best with Short or Mixed passing, not Long Ball.'
+        });
+    }
+
+    // Direct/RouteOne vs Short Passing
+    if (tactic.style === 'Direct' && tactic.passingStyle === 'Short') {
+        warnings.push({
+            type: 'WARNING',
+            message: 'Direct style contradicts Short passing. Try Mixed or Long Ball.'
+        });
+    }
+
+    // Defensive vs Gegenpress
+    if (tactic.style === 'Defensive' && tactic.pressingIntensity === 'Gegenpress') {
+        warnings.push({
+            type: 'WARNING',
+            message: 'Defensive shape is hard to maintain with Gegenpressing.'
+        });
+    }
+
+    // Tiki-Taka specificish check (Possession + Safe Aggression?)
+    // Maybe checking if they selected TikiTaka traits but screwed it up?
+    // "Total Football" usually needs smart players, but that's hard to validate here.
+
+    // High Line vs Slow Defenders (This would require player data, which we don't have here trivially)
 
     return warnings;
 };

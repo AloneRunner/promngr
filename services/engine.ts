@@ -35,7 +35,7 @@ import { LEAGUE_PRESETS, DERBY_RIVALS } from '../src/data/teams';
 import { REAL_PLAYERS, NAMES_DB } from '../src/data/players';
 import { TICKET_PRICE, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES } from '../src/data/config';
 import { TEAM_TACTICAL_PROFILES } from '../src/data/tactics';
-import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating } from './MatchEngine';
+import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating, calculateBaseOverall } from './MatchEngine';
 import { AIService } from './AI';
 
 // Economic Power Scaling relative to Turkish Super Lig (Base 1.0)
@@ -98,55 +98,63 @@ const BASE_LEAGUE_ECON_MULTIPLIERS: Record<string, number> = {
 // Score represents the TOTAL Contribution (Sum) for game balance
 // Format: [Y-4, Y-3, Y-2, Y-1, Current]
 export let LEAGUE_COEFFICIENTS: Record<string, number[]> = {
-    'en': [22, 23, 21, 24, 19],   // 109.0
-    'it': [16, 17, 22, 21, 15],   // 91.0
-    'es': [20, 18, 17, 16, 15],   // 86.0
-    'de': [15, 17, 17, 19, 15],   // 83.0
-    'br': [12, 12, 14, 15, 12],   // 65.0
-    'fr': [8, 12, 13, 16, 11],    // 60.0
-    'ar': [10, 9, 9, 11, 10],     // 49.0
-    'tr': [3, 7, 12, 12, 5],      // 39.0
-    'pt': [6, 7, 8, 9, 8],        // 38.0 - Porto/Benfica tradition
-    'nl': [7, 8, 9, 10, 9],       // 43.0 - Ajax/PSV heritage
-    'ch': [5, 6, 7, 7, 6],        // 31.0 - decent in Europe
-    'gr': [4, 4, 5, 6, 5],        // 24.0 - Panathinaikos/Olympiakos
-    'be': [4, 5, 6, 7, 6],        // 28.0 - Club Brugge occasional
-    'pl': [4, 5, 6, 7, 6],        // 28.0 - Legia Warsaw
-    'cz': [3, 4, 5, 6, 5],        // 23.0
-    'ro': [3, 3, 4, 5, 4],        // 19.0
-    'hr': [4, 5, 6, 7, 6],        // 28.0 - Dinamo Zagreb strong
-    'rs': [3, 3, 4, 5, 4],        // 19.0
-    'ru': [6, 7, 8, 8, 7],        // 36.0 - despite sanctions
-    'sco': [5, 6, 7, 8, 7],       // 33.0 - Celtic/Rangers
-    'at': [4, 5, 6, 6, 5],        // 26.0
-    'us': [3, 3, 4, 4, 4],        // 18.0
-    'mx': [3, 3, 4, 4, 4],        // 18.0
-    'sa': [3, 3, 4, 4, 4],        // 18.0 - new money
-    'eg': [3, 3, 4, 4, 4],        // 18.0
-    'jp': [3, 3, 4, 4, 4],        // 18.0
-    'kr': [3, 3, 4, 4, 4],        // 18.0
-    'au': [3, 3, 4, 4, 4],        // 18.0
-    'za': [3, 3, 4, 4, 4],        // 18.0
-    'ma': [3, 3, 4, 4, 4],        // 18.0
-    'car': [3, 3, 4, 4, 4],       // 18.0
-    'co': [3, 3, 4, 4, 4],        // 18.0
-    'cl': [3, 3, 4, 4, 4],        // 18.0
-    'uy': [3, 3, 4, 4, 4],        // 18.0
-    'tn': [3, 3, 4, 4, 4],        // 18.0
-    'cr': [3, 3, 4, 4, 4],        // 18.0
-    'in': [3, 3, 4, 4, 4],        // 18.0
-    'py': [3, 3, 4, 4, 4],        // 18.0
-    'ec': [3, 3, 4, 4, 4],        // 18.0
-    'dz': [3, 3, 4, 4, 4],        // 18.0
-    'gh': [3, 3, 4, 4, 4],        // 18.0
-    'ci': [3, 3, 4, 4, 4],        // 18.0
-    'ke': [3, 3, 4, 4, 4],        // 18.0
-    'sn': [3, 3, 4, 4, 4],        // 18.0
-    'my': [3, 3, 4, 4, 4],        // 18.0
-    'cn': [5, 6, 7, 8, 7],        // 33.0 - growing investment
-    'ng': [3, 3, 4, 4, 4],        // 18.0
-    'id': [3, 3, 4, 4, 4],        // 18.0
-    'default': [3, 3, 4, 4, 4]
+    // ========== TIER 1: ELITE LEAGUES (5-Year avg: 55-75 pts/year) ==========
+    'en': [68, 72, 65, 71, 64],    // 340.0 - England (4 CL + 4 EL teams, dominant)
+    'es': [62, 58, 55, 60, 52],    // 287.0 - Spain (3 CL spots, Real/Barca/Atleti)
+    'it': [55, 60, 58, 54, 48],    // 275.0 - Italy (4 CL, strong resurgence)
+    'de': [52, 56, 50, 54, 48],    // 260.0 - Germany (4 CL, Bayern dominance)
+    'fr': [45, 48, 42, 46, 40],    // 221.0 - France (3 CL, PSG carrying)
+
+    // ========== TIER 2: STRONG LEAGUES (5-Year avg: 30-50 pts/year) ==========
+    'pt': [38, 42, 35, 40, 32],    // 187.0 - Portugal (2 CL, Benfica/Porto)
+    'nl': [35, 38, 32, 36, 30],    // 171.0 - Netherlands (1-2 CL, Ajax)
+    'br': [42, 45, 40, 43, 38],    // 208.0 - Brazil (continental dominance)
+    'ar': [35, 38, 32, 36, 30],    // 171.0 - Argentina (Libertadores regulars)
+    'ru': [28, 32, 25, 30, 22],    // 137.0 - Russia (Zenit, sanctions effect)
+    'be': [25, 28, 22, 26, 20],    // 121.0 - Belgium (Club Brugge, Anderlecht)
+    'sco': [22, 26, 20, 24, 18],   // 110.0 - Scotland (Celtic/Rangers)
+    'at': [20, 24, 18, 22, 16],    // 100.0 - Austria (Salzburg strong)
+    'tr': [28, 32, 26, 30, 24],    // 140.0 - Turkey (Galatasaray, Fenerbahçe)
+    'gr': [18, 22, 16, 20, 14],    // 90.0 - Greece (Olympiacos)
+    'ch': [18, 22, 16, 20, 14],    // 90.0 - Switzerland (YB, Basel)
+    'hr': [15, 18, 12, 16, 10],    // 71.0 - Croatia (Dinamo Zagreb)
+    'cz': [14, 17, 12, 15, 10],    // 68.0 - Czech (Sparta/Slavia)
+    'pl': [12, 15, 10, 13, 8],     // 58.0 - Poland (Legia)
+    'ro': [10, 13, 8, 11, 6],      // 48.0 - Romania (FCSB/CFR)
+    'rs': [12, 15, 10, 13, 8],     // 58.0 - Serbia (Red Star)
+
+    // ========== TIER 3: REGIONAL POWERS (5-Year avg: 15-30 pts/year) ==========
+    'mx': [22, 25, 20, 23, 18],    // 108.0 - Mexico (CONCACAF CL)
+    'us': [18, 22, 16, 20, 14],    // 90.0 - USA (MLS growing)
+    'cn': [15, 18, 12, 16, 10],    // 71.0 - China (ACL occasional)
+    'jp': [18, 22, 16, 20, 14],    // 90.0 - Japan (ACL strong)
+    'kr': [16, 20, 14, 18, 12],    // 80.0 - Korea (ACL presence)
+    'sa': [20, 24, 18, 22, 16],    // 100.0 - Saudi (new investment + ACL)
+    'au': [12, 15, 10, 13, 8],     // 58.0 - Australia (ACL spots)
+    'eg': [18, 22, 16, 20, 14],    // 90.0 - Egypt (CAF CL - Al Ahly)
+    'ma': [14, 17, 12, 15, 10],    // 68.0 - Morocco (CAF presence)
+    'za': [12, 15, 10, 13, 8],     // 58.0 - South Africa (CAF CL)
+    'ng': [10, 13, 8, 11, 6],      // 48.0 - Nigeria (local focus)
+    'dz': [12, 15, 10, 13, 8],     // 58.0 - Algeria (CAF)
+    'tn': [14, 17, 12, 15, 10],    // 68.0 - Tunisia (Esperance)
+
+    // ========== TIER 4: DEVELOPING LEAGUES (5-Year avg: 8-18 pts/year) ==========
+    'co': [14, 17, 12, 15, 10],    // 68.0 - Colombia (Libertadores)
+    'cl': [12, 15, 10, 13, 8],     // 58.0 - Chile (U. Catolica, Colo-Colo)
+    'uy': [10, 13, 8, 11, 6],      // 48.0 - Uruguay (Nacional, Peñarol)
+    'ec': [10, 13, 8, 11, 6],      // 48.0 - Ecuador (LDU Quito)
+    'py': [8, 11, 6, 9, 5],        // 39.0 - Paraguay (Olimpia)
+    'cr': [8, 11, 6, 9, 5],        // 39.0 - Costa Rica (Saprissa)
+    'car': [6, 9, 5, 7, 4],        // 31.0 - Caribbean (CONCACAF)
+    'in': [6, 9, 5, 7, 4],         // 31.0 - India (ISL growing)
+    'id': [8, 11, 6, 9, 5],        // 39.0 - Indonesia (local passion)
+    'my': [6, 9, 5, 7, 4],         // 31.0 - Malaysia
+    'gh': [8, 11, 6, 9, 5],        // 39.0 - Ghana (CAF)
+    'sn': [8, 11, 6, 9, 5],        // 39.0 - Senegal (CAF)
+    'ci': [8, 11, 6, 9, 5],        // 39.0 - Ivory Coast (CAF)
+    'ke': [6, 9, 5, 7, 4],         // 31.0 - Kenya
+
+    'default': [8, 10, 6, 9, 5]    // 38.0 - New leagues baseline
 };
 
 // Dynamic league multiplier storage (increases with European success)
@@ -161,7 +169,8 @@ export let LEAGUE_EUROPEAN_BONUS: Record<string, number> = {
 };
 
 // Get current league multiplier (base + European bonus)
-const getLeagueMultiplier = (leagueId: string): number => {
+// Get current league multiplier (base + European bonus)
+export const getLeagueMultiplier = (leagueId: string): number => {
     const base = BASE_LEAGUE_ECON_MULTIPLIERS[leagueId] || BASE_LEAGUE_ECON_MULTIPLIERS['default'];
     const bonus = LEAGUE_EUROPEAN_BONUS[leagueId] || 0;
     return base + bonus;
@@ -185,16 +194,20 @@ export const getLeagueBonus = (leagueId: string): number => LEAGUE_EUROPEAN_BONU
 
 // Calculate coefficient-based multiplier for TV rights and ticket prices
 // This allows leagues that improve in European competitions to earn more income
-// Base reference: England (~109 points) = 1.0 multiplier, others scale proportionally
+// Base reference: England (~340 points) = 1.0 multiplier, others scale proportionally
 const BASE_COEFFICIENT_VALUES: Record<string, number> = {
-    'en': 109, 'it': 91, 'es': 86, 'de': 83, 'fr': 60, 'br': 65, 'ar': 49, 'tr': 39,
-    'pt': 38, 'nl': 43, 'ch': 31, 'gr': 24, 'be': 28, 'pl': 28, 'cz': 23, 'ro': 19,
-    'hr': 28, 'rs': 19, 'ru': 36, 'sco': 33, 'at': 26,
-    'us': 18, 'mx': 18, 'sa': 18, 'eg': 18, 'jp': 18, 'kr': 18, 'au': 18, 'za': 18,
-    'ma': 18, 'car': 18, 'co': 18, 'cl': 18, 'uy': 18, 'tn': 18, 'cr': 18, 'in': 18,
-    'py': 18, 'ec': 18, 'dz': 18, 'gh': 18, 'ci': 18, 'ke': 18, 'sn': 18, 'my': 18,
-    'cn': 33, 'ng': 18, 'id': 18,
-    'default': 18
+    // TIER 1: Elite (based on new LEAGUE_COEFFICIENTS totals)
+    'en': 340, 'es': 287, 'it': 275, 'de': 260, 'fr': 221,
+    // TIER 2: Strong
+    'pt': 187, 'nl': 171, 'br': 208, 'ar': 171, 'ru': 137, 'be': 121, 'sco': 110,
+    'at': 100, 'tr': 140, 'gr': 90, 'ch': 90, 'hr': 71, 'cz': 68, 'pl': 58, 'ro': 48, 'rs': 58,
+    // TIER 3: Regional Powers
+    'mx': 108, 'us': 90, 'cn': 71, 'jp': 90, 'kr': 80, 'sa': 100, 'au': 58,
+    'eg': 90, 'ma': 68, 'za': 58, 'ng': 48, 'dz': 58, 'tn': 68,
+    // TIER 4: Developing
+    'co': 68, 'cl': 58, 'uy': 48, 'ec': 48, 'py': 39, 'cr': 39, 'car': 31,
+    'in': 31, 'id': 39, 'my': 31, 'gh': 39, 'sn': 39, 'ci': 39, 'ke': 31,
+    'default': 38
 };
 
 export const getCoefficientMultiplier = (leagueId: string): number => {
@@ -208,8 +221,10 @@ export const getCoefficientMultiplier = (leagueId: string): number => {
     const ratio = currentTotal / baseValue;
 
     // Apply smooth scaling: ratio 1.0 = 1.0x, ratio 2.0 = 1.5x, ratio 0.5 = 0.75x
-    // Formula: 0.5 + 0.5 * ratio (clamped between 0.5 and 3.0)
-    const multiplier = Math.min(3.0, Math.max(0.5, 0.5 + 0.5 * ratio));
+    // Formula: 0.5 + 0.5 * ratio (clamped between 0.3 and 8.0)
+    // FULLY DYNAMIC: Kenya 30 sezon dominant → 8x (€5 → €40), İngiltere zayıflarsa 0.3x (€55 → €16)
+    // Cap yüksek ama absürt değerlere gitmesin diye 8x max
+    const multiplier = Math.min(8.0, Math.max(0.3, 0.5 + 0.5 * ratio));
 
     return multiplier;
 };
@@ -767,7 +782,8 @@ const generatePlayer = (teamId: string, position: Position, nationality: string,
         morale: 80
     } as Player;
 
-    const calculatedOverall = calculateEffectiveRating(tempPlayerForCalc, position);
+    // Use BASE overall calculator (pure attribute-based, no anchor)
+    const calculatedOverall = calculateBaseOverall(tempPlayerForCalc, position);
 
     // Calculate Wage Scaling based on League Economic Power
     // This prevents small leagues from paying Premier League wages
@@ -1106,6 +1122,10 @@ export const analyzeClubHealth = (team: Team, players: Player[]): AssistantAdvic
     if (!gk) advice.push({ type: 'CRITICAL', message: "No Goalkeeper in Starting XI." });
     const injured = starters.filter(p => p.weeksInjured > 0);
     if (injured.length > 0) advice.push({ type: 'CRITICAL', message: `${injured.length} injured player(s) in lineup.` });
+
+    // Check for suspended players
+    const suspended = starters.filter(p => p.matchSuspension > 0);
+    if (suspended.length > 0) advice.push({ type: 'CRITICAL', message: `${suspended.length} suspended player(s) in lineup.` });
     const lowCond = starters.filter(p => p.condition < 50);
     if (lowCond.length > 0) advice.push({ type: 'WARNING', message: `${lowCond.length} player(s) have critically low stamina.` });
     return advice;
@@ -1269,12 +1289,17 @@ export const generateWorld = (leagueId: string): GameState => {
             // =====================================================
             const MIN_STADIUM = 5000;
             const MAX_STADIUM = 150000;
-            const CAPACITY_PER_LEVEL = (MAX_STADIUM - MIN_STADIUM) / 24; // ~6,042
+            const CAPACITY_PER_LEVEL = 6000; // FIXED: Exact 6000 per level to match upgrade logic
 
             // Calculate starting stadium level based on real capacity
             const realCapacity = team.facilities.stadiumCapacity;
             const calculatedLevel = Math.round((realCapacity - MIN_STADIUM) / CAPACITY_PER_LEVEL) + 1;
             const stadiumStartLevel = Math.max(1, Math.min(25, calculatedLevel));
+
+            // CRITICAL FIX: Sync Capacity with the calculated Level immediately
+            // This prevents the mismatch (e.g. Level 7 but 41k capacity)
+            team.facilities.stadiumLevel = stadiumStartLevel;
+            team.facilities.stadiumCapacity = MIN_STADIUM + (stadiumStartLevel - 1) * CAPACITY_PER_LEVEL;
 
             // Training & Academy based on reputation tier
             const tier = team.reputation > 8500 ? 3 : team.reputation > 7500 ? 2 : 1;
@@ -1886,12 +1911,12 @@ export const simulateLeagueRound = (gameState: GameState, currentWeek: number): 
                         p.matchSuspension = (p.matchSuspension || 0) + 1;
                     }
 
-                    // Yellow Card Accumulation (2 yellows = 1 match ban)
+                    // Yellow Card Accumulation (5 yellows = 1 match ban - FIFA standard)
                     if (yellowCards > 0) {
                         // Track season yellow cards separately
                         const seasonYellows = (p.stats.yellowCards || 0);
-                        // Every 2nd yellow card = suspension
-                        if (seasonYellows % 2 === 0 && seasonYellows > 0) {
+                        // Every 5th yellow card = suspension (FIFA rules)
+                        if (seasonYellows % 5 === 0 && seasonYellows > 0) {
                             p.matchSuspension = (p.matchSuspension || 0) + 1;
                         }
                     }
@@ -2543,9 +2568,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         const tvRights = Math.floor(tvBase * positionMultiplier * repMultiplier * 1.3);
 
         // Sponsor income (or default smaller amount if no sponsor) (+30% BOOST)
+        // DYNAMIC: Scale sponsor income with coefficient multiplier (successful leagues = better deals)
         const sponsorIncome = userTeam.sponsor
-            ? Math.floor(userTeam.sponsor.weeklyIncome * 1.3)
-            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3);
+            ? Math.floor(userTeam.sponsor.weeklyIncome * 1.3 * coeffMultiplier)
+            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3 * coeffMultiplier);
 
         const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
         const weeklyExpenses = weeklyWages + maintenance + staffCosts;
@@ -2635,6 +2661,68 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
             isRead: false,
             date: new Date().toISOString()
         });
+
+        // === STADIUM CONSTRUCTION PROGRESS ===
+        if (userTeam.facilities.stadiumConstructionWeeks && userTeam.facilities.stadiumConstructionWeeks > 0) {
+            userTeam.facilities.stadiumConstructionWeeks -= 1;
+
+            if (userTeam.facilities.stadiumConstructionWeeks <= 0) {
+                // CONSTRUCTION COMPLETE!
+                userTeam.facilities.stadiumConstructionWeeks = 0;
+                userTeam.facilities.stadiumLevel += 1;
+                userTeam.facilities.stadiumCapacity += 6000;
+
+                newMessages.push({
+                    id: uuid(),
+                    week: gameState.currentWeek,
+                    type: MessageType.INFO,
+                    subject: '🏟️ Stadium Expansion Complete!',
+                    body: `The construction work is finished! Your stadium has been upgraded to Level ${userTeam.facilities.stadiumLevel}. Capacity increased by 6,000 seats.`,
+                    isRead: false,
+                    date: new Date().toISOString()
+                });
+            }
+        }
+
+        // === TRAINING GROUND CONSTRUCTION PROGRESS ===
+        if (userTeam.facilities.trainingConstructionWeeks && userTeam.facilities.trainingConstructionWeeks > 0) {
+            userTeam.facilities.trainingConstructionWeeks -= 1;
+
+            if (userTeam.facilities.trainingConstructionWeeks <= 0) {
+                userTeam.facilities.trainingConstructionWeeks = 0;
+                userTeam.facilities.trainingLevel += 1;
+
+                newMessages.push({
+                    id: uuid(),
+                    week: gameState.currentWeek,
+                    type: MessageType.INFO,
+                    subject: '🏋️ Training Ground Upgrade Complete!',
+                    body: `Construction finished! Your training facilities are now Level ${userTeam.facilities.trainingLevel}. Player development will improve.`,
+                    isRead: false,
+                    date: new Date().toISOString()
+                });
+            }
+        }
+
+        // === YOUTH ACADEMY CONSTRUCTION PROGRESS ===
+        if (userTeam.facilities.academyConstructionWeeks && userTeam.facilities.academyConstructionWeeks > 0) {
+            userTeam.facilities.academyConstructionWeeks -= 1;
+
+            if (userTeam.facilities.academyConstructionWeeks <= 0) {
+                userTeam.facilities.academyConstructionWeeks = 0;
+                userTeam.facilities.academyLevel += 1;
+
+                newMessages.push({
+                    id: uuid(),
+                    week: gameState.currentWeek,
+                    type: MessageType.INFO,
+                    subject: '🎓 Youth Academy Upgrade Complete!',
+                    body: `Construction finished! Your youth academy is now Level ${userTeam.facilities.academyLevel}. Better youth prospects will be recruited.`,
+                    isRead: false,
+                    date: new Date().toISOString()
+                });
+            }
+        }
     }
 
     // STAFF EFFECT: scoutLevel affects youth candidate generation
@@ -2750,17 +2838,21 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
         // Merchandise and sponsor income
         const starPlayerBonus = teamPlayers.filter(p => p.overall > 85).length * 5000;
         const merchandise = Math.floor(((team.reputation * 2) + starPlayerBonus) * (0.7 + (leagueMult * 0.3)) * 1.3);
+        // DYNAMIC: AI teams also benefit from league coefficient scaling for sponsors
+        const teamCoeffMult = getCoefficientMultiplier(team.leagueId || 'default');
         const sponsorIncome = team.sponsor
-            ? Math.floor(team.sponsor.weeklyIncome * 1.3)
-            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3);
+            ? Math.floor(team.sponsor.weeklyIncome * 1.3 * teamCoeffMult)
+            : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3 * teamCoeffMult);
 
         // Ticket income (simplified - AI teams don't track home/away like user)
         const STADIUM_MIN = 5000;
         const STADIUM_CAPACITY_PER_LEVEL = 6000;
         const effectiveCapacity = STADIUM_MIN + (team.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
         const baseTicketPrice = LEAGUE_TICKET_PRICES[team.leagueId] || LEAGUE_TICKET_PRICES['default'];
+        // DYNAMIC: AI teams also get dynamic ticket prices based on league success
+        const dynamicTicketPrice = Math.floor(baseTicketPrice * teamCoeffMult);
         const avgAttendance = 0.60 + (team.reputation - 5000) / 15000; // 60-93% based on reputation
-        const ticketIncome = Math.floor(effectiveCapacity * baseTicketPrice * Math.max(0.4, Math.min(0.93, avgAttendance)) * 1.3 * 0.5); // Half of weeks are home
+        const ticketIncome = Math.floor(effectiveCapacity * dynamicTicketPrice * Math.max(0.4, Math.min(0.93, avgAttendance)) * 1.3 * 0.5); // Half of weeks are home
 
         const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
         const weeklyExpenses = weeklyWages + maintenance + staffCosts;
@@ -3523,6 +3615,66 @@ export const checkAndScheduleSuperCup = (gameState: GameState): GameState => {
 };
 
 export const processSeasonEnd = (gameState: GameState) => {
+    // === MEMORY OPTIMIZATION ===
+    // Clear old history to prevent save file bloat
+    console.log("[Maintenance] Running memory cleanup...");
+
+    // 1. Limit Team History (Last 5 seasons)
+    gameState.teams.forEach(team => {
+        if (team.reputationHistory && team.reputationHistory.length > 5) {
+            team.reputationHistory = team.reputationHistory.slice(-5);
+        }
+        if (team.confidenceHistory && team.confidenceHistory.length > 90) { // Keep ~2 seasons of weekly data
+            team.confidenceHistory = team.confidenceHistory.slice(-90);
+        }
+    });
+
+    // 2. Limit Match History (Last 3 seasons for matches to save space)
+    if (gameState.matches.length > 2000) {
+        const currentSeason = gameState.currentSeason;
+        gameState.matches = gameState.matches.filter(m => m.season >= currentSeason - 2);
+    }
+
+    // === AI FACILITY UPGRADES ===
+    // AI teams invest in their facilities based on budget
+    gameState.teams.forEach(team => {
+        if (team.id === gameState.userTeamId) return; // Skip user team
+
+        // Base cost logic from ClubManagement
+        const getCost = (level: number) => Math.floor(500000 * (level + 1) * (1 + (level + 1) * 0.05));
+
+        // Check Academy (Priority 1)
+        if (team.facilities.academyLevel < 20 && Math.random() < 0.7) {
+            // HARDER: Base 600k
+            const cost = Math.floor(600000 * (team.facilities.academyLevel + 1) * (1 + (team.facilities.academyLevel + 1) * 0.1));
+            if (team.budget > cost * 2.5) { // Needs 2.5x budget to be safe
+                team.budget -= cost;
+                team.facilities.academyLevel += 1;
+                console.log(`[AI Upgrade] ${team.name} upgraded Academy to Level ${team.facilities.academyLevel}`);
+            }
+        }
+
+        // Check Training (Priority 2)
+        if (team.facilities.trainingLevel < 20 && Math.random() < 0.6) {
+            const cost = getCost(team.facilities.trainingLevel);
+            if (team.budget > cost * 2.5) {
+                team.budget -= cost;
+                team.facilities.trainingLevel += 1;
+                console.log(`[AI Upgrade] ${team.name} upgraded Training to Level ${team.facilities.trainingLevel}`);
+            }
+        }
+
+        // Check Stadium (Priority 3)
+        if (team.facilities.stadiumLevel < 15 && Math.random() < 0.4) {
+            const cost = getCost(team.facilities.stadiumLevel);
+            if (team.budget > cost * 3) {
+                team.budget -= cost;
+                team.facilities.stadiumLevel += 1;
+                console.log(`[AI Upgrade] ${team.name} upgraded Stadium to Level ${team.facilities.stadiumLevel}`);
+            }
+        }
+    });
+
     // === DYNAMIC LEAGUE REPUTATION SYSTEM (NEW) ===
     // 0. Initialize registries from GameState or Constants
     if (gameState.baseLeagueReputations) {
@@ -3672,6 +3824,30 @@ export const processSeasonEnd = (gameState: GameState) => {
 
         // Calculate season coefficient (PURE SUM - No Division)
         const totalPoints = leagueSeasonalPoints[lid] || 0;
+
+        // === DYNAMIC BASE REPUTATION (2-WAY SYSTEM) ===
+        // Ligler hem yükselir hem düşer - İngiltere kötüyse düşer, Kenya iyiyse yükselir!
+        // Çin otomobil örneği: BYD 10 yılda Avrupa'yı zorluyor, aynı mantık!
+        const currentCoeffTotal = LEAGUE_COEFFICIENTS[lid].reduce((a, b) => a + b, 0);
+        const baseCoeff = BASE_COEFFICIENT_VALUES[lid] || BASE_COEFFICIENT_VALUES['default'];
+        const currentBaseRep = BASE_LEAGUE_REPUTATION[lid] || BASE_LEAGUE_REPUTATION['default'];
+
+        // Her 3 sezonda bir base reputation ayarla (hem yukarı hem aşağı)
+        if (gameState.currentSeason % 3 === 0) {
+            // DOMINANT LEAGUE (3x+ coefficient): +2 base reputation (SINIRSIZ! - Max 98)
+            if (currentCoeffTotal > baseCoeff * 3) {
+                const newBaseRep = Math.min(98, currentBaseRep + 2);
+                BASE_LEAGUE_REPUTATION[lid] = newBaseRep;
+                console.log(`[BASE REP ↑] ${lid}: ${currentBaseRep} → ${newBaseRep} (Dominant league!)`);
+            }
+            // WEAK LEAGUE (<0.5x coefficient): -2 base reputation (Min 35)
+            // İngiltere 20 sezon kötüyse düşer!
+            else if (currentCoeffTotal < baseCoeff * 0.5 && currentBaseRep > 35) {
+                const newBaseRep = Math.max(35, currentBaseRep - 2);
+                BASE_LEAGUE_REPUTATION[lid] = newBaseRep;
+                console.log(`[BASE REP ↓] ${lid}: ${currentBaseRep} → ${newBaseRep} (Weak league - declining!)`);
+            }
+        }
 
         // DIRECT SUM: Each league's total points from all participating teams
         const seasonCoeff = Number((totalPoints).toFixed(1));
@@ -5135,6 +5311,44 @@ export const simulateAIGlobalCupMatches = (
 
         const result = simulateFullMatch(tempMatch, homeTeam, awayTeam, homePlayers, awayPlayers);
 
+        // === KNOCKOUT MATCHES: Handle Extra Time & Penalties for AI vs AI matches ===
+        let finalHomeScore = result.homeScore;
+        let finalAwayScore = result.awayScore;
+        let matchWinnerId: string | undefined;
+        let extraTimeResult: { homeScore: number, awayScore: number } | undefined;
+        let penaltyResult: { homeScore: number, awayScore: number } | undefined;
+
+        // Only handle extra time/penalties for knockout stages
+        if (match.stage !== 'GROUP') {
+            if (finalHomeScore === finalAwayScore) {
+                // Extra Time - 40% chance of goal in ET
+                const homeStrength = homePlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(homePlayers.length, 1);
+                const awayStrength = awayPlayers.reduce((sum, p) => sum + p.overall, 0) / Math.max(awayPlayers.length, 1);
+                const homeWinChance = (homeStrength + 3) / (homeStrength + 3 + awayStrength);
+
+                if (Math.random() < 0.4) {
+                    if (Math.random() < homeWinChance) finalHomeScore++; else finalAwayScore++;
+                }
+                extraTimeResult = { homeScore: finalHomeScore - result.homeScore, awayScore: finalAwayScore - result.awayScore };
+            }
+
+            // Penalties if still draw after ET
+            if (finalHomeScore === finalAwayScore) {
+                const homePens = Math.floor(Math.random() * 5) + 3; // 3-7
+                const awayPens = Math.floor(Math.random() * 5) + 3;
+                // Force a winner
+                const finalHomePens = homePens === awayPens ? homePens + 1 : homePens;
+                penaltyResult = { homeScore: finalHomePens, awayScore: awayPens };
+                matchWinnerId = finalHomePens > awayPens ? match.homeTeamId : match.awayTeamId;
+            } else {
+                matchWinnerId = finalHomeScore > finalAwayScore ? match.homeTeamId : match.awayTeamId;
+            }
+        } else {
+            // Group stage: no winner needed (draws are allowed)
+            if (finalHomeScore > finalAwayScore) matchWinnerId = match.homeTeamId;
+            else if (finalAwayScore > finalHomeScore) matchWinnerId = match.awayTeamId;
+        }
+
         updatedCup = {
             ...updatedCup,
             groups: updatedCup.groups?.map(g => ({
@@ -5142,12 +5356,22 @@ export const simulateAIGlobalCupMatches = (
                 matches: g.matches.map(m => m.id === match.id ? { ...m, isPlayed: true, homeScore: result.homeScore, awayScore: result.awayScore, events: result.events } : m),
                 standings: g.standings // Updated below
             })),
-            knockoutMatches: updatedCup.knockoutMatches?.map(m => m.id === match.id ? { ...m, isPlayed: true, homeScore: result.homeScore, awayScore: result.awayScore, events: result.events, winnerId: result.homeScore > result.awayScore ? result.homeTeamId : result.awayTeamId } : m) || []
+            knockoutMatches: updatedCup.knockoutMatches?.map(m => m.id === match.id ? {
+                ...m,
+                isPlayed: true,
+                homeScore: finalHomeScore,
+                awayScore: finalAwayScore,
+                events: result.events,
+                winnerId: matchWinnerId,
+                extraTime: extraTimeResult,
+                penalties: penaltyResult
+            } : m) || []
         };
         // Re-sync match object with result for local logic
-        match.homeScore = result.homeScore;
-        match.awayScore = result.awayScore;
+        match.homeScore = finalHomeScore;
+        match.awayScore = finalAwayScore;
         match.isPlayed = true;
+        match.winnerId = matchWinnerId;
 
         if (updatedCup.groups && match.stage === 'GROUP') {
             // Groups require manual standing update as simulateFullMatch doesn't touch cup state

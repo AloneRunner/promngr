@@ -5,8 +5,8 @@ import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, Shield
 import { PlayerAvatar } from './PlayerAvatar';
 import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset } from '../services/MatchEngine';
 import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation } from '../services/engine';
-import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey } from '../services/tactics';
-import { AssistantReport } from './AssistantReport';
+import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey, detectPreset } from '../services/tactics';
+// AssistantReport removed - replaced by inline opponent tactical panel
 import { PlayerInteractionModal } from './PlayerInteractionModal';
 import { handlePlayerInteraction } from '../services/engine';
 
@@ -174,8 +174,16 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                 <button onClick={(e) => { e.stopPropagation(); onInteractStart(player); }} className="p-1.5 hover:bg-white/10 rounded text-slate-400 hover:text-white">
                     <MessageSquare size={14} />
                 </button>
-                <div className={`font-black text-sm w-7 text-center rounded bg-slate-900 border border-white/10 ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : 'text-slate-300'}`}>
-                    {effectiveRating}
+                <div className="flex flex-col items-center" title={`Baz: ${player.overall} | Anlık: ${effectiveRating}`}>
+                    {player.overall !== effectiveRating ? (
+                        <div className="flex items-center gap-0.5">
+                            <span className="text-[9px] text-slate-500 line-through">{player.overall}</span>
+                            <span className="text-[8px] text-slate-600">→</span>
+                            <span className={`font-black text-sm ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : effectiveRating >= 70 ? 'text-slate-300' : 'text-orange-400'}`}>{effectiveRating}</span>
+                        </div>
+                    ) : (
+                        <span className={`font-black text-sm ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : 'text-slate-300'}`}>{effectiveRating}</span>
+                    )}
                 </div>
                 {onMove && (
                     <div className="flex flex-col gap-0.5">
@@ -191,6 +199,7 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
 interface TeamManagementProps {
     team: Team;
     players: Player[];
+    opponent?: Team; // NEW: Opponent team for tactical analysis
     onUpdateTactic: (tactic: TeamTactic) => void;
     onPlayerClick: (player: Player) => void;
     onUpdateLineup: (playerId: string, status: LineupStatus, lineupIndex?: number) => void;
@@ -203,11 +212,11 @@ interface TeamManagementProps {
 }
 
 export const TeamManagement: React.FC<TeamManagementProps> = ({
-    team, players, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, matchStatus, t
+    team, players, opponent, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, matchStatus, t
 }) => {
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [tacticTab, setTacticTab] = useState<'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
-    const [showAssistant, setShowAssistant] = useState(false);
+    // showAssistant removed - using inline panel instead
     const [advice, setAdvice] = useState<AssistantAdvice[]>([]);
     const [interactingPlayer, setInteractingPlayer] = useState<Player | null>(null);
     const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -255,6 +264,17 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         }
     };
 
+    // Feedback state for interactions
+    const [feedbackMessage, setFeedbackMessage] = useState<{ text: string, type: 'success' | 'info' } | null>(null);
+
+    // Clear feedback after 3 seconds
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => setFeedbackMessage(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
+
     const handleInteract = (type: 'PRAISE' | 'CRITICIZE' | 'MOTIVATE', intensity: 'LOW' | 'HIGH') => {
         if (!interactingPlayer) return;
         const result = handlePlayerInteraction(interactingPlayer, type, intensity);
@@ -269,7 +289,12 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
             onPlayerMoraleChange(interactingPlayer.id, result.moraleChange, reasonMap[type]);
         }
 
-        alert(`${result.message}\n(Morale change: ${result.moraleChange > 0 ? '+' : ''}${result.moraleChange})`);
+        // Show feedback instead of alert
+        setFeedbackMessage({
+            text: `${result.message} (${result.moraleChange > 0 ? '+' : ''}${result.moraleChange} Morale)`,
+            type: result.moraleChange >= 0 ? 'success' : 'info'
+        });
+
         setInteractingPlayer(null);
     };
 
@@ -334,8 +359,92 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in pb-10" onMouseUp={handlePitchMouseUp} onTouchEnd={handlePitchMouseUp}>
 
-            {showAssistant && <AssistantReport advice={advice} onAutoFix={handleAutoPick} onClose={() => setShowAssistant(false)} t={t} />}
+            {/* AssistantReport removed - replaced by inline opponent tactical panel */}
             {interactingPlayer && <PlayerInteractionModal player={interactingPlayer} onClose={() => setInteractingPlayer(null)} onInteract={handleInteract} t={t} />}
+
+            {/* OPPONENT TACTIC PANEL - Only show during match */}
+            {opponent && matchStatus && (
+                <div className="lg:col-span-3 bg-gradient-to-r from-red-900/30 to-slate-800/50 rounded-xl p-2 border border-red-700/30 mb-2">
+                    {/* Header */}
+                    <div className="flex items-center gap-2 mb-2">
+                        <Shield className="text-red-400" size={14} />
+                        <span className="font-bold text-red-400 text-xs">{t.opponentAnalysis || 'Rakip Analizi'}: {opponent.name}</span>
+                    </div>
+
+                    {/* Opponent Tactic Grid - Horizontal Scroll on Mobile */}
+                    <div className="overflow-x-auto pb-1 -mx-1 px-1">
+                        <div className="flex gap-1.5 min-w-max">
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.formation || 'Diziliş'}</div>
+                                <div className="text-blue-400 font-mono font-bold text-xs">{opponent.tactic?.formation || '4-4-2'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.playStyle || 'Stil'}</div>
+                                <div className="text-purple-400 font-bold text-[10px]">{opponent.tactic?.style || 'Balanced'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.aggression || 'Agresif'}</div>
+                                <div className="text-orange-400 font-bold text-[10px]">{opponent.tactic?.aggression || 'Normal'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.tempo || 'Tempo'}</div>
+                                <div className="text-cyan-400 font-bold text-[10px]">{opponent.tactic?.tempo || 'Normal'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.width || 'Genişlik'}</div>
+                                <div className="text-emerald-400 font-bold text-[10px]">{opponent.tactic?.width || 'Balanced'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.passingStyle || 'Pas'}</div>
+                                <div className="text-yellow-400 font-bold text-[10px]">{opponent.tactic?.passingStyle || 'Mixed'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.pressingIntensity || 'Press'}</div>
+                                <div className="text-red-400 font-bold text-[10px]">{opponent.tactic?.pressingIntensity || 'Balanced'}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.defensiveLine || 'Def'}</div>
+                                <div className="text-blue-300 font-bold text-[10px]">{opponent.tactic?.defensiveLine || 'Balanced'}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Counter Tactic Suggestion */}
+                    {(() => {
+                        const oppStyle = opponent.tactic?.style || 'Balanced';
+                        const oppPressing = opponent.tactic?.pressingIntensity || 'Balanced';
+                        let suggestion = '';
+                        let suggestionIcon = '💡';
+
+                        if (oppPressing === 'Gegenpress' || oppPressing === 'HighPress') {
+                            suggestion = t.counterHighPress || 'Uzun paslarla basıncı aş! Pas stilini Direct/LongBall yap.';
+                            suggestionIcon = '🚀';
+                        } else if (oppStyle === 'Possession') {
+                            suggestion = t.counterPossession || 'High Press uygula, tempoyu artır. Topu çal!';
+                            suggestionIcon = '⚡';
+                        } else if (oppStyle === 'Counter') {
+                            suggestion = t.counterCounter || 'Sabırlı ol, Possession tarzı oyna. Geniş oyna.';
+                            suggestionIcon = '🎯';
+                        } else if (oppStyle === 'Defensive') {
+                            suggestion = t.counterDefensive || 'Geniş oyna, yavaş tempo. Sabırlı ol, boşluk ara.';
+                            suggestionIcon = '🔓';
+                        } else {
+                            suggestion = t.counterBalanced || 'Kendi oyununu oyna, güçlü yönlerini kullan.';
+                            suggestionIcon = '⚖️';
+                        }
+
+                        return (
+                            <div className="bg-emerald-900/30 border border-emerald-600/30 rounded px-2 py-1.5 flex items-start gap-2 mt-2">
+                                <span className="text-sm shrink-0">{suggestionIcon}</span>
+                                <div>
+                                    <div className="text-[9px] text-emerald-500 font-bold uppercase">{t.counterTactic || 'Counter Taktik'}</div>
+                                    <div className="text-emerald-200 text-[10px]">{suggestion}</div>
+                                </div>
+                            </div>
+                        );
+                    })()}
+                </div>
+            )}
 
             <div className="lg:col-span-1 space-y-4">
                 <div className="bg-slate-800 rounded-lg p-3 shadow-xl border border-slate-700">
@@ -343,28 +452,24 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         <h2 className="text-sm font-bold text-white flex items-center gap-2"><Shield size={16} className="text-emerald-500" /> {t.tactics}</h2>
                         <div className="flex gap-1 items-center">
                             {/* Preset Selector */}
+                            {/* Preset Selector */}
                             <select
+                                value={detectPreset(team.tactic)}
                                 onChange={(e) => {
-                                    if (e.target.value) {
+                                    if (e.target.value && e.target.value !== 'Custom') {
                                         const newTactic = applyPreset(team.tactic, e.target.value as PresetKey);
                                         onUpdateTactic(newTactic);
                                     }
                                 }}
-                                className="bg-slate-700 text-white text-[10px] font-bold px-1 py-1 rounded border border-slate-600 outline-none cursor-pointer hover:bg-slate-600 transition-colors w-20 truncate"
-                                defaultValue=""
+                                className={`text-white text-[10px] font-bold px-1 py-1 rounded border border-slate-600 outline-none cursor-pointer hover:bg-slate-600 transition-colors w-24 truncate ${detectPreset(team.tactic) === 'Custom' ? 'bg-slate-700 opacity-75' : 'bg-indigo-700'}`}
                             >
-                                <option value="" disabled>Preset</option>
+                                <option value="Custom">{t.customPreset || 'Custom'}</option>
+                                <option disabled>──────────</option>
                                 {Object.keys(TACTICAL_PRESETS).map(k => (
                                     <option key={k} value={k}>{TACTICAL_PRESETS[k as PresetKey].name}</option>
                                 ))}
                             </select>
-                            <button
-                                onClick={() => setShowAssistant(true)}
-                                className={`relative bg-slate-700 hover:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 transition-all ${hasIssues ? 'ring-2 ring-red-500 animate-pulse' : ''}`}
-                            >
-                                <ShieldAlert size={10} /> {t.assistantManager}
-                                {hasIssues && <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>}
-                            </button>
+                            {/* Old assistant button removed - using inline panel now */}
                             <button
                                 onClick={handleAutoPick}
                                 className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 transition-all"
@@ -375,12 +480,47 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     </div>
 
                     <div className="flex bg-slate-900 rounded p-1 mb-2">
-                        <button onClick={() => setTacticTab('FORMATION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'FORMATION' ? 'bg-slate-700 text-white' : 'text-slate-500'}`}>{t.base}</button>
-                        <button onClick={() => setTacticTab('IN_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'IN_POSSESSION' ? 'bg-emerald-700 text-white' : 'text-slate-500'}`}>{t.attack}</button>
-                        <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white' : 'text-slate-500'}`}>{t.defense}</button>
+                        <button onClick={() => setTacticTab('PRESETS')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'PRESETS' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.presetTitle || 'Presets'}</button>
+                        <button onClick={() => setTacticTab('FORMATION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'FORMATION' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.base}</button>
+                        <button onClick={() => setTacticTab('IN_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'IN_POSSESSION' ? 'bg-emerald-700 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.attack}</button>
+                        <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.defense}</button>
                     </div>
 
                     <div className="space-y-2 min-h-[80px]">
+                        {tacticTab === 'PRESETS' && (
+                            <div className="space-y-2 h-[250px] overflow-y-auto custom-scrollbar pr-1">
+                                <div className="text-[10px] text-slate-400 mb-2 italic">
+                                    {t.presetDesc}
+                                </div>
+                                {Object.entries(TACTICAL_PRESETS).map(([key, preset]) => {
+                                    // Translate using keys if available
+                                    const nameKey = `preset${key}` as keyof Translation;
+                                    const descKey = `desc${key}` as keyof Translation;
+                                    const displayName = (t[nameKey] as string) || preset.name;
+                                    const displayDesc = (t[descKey] as string) || preset.description;
+
+                                    return (
+                                        <button
+                                            key={key}
+                                            onClick={() => {
+                                                const newTactic = applyPreset(team.tactic, key as PresetKey);
+                                                // Update the entire tactic object in one go
+                                                onUpdateTactic(newTactic);
+                                            }}
+                                            className="w-full bg-slate-800 p-2 rounded border border-slate-700 hover:border-indigo-500 hover:bg-slate-750 transition-all text-left group relative overflow-hidden"
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <span className="text-[11px] font-bold text-indigo-300 group-hover:text-indigo-200">{displayName}</span>
+                                                <span className="text-[9px] bg-slate-900 text-slate-400 px-1 rounded">{t.applyPreset}</span>
+                                            </div>
+                                            <p className="text-[9px] text-slate-400 mt-1 leading-tight group-hover:text-slate-300">
+                                                {displayDesc}
+                                            </p>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                         {tacticTab === 'FORMATION' && (
                             <>
                                 <div>
@@ -425,6 +565,14 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         >
                                             {t.aggressive}
                                         </button>
+                                        <button
+                                            key="Reckless"
+                                            onClick={() => handleTacticChange('aggression', 'Reckless')}
+                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Reckless' ? 'bg-red-700 text-white animate-pulse' : 'text-slate-400 hover:text-red-500'}`}
+                                            title="Risk: Yüksek Kart!"
+                                        >
+                                            {t.reckless}
+                                        </button>
 
                                     </div>
                                 </div>
@@ -436,13 +584,12 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 {/* Style - Main playing style */}
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.styleLabel || 'Style'}</label>
-                                    <div className="grid grid-cols-3 gap-1 mt-0.5">
+                                    <div className="grid grid-cols-2 gap-1 mt-0.5">
                                         {[
+                                            { value: 'Attacking', label: t.styleAttacking || 'Attacking' },
                                             { value: 'Balanced', label: t.styleBalanced || 'Balanced' },
-                                            // { value: 'Possession', label: t.stylePossession || 'Possession' },
                                             { value: 'Counter', label: t.styleCounter || 'Counter' },
-                                            { value: 'HighPress', label: t.styleHighPress || 'High Press' },
-                                            { value: 'ParkTheBus', label: t.styleParkTheBus || 'Park Bus' }
+                                            { value: 'Defensive', label: t.styleDefensive || 'Defensive' }
                                         ].map(s => (
                                             <button
                                                 key={s.value}
@@ -469,9 +616,10 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
                                         <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                            {/* <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button> */}
+                                            <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button>
                                             <button onClick={() => handleTacticChange('passingStyle', 'Mixed')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.passingStyle || 'Mixed') === 'Mixed' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Mix'}</button>
                                             <button onClick={() => handleTacticChange('passingStyle', 'Direct')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Direct' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticDirect}</button>
+                                            <button onClick={() => handleTacticChange('passingStyle', 'LongBall')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'LongBall' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticLongBall || 'Long'}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -483,11 +631,86 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         <button onClick={() => handleTacticChange('tempo', 'Fast')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Fast' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoFast || 'Fast'}</button>
                                     </div>
                                 </div>
+
+                                {/* PLAYER INSTRUCTIONS - NEW TOGGLES */}
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.instructions || 'Instructions'}</label>
+                                    <div className="flex flex-wrap gap-1 mt-0.5">
+                                        {[
+                                            { id: 'WorkBallIntoBox', label: t.instrWorkBall, icon: '🛡️' },
+                                            { id: 'ShootOnSight', label: t.instrShootSight, icon: '🚀' },
+                                            { id: 'RoamFromPosition', label: t.instrRoam, icon: '🔄' }
+                                        ].map(instr => {
+                                            const isActive = (team.tactic.instructions || []).includes(instr.id);
+                                            return (
+                                                <button
+                                                    key={instr.id}
+                                                    onClick={() => {
+                                                        const current = team.tactic.instructions || [];
+                                                        const exists = current.includes(instr.id);
+                                                        // Toggle logic
+                                                        const newInstr = exists
+                                                            ? current.filter(i => i !== instr.id)
+                                                            : [...current, instr.id];
+
+                                                        // mutually exclusive check
+                                                        if (!exists) {
+                                                            if (instr.id === 'WorkBallIntoBox') {
+                                                                const idx = newInstr.indexOf('ShootOnSight');
+                                                                if (idx > -1) newInstr.splice(idx, 1);
+                                                            }
+                                                            if (instr.id === 'ShootOnSight') {
+                                                                const idx = newInstr.indexOf('WorkBallIntoBox');
+                                                                if (idx > -1) newInstr.splice(idx, 1);
+                                                            }
+                                                        }
+
+                                                        handleTacticChange('instructions', newInstr);
+                                                    }}
+                                                    className={`px-2 py-1.5 text-[9px] font-bold rounded border transition-all flex items-center gap-1 ${isActive
+                                                        ? 'bg-yellow-600 text-white border-yellow-500 shadow-sm'
+                                                        : 'bg-slate-700 text-slate-400 border-slate-600 hover:bg-slate-600'
+                                                        }`}
+                                                >
+                                                    <span>{instr.icon}</span>
+                                                    <span>{instr.label}</span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         )}
 
                         {tacticTab === 'OUT_POSSESSION' && (
                             <div className="space-y-2">
+                                {/* PRESSING INTENSITY - NEW */}
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.pressingIntensity}</label>
+                                    <div className="flex flex-col gap-1 mt-1 bg-slate-900/50 p-1.5 rounded">
+                                        {[
+                                            { value: 'StandOff', label: t.pressStandOff, color: 'bg-blue-600' },
+                                            { value: 'Balanced', label: t.pressBalanced, color: 'bg-slate-600' },
+                                            { value: 'HighPress', label: t.pressHigh, color: 'bg-orange-600' },
+                                            { value: 'Gegenpress', label: t.pressGegen, color: 'bg-red-600' }
+                                        ].map(p => (
+                                            <button
+                                                key={p.value}
+                                                onClick={() => handleTacticChange('pressingIntensity', p.value)}
+                                                className={`text-[10px] py-1.5 px-2 rounded font-bold text-left transition-all border ${(team.tactic.pressingIntensity || 'Balanced') === p.value
+                                                    ? `${p.color} text-white border-white/30 shadow-lg`
+                                                    : 'bg-slate-700 text-slate-400 border-transparent hover:bg-slate-600'
+                                                    }`}
+                                            >
+                                                <div className="flex justify-between items-center w-full">
+                                                    <span>{p.label}</span>
+                                                    {(team.tactic.pressingIntensity || 'Balanced') === p.value && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensiveLine}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">

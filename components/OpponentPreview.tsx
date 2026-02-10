@@ -1,8 +1,7 @@
 
-import React, { useState } from 'react';
-import { Team, Player, Translation, Position, TacticalMatchRecord } from '../types';
-import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle, Brain } from 'lucide-react';
-import { AssistantCoachModal } from './AssistantCoachModal';
+import React from 'react';
+import { Team, Player, Translation, Position } from '../types';
+import { Shield, Target, TrendingUp, TrendingDown, Minus, Users, Zap, AlertTriangle } from 'lucide-react';
 import { getTeamLogo } from '../logoMapping';
 import { adMobService } from '../services/adMobService';
 
@@ -11,7 +10,6 @@ interface OpponentPreviewProps {
     opponentPlayers: Player[];
     userTeam: Team;
     t: Translation;
-    tacticalHistory: TacticalMatchRecord[];
     onClose: () => void;
     onStartMatch: () => void;
 }
@@ -21,11 +19,9 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
     opponentPlayers,
     userTeam,
     t,
-    tacticalHistory,
     onClose,
     onStartMatch
 }) => {
-    const [showCoach, setShowCoach] = useState(false);
     // Get top 3 players by overall
     const topPlayers = [...opponentPlayers]
         .filter(p => p.lineup === 'STARTING')
@@ -189,27 +185,8 @@ export const OpponentPreview: React.FC<OpponentPreviewProps> = ({
                     </div>
                 </div>
 
-                {/* Assistant Coach Modal */}
-                {showCoach && (
-                    <AssistantCoachModal
-                        userTeam={userTeam}
-                        opponent={opponent}
-                        tacticalHistory={tacticalHistory}
-                        onClose={() => setShowCoach(false)}
-                        t={t}
-                    />
-                )}
-
                 {/* Actions */}
                 <div className="p-6 space-y-3">
-                    {/* Assistant Coach Button */}
-                    <button
-                        onClick={() => setShowCoach(true)}
-                        className="w-full py-3 bg-gradient-to-r from-purple-600/80 to-indigo-600/80 text-white font-bold rounded-xl hover:from-purple-500 hover:to-indigo-500 transition-all border border-purple-500/30 flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-purple-500/20"
-                    >
-                        <Brain size={20} className="drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
-                        {t.assistantCoach || 'Yardımcı Antrenör'}
-                    </button>
 
                     <button
                         onClick={onStartMatch}

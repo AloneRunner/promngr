@@ -320,4 +320,71 @@ export class AIService {
 
         return TacticType.T_442; // Default
     }
+
+    // --- 4. OPPONENT ANALYSIS (COUNTER-TACTICS) ---
+    // Analyzes opponent and adjusts tactic if necessary (The "Rock-Paper-Scissors" Logic)
+    public static analyzeOpponent(
+        myTeam: Team,
+        opponentTactic: TeamTactic,
+        opponentReputation: number
+    ): TeamTactic {
+        // 1. IDENTITY CHECK (Reputation)
+        // If we are much stronger, we dictate the game. We don't adapt.
+        const repDiff = myTeam.reputation - opponentReputation;
+        if (repDiff > 500) {
+            return myTeam.tactic; // We are dominant, play our game.
+        }
+
+        // If we are much weaker, we MUST adapt to survive.
+        // If evenly matched, we try to get an edge.
+
+        const newTactic = { ...myTeam.tactic };
+        let adapted = false;
+
+        // 2. ROCK-PAPER-SCISSORS LOGIC
+
+        // SCENARIO A: Opponent plays POSSESSION (Tiki-Taka)
+        // Counter: HIGH PRESS (Force mistakes)
+        if (opponentTactic.style === 'Possession' || opponentTactic.passingStyle === 'Short') {
+            // If we are not already pressing, strictly increase it
+            if (newTactic.pressingIntensity !== 'Gegenpress') {
+                newTactic.pressingIntensity = 'HighPress';
+                newTactic.aggression = 'Aggressive'; // Physicality disrupts rhythm
+                adapted = true;
+            }
+        }
+
+        // SCENARIO B: Opponent plays HIGH PRESS (Gegenpress)
+        // Counter: DIRECT / LONG BALL (Bypass midfield pressure)
+        else if (opponentTactic.style === 'HighPress' || opponentTactic.pressingIntensity === 'Gegenpress') {
+            newTactic.style = 'Counter';
+            newTactic.passingStyle = 'Direct'; // Don't play short into pressure
+            newTactic.tempo = 'Fast';
+            adapted = true;
+        }
+
+        // SCENARIO C: Opponent plays PARK THE BUS (Defensive)
+        // Counter: WIDTH + SHOOT ON SIGHT (Stretch them and test GK)
+        else if (opponentTactic.style === 'Defensive' || opponentTactic.defensiveLine === 'Deep') {
+            newTactic.style = 'Attacking';
+            newTactic.width = 'Wide'; // Stretch the bus
+
+            // Add "Shoot On Sight" instruction if not present
+            const instructions = newTactic.instructions || [];
+            if (!instructions.includes('ShootOnSight')) {
+                newTactic.instructions = [...instructions, 'ShootOnSight'];
+            }
+            adapted = true;
+        }
+
+        // SCENARIO D: Opponent plays WIDE (Wings)
+        // Counter: NARROW (Pack the box)
+        else if (opponentTactic.width === 'Wide') {
+            newTactic.width = 'Narrow'; // Force them outside, protect the middle
+            newTactic.defensiveLine = 'Deep'; // Don't get beaten by pace on wings
+            adapted = true;
+        }
+
+        return adapted ? newTactic : myTeam.tactic;
+    }
 }

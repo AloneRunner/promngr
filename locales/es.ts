@@ -22,6 +22,7 @@
     safe: "Seguro",
     normal: "Normal",
     aggressive: "Agresivo",
+    reckless: "Temerario",
     startingXI: "Once Inicial",
     bench: "Banquillo",
     reserves: "Reservas",
@@ -138,9 +139,39 @@
     tacticDeep: "Bajo",
     tacticHigh: "Alto",
     tacticZonal: "Zonal",
-    tacticManMark: "Individual",
+    tacticManMark: "Marcaje al Hombre",
+    tacticLongBall: "Balón Largo",
+    instrWorkBall: "Llevar el balón al área",
+    instrShootSight: "Disparar al ver puerta",
+    instrRoam: "Libertad de movimientos",
     tempoSlow: "Lento",
     tempoFast: "Rápido",
+    // Tactical Presets
+    presetTitle: "Preajuste Táctico",
+    presetDesc: "Elige un estilo de juego para tu equipo.",
+    applyPreset: "Aplicar",
+    currentPreset: "Actual: ",
+    customPreset: "Personalizado",
+
+    presetGegenpress: "Gegenpress",
+    descGegenpress: "Presión intensa para recuperar el balón inmediatamente.",
+    presetTikiTaka: "Tiki-Taka",
+    descTikiTaka: "Juego de posesión extrema. Pasos cortos y movilidad.",
+    presetTotalFootball: "Fútbol Total",
+    descTotalFootball: "Movimiento fluido donde todos atacan y defienden.",
+    presetFluidCounter: "Contra Fluida",
+    descFluidCounter: "Atráelos y golpea con velocidad.",
+    presetRouteOne: "Juego Directo",
+    descRouteOne: "El camino más corto al gol es una línea recta.",
+    presetCounterAttack: "Contra Rápida",
+    descCounterAttack: "Absorbe la presión y contraataca rápido.",
+    presetParkTheBus: "Autobús",
+    descParkTheBus: "Defiende con todos detrás del balón.",
+    presetWingPlay: "Juego de Bandas",
+    descWingPlay: "Abre el campo y centra al área.",
+    presetCatenaccio: "Catenaccio",
+    descCatenaccio: "Defensa italiana clásica. Organización muy fuerte.",
+
     clickHelp: "Clic para cambiar/seleccionar",
     dragHelp: "Arrastra para ajustar",
     autoSortHelp: "Auto-ordenar posiciones",
@@ -876,6 +907,20 @@ B. Alta (High) - "Trampa del Fuera de Juego"
     update325Item3Title: "Gestión y Club",
     update325Item3Desc: "• ¡Despido activo! (Baja confianza = Game Over).\n• Suspensiones por tarjeta roja activas.\n• Puntos de reputación actualizados.",
 
+    // Developer Letter - v3.4
+    devLetterTitle: "Carta del Desarrollador",
+    devLetterGreeting: "¡Hola Queridos Jugadores! 👋",
+    devLetterParagraph1: "Antes que nada, muchas gracias por descargar nuestro juego y dedicarle tiempo. Sé que algunos de ustedes han encontrado errores graves después de las últimas actualizaciones, y pido disculpas sinceras por ello.",
+    devLetterParagraph2: "Con esta actualización, he reescrito completamente el código del juego desde cero. Mi máxima prioridad era hacer que los partidos en vivo fueran una experiencia realmente agradable. El motor de partidos se ha reconstruido desde la base. Descubrí errores críticos en Champions League, Europa League y Supercopa: Los partidos en vivo, simulación rápida y simulación a mitad de partido funcionaban de manera diferente. Las clasificaciones de grupo no se actualizaban después de los partidos, y en las eliminatorias, no estaba claro quién avanzaría después de un empate. Todas estas inconsistencias ya están corregidas.",
+    devLetterParagraph3: "Los penaltis ahora se simulan cuando los partidos de eliminación terminan en empate. Actualmente funciona en segundo plano, pero planeo agregar una experiencia visual de penaltis en futuras actualizaciones. También están en progreso mejoras para jugadas a balón parado como tiros libres y córners.",
+    devLetterParagraph4: "⚠️ Nota Importante: Para la experiencia más estable, recomiendo iniciar un nuevo juego. Si tienes problemas con partidas antiguas, puedes borrar la caché y datos de la app desde los ajustes del teléfono y empezar de nuevo.",
+    devLetterParagraph5: "Actualmente con 48 ligas, la simulación semanal tarda unos 12 segundos en un teléfono estándar. Cada semana, los equipos IA realizan simulaciones reales de partidos y todos los traspasos ocurren inteligentemente. Cuando teníamos solo 8 ligas, esto no era problema. No planeo añadir 2ª divisiones a cada país porque empeoraría el rendimiento. Podríamos agregar asignación de puntuación aleatoria como alternativa, pero eso comprometería el realismo. También limité la actividad de transferencias de equipos IA al 20% por semana para prevenir caos. Estamos trabajando en soluciones alternativas.",
+    devLetterParagraph6: "Estoy desarrollando este juego solo. Compartir errores y sugerencias en reseñas es muy valioso para mí. Sus comentarios me ayudan a identificar y corregir problemas mucho más rápido. Una vez que la base sea sólida, pasaré al equilibrio económico, límites de instalaciones y modo carrera. ¡Gracias por su apoyo! 🙏",
+    devLetterSignature: "Con cariño,",
+    devLetterAuthor: "El Desarrollador",
+    devLetterDate: "7 de Febrero de 2026",
+    devLetterContinue: "Continuar al Juego",
+
     // --- v3.3 UPDATE ---
     update330Title: "v3.3 - Actualización Económica y FFP",
     update330Item1Title: "Salarios Bloqueados por Contrato",
@@ -891,7 +936,7 @@ B. Alta (High) - "Trampa del Fuera de Juego"
 
     ffpSolidarityFund: "Fondo de Solidaridad FFP",
     ffpLuxuryTax: "Impuesto de Lujo FFP",
-    
+
     // Configuración
     settings: "Configuración",
     comingSoon: "Próximamente",
