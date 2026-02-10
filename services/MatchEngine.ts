@@ -219,51 +219,101 @@ const PENALTY_BOX_WIDTH = 40.32;   // 40.32m genişlik (Y: 13.84 - 54.16)
 const SIX_YARD_BOX_DEPTH = 5.5;    // 6 yard box = 5.5m
 const PENALTY_SPOT = 11;           // Penaltı noktası = 11m
 
-// --- RATING CALCULATOR ---
+// --- FM-STYLE RATING CALCULATOR ---
+// Uses ALL 14 attributes with position-specific weights (like Football Manager)
+// No attribute is ignored - each contributes with appropriate weight for the position
+
+// Helper: Get attribute values with defaults
+const getAttrValues = (attr: any) => ({
+    fin: attr.finishing || 50,
+    pas: attr.passing || 50,
+    dri: attr.dribbling || 50,
+    tac: attr.tackling || 50,
+    gk: attr.goalkeeping || 10,
+    spd: attr.speed || 50,
+    sta: attr.stamina || 50,
+    str: attr.strength || 50,
+    dec: attr.decisions || 50,
+    pos: attr.positioning || 50,
+    vis: attr.vision || 50,
+    com: attr.composure || 50,
+    lea: attr.leadership || 50,
+    agg: attr.aggression || 50,
+});
+
+// Helper: Calculate position-weighted attribute score
+const calcPositionScore = (a: ReturnType<typeof getAttrValues>, position: Position): number => {
+    if (position === Position.GK) {
+        return (a.gk * 0.40) + (a.pos * 0.12) + (a.com * 0.10) + (a.dec * 0.08) +
+            (a.str * 0.06) + (a.spd * 0.05) + (a.lea * 0.04) + (a.pas * 0.04) +
+            (a.vis * 0.03) + (a.sta * 0.03) + (a.agg * 0.02) + (a.fin * 0.01) +
+            (a.dri * 0.01) + (a.tac * 0.01);
+    } else if (position === Position.DEF) {
+        return (a.tac * 0.18) + (a.pos * 0.14) + (a.str * 0.12) + (a.spd * 0.10) +
+            (a.com * 0.08) + (a.dec * 0.08) + (a.agg * 0.07) + (a.sta * 0.06) +
+            (a.pas * 0.05) + (a.lea * 0.04) + (a.vis * 0.03) + (a.dri * 0.02) +
+            (a.fin * 0.02) + (a.gk * 0.01);
+    } else if (position === Position.MID) {
+        return (a.pas * 0.15) + (a.vis * 0.13) + (a.sta * 0.10) + (a.dri * 0.10) +
+            (a.dec * 0.09) + (a.com * 0.08) + (a.spd * 0.07) + (a.pos * 0.06) +
+            (a.tac * 0.06) + (a.fin * 0.05) + (a.str * 0.04) + (a.lea * 0.03) +
+            (a.agg * 0.03) + (a.gk * 0.01);
+    } else { // FWD
+        return (a.fin * 0.20) + (a.spd * 0.14) + (a.dri * 0.12) + (a.pos * 0.10) +
+            (a.com * 0.10) + (a.dec * 0.06) + (a.str * 0.06) + (a.vis * 0.05) +
+            (a.pas * 0.05) + (a.sta * 0.04) + (a.agg * 0.04) + (a.tac * 0.02) +
+            (a.lea * 0.01) + (a.gk * 0.01);
+    }
+};
+
+// === BASE OVERALL CALCULATOR (for player creation) ===
+// Pure attribute-based, no anchor. Used when creating players from data.
+export const calculateBaseOverall = (player: Player, position: Position): number => {
+    if (!player || !player.attributes) return 60;
+    const a = getAttrValues(player.attributes);
+    const score = calcPositionScore(a, position);
+    return Math.max(1, Math.floor(score));
+};
+
+// === EFFECTIVE RATING CALCULATOR (for display/UI) ===
+// Uses base overall as anchor + position fit bonus + condition/morale penalties
 export const calculateEffectiveRating = (player: Player, assignedPosition: Position, currentCondition: number = 100): number => {
     if (!player || !player.attributes) return 60;
-    const attr = player.attributes;
-    let score = 0;
+    const a = getAttrValues(player.attributes);
+    const attrScore = calcPositionScore(a, assignedPosition);
 
-    if (assignedPosition === Position.GK) {
-        score = (attr.goalkeeping * 0.85) + (attr.decisions * 0.05) + (attr.positioning * 0.05) + (attr.strength * 0.05);
-    } else if (assignedPosition === Position.DEF) {
-        score = (attr.tackling * 0.40) + (attr.strength * 0.20) + (attr.positioning * 0.15) + (attr.speed * 0.15) + (attr.passing * 0.10);
-    } else if (assignedPosition === Position.MID) {
-        score = (attr.passing * 0.30) + (attr.vision * 0.20) + (attr.dribbling * 0.15) + (attr.stamina * 0.15) + (attr.tackling * 0.10) + (attr.finishing * 0.10);
-    } else if (assignedPosition === Position.FWD) {
-        score = (attr.finishing * 0.40) + (attr.speed * 0.25) + (attr.dribbling * 0.15) + (attr.positioning * 0.10) + (attr.strength * 0.10);
+    // If player has no overall yet (creation time), return pure attribute score
+    if (!player.overall || player.overall === 0) {
+        return Math.max(1, Math.floor(attrScore));
     }
 
-    // POSITION PENALTY
+    // === ANCHOR TO BASE OVERALL ===
+    const baseOvr = player.overall;
+    const simpleAvg = (a.fin + a.pas + a.dri + a.tac + a.spd + a.sta + a.str + a.dec + a.pos + a.vis + a.com + a.lea + a.agg) / 13;
+    const positionFit = attrScore - simpleAvg;
+    const fitBonus = Math.max(-8, Math.min(8, positionFit));
+    let score = baseOvr + fitBonus;
+
+    // POSITION PENALTY (only when playing out of position)
     if (player.position !== assignedPosition) {
-        if (player.position === Position.GK || assignedPosition === Position.GK) score *= 0.1;
-        else if ((player.position === Position.DEF && assignedPosition === Position.FWD) || (player.position === Position.FWD && assignedPosition === Position.DEF)) score *= 0.6;
+        if (player.position === Position.GK || assignedPosition === Position.GK) score *= 0.3;
+        else if ((player.position === Position.DEF && assignedPosition === Position.FWD) || (player.position === Position.FWD && assignedPosition === Position.DEF)) score *= 0.7;
         else score *= 0.90;
     }
 
-    // MORALE IMPACT
-    let moraleMod = 1.0;
-    if (player.morale < 50) {
-        moraleMod = 0.9 + (player.morale / 50) * 0.1;
-    } else {
-        moraleMod = 1.0 + ((player.morale - 50) / 50) * 0.05;
+    // MORALE IMPACT (subtle: only negative below 40)
+    if (player.morale < 40) {
+        score -= Math.floor((40 - player.morale) / 10);
     }
 
-
-
-    // STAMINA IMPACT (FATIGUE)
-    // Relaxed curve: Players stay effective longer.
-    let fatigueMod = 1.0;
+    // CONDITION/FATIGUE IMPACT
     if (currentCondition < 30) {
-        // Critical fatigue only below 30%
-        fatigueMod = Math.max(0.5, currentCondition / 60);
+        score -= Math.floor((30 - currentCondition) / 5);
     } else if (currentCondition < 60) {
-        // Minor drop between 30-60%
-        fatigueMod = 0.85 + ((currentCondition - 30) / 30) * 0.15;
+        score -= Math.floor((60 - currentCondition) / 15);
     }
 
-    return Math.floor(score * moraleMod * fatigueMod);
+    return Math.max(1, Math.floor(score));
 };
 
 export const getRoleFromX = (x: number): Position => {
@@ -391,6 +441,7 @@ type SetPieceMode =
     | 'GOAL_KICK_HOME' | 'GOAL_KICK_AWAY'
     | 'CORNER_HOME_TOP' | 'CORNER_HOME_BOTTOM' | 'CORNER_AWAY_TOP' | 'CORNER_AWAY_BOTTOM'
     | 'FREE_KICK_HOME' | 'FREE_KICK_AWAY'
+    | 'PENALTY_HOME' | 'PENALTY_AWAY'
     | 'THROW_IN_HOME' | 'THROW_IN_AWAY';
 
 interface Signal {
@@ -1671,10 +1722,16 @@ export class MatchEngine {
             let maxPressers = 2; // Varsayılan: 2 kişi
 
             // Taktik bazlı ayarlama
-            if (defenderTactic.style === 'ParkTheBus' || defenderTactic.style === 'VeryDefensive') {
-                maxPressers = 1; // Defansif taktik = tek kişi bas
-            } else if (defenderTactic.aggression === 'High') {
-                maxPressers = 2; // Yüksek agresyon = 2 kişi (fazla değil!)
+            const pressIntensity = defenderTactic.pressingIntensity || 'Balanced';
+
+            if (pressIntensity === 'StandOff') {
+                maxPressers = 1; // Alan savunması
+            } else if (pressIntensity === 'Balanced') {
+                maxPressers = 2; // Standart
+            } else if (pressIntensity === 'HighPress') {
+                maxPressers = 3; // Agresif baskı
+            } else if (pressIntensity === 'Gegenpress') {
+                maxPressers = 4; // Topa şok baskı!
             }
 
             // Tehlike bölgesi: Ceza sahası yakınında +1 presçi
@@ -2368,8 +2425,9 @@ export class MatchEngine {
         if (distToBall < 30 && distToBall > 10) idealDistFromLine = 5;
         if (distToBall <= 10) idealDistFromLine = 3;
 
-        const targetX = goalX + (Math.cos(angleToBall) * idealDistFromLine);
-        const targetY = goalY + (Math.sin(angleToBall) * idealDistFromLine);
+        let targetX = goalX + (Math.cos(angleToBall) * idealDistFromLine);
+        let targetY = goalY + (Math.sin(angleToBall) * idealDistFromLine);
+
         let clampedX = isHome ? clamp(targetX, 0, PENALTY_BOX_DEPTH) : clamp(targetX, PITCH_LENGTH - PENALTY_BOX_DEPTH, PITCH_LENGTH);
 
         this.applySteeringBehavior(p, clampedX, targetY, MAX_PLAYER_SPEED * 0.7);
@@ -2431,6 +2489,18 @@ export class MatchEngine {
 
         this.sim.ball.x = simP.x + (Math.cos(simP.facing) * closeControl);
         this.sim.ball.y = simP.y + (Math.sin(simP.facing) * closeControl);
+
+        // === PENALTY KICK EXECUTION ===
+        // Force shoot if in penalty mode
+        if (this.sim.mode === 'PENALTY_HOME' || this.sim.mode === 'PENALTY_AWAY') {
+            state.decisionTimer++;
+            // Wait 1 second (20 ticks) before shooting
+            if (state.decisionTimer > 20) {
+                this.actionShoot(p, isHome);
+                this.sim.mode = undefined; // Reset mode to normal play (allows rebounds etc)
+            }
+            return;
+        }
 
         // --- GOALKEEPER AI (Clearance) ---
         if (this.playerRoles[p.id] === Position.GK) {
@@ -2568,16 +2638,18 @@ export class MatchEngine {
                 if (hasCurve) fkShootSkill += 15;
 
                 // Baraj etkisi: Her bloker şansı düşürür
-                const wallPenalty = wallBlockers * 15 + wallQuality * 10;
+                // Baraj cezası azaltıldı (%30)
+                const wallPenalty = (wallBlockers * 10 + wallQuality * 7);
 
                 // === GERÇEK SERBEST VURUŞ BONUSU ===
-                // Eğer gerçek free kick modundaysak, daha agresif ol!
-                const realFkBonus = isRealFreeKick ? 150 : 0;
+                // Eğer gerçek free kick modundaysak, neredeyse kesin şut çek!
+                const realFkBonus = isRealFreeKick ? 500 : 0; // 150 -> 500 (Pas vermeyi engellemek için)
 
                 // === SERBEST VURUŞ KARARI ===
                 // Yakın mesafe (< 22m): İyi şutçular direkt vurur
-                if (distToGoal < 22 && fkShootSkill > 60) {
-                    const netScore = 400 + realFkBonus - wallPenalty + (fkShootSkill - 60) * 3;
+                // Eşikler düşürüldü: 60 -> 50
+                if (distToGoal < 22 && fkShootSkill > 50) {
+                    const netScore = 400 + realFkBonus - wallPenalty + (fkShootSkill - 50) * 3;
                     if (netScore > 180) {
                         shootScore += netScore;
                         if (wallBlockers > 0) {
@@ -2586,28 +2658,32 @@ export class MatchEngine {
                             this.traceLog.push(`${p.lastName} frikik kullanıyor... Direkt Kaleye!`);
                         }
                     } else {
-                        // Baraj çok güçlü, pas daha iyi
-                        shootScore -= 100;
+                        // Baraj çok güçlü, ama gerçek frikikse yine de dene
+                        if (isRealFreeKick) shootScore += 200;
+                        else shootScore -= 50;
                     }
                 }
                 // Orta mesafe (22-30m): Sadece uzman oyuncular
-                else if (distToGoal < 30 && fkShootSkill > 70) {
-                    const netScore = 300 + realFkBonus - wallPenalty + (fkShootSkill - 70) * 5;
-                    if (netScore > 120 && wallBlockers < 4) {
+                // Eşikler düşürüldü: 70 -> 60
+                else if (distToGoal < 30 && fkShootSkill > 60) {
+                    const netScore = 300 + realFkBonus - wallPenalty + (fkShootSkill - 60) * 5;
+                    if (netScore > 120 && wallBlockers < 5) {
                         shootScore += netScore;
                         this.traceLog.push(`${p.lastName} uzak mesafeden frikik deniyor!`);
                     } else {
-                        shootScore -= 150;
+                        if (isRealFreeKick) shootScore += 150; // Uzak ama yine de dene
+                        else shootScore -= 100;
                     }
                 }
                 // Uzak mesafe (30-35m): Çok nadir, sadece efsaneler
-                else if (distToGoal < 35 && fkShootSkill > 85 && wallBlockers < 3) {
+                else if (distToGoal < 35 && fkShootSkill > 80 && wallBlockers < 4) {
                     shootScore += 200 + realFkBonus;
                     this.traceLog.push(`${p.lastName} çok uzaktan frikik deniyor! (${Math.round(distToGoal)}m)`);
                 }
-                // Aksi halde pas tercih edilir
+                // Aksi halde pas tercih edilir (ama gerçek frikikse şut şansı ver)
                 else {
-                    shootScore -= 200;
+                    if (isRealFreeKick && distToGoal < 25) shootScore += 200; // Yakınsa mecburen vur
+                    else shootScore -= 200;
                 }
             }
             // === NORMAL PLAY LOGIC ===
@@ -2756,6 +2832,23 @@ export class MatchEngine {
                 shootScore += 30;     // 15 → 30
                 dribbleScore += 20;   // 10 → 20
                 passScore -= 25;      // -10 → -25
+            } else if (tactic.passingStyle === 'Short') {
+                // Short: Kisa pas, sabirli oyun (Tiki-Taka)
+                shootScore -= 20;     // Gereksiz sut atma
+                dribbleScore -= 10;   // Topu ayaginda tutma
+                passScore += 30;      // Pas ver!
+            } else if (tactic.passingStyle === 'LongBall') {
+                // Long: Uzun Top
+                if (isInAttackingThird) {
+                    // Forvetler topu alinca ne yapsin?
+                    shootScore += 25;     // VUR! (Hedef sensin)
+                    dribbleScore += 10;   // Topu sakla (Target Man)
+                } else {
+                    // Defans/Orta Saha: Ileri sisir
+                    shootScore += 5;
+                    dribbleScore -= 20;   // Ezme
+                    passScore += 40;      // Doldur
+                }
             }
             if (tactic.style === 'Counter') {
                 if (isInAttackingThird) {
@@ -2763,14 +2856,32 @@ export class MatchEngine {
                     dribbleScore += 15;
                 }
                 if (distToGoal < 16) shootScore += 20;
-            } else if (tactic.style === 'HighPress') {
+            } else if (tactic.pressingIntensity === 'HighPress' || tactic.pressingIntensity === 'Gegenpress') {
                 if (shotOpenness > 0.6) shootScore += 10;
                 else shootScore -= 10;
                 dribbleScore += 10;
-            } else if (tactic.style === 'ParkTheBus') {
+            } else if (tactic.pressingIntensity === 'StandOff') {
                 passScore += 20;
                 shootScore -= 30;
                 dribbleScore -= 20;
+            }
+
+            // === PLAYER INSTRUCTIONS EFFECTS ===
+            const instructions = tactic.instructions || [];
+
+            // 1. Work Ball Into Box (Uzaktan şutu azalt)
+            if (instructions.includes('WorkBallIntoBox')) {
+                if (distToGoal > 25) {
+                    shootScore -= 40; // Uzaktan şut deneme
+                    passScore += 15;  // Pas yap
+                }
+            }
+
+            // 2. Shoot On Sight (Gördüğün yerden vur)
+            if (instructions.includes('ShootOnSight')) {
+                if (distToGoal < 35 && shotOpenness > 0.4) {
+                    shootScore += 25; // Mesafeye bakma vur
+                }
             }
 
             // Width Logic - Kanat bölgesi (0-17m ve 51-68m)
@@ -2936,6 +3047,12 @@ export class MatchEngine {
             // Base Score: Closer to enemy goal is better
             const distToGoal = dist(simTm.x, simTm.y, goalX, PITCH_CENTER_Y);
             let score = (126 - distToGoal);  // 120 → 126 (ölçeklendi)
+
+            // === LONG BALL LOGIC ===
+            if (tactic && tactic.passingStyle === 'LongBall') {
+                if (d > 35) score += 50; // Uzun pasa buyuk odul
+                if (d < 20) score -= 30; // Kisa pas sevmez
+            }
 
             // === KRİTİK FIX: ALICININ YANINDA RAKİP VARSA PAS RİSKLİ! ===
             // Bu kontrol olmadan, pas yolu açık olsa bile alıcının yanında rakip varsa top kaybediliyordu
@@ -4175,6 +4292,18 @@ export class MatchEngine {
             }
         }
 
+        // === INSTRUCTION: ROAM FROM POSITION ===
+        // Apply random movement to off-ball players to make them harder to mark
+        if (tactic.instructions && tactic.instructions.includes('RoamFromPosition')) {
+            // Only apply roam if not sprinting/pressing hard (don't mess up critical runs)
+            if (simP.state !== 'SPRINT' && !this.playerStates[p.id].isPressing) {
+                const roamX = (Math.random() - 0.5) * 6.0; // +/- 3.0m random
+                const roamY = (Math.random() - 0.5) * 6.0;
+                targetX += roamX;
+                targetY += roamY;
+            }
+        }
+
         targetY = clamp(targetY, 2, PITCH_WIDTH - 2);
         targetX = clamp(targetX, 0, PITCH_LENGTH);
 
@@ -5217,7 +5346,10 @@ export class MatchEngine {
         let riskFactor = 1.0;
         if (tactic.aggression === 'Aggressive') {
             effectiveDef *= 1.25;
-            riskFactor = 2.2; // INCREASED: More fouls/cards for aggressive pressing
+            riskFactor = 2.2;
+        } else if (tactic.aggression === 'Reckless') { // YENİ: KASAP MODU
+            effectiveDef *= 1.45; // %45 DEFANS BONUSU (Neredeyse geçilmez)
+            riskFactor = 3.5;     // %250 daha fazla faul riski
         } else if (tactic.aggression === 'Safe') {
             effectiveDef *= 0.85;
             riskFactor = 0.6;
@@ -5276,25 +5408,52 @@ export class MatchEngine {
                 // Store foul position for free kick
                 this.foulPosition = { x: attPos?.x ?? 50, y: attPos?.y ?? 50 };
 
-                // Determine which team gets the free kick
+                // Determine which team gets the free kick (or penalty)
                 const attackingTeamIsHome = attacker.teamId === this.homeTeam.id;
+                const defenderTeamIsHome = defender.teamId === this.homeTeam.id;
+
+                // === PENALTY CHECK ===
+                // Check if foul is in the penalty area of the DEFENDING team
+                // Penalty Box Y range (centered): 34 ± 20.16 = 13.84 to 54.16
+                const isInsideBoxY = this.foulPosition.y > (34 - 20.16) && this.foulPosition.y < (34 + 20.16);
+                let isPenalty = false;
+
+                if (isInsideBoxY) {
+                    if (defenderTeamIsHome) {
+                        // Home defends Left (0-16.5)
+                        if (this.foulPosition.x < 16.5) isPenalty = true;
+                    } else {
+                        // Away defends Right (88.5-105)
+                        if (this.foulPosition.x > (105 - 16.5)) isPenalty = true;
+                    }
+                }
 
                 // Card chance: based on aggression and how bad the foul is
                 const cardRoll = Math.random();
-                // BALANCED CARD RATES v2:
-                // Safe: Yellow 10%, Red 1%
-                // Normal: Yellow 20%, Red 3%
-                // Aggressive: Yellow 35%, Red 8% (Still risky!)
+                // BALANCED CARD RATES v3:
+                // Safe: Yellow 8%, Red 0.5%
+                // Normal: Yellow 15%, Red 1%
+                // Aggressive: Yellow 25%, Red 3%
+                // Reckless: Yellow 50%, Red 15% (KASAP - unchanged, high risk!)
 
-                let yellowChance = 0.20;
-                let redChance = 0.03;
+                let yellowChance = 0.15;
+                let redChance = 0.01;
+
+                // Increase card chance for penalties (DOGSO logic simplified)
+                if (isPenalty) {
+                    yellowChance += 0.20; // High chance of card in box
+                    redChance += 0.10;    // Potential Red
+                }
 
                 if (tactic.aggression === 'Aggressive') {
-                    yellowChance = 0.35;
-                    redChance = 0.08; // High risk - caydırıcı ama makul
+                    yellowChance = 0.25;
+                    redChance = 0.03;
+                } else if (tactic.aggression === 'Reckless') { // KASAP MODU - High risk!
+                    yellowChance = 0.50;
+                    redChance = 0.15;
                 } else if (tactic.aggression === 'Safe') {
-                    yellowChance = 0.10;
-                    redChance = 0.01;
+                    yellowChance = 0.08;
+                    redChance = 0.005;
                 }
 
                 let cardEvent: MatchEvent | null = null;
@@ -5319,7 +5478,9 @@ export class MatchEngine {
                     };
 
                     // UI INDICATOR FIX: Mark as suspended immediately
-                    defender.matchSuspension = 1;
+                    // Set to 2 because processWeeklyUpdate decrements BEFORE next match
+                    // 2 → 1 (after current week) → still banned for next match → 0 (after that)
+                    defender.matchSuspension = 2;
 
                     // Remove player from pitch completely
                     defender.lineup = 'RESERVE';
@@ -5362,105 +5523,45 @@ export class MatchEngine {
                     this.pendingEvents.push(cardEvent);
                 }
 
-                // === FREE KICK SETUP (NO FULL RESET) ===
-                const fkX = this.foulPosition?.x ?? 50;
-                const fkY = this.foulPosition?.y ?? 50;
-
-                // Find best passer from attacking team
-                const attackingTeamPlayers = (attackingTeamIsHome ? this.homePlayers : this.awayPlayers)
-                    .filter(p => p.lineup === 'STARTING' && this.playerRoles[p.id] !== Position.GK);
-                const taker = attackingTeamPlayers.sort((a, b) =>
-                    (b.attributes.passing + b.attributes.vision) - (a.attributes.passing + a.attributes.vision)
-                )[0];
-
-                if (taker && this.sim.players[taker.id]) {
-                    // Move taker to foul position
-                    this.sim.players[taker.id].x = fkX;
-                    this.sim.players[taker.id].y = fkY;
-                    this.sim.players[taker.id].vx = 0;
-                    this.sim.players[taker.id].vy = 0;
-                    this.sim.ball.ownerId = taker.id;
-                    this.sim.ball.x = fkX;
-                    this.sim.ball.y = fkY;
-                    this.sim.ball.vx = 0;
-                    this.sim.ball.vy = 0;
-                    this.sim.ball.vz = 0;
-                    if (this.playerStates[taker.id]) {
-                        this.playerStates[taker.id].actionLock = 5;
-                    }
-                }
-
-                // === WALL FORMATION ===
-                // Position 3-4 defenders in a wall between ball and goal
-                const enemyTeam = (attackingTeamIsHome ? this.awayPlayers : this.homePlayers)
-                    .filter(p => p.lineup === 'STARTING' && this.playerRoles[p.id] !== Position.GK);
-
-                // Determine which goal the free kick is aimed at
-                const targetGoalX = attackingTeamIsHome ? 100 : 0; // Attacking towards this goal
-                const wallDistance = 10; // 9.15m scaled
-
-                // Calculate wall position (between ball and goal)
-                const angleToGoal = Math.atan2(50 - fkY, targetGoalX - fkX);
-                const wallCenterX = fkX + Math.cos(angleToGoal) * wallDistance;
-                const wallCenterY = fkY + Math.sin(angleToGoal) * wallDistance;
-
-                // Select 3-4 closest defenders for wall
-                const wallSize = fkX > 20 && fkX < 80 ? 4 : 3; // Bigger wall for dangerous positions
-                const wallPlayers = enemyTeam
-                    .filter(p => this.sim.players[p.id])
-                    .sort((a, b) => {
-                        const distA = dist(fkX, fkY, this.sim.players[a.id].x, this.sim.players[a.id].y);
-                        const distB = dist(fkX, fkY, this.sim.players[b.id].x, this.sim.players[b.id].y);
-                        return distA - distB;
-                    })
-                    .slice(0, wallSize);
-
-                // Position wall players in a line perpendicular to ball-goal angle
-                const perpAngle = angleToGoal + Math.PI / 2;
-                const wallSpacing = 2.5;
-
-                wallPlayers.forEach((wp, idx) => {
-                    const simWp = this.sim.players[wp.id];
-                    if (simWp) {
-                        const offset = (idx - (wallPlayers.length - 1) / 2) * wallSpacing;
-                        simWp.x = wallCenterX + Math.cos(perpAngle) * offset;
-                        simWp.y = wallCenterY + Math.sin(perpAngle) * offset;
-                        simWp.vx = 0;
-                        simWp.vy = 0;
-                        // Face the ball
-                        simWp.facing = Math.atan2(fkY - simWp.y, fkX - simWp.x);
-                        if (this.playerStates[wp.id]) {
-                            this.playerStates[wp.id].actionLock = 8; // Hold position longer
-                        }
-                    }
-                });
-
-                // Push other nearby opponents back (not in wall)
-                const wallPlayerIds = new Set(wallPlayers.map(p => p.id));
-                enemyTeam.forEach(ep => {
-                    if (wallPlayerIds.has(ep.id)) return; // Skip wall players
-                    const simEp = this.sim.players[ep.id];
-                    if (simEp && dist(fkX, fkY, simEp.x, simEp.y) < 12) {
-                        const dx = simEp.x - fkX;
-                        const dy = simEp.y - fkY;
-                        const d = Math.max(0.1, Math.sqrt(dx * dx + dy * dy));
-                        simEp.x = fkX + (dx / d) * 14;
-                        simEp.y = fkY + (dy / d) * 14;
-                        simEp.vx = 0;
-                        simEp.vy = 0;
-                    }
-                });
-
-                // Queue free kick event
                 const attackingTeam = attackingTeamIsHome ? this.homeTeam : this.awayTeam;
-                this.pendingEvents.push({
-                    minute: this.internalMinute,
-                    type: MatchEventType.FREE_KICK,
-                    description: `Serbest Vuruş: ${attackingTeam.name}`,
-                    teamId: attackingTeam.id
-                });
 
-                this.traceLog.push(`⚠️ FAUL! ${defender.lastName} - Serbest vuruş ${attackingTeam.name}`);
+                // === PENALTY OR FREE KICK ===
+                if (isPenalty) {
+                    // PENALTY KICK
+                    this.pendingEvents.push({
+                        minute: this.internalMinute,
+                        type: MatchEventType.PENALTY,
+                        description: `PENALTI: ${attackingTeam.name}`,
+                        teamId: attackingTeam.id
+                    });
+                    this.traceLog.push(`‼️ PENALTI! ${defenderName}, ${attackerName}'i ceza sahasında düşürdü!`);
+
+                    // Setup Penalty Position (Penalty Spot)
+                    // If Attacking Home: Shoot Right -> Spot at 105 - 11 = 94
+                    // If Attacking Away: Shoot Left -> Spot at 11
+                    const penaltyX = attackingTeamIsHome ? (105 - 11) : 11;
+                    const penaltyY = 34; // Center Y
+
+                    this.placeBallForSetPiece(attackingTeam, penaltyX, penaltyY, false, attackingTeamIsHome ? 'PENALTY_HOME' : 'PENALTY_AWAY'); // false = no wall needed
+
+                } else {
+                    // FREE KICK
+                    // === FREE KICK SETUP (NO FULL RESET) ===
+                    const fkX = this.foulPosition?.x ?? 50;
+                    const fkY = this.foulPosition?.y ?? 50;
+
+                    this.placeBallForSetPiece(attackingTeam, fkX, fkY, true, attackingTeamIsHome ? 'FREE_KICK_HOME' : 'FREE_KICK_AWAY'); // true = build wall
+
+                    // Queue free kick event
+                    this.pendingEvents.push({
+                        minute: this.internalMinute,
+                        type: MatchEventType.FREE_KICK,
+                        description: `Serbest Vuruş: ${attackingTeam.name}`,
+                        teamId: attackingTeam.id
+                    });
+
+                    this.traceLog.push(`⚠️ FAUL! ${defender.lastName} - Serbest vuruş ${attackingTeam.name}`);
+                }
             } else {
                 // Normal çalım - faul yok
                 const recoveryTime = 25 * riskFactor * (2 - defFatigueMods.speed);
@@ -5472,6 +5573,110 @@ export class MatchEngine {
 
                 this.traceLog.push(`${attacker.lastName} rakibini geçti!`);
             }
+        }
+    }
+
+    // New Helper for Set Pieces
+    private placeBallForSetPiece(attackingTeam: Team, x: number, y: number, buildWall: boolean, mode: SetPieceMode) {
+        // Set match mode
+        this.sim.mode = mode;
+
+        // Find best taker
+        const attackingTeamPlayers = (attackingTeam.id === this.homeTeam.id ? this.homePlayers : this.awayPlayers)
+            .filter(p => p.lineup === 'STARTING' && this.playerRoles[p.id] !== Position.GK);
+
+        const taker = attackingTeamPlayers.sort((a, b) =>
+            (b.attributes.passing + b.attributes.vision) - (a.attributes.passing + a.attributes.vision)
+        )[0];
+
+        if (taker && this.sim.players[taker.id]) {
+            // Move taker to position
+            this.sim.players[taker.id].x = x;
+            this.sim.players[taker.id].y = y;
+            this.sim.players[taker.id].vx = 0;
+            this.sim.players[taker.id].vy = 0;
+            this.sim.ball.ownerId = taker.id;
+            this.sim.ball.x = x;
+            this.sim.ball.y = y;
+            this.sim.ball.vx = 0;
+            this.sim.ball.vy = 0;
+            this.sim.ball.vz = 0;
+            if (this.playerStates[taker.id]) {
+                this.playerStates[taker.id].actionLock = 5;
+            }
+        }
+
+        if (buildWall) {
+            // === WALL FORMATION ===
+            // Position 3-4 defenders in a wall between ball and goal
+            const enemyTeam = (attackingTeam.id === this.homeTeam.id ? this.awayPlayers : this.homePlayers)
+                .filter(p => p.lineup === 'STARTING' && this.playerRoles[p.id] !== Position.GK);
+
+            // Determine which goal the free kick is aimed at
+            const targetGoalX = attackingTeam.id === this.homeTeam.id ? 100 : 0; // Attacking towards this goal
+            const wallDistance = 10; // 9.15m scaled
+
+            // === GK POSITIONING ===
+            // Ensure GK is on the line
+            const enemyPlayersArr = (attackingTeam.id === this.homeTeam.id ? this.awayPlayers : this.homePlayers);
+            const gk = enemyPlayersArr.find(p => this.playerRoles[p.id] === Position.GK);
+            if (gk && this.sim.players[gk.id]) {
+                this.sim.players[gk.id].x = targetGoalX > 50 ? 100 : 5; // On the line (slightly off 0/105)
+                this.sim.players[gk.id].y = 34; // Center
+                this.sim.players[gk.id].vx = 0;
+                this.sim.players[gk.id].vy = 0;
+            }
+
+            // Calculate wall position (between ball and goal)
+            const angleToGoal = Math.atan2(34 - y, targetGoalX - x); // Target center Y=34
+            const wallCenterX = x + Math.cos(angleToGoal) * wallDistance;
+            const wallCenterY = y + Math.sin(angleToGoal) * wallDistance;
+
+            // Select 3-4 closest defenders for wall
+            const wallSize = x > 20 && x < 80 ? 4 : 3; // Bigger wall for dangerous positions
+            const wallPlayers = enemyTeam
+                .filter(p => this.sim.players[p.id] && (!gk || p.id !== gk.id)) // Exclude GK from wall
+                .sort((a, b) => {
+                    const distA = dist(x, y, this.sim.players[a.id].x, this.sim.players[a.id].y);
+                    const distB = dist(x, y, this.sim.players[b.id].x, this.sim.players[b.id].y);
+                    return distA - distB;
+                })
+                .slice(0, wallSize);
+
+            // Position wall players
+            const perpAngle = angleToGoal + Math.PI / 2;
+            const wallSpacing = 2.5;
+
+            wallPlayers.forEach((wp, idx) => {
+                const simWp = this.sim.players[wp.id];
+                if (simWp) {
+                    const offset = (idx - (wallPlayers.length - 1) / 2) * wallSpacing;
+                    simWp.x = wallCenterX + Math.cos(perpAngle) * offset;
+                    simWp.y = wallCenterY + Math.sin(perpAngle) * offset;
+                    simWp.vx = 0;
+                    simWp.vy = 0;
+                    simWp.facing = Math.atan2(y - simWp.y, x - simWp.x);
+                    if (this.playerStates[wp.id]) {
+                        this.playerStates[wp.id].actionLock = 8;
+                    }
+                }
+            });
+
+            // Push other nearby opponents back
+            const wallPlayerIds = new Set(wallPlayers.map(p => p.id));
+            enemyTeam.forEach(ep => {
+                if (wallPlayerIds.has(ep.id)) return;
+                const simEp = this.sim.players[ep.id];
+                if (simEp && dist(x, y, simEp.x, simEp.y) < 12) {
+                    const dx = simEp.x - x;
+                    const dy = simEp.y - y;
+                    const d = Math.max(0.1, Math.sqrt(dx * dx + dy * dy));
+                    simEp.x = x + (dx / d) * 14;
+                    simEp.y = y + (dy / d) * 14;
+                    simEp.vx = 0;
+                    simEp.vy = 0;
+                }
+            });
         }
     }
 

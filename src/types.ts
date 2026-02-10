@@ -4,7 +4,7 @@ export enum MatchEventType {
     GOAL = 'GOAL', CARD_YELLOW = 'CARD_YELLOW', CARD_RED = 'CARD_RED',
     SUB = 'SUB', INJURY = 'INJURY', FULL_TIME = 'FULL_TIME',
     HALF_TIME = 'HALF_TIME', PENALTY = 'PENALTY', CORNER = 'CORNER',
-    KICKOFF = 'KICKOFF', FOUL = 'FOUL', FREE_KICK = 'FREE_KICK', THROW_IN = 'THROW_IN'
+    KICKOFF = 'KICKOFF', FOUL = 'FOUL', FREE_KICK = 'FREE_KICK', THROW_IN = 'THROW_IN', INFO = 'INFO'
 }
 
 export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING' }
@@ -28,6 +28,8 @@ export enum TacticType {
     T_532 = '5-3-2', T_41212 = '4-1-2-1-2', T_4321 = '4-3-2-1'
 }
 
+export type PressingIntensity = 'StandOff' | 'Balanced' | 'HighPress' | 'Gegenpress';
+
 export interface PlayerAttributes {
     finishing: number; passing: number; tackling: number; dribbling: number; goalkeeping: number;
     speed: number; stamina: number; strength: number; positioning: number; aggression: number;
@@ -47,7 +49,10 @@ export interface Player {
 
 export interface TeamTactic {
     formation: TacticType; style: string; aggression: string; tempo: string; width: string;
-    defensiveLine: string; passingStyle: string; marking: string; customPositions?: Record<string, { x: number, y: number }>;
+    defensiveLine: string; passingStyle: string; marking: string;
+    pressingIntensity?: PressingIntensity; // YENİ: Pres Yoğunluğu
+    instructions?: string[]; // YENİ: Takım Talimatları (WorkBallIntoBox, ShootOnSight, vb)
+    customPositions?: Record<string, { x: number, y: number }>;
     mentality?: string;
 }
 
@@ -90,7 +95,7 @@ export interface FinancialRecord {
 export interface Team {
     id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number; boardConfidence: number; leagueId: string; wages: number;
-    facilities: { stadiumCapacity: number; stadiumLevel: number; trainingLevel: number; academyLevel: number; };
+    facilities: { stadiumCapacity: number; stadiumLevel: number; trainingLevel: number; academyLevel: number; stadiumConstructionWeeks?: number; trainingConstructionWeeks?: number; academyConstructionWeeks?: number; };
     staff: { headCoachLevel: number; scoutLevel: number; physioLevel: number; };
     objectives: any[]; tactic: TeamTactic; coachArchetype: CoachArchetype;
     trainingFocus: TrainingFocus; trainingIntensity: TrainingIntensity;
@@ -108,6 +113,7 @@ export interface Match {
     competitionId?: string;
     competitionName?: string;
     season?: number;
+    winnerId?: string;
 }
 
 export interface GlobalCup {

@@ -461,7 +461,7 @@ export const useMatchSimulation = ({
                                 : simulated.awayScore > simulated.homeScore
                                     ? simulated.awayTeamId
                                     : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId);
-                            simulated.winnerId = resolvedWinnerId as any;
+                            (simulated as any).winnerId = resolvedWinnerId;
                             simulated.isPlayed = true;
                             teamsWithBonus = teamsWithBonus.map(t => {
                                 if (t.id === userTeamId || t.id === opponentId) {
@@ -476,13 +476,13 @@ export const useMatchSimulation = ({
 
                 // Save Super Cup match separately
                 if (cupType === 'superCup' && prevState.superCup) {
-                    const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
-                        ? simulated.homeTeamId
-                        : simulated.awayScore > simulated.homeScore
-                            ? simulated.awayTeamId
-                            : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
-                    const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
-                    return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                        const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
+                            ? simulated.homeTeamId
+                            : simulated.awayScore > simulated.homeScore
+                                ? simulated.awayTeamId
+                                : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
+                        const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
+                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                 }
 
                 // Save European Cup match separately
@@ -491,6 +491,29 @@ export const useMatchSimulation = ({
                     let updatedGroups = cup.groups;
                     let updatedKnockouts = cup.knockoutMatches;
 
+                    // CRITICAL FIX: For knockout matches, ensure winnerId is set
+                    let knockoutSimulated = simulated as any;
+                    if (updatedKnockouts?.some(m => m.id === matchId)) {
+                        // This is a knockout match - must have a winnerId
+                        if (knockoutSimulated.homeScore === knockoutSimulated.awayScore) {
+                            // Draw in knockout = penalty shootout
+                            let homePens = 0, awayPens = 0;
+                            for (let i = 0; i < 5; i++) {
+                                if (Math.random() < 0.76) homePens++;
+                                if (Math.random() < 0.76) awayPens++;
+                            }
+                            while (homePens === awayPens) {
+                                if (Math.random() < 0.76) homePens++; else awayPens++;
+                            }
+                            knockoutSimulated.winnerId = homePens > awayPens ? knockoutSimulated.homeTeamId : knockoutSimulated.awayTeamId;
+                            knockoutSimulated.penalties = { homeScore: homePens, awayScore: awayPens };
+                        } else {
+                            knockoutSimulated.winnerId = knockoutSimulated.homeScore > knockoutSimulated.awayScore 
+                                ? knockoutSimulated.homeTeamId 
+                                : knockoutSimulated.awayTeamId;
+                        }
+                    }
+
                     if (updatedGroups) {
                         updatedGroups = updatedGroups.map(g => ({
                             ...g,
@@ -498,7 +521,7 @@ export const useMatchSimulation = ({
                         })).map(recalcGroupStandings);
                     }
                     if (updatedKnockouts) {
-                        updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m);
+                        updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? knockoutSimulated as unknown as GlobalCupMatch : m);
                     }
 
                     return {
@@ -515,6 +538,29 @@ export const useMatchSimulation = ({
                     let updatedGroups = cup.groups;
                     let updatedKnockouts = cup.knockoutMatches;
 
+                    // CRITICAL FIX: For knockout matches, ensure winnerId is set
+                    let knockoutSimulatedEL = simulated as any;
+                    if (updatedKnockouts?.some(m => m.id === matchId)) {
+                        // This is a knockout match - must have a winnerId
+                        if (knockoutSimulatedEL.homeScore === knockoutSimulatedEL.awayScore) {
+                            // Draw in knockout = penalty shootout
+                            let homePens = 0, awayPens = 0;
+                            for (let i = 0; i < 5; i++) {
+                                if (Math.random() < 0.76) homePens++;
+                                if (Math.random() < 0.76) awayPens++;
+                            }
+                            while (homePens === awayPens) {
+                                if (Math.random() < 0.76) homePens++; else awayPens++;
+                            }
+                            knockoutSimulatedEL.winnerId = homePens > awayPens ? knockoutSimulatedEL.homeTeamId : knockoutSimulatedEL.awayTeamId;
+                            knockoutSimulatedEL.penalties = { homeScore: homePens, awayScore: awayPens };
+                        } else {
+                            knockoutSimulatedEL.winnerId = knockoutSimulatedEL.homeScore > knockoutSimulatedEL.awayScore 
+                                ? knockoutSimulatedEL.homeTeamId 
+                                : knockoutSimulatedEL.awayTeamId;
+                        }
+                    }
+
                     if (updatedGroups) {
                         updatedGroups = updatedGroups.map(g => ({
                             ...g,
@@ -522,7 +568,7 @@ export const useMatchSimulation = ({
                         })).map(recalcGroupStandings);
                     }
                     if (updatedKnockouts) {
-                        updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? simulated as unknown as GlobalCupMatch : m);
+                        updatedKnockouts = updatedKnockouts.map(m => m.id === matchId ? knockoutSimulatedEL as unknown as GlobalCupMatch : m);
                     }
 
                     return {
@@ -780,13 +826,13 @@ export const useMatchSimulation = ({
                     }
 
                     if (cupType === 'superCup' && prevState.superCup) {
-                        const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
-                            ? currentMatch.homeTeamId
-                            : currentMatch.awayScore > currentMatch.homeScore
-                                ? currentMatch.awayTeamId
-                                : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
-                        const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
-                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                            const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
+                                ? currentMatch.homeTeamId
+                                : currentMatch.awayScore > currentMatch.homeScore
+                                    ? currentMatch.awayTeamId
+                                    : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
+                            const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
+                            return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                     }
 
                     if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -809,7 +855,7 @@ export const useMatchSimulation = ({
         }
 
         if (cupType === 'superCup' && prevState.superCup) {
-            return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
+                return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
         }
 
         if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -1077,6 +1123,14 @@ export const useMatchSimulation = ({
                     updatedState = { ...updatedState, europaLeague: updatedCup, teams: updatedTeams };
                 }
 
+                // CRITICAL FIX: Advance Cup Stages AFTER all AI matches are simulated
+                if (updatedState.europeanCup) {
+                    updatedState.europeanCup = engine.advanceGlobalCupStage(updatedState.europeanCup);
+                }
+                if (updatedState.europaLeague) {
+                    updatedState.europaLeague = engine.advanceGlobalCupStage(updatedState.europaLeague);
+                }
+
                 // Check if both cups are complete and Super Cup should be generated
                 if (updatedState.europeanCup?.currentStage === 'COMPLETE' &&
                     updatedState.europaLeague?.currentStage === 'COMPLETE' &&
@@ -1340,10 +1394,10 @@ export const useMatchSimulation = ({
                 if (home && away) {
                     const homeP = checkState.players.filter(p => p.teamId === home.id);
                     const awayP = checkState.players.filter(p => p.teamId === away.id);
-
+                    
                     const result = engine.simulateFullMatch(checkState.superCup.match as any, home, away, homeP, awayP);
                     result.isPlayed = true;
-
+                    
                     const completedSuperCup = {
                         ...checkState.superCup,
                         match: result as any,
@@ -1535,9 +1589,6 @@ export const useMatchSimulation = ({
                         playerId: playerIn.id,
                         playerOutId: playerOut.id
                     };
-
-                    // Sync with Match Engine (Important for visual updates)
-                    engine.performSubstitution(matchId, playerIn, playerOut.id);
                 }
             }
 
@@ -1684,23 +1735,19 @@ export const useMatchSimulation = ({
 
                 // --- Save Tactical Timeline ---
                 let updatedTacticalHistory = prev.tacticalHistory || [];
-
-                // Always save match history for Assistant Coach analysis
-                const tacticalRecord: any = {
-                    matchId: activeMatch.id,
-                    season: prev.currentSeason,
-                    week: prev.currentWeek,
-                    opponentId: isUserHome ? awayTeam.id : homeTeam.id,
-                    isUserHome: isUserHome,
-                    homeTactic: homeTeam.tactic,
-                    awayTactic: awayTeam.tactic,
-                    homeGoals: activeMatch.homeScore,
-                    awayGoals: activeMatch.awayScore,
-                    userWon: (isUserHome && activeMatch.homeScore > activeMatch.awayScore) || (!isUserHome && activeMatch.awayScore > activeMatch.homeScore),
-                    matchDate: Date.now(),
-                    userFinalTactic: isUserHome ? homeTeam.tactic : awayTeam.tactic
-                };
-                updatedTacticalHistory = [...updatedTacticalHistory, tacticalRecord];
+                if (tacticalTimeline.length > 0) {
+                    const matchRecord = {
+                        matchId: activeMatch.id,
+                        homeTeamId: activeMatch.homeTeamId,
+                        awayTeamId: activeMatch.awayTeamId,
+                        date: new Date().toISOString(),
+                        timeline: [...tacticalTimeline],
+                        homeScore: activeMatch.homeScore,
+                        awayScore: activeMatch.awayScore
+                    };
+                    // Append the single record
+                    updatedTacticalHistory = [...updatedTacticalHistory, matchRecord as any];
+                }
 
                 // INJECT CUP REWARDS (Live Match Update - Budget Only)
                 if (activeMatch && (cupType === 'europeanCup' || cupType === 'europaLeague' || cupType === 'superCup')) {
@@ -1820,21 +1867,38 @@ export const useMatchSimulation = ({
 
             let finalState = engine.simulateLeagueRound(matchUpdatedState, matchUpdatedState.currentWeek);
 
-            // Simulate concurrent Cup matches
+            // Simulate concurrent Cup matches - BOTH CL and EL
             if (finalState.europeanCup && finalState.europeanCup.isActive) {
                 const { updatedCup, updatedTeams } = engine.simulateAIGlobalCupMatches(
                     finalState.europeanCup,
                     finalState.teams,
                     finalState.players,
                     finalState.userTeamId,
-                    finalState.currentWeek
+                    finalState.currentWeek,
+                    1.0 // CL prize multiplier
                 );
                 finalState = { ...finalState, europeanCup: updatedCup, teams: updatedTeams };
             }
+            
+            // Simulate Europa League AI matches
+            if (finalState.europaLeague && finalState.europaLeague.isActive) {
+                const { updatedCup, updatedTeams } = engine.simulateAIGlobalCupMatches(
+                    finalState.europaLeague,
+                    finalState.teams,
+                    finalState.players,
+                    finalState.userTeamId,
+                    finalState.currentWeek,
+                    0.5 // EL prize multiplier
+                );
+                finalState = { ...finalState, europaLeague: updatedCup, teams: updatedTeams };
+            }
 
-            // Advance Cup Stage if needed
+            // CRITICAL: Advance Cup Stages AFTER all AI matches are simulated
             if (finalState.europeanCup) {
                 finalState.europeanCup = engine.advanceGlobalCupStage(finalState.europeanCup);
+            }
+            if (finalState.europaLeague) {
+                finalState.europaLeague = engine.advanceGlobalCupStage(finalState.europaLeague);
             }
 
             const engineState = engine.getEngineState();
@@ -2070,6 +2134,56 @@ export const useMatchSimulation = ({
                 }
                 currentMatch.isPlayed = true;
                 matchJustFinished = true;
+
+                // === CRITICAL FIX: KNOCKOUT MATCH WINNER DETERMINATION ===
+                // For knockout matches (CL_KNOCKOUT, EL_KNOCKOUT, SUPER_CUP), if the match ends in a draw,
+                // we MUST determine a winner via penalty shootout simulation
+                const isKnockoutMatch = matchType === 'CL_KNOCKOUT' || matchType === 'EL_KNOCKOUT' || matchType === 'SUPER_CUP';
+                if (isKnockoutMatch && currentMatch.homeScore === currentMatch.awayScore) {
+                    // Penalty shootout simulation
+                    const homeTeam = prevState.teams.find(t => t.id === currentMatch.homeTeamId);
+                    const awayTeam = prevState.teams.find(t => t.id === currentMatch.awayTeamId);
+                    
+                    // Calculate penalty success based on team strength (simplified)
+                    const homeStrength = homeTeam?.reputation || 5000;
+                    const awayStrength = awayTeam?.reputation || 5000;
+                    const homeWinChance = 0.5 + (homeStrength - awayStrength) / 20000; // Slight advantage for stronger team
+                    
+                    // Simulate penalty shootout
+                    let homePenalties = 0, awayPenalties = 0;
+                    for (let i = 0; i < 5; i++) {
+                        if (Math.random() < 0.76) homePenalties++;
+                        if (Math.random() < 0.76) awayPenalties++;
+                    }
+                    // Sudden death if tied after 5
+                    while (homePenalties === awayPenalties) {
+                        const homeScores = Math.random() < 0.76;
+                        const awayScores = Math.random() < 0.76;
+                        if (homeScores && !awayScores) homePenalties++;
+                        else if (!homeScores && awayScores) awayPenalties++;
+                        else if (homeScores && awayScores) { homePenalties++; awayPenalties++; }
+                        // Both miss = continue
+                    }
+                    
+                    // Assign winner based on penalties
+                    const winnerId = homePenalties > awayPenalties ? currentMatch.homeTeamId : currentMatch.awayTeamId;
+                    currentMatch.winnerId = winnerId;
+                    currentMatch.penalties = { homeScore: homePenalties, awayScore: awayPenalties };
+                    
+                    // Add penalty result event
+                    const winnerName = homePenalties > awayPenalties ? (homeTeam?.name || 'Home') : (awayTeam?.name || 'Away');
+                    currentMatch.events.push({
+                        minute: 120,
+                        type: MatchEventType.PENALTY,
+                        description: `⚽ Penaltılar: ${homePenalties}-${awayPenalties} | ${winnerName} tur atladı!`,
+                        teamId: winnerId
+                    });
+                } else if (isKnockoutMatch) {
+                    // Non-draw knockout: winner is whoever scored more
+                    currentMatch.winnerId = currentMatch.homeScore > currentMatch.awayScore 
+                        ? currentMatch.homeTeamId 
+                        : currentMatch.awayTeamId;
+                }
             }
 
             // --- Update Player Stats (Goals) Locally ---
@@ -2267,6 +2381,19 @@ export const useMatchSimulation = ({
 
                 return { ...prevState, matches: newMatches, players: updatedPlayers };
             } else if (matchType === 'SUPER_CUP' && prevState.superCup) {
+                // CRITICAL FIX: When Super Cup finishes, set winnerId and isComplete
+                if (matchJustFinished && currentMatch.winnerId) {
+                    return { 
+                        ...prevState, 
+                        superCup: { 
+                            ...prevState.superCup, 
+                            match: currentMatch,
+                            winnerId: currentMatch.winnerId,
+                            isComplete: true
+                        }, 
+                        players: updatedPlayers 
+                    };
+                }
                 return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch }, players: updatedPlayers };
             } else {
                 // CUP Matches
@@ -2306,10 +2433,26 @@ export const useMatchSimulation = ({
                 }
 
                 if (matchType === 'CL_KNOCKOUT' && prevState.europeanCup) {
-                    const newCup = { ...prevState.europeanCup };
+                    let newCup = { ...prevState.europeanCup };
                     const newKnockouts = [...(newCup.knockoutMatches || [])];
                     newKnockouts[matchIndex] = currentMatch;
                     newCup.knockoutMatches = newKnockouts;
+                    
+                    // CRITICAL FIX: If match just finished, try to advance the stage
+                    if (matchJustFinished) {
+                        console.log(`[CL_KNOCKOUT] Match finished. winnerId: ${currentMatch.winnerId}, Score: ${currentMatch.homeScore}-${currentMatch.awayScore}`);
+                        // Check if all knockout matches in current stage are complete
+                        const allStageComplete = newCup.knockoutMatches
+                            .filter(m => m.stage === newCup.currentStage)
+                            .every(m => m.isPlayed && m.winnerId);
+                        
+                        if (allStageComplete) {
+                            console.log(`[CL_KNOCKOUT] All ${newCup.currentStage} matches complete. Advancing stage...`);
+                            newCup = engine.advanceGlobalCupStage(newCup);
+                            console.log(`[CL_KNOCKOUT] New stage: ${newCup.currentStage}`);
+                        }
+                    }
+                    
                     return { ...prevState, europeanCup: newCup, players: updatedPlayers };
                 }
 
@@ -2349,7 +2492,7 @@ export const useMatchSimulation = ({
                 }
 
                 if (matchType === 'EL_KNOCKOUT' && prevState.europaLeague) {
-                    const newCup = { ...prevState.europaLeague };
+                    let newCup = { ...prevState.europaLeague };
                     if (newCup.knockoutMatches) {
                         const newKnockouts = [...newCup.knockoutMatches];
                         newKnockouts[matchIndex] = currentMatch;
@@ -2359,6 +2502,22 @@ export const useMatchSimulation = ({
                         newMatches[matchIndex] = currentMatch;
                         newCup.matches = newMatches;
                     }
+                    
+                    // CRITICAL FIX: If match just finished, try to advance the stage
+                    if (matchJustFinished && newCup.knockoutMatches) {
+                        console.log(`[EL_KNOCKOUT] Match finished. winnerId: ${currentMatch.winnerId}, Score: ${currentMatch.homeScore}-${currentMatch.awayScore}`);
+                        // Check if all knockout matches in current stage are complete
+                        const allStageComplete = newCup.knockoutMatches
+                            .filter(m => m.stage === newCup.currentStage)
+                            .every(m => m.isPlayed && m.winnerId);
+                        
+                        if (allStageComplete) {
+                            console.log(`[EL_KNOCKOUT] All ${newCup.currentStage} matches complete. Advancing stage...`);
+                            newCup = engine.advanceGlobalCupStage(newCup);
+                            console.log(`[EL_KNOCKOUT] New stage: ${newCup.currentStage}`);
+                        }
+                    }
+                    
                     return { ...prevState, europaLeague: newCup, players: updatedPlayers };
                 }
 

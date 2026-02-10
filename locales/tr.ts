@@ -22,6 +22,7 @@
     safe: "Temkinli",
     normal: "Normal",
     aggressive: "Agresif",
+    reckless: "Ölümüne (Kasap)",
     startingXI: "İlk 11",
     bench: "Yedekler",
     reserves: "Rezerv",
@@ -135,16 +136,58 @@
     tacticWide: "Geniş",
     tacticShort: "Kısa",
     tacticDirect: "Direkt",
+    tacticLongBall: "Uzun Top",
     tacticDeep: "Derin",
     tacticHigh: "Önde",
     tacticZonal: "Alan",
     tacticManMark: "Adam Adama",
+    styleAttacking: "Hücum",
+    styleDefensive: "Defansif",
+    styleBalanced: "Dengeli",
+    styleCounter: "Kontra Atak",
+
+    // Instructions
+    instrWorkBall: "Paslaşarak Gir",
+    instrShootSight: "Gördüğün Yerden Vur",
+    instrRoam: "Serbest Dolaş",
+
+    pressingIntensity: "Pres Yoğunluğu",
+    pressStandOff: "Geride Karşıla (Otobüs)",
+    pressBalanced: "Dengeli",
+    pressHigh: "Yüksek Pres",
+    pressGegen: "Gegenpress (Şok Pres)",
     tempoSlow: "Yavaş",
     tempoFast: "Hızlı",
     clickHelp: "Değiştirmek için tıkla",
     dragHelp: "Pozisyonu sürükle",
     autoSortHelp: "Otomatik diziliş",
     selected: "Seçilen",
+    // Tactical Presets
+    presetTitle: "Taktiksel Hazır Ayar",
+    presetDesc: "Takımınız için bir oyun stili seçin.",
+    applyPreset: "Uygula",
+    currentPreset: "Mevcut: ",
+    customPreset: "Özel",
+
+    presetGegenpress: "Gegenpress",
+    descGegenpress: "Topu anında geri kazanmak için yoğun pres.",
+    presetTikiTaka: "Tiki-Taka",
+    descTikiTaka: "Aşırı topa sahip olma. Kısa pas ve hareketlilik.",
+    presetTotalFootball: "Total Futbol",
+    descTotalFootball: "Her oyuncunun hücum ve savunma yaptığı akıcı oyun.",
+    presetFluidCounter: "Akıcı Kontra",
+    descFluidCounter: "Rakibi üzerine çek, sonra hızla vur.",
+    presetRouteOne: "Doldur Boşalt",
+    descRouteOne: "Kale en kısa yol: Hedef santrafora uzun top.",
+    presetCounterAttack: "Hızlı Kontra",
+    descCounterAttack: "Baskıyı em ve direkt paslarla hızlı çık.",
+    presetParkTheBus: "Otobüsü Çek",
+    descParkTheBus: "Herkes topun arkasında. Rakibi bıktır.",
+    presetWingPlay: "Kanat Oyunu",
+    descWingPlay: "Topu kanatlara taşı ve içeri ortala.",
+    presetCatenaccio: "Catenaccio",
+    descCatenaccio: "Klasik İtalyan savunması. Çok güçlü organizasyon.",
+
     selectToStart: "Başlamak için oyuncu seç",
     attributes: "Özellikler",
     technical: "Teknik",
@@ -386,210 +429,202 @@
     guideTacticsTitle: "Taktik Sistemi (Detaylı Analiz)",
 
     // --- DEEP DIVE TACTICS (USER MANUAL EXACT TEXT) ---
-    guideDeepPassTitle: "📐 Taktiksel Analiz: Pas ve Genişlik (GÜNCEL)",
+    guideDeepPassTitle: "📐 Taktiksel Analiz: Pas ve Genişlik (GÜNCEL v3.4)",
     guideDeepPassContent: `1. Pas Stili (Passing Style)
-⚠️ ÖNEMLİ NOT: "Kısa Pas" (Short Passing) seçeneği, takımların şut çekmesini engellediği ve oyunu kilitlediği için oyun motorundan KALDIRILMIŞTIR.
+Motorun içindeki gerçek "Skorlama" formülleri:
 
-A. Direkt Pas (Direct Passing)
-"Dikine, hemen kaleye!" felsefesi. Premier Lig stili.
-• 🚀 Havadan Pas Bonusu: Havadan (Aerial) paslara ve ortalara +20 Puan eklenir.
-• 🔫 Şut ve Çalım: Şut (+15) ve Çalım (+10) isteği artar! Bireysel oynamayı severler.
-• 📉 Güvenli Pasa Ceza: Yan pas yapma isteği -10 Puan azaltılır.
-Ne Zaman?: Hızlı forvetler, Fiziksel takım, Kötü zemin, Kontratak.
+A. Kısa Pas (Short) - "Tiki-Taka"
+• Mantık: Sabır.
+• Formül: Şut İsteği -20, Çalım İsteği -10, Pas İsteği +30.
+• Sonuç: Oyuncular çok net fırsat görmedikçe şut çekmez, sürekli boş arkadaşını arar.
 
-B. Dengeli (Mixed)
-Standart ayardır. Oyuncular mesafeye bakmaksızın o anki en uygun (en yüksek skorlu) pası seçer.
+B. Direkt (Direct) - "Kaos / Klopp Stili"
+• Mantık: Dikine, hemen kaleye!
+• Formül: Şut İsteği +30, Çalım İsteği +20, Pas İsteği -25.
+• Sonuç: Oyuncular bencil oynar. Topu alan kaleye gitmeye veya vurmaya çalışır.
+
+C. Uzun Top (Long Ball) - "Doldur Boşalt"
+• Mantık: Defans arkasına şişir.
+• Formül: Eğer pas mesafesi > 35m ise, o pas seçeneğine +50 Puan bonus verilir.
+• Sonuç: Defans oyuncuları riske girip uzak forveti görmeye çalışır.
+
+D. Dengeli (Mixed)
+• Standart ayardır. Ekstra bonus veya ceza yoktur.
 
 2. Genişlik (Width)
-Bu ayar takımın sahayı nasıl parsellediğini belirler.
-
 A. Dar (Narrow)
-"Göbekten delme" taktiği.
-• 🧱 Merkezden Oyun: Oyuncu merkezdeyse Pas (+15) ve Çalım (+10) bonusu alır.
-• Etkisi: Kanat yerine göbekten verkaç yapmayı denerler.
-• Uygun Formasyonlar: 4-1-2-1-2 (Baklava), 4-3-1-2, 5-3-2.
+• Merkez Bonus: Oyuncu merkezdeyse Pas (+15) ve Çalım (+10) bonusu alır. 
+• Sonuç: Takım göbekten verkaçlarla delmeye çalışır.
 
 B. Geniş (Wide)
-"Çizgiye in, ortala" taktiği.
-• 🏍️ Kanat Akınları: Oyuncu kanattaysa Çalım isteği +20 Puan artar!
-• 🎯 Orta (Cross) Bonusu: 3.Bölgede Pas (Orta) puanı +15 artar.
-• Uygun Formasyonlar: 4-3-3, 3-4-3, 4-4-2 (Kanatlı).`,
+• Kanat Bonus: Oyuncu kanattaysa Çalım isteği +20 Puan artar!
+• Orta (Cross): Kanattan ceza sahasına gönderilen pasın değeri +15 artar.`,
 
-    guideDeepTempoTitle: "⚡ Taktiksel Analiz: Tempo ve Savunma",
-    guideDeepTempoContent: `1. Tempo (Game Speed)
+    guideDeepTempoTitle: "⚡ Taktiksel Analiz: Tempo ve Pres",
+    guideDeepTempoContent: `1. Tempo (Karar Hızı)
 A. Yavaş (Slow) - "Satranç"
-• Karar Süresi: x1.4 artar. (Daha çok düşünürler)
-• Top Kaybı: Azalır.
-• Rakip: Yerleşme fırsatı bulur.
+• Formül: Karar Verme Süresi x 1.4 (Daha yavaş)
+• Etkisi: Oyuncu pas atmadan önce etrafına daha iyi bakar. Hata oranı düşer, topa sahip olma artar.
 
-B. Hızlı (Fast) - "Kaos"
-• Karar Süresi: x0.7 azalır! (Panik paslar)
-• Hata Riski: Yüksek.
-• Etkisi: Rakibi bunaltır.
+B. Hızlı (Fast) - "Heavy Metal"
+• Formül: Karar Verme Süresi x 0.7 (Çok hızlı)
+• Etkisi: Oyuncu düşünmeden oynar. Sürpriz paslar atar ama top kaybı riski çok artar.
 
-2. Savunma Hattı (Defensive Line)
-A. Derin (Deep) - "Gömülü"
-• Konum: Kaleden 20-30m önde.
-• Avantaj: Arkaya adam kaçmaz (Mbappe önlemi).
-• Dezavantaj: Orta saha hakimiyeti rakibe geçer.
+2. Pres Yoğunluğu (Pressing Intensity)
+A. Stand Off (Geride Karşıla)
+• Formül: Pas +20, Şut -30, Çalım -20.
+• Mantık: Rakibi üzerine çek, kapınca garantili çık. Riski minimize et.
 
-B. Önde (High) - "Ofsayt Taktiği"
-• Konum: Orta sahaya yakın.
-• Avantaj: Rakibi sahasına hapsedersin.
-• Dezavantaj: Arkaya atılan her top %90 gol pozisyonudur.`,
+B. Yüksek Pres / Gegenpress
+• Formül: Eğer boşluk varsa Şut +10, Çalım +10.
+• Risk: Defans arkası boşalır ama rakibi hataya zorlar.
+• Mesafe: Normalde 2.0m olan "Pas Arası" (Interception) menzili, preste 2.8m'ye çıkar! (Daha çok top kaparsınız)`,
 
     guideDeepComboTitle: "🛠️ Kritik Kombinasyon Tavsiyeleri",
-    guideDeepComboContent: `⚠️ "Kaos Futbolu (Klopp Stili)":
-Stil: Yüksek Pres + Pas: Direkt + Genişlik: Geniş
-Sonuç: Maç 4-3 biter. Kim kazanır bilemem ama izleyenler çıldırır.
+    guideDeepComboContent: `⚠️ "Modern Guardiola (City)":
+Stil: Hücum + Pas: Kısa + Tempo: Yavaş + Genişlik: Geniş
+Sonuç: Rakibi boğar, %70 topla oynarsınız. Sabırla boşluk arar.
 
-⚠️ "İtalyan Duvarı (Catenaccio)":
-Stil: Kontratak + Pas: Direkt + Genişlik: Dar
-Sonuç: 1-0 olsun bizim olsun.
+⚠️ "Klasik Mourinho (Inter)":
+Stil: Defansif + Pas: Direkt + Tempo: Hızlı + Genişlik: Dar
+Sonuç: Katı savunma, kapılan topla fişek gibi kontra.
 
-(Not: Tiki-Taka için gereken 'Kısa Pas' kaldırıldığı için, pas oyunu sevenler 'Dengeli' stili tercih etmelidir.)`,
-
-
+⚠️ "Total Futbol":
+Stil: Akıcı + Pas: Dengeli + Tempo: Hızlı + Pres: Yüksek
+Sonuç: Çok gol atar, çok gol yersiniz. Seyir zevki %100.`,
 
 
     guideRolesTitle: "Oyuncu Rolleri",
-    guideRolesIntro: "Her oyuncu, özelliklerine göre bir role sahiptir. Mesela Hızı düşük bir forveti 'Fırsatçı' oynatamazsın.",
-    guideRolePoacher: "Fırsatçı Golcü: Oyun kurulumuna karışmaz, sadece son vuruşu yapar. Hız ve Bitiricilik şart.",
-    guideRoleTargetMan: "Kule Forvet (Target Man): Sırtı dönük top saklar, takımı ileri taşır. Fizik ve Pas gerekir.",
-    guideRoleFalse9: "Sahte 9: Forvet gibi görünür ama orta sahaya gelip pas dağıtır.",
-    guideRolePlaymaker: "Oyun Kurucu: Takımın beyni. Tüm toplar onda toplanır. Yüksek Vizyon olmazsa takım kilitlenir.",
-    guideTrainingTitle: "🏋️ Antrenman Sistemi (DETAYLI)",
-    guideTrainAge: "⚠️ 28 yaşından büyükler gelişmez!",
-    guideTrainLuck: "Gelişim şansa bağlıdır, garanti değildir.",
-    guideTrainFocus: "Antrenman Odakları (Focus)",
+    guideRolesIntro: "Her oyuncu, özelliklerine göre bir role sahiptir. Yanlış rol, performansı %20 düşürür.",
+    guideRolePoacher: "Fırsatçı Golcü: Oyun kurulumuna karışmaz, sadece son vuruşu yapar. (Hız + Bitiricilik)",
+    guideRoleTargetMan: "Kule Forvet: Sırtı dönük top saklar, takımı ileri taşır. (Güç + Pas)",
+    guideRoleFalse9: "Sahte 9: Forvet gibi görünür ama orta sahaya gelip pas dağıtır. (Vizyon + Pas)",
+    guideRolePlaymaker: "Oyun Kurucu: Takımın beyni. Tüm toplar onda toplanır. (Vizyon 85+ Şart)",
+    guideTrainingTitle: "🏋️ Antrenman Sistemi (GELİŞİM FORMÜLLERİ)",
+    guideTrainAge: "⚠️ 28 yaşından sonra gelişim durur, sadece form tutulur.",
+    guideTrainLuck: "Gelişim her hafta 'zar atılarak' belirlenir.",
+    guideTrainFocus: "Antrenman Odakları",
     guideTrainFocusBal: "Dengeli: Tüm özellikler az miktarda artar.",
-    guideTrainFocusAtt: "Hücum: Bitiricilik, Şut, Dripling artar.",
-    guideTrainFocusDef: "Savunma: Top Kapma, Pozisyon, Güç artar.",
-    guideTrainFocusPhy: "Fiziksel: Hız, Dayanıklılık, Güç artar.",
-    guideTrainFocusTec: "Teknik: Pas, Dripling, Vizyon artar.",
-    guideTrainPosBased: `Targeted Training (NEW!)
-Position-Based training improves attributes specifically for that role.
+    guideTrainFocusAtt: "Hücum: Bitiricilik, Şut, Dripling odaklı.",
+    guideTrainFocusDef: "Savunma: Top Kapma, Pozisyon, Güç odaklı.",
+    guideTrainFocusPhy: "Fiziksel: Hız, Dayanıklılık, Güç odaklı.",
+    guideTrainFocusTec: "Teknik: Pas, Dripling, Vizyon odaklı.",
+    guideTrainPosBased: `Pozisyon Odaklı: Her mevkii kendi kritik özelliklerini çalışır.`,
 
-UZMAN: Gelişim Matematiği
-Motorun içindeki gerçek formüller:
-1. Yaş Faktörü:
-• < 21 Yaş: Gelişim şansı %5 (Çok Hızlı)
-• 21-24 Yaş: Gelişim şansı %3 (Normal)
-• 24-28 Yaş: Gelişim şansı %1 (Yavaş)
-• 28+ Yaş: Gelişim DURUR. Sadece maç oynayarak form tutabilirler.
-• 32+ Yaş: Her hafta %5 ihtimalle özellikleri DÜŞER (Emeklilik yaklaşıyor).
+    guideDeepTrainingTitle: "UZMAN: Gelişim Matematiği v3.0",
+    guideDeepTrainingContent: `Motorun içindeki gerçek gelişim formülü:
+    
+1. Yaş Çarpanı (Base Chance):
+• < 21 Yaş: %5 Şans (Her hafta)
+• 21-24 Yaş: %3 Şans
+• 24-28 Yaş: %1 Şans
+• 28+ Yaş: %0 (Gelişim Durur)
+• 32+ Yaş: %5 ihtimalle DÜŞÜŞ başlar (Emeklilik).
 
-2. Tesis Etkisi:
-• Antrenman Tesisiniz her seviye için şansı %0.5 artırır.
-• Baş Antrenörünüz (Head Coach) her seviye için %0.8 ekstra bonus verir.
-• ÖRNEK: 18 yaşında bir oyuncu, 10. Seviye Tesis ve 5. Seviye Hocayla her hafta %15 ihtimalle güçlenir!
+2. Bina ve Personel Bonusu:
+• Tesis Seviyesi: Her level için +%0.5 (Max %10)
+• Baş Antrenör: Her level için +%0.8 (Max %4)
+• SONUÇ: Genç bir oyuncu, iyi tesislerde (%5 + %10 + %4) = Haftalık %19 ihtimalle güçlenir!
 
-3. Yorgunluk (Condition):
-• Kondisyon < %60: Antrenman verimi YARIYA düşer.
-• Kondisyon < %30: Oyuncu antrenmana çıkmaz, dinlenir.
-• İPUCU: Maçtan sonra oyuncuları "Hafif" idmanda dinlendirmek gelişimi hızlandırabilir!`,
+3. Potansiyel Duvarı:
+• Her oyuncunun gizli bir potansiyeli vardır. Oraya ulaşınca gelişim yavaşlar.
+• Kondisyon <%60 ise antrenman verimi SIFIRDIR.`,
 
-    guideFacilitiesTitle: "🏢 Tesisler & Personel",
-    guideStadiumEffect: `Stadyum
-• Her level = +6.000 kapasite. Daha fazla seyirci = daha fazla bilet geliri.
+    guideFacilitiesTitle: "🏢 Tesisler & Yatırım (ROI)",
+    guideStadiumEffect: `Stadyum Gelir Hesabı:
+• Bilet Fiyatı x Seyirci Sayısı
+• Her seviye +6.000 kapasite ekler.`,
+    guideTrainingEffect: "Antrenman Merkezi: Gelişim hızını artırır (Formüle bakın).",
+    guideScoutVsAcad: "Scout vs Akademi: Scout her zaman daha kârlıdır.",
 
-🏋️ Antrenman Merkezi
-• Antrenman Merkezi: Oyuncu gelişim hızı artar.
+    guideDeepFacilitiesTitle: "UZMAN: Ekonomi ve İflas Riski",
+    guideDeepFacilitiesContent: `Bütçenizi batırmadan nasıl büyürsünüz?
 
-UZMAN: Yatırım Getirisi (ROI)
-Bütçenizi batırmadan nasıl büyürsünüz?
-
-1. Bakım Masrafları (Gizli Gider):
-• Formül: (Seviye ^ 1.3) x 2000 €
-• Level 1 Stadyum: Haftalık 2.000 €
-• Level 15 Stadyum: Haftalık ~70.000 € (Korkunç artış!)
-• İPUCU: Geliriniz artmadan tesis basmayın. İflas edersiniz.
+1. Gizli Bakım Masrafları (Maintenance):
+• Formül: (Seviye ^ 1.3) x 2.000 €
+• Level 1 Stadyum: Haftalık 2.000 € gider.
+• Level 20 Stadyum: Haftalık ~100.000 € gider!
+• UYARI: Geliriniz artmadan tesis basmayın, iflas edersiniz.
 
 2. Stadyum Matematiği:
 • Her koltuk ortalama 15 € bırakır.
-• +2000 Kapasite (1 Upgrade) = Haftalık +30.000 € Ekstra Gelir.
-• Maliyeti (3M €) çıkarması yaklaşık 100 hafta sürer (2 sezon).
-• SONUÇ: Stadyum uzun vadeli yatırımdır. Kısa vadede para kazandırmaz.
+• +6.000 Kapasite (1 Upgrade) = Haftalık +90.000 € Ekstra Gelir.
+• Yatırım kendini 40 haftada (1 sezon) amorti eder.
+• SONUÇ: Stadyum en güvenli yatırımdır.
 
 3. Akademi vs Scout:
-• Akademi Level 10: Her hafta %5 ihtimalle vasat genç oyuncu (50-60 OVR) gelir.
-• Scout Level 10: Her hafta %10 ihtimalle YETENEKLİ genç (65-80 Potansiyel) bulur.
-• TAVSİYE: Parayı önce Scout'a yatırın. Bulduğu gençleri 5-10 Milyon €'ya satabilirsiniz!`,
-    guideTrainingEffect: "Antrenman Merkezi: Gelişim hızını artırır.",
-    guideScoutVsAcad: "Scout vs Akademi: Scout potansiyeli yüksek oyuncu bulur, Akademi ise bedava oyuncu üretir.",
+• Akademi (Lvl 10): Her hafta %5 ihtimalle 50-60 OVR (Çöp) oyuncu verir.
+• Scout (Lvl 10): Her hafta %10 ihtimalle 65-80 Potansiyelli (Yıldız) oyuncu bulur.
+• TAVSİYE: Parayı Scout'a gömün. Bulduğu genci 10M €'ya satabilirsiniz!`,
 
-    guideMoraleTitle: "🧠 Moral Sistemi",
-    guideMoraleXI: "İlk 11: +2 Moral",
+    guideMoraleTitle: "🧠 Moral Sistemi ve Kaprisler",
+    guideMoraleXI: "İlk 11: +2 Moral (Her maç)",
     guideMoraleBench: "Yedek: Değişmez",
-    guideMoraleRes75: "Rezerv (75+ OVR): -3 Moral!",
+    guideMoraleRes75: "Rezerv (75+ OVR): -3 Moral (Kapris yapar!)",
     guideMoraleRes65: "Rezerv (65-75 OVR): -1 Moral",
-    guideMoralePerform: `Morale directly affects player performance (OVR).
+    guideMoralePerform: `Moral düştükçe oyuncu sahada "hayalet" olur.`,
 
-UZMAN: Moral Matematiği
-Moral sadece süs değildir, oyuncunun sahadaki IQ'sunu belirler.
+    guideDeepMoraleTitle: "UZMAN: Moral ve Performans",
+    guideDeepMoraleContent: `Moral sadece renkli bir çubuk değildir, maç motoruna direkt etki eder (Formül: Performance Multiplier).
 
-1. Moral Nasıl Düşer?
-• Rezervde Bekleyen Yıldız: Eğer OVR > 75 ise ve oynatmıyorsanız her hafta -3 Moral yer (Yıldız kaprisi).
-• Sıradan Yedek: Eğer OVR 65-75 ise -1 Moral yer.
-• Gençler (<65 OVR): Oynamasalar da üzülmezler (Stabil).
+1. Performans Etkisi:
+• 80-100 Moral: %110 Performans (Paslar adrese, şutlar köşeye gider).
+• 40-60 Moral: %100 Performans (Normal).
+• 0-20 Moral: %80 Performans (Kaleci topu elinden kaçırır, forvet boş kaleye atamaz).
 
-2. Maç İçi Etkisi (Çok Önemli!):
-• 80-100 Moral: Oyuncu %110 performansla oynar. Yanındaki pası kaçırmaz.
-• 40-60 Moral: Normal performans.
-• 0-20 Moral: Oyuncu "Kusursuz" pozisyonda bile golü kaçırır. Kaleci ellerinin arasından topu kaçırır.
-• KRİTİK: Mutsuz yıldız oyuncuyu derbide oynatmak intihardır. Satın gitsin.`,
+2. Zincirleme Reaksiyon:
+• Mutsuz bir yıldız (Kırmızı surat), soyunma odasında huzursuzluk çıkarmaz ama sahada takımı satar.
+• ÇÖZÜM: Oynatmayacaksanız satın. Yedekte bekleyen 80+ OVR oyuncu saatli bombadır.`,
 
-    guideTransferTitle: "✈️ Transfer Sistemi",
-    guideTransList: "Transfer listesindekiler ucuzdur.",
-    guideTransUnlisted: `📅 Transfer Windows (NEW!)
-• Summer: Weeks 1-8
-• Winter: Weeks 20-24
+    guideTransferTitle: "✈️ Transfer ve İkna Yöntemleri",
+    guideTransList: "Transfer Listesi: İndirimli pazar.",
+    guideTransUnlisted: `Takvim:
+• Yaz: 1-8. Haftalar
+• Kış: 20-24. Haftalar`,
 
-UZMAN: Pazarlık Sırları
-Yapay zeka nasıl ikna olur?
+    guideDeepTransferTitle: "UZMAN: Pazarlık Sırları",
+    guideDeepTransferContent: `Yapay zeka nasıl ikna olur? "Willingness" (İsteklilik) puanı 50'yi geçmelidir.
 
-1. "İsteklilik" (Willingness) Puanı:
-Oyuncunun gelmek istemesi için şu puanın 50'yi geçmesi lazım:
-• Lig Farkı: İngiltere vs Türkiye farkı abartıldığı kadar değil (Max -7 Puan).
-• Takım İtibarı: Her 75 puanlık fark size +1 Puan getirir.
-• Şampiyonlar Ligi: İtibarı artırdığı için dolaylı yoldan etki eder.
+1. "İsteklilik" Puanı Hesabı:
+• Lig Farkı: Premier Lig'den Süper Lig'e gelmek zordur ( -7 Puan).
+• Takım İtibarı: Her 75 puanlık fark size +1 Puan kazandırır.
+• Şampiyonlar Ligi: Katılıyorsanız +10 Puan bonus alırsınız.
 
-2. Parayla İkna Etmek (Maaş Kozu):
-Parayı kullanarak "Hayır"ı "Evet"e çevirin:
+2. "Para Her Kapıyı Açar" (Maaş Kozu):
+• 1.0x Maaş: Etkisiz.
 • 1.5x Maaş Teklifi: +25 İsteklilik Puanı.
 • 2.0x Maaş Teklifi: +50 Puan (MAKSİMUM ETKİ).
-• DİKKAT: 3.0x maaş teklif etmek size ekstra puan kazandırmaz! 2.0x tavan sınırdır.
+• İPUCU: 3.0x maaş teklif etmek gereksizdir, tavan 2.0 kattır.
 
-3. Satış Taktiği:
-• Transfer Listesindeki oyuncuya AI takımlar değerinin %100-%150'si kadar teklif yapar.
-• Listede OLMAYAN oyuncuyu almak için değerinin %120-%170'ini ödemek zorundalar.
-• İPUCU: Değerli oyuncunuzu satmak istemiyorsanız listeye koymayın, AI almak için servet ödemek zorunda kalır!`,
+3. Satış Stratejisi:
+• Transfer Listesindeki oyuncuya AI takımlar değerinin %100'ünü teklif eder.
+• Listede OLMAYAN oyuncuyu almak için değerinin %150'sini ödemek zorundalar.
+• TİCARET SIRRI: Değerli oyuncunuzu satmak istemiyorsanız listeye koymayın, AI almak için servet ödemek zorunda kalır!`,
 
-    guideYouthTitle: "Genç Akademisi (Bedava!)",
-    guideYouth1: "Gençler 50K € değerle gelir.",
-    guideYouth2: "Maaş: Sadece 25K €/yıl.",
+    guideYouthTitle: "Genç Akademisi",
+    guideYouth1: "Gelen oyuncular bedavadır.",
+    guideYouth2: "Maaşları çok düşüktür (25K).",
 
     guideFinanceTitle: "💰 Finans Yönetimi",
-    guideSponsorG: "Garantili: Yüksek sabit, düşük bonus. Güvenli.",
-    guideSponsorD: "Dengeli: Orta sabit, orta bonus.",
-    guideSponsorR: `Riskli: Düşük sabit, yüksek bonus.
+    guideSponsorG: "Garantili: Düşük risk, sabit gelir.",
+    guideSponsorD: "Dengeli: Orta risk.",
+    guideSponsorR: `Riskli: Şampiyonluk primi çok yüksek ($$$).`,
 
-UZMAN: Hileli Finans Taktikleri
-Bütçe açığını kapatmak için legal hileler:
+    guideDeepFinanceTitle: "UZMAN: Finansal Hileler (Legit)",
+    guideDeepFinanceContent: `Bütçe açığını kapatmak için taktikler:
 
-1. "Al-Sat" Döngüsü (Farming):
-• Sezon başı 16-19 yaş arası "Serbest" (Free Agent) oyuncuları toplayın.
-• Maaşları sadece 25-50K € olur.
-• 10 hafta antrenman yaptırıp "Transfer Listesine" koyun.
-• Değerleri 100K € olsa bile kârdasınız. Bedavaya alıp 100K'ya satmak en temiz paradır.
+1. "Al-Sat" (Farming):
+• Sezon başı 16-19 yaş arası "Boşta" (Free Agent) oyuncuları toplayın.
+• Maaşları düşüktür. 10 hafta antrenman verip satılığa koyun.
+• Bedavaya alıp 200K €'ya satmak en temiz paradır.
 
 2. Sponsor Kumarı:
-• Eğer şampiyonluğa oynuyorsanız "Riskli" sponsoru seçin. Şampiyonluk bonusu 5M € civarıdır.
-• Eğer orta sıra takımıysanız, "Garantili" sponsoru seçin. Haftalık nakit akışı sizi iflastan korur.
+• Şampiyonluğa oynuyorsanız "Riskli" sponsoru seçin. Şampiyonluk bonusu 5M € civarıdır.
+• Orta sıra takımıysanız "Garantili" seçin, haftalık nakit akışı sizi kurtarır.
 
 3. Avrupa Geliri:
-• Sadece Kıtalar Arası Kupa'ya katılmak bile 2.5M € ayakbastı parası getirir.
-• Ligde 3. olmak, 1. olmaktan bazen daha kârlıdır (Şampiyonlar Ligi'nde 0 çekmektense, alt kupada 3 tur atlamak daha çok kazandırır).`,
+• Sadece Kupa'ya katılmak bile 2.5M € kazandırır.
+• Ligde 3. olup alt kupada ilerlemek, Şampiyonlar Ligi'nde 0 çekmekten daha kârlı olabilir!`,
 
     guideEuroTitle: "🌍 Kıtalar Arası Kupalar",
     guideEuroReq: "Katılım Şartları",
@@ -734,10 +769,21 @@ Bütçe açığını kapatmak için legal hileler:
     runnerUpLabel: "İkinci",
     topScorerLabel: "Gol Kralı",
 
-    // v3.3 Update
-    update330Title: "v3.3 - Ekonomi & FFP Güncellemesi",
-    update330Item1Title: "Sabit Maaşlı Kontratlar",
-    update330Item1Desc: "Maaşlar artık oyuncu geliştikçe artmıyor! Sadece yeni sözleşme imzaladığınızda güncelleniyor. Genç yetenekleri ucuza kapatma şansı!",
+    // Developer Letter - v3.4
+    devLetterTitle: "Geliştiriciden Mektup",
+    devLetterGreeting: "Merhaba Değerli Oyuncular! 👋",
+    devLetterParagraph1: "Öncelikle oyunumuzu indirdiğiniz ve vakit ayırdığınız için çok teşekkür ederim. Son güncellemelerden sonra bazılarınızın ciddi hatalarla karşılaştığını biliyorum ve bunun için özür dilerim.",
+    devLetterParagraph2: "Bu güncellemeyle birlikte oyunun tüm kodlarını baştan ele aldım. En önemli önceliğim canlı maçların gerçek bir seyir keyfi sunmasıydı. Maç motoru sıfırdan yeniden yazıldı. Özellikle Şampiyonlar Ligi, Avrupa Ligi ve Süper Kupa'da ciddi hatalar tespit ettim: Canlı maç, hızlı simülasyon ve maç ortasında çıkıp simüle etme seçenekleri hep farklı çalışıyordu. Grup maçlarından sonra puan tablosu güncellenmiyor, eleme maçlarında beraberlikte kim tur atlayacağı belli olmuyordu. Tüm bu tutarsızlıklar artık giderildi.",
+    devLetterParagraph3: "Eleme maçlarında beraberlik durumunda artık penaltı atışları simüle ediliyor. Şimdilik arka planda çalışıyor ama ileride görsel bir penaltı deneyimi eklemeyi planlıyorum. Serbest vuruş ve korner gibi özel durumlar için de geliştirmeler devam ediyor.",
+    devLetterParagraph4: "⚠️ Önemli Not: En stabil deneyim için yeni bir oyun başlatmanızı öneririm. Eski kayıtlarda sorun yaşarsanız, telefonunuzun ayarlarından uygulamanın önbelleğini ve verilerini temizleyip yeniden başlayabilirsiniz.",
+    devLetterParagraph5: "Şu anda 48 lig bulunuyor ve haftalık simülasyon 12 saniye sürüyor (normal telefonda). Her hafta AI takımlar gerçekten maç simülasyonları yapıyor, tüm transferler akıllı şekilde gerçekleşiyor. 8 ligimiz varken bu sorun yoktu. 2. ligleri her ülkeye eklemeyi düşünmüyorum çünkü bu performansı daha da bozacaktır. Alternatif olarak random skor atama seçeneği ekleyebiliriz ama bu oyunun gerçekliğini kaybettireceği için uygun görünmüyor. AI takımlarının haftada %20'den fazla transfer yapmasını da engelledik. Alternatif çözümler üzerinde çalışıyoruz.",
+    devLetterParagraph6: "Bu oyunu tek başıma geliştiriyorum. Gördüğünüz hataları ve önerilerinizi yorum olarak paylaşmanız benim için çok değerli. Geri bildirimleriniz sayesinde sorunları çok daha hızlı tespit edip düzeltebiliyorum. Alt yapı sağlam olduğunda ekonomik dengelemeler, tesis limitleri ve kariyer moduna geçeceğim. Desteğiniz için teşekkürler! 🙏",
+    devLetterSignature: "Sevgilerle,",
+    devLetterAuthor: "Geliştirici",
+    devLetterDate: "7 Şubat 2026",
+    devLetterContinue: "Oyuna Devam Et",
+
+    ffpSolidarityFund: "FFP Dayanışma Fonu",
     update330Item2Title: "Küresel Genç Yetenek Havuzu",
     update330Item2Desc: "Emekli olan oyuncuların yerine 'regen' gelmesi bitti. Artık her sezon dünya çapında 80 kişilik dev bir genç havuzu oluşturuluyor ve takımlar Scout gücüne göre kapışıyor.",
     update330Item3Title: "Piyasa Enflasyonu",
@@ -750,99 +796,6 @@ Bütçe açığını kapatmak için legal hileler:
     ffpSolidarityFund: "FFP Dayanışma Fonu",
     ffpLuxuryTax: "FFP Lüks Vergisi",
 
-    // --- EXPERT GUIDE DEEP DIVES ---
-    guideDeepTrainingTitle: "UZMAN: Gelişim Matematigi",
-    guideDeepTrainingContent: `Motorun içindeki gerçek formüller:
-1. Yaş Faktörü:
-• < 21 Yaş: Gelişim şansı %5 (Çok Hızlı)
-• 21-24 Yaş: Gelişim şansı %3 (Normal)
-• 24-28 Yaş: Gelişim şansı %1 (Yavaş)
-• 28+ Yaş: Gelişim DURUR. Sadece maç oynayarak form tutabilirler.
-• 32+ Yaş: Her hafta %5 ihtimalle özellikleri DÜŞER (Emeklilik yaklaşıyor).
-
-2. Tesis Etkisi:
-• Antrenman Tesisiniz her seviye için şansı %0.5 artırır.
-• Baş Antrenörünüz (Head Coach) her seviye için %0.8 ekstra bonus verir.
-• ÖRNEK: 18 yaşında bir oyuncu, 10. Seviye Tesis ve 5. Seviye Hocayla her hafta %15 ihtimalle güçlenir!
-
-3. Yorgunluk (Condition):
-• Kondisyon < %60: Antrenman verimi YARIYA düşer.
-• Kondisyon < %30: Oyuncu antrenmana çıkmaz, dinlenir.
-• İPUCU: Maçtan sonra oyuncuları "Hafif" idmanda dinlendirmek gelişimi hızlandırabilir!`,
-
-    guideDeepFacilitiesTitle: "UZMAN: Yatırım Getirisi (ROI)",
-    guideDeepFacilitiesContent: `Bütçenizi batırmadan nasıl büyürsünüz?
-
-1. Bakım Masrafları (Gizli Gider):
-• Formül: (Seviye ^ 1.3) x 2000 €
-• Level 1 Stadyum: Haftalık 2.000 €
-• Level 15 Stadyum: Haftalık ~70.000 € (Korkunç artış!)
-• İPUCU: Geliriniz artmadan tesis basmayın. İflas edersiniz.
-
-2. Stadyum Matematiği:
-• Her koltuk ortalama 15 € bırakır.
-• +2000 Kapasite (1 Upgrade) = Haftalık +30.000 € Ekstra Gelir.
-• Maliyeti (3M €) çıkarması yaklaşık 100 hafta sürer (2 sezon).
-• SONUÇ: Stadyum uzun vadeli yatırımdır. Kısa vadede para kazandırmaz.
-
-3. Akademi vs Scout:
-• Akademi Level 10: Her hafta %5 ihtimalle vasat genç oyuncu (50-60 OVR) gelir.
-• Scout Level 10: Her hafta %10 ihtimalle YETENEKLİ genç (65-80 Potansiyel) bulur.
-• TAVSİYE: Parayı önce Scout'a yatırın. Bulduğu gençleri 5-10 Milyon €'ya satabilirsiniz!`,
-
-    guideDeepMoraleTitle: "UZMAN: Moral Matematiği",
-    guideDeepMoraleContent: `Moral sadece süs değildir, oyuncunun sahadaki IQ'sunu belirler.
-
-1. Moral Nasıl Düşer?
-• Rezervde Bekleyen Yıldız: Eğer OVR > 75 ise ve oynatmıyorsanız her hafta -3 Moral yer. (Yıldız kaprisi)
-• Sıradan Yedek: Eğer OVR 65-75 ise -1 Moral yer.
-• Gençler (<65 OVR): Oynamasalar da üzülmezler (Stabil).
-
-2. Maç İçi Etkisi (Çok Önemli!):
-• 80-100 Moral: Oyuncu %110 performansla oynar. Yanındaki pası kaçırmaz.
-• 40-60 Moral: Normal performans.
-• 0-20 Moral: Oyuncu "Kusursuz" pozisyonda bile golü kaçırır. Kaleci ellerinin arasından topu kaçırır.
-• KRİTİK: Mutsuz yıldız oyuncuyu derbide oynatmak intihardır. Satın gitsin.`,
-
-    guideDeepTransferTitle: "UZMAN: Pazarlık Sırları",
-    guideDeepTransferContent: `Yapay zeka nasıl ikna olur?
-
-1. "İsteklilik" (Willingness) Puanı:
-Oyuncunun gelmek istemesi için şu puanın 50'yi geçmesi lazım:
-• Lig Farkı: İngiltere vs Türkiye farkı abartıldığı kadar değil (Max -7 Puan).
-• Takım İtibarı: Her 75 puanlık fark size +1 Puan getirir.
-• Şampiyonlar Ligi: İtibarı artırdığı için dolaylı yoldan etki eder.
-
-2. Parayla İkna Etmek (Maaş Kozu):
-Parayı kullanarak "Hayır"ı "Evet"e çevirin:
-• 1.5x Maaş Teklifi: +25 İsteklilik Puanı.
-• 2.0x Maaş Teklifi: +50 Puan (MAKSİMUM ETKİ).
-• DİKKAT: 3.0x maaş teklif etmek size ekstra puan kazandırmaz! 2.0x tavan sınırdır.
-
-3. Satış Taktigi:
-• Transfer Listesindeki oyuncuya AI takımlar değerinin %100-%150'si kadar teklif yapar.
-• Listede OLMAYAN oyuncuyu almak için değerinin %120-%170'ini ödemek zorundalar.
-• İPUCU: Değerli oyuncunuzu satmak istemiyorsanız listeye koymayın, AI almak için servet ödemek zorunda kalır!`,
-
-    guideDeepFinanceTitle: "UZMAN: Hileli Finans Taktikleri",
-    guideDeepFinanceContent: `Bütçe açığını kapatmak için legal hileler:
-
-1. "Al-Sat" Döngüsü (Farming):
-• Sezon başı 16-19 yaş arası "Serbest" (Free Agent) oyuncuları toplayın.
-• Maaşları sadece 25-50K € olur.
-• 10 hafta antrenman yaptırıp "Transfer Listesine" koyun.
-• Değerleri 100K € olsa bile kârdasınız. Bedavaya alıp 100K'ya satmak en temiz paradır.
-
-2. Sponsor Kumarı:
-• Eğer şampiyonluğa oynuyorsanız "Riskli" sponsoru seçin. Şampiyonluk bonusu 5M € civarıdır.
-• Eğer orta sıra takımıysanız (Anadolu takımı), "Garantili" sponsoru seçin. Haftalık nakit akışı sizi iflastan korur.
-
-3. Avrupa Geliri:
-• Sadece Kıtalar Arası Kupa'ya katılmak bile 2.5M € ayakbastı parası getirir.
-• Ligde 3. olmak, 1. olmaktan bazen daha kârlıdır (Şampiyonlar Ligi'nde 0 çekmektense, alt kupada 3 tur atlamak daha çok kazandırır).`,
-
-
-
     // --- v3.2 UPDATE & STYLES ---
     update320Title: "Uzman Rehberi ve Dev Avcıları",
     update320Item1Title: "Dev Avcısı (Giant Killer)",
@@ -854,13 +807,7 @@ Parayı kullanarak "Hayır"ı "Evet"e çevirin:
     update320Item4Title: "Taktiksel Derinlik",
     update320Item4Desc: "Pas, Tempo ve Genişlik ayarlarının maç motoruna tam etkisi rehbere eklendi.",
 
-    // Tactical Styles
-    styleLabel: "Oyun Stili",
-    styleBalanced: "Dengeli",
-    stylePossession: "Topa Sahip (Tiki-Taka)",
-    styleCounter: "Kontra Atak",
-    styleHighPress: "Yüksek Pres (Gegenpress)",
-    styleParkTheBus: "Otobüsü Çek (Katı Defans)",
+
 
     // --- v3.2.1 UPDATE ---
     update321Title: "Dinamik Gelir ve Katsayı Sistemi",
@@ -907,7 +854,7 @@ Parayı kullanarak "Hayır"ı "Evet"e çevirin:
     fired: "KOVULDUN!",
     firedMessage: "Yönetim performansından memnun değil ve görevine son verildi. Güvenlik binadan çıkmana eşlik edecek.",
     returnToMenu: "Ana Menüye Dön",
-    
+
     // Performans & Ayarlar
     settings: "Ayarlar",
     comingSoon: "Yakında",

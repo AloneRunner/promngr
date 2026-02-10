@@ -38,6 +38,7 @@ import { LEAGUE_PRESETS } from './src/data/teams';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock } from 'lucide-react';
 import { adMobService } from './src/services/adMobService';
 import { assignJerseyNumber, migrateJerseyNumbers, uuid } from './src/utils/playerUtils';
+import { AIService } from './services/AI';
 import { runTacticalAnalysis } from './src/utils/tacticalUtils';
 import { useMatchSimulation } from './src/hooks/useMatchSimulation';
 import { useTransferMarket } from './src/hooks/useTransferMarket';
@@ -105,6 +106,17 @@ const App: React.FC = () => {
             setGameState(newState);
         }
     }, [gameState?.currentWeek, gameState?.matches]);
+
+    // Show developer letter on first launch of v3.4
+    useEffect(() => {
+        if (!showSplash) {
+            const hasSeenV34Letter = localStorage.getItem('hasSeenV34Letter');
+            if (!hasSeenV34Letter) {
+                setShowUpdates(true);
+                localStorage.setItem('hasSeenV34Letter', 'true');
+            }
+        }
+    }, [showSplash]);
 
     const t = TRANSLATIONS[lang];
 
@@ -884,7 +896,8 @@ const App: React.FC = () => {
 
     const handleDeleteAll = () => {
         if (!gameState) return;
-        setGameState(prev => prev ? { ...prev, messages: [] } : null);
+        // Also clear pendingOffers when all messages are deleted
+        setGameState(prev => prev ? { ...prev, messages: [], pendingOffers: [] } : null);
     };
 
     const handleToggleTransferList = (player: Player) => {
@@ -1225,21 +1238,38 @@ const App: React.FC = () => {
         }
 
         // ========== BALANCED UPGRADE COSTS ==========
-        // Early levels affordable, late levels more expensive but REASONABLE
-        // Max cost around €20M for final upgrades
-        const nextLevel = currentLevel + 1;
         let baseCost = 0;
+        let nextLevel = 0;
         let description = '';
 
         if (type === 'stadium') {
-            baseCost = 500000; // €500K base
-            description = 'Stadium';
+            nextLevel = userTeam.facilities.stadiumLevel + 1;
+            baseCost = 200000;  // €200K base
+            description = 'Stadium Expansion';
+
+            // Check if already under construction
+            if (userTeam.facilities.stadiumConstructionWeeks && userTeam.facilities.stadiumConstructionWeeks > 0) {
+                alert(`Stadium is currently under construction! (${userTeam.facilities.stadiumConstructionWeeks} weeks remaining)`);
+                return;
+            }
         } else if (type === 'training') {
+            nextLevel = userTeam.facilities.trainingLevel + 1;
             baseCost = 300000; // €300K base
             description = 'Training Ground';
+
+            if (userTeam.facilities.trainingConstructionWeeks && userTeam.facilities.trainingConstructionWeeks > 0) {
+                alert(`Training Ground is currently under construction! (${userTeam.facilities.trainingConstructionWeeks} weeks remaining)`);
+                return;
+            }
         } else if (type === 'academy') {
+            nextLevel = userTeam.facilities.academyLevel + 1;
             baseCost = 250000; // €250K base
             description = 'Youth Academy';
+
+            if (userTeam.facilities.academyConstructionWeeks && userTeam.facilities.academyConstructionWeeks > 0) {
+                alert(`Youth Academy is currently under construction! (${userTeam.facilities.academyConstructionWeeks} weeks remaining)`);
+                return;
+            }
         }
 
         // Linear progression with slight exponential at higher levels
@@ -1251,24 +1281,38 @@ const App: React.FC = () => {
             alert(t.notEnoughFunds);
             return;
         }
+        // Construction Time Logic
+        let constructionWeeks = 0;
+        let constructionMessage = '';
 
-        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: €${(cost / 1000000).toFixed(2)}M`)) {
+        // Logic for all facilities
+        if (nextLevel <= 5) constructionWeeks = 5;       // ~1 month
+        else if (nextLevel <= 15) constructionWeeks = 12; // ~3 months
+        else constructionWeeks = 24;                     // ~6 months
+
+        constructionMessage = `\n\n🚧 CONSTRUCTION REQUIRED 🚧\nDuration: ${constructionWeeks} Weeks\nFacility level will increase after construction is complete.`;
+
+        if (confirm(`Upgrade ${description} to level ${nextLevel}? Cost: €${(cost / 1000000).toFixed(2)}M${constructionMessage}`)) {
             const updatedTeams = gameState.teams.map(team => {
                 if (team.id === userTeam.id) {
                     const newFacilities = { ...team.facilities };
                     if (type === 'stadium') {
-                        newFacilities.stadiumLevel += 1;
-                        newFacilities.stadiumCapacity += 2500;
+                        // START CONSTRUCTION: Do NOT increase level/capacity yet
+                        newFacilities.stadiumConstructionWeeks = constructionWeeks;
                     } else if (type === 'training') {
-                        newFacilities.trainingLevel += 1;
+                        // START CONSTRUCTION
+                        newFacilities.trainingConstructionWeeks = constructionWeeks;
                     } else if (type === 'academy') {
-                        newFacilities.academyLevel += 1;
+                        // START CONSTRUCTION
+                        newFacilities.academyConstructionWeeks = constructionWeeks;
                     }
                     return { ...team, budget: team.budget - cost, facilities: newFacilities };
                 }
                 return team;
             });
             setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
+
+            alert(`Construction started! Expected completion in ${constructionWeeks} weeks.`);
         }
     };
 
@@ -1371,6 +1415,32 @@ const App: React.FC = () => {
 
     const confirmStartMatch = useCallback(() => {
         if (!gameState || !pendingMatch) return;
+
+        // === AI TACTICAL ADAPTATION ===
+        // Analyze opponent before match starts
+        const opponentId = pendingMatch.homeTeamId === gameState.userTeamId ? pendingMatch.awayTeamId : pendingMatch.homeTeamId;
+        const opponent = gameState.teams.find(t => t.id === opponentId);
+        const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+
+        let updatedTeams = gameState.teams;
+
+        if (opponent && userTeam) {
+            // AI analyzes user team to pick best counter tactic
+            const adaptedTactic = AIService.analyzeOpponent(opponent, userTeam.tactic, userTeam.reputation);
+
+            // Apply new tactic to opponent
+            updatedTeams = gameState.teams.map(t =>
+                t.id === opponent.id ? { ...t, tactic: adaptedTactic } : t
+            );
+
+            // Update state with new tactics immediately so simulation uses it
+            setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
+        }
+
+        // Proceed with match start using the potentially updated teams
+        // Note: simulation.confirmStartMatch likely uses the *current* state ref, 
+        // so we might need to ensure it picks up the latest teams or pass them explicitly.
+        // For now, we update the state first.
 
         simulation.confirmStartMatch(pendingMatch.id);
 
@@ -1908,7 +1978,6 @@ const App: React.FC = () => {
                             opponentPlayers={opponentPlayers}
                             userTeam={userTeam}
                             t={t}
-                            tacticalHistory={gameState.tacticalHistory || []}
                             onClose={() => {
                                 setShowOpponentPreview(false);
                                 setPendingMatch(null);
@@ -2095,6 +2164,15 @@ const App: React.FC = () => {
                     ) : (
 
                         <div className="animate-fade-in w-full">
+                            {/* Navigation Safety: Ensure active match is cleared if user navigates away */}
+                            {(() => {
+                                if (view !== 'match' && activeMatchId) {
+                                    // Use setTimeout to avoid state updates during render
+                                    setTimeout(() => handleMatchFinish(), 0);
+                                }
+                                return null;
+                            })()}
+
                             {/* Mobile Menu View */}
                             {view === 'menu' && (
                                 <div className="flex flex-col gap-4 animate-fade-in pb-20">
@@ -2654,7 +2732,8 @@ const App: React.FC = () => {
                             {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} t={t} onBack={() => setView('dashboard')} />}
                         </div >
 
-                    )}
+                    )
+                    }
                 </div >
             </div >
 
@@ -2679,14 +2758,16 @@ const App: React.FC = () => {
             />
 
             {/* Season Summary Modal */}
-            {gameState && (
-                <SeasonSummaryModal
-                    isOpen={showSeasonSummary}
-                    gameState={gameState}
-                    t={t}
-                    onStartNewSeason={handleStartNewSeason}
-                />
-            )}
+            {
+                gameState && (
+                    <SeasonSummaryModal
+                        isOpen={showSeasonSummary}
+                        gameState={gameState}
+                        t={t}
+                        onStartNewSeason={handleStartNewSeason}
+                    />
+                )
+            }
 
             {/* Game Over Modal */}
             {

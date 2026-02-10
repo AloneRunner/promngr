@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Player, Translation } from '../types';
+import { Player, Translation, Position } from '../types';
 import { X, Clock, FileText, BarChart2, Eye, History, DollarSign, Ban, Star, Hexagon, LayoutGrid } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { RadarChart } from './RadarChart';
+import { calculateEffectiveRating } from '../services/MatchEngine';
 
 interface PlayerModalProps {
     player: Player | null;
@@ -58,9 +59,22 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                                         #{player.jerseyNumber}
                                     </div>
                                 )}
-                                <div className={`text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 ${getAttrColor(player.overall)}`}>
-                                    {player.overall}
-                                </div>
+                                {(() => {
+                                    const posMap: Record<string, Position> = { 'GK': Position.GK, 'DEF': Position.DEF, 'MID': Position.MID, 'FWD': Position.FWD };
+                                    const pos = posMap[player.position] || Position.MID;
+                                    const effectiveOvr = calculateEffectiveRating(player, pos, player.condition);
+                                    return effectiveOvr !== player.overall ? (
+                                        <div className="flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700" title={`Baz: ${player.overall} | Anlık: ${effectiveOvr}`}>
+                                            <span className="text-slate-500 line-through text-xs">{player.overall}</span>
+                                            <span className="text-slate-600">→</span>
+                                            <span className={effectiveOvr >= 80 ? 'text-emerald-400' : effectiveOvr >= 70 ? 'text-green-300' : 'text-orange-400'}>{effectiveOvr}</span>
+                                        </div>
+                                    ) : (
+                                        <div className={`text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 ${getAttrColor(player.overall)}`}>
+                                            {player.overall}
+                                        </div>
+                                    );
+                                })()}
                             </div>
                             <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
                                 <span className="font-bold text-slate-300">{player.position}</span>
