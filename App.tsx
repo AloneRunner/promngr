@@ -1428,10 +1428,15 @@ const App: React.FC = () => {
             // AI analyzes user team to pick best counter tactic
             const adaptedTactic = AIService.analyzeOpponent(opponent, userTeam.tactic, userTeam.reputation);
 
+
             // Apply new tactic to opponent
             updatedTeams = gameState.teams.map(t =>
                 t.id === opponent.id ? { ...t, tactic: adaptedTactic } : t
             );
+
+            // FIX: Also ensure USER team uses the SELECTED tactic from UI, not just database state
+            // Although simulation uses 'userTeam.tactic', we want to be sure any UI overrides apply
+            // (Assuming UI updates gameState.teams[user].tactic before this function is called)
 
             // Update state with new tactics immediately so simulation uses it
             setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);

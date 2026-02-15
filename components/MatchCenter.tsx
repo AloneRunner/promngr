@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation, LineupStatus } from '../types';
-import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers } from 'lucide-react';
+import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, MonitorPlay, Users, Settings, LogOut, Layers, Palette } from 'lucide-react';
 import { TeamLogo } from './TeamLogo';
 import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
@@ -128,6 +128,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 }) => {
     const [speed, setSpeed] = useState<number>(1);
     const [viewMode, setViewMode] = useState<'2D' | '2.5D'>('2.5D'); // NEW: View Mode Toggle
+    const [useDefaultColors, setUseDefaultColors] = useState(false); // NEW: Default Colors Toggle
     const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
     const [showTacticsModal, setShowTacticsModal] = useState(false);
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null); // NEW: Goal celebration flash
@@ -652,7 +653,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 facing: lerpAngle(prevP.facing || 0, nextP.facing || 0, alpha),
                 stamina: nextP.stamina || 100,
                 state: nextP.state || 'IDLE',
-                signal: nextP.outgoingSignal // Catch signal here (passed from Sim State)
+                signal: nextP.outgoingSignal, // Catch signal here (passed from Sim State)
+                shotType: (nextP as any).shotType,
+                isCollided: (nextP as any).isCollided
             };
         }).filter(item => item !== null).sort((a, b) => a!.y - b!.y);
 
@@ -660,12 +663,45 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         renderQueue.forEach(item => {
             if (!item) return;
             const isHome = item.player.teamId === homeTeam.id;
-            const primary = isHome ? homeTeam.primaryColor : awayTeam.primaryColor;
-            const secondary = isHome ? homeTeam.secondaryColor : awayTeam.secondaryColor;
+            let primary = isHome ? homeTeam.primaryColor : awayTeam.primaryColor;
+            let secondary = isHome ? homeTeam.secondaryColor : awayTeam.secondaryColor;
+
+            // === DEFAULT COLORS OVERRIDE ===
+            if (useDefaultColors) {
+                const isMyTeam = item.player.teamId === userTeamId;
+                primary = isMyTeam ? '#3b82f6' : '#ef4444'; // Blue (Me) vs Red (Opponent)
+                secondary = '#ffffff';
+            }
+
             const num = playerNumbers.current[item.player.id] || 0;
             const hasBall = nextState.ball.ownerId === item.player.id;
 
             drawPlayer(ctx, item.x, item.y, item.z || 0, item.facing, primary, secondary, num, hasBall, item.player.lastName, item.stamina, item.state, item.signal);
+
+            // === VISUAL CUES ===
+            if ((item as any).isCollided) {
+                ctx.font = '24px Arial';
+                ctx.fillStyle = '#ffcc00';
+                ctx.textAlign = 'center';
+                ctx.fillText('💥', item.x, item.y - 50);
+            }
+            if ((item as any).shotType) {
+                let emoji = '';
+                const type = (item as any).shotType;
+                if (type === 'BICYCLE') emoji = '🚲';
+                else if (type === 'VOLLEY') emoji = '🚀';
+                else if (type === 'HEADER') emoji = '🤕';
+
+                if (emoji) {
+                    ctx.font = '28px Arial';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.shadowColor = 'black';
+                    ctx.shadowBlur = 4;
+                    ctx.fillText(emoji, item.x, item.y - 60);
+                    ctx.shadowBlur = 0;
+                }
+            }
         });
 
         // Draw Ball with Trail Effect
@@ -712,37 +748,24 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         }
 
         // ========== GOAL FLASH EFFECT ==========
+        // ========== GOAL FLASH EFFECT (REMOVED FOR PERFORMANCE) ==========
         if (goalFlash) {
-            // Use coordinate transformation for goal position
             const goalPos = toScreen(goalFlash === 'AWAY' ? 0 : 100, 50, 0, viewMode);
-            const goalX = goalPos.x;
-            const goalY = goalPos.y;
-
-            // Pulsing glow effect
-            const pulse = Math.sin(Date.now() / 100) * 0.3 + 0.7;
-
-            // Radial gradient glow from goal
-            const gradient = ctx.createRadialGradient(goalX, goalY, 10, goalX, goalY, 150);
-            gradient.addColorStop(0, `rgba(255, 215, 0, ${0.8 * pulse})`);
-            gradient.addColorStop(0.3, `rgba(255, 255, 255, ${0.6 * pulse})`);
-            gradient.addColorStop(0.7, `rgba(255, 215, 0, ${0.3 * pulse})`);
-            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
-
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
-            // Add sparkle particles effect
-            for (let i = 0; i < 12; i++) {
-                const angle = (Date.now() / 500 + i * 0.5) % (Math.PI * 2);
-                const radius = 40 + Math.sin(Date.now() / 200 + i) * 20;
-                const sparkleX = goalX + Math.cos(angle) * radius;
-                const sparkleY = goalY + Math.sin(angle) * radius * 0.6;
-
-                ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * pulse})`;
-                ctx.beginPath();
-                ctx.arc(sparkleX, sparkleY, 3, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            // Lightweight pulse text instead of full screen gradient
+            ctx.save();
+            ctx.font = 'bold 40px "Outfit", sans-serif';
+            ctx.fillStyle = goalFlash === 'HOME' ? homeTeam.secondaryColor : awayTeam.secondaryColor;
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(255,215,0,0.8)';
+            ctx.shadowBlur = 20;
+            const scale = 1 + Math.sin(Date.now() / 100) * 0.1;
+            ctx.translate(goalPos.x, goalPos.y - 60);
+            ctx.scale(scale, scale);
+            ctx.strokeText("GOAL!", 0, 0);
+            ctx.fillText("GOAL!", 0, 0);
+            ctx.restore();
         }
     };
 
@@ -1190,13 +1213,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         const cx = pos.x;
         const groundY = pos.y; // Shadow always here
         const scale = pos.scale;
-        const baseRadius = 12;
+        const baseRadius = 9; // Reduced from 12
         let radius = baseRadius * scale;
-        const playerHeight = 8 * scale; // 3D height effect
+        const playerHeight = 6 * scale; // Reduced from 8
 
         // Calculate Body Y based on Jump Height (Z)
         // Z usually goes 0 to 2-3 meters. We scale it up for pixels.
-        const jumpOffset = z * 10 * scale;
+        const jumpOffset = z * 8 * scale; // Reduced from 10
         const bodyCenterY = groundY - jumpOffset;
 
         ctx.save();
@@ -1368,7 +1391,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         const pos = toScreen(xPct, yPct, z, '2.5D');
         const groundPos = toScreen(xPct, yPct, 0, '2.5D');
         const scale = pos.scale;
-        const baseRadius = 5;
+        const baseRadius = 4; // Reduced from 5
         const radius = baseRadius * scale;
 
         // Shadow (gets smaller and lighter as ball goes higher)
@@ -1592,6 +1615,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                 <button onClick={() => setViewMode(viewMode === '2D' ? '2.5D' : '2D')} className="w-8 h-8 rounded-full bg-blue-600/80 border border-blue-400/30 flex items-center justify-center text-white font-bold text-[10px]">
                                     {viewMode}
                                 </button>
+                                <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${useDefaultColors ? 'bg-emerald-600/80 border-emerald-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
+                                    <Palette size={14} />
+                                </button>
                                 <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
                                     <Settings size={14} />
                                 </button>
@@ -1750,6 +1776,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         className="flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl bg-blue-600 active:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/30 transition-all active:scale-95 border-b-2 md:border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
                     >
                         <Layers size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline text-[9px] uppercase">{viewMode}</span>
+                    </button>
+                    <button
+                        onClick={() => setUseDefaultColors(!useDefaultColors)}
+                        className={`flex flex-col items-center justify-center gap-1 w-10 h-10 md:w-14 md:h-14 rounded-xl text-white font-bold shadow-lg transition-all active:scale-95 border-b-2 md:border-b-4 active:border-b-0 active:translate-y-1 ${useDefaultColors ? 'bg-emerald-600 active:bg-emerald-500 shadow-emerald-900/30 border-emerald-800' : 'bg-slate-700 active:bg-slate-600 shadow-slate-900/30 border-slate-800'}`}
+                    >
+                        <Palette size={16} className="md:w-5 md:h-5" /> <span className="hidden md:inline text-[9px] uppercase">Color</span>
                     </button>
                     <button
                         onClick={() => { setSpeed(0); setShowTacticsModal(true); }}

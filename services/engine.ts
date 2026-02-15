@@ -1413,6 +1413,14 @@ export const initializeMatch = (match: Match, homeTeam: Team, awayTeam: Team, ho
 export const simulateTick = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) => {
     if (!activeEngine || (activeEngine as any).match.id !== match.id) {
         activeEngine = new MatchEngine(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
+    } else {
+        // FIX: Ensure tactics are synced if UI updated them *after* engine initialization
+        if (JSON.stringify(activeEngine.homeTeam.tactic) !== JSON.stringify(homeTeam.tactic)) {
+            activeEngine.updateTactic(homeTeam.id, homeTeam.tactic);
+        }
+        if (JSON.stringify(activeEngine.awayTeam.tactic) !== JSON.stringify(awayTeam.tactic)) {
+            activeEngine.updateTactic(awayTeam.id, awayTeam.tactic);
+        }
     }
     const result = activeEngine.step();
     return {
@@ -3551,6 +3559,57 @@ export const getLastLeagueWeek = (matches: Match[]): number => {
 
 // Super Cup is ALWAYS week 39 (fixed calendar slot)
 export const SUPER_CUP_WEEK = 39;
+
+// === AI TACTICS SELECTION ===
+export const autoPickTactics = (team: Team, opponent?: Team) => {
+    // 1. Determine Mentality based on relative strength
+    // Use reputation as proxy for overall strength (1000-10000 range)
+    const myRating = team.reputation || 4000;
+    const oppRating = opponent?.reputation || 4000;
+    const strengthDiff = (myRating - oppRating) / 100; // Normalize to approx -50 to 50 range
+
+    let mentality: 'Attacking' | 'Balanced' | 'Defensive' = 'Balanced';
+    if (strengthDiff > 10) mentality = 'Attacking';
+    else if (strengthDiff < -10) mentality = 'Defensive';
+
+    // 2. Determine Style based on players or randomness
+    // If team has no specific style preference, pick one suitable for mentality
+    let style = team.tactic.style || 'Balanced';
+    if (style === 'Balanced' || Math.random() < 0.3) {
+        if (mentality === 'Attacking') {
+            style = Math.random() < 0.6 ? 'Wing Play' : 'Tiki Taka';
+        } else if (mentality === 'Defensive') {
+            style = Math.random() < 0.7 ? 'Park the Bus' : 'Counter Attack';
+        } else {
+            const styles = ['Wing Play', 'Tiki Taka', 'Counter Attack', 'Balanced'];
+            style = styles[Math.floor(Math.random() * styles.length)] as any;
+        }
+    }
+
+    // 3. Set Aggression
+    // Default to Normal, but vary based on match importance or team history?
+    // User requested "Normal" buff, so AI using Normal is good.
+    // Occasionally use Aggressive for weaker teams trying to compensate?
+    let aggression: 'Safe' | 'Normal' | 'Aggressive' | 'Reckless' = 'Normal';
+    if (Math.random() < 0.2) aggression = 'Aggressive';
+    if (strengthDiff < -15 && Math.random() < 0.3) aggression = 'Reckless'; // Desperate
+    if (strengthDiff > 15 && Math.random() < 0.3) aggression = 'Safe'; // Comfortable
+
+    // 4. Apply to Team Tactic
+    // We update the team object directly for this match context
+    team.tactic = {
+        ...team.tactic,
+        mentality,
+        style: style as any,
+        aggression,
+        // Width defaults based on style
+        width: style === 'Wing Play' ? 'Wide' : (style === 'Tiki Taka' ? 'Narrow' : 'Normal'),
+        // Defensive Line
+        defensiveLine: mentality === 'Attacking' ? 'High' : (mentality === 'Defensive' ? 'Deep' : 'Normal')
+    };
+
+    return team;
+};
 
 export const generateSuperCup = (gameState: GameState): SuperCup | undefined => {
     const clWinner = gameState.europeanCup?.winnerId;
@@ -5748,6 +5807,16 @@ export const analyzeMatchSituation = (
     }
 
     return advice;
+};
+
+// === HELPER FOR USEMATCHSIMULATION ===
+// Allows retrieving the FINAL state of players (stats, condition, cards) after a match
+export const getFinalMatchStats = () => {
+    if (!activeEngine) return null;
+    return {
+        homePlayers: activeEngine.homePlayers,
+        awayPlayers: activeEngine.awayPlayers
+    };
 };
 
 

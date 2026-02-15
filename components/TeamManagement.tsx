@@ -589,7 +589,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                             { value: 'Attacking', label: t.styleAttacking || 'Attacking' },
                                             { value: 'Balanced', label: t.styleBalanced || 'Balanced' },
                                             { value: 'Counter', label: t.styleCounter || 'Counter' },
-                                            { value: 'Defensive', label: t.styleDefensive || 'Defensive' }
+                                            { value: 'Defensive', label: t.styleDefensive || 'Defensive' },
+                                            { value: 'Possession', label: t.stylePossession || 'Possession' }
                                         ].map(s => (
                                             <button
                                                 key={s.value}

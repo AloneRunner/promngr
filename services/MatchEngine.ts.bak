@@ -14,24 +14,6 @@ import {
     LineupStatus
 } from '../types';
 
-// === MISSING INTERFACE DEFINITION ===
-interface PlayerState {
-    targetX: number;
-    targetY: number;
-    isPressing: boolean;
-    actionLock: number;
-    sprintDistance?: number;
-    runDistance?: number;
-    currentStamina: number;
-    incomingSignal?: { type: string; senderId?: string };
-    outgoingSignal?: { type: string; targetId?: string };
-    matchRating?: number;
-    stats?: any;
-    hasBall?: boolean;
-    shotType?: string; // 'NORMAL', 'VOLLEY', 'BICYCLE', 'HEADER', 'CHIP', etc.
-    isCollided?: boolean;
-}
-
 // --- UTILS ---
 const dist = (x1: number, y1: number, x2: number, y2: number) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 const distSq = (x1: number, y1: number, x2: number, y2: number) => (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
@@ -432,15 +414,13 @@ export const getBaseFormationOffset = (formation: TacticType, role: Position, in
     }
 
     if (role === Position.FWD) {
-        // === FIX: FORVETLERİ GERİ ÇEK (Daha Derin Başlangıç) ===
-        // 88/86 -> 80/78 (Böylece koşu mesafesi artar, ofsayta düşmezler)
         if (formation === TacticType.T_433 || formation === TacticType.T_343) {
-            if (index === 1) return { x: xPos(80), y: PITCH_WIDTH / 2 };   // ST (merkez) - 88->80
-            return { x: xPos(78), y: index === 0 ? spreadY(0, 2, 80) : spreadY(1, 2, 80) }; // Kanatlar - 82->78
+            if (index === 1) return { x: xPos(88), y: PITCH_WIDTH / 2 };   // ST (merkez)
+            return { x: xPos(82), y: index === 0 ? spreadY(0, 2, 80) : spreadY(1, 2, 80) }; // Kanatlar
         }
-        if (totalInRole === 1) return { x: xPos(80), y: PITCH_WIDTH / 2 }; // Tek forvet - 88->80
-        if (totalInRole === 2) return { x: xPos(78), y: index === 0 ? spreadY(0, 2, 44) : spreadY(1, 2, 44) }; // 2 forvet - 86->78
-        return { x: xPos(78), y: spreadY(index, totalInRole, 60) };
+        if (totalInRole === 1) return { x: xPos(88), y: PITCH_WIDTH / 2 }; // Tek forvet
+        if (totalInRole === 2) return { x: xPos(86), y: index === 0 ? spreadY(0, 2, 44) : spreadY(1, 2, 44) }; // 2 forvet
+        return { x: xPos(82), y: spreadY(index, totalInRole, 60) };
     }
 
     return { x: PITCH_CENTER_X, y: PITCH_CENTER_Y }; // Varsayılan: orta saha merkezi
@@ -511,11 +491,7 @@ export class MatchEngine {
         outgoingSignal?: Signal | null,
         // === MESAFE BAZLI YORGUNLUK TAKİBİ ===
         sprintDistance?: number,  // Toplam sprint mesafesi (birim)
-        runDistance?: number,     // Toplam koşu mesafesi (birim)
-        supportRunUntil?: number, // === G MOTORU: VER-KAÇ İÇİN DESTEK KOŞUSU SÜRESİ ===
-        // === DECISION PERSISTENCE (TITREME ENGELLEYİCİ) ===
-        tacticalDecision?: string, // 'COME_SHORT', 'RUN_BEHIND', etc.
-        decisionExpiry?: number    // Bu kararın kaçıncı tick'e kadar geçerli olduğu
+        runDistance?: number      // Toplam koşu mesafesi (birim)
     }> = {};
 
     // === DEBUG MODE ===
@@ -565,9 +541,6 @@ export class MatchEngine {
     private _cachedAwayStarters: Player[] = [];
     private _starterCacheValid: boolean = false;
     private _statsLogged: boolean = false;
-    // === OFSAYT: Defans hatları (her tick güncellenir, actionPass'ta kullanılır) ===
-    private _homeDefLine: number = 50;
-    private _awayDefLine: number = 55;
 
     constructor(match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) {
         this.match = match;
@@ -586,13 +559,6 @@ export class MatchEngine {
                 awaySaves: 0
             };
         }
-        // === AGRESİFLİK ÇARPANI (RESTORED to Original) ===
-        const aggressionMultipliers = {
-            'Safe': 0.85,
-            'Normal': 1.00,
-            'Aggressive': 1.25,
-            'Reckless': 1.45
-        };
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         // Keep all players (STARTING + BENCH) so substitutions can work
@@ -659,7 +625,7 @@ export class MatchEngine {
             if (this.sim.ball.z === undefined) { this.sim.ball.z = 0; this.sim.ball.vz = 0; }
         } else {
             this.sim = {
-                ball: { x: 50, y: 50, z: 0, vx: 0, vy: 0, vz: 0, curve: 0, ownerId: null, targetId: null },
+                ball: { x: 50, y: 50, z: 0, vx: 0, vy: 0, vz: 0, curve: 0, ownerId: null },
                 players: {},
                 homeMentality: TeamMentality.BALANCED,
                 awayMentality: TeamMentality.BALANCED
@@ -1697,23 +1663,6 @@ export class MatchEngine {
         this.clearExpiredSignals();
         this.updateBallPhysics();
 
-        // === VISUAL STATE CLEANUP ===
-        Object.keys(this.sim.players).forEach(id => {
-            const simP = this.sim.players[id] as any;
-            const state = this.playerStates[id] as any;
-
-            // Reset collision flag every tick (it's re-calculated in resolveCollisions)
-            // But resolveCollisions runs every 2 ticks, so we might want to keep it?
-            // Actually, let's just clear it. If it flickers, we can increase persistence.
-            if (this.tickCount % 2 === 0) simP.isCollided = false;
-
-            // Clear shot type if expired
-            if (simP.shotType && state.shotTypeExpiry && this.tickCount > state.shotTypeExpiry) {
-                simP.shotType = undefined;
-                state.shotTypeExpiry = undefined;
-            }
-        });
-
         // === GLOBAL PRESSING CONTROLLER (Merkezi Pres Dağıtıcı) ===
         // Her tick başında kimlerin pres yapacağını MERKEZI olarak belirle
         // Bu sayede 5-6 kişi birden topa saldırmaz!
@@ -1882,9 +1831,6 @@ export class MatchEngine {
 
         const homeDefLine = this.calculateDefensiveLine(true);
         const awayDefLine = this.calculateDefensiveLine(false);
-        // === OFSAYT: defLine'ları instance olarak sakla (actionPass'ta kullanılacak) ===
-        this._homeDefLine = homeDefLine;
-        this._awayDefLine = awayDefLine;
 
         // === PERFORMANCE: Use cached starter lists instead of repeated .filter() calls ===
         // Cache is rebuilt when invalidated (after substitutions) or on first tick
@@ -1983,45 +1929,10 @@ export class MatchEngine {
                 this.sim.players[p.id].state = 'RUN';
                 state.isPressing = false;
             } else {
-                // Check if it's a set piece and player should hold position
-                const isSetPiece = this.sim.mode === 'KICKOFF' || this.sim.mode?.includes('GOAL_KICK') || this.sim.mode?.includes('CORNER') || this.sim.mode?.includes('FREE_KICK') || this.sim.mode?.includes('PENALTY') || this.sim.mode?.includes('THROW_IN');
-                if (isSetPiece && this.sim.ball.ownerId) {
-                    // If ball owner is on my team, hold position or move to base offset
-                    const ballOwnerTeam = this.getPlayer(this.sim.ball.ownerId)?.teamId;
-                    if (ballOwnerTeam === p.teamId) {
-                        const base = this.baseOffsets[p.id];
-                        if (base) {
-                            const targetX = p.teamId === this.homeTeam.id ? base.x : PITCH_LENGTH - base.x;
-                            const targetY = p.teamId === this.homeTeam.id ? base.y : PITCH_WIDTH - base.y;
-                            this.applySteeringBehavior(p, targetX, targetY, MAX_PLAYER_SPEED * 0.5);
-                            this.sim.players[p.id].state = 'IDLE';
-                        }
-                        return;
-                    }
-                }
-
                 if (!ballOwner && p.id === this.currentLooseBallChaserId) {
-                    // === AKILLI SAHIPSİZ TOP KOVALAMASI (v2) ===
-                    const ballSpeed = Math.sqrt(this.sim.ball.vx ** 2 + this.sim.ball.vy ** 2);
-                    const distToBall = dist(this.sim.players[p.id].x, this.sim.players[p.id].y, this.sim.ball.x, this.sim.ball.y);
-
-                    const lookAhead = ballSpeed > 2.0 ? Math.min(8, distToBall / ballSpeed)
-                        : ballSpeed > 1.0 ? 4
-                            : 2;
-                    let interceptX = this.sim.ball.x + (this.sim.ball.vx * lookAhead);
-                    const interceptY = this.sim.ball.y + (this.sim.ball.vy * lookAhead);
-
-                    // === OFSAYT KONTROLÜ: Forvet sahipsiz topa koşarken ofsayda girmesin! ===
-                    if (this.playerRoles[p.id] === Position.FWD) {
-                        const fwdDefLine = isHome ? awayDefLine : homeDefLine;
-                        if (isHome) {
-                            interceptX = Math.min(interceptX, fwdDefLine - 2.0);
-                        } else {
-                            interceptX = Math.max(interceptX, fwdDefLine + 2.0);
-                        }
-                    }
-
-                    this.applySteeringBehavior(p, interceptX, interceptY, MAX_PLAYER_SPEED);
+                    const interceptX = this.sim.ball.x + (this.sim.ball.vx * 2);
+                    const interceptY = this.sim.ball.y + (this.sim.ball.vy * 2);
+                    this.applySteeringBehavior(p, interceptX, interceptY, MAX_PLAYER_SPEED); // Removed 1.15x - was causing light speed bug!
                     this.sim.players[p.id].state = 'SPRINT';
                     state.isPressing = true;
                 }
@@ -2034,11 +1945,6 @@ export class MatchEngine {
         });
 
         this.resolveCollisions();
-
-        // === G MOTORU: PROAKTİF SİNYAL SİSTEMİ ===
-        // Oyuncular her an çevrelerini tarar ve uygunsa sinyal verir
-        this.updatePlayerSignals();
-
         event = this.checkGameEvents();
 
         // DEBUG: Log event from checkGameEvents
@@ -2103,25 +2009,20 @@ export class MatchEngine {
 
     private calculateDefensiveLine(isHome: boolean): number {
         const teamPlayers = isHome ? this.homePlayers : this.awayPlayers;
-        // === OFSAYT HATTI FIX: KALECİ HARİÇ! ===
-        // Gerçek futbolda ofsayt, son 2 SAHA oyuncusuna (kaleci hariç) göre belirlenir.
-        // Eski kod kaleci dahil ediyordu → hat yanlış hesaplanıyordu.
-        const outfieldPositionsX = teamPlayers
-            .filter(p => this.sim.players[p.id] && this.playerRoles[p.id] !== Position.GK)
+        const playerPositionsX = teamPlayers
+            .filter(p => this.sim.players[p.id])
             .map(p => this.sim.players[p.id].x);
 
-        if (outfieldPositionsX.length < 2) {
+        if (playerPositionsX.length < 2) {
             return isHome ? 10 : 90;
         }
 
         if (isHome) {
-            outfieldPositionsX.sort((a, b) => a - b);
-            // İlk değer = en geri saha oyuncusu (genelde stoper)
-            // İkinci değer = ikinci en geri saha oyuncusu → OFSAYT HATTI
-            return outfieldPositionsX[1];
+            playerPositionsX.sort((a, b) => a - b);
+            return playerPositionsX[1];
         } else {
-            outfieldPositionsX.sort((a, b) => b - a);
-            return outfieldPositionsX[1];
+            playerPositionsX.sort((a, b) => b - a);
+            return playerPositionsX[1];
         }
     }
 
@@ -2195,21 +2096,6 @@ export class MatchEngine {
                     let gkReachBase = 4.0; // 4.5 -> 4.0 (Daha insani erişim)
                     if (isCloseRange) gkReachBase = 3.0; // 3.5 -> 3.0 (Yakında daha zor)
 
-                    // === 1v1 NERF: Kaleci direkt karşı karşıya geldiğinde ===
-                    // Gerçek futbolda 1v1'lerde kaleci %30-40 kurtarma oranına sahip
-                    let is1v1Shot = false;
-                    if (isCloseRange) {
-                        // Top taşıyanı bul, kaleciye çok yakın mı?
-                        const ballOwnerBefore = this.lastTouchTeamId;
-                        const isAttackOnThisGoal = headingToLeftGoal
-                            ? (ballOwnerBefore !== this.homeTeam.id)
-                            : (ballOwnerBefore !== this.awayTeam.id);
-                        if (isAttackOnThisGoal && distToGK < 12) {
-                            is1v1Shot = true;
-                            gkReachBase -= 0.8; // 1v1'de erişim azalsın
-                        }
-                    }
-
                     // Kaleci hızı erişimi artırır
                     const speedBonus = (gk.attributes.speed || 50) / 100;
 
@@ -2235,25 +2121,19 @@ export class MatchEngine {
 
 
                         // BASE CHANCE: Temel kurtarış şansı
-                        // PANTHER MODE v2: -10 -> -5
-                        let baseSaveChance = -5;
-
-                        // === 1v1 NERF ===
-                        // Direkt karşı karşıyada kaleci kurtarma şansı düşsün!
-                        if (is1v1Shot) {
-                            baseSaveChance -= 15; // 1v1'de -15 ceza
-                        }
+                        // ULTRA NERF v2: -5 → -10 (Daha fazla gol olsun!)
+                        let baseSaveChance = -10;
 
                         // PlayStyles (Özel Yetenekler) Etkisi
                         if (gk.playStyles?.includes("Kedi Refleks") || gk.playStyles?.includes("Kedi Refleks+")) {
-                            baseSaveChance += 12;
+                            baseSaveChance += 12; // 15 → 12
                         }
                         if (gk.playStyles?.includes("Birebir") && isCloseRange) {
-                            baseSaveChance += 15; // "Birebir" yeteneği 1v1 nerf'ini kısmen karşılar!
+                            baseSaveChance += 15; // 20 → 15
                         }
 
-                        // RESTORE: 0.65 -> 0.78 (Kaleci stat etkisi artırıldı)
-                        const saveChance = baseSaveChance + (effectiveGKing * 0.78) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
+                        // NERF: 0.78 → 0.65 (Kaleci stat etkisi düşürüldü)
+                        const saveChance = baseSaveChance + (effectiveGKing * 0.65) + distanceBonus + heightBonus + positioningBonus - speedPenalty;
 
                         // Şans faktörü (Zar atıyoruz)
                         const saveRoll = Math.random() * 100;
@@ -2275,13 +2155,11 @@ export class MatchEngine {
                                 // ÇELDİ (Parry/Deflect)
                                 // Topu rastgele ama kaleden uzağa sektir
                                 const deflectAngle = Math.atan2(b.vy, b.vx) + (Math.random() > 0.5 ? 1.5 : -1.5); // 90 derece yana
-                                let deflectPower = ballSpeed * (0.3 + Math.random() * 0.2); // NERF: Daha az sekme
-                                // PENALTI FIX: Kurtarışta top karşı kaleye gitmesin!
-                                deflectPower = Math.min(deflectPower, 1.5); // Maksimum 1.5 birim hız
+                                const deflectPower = ballSpeed * (0.3 + Math.random() * 0.2); // NERF: Daha az sekme
 
                                 b.vx = Math.cos(deflectAngle) * deflectPower;
                                 b.vy = Math.sin(deflectAngle) * deflectPower;
-                                b.vz = 1.0 + Math.random() * 0.5; // Daha az havaya (1.5-2.5 → 1.0-1.5)
+                                b.vz = 1.5 + Math.random(); // Havaya dik
 
                                 this.playerStates[gk.id].possessionCooldown = 10; // Çabuk toparlan
                                 this.lastTouchTeamId = gk.teamId;
@@ -2421,62 +2299,13 @@ export class MatchEngine {
 
                 // Strength hava topu kontrolünü etkiler
                 if (Math.random() * 110 + technique + strengthBonus > difficulty) {
-                    // === OFSAYT KONTROLÜ: TOP ALMA ANINDA ===
-                    // Pas veya şut sonrası sahipsiz topa değen oyuncu ofsaytta mı?
-                    const pPos = this.sim.players[p.id];
-                    const isPlayerHome = p.teamId === this.homeTeam.id;
-                    const wasOwnTeamTouch = this.lastTouchTeamId === p.teamId;
-                    const playerRole = this.playerRoles[p.id];
-                    let offsideCaught = false;
+                    this.sim.ball.ownerId = p.id;
+                    this.sim.ball.vx = 0; this.sim.ball.vy = 0; this.sim.ball.z = 0; this.sim.ball.curve = 0;
+                    this.lastTouchTeamId = p.teamId;
 
-                    // Sadece kendi takımdan gelen top + ileri oyuncular kontrol edilsin
-                    // (Rakip topunu çalan oyuncu ofsayt olmaz!)
-                    if (wasOwnTeamTouch && playerRole !== Position.GK && playerRole !== Position.DEF && pPos) {
-                        const defLine = isPlayerHome ? this._awayDefLine : this._homeDefLine;
-                        if (defLine !== undefined) {
-                            const isOffside = isPlayerHome
-                                ? pPos.x > defLine + 1.5  // 1.5m tolerans
-                                : pPos.x < defLine - 1.5;
-
-                            if (isOffside) {
-                                // OFSAYT! Top alma iptal
-                                this.sim.ball.ownerId = null;
-                                this.sim.ball.vx = 0;
-                                this.sim.ball.vy = 0;
-                                this.sim.ball.vz = 0;
-                                this.sim.ball.x = pPos.x;
-                                this.sim.ball.y = pPos.y;
-                                this.traceLog.push(`🚩 OFSAYT! ${p.lastName} sahipsiz topu ofsayt pozisyonda aldı!`);
-                                this.pendingEvents.push({
-                                    minute: this.internalMinute,
-                                    type: MatchEventType.OFFSIDE,
-                                    description: `🚩 ${p.lastName} ofsayt! Serbest vuruş.`,
-                                    teamId: p.teamId,
-                                    playerId: p.id
-                                });
-                                // Rakip takıma ver
-                                const enemyTeamPlayers = isPlayerHome ? this.awayPlayers : this.homePlayers;
-                                const nearestEnemy = enemyTeamPlayers
-                                    .filter(ep => ep.lineup === 'STARTING' && this.playerRoles[ep.id] === Position.DEF)
-                                    .sort((a2, b2) => dist(this.sim.players[a2.id]?.x || 0, this.sim.players[a2.id]?.y || 0, pPos.x, pPos.y) - dist(this.sim.players[b2.id]?.x || 0, this.sim.players[b2.id]?.y || 0, pPos.x, pPos.y))[0];
-                                if (nearestEnemy) {
-                                    this.sim.ball.ownerId = nearestEnemy.id;
-                                }
-                                this.playerStates[p.id].possessionCooldown = 20;
-                                offsideCaught = true;
-                            }
-                        }
-                    }
-
-                    if (!offsideCaught) {
-                        this.sim.ball.ownerId = p.id;
-                        this.sim.ball.vx = 0; this.sim.ball.vy = 0; this.sim.ball.z = 0; this.sim.ball.curve = 0;
-                        this.lastTouchTeamId = p.teamId;
-
-                        // Visual Jump Effect
-                        if (b.z > 0.5) {
-                            this.sim.players[p.id].z = Math.min(b.z, 2.0); // Jump to ball height
-                        }
+                    // Visual Jump Effect
+                    if (b.z > 0.5) {
+                        this.sim.players[p.id].z = Math.min(b.z, 2.0); // Jump to ball height
                     }
                 } else {
                     b.vx *= 0.6; b.vy *= 0.6;
@@ -2577,7 +2406,7 @@ export class MatchEngine {
 
             // Sadece ceza sahası içinde hareket et
             const maxOutX = isHome ? 8 : PITCH_LENGTH - 8;
-            let targetX = isHome ? Math.min(predictedX, maxOutX) : Math.max(predictedX - 2, PITCH_LENGTH - 12);
+            let targetX = isHome ? Math.min(predictedX, maxOutX) : Math.max(predictedX, maxOutX);
             let targetY = clamp(predictedY, GOAL_Y_TOP - 2, GOAL_Y_BOTTOM + 2); // Kale genişliği civarında kal
 
             // "Uzağa Fırlatma" yeteneği: Cross'lara daha iyi müdahale
@@ -2606,46 +2435,42 @@ export class MatchEngine {
         simP.state = 'IDLE';
     }
 
-    // === G MOTORU: GÖRÜŞ AÇISI HESAPLAMA (GÜNCELLENMİŞ) ===
-    private calculateShotOpening(x: number, y: number, targetX: number, isHome: boolean): number {
-        const dx = targetX - x;
-        const dy = PITCH_CENTER_Y - y;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const distToTarget = Math.sqrt(dx * dx + dy * dy);
-
-        // Hedefe giden vektör
-        const angleToTarget = Math.atan2(dy, dx);
-
-        // Tarama konisi (45 derece)
-        const coneWidth = Math.PI / 4;
-
-        let blockage = 0;
+    private calculateShotOpening(shooterX: number, shooterY: number, goalX: number, isHome: boolean): number {
+        const targets = [GOAL_Y_TOP + 1, GOAL_Y_CENTER, GOAL_Y_BOTTOM - 1];
+        let clearPaths = 0;
         const enemies = isHome ? this.awayPlayers : this.homePlayers;
 
-        // Önümdeki rakiplere bak
-        for (const e of enemies) {
-            const ePos = this.sim.players[e.id];
-            if (!ePos) continue;
+        targets.forEach(targetY => {
+            let blocked = false;
+            for (const e of enemies) {
+                if (!this.sim.players[e.id]) continue;
+                const ePos = this.sim.players[e.id];
 
-            const d = dist(x, y, ePos.x, ePos.y);
-            if (d > 25) continue; // Çok uzaktakiler önemli değil
+                const dx = goalX - shooterX;
+                const dy = targetY - shooterY;
+                const lenSq = dx * dx + dy * dy;
 
-            const angleToE = Math.atan2(ePos.y - y, ePos.x - x);
-            const angleDiff = Math.abs(angleToE - angleToTarget);
+                const ex = ePos.x - shooterX;
+                const ey = ePos.y - shooterY;
 
-            // Eğer rakip hedef açımın içindeyse
-            if (angleDiff < coneWidth / 2) {
-                // Yakınlık cezası: Ne kadar yakınsa o kadar bloklar
-                const proximityPenalty = 1.0 - (d / 25); // 0m=1.0, 25m=0.0
-                blockage += proximityPenalty;
+                const dot = (ex * dx + ey * dy) / lenSq;
+
+                if (dot > 0 && dot < 1) {
+                    const closestX = shooterX + dot * dx;
+                    const closestY = shooterY + dot * dy;
+                    const distToLine = dist(ePos.x, ePos.y, closestX, closestY);
+
+                    if (distToLine < 2.0) {
+                        blocked = true;
+                        break;
+                    }
+                }
             }
-        }
+            if (!blocked) clearPaths++;
+        });
 
-        // Açıklık skoru (0 ile 1 arası)
-        return Math.max(0, 1.0 - blockage);
+        return clearPaths / targets.length;
     }
-
-
 
     private updateBallCarrierAI(p: Player, isHome: boolean, offsideLineX: number, goalX: number) {
         if (!this.sim.players[p.id]) return;
@@ -2673,15 +2498,6 @@ export class MatchEngine {
             if (state.decisionTimer > 20) {
                 this.actionShoot(p, isHome);
                 this.sim.mode = undefined; // Reset mode to normal play (allows rebounds etc)
-
-                // === PENALTI SONRASI: Tüm oyuncuları serbest bırak! ===
-                // Aksi halde D-arc'ta donup kalıyorlar
-                const allPlayersArr = [...this.homePlayers, ...this.awayPlayers];
-                for (const pp of allPlayersArr) {
-                    if (pp.lineup === 'STARTING' && this.playerStates[pp.id]) {
-                        this.playerStates[pp.id].actionLock = 0;
-                    }
-                }
             }
             return;
         }
@@ -2745,8 +2561,8 @@ export class MatchEngine {
         }
 
         let decisionSpeed = 8 - ((p.attributes.decisions || 50) / 25);
-        if (tactic.tempo === 'Fast') decisionSpeed *= 0.6; // Faster decisions (0.7→0.6)
-        else if (tactic.tempo === 'Slow') decisionSpeed *= 1.5; // Slower decisions (1.4→1.5)
+        if (tactic.tempo === 'Fast') decisionSpeed *= 0.7; // Faster decisions
+        else if (tactic.tempo === 'Slow') decisionSpeed *= 1.4; // Slower decisions
 
         // === YILDIZ OYUNCU BONUSU ===
         // OVR 85+ oyuncular: Daha hızlı ve daha iyi kararlar
@@ -2757,9 +2573,6 @@ export class MatchEngine {
         } else if (playerOVR >= 80) {
             decisionSpeed *= 0.90; // %10 daha hızlı karar
         }
-
-        // NERF: Increase possession cooldown after shooting to prevent instant follow-up actions
-        if (state.possessionCooldown > 0) state.possessionCooldown--;
 
         // === MERKEZİ YORGUNLUK ETKİSİ - ZİHİNSEL ===
         // Yorgun oyuncular daha yavaş karar verir
@@ -2876,21 +2689,20 @@ export class MatchEngine {
             // === NORMAL PLAY LOGIC ===
             else if (distToGoal < SHOOT_RANGE) {
                 // BASE: Closer = Better
-                // NERF: 120 -> 90 base score to significantly reduce random long shots
-                shootScore = 90 - (distToGoal * 2.5);
+                shootScore = 120 - (distToGoal * 2);
 
                 // === FINISHING-BASED DISTANCE PENALTY ===
                 // Low finishing players should prefer VERY close shots
                 const finishingFactor = Math.max(0.6, 2.0 - (p.attributes.finishing / 50));
-                const distancePenalty = distToGoal * finishingFactor * 1.5; // Increased penalty multiplier
+                const distancePenalty = distToGoal * finishingFactor;
 
                 // Low finishers get EXTRA penalty for long range (>20m)
-                if (distToGoal > 20 && p.attributes.finishing < 75) {
-                    shootScore -= (distToGoal - 20) * 5;
+                if (distToGoal > 20 && p.attributes.finishing < 70) {
+                    shootScore -= (distToGoal - 20) * 3;
                 }
 
-                // Apply finishing factor penalty
-                shootScore -= distancePenalty;
+                // Apply finishing factor to base score
+                shootScore = 120 - distancePenalty;
 
                 // Openness is critical
                 if (shotOpenness > 0.8) shootScore += 300; // Wide open!
@@ -2913,9 +2725,9 @@ export class MatchEngine {
 
                 // === DEATH ZONE (KILLER INSTINCT) ===
                 // 10m within central goal area -> FORCE SHOT unless impossible
-                const isDeathZone = distToGoal < 10 && Math.abs(simP.y - PITCH_CENTER_Y) < 10;
+                const isDeathZone = distToGoal < 10 && Math.abs(simP.y - 50) < 10;
                 if (isDeathZone && shotOpenness > 0.2) {
-                    shootScore += 500; // NERFED: 1000 -> 500 (Less "Shoot on Sight")
+                    shootScore += 1000; // ALMOST ALWAYS SHOOT
                 }
 
                 // === PENALTY BOX SHOT BONUS ===
@@ -2949,8 +2761,7 @@ export class MatchEngine {
             }
 
             // 3. EVALUATE DRIBBLING
-            // 3. EVALUATE DRIBBLING
-            let dribbleScore = 10; // Base düşürüldü (30 -> 10)
+            let dribbleScore = 30; // Base bias
 
             // Check space ahead
             const forwardAngle = isHome ? 0 : Math.PI;
@@ -2959,22 +2770,8 @@ export class MatchEngine {
             const checkY = simP.y + Math.sin(forwardAngle) * checkDist;
             const spaceObstacles = this.detectObstacles(p, checkX, checkY);
 
-            // Boş alan bonusu azaltıldı
-            if (spaceObstacles.length === 0) dribbleScore += 30; // 50 -> 30
-            else dribbleScore -= (spaceObstacles.length * 30); // Engel cezası arttı
-
-            // Yetenek etkisi
-            if (p.attributes.dribbling > 60) {
-                dribbleScore += ((p.attributes.dribbling - 60) * 1.5);
-            }
-
-            // === TAKTİKSEL KİLİT ===
-            // Kısa Pas taktiğinde driblingi ÖLDÜR
-            if (tactic.passingStyle === 'Short') {
-                dribbleScore -= 100; // -30 -> -100 (Artık çalım atmaya korkar)
-            } else if (tactic.passingStyle === 'Mixed') {
-                dribbleScore -= 20;  // Mixed'de de biraz pası tercih etsin
-            }
+            if (spaceObstacles.length === 0) dribbleScore += 50; // Open space!
+            else dribbleScore -= (spaceObstacles.length * 25);
 
             // IMPROVED DRIBBLING IMPACT
             if (p.attributes.dribbling > 60) {
@@ -2985,48 +2782,14 @@ export class MatchEngine {
                 dribbleScore += 40;
             }
 
-            // === MATCHUP ANALİZİ (RAKİBİ TARTMA) ===
-            // pressure ve spaceObstacles yukarıda hesaplandı (detectObstacles ile)
-            if (pressure > 0 && spaceObstacles.length > 0) {
-                // En yakındaki engeli (savunmacıyı) bul
-                const nearestDefender = spaceObstacles[0];
+            if (pressure > 0) dribbleScore -= (pressure * 15);
 
-                if (nearestDefender) {
-                    // --- 1. HIZ FARKI (Speed Mismatch) ---
-                    // Eğer ben rakibimden çok hızlıysam, topu dürtüp geçerim (Kick and Rush)
-                    const mySpeed = p.attributes.speed || 50;
-                    const defSpeed = nearestDefender.attributes.speed || 50;
-
-                    if (mySpeed > defSpeed + 10) {
-                        // Ciddi hız farkı var, çalım atmayı çok iste!
-                        dribbleScore += 40;
-                        // Eğer boş alan da varsa bu skor uçar
-                        if (spaceObstacles.length === 1) dribbleScore += 30; // Önümde sadece o varsa
-                    }
-
-                    // --- 2. YETENEK FARKI (Skill Mismatch) ---
-                    // Benim driblingim vs Rakibin Top Kapması + Gücü
-                    const mySkill = p.attributes.dribbling || 50;
-                    // Savunmacı skoru: Tackling %70 + Strength %30
-                    const defSkill = (nearestDefender.attributes.tackling || 50) * 0.7 + (nearestDefender.attributes.strength || 50) * 0.3;
-
-                    const mismatch = mySkill - defSkill;
-
-                    if (mismatch > 15) {
-                        // Rakip savunmada çok zayıf, üzerine git!
-                        dribbleScore += 35;
-                    } else if (mismatch < -10) {
-                        // Rakip duvar gibi (örn: Van Dijk), çalım deneme, pas ver!
-                        dribbleScore -= 50;
-                    }
-
-                    // --- 3. SARI KART KORKUSU (Basitleştirilmiş) ---
-                    // (Şimdilik pendingEvents kullanılamadığı için burayı es geçiyoruz veya
-                    // basitçe agresifliğine bakabiliriz ama şimdilik kapalı kalsın)
-                }
-            } else if (pressure > 0) {
-                // Eski mantık fallback (DetectObstacles menzili dışındaki genel baskı için)
-                dribbleScore -= (pressure * 15);
+            // === "TOP SÜREN" ve "KIVRAK" yetenekli oyunculara çalım bonusu ===
+            if (p.playStyles?.includes("Top Süren") || p.playStyles?.includes("Top Süren+")) {
+                dribbleScore += 15;
+            }
+            if (p.playStyles?.includes("Kıvrak") || p.playStyles?.includes("Kıvrak+")) {
+                dribbleScore += 12;
             }
 
             // POSITION-AWARE BEHAVIOR
@@ -3066,16 +2829,14 @@ export class MatchEngine {
                 passScore -= 10;
             } else if (tactic.passingStyle === 'Direct') {
                 // Direct: Agresif uzun top, daha az pas
-                // REHBER UPDATE: Şut +40, Dribble +50
-                shootScore += 40;     // 30 -> 40
-                dribbleScore += 50;   // 20 -> 50
-                passScore -= 25;      // -25 (Sabit)
+                shootScore += 30;     // 15 → 30
+                dribbleScore += 20;   // 10 → 20
+                passScore -= 25;      // -10 → -25
             } else if (tactic.passingStyle === 'Short') {
                 // Short: Kisa pas, sabirli oyun (Tiki-Taka)
-                // REHBER UPDATE: Pas +50, Şut -30, Dribble -30
-                shootScore -= 30;     // -20 -> -30
-                dribbleScore -= 30;   // -10 -> -30
-                passScore += 50;      // +30 -> +50
+                shootScore -= 20;     // Gereksiz sut atma
+                dribbleScore -= 10;   // Topu ayaginda tutma
+                passScore += 30;      // Pas ver!
             } else if (tactic.passingStyle === 'LongBall') {
                 // Long: Uzun Top
                 if (isInAttackingThird) {
@@ -3089,58 +2850,13 @@ export class MatchEngine {
                     passScore += 40;      // Doldur
                 }
             }
-
-            // OYUN STİLİ ETKİLERİ (Playing Style)
             if (tactic.style === 'Counter') {
-                // Counter: Kontra Atak - Hızlı çık, düşünme vur!
                 if (isInAttackingThird) {
-                    // REHBER UPDATE: Şut +80, Dribble +50
-                    shootScore += 80; // 25 -> 80 (Affetme!)
-                    dribbleScore += 50; // 15 -> 50
+                    shootScore += 25;
+                    dribbleScore += 15;
                 }
-                // Box içi ekstra şut isteği
-                if (distToGoal < 16) shootScore += 60; // 20 -> 60
-            } else if (tactic.style === 'Attacking') {
-                // REHBER UPDATE: Şut +40, Dribble +30
-                shootScore += 40;
-                dribbleScore += 30;
-            } else if (tactic.style === 'Defensive') {
-                // REHBER UPDATE: Şut -40, Dribble -30, Pas +50
-                shootScore -= 40;
-                dribbleScore -= 30;
-                passScore += 50;
-            } else if (tactic.style === 'Possession') {
-                // POSSESSION: Kısa pas ve sabırlı oyun
-                passScore += 40;
-                shootScore -= 20;
-                dribbleScore += 15; // Topu tut, alan aç
-            }
-
-            // === MENTALITY ETKİSİ (YENİ) ===
-            const mentality = tactic.mentality || 'Balanced';
-            if (mentality === 'Attacking') {
-                shootScore += 25;
-                dribbleScore += 20;
-                passScore -= 10;
-            } else if (mentality === 'Defensive') {
-                shootScore -= 20;
-                dribbleScore -= 15;
-                passScore += 25;
-            }
-
-            // === TEMPO ETKİSİ (GENİŞLETİLMİŞ) ===
-            if (tactic.tempo === 'Fast') {
-                // Hızlı tempo: Daha az düşün, daha çok risk al
-                shootScore += 15;
-                dribbleScore += 10;
-            } else if (tactic.tempo === 'Slow') {
-                // Yavaş tempo: Daha sabırlı, daha güvenli
-                passScore += 20;
-                shootScore -= 10;
-            }
-
-            // PRESIING INTENSITY EFFECTS
-            if (tactic.pressingIntensity === 'HighPress' || tactic.pressingIntensity === 'Gegenpress') {
+                if (distToGoal < 16) shootScore += 20;
+            } else if (tactic.pressingIntensity === 'HighPress' || tactic.pressingIntensity === 'Gegenpress') {
                 if (shotOpenness > 0.6) shootScore += 10;
                 else shootScore -= 10;
                 dribbleScore += 10;
@@ -3168,19 +2884,6 @@ export class MatchEngine {
                 }
             }
 
-            // 3. FreeRoam (Serbest Dolaş - Gizli Forvet)
-            // MID oyuncuları daha agresif oyna: dribble/şut artır, pas azalt
-            // DEF ve FWD'ye etkisi minimal (zaten farklı roller)
-            if (instructions.includes('RoamFromPosition')) {
-                if (this.playerRoles[p.id] === Position.MID) {
-                    dribbleScore += 30;  // Taşı, ileri git!
-                    shootScore += 20;    // Fırsat gördüğünde çek
-                    passScore -= 15;     // Hep pas atma, kendin de gir
-                } else if (this.playerRoles[p.id] === Position.FWD) {
-                    dribbleScore += 10;  // Forvetler zaten agresif
-                }
-            }
-
             // Width Logic - Kanat bölgesi (0-17m ve 51-68m)
             const isOnWing = simP.y < 17 || simP.y > PITCH_WIDTH - 17;
             if (tactic.width === 'Wide' && isOnWing) {
@@ -3205,17 +2908,6 @@ export class MatchEngine {
                     // Baskı yokken geri dönmek korkaklıktır!
                     passScore -= 150;
                 }
-            }
-
-            // REHBER SİNC: Direct Passing - Geri pas yasak (-50)
-            if (tactic.passingStyle === 'Direct' && isBackPass) {
-                passScore -= 50;
-            }
-
-            // REHBER SİNC: Defensive Style - Geri pas ödül (+60)
-            // Defansif takımlar topu geride tutup süreyi eritmek ister
-            if (tactic.style === 'Defensive' && isBackPass) {
-                passScore += 60;
             }
 
             // "Dribbler" (Top Süren) özelliği olanlar boşluğu asla affetmez
@@ -3250,41 +2942,20 @@ export class MatchEngine {
             let shootThreshold: number;
             if (distToGoal < 10) {
                 // DEATH ZONE (<10m): Şut at!
-                shootThreshold = 100 * attackerBonus; // 80 -> 100, Forvet: 60
+                shootThreshold = 80 * attackerBonus; // 100 → 80, Forvet: 48
             } else if (distToGoal < 18) {
                 // CEZA SAHASI (10-18m): İyi fırsat varsa şut
-                shootThreshold = 160 * attackerBonus; // 130 -> 160, Forvet: 96
+                shootThreshold = 130 * attackerBonus; // 160 → 130, Forvet: 78
             } else if (distToGoal < 25) {
                 // CEZA SAHASI DIŞI (18-25m): Seçici ol
-                shootThreshold = 280 * attackerBonus; // 220 -> 280, Forvet: 168
+                shootThreshold = 220 * attackerBonus; // 280 → 220, Forvet: 132
             } else {
                 // UZAK MESAFE (25m+): Çok iyi fırsat lazım
-                shootThreshold = 400 * attackerBonus; // 320 -> 400, Forvet: 240
+                shootThreshold = 320 * attackerBonus; // 400 → 320, Forvet: 192
             }
 
             // 1v1 durumunda eşiği düşür
-            if (is1v1) shootThreshold = Math.min(shootThreshold, 80); // 60 -> 80
-
-            // === KILLER INSTINCT (1v1 BİTİRİCİLİK - TEK VURUŞ) v2 ===
-            // Forvet, ceza sahasında, 1v1 ve kaleyi görüyorsa normalde HİÇ DÜŞÜNMEZ!
-            // AMA: Yanında boş kaleye atacak arkadaşı varsa (2v0, 2v1) pas verebilir.
-            if (is1v1 && isAttacker && distToGoal < 16) {
-                // Eğer çok net bir pas opsiyonu varsa (Al da at)
-                // bestPass > 200 genelde "boş kale" veya "çok net pozisyon" demek
-                if (bestPass && bestPass.score > 200) {
-                    // Pas opsiyonunu KORU, şutu da KORU. Karar hiyerarşisi en iyisini seçsin.
-                    // Sadece bekleme süresini sıfırla ki hemen karar versin.
-                    state.decisionTimer = 0;
-                    // Şut puanını biraz artır ama pası ezme
-                    shootScore += 50;
-                } else {
-                    // İyi pas yoksa -> BENCİL OL VE VUR!
-                    shootScore += 200;
-                    dribbleScore = -100;
-                    passScore = -100;
-                    state.decisionTimer = 0;
-                }
-            }
+            if (is1v1) shootThreshold = Math.min(shootThreshold, 60); // 80 → 60
 
             // Karar hiyerarşisi
             if (shootScore > shootThreshold) decision = 'SHOOT';
@@ -3297,13 +2968,12 @@ export class MatchEngine {
 
             if (!is1v1 && Math.random() < 0.1) decision = 'DRIBBLE';
 
+            if (decision === 'PASS' && bestPass && bestPass.type === 'THROUGH') {
+                if (Math.random() < 0.02) this.emitTeamSignal(p, 'POINT', bestPass.player.id);
+            }
+
             if (decision === 'SHOOT') {
                 this.actionShoot(p, isHome);
-                state.decisionTimer = -10; // Daha uzun bekleme
-                state.possessionCooldown = 45; // NERFED: 15 -> 45 ticks cooldown
-
-                // Reset sprint status
-                simP.state = 'RUN';
                 return;
             } else if (decision === 'PASS' && bestPass) {
                 this.actionPass(p, bestPass.player, bestPass.type, bestPass.targetX, bestPass.targetY);
@@ -3348,44 +3018,6 @@ export class MatchEngine {
         this.applySteeringBehavior(p, targetX, targetY, MAX_PLAYER_SPEED * 0.85);
     }
 
-    // === SMART RECOVERY LOGIC (ENGINE 4 PORT) ===
-    private applyDefensiveRecoveryLogic(p: Player, state: PlayerState, offsideLineX: number, isHome: boolean): boolean {
-        // 1. Topun geleceği noktayı tahmin et (Intercept Vector)
-        const simP = this.sim.players[p.id];
-        if (!simP) return false;
-
-        const b = this.sim.ball;
-        const ballSpeed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-
-        // Sadece top hızlıysa ve rakip hücum ediyorsa
-        const isAttacking = isHome ? (b.vx < -0.5) : (b.vx > 0.5);
-
-        if (ballSpeed > 1.5 && isAttacking) {
-            // Topun 1.5 saniye sonraki konumu
-            const interceptX = b.x + b.vx * 45; // 30 tick = 1 sec (approx 1.5s -> 45)
-            const interceptY = b.y + b.vy * 45;
-
-            // Eğer top benim savunma bölgeme geliyorsa
-            const isDangerous = isHome ? (interceptX < 50) : (interceptX > 55);
-
-            if (isDangerous) {
-                // Topa değil, topun GİDECEĞİ yere koş (Smart Cut)
-                const distToIntercept = dist(simP.x, simP.y, interceptX, interceptY);
-                const distToBall = dist(simP.x, simP.y, b.x, b.y);
-
-                // Eğer topa yetişme şansım varsa (Benim mesafem < Topun mesafesi + avantaj)
-                if (distToIntercept < 40) {
-                    state.targetX = interceptX;
-                    state.targetY = interceptY;
-                    // SPRINT!
-                    this.applySteeringBehavior(p, interceptX, interceptY, MAX_PLAYER_SPEED * 1.05);
-                    return true; // Logic handled
-                }
-            }
-        }
-        return false;
-    }
-
     private findBestPassOption(p: Player, isHome: boolean, offsideLineX: number, goalX: number): { player: Player, score: number, type: 'GROUND' | 'THROUGH' | 'AERIAL', targetX: number, targetY: number } | null {
         let bestTarget: Player | null = null;
         let maxScore = -9999;
@@ -3416,90 +3048,9 @@ export class MatchEngine {
             const distToGoal = dist(simTm.x, simTm.y, goalX, PITCH_CENTER_Y);
             let score = (126 - distToGoal);  // 120 → 126 (ölçeklendi)
 
-            // === PAS DAĞITIMI: Kanat forvetleri ve çeşitlilik ===
-            // Merkez forvet her zaman kaleye en yakın → hep en yüksek skor alıyor
-            // Bu düzeltme kanat forvetlerini de cazip hale getiriyor
-            const tmRole = this.playerRoles[tm.id];
-            if (tmRole === Position.FWD) {
-                // Kanat forvetlerine açılma bonusu (merkez dışındaki forvetler)
-                const isOnWing = simTm.y < 25 || simTm.y > PITCH_WIDTH - 25;
-                if (isOnWing) {
-                    score += 15; // Kanat açık → iyi seçenek!
-                }
-                // Çeşitlilik: Hep aynı adama pas atmak yerine rastlantı
-                score += (Math.random() * 12) - 6; // ±6 puan rastgelelik
-            }
-
-            // === OYUNU GENİŞLETME (SPREAD PLAY) ===
-            // Daha akıllı kanat kullanımı (Özellikle 4-3-3 için)
-            const amICentral = Math.abs(simP.y - PITCH_CENTER_Y) < 15;
-            const isTeammateWide = Math.abs(simTm.y - PITCH_CENTER_Y) > 20;
-
-            if (amICentral && isTeammateWide) {
-                score += 40; // Kanata pası teşvik et
-            }
-
-            // Forward Progress: Pozitifse ileri, negatifse geri pas (Moved Up for LongBall Logic)
-            const forwardProgress = isHome ? (simTm.x - simP.x) : (simP.x - simTm.x);
-
-            // === SİNYAL OKUMA SİSTEMİ (G MOTORU) ===
-            const tmState = this.playerStates[tm.id]; // Variable declaration fixed
-            if (tmState?.incomingSignal?.type === 'CALL') {
-                score += 50; // Bağıran oyuncuya pas atma isteği ciddi artar
-            }
-            if (tmState?.outgoingSignal?.type === 'POINT') {
-                // Eğer oyuncu ileriye koşuyorsa ve ileriye doğru pas veriyorsak bonus
-                if (forwardProgress > 10) score += 60;
-            }
-
-            // === G MOTORU: SAVUNMA YOĞUNLUĞU KONTROLÜ (Interception Risk) ===
-            let proximityRisk = 0;
-            const opponents = isHome ? this.awayPlayers : this.homePlayers;
-
-            opponents.forEach(e => {
-                if (!this.sim.players[e.id]) return;
-                const simE = this.sim.players[e.id];
-
-                // Pas yolu üzerinde mi?
-                const distToLine = this.distToSegment(simE.x, simE.y, simP.x, simP.y, simTm.x, simTm.y);
-
-                if (distToLine < 2.5) { // Eğer rakip pas yoluna 2.5m yakınsa
-                    proximityRisk += 150; // Pasın geçme ihtimalini bitir
-                }
-            });
-            score -= proximityRisk;
-
-            // === GLOBAL OFSAYT KONTROLÜ (TÜM PAS TÜRLERİ İÇİN) ===
-            // Gerçek futbolda ofsayt, PASIN ATILDIĞI ANDAKİ alıcının pozisyonuna bakılır.
-            // Eğer alıcı ofsayt çizgisinin ötesindeyse VE pas ileriye gidiyorsa → OFSAYT!
-            // Geri paslar ofsayt değildir (forwardProgress < 0).
-            // Pasörün kendi yarı sahasından atılan paslarda ofsayt yoktur.
-            if (forwardProgress > 0) {
-                const isReceiverOffside = isHome
-                    ? simTm.x > offsideLineX + 0.5  // 0.5m tolerans (VAR hassasiyeti)
-                    : simTm.x < offsideLineX - 0.5;
-
-                // Pasör kendi yarı sahasında mı? (Ofsayt sadece rakip yarı sahada geçerli)
-                const isPasserInOwnHalf = isHome
-                    ? simP.x < PITCH_CENTER_X
-                    : simP.x > PITCH_CENTER_X;
-
-                if (isReceiverOffside && !isPasserInOwnHalf) {
-                    return; // Bu alıcı ofsayt - pas seçeneği tamamen iptal!
-                }
-            }
-
-
             // === LONG BALL LOGIC ===
             if (tactic && tactic.passingStyle === 'LongBall') {
-                if (d > 35) {
-                    // SADECE İLERİ OYNAMALI! (User Request: Geriye uzun top yasak)
-                    if (forwardProgress > 5) {
-                        score += 50; // İleri uzun pasa büyük ödül
-                    } else if (forwardProgress < -5) {
-                        score -= 500; // Geriye uzun top KESİNLİKLE yasak
-                    }
-                }
+                if (d > 35) score += 50; // Uzun pasa buyuk odul
                 if (d < 20) score -= 30; // Kisa pas sevmez
             }
 
@@ -3508,6 +3059,9 @@ export class MatchEngine {
             const enemies = isHome ? this.awayPlayers : this.homePlayers;
             let receiverPressure = 0;
             let closestEnemyToReceiver = 999;
+
+            // Forward Progress: Pozitifse ileri, negatifse geri pas (Lint Fix: Hoisted)
+            const forwardProgress = isHome ? (simTm.x - simP.x) : (simP.x - simTm.x);
 
             enemies.forEach(e => {
                 if (!this.sim.players[e.id]) return;
@@ -3630,28 +3184,11 @@ export class MatchEngine {
 
             if (forwardProgress > 0) score += (forwardProgress * forwardBias);
 
-            // ANTI-COWARD LOGIC (REFINED)
-            // Geriye pas atarken korkaklık cezası - AMA taktiksel geri paslara izin ver
-            // Eğer "Possession" oynuyorsak, geriye pas normaldir
-            if (forwardProgress < 0) { // Backward pass
-                // Eğer baskı altındaysak, geriye pas "güvenli" seçenektir - CEZA YOK
-                const pressureForPass = this.detectObstacles(p, simP.x, simP.y).length;
-                if (pressureForPass > 0) {
-                    score += 5; // Panic relief bonus
-                } else {
-                    // Baskı yokken geriye oynamak
-                    if (tactic.style === 'Possession') {
-                        score *= 0.95; // Hafif ceza (hala ileri gitmeyi tercih etmeli ama yasak değil)
-                    } else if (tactic.style === 'Counter') {
-                        score *= 0.70; // Counter'da geriye oynamak kötüdür
-                    } else {
-                        score *= 0.85; // Normal ceza
-                    }
-                }
-            } else {
-                // Forward pass bonus
-                if (tactic.style === 'Counter') score *= 1.2;
-                if (tactic.style === 'Attacking') score *= 1.1;
+            // ANTI-COWARD LOGIC: Çok possession ama az şut = yan pası cezalandır
+            const myPossession = isHome ? this.match.stats.homePossession : this.match.stats.awayPossession;
+            const myShots = isHome ? this.match.stats.homeShots : this.match.stats.awayShots;
+            if (myPossession > 55 && myShots < 3 && forwardProgress <= 0) {
+                score -= 40; // Yan/geri pasa ceza
             }
 
             // VISION IMPACT ON PASS DECISION - High vision sees better options!
@@ -3670,24 +3207,29 @@ export class MatchEngine {
                 if (forwardProgress > 15) score += 20;
             }
 
+            // --- SIGNAL SYSTEM INTEGRATION ---
+            // If teammate is calling for the ball, prioritize them!
+            const tmState = this.playerStates[tm.id];
+            if (tmState?.incomingSignal?.type === 'CALL') {
+                score += 50; // Significant bonus for calling teammate
+            }
+            // POINT signal means they want a through/aerial pass to space
+            if (tmState?.outgoingSignal?.type === 'POINT') {
+                if (forwardProgress > 10) score += 40; // They're pointing to space ahead
+            }
 
-
-            // --- CROSSING LOGIC (KANAT ORTASI - ENHANCED) ---
+            // --- CROSSING LOGIC (KANAT ORTASI) ---
             // Deep: Son 25m (X ekseni), Wide: Kanat (Y<17 veya Y>51)
             const isDeep = isHome ? simP.x > PITCH_LENGTH * 0.76 : simP.x < PITCH_LENGTH * 0.24;
             const isWide = simP.y < 17 || simP.y > PITCH_WIDTH - 17;
 
-            // === FORCE AERIAL CROSS FROM WINGS ===
-            // Kanattan ceza sahasına pas = MUTLAKA HAVADAN olmalı (gerçek futbol!)
-            let forcedAerialCross = false;
             if (isDeep && isWide) {
                 // If I am in Crossing Zone, prioritize players in the box!
-                const isTargetCentral = Math.abs(simTm.y - PITCH_CENTER_Y) < 18; // Geniş merkez bölge (14 → 18)
-                const isTargetDeep = isHome ? simTm.x > 80 : simTm.x < 25; // 84/21 → 80/25
+                const isTargetCentral = Math.abs(simTm.y - PITCH_CENTER_Y) < 14; // ~20% merkez bölge
+                const isTargetDeep = isHome ? simTm.x > 84 : simTm.x < 21;
 
                 if (isTargetCentral && isTargetDeep) {
                     score += 500; // MASSIVE BONUS FOR CROSS TARGET
-                    forcedAerialCross = true; // AERIAL ZORUNLU!
                 }
             }
 
@@ -3737,7 +3279,8 @@ export class MatchEngine {
 
                 let t = ((simE.x - simP.x) * dx + (simE.y - simP.y) * dy) / l2;
                 t = Math.max(0, Math.min(1, t));
-                const px = simP.x + t * dx; const py = simP.y + t * dy;
+                const px = simP.x + t * dx;
+                const py = simP.y + t * dy;
 
                 // PAS KESİM RİSKİ: Daha gerçekçi mesafe
                 // ESKİ: 2.8m (pressing 3.5m) - ÇOK YÜKSEK, paslar kesiliyordu
@@ -3752,42 +3295,6 @@ export class MatchEngine {
 
             // --- 3. EVALUATE OPTIONS ---
 
-            // === PAS STİLİ: MESAFE ETKİSİ (v5 - OVERHAUL) ===
-            // Ana kontrol mekanizması: MESAFE!
-            // Forward progress bonus 50m = +225 puan olduğu için
-            // cezalar bunu dengeleyecek kadar güçlü olmalı
-            if (tactic.passingStyle === 'Short') {
-                // Short: 5-25m ideal, >25m sert ceza
-                // TIKI-TAKA: Kisa pas odul, uzun pas agir ceza
-                if (d < 12) score += 50;          // Cok kisa pas buyuk bonus
-                else if (d < 20) score += 25;     // Kisa-orta pas bonus
-                else if (d < 25) score += 5;      // Kabul edilebilir
-                else {
-                    // 25m+ agir ceza
-                    score -= Math.min(250, (d - 25) * 10);
-                    // Ileri sisirmeyi engelle
-                    if (forwardProgress > 15) {
-                        score -= (forwardProgress - 15) * 6;
-                    }
-                }
-            } else if (tactic.passingStyle === 'LongBall') {
-                // LongBall: 30-55m ideal, kisa paslari cezalandir
-                if (d < 12) score -= Math.min(80, (12 - d) * 7);  // Cok kisa = buyuk ceza
-                else if (d < 20) score -= Math.min(40, (20 - d) * 5); // Kisa pas ceza
-                else if (d > 30) score += Math.min(80, (d - 30) * 4); // Uzun pas guclu bonus
-            } else if (tactic.passingStyle === 'Direct') {
-                // Direct: 15-40m ideal, ileri pas odul, geri/kisa ceza
-                if (d < 10) score -= 30;          // Cok kisa pas buyuk ceza
-                else if (d < 15) score -= 10;     // Kisa pas hafif ceza
-                else if (d > 20 && forwardProgress > 10) score += Math.min(50, (d - 20) * 2.5); // Ileri uzun pas bonus
-                else if (d > 40) score -= Math.min(30, (d - 40) * 2); // Asiri uzun ceza
-            } else if (tactic.passingStyle === 'Mixed') {
-                // Mixed: 10-35m ideal, uc noktalari hafif cezalandir
-                if (d < 8) score -= 15;           // Cok kisa hafif ceza
-                else if (d > 35) score -= Math.min(50, (d - 35) * 3); // Uzun pas ceza
-                else if (d >= 12 && d <= 30) score += 10; // Ideal aralik bonus
-            }
-
             let currentBestScore = -9999;
             let currentType: 'GROUND' | 'THROUGH' | 'AERIAL' = 'GROUND';
             let finalTx = groundTx;
@@ -3796,13 +3303,9 @@ export class MatchEngine {
             // OPTION 1: GROUND PASS
             let groundScore = score;
 
-            // === PAS STİLİ: TİP BONUSU KALDIRILDI (v5) ===
-            // Mesafe zaten doğru tipi zorluyor:
-            // - Kısa pas → doğal olarak GROUND (risk düşük)
-            // - Uzun pas → doğal olarak AERIAL (üzerinden geçmesi gerek)
-            // Artık ekstra tip bonusu YOK, sadece mesafe kontrol ediyor
-
             // === KRİTİK FIX: PAS YOLUNDA RAKİP VARSA, BU PASI YAPMA! ===
+            // Önceki: groundRisk > 50 ise -200 ceza (yetersizdi, pas hala atılıyordu)
+            // Yeni: groundRisk > 0 ise bu pas seçeneği DİSKALİFİYE
             const isGroundBlocked = groundRisk > 0;
 
             if (isGroundBlocked) {
@@ -3867,60 +3370,22 @@ export class MatchEngine {
             }
 
             // OPTION 3: AERIAL / CROSS / CHIP PASS
-            // === ENHANCED: Kanattan orta her zaman AERIAL olmalı ===
+            // If Crossing Zone (Deep & Wide), Aerial is often BEST if Ground is risky
             // VEYA: Kısa mesafe chip pass (löb)
-            if (forcedAerialCross || (isDeep && isWide) || (groundRisk > 50 && d > 8 && d < 45) || useChipPass) {
-                let aerialScore = score - 25; // AERIAL doğal ceza (15 → 25)
+            if ((isDeep && isWide) || (groundRisk > 50 && d > 12 && d < 45) || useChipPass) {
+                let aerialScore = score - 30; // Native penalty
 
-                if (forcedAerialCross) aerialScore += 100; // 300 → 100 (hala güçlü ama dominant değil)
-                else if (isDeep && isWide) aerialScore += 70; // 100 → 70
+                if (isDeep && isWide) aerialScore += 100; // CROSSING BONUS
+                // Pas stili etkisi (v2)
+                if (tactic.passingStyle === 'Mixed') aerialScore += 20;
+                else if (tactic.passingStyle === 'Direct') aerialScore += 35; // 20 → 35
 
-                // === PAS STİLİ ETKİSİ (v3 - ÇOK ÖNEMLİ) ===
-                // Her pas stili AERIAL tercihini farklı ayarlar
-                // Short: Kısa pas oynamak istiyor → AERIAL'ı cezalandır!
-                // Mixed: Nötr
-                // Direct: Direkt futbol → AERIAL'ı biraz sev
-                // LongBall: Uzun top → AERIAL'ı çok sev
-                // v5: Mesafe zaten uzun AERIAL'ı cezalandırıyor, sadece hafif tip etkisi
-                if (tactic.passingStyle === 'Short') aerialScore -= 40; // -80 → -40 (mesafe zaten ağır ceza)
-                else if (tactic.passingStyle === 'Mixed') aerialScore += 5;
-                else if (tactic.passingStyle === 'Direct') aerialScore += 20;
-                else if (tactic.passingStyle === 'LongBall') aerialScore += 35;
-
-                // === CHIP PASS BONUS (düzeltildi) ===
+                // === CHIP PASS BONUS ===
+                // Kısa mesafe löb pas için bonus
                 if (useChipPass) {
-                    aerialScore += 60; // 120 → 60 (hala tercih ediliyor ama dominant değil)
-                    if (p.attributes.passing > 70) aerialScore += 15; // 30 → 15
-                    if (p.attributes.vision > 75) aerialScore += 10; // 20 → 10
-                }
-
-                // === SMART CHIP PASS (AKILLI AŞIRTMA - v2) ===
-                // Eğer yer pası defans tarafından kesiliyorsa (isGroundBlocked),
-                // Ve oyuncu yetenekliyse (Vizyon > 75), şık bir aşırtma yap!
-                if (d > 8 && d < 25 && isGroundBlocked) {
-                    // Bloklanmış yer pası durumunda Chip Pass'i ciddi şekilde ödüllendir
-                    if (p.attributes.vision > 75 || p.playStyles?.includes("Maestro")) {
-                        aerialScore += 150; // Kesin tercih sebebi yap!
-                        // "Maestro" trait'i varsa neredeyse her zaman aşırtır
-                    } else if (p.attributes.passing > 70) {
-                        aerialScore += 80; // İyi pasörler de aşırtabilir
-                    } else {
-                        aerialScore += 30; // Standart aşırtma denemesi
-                    }
-                }
-
-                // === OFSAYT KONTROLÜ (AERIAL İÇİN EK GÜVENLİK) ===
-                // Global ofsayt kontrolü zaten yukarıda yapılıyor.
-                // Bu ek kontrol, havadan paslarda topun düşeceği yerin de
-                // ofsayt çizgisinin gerisinde olmasını sağlar (ekstra güvenlik).
-                const targetSimP = this.sim.players[tm.id];
-                if (targetSimP) {
-                    const isTargetOffside = isHome
-                        ? targetSimP.x > offsideLineX + 0.5
-                        : targetSimP.x < offsideLineX - 0.5;
-                    if (isTargetOffside && forwardProgress > 0) {
-                        aerialScore = -9999; // OFSAYT! Bu pas seçeneğini iptal
-                    }
+                    aerialScore += 80; // Chip pass tercih edilmeli
+                    // Yüksek teknik oyuncular daha iyi chip pass atar
+                    if (p.attributes.passing > 75) aerialScore += 20;
                 }
 
                 if (aerialScore > currentBestScore) {
@@ -3930,9 +3395,6 @@ export class MatchEngine {
                     finalTy = groundTy;
                 }
             }
-
-            // Not: Eski "FORCED CROSS OVERRIDE" kaldırıldı
-            // Artık forcedAerialCross bonus veriyor ama zorlamıyor
 
             // --- FINAL ADJUSTMENTS ---
             if (currentBestScore > maxScore) {
@@ -3945,8 +3407,6 @@ export class MatchEngine {
         });
 
         if (maxScore < 20) return null;
-
-        // Debug log kaldirildi - gercek pas aninda loglanacak (updateBallCarrierAI'da)
 
         return {
             player: bestTarget!,
@@ -3980,11 +3440,6 @@ export class MatchEngine {
         this.allPlayers
             .filter(other => other.lineup === 'STARTING')
             .forEach(other => {
-                // === FIX: EXCESSIVE FOULS ===
-                // If game is in a set piece mode, STOP pressing!
-                // This prevents defenders from rushing the kicker during free kicks
-                if (this.sim.mode !== 'PLAYING' && this.sim.mode !== 'KICKOFF') return;
-
                 if (other.teamId === p.teamId) return;
                 const otherPos = this.sim.players[other.id];
                 if (!otherPos) return;
@@ -4018,81 +3473,6 @@ export class MatchEngine {
         const baseY = isHome ? base.y : PITCH_WIDTH - base.y;
         const baseX = isHome ? base.x : PITCH_LENGTH - base.x;
 
-        // === PRIORITY 1: OFSAYT RECOVERY (MUTLAK ÖNCELİK) ===
-        // Eğer forvet ofsayttaysa, HİÇBİR ŞEY yapma, sadece çizginin gerisine koş.
-        // Formation drift vs. çalışmamalı.
-        if (role === Position.FWD) {
-            const offsideBuffer = 0.2; // 0.2m Tolerance (Strict!)
-            const isOnside = isHome ? (simP.x < offsideLineX - offsideBuffer) : (simP.x > offsideLineX + offsideBuffer);
-
-            if (!isOnside) {
-                this.playerStates[p.id].isPressing = false;
-                // Hedef: Çizginin 4m gerisi (G Motoru Standardı)
-                const recoveryX = isHome ? offsideLineX - 4.0 : offsideLineX + 4.0;
-                // Y ekseninde kendi pozisyonunu koru ama hafifçe merkeze kay (çarpışma önlemek için)
-                const recoveryY = lerp(simP.y, baseY, 0.2);
-
-                const recoverySpeed = MAX_PLAYER_SPEED * 1.15; // PANIC SPEED (%115)
-                simP.state = 'SPRINT';
-                simP.facing = Math.atan2(baseY - simP.y, (isHome ? 0 : PITCH_LENGTH) - simP.x); // Arkaya bak
-
-                this.applySteeringBehavior(p, recoveryX, recoveryY, recoverySpeed);
-                return; // MUTLAK RETURN - Başka kod çalışamaz!
-            }
-        }
-
-        // === PRIORITY 2: TOP BANA GELİYOR (MUTLAK ÖNCELİK) ===
-        // Eğer topun hedefi bendem, her şeyi bırak topa koş.
-        // Eğer top bana atıldıysa...
-        if ((this.sim.ball as any).targetId === p.id && !this.sim.ball.ownerId) {
-            const b = this.sim.ball;
-            const distToBall = dist(simP.x, simP.y, b.x, b.y);
-
-            // Topun tahmini varış noktası (basit projeksiyon)
-            const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-            const ticksToArrival = Math.max(1, distToBall / Math.max(0.1, speed));
-
-            let predX = b.x + b.vx * ticksToArrival;
-            let predY = b.y + b.vy * ticksToArrival;
-
-            // Sınırlar
-            predX = clamp(predX, 1, PITCH_LENGTH - 1);
-            predY = clamp(predY, 1, PITCH_WIDTH - 1);
-
-            // === CHECKING TO THE BALL (TOPA GELME) ===
-            // Pası beklemek yerine topa doğru hareket et!
-            // Özellikle araya giren defans oyuncularını ekarte etmek için
-            // Target = Topun şu anki yeri ile varış yeri arasında bir nokta
-
-            let meetFactor = 0.0; // 0=Varış yerine koş, 1=Topa koş
-
-            if (distToBall > 15) {
-                // Uzun top: Yarı yolda buluş (%40 gel)
-                meetFactor = 0.4;
-            } else if (distToBall > 5) {
-                // Orta mesafe: Biraz yaklaş (%25 gel)
-                meetFactor = 0.25;
-            } else {
-                // Kısa mesafe: Direkt topa git (kontrol için)
-                meetFactor = 0.8;
-            }
-
-            // Havadan gelen toplar için (b.z > 1) biraz daha varış noktasına odaklan (kafa vuruşu için)
-            if (b.z && b.z > 1.5) meetFactor *= 0.5;
-
-            const finalTargetX = lerp(predX, b.x, meetFactor);
-            const finalTargetY = lerp(predY, b.y, meetFactor);
-
-            // Sprint at!
-            this.applySteeringBehavior(p, finalTargetX, finalTargetY, MAX_PLAYER_SPEED * 1.05);
-            this.sim.players[p.id].state = 'SPRINT';
-            simP.facing = Math.atan2(b.y - simP.y, b.x - simP.x);
-
-            return; // Başka mantık çalıştırma
-        }
-
-
-
         // === SÜRÜ MENTALİTESİ ENGELLEYİCİ ===
         // Takım arkadaşları ile minimum mesafe kontrolü
         const teammates = isHome ? this._cachedHomeStarters : this._cachedAwayStarters;
@@ -4120,69 +3500,88 @@ export class MatchEngine {
         const tooCloseTeammates = nearbyTeammates.filter(tm => dist(simP.x, simP.y, tm.x, tm.y) < MIN_TEAMMATE_DISTANCE);
 
         if (role === Position.FWD) {
-            if (teamHasBall) {
-                // --- ATTACKING PATTERNS (REVISED) ---
+            const offsideBuffer = 1.0;
+            const isOnside = isHome ? (simP.x < offsideLineX - offsideBuffer) : (simP.x > offsideLineX + offsideBuffer);
+
+            if (!isOnside) {
+                // Return to onsite
+                this.playerStates[p.id].isPressing = false;
+                targetX = isHome ? offsideLineX - 2.5 : offsideLineX + 2.5;
+                targetY = lerp(simP.y, baseY, 0.2); // Drift to formation Y
+                speedMod = MAX_PLAYER_SPEED * 0.85;
+                simP.state = 'RUN';
+            } else if (teamHasBall) {
+                // --- ATTACKING PATTERNS (Hücum Setleri) ---
                 const ballCarrierId = this.sim.ball.ownerId;
-                const distToBall = dist(simP.x, simP.y, ballX, ballY);
                 const isBehindBall = isHome ? (simP.x < ballX) : (simP.x > ballX);
+                const distToBall = dist(simP.x, simP.y, ballX, ballY);
 
-                // === ZORUNLU BAĞLANTI (MANDATORY LINK-UP) ===
-                // Top kendi sahamızda ve forvet çok uzaksa (40m+), zorla geri dönsün!
-                const isBallInMakePlayZone = isHome ? ballX < 50 : ballX > 55;
-                if (isBallInMakePlayZone && distToBall > 40) {
-                    // Zorla orta sahaya çek
-                    targetX = PITCH_CENTER_X;
-                    targetY = PITCH_CENTER_Y; // Merkeze gel
-
-                    // Sprint at!
-                    speedMod = MAX_PLAYER_SPEED;
-                    simP.state = 'SPRINT';
-
-                    this.applySteeringBehavior(p, targetX, targetY, speedMod);
-                    return; // Diğer mantıkları ez, direkt gel!
-                }
-
-                // === SEPARATION LOGIC ===
+                // === FORVET AYRILMA MANTIĞI ===
+                // Eğer başka bir forvet çok yakınsa, uzaklaş!
                 let separationTargetY: number | null = null;
                 if (sameRoleNearby.length > 0) {
                     const otherFwd = sameRoleNearby[0];
                     const yDiff = simP.y - otherFwd.y;
+
+                    // Eğer çok yakınlarsa (< 12 birim), birbirinden uzaklaş
                     if (Math.abs(yDiff) < 12) {
-                        if (yDiff > 0) separationTargetY = Math.min(PITCH_WIDTH - 5, simP.y + 15);
-                        else separationTargetY = Math.max(5, simP.y - 15);
+                        // Ben üstteyim → daha üste git, alttayım → daha alta git
+                        if (yDiff > 0) {
+                            separationTargetY = Math.min(85, simP.y + 15); // Alta kaç
+                        } else {
+                            separationTargetY = Math.max(15, simP.y - 15); // Üste kaç
+                        }
                     }
                 }
 
-                // === GENİŞLİK AYARI (WIDTH) ===
-                // Artık sabit değil, taktikten geliyor!
-                let channelWidth = 14; // Normal (Merkezden uzaklık)
-                if (tactic.width === 'Wide') channelWidth = 22; // Kanatlara açıl
-                else if (tactic.width === 'Narrow') channelWidth = 8; // Göbekte toplan
-
-                const leftChannel = PITCH_CENTER_Y - channelWidth;
-                const rightChannel = PITCH_CENTER_Y + channelWidth;
-
                 if (isBehindBall) {
                     // Ball is ahead -> Support or Run
-                    // Using adapted Y-coordinates based on width
-                    const isBallWide = ballY < 20 || ballY > 48;
+                    // Determine Run Type based on Ball Position
+                    const isBallWide = ballY < 25 || ballY > 75;
                     const isBallDeep = isHome ? ballX > 65 : ballX < 35;
 
                     if (isBallWide && isBallDeep) {
-                        // === CROSSING SPLIT (Dynamic) ===
+                        // --- CROSSING SCENARIO (Orta Pozisyonu) ---
+                        // Forwards should split: Near Post vs Far Post
                         const myIndex = p.lineupIndex || 0;
-                        let runY = (myIndex % 2 === 0) ? leftChannel : rightChannel;
 
-                        targetX = isHome ? PITCH_LENGTH - 11 : 11; // Penaltı noktası hizası
+                        // Diğer forvetin pozisyonuna göre farklı direğe git
+                        // Motor koordinatları: Y=0-68, merkez=34, kale=30.34-37.66
+                        let runY: number;
+                        const nearPostY = GOAL_Y_TOP + 3;   // ~33 (yakın direk)
+                        const farPostY = GOAL_Y_BOTTOM - 3; // ~35 (uzak direk)
+                        const wideNearY = 24; // Geniş yakın
+                        const wideFarY = 44;  // Geniş uzak
+
+                        if (sameRoleNearby.length > 0) {
+                            const otherFwd = sameRoleNearby[0];
+                            // Diğeri üstteyse ben alta, diğeri alttaysa ben üste
+                            if (otherFwd.y < PITCH_CENTER_Y) {
+                                runY = ballY < PITCH_CENTER_Y ? wideFarY : wideNearY;
+                            } else {
+                                runY = ballY < PITCH_CENTER_Y ? wideNearY : wideFarY;
+                            }
+                        } else {
+                            runY = (myIndex % 2 === 0) ? (ballY < PITCH_CENTER_Y ? wideNearY : wideFarY) : (ballY < PITCH_CENTER_Y ? wideFarY : wideNearY);
+                        }
+
+                        targetX = isHome ? PITCH_LENGTH - 10 : 10;
                         targetY = runY;
                         speedMod = MAX_PLAYER_SPEED * 0.95;
                         simP.state = 'SPRINT';
-                    }
-                    else {
+
+                        const pointChance = 0.02;
+                        if (Math.random() < pointChance) {
+                            this.emitTeamSignal(p, 'POINT');
+                        }
+                    } else {
                         // --- CENTRAL BUILD UP ---
                         const positioningBonus = (p.attributes.positioning || 50) / 100;
-                        let channelY: number;
 
+                        // Kanal seçimi: Diğer forvetten uzak taraf (sol kanal ~24m, sağ kanal ~44m)
+                        let channelY: number;
+                        const leftChannel = 24; // ~35% of 68
+                        const rightChannel = 44; // ~65% of 68
                         if (sameRoleNearby.length > 0) {
                             const otherFwd = sameRoleNearby[0];
                             channelY = otherFwd.y < PITCH_CENTER_Y ? (rightChannel + positioningBonus * 7) : (leftChannel - positioningBonus * 7);
@@ -4190,110 +3589,61 @@ export class MatchEngine {
                             channelY = simP.y < PITCH_CENTER_Y ? (leftChannel - positioningBonus * 7) : (rightChannel + positioningBonus * 7);
                         }
 
-                        // Run Depth: 5m + bonus
                         const runDepth = 5 + (positioningBonus * 5);
                         targetX = isHome ? offsideLineX + runDepth : offsideLineX - runDepth;
                         targetY = separationTargetY || channelY;
                         speedMod = MAX_PLAYER_SPEED * (0.85 + positioningBonus * 0.1);
                         simP.state = 'RUN';
 
-                        if (Math.random() < 0.015) this.emitTeamSignal(p, 'CALL');
+                        const signalChance = 0.015;
+                        if (Math.random() < signalChance) {
+                            this.emitTeamSignal(p, 'CALL');
+                        }
                     }
                 } else {
                     // Ahead of ball -> Hold line or Show feet
-                    // FIX: Mesafe 35 -> 60 (Daha uzaktan görsün)
-                    const showFeet = distToBall < 60 && (p.attributes.vision > 55);
+                    // AI CONSENSUS: Forvetler daha sık topa gelsin (30→35m, 0.7→0.5)
+                    const showFeet = distToBall < 35 && (p.attributes.vision > 55);
 
-                    // === DECISION PERSISTENCE (TITREME ENGELLEYİCİ) ===
-                    const myState = this.playerStates[p.id];
-                    const now = this.tickCount;
-
-                    // Eğer karar aktifse ve süresi dolmadıysa, aynı kararı uygula
-                    if (myState.tacticalDecision === 'COME_SHORT' && myState.decisionExpiry && myState.decisionExpiry > now) {
-                        // Mevcut kararı sürdür (Show Feet)
-                        // Hedef zaten önceki tick'lerde belirlendi, sadece güncelle (ball hareket ediyor)
-                        const angleToBall = Math.atan2(ballY - simP.y, ballX - simP.x);
-                        targetX = simP.x + Math.cos(angleToBall) * 2.0; // Ufak güncelleme
-                        targetY = simP.y + Math.sin(angleToBall) * 2.0;
-
-                        // Hızını koru
-                        speedMod = MAX_PLAYER_SPEED * 0.95;
-                        simP.state = 'RUN';
-
-                        // Erken çıkış (diğer mantıklara girme)
-                        this.applySteeringBehavior(p, targetX, targetY, speedMod);
-                        return;
-                    }
-
-                    // === FORWARD SUPPORT (SIRTI DÖNÜK OYUN - BOOSTED) ===
-                    // Forvet izole kaldıysa veya "False 9" ise geriye gelip top istesin
-                    const isIsolated = sameRoleNearby.length === 0 && nearbyTeammates.length < 2;
-                    const isFalse9 = p.playStyles?.includes("False 9");
-
-                    // İhtimal: DÜZELTİLDİ - Artık çok daha agresif destek veriyorlar (User Request)
-                    // Min %60 şansla topa gelmeli
-                    let checkBackChance = 0.6;
-                    if (isFalse9) checkBackChance = 0.9; // False 9 ise neredeyse hep gelir
-                    if (isIsolated) checkBackChance = 0.75; // Yalnızsa yardıma gelir
-
-                    // Karar verme anı (Eğer karar yoksa)
-                    if (showFeet && Math.random() < checkBackChance) {
-                        // KARAR VERİLDİ: "COME_SHORT"
-                        myState.tacticalDecision = 'COME_SHORT';
-                        myState.decisionExpiry = now + 90; // 1.5 Saniye boyunca fikrini değiştirme!
-
-                        // Drop deep to receive (Show Feet)
-                        // Topa doğru yaklaş (8-10m mesafe bırakacak şekilde)
-                        // Drop deep to receive (Show Feet)
-                        // Topa doğru yaklaş (8-10m mesafe bırakacak şekilde)
-                        const angleToBall = Math.atan2(ballY - simP.y, ballX - simP.x);
-
-                        // === DEEP SUPPORT FIX ===
-                        // Eğer top kendi yarı sahamızdaysa, orta sahaya kadar gel!
-                        // Sadece "kısa" gelmek yetmez, bağlantı kurmak lazım.
-                        const isBallInOwnHalf = isHome ? ballX < 52.5 : ballX > 52.5;
-
-                        if (isBallInOwnHalf) {
-                            // Orta sahaya kadar gelme izni (Deep Lying Forward / False 9)
-                            const midLineX = 52.5;
-                            // Topa 10m yaklaş ama orta sahayı da geçebil
-                            const supportDist = Math.min(distToBall - 5, 20); // Max 20m geriye gel
-                            targetX = simP.x + Math.cos(angleToBall) * supportDist;
-                            targetY = simP.y + Math.sin(angleToBall) * supportDist;
-                        } else {
-                            // Rakip yarı sahada standart destek (8m)
-                            targetX = simP.x + Math.cos(angleToBall) * 8.0;
-                            targetY = simP.y + Math.sin(angleToBall) * 8.0;
-                        }
-
-                        speedMod = MAX_PLAYER_SPEED * 0.95; // Hızlıca boşa çık (%95)
-
-                        // Top iste
-                        // CALL Sinyali: "Ayağıma at!"
-                        if (Math.random() < 0.25) this.emitTeamSignal(p, 'CALL'); // Şans artırıldı (%25)
+                    if (showFeet && Math.random() > 0.5) {
+                        // Drop deep to receive - daha yakın destek
+                        targetX = isHome ? ballX + 8 : ballX - 8; // 10→8
+                        targetY = lerp(simP.y, ballY, 0.5); // 0.4→0.5
+                        speedMod = MAX_PLAYER_SPEED * 0.85;
                     } else {
-                        // Stay on shoulder of defender
-                        // KARAR: "RUN_BEHIND" (Varsayılan)
-                        myState.tacticalDecision = 'RUN_BEHIND';
-                        myState.decisionExpiry = now + 30; // 0.5sn (Daha sık kontrol et)
-
-                        targetX = isHome ? offsideLineX - 0.2 : offsideLineX + 0.2; // Stay STRICTLY onside!
+                        // Stay on shoulder of defender - ama diğer forvetten uzakta
+                        targetX = isHome ? offsideLineX - offsideBuffer : offsideLineX + offsideBuffer;
                         targetY = separationTargetY || baseY;
                     }
                     simP.state = 'RUN';
                 }
 
-                // === AŞIRI KAYMA ENGELİ (HÜCUM) ===
-                // Forvet kanata gitmesin, merkezde kalsın
-                // FIX: Eğer 'Wide' taktik varsa, merkeze çekme! Özgür bırak.
-                if ((role as any) === Position.FWD && tactic.width !== 'Wide') {
-                    targetY = lerp(targetY, PITCH_CENTER_Y, 0.2);
-                }
+                // Loose Ball / Through Ball Chase - AMA SADECE EN YAKIN OYUNCU!
+                const ballVel = Math.sqrt((this.sim.ball.vx || 0) ** 2 + (this.sim.ball.vy || 0) ** 2);
+                const ballMovingToGoal = isHome ? (this.sim.ball.vx > 0.8) : (this.sim.ball.vx < -0.8);
 
-                // === MERKEZE KİLİTLE (Central Clamp) ===
-                // Forvetler ne olursa olsun taç çizgisine yapışmasın (Ceza sahası genişliği: 20-48)
-                if (role === Position.FWD) {
-                    targetY = clamp(targetY, 20, 48);
+                if (ballVel > 1.2 && ballMovingToGoal) {
+                    // Sadece topa en yakın forvet koşsun!
+                    const ballLandingX = this.sim.ball.x + (this.sim.ball.vx * 15);
+                    const ballLandingY = this.sim.ball.y + (this.sim.ball.vy * 15);
+                    const myDistToLanding = dist(simP.x, simP.y, ballLandingX, ballLandingY);
+
+                    let amIClosest = true;
+                    for (const tm of sameRoleNearby) {
+                        const tmDist = dist(tm.x, tm.y, ballLandingX, ballLandingY);
+                        if (tmDist < myDistToLanding - 3) {
+                            amIClosest = false;
+                            break;
+                        }
+                    }
+
+                    if (amIClosest) {
+                        targetX = ballLandingX;
+                        targetY = ballLandingY;
+                        speedMod = MAX_PLAYER_SPEED * 1.05;
+                        simP.state = 'SPRINT';
+                    }
+                    // En yakın değilsem, alan aç - topa koşma!
                 }
             } else {
                 // Defensive Shape - IMPROVED FORWARD DEFENSIVE SUPPORT
@@ -4318,78 +3668,52 @@ export class MatchEngine {
                 } else {
                     // Normal defensive position
                     targetX = isHome ? offsideLineX - 2.0 : offsideLineX + 2.0;
-                    targetY = lerp(simP.y, baseY, 0.15);
-                    speedMod = MAX_PLAYER_SPEED * 0.7;
-                    simP.state = 'RUN';
+                    targetY = lerp(simP.y, baseY, 0.08);
+                    speedMod = MAX_PLAYER_SPEED * 0.5;
+                    simP.state = 'IDLE';
                 }
             }
         } else if (role === Position.MID && teamHasBall && tactic.style === 'Possession') {
             // === POSSESSION MIDFIELDER "LATE RUNS" ===
             // This is the missing link! Mids must attack space
             const ballX = this.sim.ball.x;
-            const ballY = this.sim.ball.y;
             const distToBall = dist(simP.x, simP.y, ballX, ballY);
             const isInAttackingThird = isHome ? (ballX > 65) : (ballX < 35);
-
-            // === SHADOW STRIKER (GİZLİ FORVET) ===
-            // Orta sahaların ceza sahasına sızması
-            // PlayStyle: Gizli Forvet veya Yüksek (Pos+Fin)
-            const isShadowStriker = p.playStyles?.includes("Gizli Forvet") || (p.attributes.positioning > 75 && p.attributes.finishing > 70);
-            const distToGoal = dist(simP.x, simP.y, isHome ? PITCH_LENGTH : 0, PITCH_CENTER_Y);
-
-            // Shadow Striker Aktivasyonu: Atak 3. bölgede ve kaleye yakın
-            if (isShadowStriker && isInAttackingThird && distToGoal < 30) {
-                // Ceza sahasına SIZ!
-                // Hedef: Penaltı noktası veya arka direk
-                const penSpotX = isHome ? PITCH_LENGTH - 11 : 11;
-                const penSpotY = PITCH_CENTER_Y;
-
-                // Boşluk bulmak için hafif sağ/sol varyasyon
-                const yVar = (p.lineupIndex % 2 === 0) ? -5 : 5;
-
-                targetX = penSpotX;
-                targetY = penSpotY + yVar;
-                speedMod = MAX_PLAYER_SPEED * 0.95; // Sürpriz koşu hızlı olur
-                simP.state = 'SPRINT';
-
-                this.applySteeringBehavior(p, targetX, targetY, speedMod);
-                return; // Shadow Striker devraldı
-            }
 
             // === ALAN AÇMA MANTIĞI ===
             // Yakındaki takım arkadaşlarından uzaklaş!
             let avoidanceX = 0, avoidanceY = 0;
-            // Avoidance calculation removed to prevent formation drift
-            // Apply steering behavior handles separation naturally
+            for (const tm of tooCloseTeammates) {
+                const dx = simP.x - tm.x;
+                const dy = simP.y - tm.y;
+                const d = Math.max(0.1, dist(simP.x, simP.y, tm.x, tm.y));
+                // İtme kuvveti: çok yakınsa güçlü it
+                const pushStrength = (MIN_TEAMMATE_DISTANCE - d) / MIN_TEAMMATE_DISTANCE;
+                avoidanceX += (dx / d) * pushStrength * 5;
+                avoidanceY += (dy / d) * pushStrength * 5;
+            }
 
             // Only run if close enough to be effective, but not ON TOP of the ball
             if (isInAttackingThird && distToBall < 35 && distToBall > 5) {
-                // Break lines!
+                // Break lines! 
                 const runDepth = 15;
                 targetX = isHome ? offsideLineX + runDepth : offsideLineX - runDepth;
 
                 // Find empty channel (Y) - Opposite to ball Y AND other players
                 // Eğer yakınımda çok oyuncu varsa, onlardan uzak tarafa git
                 let channelY: number;
-                // === WIDTH ETKİSİ: Late Run Kanalları ===
-                // Wide: Kanatlardan koş (daha geniş kanallar)
-                // Narrow: Merkeze yakın koş (daha dar kanallar)
-                const widthChannelMult = tactic.width === 'Wide' ? 1.35 : tactic.width === 'Narrow' ? 0.7 : 1.0;
-                const leftChannel = PITCH_CENTER_Y - (14 * widthChannelMult);   // Normal:20, Wide:15, Narrow:24
-                const rightChannel = PITCH_CENTER_Y + (14 * widthChannelMult);  // Normal:48, Wide:53, Narrow:44
+                const leftChannel = 20;  // ~30% of 68
+                const rightChannel = 48; // ~70% of 68
                 if (nearbyTeammates.length > 2) {
                     // Çok kalabalık - ters tarafa git
                     const avgTeammateY = nearbyTeammates.reduce((sum, t) => sum + t.y, 0) / nearbyTeammates.length;
                     channelY = avgTeammateY > PITCH_CENTER_Y ? leftChannel : rightChannel;
                 } else {
-                    channelY = simP.y < PITCH_CENTER_Y
-                        ? (PITCH_CENTER_Y - (10 * widthChannelMult))
-                        : (PITCH_CENTER_Y + (10 * widthChannelMult));
+                    channelY = simP.y < PITCH_CENTER_Y ? 24 : 44;
                 }
 
                 targetY = channelY + avoidanceY;
-                targetY = channelY;
-                // targetX += avoidanceX; // REMOVED
+                targetX += avoidanceX;
 
                 speedMod = MAX_PLAYER_SPEED * 0.9;
                 simP.state = 'RUN';
@@ -4400,13 +3724,11 @@ export class MatchEngine {
                 // Fallback to standard positioning if not running
                 const baseTargetX = isHome ? base.x : (PITCH_LENGTH - base.x);
                 const baseTargetY = isHome ? base.y : (PITCH_WIDTH - base.y);
-                targetX = baseTargetX;
-                targetY = baseTargetY;
+                targetX = baseTargetX + avoidanceX;
+                targetY = baseTargetY + avoidanceY;
 
-                // Apply width - GELİŞTİRİLMİŞ
-                // Eski: 1.25/0.75 (%25 fark) → çok az etki!
-                // Yeni: 1.4/0.65 (%35-40 fark) → belirgin etki!
-                const widthOffset = tactic.width === 'Wide' ? 1.4 : tactic.width === 'Narrow' ? 0.65 : 1.0;
+                // Apply width
+                const widthOffset = tactic.width === 'Wide' ? 1.25 : tactic.width === 'Narrow' ? 0.75 : 1.0;
                 targetY = PITCH_CENTER_Y + (targetY - PITCH_CENTER_Y) * widthOffset;
 
                 simP.state = 'IDLE';
@@ -4426,31 +3748,13 @@ export class MatchEngine {
             const hasCustomPos = tactic_local.customPositions && tactic_local.customPositions[p.id];
 
             // Maksimum kayma mesafesi - aşırı gezinmeyi engelle
-            let maxDriftX = hasCustomPos ? 12 : 18;
-            let maxDriftY = hasCustomPos ? 10 : 15;
-
-            // === FREEROAM: MID drift limitlerini artır ===
-            // Serbest Dolaş aktifse, orta saha oyuncuları daha geniş hareket etsin
-            const instructions_offball = tactic.instructions || [];
-            if (instructions_offball.includes('RoamFromPosition') && role === Position.MID) {
-                maxDriftX = Math.round(maxDriftX * 1.5);  // 18→27 (veya 12→18)
-                maxDriftY = Math.round(maxDriftY * 1.5);  // 15→22 (veya 10→15)
-
-                // GİZLİ FORVET ETKİSİ: Base pozisyonunu 12m ileri kaydır
-                // Böylece "drift" payını ileri gitmek için harcar
-                if (teamHasBall) {
-                    targetX += isHome ? 12 : -12;
-                }
-            }
+            const maxDriftX = hasCustomPos ? 12 : 18;
+            const maxDriftY = hasCustomPos ? 10 : 15;
 
             // Width offset - COMPLETELY IGNORED for defenders to keep shape compact
-            // === GELİŞTİRİLMİŞ WIDTH ETKİSİ ===
-            // Eski: 1.25/0.75 (%25 fark) → çok az etki
-            // Yeni: 1.4/0.65 (%35-40 fark) → belirgin etki
-            let widthOffset = tactic.width === 'Wide' ? 1.4 : tactic.width === 'Narrow' ? 0.65 : 1.0;
+            let widthOffset = tactic.width === 'Wide' ? 1.25 : tactic.width === 'Narrow' ? 0.75 : 1.0;
             if (role === Position.DEF) {
                 // Defenders: ALWAYS 1.0 - stay in formation, don't spread to touchlines
-                // (Kullanıcı isteği: Defansta genişlik değişmesin!)
                 widthOffset = 1.0;
             }
             targetY = PITCH_CENTER_Y + (targetY - PITCH_CENTER_Y) * widthOffset;
@@ -4458,8 +3762,6 @@ export class MatchEngine {
             if (teamHasBall) {
                 // --- OFFENSIVE SHAPE & SUPPORT PLAY ---
                 this.playerStates[p.id].isPressing = false;
-
-                let isCovered = false; // Moved to wider scope
 
                 // 1. Maintain Formation Structure
                 /* ... Mentality and Line Logic simplified ... */
@@ -4478,7 +3780,7 @@ export class MatchEngine {
                 // Only support if reasonably close (involved in play)
                 if (distToBall < 35 && role !== Position.GK) {
                     // Check if I am blocked (Cover Shadow)
-                    // isCovered defined above
+                    let isCovered = false;
                     const enemies = isHome ? this.awayPlayers : this.homePlayers;
                     for (const e of enemies) {
                         const simE = this.sim.players[e.id];
@@ -4493,26 +3795,22 @@ export class MatchEngine {
                     const carrierIsHolding = myState?.incomingSignal?.type === 'HOLD';
 
                     if (isCovered || Math.random() < 0.05 || carrierIsHolding) {
-                        /* ... drifting logic ... */
+                        // DRIFT TO OPEN SPACE (Üçgen Kurma)
+                        // Try to find a spot 5-10m away that is NOT covered
+                        // Simple heuristic: Move perpendicular to ball-me vector
+                        const angleToBall = Math.atan2(ballY - simP.y, ballX - simP.x);
+                        // Shift 30 degrees left or right (alternate based on player index)
+                        const playerHash = p.id.charCodeAt(0) + (p.id.charCodeAt(p.id.length - 1) || 0);
+                        const shiftDir = (playerHash % 2 === 0) ? 0.5 : -0.5;
+                        const supportAngle = angleToBall + shiftDir;
+
+                        // More aggressive drift if carrier is holding
+                        const supportDist = carrierIsHolding ? 10 : 6; // Azaltıldı: 12/8 -> 10/6
+                        targetX += Math.cos(supportAngle) * supportDist;
+                        targetY += Math.sin(supportAngle) * supportDist;
+
+                        speedMod = carrierIsHolding ? MAX_PLAYER_SPEED * 0.9 : MAX_PLAYER_SPEED * 0.8;
                     }
-
-                    // === SMART RECOVERY INTEGRATION ===
-                    // Eğer top rakipteyse ve tehlikeli bir atak varsa, akıllı koşu yap
-                    if (!teamHasBall && this.applyDefensiveRecoveryLogic(p, this.playerStates[p.id], offsideLineX, isHome)) {
-                        return; // Recovery logic took over
-                    }
-                    const angleToBall = Math.atan2(ballY - simP.y, ballX - simP.x);
-                    // Shift 30 degrees left or right (alternate based on player index)
-                    const playerHash = p.id.charCodeAt(0) + (p.id.charCodeAt(p.id.length - 1) || 0);
-                    const shiftDir = (playerHash % 2 === 0) ? 0.5 : -0.5;
-                    const supportAngle = angleToBall + shiftDir;
-
-                    // More aggressive drift if carrier is holding
-                    const supportDist = carrierIsHolding ? 10 : 6; // Azaltıldı: 12/8 -> 10/6
-                    targetX += Math.cos(supportAngle) * supportDist;
-                    targetY += Math.sin(supportAngle) * supportDist;
-
-                    speedMod = carrierIsHolding ? MAX_PLAYER_SPEED * 0.9 : MAX_PLAYER_SPEED * 0.8;
 
                     // IMPROVED SIGNAL FREQUENCY - MEANINGFUL SIGNALS ONLY
                     const signalChance = 0.015; // Visible but not spammy
@@ -4523,25 +3821,6 @@ export class MatchEngine {
                     // Drifting with play generally - SINIRLI KAYMA
                     const xShift = (ballX - 50) * 0.4; // Azaltıldı: 0.6 -> 0.4
                     targetX += xShift;
-                }
-
-                // === G MOTORU: YARATICI KAOS (CREATIVE ROAMING) ===
-                // Yıldız oyuncular veya talimat alanlar pozisyonlarını terk edebilir
-                const isCreative = (p.attributes.vision > 80) || (p.playStyles?.includes("Serbest"));
-                const hasRoamInstruction = tactic.instructions && tactic.instructions.includes('RoamFromPosition');
-
-                if (isCreative || hasRoamInstruction) {
-                    // Drift limitlerini 2 katına çıkar!
-                    maxDriftX *= 2.0;
-                    maxDriftY *= 1.8;
-
-                    // Boşluk arama: Topun olduğu yere değil, boş alana kay
-                    if (Math.random() < 0.1) { // Her 10 tickte bir yeni boşluk ara
-                        const randomShift = (Math.random() - 0.5) * 15;
-                        targetX += randomShift;
-                        // Forvetse kanatlara değil merkeze, Kanatsa içeri
-                        if ((role as any) === Position.FWD) targetY = lerp(targetY, PITCH_CENTER_Y, 0.2);
-                    }
                 }
 
                 // === AŞIRI KAYMA ENGELİ (HÜCUM) ===
@@ -4561,7 +3840,7 @@ export class MatchEngine {
                     const isBallAdvanced = isHome ? ballX > PITCH_CENTER_X + 5 : ballX < PITCH_CENTER_X - 5;
                     if (isWide && isBallAdvanced) {
                         // Overlap run - ama sınırlı
-                        const overlapDist = Math.min(15, maxDriftX);
+                        const overlapDist = Math.min(15, maxDriftX); // Azaltıldı: 20 -> 15
                         targetX += (isHome ? overlapDist : -overlapDist);
                         targetY = lerp(targetY, (simP.y < PITCH_CENTER_Y ? 5 : PITCH_WIDTH - 5), 0.25);
                         speedMod = MAX_PLAYER_SPEED * 0.85;
@@ -4575,66 +3854,6 @@ export class MatchEngine {
                 const ballCarrierId = this.sim.ball.ownerId;
                 const distToBall = dist(simP.x, simP.y, ballX, ballY);
                 const myGoalX = isHome ? 0 : PITCH_LENGTH;
-
-                // === PAS OKUMA & KESİŞİM SİSTEMİ (YENİ) ===
-                // Top serbest (pas uçuşta) ve hızlı hareket ediyorsa, araya gir!
-                // Goal-side positioning BOZULMAZ: Bu sadece ownerId=null durumunda çalışır
-                if (!ballCarrierId) {
-                    const ballVx = this.sim.ball.vx || 0;
-                    const ballVy = this.sim.ball.vy || 0;
-                    const ballSpd = Math.sqrt(ballVx * ballVx + ballVy * ballVy);
-
-                    // Sadece hızlı hareket eden toplar için (pas/şut), yavaş toplar zaten pickup ile alınır
-                    if (ballSpd > 0.8) {
-                        // Topun 8-15 tick sonra olacağı yeri hesapla
-                        const interceptTicks = Math.min(15, distToBall / (MAX_PLAYER_SPEED * 0.9));
-                        const friction = (this.sim.ball.z > 0.5) ? 0.995 : 0.985;
-
-                        let predBallX = ballX;
-                        let predBallY = ballY;
-                        let tmpVx = ballVx;
-                        let tmpVy = ballVy;
-                        for (let t = 0; t < interceptTicks; t++) {
-                            predBallX += tmpVx;
-                            predBallY += tmpVy;
-                            tmpVx *= friction;
-                            tmpVy *= friction;
-                        }
-
-                        // Topun yolu benim bölgemden geçiyor mu?
-                        const distToPath = this.distToSegment(simP.x, simP.y, ballX, ballY, predBallX, predBallY);
-                        const distToIntercept = dist(simP.x, simP.y, predBallX, predBallY);
-
-                        // Top benim bölgemden geçiyor (15m içinde) VE yetişebilirim
-                        // Ama önemli: Kale tarafına doğru koş, topun arkasından tren gibi gitme!
-                        if (distToPath < 15 && distToIntercept < 20) {
-                            // Kesişim noktasını hesapla - topun geçeceği en yakın nokta
-                            // Ama kale ile top arasındaki çizgide kal (goal-side korunsun)
-                            let interceptX = predBallX;
-                            let interceptY = predBallY;
-
-                            // GOAL-SIDE KORUMASI: Kesişim noktası benim goal-side'ımda mı?
-                            const isInterceptGoalSide = isHome
-                                ? (interceptX < simP.x + 3) // Sol kaleye yakınsam, intercept sola doğru olmalı
-                                : (interceptX > simP.x - 3); // Sağ kaleye yakınsam, intercept sağa doğru olmalı
-
-                            if (isInterceptGoalSide) {
-                                // Kalenin önünde kal ama topun yoluna gir
-                                targetX = interceptX;
-                                targetY = interceptY;
-                                speedMod = MAX_PLAYER_SPEED * 0.95;
-                                simP.state = 'SPRINT';
-
-                                // Saha sınırları
-                                targetX = clamp(targetX, 1, PITCH_LENGTH - 1);
-                                targetY = clamp(targetY, 2, PITCH_WIDTH - 2);
-
-                                this.applySteeringBehavior(p, targetX, targetY, speedMod);
-                                return; // Intercept mantığı devreye girdi
-                            }
-                        }
-                    }
-                }
 
                 // === GENİŞLETİLMİŞ TEHLİKE BÖLGESİ ===
                 // Sadece ceza sahası değil, orta sahada da aktif ol!
@@ -4684,40 +3903,9 @@ export class MatchEngine {
                 const proposedY = lerp(idealY, ballY, shadowStrength);
                 const shiftAmount = Math.abs(proposedY - (isHome ? base.y : PITCH_WIDTH - base.y));
 
-                // 3. COVERING LOGIC (KADEME ANLAYIŞI) - YENİ!
-                // Partnerim baskıdaysa, onun boşluğunu kapat
-                if (role === Position.DEF) {
-                    let coveringShift = 0;
-                    const teammates = isHome ? this._cachedHomeStarters : this._cachedAwayStarters;
-
-                    // Yakındaki diğer defans oyuncularına bak
-                    teammates.forEach(tm => {
-                        if (tm.id === p.id) return;
-                        if (this.playerRoles[tm.id] !== Position.DEF) return; // Sadece defans partnerleri
-
-                        const tmState = this.playerStates[tm.id];
-                        if (!tmState || !this.sim.players[tm.id]) return; // Guard: oyuncu state yoksa atla
-                        const tmBase = isHome ? this.baseOffsets[tm.id] : { x: PITCH_LENGTH - this.baseOffsets[tm.id].x, y: PITCH_WIDTH - this.baseOffsets[tm.id].y };
-
-                        // Partner baskıda mı veya pozisyonunu çok mu kaybetti?
-                        // (Baskıdaysa veya 15m'den fazla açıldıysa)
-                        const isOut = tmState.isPressing || dist(this.sim.players[tm.id].x, this.sim.players[tm.id].y, tmBase.x, tmBase.y) > 15;
-
-                        if (isOut) {
-                            // Partner benden hangi yönde? (Y ekseni)
-                            const yDiff = tmBase.y - idealY; // Pozitifse o aşağıda, negatifse yukarıda
-
-                            // Eğer partner benden uzaktaysa (aramızda mesafe varsa) ve o pozisyonu terk ettiyse
-                            // Ben ona doğru kaymalıyım.
-                            // Çok yakınsam (stoper-stoper) daha çok, uzaksa (bek-stoper) daha az.
-                            if (Math.abs(yDiff) < 20) {
-                                coveringShift += yDiff * 0.4; // %40 oranında kapat
-                            }
-                        }
-                    });
-
-                    // Proposed Y'ye covering ekle
-                    idealY += coveringShift;
+                if (shiftAmount > maxShift) {
+                    // Çok fazla kayma - sınırla
+                    idealY = (isHome ? base.y : PITCH_WIDTH - base.y) + Math.sign(proposedY - (isHome ? base.y : PITCH_WIDTH - base.y)) * maxShift;
                 } else {
                     idealY = proposedY;
                 }
@@ -4726,20 +3914,6 @@ export class MatchEngine {
                 let defLineX = isHome ? 26 : 79;
                 if (tactic.defensiveLine === 'High') defLineX = isHome ? 37 : 68;
                 if (tactic.defensiveLine === 'Deep') defLineX = isHome ? 16 : 89;
-
-                // === YENİ: PRESÇI ÇIKINCA DEFANS KOMPAKT KALMA ===
-                // Bir defans arkadaşı prese çıkınca, kalan defanslar geri çekilir
-                // Bu, kanattan gelen rakibin defansın arkasında beleş kalmasını engeller
-                if (role === Position.DEF && !this.playerStates[p.id].isPressing) {
-                    const myTeamDefs = (isHome ? this.homePlayers : this.awayPlayers)
-                        .filter(tm => this.playerRoles[tm.id] === Position.DEF && tm.id !== p.id);
-                    const anyPartnerPressing = myTeamDefs.some(tm => this.playerStates[tm.id]?.isPressing);
-
-                    if (anyPartnerPressing) {
-                        // Partner prese çıkmış → diğerleri 6m geri çekil!
-                        defLineX = isHome ? Math.max(defLineX - 6, 14) : Math.min(defLineX + 6, 91);
-                    }
-                }
 
                 // 3. CRITICAL: GOAL-SIDE POSITIONING
                 // Check if ball is BEHIND my ideal position (line is broken!)
@@ -4802,7 +3976,7 @@ export class MatchEngine {
 
                                 // BUFF: Daha hızlı koş! 0.85 -> 0.92
                                 speedMod = MAX_PLAYER_SPEED * 0.92;
-                                simP.state = 'SPRINT';
+                                simP.state = 'RUN';
                             }
                         }
                     }
@@ -4828,11 +4002,7 @@ export class MatchEngine {
 
                     // Topa çok yakınsan müdahale et!
                     if (distToBall < TACKLE_RANGE_BASE + 3 && ballCarrierId) {
-                        const pState2 = this.playerStates[p.id];
-                        if (pState2 && pState2.actionLock <= 0) {
-                            this.actionTackle(p, this.getPlayer(ballCarrierId)!);
-                            pState2.actionLock = 25; // 0.4 saniye cooldown
-                        }
+                        this.actionTackle(p, this.getPlayer(ballCarrierId)!);
                     }
 
                 } else if (isInMyPenaltyBox && (role === Position.DEF || role === Position.MID)) {
@@ -4885,15 +4055,18 @@ export class MatchEngine {
                 } else {
                     // Ball is in front - maintain position but be ready
 
-                    // === G MOTORU: İÇERİ KAPANMA (TUCK IN) ===
+                    // --- TUCK IN LOGIC (Fullbacks closing in) ---
                     if (role === Position.DEF) {
-                        const isBallCentral = Math.abs(ballY - 34) < 15;
-                        const isEnemyAttacking = isHome ? ballX < 40 : ballX > 65;
+                        // Motor koordinatları: Y=0-68, merkez=34
+                        const isWide = Math.abs(targetY - PITCH_CENTER_Y) > 14; // ~20% saha genişliği
+                        const isBallCentral = Math.abs(ballY - PITCH_CENTER_Y) < 17;
 
-                        if (isBallCentral && isEnemyAttacking) {
-                            // Rakip merkezden geliyorsa, kanat bekleri merkeze yaklaşır (Kale önünü kapatır)
-                            targetY = lerp(targetY, 34, 0.4);
-                            targetX = lerp(targetX, myGoalX, 0.15); // Kaleye doğru hafif geri çekil
+                        if (isWide && isBallCentral && isDangerZone) {
+                            // Danger! Tuck in to protect goal - AMA FAZLA DEĞİL!
+                            // Gemini'nin dediği gibi: Bekler çok içeri gömülüyor
+                            // 0.6 yerine 0.35 - daha az içeri gir
+                            targetY = lerp(targetY, PITCH_CENTER_Y, 0.35);
+                            targetX = lerp(targetX, myGoalX, 0.10); // 0.15 -> 0.10
                         }
                     }
 
@@ -5071,13 +4244,7 @@ export class MatchEngine {
                         }
 
                         if (distToBall < tackleDist && ballCarrierId) {
-                            // === TACKLE COOLDOWN CHECK ===
-                            // Aynı oyuncu sürekli tackle yapamasın!
-                            const pState = this.playerStates[p.id];
-                            if (pState && pState.actionLock <= 0) {
-                                this.actionTackle(p, this.getPlayer(ballCarrierId)!);
-                                pState.actionLock = 25; // 0.4 saniye cooldown (60→25)
-                            }
+                            this.actionTackle(p, this.getPlayer(ballCarrierId)!);
                         }
                     } else {
                         // === YETKİSİZ OYUNCU - RECOVERY RUN & CROWDING FIX ===
@@ -5122,113 +4289,23 @@ export class MatchEngine {
                         }
                     }
                 }
-
-                // === GK RETREAT LOGIC (Engine 4) ===
-                if (role === Position.GK) {
-                    const startLine = isHome ? 0 : PITCH_LENGTH;
-                    const distToLine = Math.abs(ballX - startLine);
-                    const isDanger = distToLine < 35; // 35m danger zone
-
-                    if (isDanger) {
-                        // RETREAT! Kaleye geri dön
-                        targetX = isHome ? 2.0 : PITCH_LENGTH - 2.0;
-                        targetY = PITCH_CENTER_Y;
-                        speedMod = MAX_PLAYER_SPEED * 0.85;
-                    } else {
-                        // SWEEPER KEEPER
-                        // Top bizdeyse veya tehlike yoksa, defans arkasına açıl
-                        const sweepDist = teamHasBall ? 20 : 12;
-                        targetX = isHome ? sweepDist : PITCH_LENGTH - sweepDist;
-                        // Topun olduğu kanada hafif kay
-                        targetY = 34 + (ballY - 34) * 0.15;
-                    }
-                }
-
-                // === INSTRUCTION: ROAM FROM POSITION (GÜÇLENDİRİLMİŞ) ===
-                // Serbest Dolaş: Orta sahalar gizli forvet gibi çalışır
-                if (tactic.instructions && tactic.instructions.includes('RoamFromPosition')) {
-                    // 1. Random Movement (Marktan kurtulma)
-                    if (simP.state !== 'SPRINT' && !this.playerStates[p.id].isPressing) {
-                        const roamX = (Math.random() - 0.5) * 8.0; // +/- 4.0m random (6→8)
-                        const roamY = (Math.random() - 0.5) * 8.0;
-                        targetX += roamX;
-                        targetY += roamY;
-                    }
-
-                    // 2. GİZLİ FORVET SİSTEMİ (Shadow Striker / Box-to-Box)
-                    // Orta sahalar son 1/3'e girdiğinde forvetin yanına koşar
-                    if (teamHasBall && role === Position.MID && this.sim.ball.ownerId !== p.id) {
-                        const isAttackingThird = isHome ? ballX > 60 : ballX < 45;
-
-                        if (isAttackingThird) {
-                            const posAttr = p.attributes.positioning || 50;
-                            const staminaOk = (this.playerStates[p.id]?.currentStamina || 100) > 40;
-                            // %4-6 olasılık (eski: %1-1.5) — çok daha sık koşu!
-                            const runProb = staminaOk ? 0.04 + ((posAttr / 5000)) : 0.005;
-
-                            if (simP.state !== 'SPRINT' && Math.random() < runProb) {
-                                // Forvetin yanına ama offsideline'ın gerisinde
-                                const onsideX = isHome ? offsideLineX - 3 : offsideLineX + 3;
-                                const boxTargetX = isHome
-                                    ? Math.min(PITCH_LENGTH - 14, onsideX)
-                                    : Math.max(14, onsideX);
-
-                                // Top hangi kanattaysa karşı tarafta boşluk ara
-                                let boxTargetY: number;
-                                if (ballY < PITCH_CENTER_Y) {
-                                    boxTargetY = PITCH_CENTER_Y + 8 + Math.random() * 6; // Karşı taraf
-                                } else {
-                                    boxTargetY = PITCH_CENTER_Y - 8 - Math.random() * 6;
-                                }
-                                boxTargetY = clamp(boxTargetY, 20, 48);
-
-                                targetX = boxTargetX;
-                                targetY = boxTargetY;
-
-                                speedMod = MAX_PLAYER_SPEED * 0.95;
-                                simP.state = 'SPRINT';
-
-                                if (Math.random() < 0.3) this.emitTeamSignal(p, 'POINT');
-                            }
-                        }
-                    }
-                }
-
-                targetY = clamp(targetY, 2, PITCH_WIDTH - 2);
-                targetX = clamp(targetX, 0, PITCH_LENGTH);
-
             }
         }
-        // === G MOTORU: AKILLI SİNYAL SİSTEMİ (SMART SIGNALING) ===
-        // Sadece rastgele değil, gerçekten boşta olan istesin!
-        const openness = this.calculateShotOpening(simP.x, simP.y, isHome ? PITCH_LENGTH : 0, isHome);
-        const amIOpen = openness > 0.6; // Önüm açıksa (bunu 0.5'ten 0.6'ya çektim)
-        const myGoalX = isHome ? 0 : PITCH_LENGTH;
-        const distToMyGoal = Math.abs(simP.x - myGoalX); // Kendi kaleme uzaklık -> Rakip kaleye yakınlık
-        const distToEnemyGoal = PITCH_LENGTH - distToMyGoal;
-        const isInGoodPosition = distToEnemyGoal < 30 || (distToEnemyGoal < 45 && role === Position.FWD);
 
-        // POINT: Koşu yoluna iste (Sprint atıyorsam ve önüm boşsa)
-        if (simP.state === 'SPRINT' && amIOpen && Math.random() < 0.08) {
-            this.emitTeamSignal(p, 'POINT');
-        }
-
-        // CALL: Ayağıma iste (Duruyorsam, tehlikeli bölgedeysem ve boşsam)
-        else if (simP.state !== 'SPRINT' && isInGoodPosition && amIOpen && Math.random() < 0.05) {
-            this.emitTeamSignal(p, 'CALL');
-        }
-
-        // HOLD: Takım arkadaşım zorda ise "Sakin ol" de
-        else if (teamHasBall && this.sim.ball.ownerId) {
-            // Top taşıyan baskıdaysa
-            const carrier = this.sim.players[this.sim.ball.ownerId];
-            if (carrier) {
-                // Basit bir mesafe kontrolü (baskı hesabı karmaşık, random yeterli)
-                if (Math.random() < 0.02 && (role === Position.MID || role === Position.DEF)) {
-                    this.emitTeamSignal(p, 'HOLD');
-                }
+        // === INSTRUCTION: ROAM FROM POSITION ===
+        // Apply random movement to off-ball players to make them harder to mark
+        if (tactic.instructions && tactic.instructions.includes('RoamFromPosition')) {
+            // Only apply roam if not sprinting/pressing hard (don't mess up critical runs)
+            if (simP.state !== 'SPRINT' && !this.playerStates[p.id].isPressing) {
+                const roamX = (Math.random() - 0.5) * 6.0; // +/- 3.0m random
+                const roamY = (Math.random() - 0.5) * 6.0;
+                targetX += roamX;
+                targetY += roamY;
             }
         }
+
+        targetY = clamp(targetY, 2, PITCH_WIDTH - 2);
+        targetX = clamp(targetX, 0, PITCH_LENGTH);
 
         this.applySteeringBehavior(p, targetX, targetY, speedMod);
     }
@@ -5514,48 +4591,17 @@ export class MatchEngine {
                     const p2HasBall = (players[j].id === this.sim.ball.ownerId);
 
                     if (p1HasBall) {
-                        // === DRIBBLING SKILL GAP (p1) ===
-                        const p1State = this.playerStates[players[i].id];
-                        const p2State = this.playerStates[players[j].id];
-                        const p1Dri = players[i].attributes.dribbling * (p1State?.currentStamina > 30 ? 1 : 0.8);
-                        const p2Tac = players[j].attributes.tackling * (p2State?.currentStamina > 30 ? 1 : 0.8);
-                        const diff = p1Dri - p2Tac;
-
-                        if ((p1Dri > 80 && diff > 10) || players[i].playStyles?.includes("Top Cambazı")) {
-                            p1.vx *= 0.75; p1.vy *= 0.75; // Less slowdown
-                            if (p1State) p1State.actionLock = 4; // Faster recovery
-                            if (p2State) p2State.actionLock = 12; // Defender stunned
-                        } else {
-                            p1.vx *= 0.5; p1.vy *= 0.5;
-                            if (p1State) p1State.actionLock = 8;
-                            this.lastTouchTeamId = players[j].teamId;
-                        }
+                        p1.vx *= 0.5; p1.vy *= 0.5;
+                        if (this.playerStates[players[i].id]) this.playerStates[players[i].id].actionLock = 8;
+                        this.lastTouchTeamId = players[j].teamId;
                     } else {
                         p1.vx *= 0.9; p1.vy *= 0.9;
                     }
 
-                    // === VISUALS: COLLISION CUE ===
-                    // Add "struggle" effect
-                    (p1 as any).isCollided = true;
-                    (p2 as any).isCollided = true;
-
                     if (p2HasBall) {
-                        // === DRIBBLING SKILL GAP (p2) ===
-                        const p2State = this.playerStates[players[j].id];
-                        const p1State = this.playerStates[players[i].id];
-                        const p2Dri = players[j].attributes.dribbling * (p2State?.currentStamina > 30 ? 1 : 0.8);
-                        const p1Tac = players[i].attributes.tackling * (p1State?.currentStamina > 30 ? 1 : 0.8);
-                        const diff = p2Dri - p1Tac;
-
-                        if ((p2Dri > 80 && diff > 10) || players[j].playStyles?.includes("Top Cambazı")) {
-                            p2.vx *= 0.75; p2.vy *= 0.75;
-                            if (p2State) p2State.actionLock = 4;
-                            if (p1State) p1State.actionLock = 12;
-                        } else {
-                            p2.vx *= 0.5; p2.vy *= 0.5;
-                            if (p2State) p2State.actionLock = 8;
-                            this.lastTouchTeamId = players[i].teamId;
-                        }
+                        p2.vx *= 0.5; p2.vy *= 0.5;
+                        if (this.playerStates[players[j].id]) this.playerStates[players[j].id].actionLock = 8;
+                        this.lastTouchTeamId = players[i].teamId;
                     } else {
                         p2.vx *= 0.9; p2.vy *= 0.9;
                     }
@@ -5729,51 +4775,6 @@ export class MatchEngine {
         const tPos = this.sim.players[target.id];
         const state = this.playerStates[carrier.id];
 
-        // === OFSAYT KONTROLÜ ===
-        // Pas hedefi ofsayt pozisyondaysa pası iptal et!
-        // GK pasları ve geri paslar ofsayt olmaz
-        const isHome = carrier.teamId === this.homeTeam.id;
-        const offsideLineX = isHome ? this._awayDefLine : this._homeDefLine;
-        if (offsideLineX !== undefined && target.position !== Position.GK) {
-            const targetIsAhead = isHome
-                ? tPos.x > offsideLineX + 1.0  // 1m tolerans
-                : tPos.x < offsideLineX - 1.0;
-            const carrierIsAhead = isHome
-                ? cPos.x > offsideLineX
-                : cPos.x < offsideLineX;
-            // Ofsayt: hedef defans hattının ötesinde VE pasör hattın gerisinde (ileri pas)
-            const isForwardPass = isHome ? tPos.x > cPos.x : tPos.x < cPos.x;
-            if (targetIsAhead && !carrierIsAhead && isForwardPass) {
-                // OFSAYT! Pası iptal et, serbest vuruş ver
-                this.sim.ball.ownerId = null;
-                this.sim.ball.vx = 0;
-                this.sim.ball.vy = 0;
-                this.sim.ball.vz = 0;
-                // Topu ofsayt noktasına koy
-                this.sim.ball.x = tPos.x;
-                this.sim.ball.y = tPos.y;
-                this.traceLog.push(`🚩 OFSAYT! ${target.lastName} ofsayt pozisyonda — serbest vuruş!`);
-                // Event oluştur
-                this.pendingEvents.push({
-                    minute: this.internalMinute,
-                    type: MatchEventType.OFFSIDE,
-                    description: `🚩 ${target.lastName} ofsayt! Serbest vuruş.`,
-                    teamId: carrier.teamId,
-                    playerId: target.id
-                });
-                // Rakip takıma serbest vuruş ver
-                const enemyTeamPlayers = isHome ? this.awayPlayers : this.homePlayers;
-                const nearestEnemy = enemyTeamPlayers
-                    .filter(ep => ep.lineup === 'STARTING' && this.playerRoles[ep.id] === Position.DEF)
-                    .sort((a, b) => dist(this.sim.players[a.id].x, this.sim.players[a.id].y, tPos.x, tPos.y) - dist(this.sim.players[b.id].x, this.sim.players[b.id].y, tPos.x, tPos.y))[0];
-                if (nearestEnemy) {
-                    this.sim.ball.ownerId = nearestEnemy.id;
-                }
-                this.playerStates[carrier.id].actionLock = 15;
-                return; // Pası iptal et
-            }
-        }
-
         // === YORGUNLUK DAHİL GERÇEK STATLAR ===
         const isGK = carrier.position === Position.GK;
         const fatigueMods = getAllFatigueModifiers(state.currentStamina, isGK);
@@ -5793,20 +4794,9 @@ export class MatchEngine {
             const initialDist = dist(cPos.x, cPos.y, tPos.x, tPos.y);
 
             // Tahmini pas hızı (mesafeye bağlı)
-            // AERIAL: Fizik bazlı hesap — lob yüksekliği ve air drag'a göre
-            // GROUND: 0.75x MAX_BALL_SPEED (~90 km/h)
-            let estimatedPassSpeed: number;
-            if (type === 'AERIAL') {
-                // Fizik bazlı: lobHeight → airTime → gereken yatay hız
-                let estLobH = initialDist < 12 ? Math.min(1.5, 0.4 + initialDist * 0.07)
-                    : initialDist < 30 ? Math.min(2.2, 0.7 + initialDist * 0.035)
-                        : Math.min(3.0, 0.9 + initialDist * 0.03);
-                const estAirTime = 2 * estLobH / GRAVITY;
-                const estDragSum = (1 - Math.pow(BALL_AIR_DRAG, estAirTime)) / (1 - BALL_AIR_DRAG);
-                estimatedPassSpeed = estDragSum > 0.1 ? initialDist / estDragSum : 1.0;
-            } else {
-                estimatedPassSpeed = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (initialDist * 0.04));
-            }
+            const estimatedPassSpeed = type === 'AERIAL'
+                ? Math.min(MAX_BALL_SPEED * 0.5, 1.0 + (initialDist * 0.025))
+                : Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (initialDist * 0.04));
 
             // Topun varış süresi (tick cinsinden)
             const travelTime = estimatedPassSpeed > 0.1 ? initialDist / estimatedPassSpeed : 5;
@@ -5837,36 +4827,6 @@ export class MatchEngine {
                 }
             }
         }
-
-        // === PAS HATA PAYI (ERROR MARGIN) - YENİ! ===
-        const teamTactic = isHome ? this.homeTeam.tactic : this.awayTeam.tactic;
-
-        // 1. Baz Hata (Yetenek ve Yorgunluk Etkili)
-        // Pas 100 -> 0.2m sapma, Pas 50 -> 1.5m sapma
-        let targetErrorBase = Math.max(0.2, (100 - pasStat) / 33.3);
-
-        // 2. Stil Çarpanı (Risk Faktörü)
-        let styleMod = 1.0;
-        if (teamTactic.passingStyle === 'Short') styleMod = 0.5;      // Çok isabetli
-        else if (teamTactic.passingStyle === 'Mixed') styleMod = 1.0; // Normal
-        else if (teamTactic.passingStyle === 'Direct') styleMod = 1.4;// Biraz riskli
-        else if (teamTactic.passingStyle === 'LongBall') styleMod = 2.0; // Çok riskli
-
-        // 3. Mesafe Çarpanı (Uzaklaştıkça sapma artar)
-        // Kısa paslarda hata az, uzun paslarda logaritmik artar
-        const passDistCalc = dist(cPos.x, cPos.y, tx, ty);
-        const distMod = Math.max(1.0, passDistCalc / 25.0);
-
-        // 4. Nihai Hata
-        const targetErrorTotal = targetErrorBase * styleMod * distMod;
-
-        // Hedefe rastgele sapma ekle (Gaussian benzeri)
-        const errorX = (Math.random() - 0.5 + Math.random() - 0.5) * targetErrorTotal;
-        const errorY = (Math.random() - 0.5 + Math.random() - 0.5) * targetErrorTotal;
-
-        // Hata uygulanmış hedef (Saha sınırları içinde kalmalı)
-        tx = clamp(tx + errorX, 1, PITCH_LENGTH - 1);
-        ty = clamp(ty + errorY, 1, PITCH_WIDTH - 1);
 
         const dx = tx - cPos.x; const dy = ty - cPos.y;
         const angle = Math.atan2(dy, dx);
@@ -5908,80 +4868,28 @@ export class MatchEngine {
         let power: number;
         const strengthMod = fatigueMods.strength;
         if (type === 'AERIAL') {
-            // === FİZİK BAZLI AERIAL PAS (v3 - DOĞRU HESAP) ===
-            // Sorun: Eski formül air drag ve gravity'yi hesaba katmıyordu
-            // Top 50m'ye atılmak istenirken 71m gidiyordu (%40 overshoot!)
-            // Çözüm: Topun havada kalma süresini hesapla, sonra gereken yatay hızı bul
-
-            // 1. LOB YÜKSEKLİĞİ (vz) — mesafeye göre ark yüksekliği
-            let lobHeight: number;
-            if (distToT < 12) {
-                // Chip pass: Alçak, zarif ark
-                lobHeight = Math.min(1.5, 0.4 + (distToT * 0.07)) * strengthMod;
-            } else if (distToT < 30) {
-                // Normal orta: Orta yükseklik
-                lobHeight = Math.min(2.2, 0.7 + (distToT * 0.035)) * strengthMod;
-            } else {
-                // Uzun top: Yüksek ark
-                lobHeight = Math.min(3.0, 0.9 + (distToT * 0.03)) * strengthMod;
-            }
-
-            // 2. HAVADA KALMA SÜRESİ — yerçekimi ile hesap (tick cinsinden)
-            // vz her tick GRAVITY (0.20) kadar azalır
-            // Zirve süresi = lobHeight / GRAVITY
-            // Toplam uçuş = 2 * zirve (yukarı + aşağı)
-            const airTime = 2 * lobHeight / GRAVITY;
-
-            // 3. GEREKEN YATAY HIZ — air drag dahil
-            // Her tick: vx *= BALL_AIR_DRAG (0.98)
-            // Toplam mesafe = vx0 * (1 - drag^airTime) / (1 - drag)
-            // => vx0 = distToT * (1 - drag) / (1 - drag^airTime)
-            const drag = BALL_AIR_DRAG;
-            const dragSum = (1 - Math.pow(drag, airTime)) / (1 - drag);
-
-            // Güvenlik: dragSum 0 olmasın
-            if (dragSum > 0.1) {
-                power = (distToT / dragSum) * strengthMod;
-            } else {
-                power = distToT * 0.05 * strengthMod; // Fallback
-            }
-
-            // Clamp: Çok yüksek güç olmasın
-            power = Math.min(MAX_BALL_SPEED * 0.65, power);
-            // Minimum: Çok düşük güç de olmasın
-            power = Math.max(0.5, power);
-
-            // === LOB'U UYGULA ===
-            this.sim.ball.vz = lobHeight;
-            this.sim.ball.curve = 0;
-
-            // Trace log
-            if (distToT < 12) {
-                this.traceLog.push(`${carrier.lastName} zarif bir aşırtma pas attı!`);
-            } else if (distToT < 30) {
-                this.traceLog.push(`${carrier.lastName} havadan pas attı!`);
-            } else {
-                this.traceLog.push(`${carrier.lastName} uzun bir havadan pas gönderdi!`);
-            }
+            // Softer power for lobs - ball should land AT target, not beyond
+            power = Math.min(MAX_BALL_SPEED * 0.5, 1.0 + (distToT * 0.025)) * strengthMod;
         } else {
             power = Math.min(MAX_BALL_SPEED * 0.75, 1.5 + (distToT * 0.04)) * strengthMod;
         }
 
         this.sim.ball.ownerId = null;
-        // === RECEIVER AWARENESS ===
-        // Topa hedef atıyoruz ki alıcı topun kendisine geldiğini anlasın
-        (this.sim.ball as any).targetId = target.id;
         this.sim.ball.x = cPos.x + Math.cos(finalAngle) * 1.5;
         this.sim.ball.y = cPos.y + Math.sin(finalAngle) * 1.5;
         this.sim.ball.vx = Math.cos(finalAngle) * power;
         this.sim.ball.vy = Math.sin(finalAngle) * power;
 
-        if (type !== 'AERIAL') {
-            // Ground/Through pass: z ekseni yok
+        if (type === 'AERIAL') {
+            // Calculated Lob - reduced height for more accurate landing
+            const lobHeight = Math.min(2.0, 0.6 + (distToT * 0.025)) * strengthMod;
+            this.sim.ball.vz = lobHeight;
+            this.sim.ball.curve = 0;
+            this.traceLog.push(`${carrier.lastName} havadan pas attı!`);
+        } else {
             this.sim.ball.vz = 0;
             this.sim.ball.curve = 0;
         }
-        // AERIAL tipi için vz ve curve yukarıda zaten set edildi
 
         this.playerStates[carrier.id].possessionCooldown = 12;
         // SPEED GLITCH FIX: Passer Lockout
@@ -5991,23 +4899,6 @@ export class MatchEngine {
         this.sim.players[carrier.id].state = 'KICK';
 
         this.lastTouchTeamId = carrier.teamId;
-
-        // === G MOTORU: VER-KAÇ (PASS & MOVE) ===
-        // Pası atan oyuncu (GK hariç) pası attıktan sonra durmasın, ileri koşsun!
-        const isAttackingRole = this.playerRoles[carrier.id] !== Position.DEF && this.playerRoles[carrier.id] !== Position.GK;
-        const tacticName = carrier.teamId === this.homeTeam.id ? this.homeTeam.tactic.style : this.awayTeam.tactic.style;
-        const isDefensiveTactic = tacticName === 'Defensive' || tacticName === 'ParkTheBus';
-
-        // Eğer defansif oynamıyorsak ve oyuncu hücumcuysa, pası at ve koş!
-        if (isAttackingRole && !isDefensiveTactic) {
-            // Hızlı bir depar (Ver-Kaç)
-            this.playerStates[carrier.id].supportRunUntil = this.tickCount + 120; // 2 saniye boyunca ileri koş
-
-            // Ver-Kaç yaparken elini kaldırıp "önüme at" desin (POINT)
-            if (Math.random() < 0.4) {
-                this.emitTeamSignal(carrier, 'POINT', target.id);
-            }
-        }
 
         const typeText = type === 'THROUGH' ? "Ara pası" : (type === 'AERIAL' ? "Havadan pas" : "Pas");
         this.traceLog.push(`${carrier.lastName} ${typeText} denedi.`);
@@ -6034,12 +4925,9 @@ export class MatchEngine {
 
         const distToGoal = dist(pos.x, pos.y, goalX, PITCH_CENTER_Y);
 
-        // === xG HESABI (BUFF v2: Bitiricilerin Etkisi Artirildi) ===
-        const baseXG = Math.max(0.02, (0.60 - (distToGoal / 65)));  // 70 -> 65: Biraz daha comert xG
-        // finishingMod: Yuksek finishing'in etkisi artirildi
-        // Eski: 0.5 + (fin/100)*0.7 -> fin80=1.06, fin90=1.13
-        // Yeni: 0.4 + (fin/100)*0.85 -> fin80=1.08, fin90=1.165
-        const finishingMod = 0.4 + (fin / 100) * 0.85;
+        // === xG HESABI (BUFF: Artık Daha Cömert) ===
+        const baseXG = Math.max(0.02, (0.60 - (distToGoal / 70)));  // 0.45 -> 0.60, 84 -> 70
+        const finishingMod = 0.5 + (fin / 100) * 0.7;
         const xGValue = baseXG * finishingMod;
 
         // Stat Update
@@ -6059,50 +4947,24 @@ export class MatchEngine {
         const confidence = ((fin - 50) / 50) * (composure / 100);
         const cornerBias = Math.max(0.45, confidence);
 
-        // Corner bias will be modified by 1v1 logic below (after accuracyPenalty is declared)
-        let finalCornerBias = cornerBias;
-
         if (gk && this.sim.players[gk.id]) {
-            // targetY will be recalculated after 1v1 check below
             const gkY = this.sim.players[gk.id].y;
+            // Aim for corners away from GK
             if (gkY > PITCH_CENTER_Y) targetY = lerp(PITCH_CENTER_Y, GOAL_Y_TOP + 1, cornerBias);
             else targetY = lerp(PITCH_CENTER_Y, GOAL_Y_BOTTOM - 1, cornerBias);
         } else {
             targetY = PITCH_CENTER_Y;
         }
 
-        let dy = targetY - pos.y;
+        const dy = targetY - pos.y;
         const dx = goalX - pos.x;
-        let angle = Math.atan2(dy, dx);
+        const angle = Math.atan2(dy, dx);
 
         let accuracyPenalty = 0;
         const currentSpeed = Math.sqrt(this.sim.players[p.id].vx ** 2 + this.sim.players[p.id].vy ** 2);
 
         if (currentSpeed > MAX_PLAYER_SPEED * 0.5) accuracyPenalty += 0.15;
         if (currentSpeed > MAX_PLAYER_SPEED * 0.9) accuracyPenalty += 0.25;
-
-        // === 1v1 FORVET KÖŞE BONUSU ===
-        // Forvet 1v1'de kalecinin ters köşesine plase atma yeteneği
-        const is1v1Situation = distToGoal < 18 && this.calculateShotOpening(pos.x, pos.y, goalX, isHome) > 0.4;
-        const isForwardShooter = this.playerRoles[p.id] === Position.FWD;
-
-        if (is1v1Situation && isForwardShooter) {
-            // Forvetler 1v1'de daha iyi köşeye yerleştirir
-            finalCornerBias = Math.min(0.95, cornerBias + 0.15 + (composure / 300));
-            accuracyPenalty -= 0.08; // Daha isabetli
-        } else if (is1v1Situation) {
-            finalCornerBias = Math.min(0.9, cornerBias + 0.08);
-        }
-
-        // Recalculate targetY with final corner bias (1v1 bonus dahil)
-        if (gk && this.sim.players[gk.id]) {
-            const gkY = this.sim.players[gk.id].y;
-            if (gkY > PITCH_CENTER_Y) targetY = lerp(PITCH_CENTER_Y, GOAL_Y_TOP + 1, finalCornerBias);
-            else targetY = lerp(PITCH_CENTER_Y, GOAL_Y_BOTTOM - 1, finalCornerBias);
-            // Recalculate angle with updated targetY
-            dy = targetY - pos.y;
-            angle = Math.atan2(dy, dx);
-        }
 
         // === SPECIAL SHOT TYPES ===
         let shotType = 'NORMAL';
@@ -6118,7 +4980,7 @@ export class MatchEngine {
         });
         const isFreeKickShot = isStationary && nearbyEnemies.length === 0 && distToGoal > 18 && distToGoal < 35;
 
-        if (isFreeKickShot) { // isFreeKickSituation removed
+        if (isFreeKickShot) {
             shotType = 'FREE_KICK';
             const hasCurve = p.playStyles?.includes("Plase Şut") || p.playStyles?.includes("Plase Şut+");
             const hasDeadBall = p.playStyles?.includes("Ölü Top Uzmanı") || p.playStyles?.includes("Ölü Top Uzmanı+");
@@ -6141,32 +5003,17 @@ export class MatchEngine {
                 traceText = `🚀 ${p.lastName} gelişine vurdu!`;
                 accuracyPenalty += 0.15;
             }
-
-            // === VISUALS: ACROBATIC SHOT ===
-            // Pass to frontend for emoji animation
-            if (this.sim.players[p.id]) {
-                (this.sim.players[p.id] as any).shotType = shotType;
-                if (this.playerStates[p.id]) {
-                    (this.playerStates[p.id] as any).shotTypeExpiry = this.tickCount + 45; // ~0.75s display
-                }
-            }
         }
 
-        // 2. CHIP SHOT (Aşırtma) - Kaleci öndeyse
-        // FRIKIK HARİÇ - Frikiklerde aşırtma olmaz
-        const isFreeKick = this.sim.mode === 'FREE_KICK_HOME' || this.sim.mode === 'FREE_KICK_AWAY';
-        if (!isFreeKick && distToGoal < 25 && distToGoal > 5) {
-            // Kaleci kaleden açılmış mı?
-            const gkId = isHome ? this.awayPlayers.find(p => p.position === Position.GK)?.id : this.homePlayers.find(p => p.position === Position.GK)?.id;
-            if (gkId && this.sim.players[gkId]) {
-                const gkPos = this.sim.players[gkId];
-                const gkDistFromLine = Math.abs(gkPos.x - goalX); // 0 veya 105'ten uzaklık
-
-                // Kaleci 4 metreden fazla açılmışsa aşırtma dene
-                if (gkDistFromLine > 4.0) {
-                    const flairBonus = (p.attributes.vision || 50) > 70 ? 20 : 0;
-                    // Yetenekli oyuncular daha sık dener
-                    if (Math.random() * 100 < (5 + flairBonus)) {
+        // 2. CHIP SHOT (AŞIRTMA) - 1v1 and GK is out
+        if (shotType === 'NORMAL' && distToGoal < 22) {
+            const gkPos = gk ? this.sim.players[gk.id] : null;
+            if (gkPos) {
+                const distGKToGoal = isHome ? gkPos.x : (100 - gkPos.x); // approx
+                if (distGKToGoal > 8) { // GK is far out (>8m)
+                    const hasChipTrait = p.playStyles?.includes("Aşırtma") || p.playStyles?.includes("Aşırtma+");
+                    // High flair players try it
+                    if (hasChipTrait || (p.attributes.dribbling > 85 && Math.random() < 0.3)) {
                         shotType = 'CHIP';
                         traceText = `✨ ${p.lastName} kalecinin üstünden aşırtıyor!`;
                     }
@@ -6174,13 +5021,13 @@ export class MatchEngine {
             }
         }
 
-        // === ACCURACY & SPREAD (BUFF v2: İyi Bitiriciler Daha İsabetli) ===
+        // === ACCURACY & SPREAD (BUFF: %25 Azaltıldı - İyi Bitiriciler Artık Daha İsabetli) ===
         let baseSpread: number;
-        if (fin >= 95) baseSpread = 0.03 + (100 - fin) * 0.003;       // 0.04→0.03: Elit bitiriciler
-        else if (fin >= 85) baseSpread = 0.06 + (95 - fin) * 0.003;   // 0.08→0.06: Çok iyi bitiriciler
-        else if (fin >= 70) baseSpread = 0.12 + (85 - fin) * 0.005;   // 0.14→0.12: İyi bitiriciler
-        else if (fin >= 50) baseSpread = 0.23 + (70 - fin) * 0.008;
-        else baseSpread = 0.38 + (50 - fin) * 0.012;
+        if (fin >= 95) baseSpread = 0.04 + (100 - fin) * 0.004;      // 0.05 -> 0.04
+        else if (fin >= 85) baseSpread = 0.08 + (95 - fin) * 0.004;  // 0.10 -> 0.08
+        else if (fin >= 70) baseSpread = 0.14 + (85 - fin) * 0.006;  // 0.18 -> 0.14
+        else if (fin >= 50) baseSpread = 0.23 + (70 - fin) * 0.008;  // 0.30 -> 0.23
+        else baseSpread = 0.38 + (50 - fin) * 0.012;                // 0.50 -> 0.38
 
         let spread = baseSpread + accuracyPenalty;
 
@@ -6194,7 +5041,7 @@ export class MatchEngine {
 
         if (nearbyDefenders.length > 0) {
             const pressureResist = (p.personality?.pressureHandling || 0.5);
-            const impact = 1.0 - (pressureResist * 0.6);
+            const impact = 1.0 - (pressureResist * 0.6); // Better resist
             pressureMod += (nearbyDefenders.length * 0.30 * impact);
         }
         spread *= pressureMod;
@@ -6214,8 +5061,8 @@ export class MatchEngine {
 
         // === ÖLÜMCÜL BÖLGE BONUSU (Death Zone: Kale Önünde 15m) ===
         if (distToGoal < 15) {
-            shotSpeed *= 1.20;
-            spread *= 0.70;
+            shotSpeed *= 1.20; // %20 daha hızlı
+            spread *= 0.70;     // %30 daha az hata
         }
 
         // Playstyle Effects on Shot
@@ -6228,42 +5075,25 @@ export class MatchEngine {
             spread *= 1.15;
         }
         if (shotType === 'BICYCLE') {
-            shotSpeed *= 1.1;
-            spread *= 1.5;
-        }
-        // === PENALTI ÖZEL FİZİK ===
-        const isPenaltyShot = this.sim.mode === 'PENALTY_HOME' || this.sim.mode === 'PENALTY_AWAY';
-        if (isPenaltyShot) {
-            spread *= 0.40;    // %60 daha isabetli (11m, duran top)
-            accuracyPenalty = 0; // Hız penaltısı yok (duran top)
-            shotSpeed = 4.0 + (pwr / 100) * 1.5; // Sabit güçlü şut (4.0-5.5)
-            // Köşeye plase: GK'nın ters tarafına
-            if (gk && this.sim.players[gk.id]) {
-                const gkY = this.sim.players[gk.id].y;
-                // Kalecinin durduğu tarafa göre ters köşeyi hedefle
-                if (gkY > PITCH_CENTER_Y) {
-                    targetY = GOAL_Y_TOP + 1.5; // Alt köşe
-                } else {
-                    targetY = GOAL_Y_BOTTOM - 1.5; // Üst köşe
-                }
-                dy = targetY - pos.y;
-                angle = Math.atan2(dy, dx);
-            }
+            shotSpeed *= 1.1; // Powerful
+            spread *= 1.5; // Inaccurate
         }
         if (shotType === 'CHIP') {
-            shotSpeed *= 0.55; // Slower for better arc
-            spread *= 0.8;
+            shotSpeed *= 0.6; // Slow
+            spread *= 0.8; // Precise vertical
         }
-        // === SERBEST VURUŞ ÖZEL FİZİK (GÜNCELLENDİ) ===
+        // === SERBEST VURUŞ ÖZEL FİZİK ===
         if (shotType === 'FREE_KICK') {
             const hasCurve = p.playStyles?.includes("Plase Şut") || p.playStyles?.includes("Plase Şut+");
             const hasDeadBall = p.playStyles?.includes("Ölü Top Uzmanı") || p.playStyles?.includes("Ölü Top Uzmanı+");
 
-            if (hasDeadBall) spread *= 0.60; // More accurate
-            else if (hasCurve) spread *= 0.70;
-            else spread *= 0.85;
+            // Uzmanlar daha isabetli
+            if (hasDeadBall) spread *= 0.65;
+            else if (hasCurve) spread *= 0.75;
+            else spread *= 0.90; // Normal oyuncular da biraz bonus (duran top)
 
-            shotSpeed *= 0.90; // Controlled speed
+            // Hız: Orta - çok hızlı değil (kontrol önemli)
+            shotSpeed *= 0.95;
         }
 
         const shotAngle = angle + (Math.random() * spread - spread / 2);
@@ -6276,11 +5106,13 @@ export class MatchEngine {
             else this.match.stats.awayOnTarget++;
         }
 
-        // === BARAJ VE BLOKLAMA MANTIĞI ===
-        // Serbest vuruşlarda topun barajı aşması artık daha olası
+        // === BARAJ BLOKLAMA (SERBEST VURUŞLAR İÇİN ÖZEL) ===
+        // Serbest vuruşlarda top barajın ÜSTÜNDEN geçebilir!
         const enemies = (isHome ? this.awayPlayers : this.homePlayers).filter(e => e.lineup === 'STARTING');
 
+        // Serbest vuruşlarda baraj kontrolü farklı çalışır
         if (shotType === 'FREE_KICK') {
+            // Baraj mesafesi: 9.15m (gerçek futbol kuralı) ≈ 9 birim
             const WALL_DISTANCE = 9;
             let wallBlocked = false;
 
@@ -6290,21 +5122,25 @@ export class MatchEngine {
 
                 const d = dist(pos.x, pos.y, ePos.x, ePos.y);
 
+                // Baraj mesafesinde mi? (8-12 birim arası)
                 if (d >= 7 && d <= 13) {
                     const angleToE = Math.atan2(ePos.y - pos.y, ePos.x - pos.x);
                     const angleDiff = Math.abs(angleToE - shotAngle);
 
+                    // Şut açısına yakınsa
                     if (angleDiff < 0.25) {
+                        // Top yüksekliği kontrolü: Baraj yüksekliği ~1.8m = ~1.8 birim
+                        // Şutun o noktadaki tahmini yüksekliği
                         const timeToWall = d / shotSpeed;
-                        // TUNE: Daha yüksek kavis, barajı geçme şansı artırıldı
-                        const ballHeightAtWall = (this.sim.ball.vz || 2.0) * timeToWall - 0.5 * GRAVITY * timeToWall * timeToWall;
+                        const ballHeightAtWall = (this.sim.ball.vz || 1.5) * timeToWall - 0.5 * GRAVITY * timeToWall * timeToWall;
 
-                        const wallJumpHeight = 1.8 + ((e.attributes.strength || 50) / 100) * 0.5;
+                        // Eğer top baraj yüksekliğinin altındaysa bloklanır
+                        const wallJumpHeight = 1.8 + ((e.attributes.strength || 50) / 100) * 0.5; // 1.8-2.3 arası
 
                         if (ballHeightAtWall < wallJumpHeight) {
                             // BLOK!
                             const blockRoll = Math.random();
-                            const blockChance = 0.5; // Slightly reduced from 0.6
+                            const blockChance = 0.6; // Baraj blok şansı
 
                             if (blockRoll < blockChance) {
                                 this.traceLog.push(`🧱 ${e.lastName} barajda engelledi!`);
@@ -6318,16 +5154,18 @@ export class MatchEngine {
                                 break;
                             }
                         }
+                        // Top barajın üstünden geçti!
                         else {
-                            this.traceLog.push(`Top barajın üstünden şık bir kavisle geçti!`);
+                            this.traceLog.push(`Top barajın üstünden geçti!`);
                         }
                     }
                 }
             }
+
             if (wallBlocked) return;
         }
+        // Normal şutlar için standart blok kontrolü
         else {
-            // Standard block logic
             for (const e of enemies) {
                 const ePos = this.sim.players[e.id];
                 if (!ePos || this.playerRoles[e.id] === Position.GK) continue;
@@ -6336,6 +5174,7 @@ export class MatchEngine {
                 if (d < 3) {
                     const angleToE = Math.atan2(ePos.y - pos.y, ePos.x - pos.x);
                     if (Math.abs(angleToE - shotAngle) < 0.4) {
+                        // Block Chance
                         let blockChance = 0.4;
                         if (e.playStyles?.includes("Engel")) blockChance += 0.3;
 
@@ -6358,43 +5197,32 @@ export class MatchEngine {
         this.sim.ball.vx = Math.cos(shotAngle) * shotSpeed;
         this.sim.ball.vy = Math.sin(shotAngle) * shotSpeed;
 
-        // Z-Axis Physics (AERIAL TUNING)
-        let baseVz = 0.5 + (Math.random() * 0.5); // Varsayılan: Yerden/hafif seken
-
-        // FRIKIK İÇİN VZ ARTIRIMI
-        const isFreeKickShotMode = this.sim.mode === 'FREE_KICK_HOME' || this.sim.mode === 'FREE_KICK_AWAY';
-        if (isFreeKickShotMode) {
-            // Barajı (2.0m boy) geçmek için en az 2.5-3.0 vz lazım
-            // Mesafeye göre ayarla: Uzaksa daha dik, yakınsa daha kontrollü
-            if (distToGoal < 22) {
-                baseVz = 2.8 + (Math.random() * 0.5); // Yakın frikik: 2.8 - 3.3
-            } else {
-                baseVz = 3.2 + (Math.random() * 0.8); // Uzak frikik: 3.2 - 4.0
-            }
-            // Frikiklerde power biraz düşürülür (kontrol için)
-            shotSpeed *= 0.95;
-        }
-
+        // Z-Axis Physics
         if (shotType === 'CHIP') {
-            this.sim.ball.vz = 3.5 + (Math.random() * 1.5); // Daha yüksek (3.5-5.0)
-            shotSpeed *= 0.65; // Daha yumuşak vuruş
-            spread *= 0.9; // Biraz daha zor
+            this.sim.ball.vz = 2.2 + Math.random() * 0.5; // High arc
         } else if (shotType === 'FREE_KICK') {
-            this.sim.ball.vz = baseVz;
+            // Serbest vuruşlar: Barajı aşmak için orta yükseklik, sonra düşüş
+            const hasCurve = p.playStyles?.includes("Plase Şut") || p.playStyles?.includes("Plase Şut+");
+            if (hasCurve) {
+                this.sim.ball.vz = 1.4 + Math.random() * 0.4; // Kıvrımlı şut - daha alçak
+            } else {
+                this.sim.ball.vz = 1.8 + Math.random() * 0.5; // Normal - barajı aşacak kadar
+            }
         } else if (distToGoal > 25) {
-            this.sim.ball.vz = 0.5 + Math.random();
+            this.sim.ball.vz = 0.5 + Math.random(); // Long shots rise
         } else {
-            this.sim.ball.vz = 0.2 + (Math.random() * 0.7);
+            this.sim.ball.vz = 0.2 + (Math.random() * 0.7); // Low driven
         }
 
         // Curve
         if (shotType === 'FREE_KICK') {
+            // Serbest vuruşlarda kıvrım daha belirgin
             const hasCurve = p.playStyles?.includes("Plase Şut") || p.playStyles?.includes("Plase Şut+");
             const yDiff = pos.y - 50;
             if (hasCurve) {
-                this.sim.ball.curve = yDiff > 0 ? -1.4 : 1.4; // Increased curve 1.2 -> 1.4
+                this.sim.ball.curve = yDiff > 0 ? -1.2 : 1.2; // Güçlü kıvrım
             } else {
-                this.sim.ball.curve = yDiff > 0 ? -0.7 : 0.7; // 0.6 -> 0.7
+                this.sim.ball.curve = yDiff > 0 ? -0.6 : 0.6; // Hafif kıvrım
             }
         } else if (p.playStyles.includes("Plase Şut") || Math.random() > 0.75) {
             const yDiff = pos.y - 50;
@@ -6484,8 +5312,8 @@ export class MatchEngine {
         if (defState.currentStamina < 50) effectiveDef *= 0.75;
 
         // Savunma Yetenekleri
-        if (defender.playStyles?.includes("Top Kesici") || defender.playStyles?.includes("Top Kesici+")) effectiveDef *= 1.30;
-        if (defender.playStyles?.includes("Kayarak Müdahale") || defender.playStyles?.includes("Kayarak Müdahale+")) effectiveDef *= 1.25;
+        if (defender.playStyles?.includes("Top Kesici") || defender.playStyles?.includes("Top Kesici+")) effectiveDef *= 1.20;
+        if (defender.playStyles?.includes("Kayarak Müdahale") || defender.playStyles?.includes("Kayarak Müdahale+")) effectiveDef *= 1.15;
         if (defender.playStyles?.includes("Güçlü") || defender.playStyles?.includes("Güçlü+")) effectiveDef *= 1.15;
         if (defender.playStyles?.includes("Engel") || defender.playStyles?.includes("Engel+")) effectiveDef *= 1.10;
 
@@ -6533,11 +5361,13 @@ export class MatchEngine {
         if (tactic.style === 'HighPress') effectiveDef *= 1.1;
 
         const decisionPenalty = Math.max(0.7, defDecisions / 100);
-        // === TACKLE BALANCE v8: NEUTRAL BIAS (RESTORED) ===
-        // Engine 4 Standard: 0.45 / 0.45
-        // Removed global 0.98 nerf
-        const rollD = effectiveDef * (Math.random() + 0.45) * decisionPenalty;
-        const rollA = effectiveDri * (Math.random() + 0.45);
+        // === TACKLE BALANCE v7: Slight Attack Buff (Micro) ===
+        // Kullanıcı isteği: "çok az bufflasak"
+        // DEF: +0.45 -> +0.42 (Micro nerf)
+        // ATT: +0.45 -> +0.48 (Micro buff)
+        effectiveDef *= 0.98; // General def nerf (-2%)
+        const rollD = effectiveDef * (Math.random() + 0.42) * decisionPenalty;
+        const rollA = effectiveDri * (Math.random() + 0.48);
 
         if (rollD > rollA) {
             // Başarılı Müdahale
@@ -6564,25 +5394,10 @@ export class MatchEngine {
         } else {
             // Müdahale Başarısız - Çalım Yedi veya FAUL!
 
-            // === FOUL DETECTION (BALANCED v4 - AZ FAUL) ===
-            // Gerçek futbolda maç başına ortalama 10-12 faul olur (toplam iki takım)
-            // Takım başına 5-6 faul normal
-            // BALANCED: Safe: %5, Normal: %10, Aggressive: %22, Reckless: %35
-            let foulChance = riskFactor * 0.10; // 0.16 → 0.10
-
-            // === PANIC FOUL (LAST MAN) - AZALTILDI ===
-            let isPanicFoul = false;
-
-            const isDefenderHome = defender.teamId === this.homeTeam.id;
-            const attackerSim = this.sim.players[attacker.id];
-            if (defender.position === Position.DEF && attackerSim) {
-                const distToGoal = isDefenderHome ? attackerSim.x : (PITCH_LENGTH - attackerSim.x);
-                if (distToGoal < 25 && Math.random() < 0.05 && tactic.aggression !== 'Safe') { // 30→25m, 0.10→0.05
-                    foulChance += 0.20; // 0.40 → 0.20
-                    isPanicFoul = true;
-                }
-            }
-
+            // === FOUL DETECTION (BALANCED v3) ===
+            // Faul şansı agresifliğe ve başarısızlığa bağlı
+            // BALANCED: Safe: %10, Normal: %16, Aggressive: %35 (riskFactor 2.2)
+            const foulChance = riskFactor * 0.16; // INCREASED from 0.12
             const isFoul = Math.random() < foulChance;
 
             if (isFoul) {
@@ -6592,12 +5407,6 @@ export class MatchEngine {
 
                 // Store foul position for free kick
                 this.foulPosition = { x: attPos?.x ?? 50, y: attPos?.y ?? 50 };
-
-                // Panic Foul = Almost certanly a card
-                if (isPanicFoul) {
-                    this.traceLog.push(`🟥 ${defender.lastName} son adam olarak indirdi! (Profesyonel Faul)`);
-                }
-
 
                 // Determine which team gets the free kick (or penalty)
                 const attackingTeamIsHome = attacker.teamId === this.homeTeam.id;
@@ -6621,31 +5430,30 @@ export class MatchEngine {
 
                 // Card chance: based on aggression and how bad the foul is
                 const cardRoll = Math.random();
-                // BALANCED CARD RATES v4 (AZALTILDI):
-                // Gerçek futbol: Maç başına 3-4 sarı, 0.1 kırmızı
-                // Safe: Yellow 6%, Red 0.3%
-                // Normal: Yellow 12%, Red 0.5%
-                // Aggressive: Yellow 18%, Red 1.5%
-                // Reckless: Yellow 35%, Red 8%
+                // BALANCED CARD RATES v3:
+                // Safe: Yellow 8%, Red 0.5%
+                // Normal: Yellow 15%, Red 1%
+                // Aggressive: Yellow 25%, Red 3%
+                // Reckless: Yellow 50%, Red 15% (KASAP - unchanged, high risk!)
 
-                let yellowChance = 0.12; // 0.15 → 0.12
-                let redChance = 0.005;   // 0.01 → 0.005
+                let yellowChance = 0.15;
+                let redChance = 0.01;
 
-                // Penalty içindeki faul (DOGSO - azaltıldı)
+                // Increase card chance for penalties (DOGSO logic simplified)
                 if (isPenalty) {
-                    yellowChance += 0.15; // 0.20 → 0.15
-                    redChance += 0.05;    // 0.10 → 0.05
+                    yellowChance += 0.20; // High chance of card in box
+                    redChance += 0.10;    // Potential Red
                 }
 
                 if (tactic.aggression === 'Aggressive') {
-                    yellowChance = 0.18; // 0.25 → 0.18
-                    redChance = 0.015;   // 0.03 → 0.015
-                } else if (tactic.aggression === 'Reckless') {
-                    yellowChance = 0.35; // 0.50 → 0.35
-                    redChance = 0.08;    // 0.15 → 0.08
+                    yellowChance = 0.25;
+                    redChance = 0.03;
+                } else if (tactic.aggression === 'Reckless') { // KASAP MODU - High risk!
+                    yellowChance = 0.50;
+                    redChance = 0.15;
                 } else if (tactic.aggression === 'Safe') {
-                    yellowChance = 0.06; // 0.08 → 0.06
-                    redChance = 0.003;   // 0.005 → 0.003
+                    yellowChance = 0.08;
+                    redChance = 0.005;
                 }
 
                 let cardEvent: MatchEvent | null = null;
@@ -6717,7 +5525,7 @@ export class MatchEngine {
 
                 const attackingTeam = attackingTeamIsHome ? this.homeTeam : this.awayTeam;
 
-                // === PENALTY OR FREE KICK SETUP ===
+                // === PENALTY OR FREE KICK ===
                 if (isPenalty) {
                     // PENALTY KICK
                     this.pendingEvents.push({
@@ -6728,17 +5536,23 @@ export class MatchEngine {
                     });
                     this.traceLog.push(`‼️ PENALTI! ${defenderName}, ${attackerName}'i ceza sahasında düşürdü!`);
 
+                    // Setup Penalty Position (Penalty Spot)
+                    // If Attacking Home: Shoot Right -> Spot at 105 - 11 = 94
+                    // If Attacking Away: Shoot Left -> Spot at 11
                     const penaltyX = attackingTeamIsHome ? (105 - 11) : 11;
-                    const penaltyY = 34;
-                    this.placeBallForSetPiece(attackingTeam, penaltyX, penaltyY, false, attackingTeamIsHome ? 'PENALTY_HOME' : 'PENALTY_AWAY');
+                    const penaltyY = 34; // Center Y
+
+                    this.placeBallForSetPiece(attackingTeam, penaltyX, penaltyY, false, attackingTeamIsHome ? 'PENALTY_HOME' : 'PENALTY_AWAY'); // false = no wall needed
 
                 } else {
                     // FREE KICK
+                    // === FREE KICK SETUP (NO FULL RESET) ===
                     const fkX = this.foulPosition?.x ?? 50;
                     const fkY = this.foulPosition?.y ?? 50;
 
-                    this.placeBallForSetPiece(attackingTeam, fkX, fkY, true, attackingTeamIsHome ? 'FREE_KICK_HOME' : 'FREE_KICK_AWAY');
+                    this.placeBallForSetPiece(attackingTeam, fkX, fkY, true, attackingTeamIsHome ? 'FREE_KICK_HOME' : 'FREE_KICK_AWAY'); // true = build wall
 
+                    // Queue free kick event
                     this.pendingEvents.push({
                         minute: this.internalMinute,
                         type: MatchEventType.FREE_KICK,
@@ -6788,83 +5602,7 @@ export class MatchEngine {
             this.sim.ball.vy = 0;
             this.sim.ball.vz = 0;
             if (this.playerStates[taker.id]) {
-                this.playerStates[taker.id].actionLock = 30; // 5→30: Penaltı kullanana kadar rakip çalamaz!
-            }
-        }
-
-        // === PENALTY: Clear all players from penalty area ===
-        if (!buildWall && (mode === 'PENALTY_HOME' || mode === 'PENALTY_AWAY')) {
-            const isPenaltyHome = mode === 'PENALTY_HOME';
-            // Penalty is at goal side: Home attacks right (goalX=105), Away attacks left (goalX=0)
-            const penaltyGoalX = isPenaltyHome ? PITCH_LENGTH : 0;
-
-            // Position defending GK on the goal line
-            const defendingPlayers = isPenaltyHome ? this.awayPlayers : this.homePlayers;
-            const gk = defendingPlayers.find(p => this.playerRoles[p.id] === Position.GK && p.lineup === 'STARTING');
-            if (gk && this.sim.players[gk.id]) {
-                this.sim.players[gk.id].x = isPenaltyHome ? (PITCH_LENGTH - 1) : 1;
-                this.sim.players[gk.id].y = PITCH_CENTER_Y;
-                this.sim.players[gk.id].vx = 0;
-                this.sim.players[gk.id].vy = 0;
-                if (this.playerStates[gk.id]) {
-                    this.playerStates[gk.id].actionLock = 10;
-                }
-            }
-
-            // Penalty box dimensions:
-            // X: 0 to 16.5 (left) or 88.5 to 105 (right)
-            // Y: ~13.84 to ~54.16 (34 ± 20.16)
-            const boxMinY = PITCH_CENTER_Y - 22;
-            const boxMaxY = PITCH_CENTER_Y + 22;
-            const boxXLimit = 16.5;
-
-            // Push ALL players (both teams) outside the penalty area except taker and GK
-            // === PENALTY D ARC: Oyuncular penaltı noktasından 9.15m uzakta olmalı ===
-            const penaltySpotX = isPenaltyHome ? (PITCH_LENGTH - PENALTY_SPOT) : PENALTY_SPOT;
-            const allPlayers = [...this.homePlayers, ...this.awayPlayers]
-                .filter(p => p.lineup === 'STARTING' && this.sim.players[p.id]);
-
-            let pushIndex = 0; // Oyuncuları düzenli dağıtmak için
-            for (const p of allPlayers) {
-                // Skip the taker
-                if (taker && p.id === taker.id) continue;
-                // Skip defending GK
-                if (gk && p.id === gk.id) continue;
-
-                const simP = this.sim.players[p.id];
-                if (!simP) continue;
-
-                // Penaltı noktasına mesafe - D arc kontrolü (9.15m)
-                const distToPenaltySpot = Math.sqrt(
-                    (simP.x - penaltySpotX) ** 2 + (simP.y - PITCH_CENTER_Y) ** 2
-                );
-
-                let isInsideBox = false;
-                if (isPenaltyHome) {
-                    isInsideBox = simP.x > (PITCH_LENGTH - boxXLimit) && simP.y > boxMinY && simP.y < boxMaxY;
-                } else {
-                    isInsideBox = simP.x < boxXLimit && simP.y > boxMinY && simP.y < boxMaxY;
-                }
-
-                // Penaltı noktasına 9.15m'den yakın olan veya ceza sahasında olan herkesi it
-                if (isInsideBox || distToPenaltySpot < 9.15) {
-                    // Oyuncuları ceza sahasının DIŞINA, D çizgisinin arkasına yerleştir
-                    if (isPenaltyHome) {
-                        simP.x = PITCH_LENGTH - boxXLimit - 5; // 5m dışarı (3m→5m)
-                    } else {
-                        simP.x = boxXLimit + 5;
-                    }
-                    // Oyuncuları yarım daire (D) boyunca düzenli dağıt
-                    const spreadAngle = -0.8 + (pushIndex / Math.max(1, allPlayers.length - 2)) * 1.6;
-                    simP.y = PITCH_CENTER_Y + Math.sin(spreadAngle) * 18;
-                    simP.y = clamp(simP.y, boxMinY, boxMaxY);
-                    simP.vx = 0;
-                    simP.vy = 0;
-                    pushIndex++;
-                    if (this.playerStates[p.id]) {
-                        this.playerStates[p.id].actionLock = 120; // 2 saniye tut (15→120)
-                    }
-                }
+                this.playerStates[taker.id].actionLock = 5;
             }
         }
 
@@ -6982,91 +5720,4 @@ export class MatchEngine {
             // DEBUG LOGS HERE
         }
     }
-    // === G MOTORU: GÖRÜŞ AÇISI HESAPLAMA ===
-    // Bir oyuncunun belirli bir hedefe (genelde kale veya koşu yolu) ne kadar rahat ulaşabileceğini hesaplar.
-    // 0.0 = Tamamen kapalı (önünde adam var)
-    // 1.0 = Tamamen açık (dümdüz boşluk)
-
-
-    // === G MOTORU: AKILLI SİNYAL DÖNGÜSÜ ===
-    // Oyuncular sadece top beklemekle kalmaz, aktif olarak "BEN BURADAYIM" der.
-    private updatePlayerSignals() {
-        // Her tick çalıştırmak yerine performansı korumak için 
-        // oyuncuları dağıtarak (ID checksum) işleyebiliriz ama 
-        // G motoru "her tick" dediği için optimize ederek her tick çalıştıracağız.
-
-        const scanChance = 0.1; // Her tick %10 şansla tarama yap (Saniyede ~6 kez)
-        // Bu sayede CPU'yu yormadan "sürekli" hissi veririz.
-
-        this.allPlayers.forEach(p => {
-            // Sadece sahadaki oyuncular
-            if (p.lineup !== 'STARTING') return;
-
-            // Top bendeyse sinyal vermeme gerek yok (ben patronum)
-            if (p.id === this.sim.ball.ownerId) return;
-
-            // Her tick herkes taramasın, rastgele dağılsın
-            if (Math.random() > scanChance) return;
-
-            const state = this.playerStates[p.id];
-            const simP = this.sim.players[p.id];
-            if (!state || !simP) return;
-
-            // Eğer bir aksiyon içinde değilsem (serbestsem)
-            if (state.actionLock <= 0) {
-                const isHome = p.teamId === this.homeTeam.id;
-
-                // === SIGNAL VISIBILITY FIX ===
-                // calculateShotOpening yerine "Pas Yolu Açık mı?" kontrolü
-                // Sadece gol atacakken değil, pas alabilecekken de el kaldırmalı.
-
-                // Basit kontrol: Önümde (3m yarıçaplı koni içinde) rakip var mı?
-                let isPathClear = true;
-                const enemies = isHome ? this.awayPlayers : this.homePlayers;
-                const lookDirX = isHome ? 1 : -1; // Kabaca ileri bakıyor
-
-                // 10m önümü tara
-                const checkDist = 10;
-                for (const e of enemies) {
-                    const simE = this.sim.players[e.id];
-                    if (!simE) continue;
-
-                    // Rakip benimle aynı hizadaysa ve yakındaysa (yolu kapatıyorsa)
-                    const dx = simE.x - simP.x;
-                    const dy = simE.y - simP.y;
-
-                    // Sadece önümdeki rakipler
-                    if ((isHome && dx > 0 && dx < checkDist) || (!isHome && dx < 0 && dx > -checkDist)) {
-                        if (Math.abs(dy) < 2.0) { // Y ekseninde 2m yakınlık (blok)
-                            isPathClear = false;
-                            break;
-                        }
-                    }
-                }
-
-                // --- SENARYO 1: KOŞU YOLUNA İSTEK (POINT) ---
-                // Depar atıyorum ve önüm boş -> "Önüme at!"
-                if (simP.state === 'SPRINT' && isPathClear) {
-                    // Sinyal verme şansı (sürekli el kaldırmasın)
-                    if (Math.random() < 0.20) {
-                        this.emitTeamSignal(p, 'POINT');
-                    }
-                }
-
-                // --- SENARYO 2: AYAĞA İSTEK (CALL) ---
-                // Yavaşım/Duruyorum, önüm nispeten boş ve hücumdayım -> "Bana at!"
-                else if (isPathClear) {
-                    const targetGoalX = isHome ? PITCH_LENGTH : 0;
-                    const distToGoal = Math.abs(targetGoalX - simP.x);
-                    // Sadece 3. bölgede (hücumda) top iste
-                    if (distToGoal < 40) { // 35 -> 40 (biraz daha geniş alan)
-                        if (Math.random() < 0.12) { // 0.08 -> 0.12 (daha sık)
-                            this.emitTeamSignal(p, 'CALL');
-                        }
-                    }
-                }
-            }
-        });
-    }
 }
-
