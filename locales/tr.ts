@@ -793,7 +793,7 @@ Sonuç: Çok gol atar, çok gol yersiniz. Seyir zevki %100.`,
     update330Item5Title: "Detaylı Finans & FFP Takibi",
     update330Item5Desc: "Finans sekmesi yenilendi. FFP vergileri ve dayanışma gelirleri artık kalem kalem görünüyor.",
 
-    ffpSolidarityFund: "FFP Dayanışma Fonu",
+
     ffpLuxuryTax: "FFP Lüks Vergisi",
 
     // --- v3.2 UPDATE & STYLES ---

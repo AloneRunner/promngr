@@ -476,13 +476,13 @@ export const useMatchSimulation = ({
 
                 // Save Super Cup match separately
                 if (cupType === 'superCup' && prevState.superCup) {
-                        const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
-                            ? simulated.homeTeamId
-                            : simulated.awayScore > simulated.homeScore
-                                ? simulated.awayTeamId
-                                : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
-                        const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
-                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                    const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
+                        ? simulated.homeTeamId
+                        : simulated.awayScore > simulated.homeScore
+                            ? simulated.awayTeamId
+                            : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
+                    const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
+                    return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                 }
 
                 // Save European Cup match separately
@@ -508,8 +508,8 @@ export const useMatchSimulation = ({
                             knockoutSimulated.winnerId = homePens > awayPens ? knockoutSimulated.homeTeamId : knockoutSimulated.awayTeamId;
                             knockoutSimulated.penalties = { homeScore: homePens, awayScore: awayPens };
                         } else {
-                            knockoutSimulated.winnerId = knockoutSimulated.homeScore > knockoutSimulated.awayScore 
-                                ? knockoutSimulated.homeTeamId 
+                            knockoutSimulated.winnerId = knockoutSimulated.homeScore > knockoutSimulated.awayScore
+                                ? knockoutSimulated.homeTeamId
                                 : knockoutSimulated.awayTeamId;
                         }
                     }
@@ -555,8 +555,8 @@ export const useMatchSimulation = ({
                             knockoutSimulatedEL.winnerId = homePens > awayPens ? knockoutSimulatedEL.homeTeamId : knockoutSimulatedEL.awayTeamId;
                             knockoutSimulatedEL.penalties = { homeScore: homePens, awayScore: awayPens };
                         } else {
-                            knockoutSimulatedEL.winnerId = knockoutSimulatedEL.homeScore > knockoutSimulatedEL.awayScore 
-                                ? knockoutSimulatedEL.homeTeamId 
+                            knockoutSimulatedEL.winnerId = knockoutSimulatedEL.homeScore > knockoutSimulatedEL.awayScore
+                                ? knockoutSimulatedEL.homeTeamId
                                 : knockoutSimulatedEL.awayTeamId;
                         }
                     }
@@ -826,13 +826,13 @@ export const useMatchSimulation = ({
                     }
 
                     if (cupType === 'superCup' && prevState.superCup) {
-                            const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
-                                ? currentMatch.homeTeamId
-                                : currentMatch.awayScore > currentMatch.homeScore
-                                    ? currentMatch.awayTeamId
-                                    : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
-                            const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
-                            return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                        const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
+                            ? currentMatch.homeTeamId
+                            : currentMatch.awayScore > currentMatch.homeScore
+                                ? currentMatch.awayTeamId
+                                : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
+                        const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
+                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
                     }
 
                     if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -855,7 +855,7 @@ export const useMatchSimulation = ({
         }
 
         if (cupType === 'superCup' && prevState.superCup) {
-                return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
+            return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch as any, isComplete: true } };
         }
 
         if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -933,6 +933,63 @@ export const useMatchSimulation = ({
 
                     // Calculate Rewards
                     const winnerPrize = 4000000;
+                    // === CRITICAL FIX: RETRIEVE FINAL MATCH STATS FROM ENGINE ===
+                    // This ensures we capture 100% accurate simulation data (Energy, Cards, Ratings)
+                    const finalStats = engine.getFinalMatchStats();
+
+                    // Update players with match data (condition, stats, suspensions)
+                    const nextPlayers = prev.players.map(p => {
+                        let enginePlayer = finalStats?.homePlayers.find(hp => hp.id === p.id) ||
+                            finalStats?.awayPlayers.find(ap => ap.id === p.id);
+
+                        if (enginePlayer) {
+                            // Calculate rating change
+                            const ratingDiff = (enginePlayer.stats.rating || 6.0) - (p.stats.averageRating || 6.0);
+
+                            // Check for suspension (Red Card or Yellow Card accumulation)
+                            let newSuspension = p.matchSuspension;
+
+                            // 1. Direct Red Card -> Suspend next match
+                            if (enginePlayer.stats.redCards > 0) {
+                                newSuspension = {
+                                    isSuspended: true,
+                                    remainingMatches: 1, // Standard 1 match ban
+                                    reason: 'Red Card'
+                                };
+                            }
+                            // 2. Yellow Card Accumulation (Every 4 yellows)
+                            else if (enginePlayer.stats.yellowCards > 0) {
+                                const totalYellows = (p.stats.yellowCards || 0) + enginePlayer.stats.yellowCards;
+                                if (totalYellows > 0 && totalYellows % 4 === 0) {
+                                    newSuspension = {
+                                        isSuspended: true,
+                                        remainingMatches: 1,
+                                        reason: 'Yellow Card Accumulation'
+                                    };
+                                }
+                            }
+
+                            return {
+                                ...p,
+                                condition: enginePlayer.condition, // Persist fatigue
+                                form: Math.max(0, Math.min(100, p.form + ratingDiff * 2)), // Update form
+                                morale: Math.max(0, Math.min(100, p.morale + (winnerId === p.teamId ? 5 : winnerId === undefined ? 0 : -5))),
+                                matchSuspension: newSuspension, // Persist suspension
+                                stats: {
+                                    ...p.stats,
+                                    played: p.stats.played + 1,
+                                    goals: p.stats.goals + (enginePlayer.stats.goals || 0),
+                                    assists: p.stats.assists + (enginePlayer.stats.assists || 0),
+                                    rating: (p.stats.rating * p.stats.played + (enginePlayer.stats.rating || 6.0)) / (p.stats.played + 1),
+                                    yellowCards: p.stats.yellowCards + (enginePlayer.stats.yellowCards || 0),
+                                    redCards: p.stats.redCards + (enginePlayer.stats.redCards || 0),
+                                    motm: p.stats.motm + (enginePlayer.stats.motm ? 1 : 0),
+                                    cleanSheets: p.stats.cleanSheets + (enginePlayer.stats.cleanSheets ? 1 : 0)
+                                }
+                            };
+                        }
+                        return p;
+                    });
                     const loserPrize = 2000000;
                     const winnerRep = 50;
                     const loserRep = 10;
@@ -1394,10 +1451,10 @@ export const useMatchSimulation = ({
                 if (home && away) {
                     const homeP = checkState.players.filter(p => p.teamId === home.id);
                     const awayP = checkState.players.filter(p => p.teamId === away.id);
-                    
+
                     const result = engine.simulateFullMatch(checkState.superCup.match as any, home, away, homeP, awayP);
                     result.isPlayed = true;
-                    
+
                     const completedSuperCup = {
                         ...checkState.superCup,
                         match: result as any,
@@ -1733,6 +1790,64 @@ export const useMatchSimulation = ({
                 };
                 messages.push(newMessage);
 
+                // === CRITICAL FIX: RETRIEVE FINAL MATCH STATS FROM ENGINE ===
+                // This ensures we capture 100% accurate simulation data (Energy, Cards, Ratings)
+                const finalStats = engine.getFinalMatchStats();
+
+                // Update players with match data (condition, stats, suspensions)
+                const nextPlayers = prev.players.map(p => {
+                    let enginePlayer = finalStats?.homePlayers.find(hp => hp.id === p.id) ||
+                        finalStats?.awayPlayers.find(ap => ap.id === p.id);
+
+                    if (enginePlayer) {
+                        // Calculate rating change
+                        const ratingDiff = (enginePlayer.stats.rating || 6.0) - (p.stats.averageRating || 6.0);
+
+                        // Check for suspension (Red Card or Yellow Card accumulation)
+                        let newSuspension = p.matchSuspension;
+
+                        // 1. Direct Red Card -> Suspend next match
+                        if (enginePlayer.stats.redCards > 0) {
+                            newSuspension = {
+                                isSuspended: true,
+                                remainingMatches: 1, // Standard 1 match ban
+                                reason: 'Red Card'
+                            };
+                        }
+                        // 2. Yellow Card Accumulation (Every 4 yellows)
+                        else if (enginePlayer.stats.yellowCards > 0) {
+                            const totalYellows = (p.stats.yellowCards || 0) + enginePlayer.stats.yellowCards;
+                            if (totalYellows > 0 && totalYellows % 4 === 0) {
+                                newSuspension = {
+                                    isSuspended: true,
+                                    remainingMatches: 1,
+                                    reason: 'Yellow Card Accumulation'
+                                };
+                            }
+                        }
+
+                        return {
+                            ...p,
+                            condition: enginePlayer.condition, // Persist fatigue
+                            form: Math.max(0, Math.min(100, p.form + ratingDiff * 2)), // Update form
+                            morale: Math.max(0, Math.min(100, p.morale + (userScore > oppScore ? 5 : userScore === oppScore ? 0 : -5))),
+                            matchSuspension: newSuspension, // Persist suspension
+                            stats: {
+                                ...p.stats,
+                                played: p.stats.played + 1,
+                                goals: p.stats.goals + (enginePlayer.stats.goals || 0),
+                                assists: p.stats.assists + (enginePlayer.stats.assists || 0),
+                                rating: (p.stats.rating * p.stats.played + (enginePlayer.stats.rating || 6.0)) / (p.stats.played + 1),
+                                yellowCards: p.stats.yellowCards + (enginePlayer.stats.yellowCards || 0),
+                                redCards: p.stats.redCards + (enginePlayer.stats.redCards || 0),
+                                motm: p.stats.motm + (enginePlayer.stats.motm ? 1 : 0),
+                                cleanSheets: p.stats.cleanSheets + (enginePlayer.stats.cleanSheets ? 1 : 0)
+                            }
+                        };
+                    }
+                    return p;
+                });
+
                 // --- Save Tactical Timeline ---
                 let updatedTacticalHistory = prev.tacticalHistory || [];
                 if (tacticalTimeline.length > 0) {
@@ -1790,6 +1905,7 @@ export const useMatchSimulation = ({
                 let stateWithMessages = {
                     ...prev,
                     teams: updatedTeams,
+                    players: nextPlayers, // Update players with new stats/suspensions
                     messages: [...prev.messages, ...messages],
                     tacticalHistory: updatedTacticalHistory
                 };
@@ -1879,7 +1995,7 @@ export const useMatchSimulation = ({
                 );
                 finalState = { ...finalState, europeanCup: updatedCup, teams: updatedTeams };
             }
-            
+
             // Simulate Europa League AI matches
             if (finalState.europaLeague && finalState.europaLeague.isActive) {
                 const { updatedCup, updatedTeams } = engine.simulateAIGlobalCupMatches(
@@ -1926,9 +2042,13 @@ export const useMatchSimulation = ({
             // Auto-pick lineup for AI teams to avoid low-condition starters in live matches
             if (homeTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(homePlayers, homeTeam.tactic.formation, homeTeam.coachArchetype);
+                // AI Tactics Selection
+                engine.autoPickTactics(homeTeam, awayTeam);
             }
             if (awayTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(awayPlayers, awayTeam.tactic.formation, awayTeam.coachArchetype);
+                // AI Tactics Selection
+                engine.autoPickTactics(awayTeam, homeTeam);
             }
 
             const initialSimulation = engine.initializeMatch(match as Match, homeTeam, awayTeam, homePlayers, awayPlayers, prev.userTeamId);
@@ -2143,12 +2263,12 @@ export const useMatchSimulation = ({
                     // Penalty shootout simulation
                     const homeTeam = prevState.teams.find(t => t.id === currentMatch.homeTeamId);
                     const awayTeam = prevState.teams.find(t => t.id === currentMatch.awayTeamId);
-                    
+
                     // Calculate penalty success based on team strength (simplified)
                     const homeStrength = homeTeam?.reputation || 5000;
                     const awayStrength = awayTeam?.reputation || 5000;
                     const homeWinChance = 0.5 + (homeStrength - awayStrength) / 20000; // Slight advantage for stronger team
-                    
+
                     // Simulate penalty shootout
                     let homePenalties = 0, awayPenalties = 0;
                     for (let i = 0; i < 5; i++) {
@@ -2164,12 +2284,12 @@ export const useMatchSimulation = ({
                         else if (homeScores && awayScores) { homePenalties++; awayPenalties++; }
                         // Both miss = continue
                     }
-                    
+
                     // Assign winner based on penalties
                     const winnerId = homePenalties > awayPenalties ? currentMatch.homeTeamId : currentMatch.awayTeamId;
                     currentMatch.winnerId = winnerId;
                     currentMatch.penalties = { homeScore: homePenalties, awayScore: awayPenalties };
-                    
+
                     // Add penalty result event
                     const winnerName = homePenalties > awayPenalties ? (homeTeam?.name || 'Home') : (awayTeam?.name || 'Away');
                     currentMatch.events.push({
@@ -2180,8 +2300,8 @@ export const useMatchSimulation = ({
                     });
                 } else if (isKnockoutMatch) {
                     // Non-draw knockout: winner is whoever scored more
-                    currentMatch.winnerId = currentMatch.homeScore > currentMatch.awayScore 
-                        ? currentMatch.homeTeamId 
+                    currentMatch.winnerId = currentMatch.homeScore > currentMatch.awayScore
+                        ? currentMatch.homeTeamId
                         : currentMatch.awayTeamId;
                 }
             }
@@ -2383,15 +2503,15 @@ export const useMatchSimulation = ({
             } else if (matchType === 'SUPER_CUP' && prevState.superCup) {
                 // CRITICAL FIX: When Super Cup finishes, set winnerId and isComplete
                 if (matchJustFinished && currentMatch.winnerId) {
-                    return { 
-                        ...prevState, 
-                        superCup: { 
-                            ...prevState.superCup, 
+                    return {
+                        ...prevState,
+                        superCup: {
+                            ...prevState.superCup,
                             match: currentMatch,
                             winnerId: currentMatch.winnerId,
                             isComplete: true
-                        }, 
-                        players: updatedPlayers 
+                        },
+                        players: updatedPlayers
                     };
                 }
                 return { ...prevState, superCup: { ...prevState.superCup, match: currentMatch }, players: updatedPlayers };
@@ -2437,7 +2557,7 @@ export const useMatchSimulation = ({
                     const newKnockouts = [...(newCup.knockoutMatches || [])];
                     newKnockouts[matchIndex] = currentMatch;
                     newCup.knockoutMatches = newKnockouts;
-                    
+
                     // CRITICAL FIX: If match just finished, try to advance the stage
                     if (matchJustFinished) {
                         console.log(`[CL_KNOCKOUT] Match finished. winnerId: ${currentMatch.winnerId}, Score: ${currentMatch.homeScore}-${currentMatch.awayScore}`);
@@ -2445,14 +2565,14 @@ export const useMatchSimulation = ({
                         const allStageComplete = newCup.knockoutMatches
                             .filter(m => m.stage === newCup.currentStage)
                             .every(m => m.isPlayed && m.winnerId);
-                        
+
                         if (allStageComplete) {
                             console.log(`[CL_KNOCKOUT] All ${newCup.currentStage} matches complete. Advancing stage...`);
                             newCup = engine.advanceGlobalCupStage(newCup);
                             console.log(`[CL_KNOCKOUT] New stage: ${newCup.currentStage}`);
                         }
                     }
-                    
+
                     return { ...prevState, europeanCup: newCup, players: updatedPlayers };
                 }
 
@@ -2502,7 +2622,7 @@ export const useMatchSimulation = ({
                         newMatches[matchIndex] = currentMatch;
                         newCup.matches = newMatches;
                     }
-                    
+
                     // CRITICAL FIX: If match just finished, try to advance the stage
                     if (matchJustFinished && newCup.knockoutMatches) {
                         console.log(`[EL_KNOCKOUT] Match finished. winnerId: ${currentMatch.winnerId}, Score: ${currentMatch.homeScore}-${currentMatch.awayScore}`);
@@ -2510,14 +2630,14 @@ export const useMatchSimulation = ({
                         const allStageComplete = newCup.knockoutMatches
                             .filter(m => m.stage === newCup.currentStage)
                             .every(m => m.isPlayed && m.winnerId);
-                        
+
                         if (allStageComplete) {
                             console.log(`[EL_KNOCKOUT] All ${newCup.currentStage} matches complete. Advancing stage...`);
                             newCup = engine.advanceGlobalCupStage(newCup);
                             console.log(`[EL_KNOCKOUT] New stage: ${newCup.currentStage}`);
                         }
                     }
-                    
+
                     return { ...prevState, europaLeague: newCup, players: updatedPlayers };
                 }
 
