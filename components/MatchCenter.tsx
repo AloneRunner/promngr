@@ -1498,6 +1498,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <span className="text-2xl md:text-5xl font-mono font-bold text-white">{match.homeScore}</span>
                         <div className="flex flex-col items-center">
                             <span className="text-[8px] md:text-xs text-red-500 font-bold uppercase tracking-widest animate-pulse">LIVE</span>
+                            <span className="text-[6px] md:text-[8px] text-slate-500 font-mono mt-0.5 whitespace-nowrap opacity-60">
+                                {getActiveEngine()?.engineVersion || 'Engine v?'}
+                            </span>
                             <span className="text-slate-500 text-lg md:text-xl font-bold">:</span>
                         </div>
                         <span className="text-2xl md:text-5xl font-mono font-bold text-white">{match.awayScore}</span>

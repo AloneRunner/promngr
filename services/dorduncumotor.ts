@@ -537,6 +537,8 @@ export class MatchEngine {
     private lastTouchTeamId: string | null = null;
     private lastShooterId: string | null = null;
     private lastPossessingTeamId: string | null = null;
+    // Possession grace period: takımın son top kontrolü tick'i
+    private lastPossessionTick: { home: number; away: number } = { home: -999, away: -999 };
 
     // Substitution tracking
     private homeSubsMade: number = 0;
@@ -1912,8 +1914,13 @@ export class MatchEngine {
 
         // Possession Tracking
         if (owningTeamId) {
-            if (owningTeamId === this.homeTeam.id) this.possessionTicks.home++;
-            else this.possessionTicks.away++;
+            if (owningTeamId === this.homeTeam.id) {
+                this.possessionTicks.home++;
+                this.lastPossessionTick.home = this.tickCount;
+            } else {
+                this.possessionTicks.away++;
+                this.lastPossessionTick.away = this.tickCount;
+            }
 
             const total = this.possessionTicks.home + this.possessionTicks.away;
             if (total > 0) {
@@ -2076,7 +2083,10 @@ export class MatchEngine {
                 else if (this.playerRoles[p.id] === Position.GK) {
                     this.updateGoalkeeperAI(p, isHome);
                 } else {
-                    this.updateOffBallAI(p, isHome, owningTeamId === p.teamId, owningTeamId !== null, isHome ? awayDefLine : homeDefLine, isHome ? 100 : 0);
+                    // teamHasBall: Gerçek top sahibi VEYA top serbest ama son dokunan takım biziz
+                    // Bu sayede pas sırasında (top havadayken) hücum pozisyonu korunur
+                    const effectiveOwner = owningTeamId || this.lastTouchTeamId;
+                    this.updateOffBallAI(p, isHome, effectiveOwner === p.teamId, owningTeamId !== null || this.lastTouchTeamId !== null, isHome ? awayDefLine : homeDefLine, isHome ? 100 : 0);
                 }
             }
         });
@@ -4951,9 +4961,58 @@ export class MatchEngine {
         }
 
 
-        if (teamHasBall) {
+        // === POSSESSION GRACE PERIOD ===
+        // Top kaybedildiğinde MID'ler hemen geri çekilmez, 45 tick boyunca
+        // hücum pozisyonlarını korurlar (yo-yo etkisini önler).
+        // Grace period sırasında teamHasBall gibi davranır ama daha düşük ağırlıkla.
+        const POSSESSION_GRACE_TICKS = 45; // ~45 saniye oyun süresi
+        const myTeamLastPossessionTick = isHome ? this.lastPossessionTick.home : this.lastPossessionTick.away;
+        const ticksSincePossession = this.tickCount - myTeamLastPossessionTick;
+        const inGracePeriod = !teamHasBall && role === Position.MID && ticksSincePossession < POSSESSION_GRACE_TICKS;
+        // "Etkin top kontrolü": ya gerçekten top bizde, ya da grace period'dayız
+        const effectiveHasBall = teamHasBall || inGracePeriod;
+        // Grace period'da kuvvetler azaltılır (1.0 → 0.3 doğrusal)
+        const graceFactor = inGracePeriod ? Math.max(0.3, 1.0 - (ticksSincePossession / POSSESSION_GRACE_TICKS) * 0.7) : 1.0;
+
+        if (effectiveHasBall) {
             // --- OF-BALL MOVEMENT (HÜCUM STİLİNE GÖRE) ---
             this.playerStates[p.id].isPressing = false;
+
+            // === KADEME SİSTEMİ (ECHELON FORMATION SUPPORT) ===
+            // Orta sahacıları base X pozisyonuna göre sırala ve her birine depth rank ata
+            // Bu sayede 4-4-2 gibi dizilimlerde oyuncular aynı derinliğe yığılmaz
+            let midDepthRank = -1; // -1 = MID değil veya hesaplanmadı
+            let midTotalCount = 0;
+            let midTeammatePositions: { id: string, targetX: number, targetY: number, baseX: number }[] = [];
+
+            if (role === Position.MID) {
+                const myTeamMids = (isHome ? this.homePlayers : this.awayPlayers)
+                    .filter(pl => this.playerRoles[pl.id] === Position.MID && this.sim.players[pl.id]);
+                midTotalCount = myTeamMids.length;
+
+                // Base X'e göre sırala (en hücumcu = en yüksek baseX home için)
+                const sortedMids = myTeamMids
+                    .map(pl => ({
+                        id: pl.id,
+                        baseX: this.baseOffsets[pl.id]?.x || 50,
+                        simX: this.sim.players[pl.id]?.x || 50,
+                        simY: this.sim.players[pl.id]?.y || PITCH_CENTER_Y
+                    }))
+                    .sort((a, b) => isHome ? (b.baseX - a.baseX) : (a.baseX - b.baseX));
+                // rank 0 = en ileri (hücumcu), rank N-1 = en geri (defansif)
+
+                midDepthRank = sortedMids.findIndex(m => m.id === p.id);
+
+                // Takım arkadaşlarının mevcut pozisyonlarını kaydet (Y-kanal dağılımı için)
+                midTeammatePositions = sortedMids
+                    .filter(m => m.id !== p.id)
+                    .map(m => ({
+                        id: m.id,
+                        targetX: m.simX,
+                        targetY: m.simY,
+                        baseX: m.baseX
+                    }));
+            }
 
             // === DİNAMİK HEDEF: Formasyon + Top Pozisyonu Karışımı ===
             // Oyuncular sadece formasyonda durmaz, topa göre kayar
@@ -4968,38 +5027,139 @@ export class MatchEngine {
                 let moveSpeed: number;
 
                 if (role === Position.FWD) {
-                    ballPull = 0.40;
-                    moveSpeed = 0.75;
+                    ballPull = 0.50;
+                    moveSpeed = 0.80;
                 } else if (role === Position.MID) {
                     if (isDMC) {
-                        // Savunmacı orta saha: daha disiplinli
-                        ballPull = 0.25;
-                        moveSpeed = 0.70;
-                    } else {
-                        // Hücumcu orta saha (CAM, LM, RM): forvete destek
                         ballPull = 0.45;
-                        moveSpeed = 0.75;
+                        moveSpeed = 0.78;
+                    } else {
+                        ballPull = 0.65;
+                        moveSpeed = 0.82;
                         if (hasRoam) {
-                            ballPull = 0.55; // Serbest dolaş: neredeyse forvet gibi
-                            moveSpeed = 0.80;
+                            ballPull = 0.75;
+                            moveSpeed = 0.88;
                         }
+                    }
+
+                    // === KADEME: Depth rank'a göre ballPull modülasyonu ===
+                    // İleri rank = topa daha çok çekilir, geri rank = daha disiplinli
+                    if (midDepthRank >= 0 && midTotalCount > 1) {
+                        const rankRatio = midDepthRank / (midTotalCount - 1); // 0.0 (ileri) → 1.0 (geri)
+                        // İleri oyuncu: ballPull +0.15, geri oyuncu: ballPull -0.15
+                        ballPull += (0.5 - rankRatio) * 0.30;
+                        // İleri oyuncu daha hızlı
+                        moveSpeed += (0.5 - rankRatio) * 0.10;
                     }
                 } else {
                     // Defans
-                    ballPull = 0.15;
-                    moveSpeed = 0.65;
+                    ballPull = 0.20;
+                    moveSpeed = 0.70;
                 }
 
-                // Stil modülasyonu
-                if (tactic.style === 'Attacking') { ballPull += 0.05; }
-                else if (tactic.style === 'Possession') { ballPull += 0.03; }
+                // Stil modülasyonu — daha agresif farklar
+                if (tactic.style === 'Attacking') { ballPull += 0.10; }
+                else if (tactic.style === 'Possession') { ballPull += 0.06; }
                 else if (tactic.style === 'Defensive') { ballPull -= 0.05; }
 
+                // Grace period'da ballPull azalt (tam → %30 doğrusal)
+                ballPull *= graceFactor;
+
                 // X ekseni: Topa doğru çek
-                targetX = lerp(baseTargetX, ballX, ballPull);
+                // Grace period'da mevcut sim pozisyonundan lerp yap (geri çekilmeyi azalt)
+                const pullBaseX = inGracePeriod ? lerp(simP.x, baseTargetX, 1.0 - graceFactor) : baseTargetX;
+                targetX = lerp(pullBaseX, ballX, ballPull);
                 // Y ekseni: Hafif topa doğru kay — pas yollarına yaklaş
-                targetY = lerp(baseTargetY, ballY, ballPull * 0.5);
+                const pullBaseY = inGracePeriod ? lerp(simP.y, baseTargetY, 1.0 - graceFactor) : baseTargetY;
+                targetY = lerp(pullBaseY, ballY, ballPull * 0.5);
                 speedMod = MAX_PLAYER_SPEED * moveSpeed;
+
+                // === MID HÜCUM PUSH: Top rakip yarıdayken orta sahalar ekstra ileri çekilir ===
+                // ballPull tek başına yetmeyebilir çünkü baseTargetX orta sahada
+                // Bu mekanizma MID'leri topun belirli mesafe gerisine ZORLAR
+                if (role === Position.MID) {
+                    const ballInOppHalf = isHome ? ballX > PITCH_CENTER_X : ballX < PITCH_CENTER_X;
+                    if (ballInOppHalf) {
+                        // rank 0: topun 5m gerisinde, rank 3: topun 18m gerisinde
+                        const pushOffset = midDepthRank >= 0 && midTotalCount > 1
+                            ? 5 + midDepthRank * (13 / Math.max(1, midTotalCount - 1))
+                            : 10;
+                        const pushTargetX = isHome
+                            ? ballX - pushOffset
+                            : ballX + pushOffset;
+                        // Bu hedef mevcut targetX'ten ilerdeyse uygula
+                        if ((isHome && pushTargetX > targetX) || (!isHome && pushTargetX < targetX)) {
+                            // %80 ağırlıklı push — çok güçlü ileri çekme
+                            targetX = lerp(targetX, pushTargetX, 0.80);
+                        }
+                    } else {
+                        // Top kendi yarımızda bile MID'ler topun biraz gerisine çekilir
+                        // rank 0: topun 3m gerisinde, rank 3: topun 12m gerisinde
+                        const pushOffset = midDepthRank >= 0 && midTotalCount > 1
+                            ? 3 + midDepthRank * (9 / Math.max(1, midTotalCount - 1))
+                            : 6;
+                        const pushTargetX = isHome
+                            ? ballX - pushOffset
+                            : ballX + pushOffset;
+                        if ((isHome && pushTargetX > targetX) || (!isHome && pushTargetX < targetX)) {
+                            targetX = lerp(targetX, pushTargetX, 0.60);
+                        }
+                    }
+                }
+
+                // === KADEME: Derinlik Ayrımı (Depth Staggering) ===
+                // Orta sahacılar arası kademeli derinlik farkı oluştur
+                if (role === Position.MID && midDepthRank >= 0 && midTotalCount > 1) {
+                    const ballCarrierX = ballX;
+                    // Her rank için toptan farklı mesafede konumlan
+                    // rank 0: topun 2m gerisinde, rank 1: 6m, rank 2: 10m, rank 3: 14m
+                    const depthStep = 4; // Her kademe arası 4m (sıkışık kademe)
+                    const baseDepthOffset = 2; // En ileri oyuncu topun 2m gerisinde
+                    const myDepthOffset = baseDepthOffset + (midDepthRank * depthStep);
+
+                    const staggeredX = isHome
+                        ? ballCarrierX - myDepthOffset
+                        : ballCarrierX + myDepthOffset;
+
+                    // Mevcut targetX ile kademeli hedef arasında GÜÇLENDİRİLMİŞ geçiş (%60 kademe etkisi)
+                    targetX = lerp(targetX, staggeredX, 0.60);
+                }
+
+                // === KADEME: Y-Kanal Dağılımı (Lane Distribution) ===
+                // Orta sahacıların Y pozisyonlarını birbirinden ayır - TÜM stiller için
+                if (role === Position.MID && midTeammatePositions.length > 0) {
+                    const MIN_Y_SEPARATION = 8; // Minimum 8m Y ayrımı
+                    let yAdjustment = 0;
+
+                    for (const tm of midTeammatePositions) {
+                        const yDiff = Math.abs(targetY - tm.targetY);
+                        if (yDiff < MIN_Y_SEPARATION) {
+                            // Çok yakınız, birbirimizden uzaklaş
+                            const pushDir = targetY > tm.targetY ? 1 : -1;
+                            const pushStrength = (MIN_Y_SEPARATION - yDiff) * 0.4;
+                            yAdjustment += pushDir * pushStrength;
+                        }
+                    }
+
+                    targetY = clamp(targetY + yAdjustment, 5, PITCH_WIDTH - 5);
+                }
+
+                // === KADEME: Takım Arkadaşı X İtme Kuvveti (Teammate X Repulsion) ===
+                // Aynı derinlikte yığılmayı önle - TÜM stiller için
+                if (role === Position.MID && midTeammatePositions.length > 0) {
+                    const MIN_X_SEPARATION = 6;
+                    let xRepulsion = 0;
+
+                    for (const tm of midTeammatePositions) {
+                        const xDiff = Math.abs(targetX - tm.targetX);
+                        if (xDiff < MIN_X_SEPARATION) {
+                            const pushDir = targetX > tm.targetX ? 1 : -1;
+                            xRepulsion += pushDir * (MIN_X_SEPARATION - xDiff) * 0.3;
+                        }
+                    }
+
+                    targetX = clamp(targetX + xRepulsion, 5, PITCH_LENGTH - 5);
+                }
             }
 
             // 1. Maintain Formation Structure (Temel Pozisyon) & DYNAMIC SUPPORT
@@ -5007,12 +5167,12 @@ export class MatchEngine {
 
             // DYNAMIC SUPPORT: DEFENDER STEP UP
             // Top bizdeyken defans hattı orta sahaya kadar çıkabilir (Kademeli Oyun)
-            // Eğer top rakip yarı sahadaysa, defans 25m arkadan destek verir
+            // Eğer top rakip yarı sahadaysa, defans 20m arkadan destek verir (daha kompakt)
             if (role === Position.DEF) {
                 const ballInOppHalf = isHome ? ballX > PITCH_CENTER_X : ballX < PITCH_CENTER_X;
                 if (ballInOppHalf) {
-                    // Defans hattını öne taşı (45-50m civarı)
-                    lineH = isHome ? Math.min(55, ballX - 25) : Math.max(50, ballX + 25);
+                    // Defans hattını daha ileri taşı (50-58m civarı) — kompakt takım
+                    lineH = isHome ? Math.min(58, ballX - 20) : Math.max(47, ballX + 20);
                 }
             } else if (tactic.defensiveLine === 'High') {
                 lineH = isHome ? Math.min(80, ballX - 15) : Math.max(20, ballX + 15);
@@ -5020,35 +5180,85 @@ export class MatchEngine {
                 lineH = isHome ? Math.min(45, ballX - 25) : Math.max(55, ballX + 25);
             }
 
-            targetX = isHome ? Math.max(targetX, lineH) : Math.min(targetX, lineH);
+            // lineH sadece DEF için uygula — MID zaten ballPull + kademe ile yönetiliyor
+            if (role === Position.DEF) {
+                targetX = isHome ? Math.max(targetX, lineH) : Math.min(targetX, lineH);
+            }
 
-            // === ORTA SAHACI İLERİ ÇIKIŞ (LINE ADVANCEMENT) ===
-            // Top rakip yarıdayken orta sahacılar topun gerisine kadar çıkar + drift kilidi açılır
-            if (role === Position.MID && teamHasBall) {
+            // === ORTA SAHACI İLERİ ÇIKIŞ (LINE ADVANCEMENT) - KADEME UYUMLU ===
+            // Top takımdayken orta sahacılar topun gerisine kadar çıkar + drift kilidi açılır
+            // KADEME: Her MID rank'ına göre FARKLI advance line alır (düzleşmeyi önle)
+            if (role === Position.MID && effectiveHasBall) {
                 const ballInOppHalf = isHome ? ballX > PITCH_CENTER_X : ballX < PITCH_CENTER_X;
                 if (ballInOppHalf) {
-                    // Topun 10m gerisine kadar çık (eskisi 15m — çok uzaktı)
+                    // Kademe: rank 0 (ileri) = topun 2m gerisine, rank N (geri) = topun 12m gerisine
+                    const rankOffset = midDepthRank >= 0 && midTotalCount > 1
+                        ? 2 + midDepthRank * (10 / Math.max(1, midTotalCount - 1)) // 2m → 12m
+                        : 6; // fallback
                     const midAdvanceLine = isHome
-                        ? Math.min(ballX - 10, PITCH_LENGTH - 25) // max 80m
-                        : Math.max(ballX + 10, 25);               // min 25m
+                        ? Math.min(ballX - rankOffset, PITCH_LENGTH - 18)
+                        : Math.max(ballX + rankOffset, 18);
                     targetX = isHome
                         ? Math.max(targetX, midAdvanceLine)
                         : Math.min(targetX, midAdvanceLine);
-                    bypassDriftLimit = true; // Formasyon kilidini kır — hücuma katıl!
+                    bypassDriftLimit = true;
                 } else {
-                    // Top kendi yarımızda bile olsa, hafif ileri destek
+                    // Top kendi yarımızda — yine de topun yakınına çıkmalılar!
+                    const rankOffset = midDepthRank >= 0 && midTotalCount > 1
+                        ? 2 + midDepthRank * (6 / Math.max(1, midTotalCount - 1)) // 2m → 8m
+                        : 4;
                     const midSupportLine = isHome
-                        ? Math.min(ballX - 5, PITCH_CENTER_X + 5)
-                        : Math.max(ballX + 5, PITCH_CENTER_X - 5);
+                        ? Math.min(ballX - rankOffset, PITCH_CENTER_X + 10)
+                        : Math.max(ballX + rankOffset, PITCH_CENTER_X - 10);
                     targetX = isHome
                         ? Math.max(targetX, midSupportLine)
                         : Math.min(targetX, midSupportLine);
+                    // Kendi yarıda bile drift limit aç — aksi takdirde ilerleme kısıtlanır
+                    bypassDriftLimit = true;
                 }
             }
 
             // 2. Support Runs (DESTEK KOŞULARI - STİL MANTIĞI)
             const ballCarrierId = this.sim.ball.ownerId;
             const distToBall = dist(simP.x, simP.y, ballX, ballY);
+
+            // === KADEME: ÜÇGEN DESTEK SİSTEMİ (TRIANGLE SUPPORT) ===
+            // Top taşıyıcısına en yakın orta sahacılar otomatik üçgen oluşturur
+            // Bu sayede pas üçgeni + koşu yolları her zaman mevcut olur
+            if (role === Position.MID && ballCarrierId && ballCarrierId !== p.id && distToBall < 35 && distToBall > 6) {
+                const carrierP = this.sim.players[ballCarrierId];
+                if (carrierP) {
+                    const attackDir = isHome ? 1 : -1;
+
+                    // Bu oyuncunun top taşıyıcısına olan yakınlık sırası
+                    const myTeamMids = (isHome ? this.homePlayers : this.awayPlayers)
+                        .filter(pl => this.playerRoles[pl.id] === Position.MID && this.sim.players[pl.id] && pl.id !== ballCarrierId);
+                    const midsByDistToCarrier = myTeamMids
+                        .map(pl => ({ id: pl.id, d: dist(this.sim.players[pl.id].x, this.sim.players[pl.id].y, carrierP.x, carrierP.y) }))
+                        .sort((a, b) => a.d - b.d);
+
+                    const proximityRank = midsByDistToCarrier.findIndex(m => m.id === p.id);
+
+                    if (proximityRank === 0) {
+                        // En yakın MID: İleri pas opsiyonu — top taşıyıcısının 10m ilerisinde ve yana açıl
+                        const triangleX = carrierP.x + (attackDir * 10);
+                        const lateralDir = simP.y < carrierP.y ? -1 : 1;
+                        const triangleY = carrierP.y + (lateralDir * 12);
+                        targetX = lerp(targetX, clamp(triangleX, 5, PITCH_LENGTH - 5), 0.50);
+                        targetY = lerp(targetY, clamp(triangleY, 5, PITCH_WIDTH - 5), 0.50);
+                        speedMod = Math.max(speedMod, MAX_PLAYER_SPEED * 0.90);
+                    } else if (proximityRank === 1) {
+                        // İkinci yakın MID: Geri destek — top taşıyıcısının 4m gerisinde, karşı yana
+                        const triangleX = carrierP.x - (attackDir * 4);
+                        const lateralDir = simP.y < carrierP.y ? 1 : -1; // Karşı yana (ilkiyle aynı tarafa gitme)
+                        const triangleY = carrierP.y + (lateralDir * 10);
+                        targetX = lerp(targetX, clamp(triangleX, 5, PITCH_LENGTH - 5), 0.45);
+                        targetY = lerp(targetY, clamp(triangleY, 5, PITCH_WIDTH - 5), 0.45);
+                        speedMod = Math.max(speedMod, MAX_PLAYER_SPEED * 0.85);
+                    }
+                    // rank 2+ olan MID'ler kendi kademe pozisyonlarında kalır (yukarıdaki depth stagger ile)
+                }
+            }
 
             // === MIDFIELD POCKET FINDER (BOŞLUK ARAMA) ===
             // Orta sahalar rakip hatlar arasına girmeli
@@ -5063,8 +5273,8 @@ export class MatchEngine {
                     const testY = simP.y + Math.sin(angle) * 8;
                     const testObstacles = this.detectObstacles(p, testX, testY);
 
-                    if (testObstacles.length === 0) {
-                        // Orası boş! Oraya git
+                    if (testObstacles.length === 0 && midTeammatePositions.every(tm => dist(testX, testY, tm.targetX, tm.targetY) > 8)) {
+                        // Orası boş VE takım arkadaşından uzak! Oraya git
                         targetX = lerp(targetX, testX, 0.5);
                         targetY = lerp(targetY, testY, 0.5);
                     }
@@ -5147,20 +5357,29 @@ export class MatchEngine {
                     // ...
                 }
 
-                // === MIDFIELD REBOUND SUPPORT (DÖNEN TOP TAKİBİ) ===
+                // === MIDFIELD REBOUND SUPPORT (DÖNEN TOP TAKİBİ) - KADEME UYUMLU ===
                 // Top rakip ceza sahasına yakınsa, orta sahalar ceza yayı (D-Zone) civarında pusuya yatsın
+                // KADEME: Her MID farklı derinlikte ve farklı Y kanalında bekler
                 const oppGoalX_local = isHome ? PITCH_LENGTH : 0;
 
                 if (role === Position.MID && isBallDeep && Math.abs(ballX - oppGoalX_local) < 35) {
-                    const edgeOfBoxX = isHome ? PITCH_LENGTH - 25 : 25; // 20 biraz fazla içeri, 25 daha iyi (D-Zone)
+                    // Kademe: rank 0 (ileri) ceza yayının içinde, rank N (geri) dışında
+                    const baseEdgeX = isHome ? PITCH_LENGTH - 20 : 20;
+                    const rankEdgeOffset = midDepthRank >= 0 && midTotalCount > 1
+                        ? midDepthRank * 5 // rank 0: +0m, rank 1: +5m, rank 2: +10m, rank 3: +15m geri
+                        : 0;
+                    const myEdgeOfBoxX = isHome
+                        ? baseEdgeX - rankEdgeOffset
+                        : baseEdgeX + rankEdgeOffset;
 
-                    // Hedef: Ceza yayı (Center) veya top tarafındaki Half-Space
-                    targetX = lerp(simP.x, edgeOfBoxX, 0.2); // Yavaşça oraya kay
+                    targetX = lerp(simP.x, myEdgeOfBoxX, 0.35);
 
-                    // Y ekseni: Topun olduğu tarafa hafif kay ama merkezi boşaltma
-                    targetY = lerp(PITCH_CENTER_Y, ballY, 0.3);
+                    // Kademe Y: Her MID farklı kanal alır (yığılmasın)
+                    // rank'a göre farklı Y hedefi: sol half-space, merkez, sağ half-space
+                    const yChannels = [ballY, PITCH_CENTER_Y, PITCH_WIDTH - (ballY), lerp(PITCH_CENTER_Y, ballY, 0.6)];
+                    const myChannel = midDepthRank >= 0 ? yChannels[midDepthRank % yChannels.length] : PITCH_CENTER_Y;
+                    targetY = lerp(targetY, myChannel, 0.25);
 
-                    // Hazır kıta bekle
                     speedMod = MAX_PLAYER_SPEED * 0.7;
                     simP.state = 'RUN';
                 }
@@ -5892,16 +6111,42 @@ export class MatchEngine {
                 maxDriftY = Math.min(maxDriftY, 3);
             }
 
-            // === ORTA SAHACI HÜCUM DRIFT ARTIŞI ===
+            // === ORTA SAHACI HÜCUM DRIFT ARTIŞI (KADEME UYUMLU) ===
             // Top rakip yarı sahada ve takım toptayken orta sahacılar ileri çıksın
-            if (role === Position.MID && teamHasBall) {
+            // Kademe sistemi: İleri rank = daha geniş drift, geri rank = daha dar drift
+            if (role === Position.MID && effectiveHasBall) {
                 const ballInOppHalf = isHome ? ballX > PITCH_CENTER_X : ballX < PITCH_CENTER_X;
+
+                // Kademe rank'ı hesapla (drift limit scope'u için)
+                let driftRank = 0;
+                let driftMidCount = 1;
+                try {
+                    const driftMids = (isHome ? this.homePlayers : this.awayPlayers)
+                        .filter(pl => this.playerRoles[pl.id] === Position.MID && this.sim.players[pl.id]);
+                    driftMidCount = driftMids.length;
+                    const driftSorted = driftMids
+                        .map(pl => ({ id: pl.id, baseX: this.baseOffsets[pl.id]?.x || 50 }))
+                        .sort((a, b) => isHome ? (b.baseX - a.baseX) : (a.baseX - b.baseX));
+                    driftRank = driftSorted.findIndex(m => m.id === p.id);
+                    if (driftRank < 0) driftRank = 0;
+                } catch (e) {}
+
+                // Kademe-uyumlu drift: rank 0 (ileri) = geniş, rank N (geri) = dar
+                const rankFactor = driftMidCount > 1 ? (1 - driftRank / (driftMidCount - 1)) : 0.5;
+                // rankFactor: 1.0 (en ileri) → 0.0 (en geri)
+
                 if (ballInOppHalf) {
-                    maxDriftX = Math.max(maxDriftX, 18); // 6m → 18m ileri gidebilir
-                    maxDriftY = Math.max(maxDriftY, 10); // 5m → 10m yana kayabilir
+                    const baseDriftX = 18 + rankFactor * 14; // 18m (geri) → 32m (ileri)
+                    const baseDriftY = 10 + rankFactor * 6;  // 10m (geri) → 16m (ileri)
+                    maxDriftX = Math.max(maxDriftX, baseDriftX);
+                    maxDriftY = Math.max(maxDriftY, baseDriftY);
+                    // Top rakip yarıdayken MID'ler kesinlikle drift limit'ten kurtulur
+                    bypassDriftLimit = true;
                 } else {
-                    maxDriftX = Math.max(maxDriftX, 12); // Kendi yarısında bile 12m
-                    maxDriftY = Math.max(maxDriftY, 8);
+                    const baseDriftX = 12 + rankFactor * 8;  // 12m (geri) → 20m (ileri)
+                    const baseDriftY = 8 + rankFactor * 6;   // 8m (geri) → 14m (ileri)
+                    maxDriftX = Math.max(maxDriftX, baseDriftX);
+                    maxDriftY = Math.max(maxDriftY, baseDriftY);
                 }
             }
 
@@ -6693,15 +6938,18 @@ export class MatchEngine {
                         }
                     }
 
-                    // === ORGANİK ORTA SAHA SIZMASI (Possession & Attacking styles) ===
-                    // RoamFromPosition instruction'ı GEREKMEZ - taktik style yeterli
+                    // === ORGANİK ORTA SAHA SIZMASI (TÜM STİLLER - KADEME UYUMLU) ===
+                    // Artık tüm stiller için çalışır, stil şiddet ayarı yapar
                     // M motorundan alınma: Alan açma + kanal seçimi ile akıllı sızma
                     if (teamHasBall && role === Position.MID && this.sim.ball.ownerId !== p.id) {
-                        const isOrganicRunStyle = tactic.style === 'Possession' || tactic.style === 'Attacking';
-                        const isInAttackingThirdLR = isHome ? ballX > 65 : ballX < 35;
+                        // Stil bazlı hücum üçüncüsü eşiği: Attacking/Possession daha erken aktif, Balanced/Defensive daha geç
+                        const attackThirdThreshold = (tactic.style === 'Attacking' || tactic.style === 'Possession') ? 60
+                            : (tactic.style === 'Counter') ? 55
+                            : 65; // Balanced/Defensive: sadece son 1/3'te
+                        const isInAttackingThirdLR = isHome ? ballX > attackThirdThreshold : ballX < (PITCH_LENGTH - attackThirdThreshold);
                         const distToBallLR = dist(simP.x, simP.y, ballX, ballY);
 
-                        if (isOrganicRunStyle && isInAttackingThirdLR && distToBallLR < 35 && distToBallLR > 5) {
+                        if (isInAttackingThirdLR && distToBallLR < 35 && distToBallLR > 5) {
                             const staminaOkLR = (this.playerStates[p.id]?.currentStamina || 100) > 40;
 
                             if (staminaOkLR && simP.state !== 'SPRINT') {
@@ -6755,27 +7003,33 @@ export class MatchEngine {
                         }
                     }
 
-                    // === INSTRUCTION: ROAM FROM POSITION (GÜÇLENDİRİLMİŞ) ===
+                    // === INSTRUCTION: ROAM FROM POSITION (GÜÇLENDİRİLMİŞ + KADEME UYUMLU) ===
                     // Serbest Dolaş: Orta sahalar gizli forvet gibi çalışır
                     if (tactic.instructions && tactic.instructions.includes('RoamFromPosition')) {
-                        // 1. Random Movement (Marktan kurtulma)
+                        // 1. Random Movement (Marktan kurtulma) - Daha büyük ve tutarlı sapma
                         if (simP.state !== 'SPRINT' && !this.playerStates[p.id].isPressing) {
-                            const roamX = (Math.random() - 0.5) * 8.0; // +/- 4.0m random (6→8)
-                            const roamY = (Math.random() - 0.5) * 8.0;
+                            const roamX = (Math.random() - 0.5) * 12.0; // +/- 6m (daha geniş alan tarama)
+                            const roamY = (Math.random() - 0.5) * 10.0; // +/- 5m
                             targetX += roamX;
                             targetY += roamY;
                         }
+                        // Serbest Dolaş aktifken drift limitini kaldır — formasyon kilidi yok
+                        bypassDriftLimit = true;
+                        // Drift limitleri de genişlet
+                        maxDriftX = Math.max(maxDriftX, 22);
+                        maxDriftY = Math.max(maxDriftY, 14);
 
-                        // 2. GİZLİ FORVET SİSTEMİ (Shadow Striker / Box-to-Box)
-                        // Orta sahalar son 1/3'e girdiğinde forvetin yanına koşar
+                        // 2. GİZLİ FORVET SİSTEMİ (Shadow Striker / Box-to-Box) - GÜÇLENDİRİLMİŞ
+                        // Orta sahalar orta sahayı geçtiğinde bile hücuma katılır
                         if (teamHasBall && role === Position.MID && this.sim.ball.ownerId !== p.id) {
-                            const isAttackingThird = isHome ? ballX > 60 : ballX < 45;
+                            // Eşik: Orta sahayı geçtiyse yeterli (eskisi son 1/3 idi)
+                            const isAttackingThird = isHome ? ballX > 50 : ballX < 55;
                             const posAttr = p.attributes.positioning || 50;
                             const staminaOk = (this.playerStates[p.id]?.currentStamina || 100) > 40;
 
                             if (isAttackingThird) {
-                                // %12-18 olasılık — orta sahacı gerçekten hücuma katılsın
-                                const runProb = staminaOk ? 0.12 + ((posAttr / 2500)) : 0.02;
+                                // %15-22 olasılık — daha sık hücuma katılma
+                                const runProb = staminaOk ? 0.15 + ((posAttr / 2000)) : 0.03;
 
                                 if (simP.state !== 'SPRINT' && Math.random() < runProb) {
                                     // Forvetin yanına ama offsideline'ın gerisinde
@@ -6802,12 +7056,12 @@ export class MatchEngine {
                                     if (Math.random() < 0.3) this.emitTeamSignal(p, 'POINT');
                                 }
                             } else {
-                                // Orta alanda: hafif ileri destek koşusu (pas al-ver için)
-                                const midRunProb = staminaOk ? 0.05 : 0.01;
+                                // Orta alanda: ileri destek koşusu (pas al-ver için) - ARTIRILMIŞ
+                                const midRunProb = staminaOk ? 0.10 : 0.02; // 0.05→0.10 daha sık
                                 if (simP.state !== 'SPRINT' && Math.random() < midRunProb) {
-                                    const advanceX = isHome ? 10 : -10;
+                                    const advanceX = isHome ? 15 : -15; // 10→15m daha ileri koş
                                     targetX = simP.x + advanceX;
-                                    targetY = simP.y + (Math.random() - 0.5) * 12;
+                                    targetY = simP.y + (Math.random() - 0.5) * 14; // 12→14 daha geniş
                                     targetY = clamp(targetY, 10, PITCH_WIDTH - 10);
                                     targetX = clamp(targetX, 10, PITCH_LENGTH - 10);
                                     speedMod = MAX_PLAYER_SPEED * 0.85;
@@ -6851,6 +7105,13 @@ export class MatchEngine {
                         this.emitTeamSignal(p, 'HOLD');
                     }
                 }
+            }
+        }
+        // DEBUG: MID position tracking (TEMPORARY)
+        if (role === Position.MID && teamHasBall && this.sim.minute < 6 && (this.sim as any)._debugLogCounter === undefined || ((this.sim as any)._debugLogCounter = ((this.sim as any)._debugLogCounter || 0) + 1) % 240 === 0) {
+            const isHomeMid = isHome;
+            if (isHomeMid) {
+                console.log(`[DEBUG MID] ${p.id}: ballX=${ballX.toFixed(1)} baseX=${baseTargetX.toFixed(1)} targetX=${targetX.toFixed(1)} simX=${simP.x.toFixed(1)} bypass=${bypassDriftLimit} maxDrift=${maxDriftX.toFixed(1)}`);
             }
         }
         this.applySteeringBehavior(p, targetX, targetY, speedMod);

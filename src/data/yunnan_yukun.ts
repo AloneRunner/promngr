@@ -13,7 +13,6 @@ export const YUNNAN_YUKUN_SQUAD = [
     },
     // --- DEFANS ---
     {
-        ad: "Lionel Messi",
         // Not: Takımda 'Messi' lakaplı Nyasha Mushekwi yok ama gerçek kadroda yabancı stoper var. Emmers?
         // Yanlış olmasın, gerçek kadro analizi:
         // Yabancı: Zakaria Labyad (MO), Nyasha Mushekwi (SNT), Alexandru Ionita (MO)

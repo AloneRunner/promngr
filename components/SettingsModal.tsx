@@ -14,6 +14,8 @@ interface SettingsModalProps {
   currentLanguage: string;
   onLanguageChange: (lang: string) => void;
   t: any; // Translation object
+  engineChoice?: 'classic' | 'ikinc' | 'ucuncu';
+  onEngineChange?: (choice: 'classic' | 'ikinc' | 'ucuncu') => void;
 }
 
 export default function SettingsModal({
@@ -24,6 +26,7 @@ export default function SettingsModal({
   currentLanguage,
   onLanguageChange,
   t
+  , engineChoice, onEngineChange
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState(performanceSettings);
 
@@ -65,6 +68,59 @@ export default function SettingsModal({
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Match Engine Selector */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-yellow-400" />
+              {t.engineChoiceLabel || 'Match Engine'}
+            </h3>
+            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+              <div className="mb-3 text-sm text-gray-400">{t.engineChoiceDesc || 'Select which match engine runs simulations.'}</div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEngineChange && onEngineChange('classic')}
+                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                    }`}
+                >
+                  {t.engineClassic || 'Classic'}
+                </button>
+                <button
+                  onClick={() => onEngineChange && onEngineChange('ikinc')}
+                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'ikinc' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                    }`}
+                >
+                  {t.engineIkinc || 'Second Motor'}
+                </button>
+                <button
+                  onClick={() => onEngineChange && onEngineChange('ucuncu')}
+                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'ucuncu' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                    }`}
+                >
+                  {t.engineUcuncu || 'Ucuncu Motor'}
+                </button>
+              </div>
+
+              <div className="mt-4">
+                <label className="text-sm text-gray-300 mb-2 block">{t.engineFeedbackLabelInstruction || 'Lütfen mağazaya girip yorumlarda hangi motoru tercih ettiğinizi yazın — ona göre üzerinde yoğunlaşacağız.'}</label>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm text-gray-300">{t.engineFeedbackInstructionShort || 'Mağaza yorumlarına hangi motoru tercih ettiğinizi yazın; biz buna göre öncelik vereceğiz.'}</p>
+                  <button
+                    onClick={() => {
+                      try {
+                        // eslint-disable-next-line @typescript-eslint/no-var-requires
+                        const eng = require('../services/engines');
+                        const url = eng.EXTERNAL_FEEDBACK_URLS?.ikinc || 'https://play.google.com/store/apps/details?id=com.pocketfootballmanager.game&hl=tr';
+                        window.open(url, '_blank');
+                      } catch (e) {
+                        alert(t.engineFeedbackOpenError || 'Geri bildirim bağlantısı açılamadı.');
+                      }
+                    }}
+                    className="py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm"
+                  >{t.openOnPlayStore || 'Mağazada Yorum Yaz'}</button>
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Performance Settings */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -83,14 +139,12 @@ export default function SettingsModal({
                 </div>
                 <button
                   onClick={() => setLocalSettings({ ...localSettings, showAnimations: !localSettings.showAnimations })}
-                  className={`relative w-14 h-7 rounded-full transition-colors ${
-                    localSettings.showAnimations ? 'bg-blue-600' : 'bg-gray-600'
-                  }`}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${localSettings.showAnimations ? 'bg-blue-600' : 'bg-gray-600'
+                    }`}
                   disabled
                 >
-                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    localSettings.showAnimations ? 'translate-x-7' : 'translate-x-0'
-                  }`} />
+                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${localSettings.showAnimations ? 'translate-x-7' : 'translate-x-0'
+                    }`} />
                 </button>
               </div>
 
@@ -105,14 +159,12 @@ export default function SettingsModal({
                 </div>
                 <button
                   onClick={() => setLocalSettings({ ...localSettings, detailedStats: !localSettings.detailedStats })}
-                  className={`relative w-14 h-7 rounded-full transition-colors ${
-                    localSettings.detailedStats ? 'bg-blue-600' : 'bg-gray-600'
-                  }`}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${localSettings.detailedStats ? 'bg-blue-600' : 'bg-gray-600'
+                    }`}
                   disabled
                 >
-                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    localSettings.detailedStats ? 'translate-x-7' : 'translate-x-0'
-                  }`} />
+                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${localSettings.detailedStats ? 'translate-x-7' : 'translate-x-0'
+                    }`} />
                 </button>
               </div>
 
@@ -124,13 +176,11 @@ export default function SettingsModal({
                 </div>
                 <button
                   onClick={() => setLocalSettings({ ...localSettings, backgroundSimulation: !localSettings.backgroundSimulation })}
-                  className={`relative w-14 h-7 rounded-full transition-colors ${
-                    localSettings.backgroundSimulation ? 'bg-blue-600' : 'bg-gray-600'
-                  }`}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${localSettings.backgroundSimulation ? 'bg-blue-600' : 'bg-gray-600'
+                    }`}
                 >
-                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    localSettings.backgroundSimulation ? 'translate-x-7' : 'translate-x-0'
-                  }`} />
+                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${localSettings.backgroundSimulation ? 'translate-x-7' : 'translate-x-0'
+                    }`} />
                 </button>
               </div>
 
@@ -145,15 +195,14 @@ export default function SettingsModal({
                     <button
                       key={option}
                       onClick={() => setLocalSettings({ ...localSettings, autoSave: option })}
-                      className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                        localSettings.autoSave === option
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                      }`}
+                      className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${localSettings.autoSave === option
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                        }`}
                     >
                       {option === 'ALWAYS' ? t.always || 'Always' :
-                       option === 'WEEKLY' ? t.weekly || 'Weekly' :
-                       t.monthly || 'Monthly'}
+                        option === 'WEEKLY' ? t.weekly || 'Weekly' :
+                          t.monthly || 'Monthly'}
                     </button>
                   ))}
                 </div>
@@ -172,11 +221,10 @@ export default function SettingsModal({
                 <button
                   key={lang.code}
                   onClick={() => onLanguageChange(lang.code)}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    currentLanguage === lang.code
-                      ? 'border-blue-500 bg-blue-500/20 text-white'
-                      : 'border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600'
-                  }`}
+                  className={`p-4 rounded-lg border-2 transition-all ${currentLanguage === lang.code
+                    ? 'border-blue-500 bg-blue-500/20 text-white'
+                    : 'border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600'
+                    }`}
                 >
                   <div className="text-2xl mb-1">{lang.flag}</div>
                   <div className="font-medium">{lang.name}</div>

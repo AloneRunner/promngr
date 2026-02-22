@@ -605,6 +605,16 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         ))}
                                     </div>
                                 </div>
+                                {/* Decision Risk / Mentality */}
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.mentalityLabel || 'Decision Risk'}</label>
+                                    <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
+                                        <button onClick={() => handleTacticChange('mentality', 'Defensive')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Defensive' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityDefensive || 'Cautious'}</button>
+                                        <button onClick={() => handleTacticChange('mentality', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Balanced' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityBalanced || 'Balanced'}</button>
+                                        <button onClick={() => handleTacticChange('mentality', 'Attacking')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Attacking' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityAttacking || 'Risk-Taking'}</button>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
                                         <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>

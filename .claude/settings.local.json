@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/kaano/OneDrive/Desktop/10/**)",
+      "Bash(npx tsc:*)",
+      "Bash(npx tsx:*)",
+      "Bash(echo:*)",
+      "Bash(powershell.exe -Command \"\\(Get-Content ''c:\\\\Users\\\\kaano\\\\OneDrive\\\\Desktop\\\\10\\\\services\\\\ucuncumotor.ts''\\).Count\")",
+      "Bash(ls:*)",
+      "Bash(Get-Content \"C:\\\\Users\\\\kaano\\\\OneDrive\\\\Desktop\\\\10\\\\services\\\\ikincimotor.ts\")",
+      "Bash(Measure-Object -Line)",
+      "Bash(Get-Content \"C:\\\\Users\\\\kaano\\\\OneDrive\\\\Desktop\\\\10\\\\services\\\\MatchEngine.ts\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\kaano\\\\OneDrive\\\\Desktop\\\\10\\\\services\\\\ucuncumotor.ts\")",
+      "Bash(find:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

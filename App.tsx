@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -95,6 +95,7 @@ const App: React.FC = () => {
 
     // Performance & Settings State
     const [showSettings, setShowSettings] = useState(false);
+    const [engineChoice, setEngineChoice] = useState<'classic' | 'ikinc' | 'ucuncu'>(() => serviceGetEngineChoice() as any);
     const [isWeekSimulating, setIsWeekSimulating] = useState(false);
     const [simulationProgress, setSimulationProgress] = useState(0);
 
@@ -1855,6 +1856,8 @@ const App: React.FC = () => {
             {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
             {!userTeam.sponsor && <SponsorModal onSelect={handleSelectSponsor} t={t} />}
 
+            {/* Engine banner moved to Transfer Offers area */}
+
             {/* Season Summary Modal */}
             {
                 showSeasonSummary && seasonSummaryData && (
@@ -2406,6 +2409,7 @@ const App: React.FC = () => {
                                                     <div className="text-[10px] uppercase text-yellow-400/70 font-bold tracking-wider">TEKLİF</div>
                                                 </div>
                                             </button>
+                                            {/* banner moved below grid for full-width layout */}
                                             {(() => {
                                                 // Calculate last season position from history
                                                 const lastHistory = gameState.history[gameState.history.length - 1];
@@ -2461,6 +2465,24 @@ const App: React.FC = () => {
                                                     </button>
                                                 );
                                             })()}
+                                        </div>
+
+                                        {/* --- Match Engine Notice Banner (full-width below the top cards) --- */}
+                                        <div className="w-full flex items-center justify-center mt-3">
+                                            <div className="max-w-5xl w-full mx-4 p-3 rounded-lg bg-gradient-to-r from-yellow-500/8 via-amber-600/8 to-red-600/8 border border-yellow-600/30 text-white flex items-center justify-between">
+                                                <div>
+                                                    <div className="font-bold text-sm md:text-base">{t.engineBannerTitle || 'Match Engine Notice'}</div>
+                                                    <div className="text-xs md:text-sm text-gray-200 mt-1">
+                                                        {engineChoice === 'classic' ? (t.engineClassicBanner || "Main engine is an older version — it may contain bugs. Try alternatives.")
+                                                            : engineChoice === 'ikinc' ? (t.engineIkincBanner || "Ikincı motor: arcade-y, faster, more action-oriented — less realistic.")
+                                                                : (t.engineUcuncuBanner || "Ucuncu motor: latest rewrite — solid but some players find it less 'soulful'.")}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <button onClick={() => setShowSettings(true)} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-sm font-medium">{t.changeEngine || 'Change Engine'}</button>
+                                                    <button onClick={() => { alert(t.engineInfoAlert || 'You can switch engines from Settings. Feedback is stored locally.'); }} className="py-2 px-3 bg-gray-700 hover:bg-gray-600 rounded text-sm">{t.learnMore || 'Learn More'}</button>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {/* Next Match Card - Detailed */}
@@ -2835,6 +2857,11 @@ const App: React.FC = () => {
                 currentLanguage={lang}
                 onLanguageChange={(newLang) => setLang(newLang as any)}
                 t={t}
+                engineChoice={engineChoice}
+                onEngineChange={(choice) => {
+                    setEngineChoice(choice);
+                    serviceSetEngineChoice(choice);
+                }}
             />
         </Layout >
     );
