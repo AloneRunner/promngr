@@ -35,7 +35,16 @@ import { LEAGUE_PRESETS, DERBY_RIVALS } from '../src/data/teams';
 import { REAL_PLAYERS, NAMES_DB } from '../src/data/players';
 import { TICKET_PRICE, LEAGUE_TICKET_PRICES, LEAGUE_ATTENDANCE_RATES } from '../src/data/config';
 import { TEAM_TACTICAL_PROFILES } from '../src/data/tactics';
-import { MatchEngine, TICKS_PER_MINUTE, calculateEffectiveRating, calculateBaseOverall } from './MatchEngine';
+import { TICKS_PER_MINUTE, calculateEffectiveRating, calculateBaseOverall } from './MatchEngine';
+import engines from './engines';
+
+// Current engine choice (registry holds persisted value)
+export const getEngineChoice = () => engines.getEngineChoice();
+export const setEngineChoice = (k: 'classic' | 'ikinc' | 'ucuncu') => {
+    engines.setEngineChoice(k);
+    // Reset active engine so next simulate/initialize will create with new engine
+    activeEngine = null as any;
+};
 import { AIService } from './AI';
 
 // Economic Power Scaling relative to Turkish Super Lig (Base 1.0)
@@ -1402,17 +1411,19 @@ export const generateWorld = (leagueId: string): GameState => {
 };
 
 
-let activeEngine: MatchEngine | null = null;
-export const getActiveEngine = () => activeEngine;
+let activeEngine: any = null;
+export const getActiveEngine = () => activeEngine as any;
 
 export const initializeMatch = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) => {
-    activeEngine = new MatchEngine(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
+    const choice = engines.getEngineChoice();
+    activeEngine = engines.createEngineInstance(choice, match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
     return activeEngine.step().liveData.simulation;
 }
 
 export const simulateTick = (match: Match, homeTeam: Team, awayTeam: Team, homePlayers: Player[], awayPlayers: Player[], userTeamId?: string) => {
     if (!activeEngine || (activeEngine as any).match.id !== match.id) {
-        activeEngine = new MatchEngine(match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
+        const choice = engines.getEngineChoice();
+        activeEngine = engines.createEngineInstance(choice, match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId);
     } else {
         // FIX: Ensure tactics are synced if UI updated them *after* engine initialization
         if (JSON.stringify(activeEngine.homeTeam.tactic) !== JSON.stringify(homeTeam.tactic)) {

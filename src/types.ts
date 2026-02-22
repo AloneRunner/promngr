@@ -155,6 +155,19 @@ export type Translation = any;
 export type AssistantAdvice = { type: 'CRITICAL' | 'WARNING' | 'INFO'; message: string; };
 export type GameProfile = { id: string; name: string; createdAt: number; lastPlayedAt: number; gameState: GameState | null; thumbnailData?: any; };
 
+export interface PlayerVisual {
+    avatarUrl?: string;
+    faceId?: string;
+    skinTone?: string;
+    hairStyle?: string;
+    kitColor?: string;
+}
+
+export interface ProfileManagerState {
+    profiles: GameProfile[];
+    activeProfileId: string | null;
+}
+
 // Missing Interfaces added for compatibility
 export interface MatchEvent {
     minute: number; type: MatchEventType; description: string; teamId?: string; playerId?: string;

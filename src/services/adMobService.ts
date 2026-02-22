@@ -17,7 +17,6 @@ class AdMobService {
 
         try {
             await AdMob.initialize({
-                requestTrackingAuthorization: true,
                 initializeForTesting: false, // PRODUCTION MODE
             });
             this._isInitialized = true;

@@ -145,7 +145,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                     </div>
 
                     {/* Header with Week Navigation */}
-                    <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-4 md:p-6 border-b border-slate-700 flex items-center justify-between sticky top-0 z-10">
+                    <div className="bg-gradient-to-r from-slate-950 to-slate-900 p-4 md:p-6 border-b border-slate-800 flex items-center justify-between sticky top-0 z-10">
                         <button
                             onClick={() => setSelectedWeek(prev => Math.max(1, prev - 1))}
                             disabled={selectedWeek === 1}
