@@ -359,7 +359,20 @@ export const useMatchSimulation = ({
                 // *** BOARD CONFIDENCE UPDATE ***
                 const userTeam = teamsWithBonus.find(t => t.id === userTeamId);
                 const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
-                const opponent = teamsWithBonus.find(t => t.id === opponentId);
+                let opponent = teamsWithBonus.find(t => t.id === opponentId);
+
+                // Yabancı kupa rakipleri kendi ligimizde olmadığı için opponent undefined olabilir.
+                // Bu durum itibar, güven ve kupa ödülü güncellemelerini KÖKTEN atlıyordu. Düzeltildi!
+                if (!opponent && isCupMatch) {
+                    const fallbackRep = cupType === 'europeanCup' ? 8500 : cupType === 'superCup' ? 9000 : 7000;
+                    opponent = {
+                        id: opponentId,
+                        name: cupType === 'superCup' ? "Süper Kupa Rakibi" : "Avrupa Takımı",
+                        reputation: fallbackRep,
+                        budget: 20000000,
+                        financials: { history: [], lastWeekIncome: {}, lastWeekExpenses: {} }
+                    } as any;
+                }
 
                 if (userTeam && opponent) {
                     const userScore = isUserHome ? hScore : aScore;
@@ -466,7 +479,18 @@ export const useMatchSimulation = ({
                             teamsWithBonus = teamsWithBonus.map(t => {
                                 if (t.id === userTeamId || t.id === opponentId) {
                                     const isWinner = t.id === resolvedWinnerId;
-                                    return { ...t, budget: t.budget + (isWinner ? winnerPrize : loserPrize) };
+                                    const prize = isWinner ? winnerPrize : loserPrize;
+                                    return {
+                                        ...t,
+                                        budget: t.budget + prize,
+                                        financials: {
+                                            ...t.financials,
+                                            lastWeekIncome: {
+                                                ...(t.financials?.lastWeekIncome || { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0, cupPrize: 0 }),
+                                                cupPrize: ((t.financials?.lastWeekIncome as any)?.cupPrize || 0) + prize
+                                            }
+                                        }
+                                    };
                                 }
                                 return t;
                             });
@@ -710,7 +734,19 @@ export const useMatchSimulation = ({
                     // === BOARD CONFIDENCE + REPUTATION UPDATE (Live Match) ===
                     const userTeam = teamsWithBonus.find(t => t.id === userTeamId);
                     const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
-                    const opponent = teamsWithBonus.find(t => t.id === opponentId);
+                    let opponent = teamsWithBonus.find(t => t.id === opponentId);
+
+                    // Yabancı kupa rakipleri için fallback desteği:
+                    if (!opponent && isCupMatch) {
+                        const fallbackRep = cupType === 'europeanCup' ? 8500 : cupType === 'superCup' ? 9000 : 7000;
+                        opponent = {
+                            id: opponentId,
+                            name: cupType === 'superCup' ? "Süper Kupa Rakibi" : "Avrupa Takımı",
+                            reputation: fallbackRep,
+                            budget: 20000000,
+                            financials: { history: [], lastWeekIncome: {}, lastWeekExpenses: {} }
+                        } as any;
+                    }
 
                     if (userTeam && opponent) {
                         const userScore = isUserHome ? hScore : aScore;
@@ -818,7 +854,18 @@ export const useMatchSimulation = ({
                             teamsWithBonus = teamsWithBonus.map(t => {
                                 if (t.id === userTeamId || t.id === opponentId) {
                                     const isWinner = t.id === resolvedWinnerId;
-                                    return { ...t, budget: t.budget + (isWinner ? winnerPrize : loserPrize) };
+                                    const prize = isWinner ? winnerPrize : loserPrize;
+                                    return {
+                                        ...t,
+                                        budget: t.budget + prize,
+                                        financials: {
+                                            ...t.financials,
+                                            lastWeekIncome: {
+                                                ...(t.financials?.lastWeekIncome || { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0, cupPrize: 0 }),
+                                                cupPrize: ((t.financials?.lastWeekIncome as any)?.cupPrize || 0) + prize
+                                            }
+                                        }
+                                    };
                                 }
                                 return t;
                             });
@@ -933,58 +980,34 @@ export const useMatchSimulation = ({
 
                     // Calculate Rewards
                     const winnerPrize = 4000000;
-                    // === CRITICAL FIX: RETRIEVE FINAL MATCH STATS FROM ENGINE ===
-                    // This ensures we capture 100% accurate simulation data (Energy, Cards, Ratings)
-                    const finalStats = engine.getFinalMatchStats();
 
-                    // Update players with match data (condition, stats, suspensions)
+                    // Count per-player stats from simulated match events (quick-sim path)
+                    const simEvents = simResult.events || [];
                     const nextPlayers = prev.players.map(p => {
-                        let enginePlayer = finalStats?.homePlayers.find(hp => hp.id === p.id) ||
-                            finalStats?.awayPlayers.find(ap => ap.id === p.id);
+                        const goalsThisMatch = simEvents.filter((e: any) => e.type === MatchEventType.GOAL && e.playerId === p.id).length;
+                        const assistsThisMatch = simEvents.filter((e: any) => e.type === MatchEventType.GOAL && e.assisterId === p.id).length;
+                        const yellowsThisMatch = simEvents.filter((e: any) => e.type === MatchEventType.CARD_YELLOW && e.playerId === p.id).length;
+                        const redsThisMatch = simEvents.filter((e: any) => e.type === MatchEventType.CARD_RED && e.playerId === p.id).length;
 
-                        if (enginePlayer) {
-                            // Calculate rating change
-                            const ratingDiff = (enginePlayer.stats.rating || 6.0) - (p.stats.averageRating || 6.0);
-
-                            // Check for suspension (Red Card or Yellow Card accumulation)
+                        if (goalsThisMatch > 0 || assistsThisMatch > 0 || yellowsThisMatch > 0 || redsThisMatch > 0) {
                             let newSuspension = p.matchSuspension;
-
-                            // 1. Direct Red Card -> Suspend next match
-                            if (enginePlayer.stats.redCards > 0) {
-                                newSuspension = {
-                                    isSuspended: true,
-                                    remainingMatches: 1, // Standard 1 match ban
-                                    reason: 'Red Card'
-                                };
-                            }
-                            // 2. Yellow Card Accumulation (Every 4 yellows)
-                            else if (enginePlayer.stats.yellowCards > 0) {
-                                const totalYellows = (p.stats.yellowCards || 0) + enginePlayer.stats.yellowCards;
+                            if (redsThisMatch > 0) {
+                                newSuspension = 1;
+                            } else if (yellowsThisMatch > 0) {
+                                const totalYellows = (p.stats.yellowCards || 0) + yellowsThisMatch;
                                 if (totalYellows > 0 && totalYellows % 4 === 0) {
-                                    newSuspension = {
-                                        isSuspended: true,
-                                        remainingMatches: 1,
-                                        reason: 'Yellow Card Accumulation'
-                                    };
+                                    newSuspension = 1;
                                 }
                             }
-
                             return {
                                 ...p,
-                                condition: enginePlayer.condition, // Persist fatigue
-                                form: Math.max(0, Math.min(100, p.form + ratingDiff * 2)), // Update form
-                                morale: Math.max(0, Math.min(100, p.morale + (winnerId === p.teamId ? 5 : winnerId === undefined ? 0 : -5))),
-                                matchSuspension: newSuspension, // Persist suspension
+                                matchSuspension: newSuspension,
                                 stats: {
                                     ...p.stats,
-                                    played: p.stats.played + 1,
-                                    goals: p.stats.goals + (enginePlayer.stats.goals || 0),
-                                    assists: p.stats.assists + (enginePlayer.stats.assists || 0),
-                                    rating: (p.stats.rating * p.stats.played + (enginePlayer.stats.rating || 6.0)) / (p.stats.played + 1),
-                                    yellowCards: p.stats.yellowCards + (enginePlayer.stats.yellowCards || 0),
-                                    redCards: p.stats.redCards + (enginePlayer.stats.redCards || 0),
-                                    motm: p.stats.motm + (enginePlayer.stats.motm ? 1 : 0),
-                                    cleanSheets: p.stats.cleanSheets + (enginePlayer.stats.cleanSheets ? 1 : 0)
+                                    goals: (p.stats.goals || 0) + goalsThisMatch,
+                                    assists: (p.stats.assists || 0) + assistsThisMatch,
+                                    yellowCards: (p.stats.yellowCards || 0) + yellowsThisMatch,
+                                    redCards: (p.stats.redCards || 0) + redsThisMatch,
                                 }
                             };
                         }
@@ -1526,6 +1549,10 @@ export const useMatchSimulation = ({
             } else {
                 // Empty week
                 let updatedState = { ...gameState };
+
+                // THIS IS THE CRITICAL FIX: Even if the user has no match, other leagues might!
+                updatedState = engine.simulateLeagueRound(updatedState, updatedState.currentWeek);
+
                 if (updatedState.europeanCup && updatedState.europeanCup.isActive) {
                     const { updatedCup, updatedTeams } = engine.simulateAIGlobalCupMatches(
                         updatedState.europeanCup,
@@ -1576,6 +1603,22 @@ export const useMatchSimulation = ({
     }, [gameState, setGameState, t, onForcePlaySuperCup, executeMatchUpdate]);
 
     const performSubstitution = useCallback((matchId: string, p1: Player, p2Id: string) => {
+        // Notify live engine of substitution BEFORE React state update.
+        // Without this, the engine never knows about user-requested subs:
+        // the subbed-out player would keep playing in the physics simulation,
+        // and the subbed-in player would never enter the pitch.
+        if (gameState) {
+            const p2 = gameState.players.find(p => p.id === p2Id);
+            if (p2) {
+                const isActualSub = (p1.lineup === 'STARTING') !== (p2.lineup === 'STARTING');
+                if (isActualSub) {
+                    const playerIn = p1.lineup !== 'STARTING' ? p1 : p2;
+                    const playerOut = p1.lineup === 'STARTING' ? p1 : p2;
+                    engine.performSubstitution(matchId, playerIn, playerOut.id);
+                }
+            }
+        }
+
         setGameState(prev => {
             if (!prev) return null;
 
@@ -1600,9 +1643,16 @@ export const useMatchSimulation = ({
                 }
             }
             if (!currentMatch && prev.europaLeague) {
-                // Check EL (Legacy support)
-                const elMatches = prev.europaLeague.knockoutMatches || prev.europaLeague.matches || [];
-                currentMatch = elMatches.find(m => m.id === matchId) as unknown as Match;
+                // Check EL
+                if (prev.europaLeague.groups) {
+                    for (const g of prev.europaLeague.groups) {
+                        const m = g.matches.find(x => x.id === matchId);
+                        if (m) { currentMatch = m as unknown as Match; break; }
+                    }
+                }
+                if (!currentMatch && prev.europaLeague.knockoutMatches) {
+                    currentMatch = prev.europaLeague.knockoutMatches.find(x => x.id === matchId) as unknown as Match;
+                }
             }
             if (!currentMatch && prev.superCup?.match) {
                 if (prev.superCup.match.id === matchId) currentMatch = prev.superCup.match as unknown as Match;
@@ -1681,7 +1731,7 @@ export const useMatchSimulation = ({
 
             return newState;
         });
-    }, [setGameState]);
+    }, [setGameState, gameState]);
 
     const handleMatchFinish = useCallback(async () => {
         if (!activeMatchId || !gameState) return;
@@ -1790,9 +1840,14 @@ export const useMatchSimulation = ({
                 };
                 messages.push(newMessage);
 
-                // === CRITICAL FIX: RETRIEVE FINAL MATCH STATS FROM ENGINE ===
-                // This ensures we capture 100% accurate simulation data (Energy, Cards, Ratings)
+                // === RETRIEVE FINAL MATCH STATS FROM ENGINE ===
+                // Used for condition (fatigue) and rating updates only.
+                // NOTE: enginePlayer.stats has CUMULATIVE season data, not per-match data.
+                // Goals are already updated by handleMatchSync via match events - do NOT re-add.
                 const finalStats = engine.getFinalMatchStats();
+
+                // Count per-player stats from THIS match's events only
+                const matchEvents = activeMatch.events || [];
 
                 // Update players with match data (condition, stats, suspensions)
                 const nextPlayers = prev.players.map(p => {
@@ -1803,26 +1858,23 @@ export const useMatchSimulation = ({
                         // Calculate rating change
                         const ratingDiff = (enginePlayer.stats.rating || 6.0) - (p.stats.averageRating || 6.0);
 
+                        // Count stats from THIS match's events only
+                        const yellowsThisMatch = matchEvents.filter((e: any) => e.type === MatchEventType.CARD_YELLOW && e.playerId === p.id).length;
+                        const redsThisMatch = matchEvents.filter((e: any) => e.type === MatchEventType.CARD_RED && e.playerId === p.id).length;
+                        const assistsThisMatch = matchEvents.filter((e: any) => e.type === MatchEventType.GOAL && e.assisterId === p.id).length;
+
                         // Check for suspension (Red Card or Yellow Card accumulation)
                         let newSuspension = p.matchSuspension;
 
                         // 1. Direct Red Card -> Suspend next match
-                        if (enginePlayer.stats.redCards > 0) {
-                            newSuspension = {
-                                isSuspended: true,
-                                remainingMatches: 1, // Standard 1 match ban
-                                reason: 'Red Card'
-                            };
+                        if (redsThisMatch > 0) {
+                            newSuspension = 1;
                         }
                         // 2. Yellow Card Accumulation (Every 4 yellows)
-                        else if (enginePlayer.stats.yellowCards > 0) {
-                            const totalYellows = (p.stats.yellowCards || 0) + enginePlayer.stats.yellowCards;
+                        else if (yellowsThisMatch > 0) {
+                            const totalYellows = (p.stats.yellowCards || 0) + yellowsThisMatch;
                             if (totalYellows > 0 && totalYellows % 4 === 0) {
-                                newSuspension = {
-                                    isSuspended: true,
-                                    remainingMatches: 1,
-                                    reason: 'Yellow Card Accumulation'
-                                };
+                                newSuspension = 1;
                             }
                         }
 
@@ -1834,14 +1886,15 @@ export const useMatchSimulation = ({
                             matchSuspension: newSuspension, // Persist suspension
                             stats: {
                                 ...p.stats,
-                                played: p.stats.played + 1,
-                                goals: p.stats.goals + (enginePlayer.stats.goals || 0),
-                                assists: p.stats.assists + (enginePlayer.stats.assists || 0),
-                                rating: (p.stats.rating * p.stats.played + (enginePlayer.stats.rating || 6.0)) / (p.stats.played + 1),
-                                yellowCards: p.stats.yellowCards + (enginePlayer.stats.yellowCards || 0),
-                                redCards: p.stats.redCards + (enginePlayer.stats.redCards || 0),
-                                motm: p.stats.motm + (enginePlayer.stats.motm ? 1 : 0),
-                                cleanSheets: p.stats.cleanSheets + (enginePlayer.stats.cleanSheets ? 1 : 0)
+                                played: (p.stats.played || 0) + 1,
+                                // Goals already updated by handleMatchSync via match events - do NOT re-add
+                                goals: p.stats.goals,
+                                assists: (p.stats.assists || 0) + assistsThisMatch,
+                                rating: (p.stats.rating * (p.stats.played || 0) + (enginePlayer.stats.rating || 6.0)) / ((p.stats.played || 0) + 1),
+                                yellowCards: (p.stats.yellowCards || 0) + yellowsThisMatch,
+                                redCards: (p.stats.redCards || 0) + redsThisMatch,
+                                motm: (p.stats.motm || 0) + (enginePlayer.stats.motm ? 1 : 0),
+                                cleanSheets: (p.stats.cleanSheets || 0) + (enginePlayer.stats.cleanSheets ? 1 : 0)
                             }
                         };
                     }
@@ -1911,7 +1964,7 @@ export const useMatchSimulation = ({
                 };
 
                 // Simulate concurrent league matches
-                stateWithMessages = engine.simulateLeagueRound(stateWithMessages, stateWithMessages.currentWeek);
+                stateWithMessages = engine.simulateLeagueRound(stateWithMessages as GameState, stateWithMessages.currentWeek) as any;
 
                 // Simulate concurrent Cup matches
                 if (stateWithMessages.europeanCup && stateWithMessages.europeanCup.isActive) {
@@ -2188,9 +2241,8 @@ export const useMatchSimulation = ({
                         }
                     }
                 }
-                if (matchIndex === -1) {
-                    const elMatches = prevState.europaLeague.knockoutMatches || prevState.europaLeague.matches || [];
-                    matchIndex = elMatches.findIndex(m => m.id === matchId);
+                if (matchIndex === -1 && prevState.europaLeague.knockoutMatches) {
+                    matchIndex = prevState.europaLeague.knockoutMatches.findIndex(m => m.id === matchId);
                     if (matchIndex !== -1) matchType = 'EL_KNOCKOUT';
                 }
             }
@@ -2220,7 +2272,7 @@ export const useMatchSimulation = ({
             } else if (matchType === 'EL_GROUP') {
                 currentMatch = { ...prevState.europaLeague!.groups[groupIndex].matches[matchIndex] };
             } else if (matchType === 'EL_KNOCKOUT') {
-                const elMatches = prevState.europaLeague!.knockoutMatches || prevState.europaLeague!.matches || [];
+                const elMatches = prevState.europaLeague!.knockoutMatches || [];
                 currentMatch = { ...elMatches[matchIndex] };
             }
 
@@ -2617,10 +2669,6 @@ export const useMatchSimulation = ({
                         const newKnockouts = [...newCup.knockoutMatches];
                         newKnockouts[matchIndex] = currentMatch;
                         newCup.knockoutMatches = newKnockouts;
-                    } else if (newCup.matches) {
-                        const newMatches = [...newCup.matches];
-                        newMatches[matchIndex] = currentMatch;
-                        newCup.matches = newMatches;
                     }
 
                     // CRITICAL FIX: If match just finished, try to advance the stage

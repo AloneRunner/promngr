@@ -1,4 +1,265 @@
-﻿export const EN_TRANSLATIONS = {
+export const EN_TRANSLATIONS = {
+    trainingBalancedDesc: "Maintains overall condition and form.",
+    trainingAttackingDesc: "Improves finishing and passing. Reduces defense.",
+    trainingDefendingDesc: "Improves tackling and positioning. Reduces attack.",
+    trainingPhysicalDesc: "Increases speed and strength. High fatigue risk.",
+    trainingTechnicalDesc: "Improves dribbling, vision, and ball control.",
+    trainingPositionBasedDesc: "Each player trains according to their position.",
+    trainingActive: "ACTIVE",
+    trainingMechanicDesc: "Balance recovery and development. Heavy training improves players faster but reduces condition.",
+    transferWindowOpen: "Transfer Window Open",
+    dbPlayersCount: "DB: {count} Players",
+    filterAll: "All",
+    filterGK: "GK",
+    filterDEF: "DEF",
+    filterMID: "MID",
+    filterFWD: "FWD",
+    statusListed: "Listed",
+    statusNotListed: "Not for Sale",
+    statusFree: "Free Agent",
+    interestedPlayersOnly: "Interested Players Only",
+    hasAttribute: "Has Attribute...",
+    playerInfo: "Player Info",
+    liveStats: "Live Stats",
+    possession: "Possession",
+    shots: "Shots",
+    shotsOnTarget: "On Target",
+    matchEventFreeKick: "Free Kick",
+    matchEventBuildUp: "Building Up from Defense",
+    matchEventKickoff: "Kickoff",
+    matchActionLooseBall: "Loose Ball",
+    matchActionBuildingUp: "Building Up",
+    matchActionDefendingDeep: "Defending Deep",
+    matchActionPressing: "Pressing",
+    matchActionAttacking: "Attacking",
+    matchActionInPossession: "In Possession",
+    matchFeed: "Match Feed",
+    managerProfile: "Manager Profile",
+    currentTeam: "Current Team",
+    weeklySalaryWord: "Weekly Salary",
+    seasonWord: "Season",
+    leagueTitleMatch: "League Title",
+    championsLeague: "Champions League",
+    europaLeague: "Europa League",
+    careerHistory: "Career History",
+    noCareerHistory: "No career history yet. Complete your first season!",
+    cupPrizeInfo: "Cup Prize Info",
+    roundOf16ToQF: "Round of 16 → Quarter Final",
+    qfToSf: "Quarter Final → Semi Final",
+    sfToFinal: "Semi Final → Final",
+    totalPrizeLabel: "Total",
+    playingInStartingXI: "Playing in Starting XI",
+    lastMoraleChanges: "Last Morale Changes:",
+    badFormAlert: "Bad form",
+    statusLabel: "Status",
+    nameLabel: "Name",
+    attrSpd: "Pac",
+    attrSht: "Sho",
+    attrPas: "Pas",
+    attrDri: "Dri",
+    attrDef: "Def",
+    ticketSales: "Ticket Sales",
+    merchandise: "Merchandise",
+    tvRights: "TV Rights",
+    playerSales: "Player Sales",
+    weeklyWageOffer: "Weekly Wage Offer",
+    currentWageLabel: "Current",
+    playerInterest: "Player interest",
+    interestedLabel: "Interested",
+    hesitantLabel: "Hesitant",
+    reluctantLabel: "Reluctant",
+    counterOffer: "Counter",
+    sponsorIncome: "Sponsor",
+    winBonus: "Win Bonus",
+    safeBankFinancial: "SafeBank Financial",
+    styleCatReflexes: "Cat Reflexes",
+    styleSweeper: "Sweeper Keeper",
+    stylePenaltySaver: "Penalty Monster",
+    styleInterceptor: "Interceptor",
+    styleRock: "The Rock",
+    styleRelentless: "Relentless",
+    stylePressResistant: "Press Resistant",
+    styleRapid: "Rapid",
+    styleTrickster: "Trickster",
+    styleFirstTouch: "First Touch",
+    styleIncisivePass: "Incisive Pass",
+    styleMaestro: "Maestro",
+    styleDeadBall: "Dead Ball Specialist",
+    styleFinesse: "Finesse Shot",
+    styleRocket: "Rocket",
+    styleLob: "Lob Master",
+    styleAerialThreat: "Aerial Threat",
+    styleLongRanger: "Long Ranger",
+    styleShadowStriker: "Shadow Striker",
+    stylePoacher: "Poacher",
+    italianCalcio: "Italian League",
+    ligue1: "Ligue 1",
+    eredivisie: "Eredivisie",
+    belgianProLeague: "Belgian Pro League",
+    scotlandPremiership: "Scottish Premiership",
+    austriaBundesliga: "Austrian Bundesliga",
+    greeceSuperLeague: "Greek Super League",
+    russianPremierLeague: "Russian Premier League",
+    romaniaSuperLiga: "Romanian SuperLiga",
+    superSportHNL: "Croatian HNL",
+    superLiga: "Serbian SuperLiga",
+    fortunaLiga: "Czech Fortuna Liga",
+    ekstraklasa: "Polish Ekstraklasa",
+    ligaProfesional: "Argentine Liga Profesional",
+    serieA: "Brazilian Série A",
+    ligaBetPlay: "Colombian Liga BetPlay",
+    campeonatoNacional: "Chilean Campeonato Nacional",
+    campeonatoUruguayo: "Uruguayan Championship",
+    primeraDivision: "Primera División",
+    liga1: "Liga 1",
+    saudiProLeague: "Saudi Pro League",
+    j1League: "J1 League",
+    kLeague1: "K League 1",
+    aLeagueMen: "A-League Men",
+    chineseSuperLeague: "Chinese Super League",
+    npfl: "Nigerian NPFL",
+    egyptianPremierLeague: "Egyptian Premier League",
+    ligue1Algeria: "Algerian Ligue 1",
+    senegalPremierLeague: "Senegalese Premier League",
+    moroccoBotolaPro: "Moroccan Botola Pro",
+    southAfricaPSL: "South African PSL",
+    northAmericanLeague: "North American League",
+    ligaMX: "Liga MX",
+    ligue1Pro: "Guinean Ligue 1 Pro",
+    indianSuperLeague: "Indian Super League",
+    primeiraLiga: "Portuguese Primeira Liga",
+    ligaPro: "Ecuadorian Liga Pro",
+    caribbeanSuperLeague: "Caribbean Super League",
+    ligaSuperMalaysia: "Malaysia Super League",
+    kenyaPremierLeague: "Kenyan Premier League",
+    ivoryCoastPremier: "Ivory Coast Premier League",
+    statusActive: "Active",
+
+    guideGameGuideDesc: "Anatomy of the Live Match Engine, background mechanics of Tactics, and Economy formulas.",
+    guideTacticsDesc: "Your tactics alter the movement commands sent to players' (X,Y) coordinates 20 times per second.",
+    guideT_Defense: "🛡️ BASIC (Defensive Intensity)",
+    guideT_Attack: "🔥 ATTACK (Attacking Philosophy)",
+    guideT_Mentality: "🧠 Mentality (Decision Style)",
+    guideT_Width: "📏 Width",
+    guideT_PassTempo: "⚽ Passing Style & ⏱️ Tempo",
+    guideT_Instructions: "🎯 Attacking Instructions",
+    guideT_DefLinePress: "🧱 DEFENSE (Positioning and Pressing)",
+    guideT_PressIntensity: "🔥 Pressing Intensity",
+    guideT_DefLine: "📏 Defensive Line",
+    guideT_Presets: "⭐ READY TACTICAL PRESETS",
+    guideFinanceDesc: "If you go bankrupt, the board's patience runs out instantly.",
+    guideF_Eco: "💸 Why is the Economy Affected?",
+    guideF_Eco1: "<strong>Wages:</strong> Every player in your squad is a weekly debt.",
+    guideF_Eco2: "<strong>Gate Receipts:</strong> You earn money in home matches. Your stadium capacity scales this. Facility upgrades are essential.",
+    guideF_Eco3: "<strong>Sponsor & Broadcast:</strong> Money awarded based on league quality and your ranking.",
+    guideF_Eco4: "<strong>European Cups:</strong> Winning European matches pays massive Win Bonuses.",
+    guideF_Rep: "📈 What is Reputation?",
+    guideF_Rep1: "Reputation is your club's brand. If a player says 'I won't join', your reputation is lacking.",
+    guideF_Rep2: "European championships, winning league games, and signing star players increase reputation.",
+    guideTipsTitle: "💡 Critical Manager Tips",
+    guideTipsDo: "✅ MUST DO",
+    guideTipsDont: "❌ NEVER DO",
+    guideBasicsP1: "⚽ You are the <strong>Manager</strong>. The game runs on a 'Live Match Engine'. No background dice rolls! Every second (50ms ticks), decisions are made dynamically for all 22 players based on attributes.",
+    guideBasicsP2: "📅 One league match per week. Top 2 teams go to the Champions League, 3rd and 4th to the Europa League.",
+    guideBasicsP3: "📊 <strong>Board Confidence:</strong> The board's trust. If it drops below 30%, you are <strong class='text-red-400'>FIRED!</strong> Wins boost it; bankruptcy and derby losses destroy it.",
+    guideAttrTitle: "👤 Player Attributes (Engine Effects)",
+    guideAttrDesc: "The match engine uses 14 statistics to decide outcomes. Here are the true formulas:",
+    guideTechTitle: "Technical Attributes",
+    guideAttrFinishing: "Determines shot placement. Increases the probability of finesse or lobbed shots.",
+    guideAttrPassing: "Pass accuracy and speed. Low passing means slow balls that get intercepted.",
+    guideAttrDribbling: "Rolls the dice to beat an opponent, determines how fast a player turns with the ball.",
+    guideAttrTackling: "Power to win the ball cleanly. Low ability + high aggression = red cards.",
+    guideAttrGk: "Shot-saving reflex. Goalkeepers also use Positioning and Composure.",
+    guidePhysTitle: "Physical Attributes",
+    guideAttrSpeed: "Sprinting power off the ball. Determines 'Sprint Speed' on counters.",
+    guideAttrStamina: "Endurance. If it drops after the 70th minute, all attributes suffer up to 40% penalty.",
+    guideAttrStrength: "Rolls the dice for duels, power to shield the ball.",
+    guideAttrCondition: "Condition level before a match. A player starting at 60% will crawl by halftime.",
+    guideMentalTitle: "Mental Attributes",
+    guideAttrDecisions: "The AI Brain! Finds the 'mathematically optimum' choice to pass, shoot, or dribble.",
+    guideAttrPositioning: "Ability to avoid offside, find space, or close passing lanes defensively.",
+    guideAttrVision: "Vision radar. High vision sees a forward making a run 50 meters away.",
+    guideAttrComposure: "Coolness. Removes the Finishing penalty when under pressure or 1v1.",
+    guideAttrAggression: "Desire for duels. Increases pressing but logarithmically raises foul risk.",
+    guideStylesTitle: "✨ Player Styles (Critical 20 X-Factors)",
+    guideStylesDesc: "These 'Critical 20' abilities are direct mechanical triggers in the engine.",
+    guideS_Gk: "🧤 Goalkeepers",
+    guideS_Gk1: "Cat Reflexes: Drastically increases close-range save chances.",
+    guideS_Gk2: "Sweeper: Leaves the box to sweep balls played behind the defense.",
+    guideS_Gk3: "Penalty Monster: Significantly increases penalty save rates.",
+    guideS_Def: "🛡️ Defense and Resistance",
+    guideS_Def1: "Interceptor: Increases range and speed to cut passes.",
+    guideS_Def2: "Rock: Keeps the player standing in physical duels.",
+    guideS_Def3: "Relentless: Stamina never hits zero, ignores late-game fatigue penalties.",
+    guideS_Def4: "Press Resistant: Mind doesn't fog under Gegenpress, lowers errors.",
+    guideS_Move: "🏃‍♂️ Movement and Ball Technique",
+    guideS_Move1: "Rapid: Shortens time to reach top acceleration.",
+    guideS_Move2: "Trickster: Improves success rate of bypassing defenders when dribbling.",
+    guideS_Move3: "First Touch: Cushions hard or aerial passes perfectly.",
+    guideS_Pass: "🎯 Passing and Playmaking",
+    guideS_Pass1: "Incisive Pass: Increases accuracy of defense-splitting ground balls.",
+    guideS_Pass2: "Maestro: Expands vision radar; can accurately ping a 50m pass.",
+    guideS_Pass3: "Dead Ball: Adds massive curve to free kicks, skyrocketing goal chance.",
+    guideS_Shoot: "⚽ Shooting and Finishing",
+    guideS_Shoot1: "Finesse: Adds curve to shots, beating the keeper's reach.",
+    guideS_Shoot2: "Rocket: Adds unbelievable bullet speed regardless of distance.",
+    guideS_Shoot3: "Lob: Triggers the chip shot algorithm more frequently in 1v1s.",
+    guideS_Shoot4: "Aerial Threat: Adds extra jumping reach for headers.",
+    guideS_Shoot5: "Long Ranger: Bonus accuracy for long-distance missiles.",
+    guideS_Men: "🧠 Mental Roles",
+    guideS_Men1: "Shadow Striker: Invisibly crashes the box like a 2nd forward.",
+    guideS_Men2: "Poacher: Offers zero defense, waits on the offside line for counters.",
+
+    tacticBalanced: "Balanced",
+    instructions: "Player Instructions",
+
+    guideMgmt_safe: "1. Safe\nTackling Power: Drops 15% (x0.85). Defenders jockey and block angles rather than lunging. Fast wingers may bypass them.\nTackling Risk: Lowest (riskFactor = 0.6).\nEvents: Foul 6%, Yellow 4%, Red 0.2%.\nUse Case: To avoid conceding dangerous free kicks/penalties.",
+    guideMgmt_normal: "2. Normal\nTackling Power: Static (x1.0). Plays true to Tackling stat.\nEvents: Foul 10%, Yellow 8%, Red 0.3%.\nHidden 'Panic Foul': If losing, defense lunges with 40% more power but 2.5x foul risk.",
+    guideMgmt_aggressive: "3. Aggressive\nTackling Power: Increases 25% (x1.25).\nTackling Risk: Multiplies by 2.2.\nEvents: Foul 22%, Yellow 14%, Red 1.0%.\nUse Case: When choking the opponent with Gegenpress.",
+    guideMgmt_reckless: "4. Reckless (Butcher)\nTackling Power: INCREASES 45% (x1.45). A wall of flesh.\nTackling Risk: Extreme (risk = 3.5).\nEvents: Foul 35%, Yellow 25%, Red 5.0%.\n'INTIMIDATION': Hard tackles permanently crush opponent striker's morale and composure!",
+    guideAtt_att: "1. Attacking\nBrave, direct football. Shot Desire: +60, Dribble: +50, Back Pass: -50 penalty. Defense steps up with the ball.",
+    guideAtt_bal: "2. Balanced\nNo extra buffs. Left purely to the player's Decisions stat.",
+    guideAtt_count: "3. Counter Attack\nQuiet in own half. Shot desire hits +140 in opponent half! +30% vision multiplier for vertical runs.",
+    guideAtt_def: "4. Defensive\nZero risk. Defense won't dribble (-100). Safe sideways/backwards passes (+80 pass).",
+    guideAtt_poss: "5. Possession (Tiki-Taka)\nPass/Return: +80. Dribbling Penalty: -15. Trickster players still get +35 freedom!",
+    guideAtt_risk_high: "1. Risk-Taking Mentality\nShot Desire: +25, Dribble +20. SECRETLY activates after 70th min if losing!",
+    guideAtt_risk_bal: "2. Balanced Mentality\n0 impact. Composure and Pressure handle the rest.",
+    guideAtt_risk_safe: "3. Cautious Mentality\nWastes time, avoids risks. (Pass +25, Shot -20, Dribble -15).",
+    guideWidth_nar: "1. Narrow\nSqueezed centrally (30% narrower). Center passing +15, dribbling +10. Vulnerable to wide counters.",
+    guideWidth_bal: "2. Balanced\nStandard pitch width.",
+    guideWidth_wide: "3. Wide\nMoves 30% wider. Wingers ready to sprint (Dribble +20). Easy to intercept if passing is low.",
+    guidePass_short: "1. Short: Passing buffed +50, shooting/dribbling cut (-30). Only shoots from close range.",
+    guidePass_mix: "2. Mixed: Standard freedom.",
+    guidePass_dir: "3. Direct: Takes vertical risks instantly (+25). Back passes penalized (-50).",
+    guidePass_long: "4. Long Ball: Defense never dribbles (-20). Hoofs it 50m forward (+40 pass).",
+    guideTempo_slow: "1. Slow: Waits for risk-free angles (+40 tick wait).",
+    guideTempo_norm: "2. Normal: Standard tempo.",
+    guideTempo_fast: "3. Fast: 0 hesitation! Burns stamina, causes panic errors but creates rapid counters.",
+    guideInst_work: "🛡️ Work Ball Into Box: -50 penalty for long shots! Passing buffed by +20.",
+    guideInst_shoot: "🚀 Shoot On Sight: +25 bonus upon entering 32m. Ruthless shooting.",
+    guideInst_roam: "🔄 Roam From Position: Dribbling +15. CBs make forward runs, discipline drops 30%.",
+    guideDef_pressStand: "Stand Off: Forwards drop to 30m and wait to intercept.",
+    guideDef_pressBal: "Balanced: Forwards pull back to the center circle (45m).",
+    guideDef_pressGegen: "Gegenpress: Forwards stay high at 55m. Team FATIGUE multiplies heavily.",
+    guideDef_lineDeep: "Deep: Defense sits at 16m. Through balls impossible, but gives up midfield space.",
+    guideDef_lineNorm: "Normal: Line at 26m. Balanced.",
+    guideDef_lineHigh: "High: Line at 37m! Catches offsides but vulnerable to lobs if keeper is slow.",
+    guidePreset_1: "1. Gegenpress: Shock press, direct fast tempo, narrow. 4-2-3-1.",
+    guidePreset_2: "2. Tiki-Taka: Normal press, extremely slow, short passing, wide. 4-3-3.",
+    guidePreset_3: "3. Total Football: Fluid roaming, fast, narrow. 4-3-3.",
+    guidePreset_4: "4. Fluid Counter: Absorb pressure, explode with dribbles. Wide. 4-2-3-1.",
+    guidePreset_5: "5. Quick Counter: Direct passing to exploit gaps while defending narrow.",
+    guidePreset_6: "6. Route One: Long balls to a Target Man. 4-4-2.",
+    guidePreset_7: "7. Park The Bus: Everyone behind the ball, deep line. 5-4-1.",
+    guidePreset_8: "8. Wing Play: High tempo attacks relying on wingbacks.",
+    guidePreset_9: "9. Catenaccio: Hard tackling, defensive shape, ruins opponent morale.",
+    counterHighPress: "Danger: We are under heavy press. Don't hold the ball (Tempo = Fast). Use 'Direct/Long Pass' to exploit the space behind their defense!",
+    counterPossession: "They dominate the ball. Choke them with Gegenpress or drop deep ('Stand Off') and hit on the Counter.",
+    counterCounter: "They are looking to counter. Don't push the defensive line too 'High'. Keep aggression 'Normal' or 'Safe' and watch the wings.",
+    counterDefensive: "They parked the bus. Play 'Wide' to stretch their CBs. Lower the 'Tempo' and patiently use 'Work Ball Into Box'.",
+    counterAttacking: "They are overly attacking. Huge gaps behind. Use 'Counter' or 'Wing Play' with fast forwards!",
+    counterBalanced: "Balanced tactics. Winning midfield duels is key. Rely on your star players' standard game.",
+
     dashboard: "Dashboard",
     news: "News",
     squad: "Squad",
@@ -18,11 +279,11 @@
     week: "Week",
     tactics: "Tactics",
     formation: "Formation",
-    aggression: "Aggression",
+    aggression: "Aggressiveness",
     safe: "Safe",
     normal: "Normal",
     aggressive: "Aggressive",
-    reckless: "Reckless",
+    reckless: "Reckless (Butcher)",
     startingXI: "Starting XI",
     bench: "Bench",
     reserves: "Reserves",
@@ -42,7 +303,7 @@
     resign: "Resign",
     clubBudget: "Club Budget",
     projectedWeekly: "Projected Weekly Balance",
-    lastWeekReport: "Last Week Report",
+    lastWeekReport: "Last Week's Report",
     income: "Income",
     expenses: "Expenses",
     stadium: "Stadium",
@@ -53,7 +314,7 @@
     trainingCenter: "Training Center",
     academy: "Academy",
     scoutReport: "Scout Report",
-    promotePlayer: "Promote",
+    promotePlayer: "Promote to Senior",
     academyEmpty: "No candidates available.",
     efficiency: "Efficiency",
     coachNote: "Coach's Note",
@@ -100,16 +361,16 @@
     l: "L",
     gd: "GD",
     buy: "Buy",
-    soldFor: "sold for",
+    soldFor: "sold for:",
     offerAccepted: "Offer accepted.",
     offerReceived: "Transfer Offer",
     acceptOffer: "Accept",
     rejectOffer: "Reject",
     renewContract: "Renew Contract",
     contractExtended: "Contract Extended",
-    notEnoughFunds: "Not enough funds.",
-    successfullySigned: "Successfully signed",
-    promotedToSenior: "promoted to senior squad.",
+    notEnoughFunds: "Insufficient funds.",
+    successfullySigned: "Successfully signed:",
+    promotedToSenior: "Promoted to senior squad:",
     assistantManager: "Assistant Manager",
     clubHealth: "Club Health",
     squadReady: "Squad is ready.",
@@ -141,12 +402,48 @@
     tacticHigh: "High",
     tacticZonal: "Zonal",
     tacticManMark: "Man Mark",
+    styleAttacking: "Attacking",
+    styleDefensive: "Defensive",
+    styleBalanced: "Balanced",
+    styleCounter: "Counter Attack",
+    mentalityLabel: "Mentality",
+    mentalityAttacking: "Risk-Taking",
+    mentalityBalanced: "Balanced",
+    mentalityDefensive: "Cautious",
+
     instrWorkBall: "Work Ball Into Box",
     instrShootSight: "Shoot On Sight",
     instrRoam: "Roam From Position",
+
+    pressingIntensity: "Pressing Intensity",
+    pressStandOff: "Stand Off (Park the Bus)",
+    pressBalanced: "Balanced",
+    pressHigh: "High Press",
+    pressGegen: "Gegenpress (Shock Press)",
     tempoSlow: "Slow",
     tempoFast: "Fast",
-    // Tactical Presets
+    engineChoiceLabel: "Match Engine",
+    engineChoiceDesc: "Choose which engine runs the live simulation.",
+    engineClassic: "Recommended Main Engine — Most realistic and balanced (may have minor flaws)",
+    engineIkinc: "Arcade Engine — Will be simplified for low-end devices in the future",
+    engineUcuncu: "Beta Engine — Under active development. May be unstable. Currently refining: free kick physics, pass-and-move AI, offside recovery, and aggression balance.",
+    engineFeedbackLabelInstruction: "Please visit the store and leave a review about the Main Engine — we prioritize development based on this.",
+    engineFeedbackInstructionShort: "Leave a store review about the Main Engine; we will adjust accordingly.",
+    openOnPlayStore: "Leave a Review on Store",
+    engineFeedbackOpenError: "Could not open the review link.",
+    engineFeedbackSaveError: "Could not save feedback.",
+    engineClassicBanner: "Main engine — most realistic and actively developed version.",
+    engineIkincBanner: "Arcade engine — to be optimized for low-end devices soon.",
+    engineUcuncuBanner: "Beta engine — in development. Free kicks, player runs and defensive AI being refined.",
+
+    changeEngine: "Change Engine",
+    learnMore: "Learn More",
+    engineInfoAlert: "You can change engines in Settings. Feedback is stored locally.",
+    clickHelp: "Click to swap",
+    dragHelp: "Drag to adjust",
+    autoSortHelp: "Auto-Sort",
+    selected: "Selected",
+
     presetTitle: "Tactical Preset",
     presetDesc: "Select a playing style for your team.",
     applyPreset: "Apply",
@@ -154,29 +451,25 @@
     customPreset: "Custom",
 
     presetGegenpress: "Gegenpress",
-    descGegenpress: "High intensity pressing to win the ball back immediately.",
+    descGegenpress: "High intensity pressing to win the ball immediately.",
     presetTikiTaka: "Tiki-Taka",
-    descTikiTaka: "Extreme possession game. Short passing and movement.",
+    descTikiTaka: "Extreme possession. Short passing and movement.",
     presetTotalFootball: "Total Football",
-    descTotalFootball: "Fluid movement where every player attacks and defends.",
+    descTotalFootball: "Fluid movement where everyone attacks and defends.",
     presetFluidCounter: "Fluid Counter",
-    descFluidCounter: "Draw them in, then hit them with pace and movement.",
+    descFluidCounter: "Draw them in, hit them with pace.",
     presetRouteOne: "Route One",
-    descRouteOne: "The quickest way to goal is a straight line.",
+    descRouteOne: "Long balls straight to the Target Man.",
     presetCounterAttack: "Rapid Counter",
-    descCounterAttack: "Soak up pressure and break fast with direct passing.",
+    descCounterAttack: "Soak up pressure and break fast.",
     presetParkTheBus: "Park The Bus",
-    descParkTheBus: "Defend with everyone behind the ball.",
+    descParkTheBus: "Everyone behind the ball. Frustrate the opponent.",
     presetWingPlay: "Wing Play",
-    descWingPlay: "Get the ball wide and cross it into the box.",
+    descWingPlay: "Use the flanks and cross into the box.",
     presetCatenaccio: "Catenaccio",
-    descCatenaccio: "Classic Italian defense. Very strong organization.",
+    descCatenaccio: "Classic Italian defense. Tough and organized.",
 
-    clickHelp: "Click player to swap/select",
-    dragHelp: "Drag to adjust position",
-    autoSortHelp: "Auto-Sort to fix positions",
-    selected: "Selected",
-    selectToStart: "Select players to start",
+    selectToStart: "Select player to start",
     attributes: "Attributes",
     technical: "Technical",
     physical: "Physical",
@@ -199,11 +492,11 @@
     weeklyReport: "Weekly Report",
     trainingReport: "Training Report",
     unhappyPlayer: "Unhappy Player",
-    unhappyPlayerDesc: "{name} is unhappy with the lack of game time.",
-    trainingIntensityReport: "Team trained with {intensity} intensity. Recovery: +{recovery}%",
+    unhappyPlayerDesc: "{name} is unhappy with game time.",
+    trainingIntensityReport: "Team trained at {intensity} intensity. Recovery: +{recovery}%",
     financeReport: "Finance Report",
-    financeReportProfit: "This week the club budget closed with €{amount} profit.",
-    financeReportLoss: "This week the club budget closed with €{amount} loss.",
+    financeReportProfit: "Club economy closed with €{amount} profit this week.",
+    financeReportLoss: "Club economy closed with €{amount} loss this week.",
     currentBalance: "Current balance: €{amount}",
     completeSquad: "Complete Squad",
     gameGuide: "Game Guide",
@@ -211,14 +504,14 @@
     prevWeek: "Previous Week",
     nextWeek: "Next Week",
     saveAndExit: "Save & Exit",
-    noMatchToday: "No match scheduled for today",
+    noMatchToday: "No matches today",
     noMatchInfo: "Advance the week from the dashboard or check fixtures.",
     returnToDashboard: "Return to Dashboard",
-    clickSwap: "Click to swap",
-    dragAdjust: "Drag to adjust",
+    clickSwap: "Swap",
+    dragAdjust: "Position",
     con: "CON",
     mor: "MOR",
-    lastNews: "Latest News regarding your club.",
+    lastNews: "Latest news about your club.",
     deleteRead: "Delete Read",
     deleteAll: "Delete All",
     urgent: "URGENT",
@@ -226,26 +519,26 @@
     accept: "Accept",
     reject: "Reject",
     deleteMessage: "Delete Message",
-    chooseTopic: "Choose a topic to discuss with the player.",
+    chooseTopic: "Choose a topic to discuss.",
     praisePerformance: "Praise Performance",
-    praiseDesc: "Boost morale if playing well.",
+    praiseDesc: "Boosts morale if playing well.",
     criticizeForm: "Criticize Form",
     criticizeDesc: "Demand better results. Risky.",
     encourage: "Encourage",
-    encourageDesc: "Help with confidence issues.",
+    encourageDesc: "Helps with confidence issues.",
     praisePlayer: "Praise",
     criticizePlayer: "Criticize",
     motivatePlayer: "Motivate",
     calmTone: "Calm Tone",
     passionateTone: "Passionate Tone",
     transferNewsSubject: "📰 Transfer News",
-    transferSignedBody: "{team} has signed {position} {name} from {fromTeam} for €{amount}M.",
+    transferSignedBody: "{team} signed {position} {name} from {fromTeam} for €{amount}M.",
     transferOfferSubject: "💰 {team} wants {name}!",
-    transferOfferBody: "{team} has made an unsolicited offer of €{amount}M for {name}. They really want this player!",
+    transferOfferBody: "{team} offered €{amount}M for {name}. They really want him!",
     injurySubject: "🏥 {name} Injured!",
-    injuryBody: "{name} sustained an injury during training. Expected recovery: {weeks} week(s).",
+    injuryBody: "{name} was injured in training. Expected recovery: {weeks} week(s).",
     youthProspectSubject: "🌟 Youth Prospect Found!",
-    youthProspectBody: "Your scouts have discovered {name} ({position}, {age}). Overall: {overall}, Potential: {potential}",
+    youthProspectBody: "Scouts discovered {name} ({position}, {age}). Overall: {overall}, Potential: {potential}",
     orangeTeam: "Orange Team",
     blueTeam: "Blue Team",
     orange: "Orange",
@@ -253,12 +546,13 @@
     selectPlayer: "Select Player",
     avg: "Avg",
     motm: "Man of the Match",
-    trainingMatchSetup: "Training Match Setup",
+    trainingMatchSetup: "Training Match - Team Selection",
     needMorePlayers: "Need {count} more fit players",
     setupMatch: "Setup Training Match",
     newMatch: "New Match",
     trainingMatch: "Training Match",
-    trainingMatchDesc: "Create two teams from your squad and watch them play!",
+    trainingMatchDesc: "Create two teams from your squad and watch!",
+    minPlayersWarning: "Each team needs at least 7 players",
     playing: "Playing...",
     seasonComplete: "Season Complete!",
     seasonOver: "The season has ended.",
@@ -267,11 +561,11 @@
     attrPace: "Pace",
     attrShoot: "Shoot",
     attrPass: "Pass",
-    attrDribble: "Dribble",
+    attrDribble: "Drib",
     attrDefense: "Defense",
     attrPhys: "Physical",
     consistency: "Consistency",
-    bigMatches: "Big Games",
+    bigMatches: "Big Matches",
     injuryRisk: "Injury Risk",
     veryConsistent: "Very Consistent",
     inconsistent: "Inconsistent",
@@ -283,41 +577,41 @@
     resilient: "Resilient",
     playstyles: "Playstyles",
     simulateMatch: "Simulate Match",
-    simulating: "Simulating...",
+    simulating: "Calculating...",
     quickSimResult: "Match Result",
     managerOverview: "Manager Overview",
-    negotiationOpen: "We are open to selling {name}. His market value is {value}. What is your offer?",
+    negotiationOpen: "We are open to selling {name}. Value is {value}. Your offer?",
     negotiationUnlisted: [
-        "{name} is NOT for sale. It would take a massive offer to change our mind.",
-        "We have no intention of selling {name}. He is key to our plans.",
-        "The player is happy here. We will only listen to exceptional offers."
+        "{name} is NOT for sale. It would take a massive offer.",
+        "{name} is a key player. We are not selling.",
+        "The player is happy. We only listen to exceptional offers."
     ],
     negotiationAccept: "We accept your offer. It's a fair price.",
-    negotiationAcceptUnlisted: "This offer is too good to refuse. We accept.",
-    negotiationCounter: "That is too low. We want {amount}.",
+    negotiationAcceptUnlisted: "This offer is too good to refuse. Accepted.",
+    negotiationCounter: "Too low. We want {amount}.",
     negotiationReject: [
-        "As I said, he is not for sale.",
-        "This is a waste of time.",
-        "Nowhere near enough."
+        "As I said, not for sale.",
+        "You are wasting our time.",
+        "Not even close."
     ],
     negotiationRejectUnlisted: [
-        "That offer is insulting.",
-        "You need to do much better.",
-        "Is that a joke?"
+        "This offer is an insult.",
+        "You must do much better.",
+        "Is this a joke?"
     ],
-    negotiationWalkout: "We are done talking. The negotiation is over.",
-    negotiationInsistSuccess: "Fine. Since you are persistent, we will accept this price.",
-    negotiationInsistFail: "Your persistence is annoying. We are ending negotiations immediately!",
+    negotiationWalkout: "Nothing left to say. Talks are over.",
+    negotiationInsistSuccess: "Fine. If you insist, we accept.",
+    negotiationInsistFail: "Your persistence is annoying. Talks are terminated!",
     makeOffer: "Make Offer",
     insist: "Insist",
     confirmTransfer: "Confirm Transfer",
     dealAgreed: "Deal Agreed!",
     negotiationFailed: "Negotiation Failed",
-    negotiationFailedDesc: "The club has withdrawn from talks.",
+    negotiationFailedDesc: "The club left the table.",
     insufficientFunds: "Insufficient Funds",
-    currentValue: "Current Value",
+    currentValue: "Market Value",
     patience: "Patience",
-    insistHelp: "Pressure the club (High Risk)",
+    insistHelp: "Force the club (High Risk)",
     jobOffers: "Job Offers",
     terminateContract: "Release Player",
     terminateConfirm: "Release {name}? Severance: €{cost}K",
@@ -325,47 +619,33 @@
     guideAbout: "About the Game",
     guideBasics: "Game Basics",
     guideSquad: "Squad Management",
-    guideTactics: "Tactics (Detailed)",
+    guideTactics: "Tactics System (Detailed)",
     guideTraining: "Training System",
     guideFacilities: "Facilities & Staff",
     guideMorale: "Morale System",
     guideTransfers: "Transfer System",
     guideFinance: "Financial Management",
-    guideEuropean: "European Cups",
+    guideEuropean: "Continental Cups",
     guideTips: "Pro Tips",
     guideUnderDev: "Under Development!",
-    guideUnderDevDesc: "This game is actively being developed. User feedback is directly reflected in the game. Contact us for bugs or suggestions!",
+    guideUnderDevDesc: "This game is actively developed. User feedback directly shapes the game. Contact us for bugs/suggestions!",
     guideDifferent: "What Makes Us Different?",
-    guideDifferentDesc: "Unlike other manager games, we don't overwhelm users with stats. An easy-to-learn, hard-to-master game that even casual football fans can enjoy.",
-    guideSimple: "Simple and clear interface",
+    guideDifferentDesc: "Unlike ultra-detailed managers, we don't drown you in stats. An easy-to-learn, hard-to-master game for everyone.",
+    guideSimple: "Clean and simple interface",
     guideFast: "Fast match simulation",
     guideMobile: "Mobile-first design",
     guideLiveEngine: "Live Match Engine",
-    engineChoiceLabel: "Match Engine",
-    engineChoiceDesc: "Choose which match engine runs the live simulation.",
-    engineClassic: "Recommended Main Engine — Most realistic and balanced (may have minor flaws)",
-    engineIkinc: "Arcade Engine — Will be made simpler for lower-end devices in the future",
-    engineUcuncu: "Experimental Engine — No longer used, will be removed soon. Please select the first one.",
-    engineFeedbackLabel: "Engine Feedback",
-    engineFeedbackPlaceholder: "Tell us which engine you prefer and why (bugs, feel, suggestions)",
-    engineSaveFeedback: "Thanks — feedback saved locally.",
-    engineClassicBanner: "Main engine — the most realistic and actively developed version.",
-    engineIkincBanner: "Arcade engine — will be lightened for lower-end devices in the future.",
-    engineUcuncuBanner: "Experimental engine — no longer supported, will be removed from the game soon.",
-    changeEngine: "Change Engine",
-    learnMore: "Learn More",
-    engineInfoAlert: "You can switch engines from Settings. Feedback is stored locally.",
-    guideLiveEngineDesc: "Most manager games (FM, Top Eleven etc.) pre-calculate matches and show you highlights. The 'script' is already written.",
+    guideLiveEngineDesc: "Most manager games pre-calculate matches. The 'script' is already written.",
     guideOurEngine: "Our engine is different!",
-    guideEvery50ms: "Every 50ms (20 times per second):",
+    guideEvery50ms: "Every 50ms (20 times a second):",
     guide22Players: "22 player positions are calculated",
     guideAIDecides: "AI decides (shoot, pass, or dribble?)",
     guideBallPhysics: "Ball physics are simulated",
     guideUnpredictable: "Real-time, unpredictable matches!",
     guide2D25D: "2D vs 2.5D View",
-    guide2DDesc: "Classic bird's eye view. Ideal for tactical analysis. See the entire pitch.",
-    guide25DDesc: "Perspective view. More cinematic, like a TV broadcast.",
-    guideChangeView: "Change view during match from top right!",
+    guide2DDesc: "Classic bird's eye view. Ideal for tactical analysis.",
+    guide25DDesc: "Perspective view. Cinematic broadcast feel.",
+    guideChangeView: "Change from the top right during matches!",
     assistantCoach: "Assistant Coach",
     coachRookie: "Rookie",
     coachExperienced: "Experienced",
@@ -377,617 +657,443 @@
     myRecommendation: "My Recommendation",
     against: "against",
     tryThis: "try this!",
-    reasonPressure: "Pressure breaks defensive setups",
-    reasonCounter: "Counter-attacks beat high press",
-    reasonPressWin: "Pressing wins the ball back",
-    reasonControl: "Control prevents counter-attacks",
-    reasonPressBalanced: "Pressing is effective against balanced teams",
+    reasonPressure: "Pressure breaks defense",
+    reasonCounter: "Counters beat high press",
+    reasonPressWin: "Pressing wins the ball",
+    reasonControl: "Control prevents counters",
+    reasonPressBalanced: "Pressing works against balanced teams",
     tacticsRecord: "record vs this style",
     winRate: "win rate",
-    needMoreExperience: "Need More Experience",
-    needMoreMatchesDesc: "I need at least 5 matches to give advice. We've played {count} so far.",
+    needMoreExperience: "Need Experience",
+    needMoreMatchesDesc: "Need at least 5 matches to advise. Played: {count}",
     pastMatches: "Past Encounters",
     season: "Season",
-    understood: "Got It",
+    understood: "Understood",
     rating: "Rating",
     history: "History",
     player: "Player",
-    noStatsYet: "No stats recorded yet.",
-    notEnoughMatches: "Not enough matches played yet.",
+    noStatsYet: "No stats yet.",
+    notEnoughMatches: "Not enough matches played.",
     trophyCabinet: "Trophy Cabinet",
     championship: "Championship",
-    runnerUp: "Runner-up",
+    runnerUp: "Runner-Up",
     seasonHistory: "Season History",
     noHistoryYet: "No history yet. Complete a season!",
     scorerKing: "Top Scorer",
     assistKing: "Top Assister",
     cards: "Cards",
     form: "Form",
-    guideBasicsTitle: "Game Basics",
-    guideBasics1: "You are the manager of a football team in this game.",
-    guideBasics2: "📅 A league match is played every week. Champion is determined at the end of the season.",
-    guideBasics3: "🏆 Goal: Championship, European cups and growing the club.",
-    guideBasics4: "💾 The game saves automatically. Use 'Save and Exit' for a safe exit.",
-    guideBasics5: "📊 If Board Confidence drops, you might be fired!",
+    guideBasicsTitle: "🎮 Game Basics",
+    guideBasics1: "You are the manager of a football team.",
+    guideBasics2: "📅 Play a league match every week. Champion decided at the end.",
+    guideBasics3: "🏆 Goal: Win titles, cups, and grow the club.",
+    guideBasics4: "💾 Auto-saves. Use 'Save & Exit' to safely close.",
+    guideBasics5: "📊 If board confidence drops, you will be fired!",
     guideBoardEffectTitle: "⚠️ Board Confidence Effects:",
-    guideWinEffect: "• Win: +2 to +6 (Depending on opponent)",
+    guideWinEffect: "• Win: +2 to +6",
     guideDrawEffect: "• Draw: Varies by expectation",
     guideLossEffect: "• Loss: -3 to -8",
-    guideFireWarning: "• Below 30%: YOU GET FIRED!",
-    guideDerbyNote: "🔥 Derby & European matches are 2x more important!",
+    guideFireWarning: "• Drops below 30% = FIRED!",
+    guideDerbyNote: "🔥 Derby & European games are 2x more important!",
     guideSquadTitle: "Squad Management",
-    guideSquad1: "• Set players as Starting XI, Bench, or Reserves.",
-    guideSquad2: "🔄 Click a player to swap with another.",
-    guideSquad3: "📍 Try different formations by selecting a layout.",
-    guideOvrCalcTitle: "📊 How is OVR (Overall Rating) Calculated?",
-    guidePosMatch: "• Position Match: Players in correct positions show higher OVR.",
-    guideMoraleEffect: "• Morale Effect: 50+ morale = bonus, 50- morale = penalty.",
-    guideConEffect: "• Condition: Below 30% condition = serious performance drop.",
-    guideReleaseTitle: "❌ Contract Termination",
-    guideRelease1: "• You can release unwanted players.",
-    guideRelease2: "• Compensation: Remaining Years × Annual Wage × 50%",
-    guideRelease3: "• The player becomes a free agent.",
-    guideTacticsTitle: "Tactics System (Detailed Analysis)",
+    guideSquad1: "• Set players to Starting XI, Bench, or Reserve.",
+    guideSquad2: "🔄 Click a player to swap.",
+    guideSquad3: "📍 Try different formations.",
+    guideOvrCalcTitle: "📊 How is OVR Calculated?",
+    guidePosMatch: "• Position Match: Playing in correct role gives higher OVR.",
+    guideMoraleEffect: "• Morale: 50+ = bonus, <50 = penalty.",
+    guideConEffect: "• Condition: <30% condition = massive performance drop.",
+    guideReleaseTitle: "❌ Release Player",
+    guideRelease1: "• Release unwanted players.",
+    guideRelease2: "• Severance: Remaining Years × Annual Wage × 50%",
+    guideRelease3: "• They become Free Agents.",
+    guideTacticsTitle: "🎯 Tactics Board (In-Depth)",
 
-    // TACTICS DEEP DIVE
-    guideDeepPassTitle: "1. Passing Style",
+    guideDeepPassTitle: "📐 Tactical Analysis: Passing & Width (v3.4)",
     guideDeepPassContent: `1. Passing Style
-⚠️ IMPORTANT NOTE: The "Short Passing" option has been REMOVED from the game engine because it prevented teams from shooting and locked up play.
+Engine formulas:
 
-A. Direct Passing
-"Vertical, go to goal!" philosophy. Premier League style.
-• 🚀 Aerial Bonus: +20 Points for aerial passes and crosses.
-• 🔫 Shoot & Dribble: Shoot (+15) and Dribble (+10) desire increases! They want to be heroes.
-• 📉 Safe Pass Penalty: Side passing desire reduced by -10 Points.
-When?: Fast forwards, Physical team, Bad pitch, Counter-attacks.
+A. Short - "Tiki-Taka"
+• Logic: Patience.
+• Formula: Shoot -20, Dribble -10, Pass +30.
+• Result: Refuses to shoot unless it's a clear chance. Looks for passes.
 
-B. Balanced (Mixed)
-Standard setting. Players choose the best option (highest score) regardless of distance.
+B. Direct - "Chaos / Klopp"
+• Logic: Vertical, straight to goal!
+• Formula: Shoot +30, Dribble +20, Pass -25.
+• Result: Selfish play. Wants to be a hero.
+
+C. Long Ball - "Route One"
+• Logic: Hoof it to the forwards.
+• Formula: If pass is >35m, it gets a +50 bonus score.
+• Result: Defense bypasses midfield completely.
+
+D. Balanced (Mixed)
+• Standard. No extra buffs/debuffs.
 
 2. Width
-This setting determines how the team parcels out the pitch.
-
 A. Narrow
-"Must go through the middle" tactic.
-• 🧱 Center Play: If player is NOT near touchline, Pass (+15) and Dribble (+10) bonus.
-• Effect: Players prefer one-twos in the center rather than going wide.
-• Suitable: 4-1-2-1-2 (Diamond), 4-3-1-2, 5-3-2.
+• Center Bonus: Central players get Pass (+15) and Dribble (+10).
+• Result: Tries to pierce through the middle.
 
 B. Wide
-"Hit the line, cross it" tactic.
-• 🏍️ Wing Attacks: Dribble desire increases by +20 Points if on the wing!
-• 🎯 Cross Bonus: Pass (Cross) points +15 in attack zone.
-• Suitable: 4-3-3, 3-4-3, 4-4-2.`,
+• Wing Bonus: Wingers get Dribble (+20)!
+• Cross: Balls played from wing into box get +15 bonus.`,
 
-    guideDeepTempoTitle: "⚡ Detailed Analysis: Tempo & Defense",
-    guideDeepTempoContent: `1. Tempo (Game Speed)
+    guideDeepTempoTitle: "⚡ Tactical Analysis: Tempo & Pressing",
+    guideDeepTempoContent: `1. Tempo (Decision Speed)
 A. Slow - "Chess"
-• Decision Time: x1.4 slower (They think more).
-• Turnover Risk: Reduced.
-• Use: Protecting score, technical team.
+• Formula: Think Time x 1.4 (Slower)
+• Effect: Less errors, higher possession. Looks for guaranteed passes.
 
-B. Fast - "Chaos"
-• Decision Time: x0.7 faster (Panic passes).
-• Error Risk: High.
-• Effect: Overwhelms the opponent.
+B. Fast - "Heavy Metal"
+• Formula: Think Time x 0.7 (Very fast)
+• Effect: Plays without thinking. Causes panic but lethal counters.
 
-2. Defensive Line
-A. Deep - "Bunker"
-• Position: 20-30m from goal.
-• Advantage: No space behind (Anti-Mbappe).
-• Disadvantage: Midfield control given to opponent.
+2. Pressing Intensity
+A. Stand Off (Park the Bus)
+• Formula: Pass +20, Shoot -30, Dribble -20.
+• Logic: Minimize risk, absorb pressure.
 
-B. High - "Offside Trap"
-• Position: Near midfield.
-• Advantage: Trap opponent in their half.
-• Disadvantage: Through balls are 90% goal chances.`,
+B. High Press / Gegenpress
+• Formula: Shoot +10, Dribble +10 in space.
+• Risk: Empty defense, but forces opponent errors.
+• Distance: Interception range jumps from 2.0m to 2.8m!`,
 
     guideDeepComboTitle: "🛠️ Critical Combination Recommendations",
-    guideDeepComboContent: `⚠️ "Chaos Football (Klopp Style)":
-Style: High Press + Pass: Direct + Width: Wide
-Result: Match ends 4-3. Fans go crazy.
+    guideDeepComboContent: `⚠️ "Modern Guardiola (City)":
+Style: Attacking + Pass: Short + Tempo: Slow + Width: Wide
+Result: Suffocates opponent, 70% possession. Patient buildup.
 
-⚠️ "Italian Wall (Catenaccio)":
-Style: Counter + Pass: Direct + Width: Narrow
-Result: Win 1-0 and go home.
+⚠️ "Classic Mourinho (Inter)":
+Style: Defensive + Pass: Direct + Tempo: Fast + Width: Narrow
+Result: Solid wall, lethal bullet-like counter-attacks.
 
-(Note: Since 'Short Passing' required for Tiki-Taka is removed, possession lovers should prefer 'Balanced' style.)`,
+⚠️ "Total Football":
+Style: Balanced + Pass: Mixed + Tempo: Fast + Press: High
+Result: You score a lot, you concede a lot. 100% entertainment.`,
+
     guideRolesTitle: "Player Roles",
-    guideRolesIntro: "Each player fits a specific role based on their attributes. For example, you can't play a slow striker as a 'Poacher'.",
-    guideRolePoacher: "Poacher: Does not contribute to build-up, only finishes. Speed and Finishing required.",
-    guideRoleTargetMan: "Target Man: Holds up the ball with back to goal, brings teammates into play. Strength and Passing required.",
-    guideRoleFalse9: "False 9: Looks like a striker but drops deep to distribute passes.",
-    guideRolePlaymaker: "Playmaker: The brain of the team. All balls go through them. High Vision is essential.",
-    guideRoleB2B: "Box-to-Box: Runs between defense and attack. Requires high Stamina (lungs required!).",
-    guideRoleDestroyer: "Destroyer: Only goal is to stop opponent attacks with fouls or tackles. Weak passing.",
-    guideRoleStopper: "Stopper: Classic defender. Clears the ball.",
-    guideRoleBallPlaying: "Ball Playing CB: Essential for modern football. Starts play from the back, plays long balls.",
-    guideRoleWingback: "Wingback: Doesn't just defend, joins attack and crosses. Speed is crucial.",
+    guideRolesIntro: "Every player has a role. Wrong role drops performance 20%.",
+    guideRolePoacher: "Poacher: Doesn't build up, just finishes. (Pace + Finishing)",
+    guideRoleTargetMan: "Target Man: Holds the ball up. (Strength + Passing)",
+    guideRoleFalse9: "False 9: Drops deep to distribute. (Vision + Passing)",
+    guideRolePlaymaker: "Playmaker: The brain. All passes go through him. (Vision 85+)",
+    guideTrainingTitle: "🏋️ Training System (GROWTH FORMULAS)",
+    guideTrainAge: "⚠️ Development stops after age 28, they only maintain form.",
+    guideTrainLuck: "Growth is rolled via dice every week.",
+    guideTrainFocus: "Training Focus",
+    guideTrainFocusBal: "Balanced: Minor growth to all.",
+    guideTrainFocusAtt: "Attacking: Finishing, Shooting, Dribbling.",
+    guideTrainFocusDef: "Defending: Tackling, Positioning, Strength.",
+    guideTrainFocusPhy: "Physical: Speed, Stamina, Strength.",
+    guideTrainFocusTec: "Technical: Passing, Dribbling, Vision.",
+    guideTrainPosBased: `Position Based: Trains specific crucial stats for their position.`,
 
-    guideTrainingTitle: "🏋️ Training System (DETAILED)",
-    guideTrainAge: "⚠️ Players over 28 do NOT improve!",
-    guideTrainLuck: "Development is luck-based, not guaranteed.",
-    guideTrainFocus: "Training Focuses",
-    guideTrainFocusBal: "Balanced: Slight increase for all stats.",
-    guideTrainFocusAtt: "Attack: Finishing, Shooting, Dribbling increases.",
-    guideTrainFocusDef: "Defense: Tackling, Positioning, Strength increases.",
-    guideTrainFocusPhy: "Physical: Speed, Stamina, Strength increases.",
-    guideTrainFocusTec: "Technical: Passing, Dribbling, Vision increases.",
-    guideTrainPosBased: `Targeted Training (NEW!)
-Position-Based training improves attributes specifically for that role.
+    guideDeepTrainingTitle: "EXPERT: Growth Math v3.0",
+    guideDeepTrainingContent: `Actual engine formulas:
+    
+1. Age Factor (Base Chance):
+• < 21 Years: 5% Chance (Weekly)
+• 21-24 Years: 3% Chance
+• 24-28 Years: 1% Chance
+• 28+ Years: 0% (Growth Stops)
+• 32+ Years: 5% chance to DECLINE.
 
-EXPERT: Development Math
-Actual formulas inside the game engine:
-1. Age Factor:
-• < 21 Years: 5% Growth Chance (Very Fast)
-• 21-24 Years: 3% Growth Chance (Normal)
-• 24-28 Years: 1% Growth Chance (Slow)
-• 28+ Years: Growth STOPS. Can only maintain form by playing.
-• 32+ Years: 5% chance to DECLINE every week (Retirement nearing).
+2. Facility & Staff Bonus:
+• Facility Level: +0.5% per level (Max 10%)
+• Head Coach: +0.8% per level (Max 4%)
+• RESULT: A young player with maxed facilities (5% + 10% + 4%) = 19% weekly growth chance!
 
-2. Facility Effect:
-• Training Facility: +0.5% chance per Level.
-• Head Coach: +0.8% bonus per Level.
-• EXAMPLE: An 18-year-old with Lvl 10 Facility & Lvl 5 Coach has ~15% growth chance weekly!
+3. Potential Wall:
+• Players have hidden potential. Growth slows down as they near it.
+• Condition <60% = ZERO training efficiency.`,
 
-3. Fatigue (Condition):
-• Condition < 60%: Training efficiency HALVED.
-• Condition < 30%: Player skips training to rest.
-• TIP: Rest players with "Light" training after matches to speed up growth!`,
+    guideFacilitiesTitle: "🏢 Facilities & ROI",
+    guideStadiumEffect: `Stadium Income:
+• Ticket Price x Attendance
+• Each level adds +6,000 capacity.`,
+    guideTrainingEffect: "Training Center: Boosts development speed.",
+    guideScoutVsAcad: "Scout vs Academy: Scout is always more profitable.",
 
-    guideFacilitiesTitle: "🏢 Facilities & Staff",
-    guideStadiumEffect: `Stadium
-• Each level = +6,000 capacity. More fans = more ticket revenue.
+    guideDeepFacilitiesTitle: "EXPERT: Economy & Bankruptcy",
+    guideDeepFacilitiesContent: `How to grow without going broke:
 
-🏋️ Training Center
-• Training Center: Increases player development speed.
-
-EXPERT: Return on Investment (ROI)
-How to grow without going bankrupt?
-
-1. Maintenance Costs (Hidden Expense):
-• Formula: (Level ^ 1.3) x 2,000 €
-• Level 1 Stadium: 2,000 € / week
-• Level 15 Stadium: ~70,000 € / week (Huge spike!)
-• TIP: Do not upgrade facilities if your income hasn't increased. You will go bankrupt.
+1. Hidden Maintenance Costs:
+• Formula: (Level ^ 1.3) x €2,000
+• Level 1 Stadium: €2,000 weekly.
+• Level 20 Stadium: ~€100,000 weekly!
+• WARNING: Do not upgrade if income isn't steady.
 
 2. Stadium Math:
-• Each seat yields avg. 15 €.
-• +2000 Capacity (1 Upgrade) = +30,000 € Extra Revenue/week.
-• Takes ~100 weeks (2 seasons) to cover the 3M € cost.
-• RESULT: Stadium is a long-term investment. It loses money in the short term.
+• Average €15 per seat.
+• +6,000 Capacity (1 Upgrade) = +€90,000 weekly.
+• Pays for itself in ~40 weeks (1 season).
+• RESULT: Safest long-term investment.
 
 3. Academy vs Scout:
-• Academy Lvl 10: 5% chance for a mediocre youth (50-60 OVR) weekly.
-• Scout Lvl 10: 10% chance for a TALENTED youth (65-80 Pot/OVR) weekly.
-• ADVICE: Invest in Scout first. You can sell found talents for 5-10M €!`,
-    guideTrainingEffect: "Training Center: Increases development speed.",
-    guideScoutVsAcad: "Scout vs Academy: Scout finds better potential, upgrade it first!",
+• Academy (Lvl 10): 5% weekly chance for a 50-60 OVR player (Trash).
+• Scout (Lvl 10): 10% weekly chance for a 65-80 Pot player (Star).
+• ADVICE: Dump money into Scout. Sell the kids for €10M!`,
 
-    guideMoraleTitle: "🧠 Morale System",
-    guideMoraleXI: "Starting XI: +2 Morale",
-    guideMoraleBench: "Bench: No Change",
-    guideMoraleRes75: "Reserve (75+ OVR): -3 Morale!",
+    guideMoraleTitle: "🧠 Morale System & Egos",
+    guideMoraleXI: "Starting XI: +2 Morale (per match)",
+    guideMoraleBench: "Bench: Stable",
+    guideMoraleRes75: "Reserve (75+ OVR): -3 Morale (Ego issues!)",
     guideMoraleRes65: "Reserve (65-75 OVR): -1 Morale",
-    guideMoralePerform: `Morale directly affects player performance (OVR).
+    guideMoralePerform: `Low morale turns players into ghosts on the pitch.`,
 
-EXPERT: Morale Math
-Morale defines the player's IQ on the pitch.
+    guideDeepMoraleTitle: "EXPERT: Morale & Performance",
+    guideDeepMoraleContent: `Morale directly alters the engine's Performance Multiplier.
 
-1. How Morale Drops?
-• Star in Reserves: If OVR > 75 and not playing, -3 Morale/week (Star Ego).
-• Regular Sub: If OVR 65-75, -1 Morale/week.
-• Youngsters (<65 OVR): They don't mind not playing (Stable).
+1. Performance Impact:
+• 80-100 Morale: 110% Performance (Perfect passes, deadly shots).
+• 40-60 Morale: 100% Performance (Normal).
+• 0-20 Morale: 80% Performance (Keeper drops ball, striker misses open goal).
 
-2. In-Match Impact (Crucial!):
-• 80-100 Morale: Plays with 110% performance. Won't miss passes.
-• 40-60 Morale: Normal performance.
-• 0-20 Morale: Misses open goals. GK lets ball slip through hands.
-• CRITICAL: Never play an unhappy star in a derby. Sell them.`,
+2. Chain Reaction:
+• An unhappy star (Red face) won't ruin the dressing room, but he will sell the match on the pitch.
+• SOLUTION: Sell if you won't play them. A benched 80+ OVR player is a ticking bomb.`,
 
-    guideTransferTitle: "✈️ Transfer System",
-    guideTransList: "Listed players are cheaper.",
-    guideTransUnlisted: `📅 Transfer Windows (NEW!)
+    guideTransferTitle: "✈️ Transfers & Negotiations",
+    guideTransList: "Transfer List: Discounted market.",
+    guideTransUnlisted: `Windows:
 • Summer: Weeks 1-8
-• Winter: Weeks 20-24
+• Winter: Weeks 20-24`,
 
-EXPERT: Negotiation Secrets
-How to convince the AI?
+    guideDeepTransferTitle: "EXPERT: Negotiation Secrets",
+    guideDeepTransferContent: `AI requires a "Willingness" score over 50.
 
-1. "Willingness" Score:
-Need > 50 points for player to say "Yes":
-• League Diff: England vs Turkey difference is capped (Max -7 Pts).
-• Team Rep: +1 Pt for every 75 reputation difference.
-• Champions League: Indirectly boosts willingness via reputation.
+1. Willingness Score:
+• League Diff: Hard to leave Premier League for Süper Lig (-7 Pts).
+• Team Rep: Every 75 point difference = +1 Pt.
+• Champions League: Participating = +10 Pts.
 
-2. Money Talks (Wage Strategy):
-Use wage to turn "No" into "Yes":
+2. "Money Talks" (Wage Power):
+• 1.0x Wage: No effect.
 • 1.5x Wage Offer: +25 Willingness Pts.
 • 2.0x Wage Offer: +50 Pts (MAX EFFECT).
-• WARNING: Offering 3.0x wage gives NO extra points! 2.0x is the cap.
+• TIP: Don't offer 3.0x, it caps at 2.0x.
 
-3. Selling Tactics:
-• AI offers 100-150% value for listed players.
-• They MUST pay 120-170% for unlisted players.
-• TIP: Don't list your stars if you don't want to sell; make AI pay a fortune!`,
+3. Selling Strategy:
+• AI pays 100% value for Listed players.
+• AI pays 150% value for UNLISTED players.
+• SECRET: Don't list stars you want to keep; make the AI pay a fortune to get them!`,
 
-    guideYouthTitle: "Youth Academy (Cheap!)",
-    guideYouth1: "Youths come with 50K € value.",
-    guideYouth2: "Wage: Only 25K €/year.",
+    guideYouthTitle: "Youth Academy",
+    guideYouth1: "Incoming players are free.",
+    guideYouth2: "Very low wages (€25K).",
+    guideFinanceTitle: "💵 Finance, Rep & Leagues",
+    guideSponsorG: "Guaranteed: Low risk, fixed income.",
+    guideSponsorD: "Balanced: Medium risk.",
+    guideSponsorR: `Risky: Massive title bonus ($$$).`,
 
-    guideFinanceTitle: "💰 Finance Management",
-    guideSponsorG: "Guaranteed: High fixed, low bonus. Safe.",
-    guideSponsorD: "Balanced: Mid fixed, mid bonus.",
-    guideSponsorR: `Risky: Low fixed, high bonus.
+    guideDeepFinanceTitle: "EXPERT: Legal Financial Cheats",
+    guideDeepFinanceContent: `How to fix your budget:
 
-EXPERT: Legal Cheats
-How to cover budget deficits:
-
-1. "Buy-Low Sell-High" (Farming):
-• Sign "Free Agent" players aged 16-19 at start of season.
-• Wages are only 25-50K €.
-• Train them for 10 weeks, then list them.
-• Even at 100K € value, it's profit. Getting free players and selling for 100K is clean money.
+1. "Farming" Free Agents:
+• Sign 16-19 year old Free Agents early season.
+• Wages are tiny. Train for 10 weeks, then list them.
+• Pure profit selling them for €200K.
 
 2. Sponsor Gambling:
-• If aiming for title: Pick "Risky" (5M € Bonus).
-• If mid-table: Pick "Guaranteed" for safe weekly cash flow.
+• Title contender? Pick "Risky" (~€5M bonus).
+• Mid-table? Pick "Guaranteed" to survive weekly costs.
 
-3. European Income:
-• Just participating in Intercontinental Cup gives 2.5M € start money.
-• Finishing 3rd in League can sometimes be more profitable than 1st (Better to progress 3 rounds in lower cup than 0 in Champions League).`,
+3. European Cash:
+• Participation alone is €2.5M.
+• Finishing 3rd in League and running deep in the lower cup is more profitable than zero wins in the Champions League!`,
 
-    guideEuroTitle: "🌍 Intercontinental Cups",
-    guideEuroReq: "Participation Rules",
+    guideEuroTitle: "🌍 Continental Cups",
+    guideEuroReq: "Qualification",
     guideEuroCL: "Champions Cup: 1st & 2nd in League",
     guideEuroEL: "Intercontinental Cup: 3rd & 4th in League",
-    guideEuroFormat: "Tournament Format",
-    guideEuroGroups: "Group Stage: Groups of 4",
+    guideEuroFormat: "Format",
+    guideEuroGroups: "Groups: 4 teams each",
     guideEuroAdv: "Top 2 advance",
     guideEuroKO: "QF, SF, Final",
-    guideEuroSingle: "Single-leg knockout",
+    guideEuroSingle: "Single-leg knockouts",
 
     guideProTipsTitle: "🏆 Pro Tips",
     guideTipsDos: "Do's",
-    guideTipsDo1: "• Keep at least 2 players per position.",
-    guideTipsDo2: "• Give youngsters a chance - they improve!",
-    guideTipsDo3: "• Upgrade Scout Network first (most effective).",
-    guideTipsDo4: "• Sell academy players - pure profit!",
-    guideTipsDo5: "• Adapt tactics to your opponent.",
+    guideTipsDo1: "• Keep backups for all positions. Tired players perform worse and get injured.",
+    guideTipsDo2: "• If opponent plays <strong>'Gegenpress'</strong>, use <strong>'Long Ball + Wide'</strong> to bypass the press!",
+    guideTipsDo3: "• Use <strong>'Motivate'</strong> interactions to keep stars happy.",
+    guideTipsDo4: "• Sell academy kids - huge profit margin!",
+    guideTipsDo5: "• Change tactics based on opponent.",
     guideTipsDo6: "• Rest tired players.",
     guideTipsDonts: "❌ Don'ts",
-    guideTipsDont1: "• Don't keep stars in reserves forever.",
-    guideTipsDont2: "• Don't overspend your budget.",
-    guideTipsDont3: "• Don't stick to one formation.",
+    guideTipsDont1: "• 'Keeper as Defender': 80% error rate.",
+    guideTipsDont2: "• 'High Press + High Line + Slow CBs': You will be destroyed on counters.",
+    guideTipsDont3: "• 'Short Pass + Low Tech Team': You'll lose the ball in your own box.",
     guideTipsDont4: "• Don't ignore injuries.",
     guideTipsDont5: "• Don't let contracts expire.",
     guideTipsTactical: "Tactical Tips",
-    guideTipStrong: "Strong Opponent: ParkTheBus + Counter",
-    guideTipWeak: "Weak Opponent: HighPress + Possession",
-    guideTipWinning: "When Winning: Safe aggression",
-    guideTipLosing: "When Losing: Aggressive + Fast tempo",
-    managerProfile: "Manager Profile",
-    currentTeam: "Current Team",
-    weeklySalary: "Weekly Salary",
-    leagueTitle: "League Title",
-    championsLeague: "Intercontinental Champions Cup",
-    uefaCup: "Intercontinental Cup",
-    superCup: "Super Cup",
-    internationalEliteCup: "International Elite Cup",
-    internationalChallengeCup: "International Challenge Cup",
-    internationalSuperCup: "International Super Cup",
-    internationalTournament: "International Tournament",
+    guideTipStrong: "Strong opponent: Park the Bus + Counter",
+    guideTipWeak: "Weak opponent: High Press + Possession",
+    guideTipWinning: "Winning: Cautious aggression",
+    guideTipLosing: "Losing: Aggressive + Fast tempo",
+    guideLineDeepEffect: "Defense sits near keeper (20-30m). Prevents through balls but lacks pressure.",
+    guideLineDeepUse: "Use against fast strikers like Mbappe, or when parking the bus.",
+    guideLineHighEffect: "Defense pushes to midfield. Chokes the opponent, but very vulnerable to balls over the top!",
+    guideLineHighUse: "Against weak teams, when needing a goal, or High Pressing.",
+    guideGoldenSetTitle: "Manager's Golden Tactics",
+    guideGoldenParkTitle: "Park The Bus (Protect Score)",
+    guideGoldenGoalTitle: "Last Minute Goal (All Out Attack)",
+    adviceMarkPlaymaker: "Mark the playmaker",
+    adviceMidfieldSuperiority: "Dominate the midfield",
+    adviceUseWingsNarrow: "Use the wings, they play narrow",
+    advicePlayWide: "Play wide and stretch them",
+    adviceBePatient: "Be patient, wait for gaps",
+    adviceQuickCounter: "Quick counters via long balls",
+    advicePressOnLoss: "Immediate press on ball loss",
+    adviceKeepPossession: "Keep possession, prevent counters",
+    adviceControlledPress: "Controlled press is highly effective",
+    adviceBalancedApproach: "A balanced approach is safest",
+    coachNoteText: "Setting focus to {focus} shapes team identity. Use Light training to recover condition.",
+    clParticipationSubject: "European Cup Participation",
+    clParticipationBody: "🏆 You are participating in the Intercontinental Champions Cup!",
+    elParticipationBody: "🥈 You are participating in the Intercontinental Cup!",
+    internationalEliteCup: "Intercontinental Champions Cup",
+    internationalChallengeCup: "Intercontinental Cup",
+    internationalSuperCup: "Intercontinental Super Cup",
+    internationalTournament: "Intercontinental Tournament",
     viewTournamentDetails: "View Tournament Details",
     currentStageLabel: "Current Stage",
-    superCupSubtitle: "International Elite Cup Champion vs International Challenge Cup Champion",
-    careerHistory: "Career History",
-    noCareerYet: "No career history yet. Complete your first season!",
-    prizeMoneyInfo: "Trophy Prizes Info",
-    roundOf16ToQF: "Round of 16 → Quarter Final",
-    qfToSF: "Quarter Final → Semi Final",
-    sfToFinal: "Semi Final → Final",
-    championshipPrize: "Championship",
-    totalPrize: "Total",
-    stadiumLevel: "Stadium Level",
-    seats: "Seats",
-    currentSeats: "Current",
-    newSeats: "New",
-    maintIncrease: "Maintenance increase",
-    upgrade: "Upgrade",
-    trainingCenterLevel: "Training Level",
-    playerDevSpeed: "Player Development Speed",
-    currentBonus: "Current bonus",
-    newBonus: "New bonus",
-    academyLevel: "Academy Level",
-    youthQuality: "Youth Quality",
-    scoutNetwork: "Scout Network",
-    scoutReportDesc: "Scouts find young talents worldwide. These players come from other clubs' youth systems.",
-    staffAssistant: "Assistant Coach",
-    staffAssistantDesc: "Increases training efficiency and tactical harmony.",
-    staffScout: "Head Scout",
-    staffScoutDesc: "Finds better youth talents, reveals hidden attributes.",
-    staffPhysio: "Head Physio",
-    staffPhysioDesc: "Speeds up injury recovery, reduces fatigue accumulation.",
-    fitnessPerWeek: "fitness/week",
-    discoveryChance: "discovery chance",
-    psRocket: "Rocket",
-    psQuick: "Quick",
-    psFinesse: "Finesse Shot",
-    psTrickster: "Trickster",
-    psPoacher: "Poacher",
-    easyOpponent: "Easy Opponent",
-    balancedMatch: "Balanced Match",
-    hardOpponent: "Hard Opponent",
-    squadStrength: "Squad Strength",
-    prestige: "Prestige",
-    last5Matches: "Last 5 Matches",
-    noMatchesYet: "No matches yet",
-    keyPlayers: "Key Players",
-    squadDistribution: "Squad Distribution",
-    startMatchBtn: "Start Match!",
-    goBack: "Go Back",
-    backToProfiles: "Back to Profiles",
-    playingXIBonus: "Playing in Starting XI (+2/week)",
-    benchStable: "On bench (stable - ready to play)",
-    reserveStarPenalty: "Reserve, star player (-3/week)",
-    reserveMediumPenalty: "Reserve (-1/week)",
-    reserveStable: "Reserve (stable)",
-    lastMoraleChanges: "Last Morale Changes",
-    playStyle: "Play Style",
-    aggressiveness: "Aggressiveness",
-    slow: "Slow",
-    fast: "Fast",
-    managerProfileTitle: "Manager Profile",
-    currentTeamLabel: "Current Team",
-    weeklySalaryLabel: "Weekly Salary",
-    seasonLabel: "Season",
-    trophyCabinetTitle: "Trophy Cabinet",
-    trophyCount: "trophies",
-    leagueTitleLabel: "League Title",
-    championsLeagueLabel: "Intercontinental Champions Cup",
-    uefaCupLabel: "Intercontinental Cup",
-    superCupLabel: "Super Cup",
-    careerHistoryTitle: "Career History",
-    noCareerHistoryYet: "No career history yet. Complete your first season!",
-    positionLabel: "Position",
-    trophiesLabel: "Trophies",
-    cupPrizeInfoTitle: "Cup Prize Info",
-    roundOf16ToQFLabel: "Round of 16 → Quarter-Final",
-    qfToSFLabel: "Quarter-Final → Semi-Final",
-    sfToFinalLabel: "Semi-Final → Final",
-    championshipLabel: "Championship",
-    totalLabel: "Total",
-    currentLabel: "Current",
-    newLabel: "New",
-    maintIncreaseLabel: "Maintenance increase",
-    upgradeBtn: "Upgrade",
-    progressLabel: "Progress",
-    qualityLabel: "Quality",
-    stadiumName: "Stadium",
-    seatsLabel: "Seats",
-    trainingFacility: "Training Facility",
-    performanceCenter: "Performance Center",
-    playerDevelopment: "Player Development",
-    developmentSpeed: "development speed",
-    youthAcademyFacility: "Youth Academy",
-    nextGenAcademy: "Next Gen Academy",
-    betterYouthLabel: "better youth",
-    youthQualityLabel: "youth quality",
-    scoutNetworkLabel: "Scout Network",
-    assistantCoachTitle: "Assistant Coach",
-    assistantCoachDesc: "Increases training efficiency and tactical harmony.",
-    headScoutTitle: "Head Scout",
-    headScoutDesc: "Finds better youth talents, reveals hidden attributes.",
-    headPhysioTitle: "Head Physio",
-    headPhysioDesc: "Speeds up injury recovery, reduces fatigue accumulation.",
-    levelLabel: "Level",
-    trainingEfficiency: "training efficiency",
-    youthDiscoveryChance: "youth discovery chance",
-    conditionPerWeek: "condition/week",
-    trainingBalanced: "Balanced",
-    trainingBalancedDesc: "Maintains overall condition and form.",
-    trainingAttack: "Attack",
-    trainingAttackDesc: "Improves Finishing and Passing.",
-    trainingDefense: "Defense",
-    trainingDefenseDesc: "Improves Tackling and Positioning.",
-    trainingPhysical: "Physical",
-    trainingPhysicalDesc: "Increases Speed and Strength. Fatigue risk.",
-    trainingTechnical: "Technical",
-    trainingTechnicalDesc: "Improves Dribbling and Vision.",
-    trainingPositionBased: "Position Based",
-    trainingPositionBasedDesc: "Each player trains according to their position.",
-    trainingTip: "Balance rest and development. Heavy training improves players quickly but reduces rest.",
-    trainingMatchTitle: "Training Match",
-    prepareMatch: "Prepare Match",
-    upgradeTrainingTip: "Upgrade Training Facilities from Club menu to increase weekly player development.",
-    filterAll: "All",
-    filterListed: "Listed",
-    filterUnlisted: "Not Listed",
-    filterFree: "Free",
-    tacticBalanced: "Balanced",
-    tacticPossession: "Possession",
-    tacticCounter: "Counter",
-    tacticHighPress: "High Press",
-    tacticParkTheBus: "Park The Bus",
-    myTacticalAdvice: "My Tactical Advice",
-    generalAdvice: "General advice",
-    withStyle: "with",
-    playWith: "play",
-    vsTacticStats: "vs {tactic} tactic:",
-    adviceWingPressure: "Wing pressure will force the middle",
-    adviceMidfieldControl: "Tight midfield control",
-    adviceUseWings: "You'll bypass through the wings",
-    adviceTwoStrikers: "Two strikers will apply pressure",
-    adviceExtraDefense: "Extra defensive support needed",
-
-
-
-    adviceMarkPlaymaker: "You'll mark the playmaker",
-    adviceMidfieldSuperiority: "Midfield superiority",
-    adviceUseWingsNarrow: "Use the wings, they play narrow",
-    advicePlayWide: "Play wide, attack the flanks",
-    adviceBePatient: "Be patient, wait for gaps",
-    adviceQuickCounter: "Quick counter on long balls",
-    advicePressOnLoss: "Press immediately on ball loss",
-    adviceKeepPossession: "Keep possession, avoid counters",
-    adviceControlledPress: "Controlled pressing will be effective",
-    adviceBalancedApproach: "Balanced approach is safest",
-    coachNoteText: "Setting the focus to {focus} will help shape the team's identity. Use Light intensity after tough matches to recover condition.",
-    clParticipationSubject: "European Cup Participation",
-    clParticipationBody: "🏆 You are participating in the Champions League!",
-    elParticipationBody: "🥈 You are participating in the UEFA Cup!",
-    clDrawSubject: "🏆 Champions League Draw!",
-    clDrawQualifiedBody: "Your team has qualified for the Champions League! Quarter-final matchups are set.",
-    clDrawNotQualifiedBody: "Champions League has started. Unfortunately, your team did not qualify this season.",
-    clInvitationSubject: "🏆 Champions League Invitation!",
-    clInvitationBody: "As {team}, you have qualified for the Champions League!",
-    elInvitationSubject: "⚽ UEFA Europa League Invitation!",
-    elInvitationBody: "As {team}, you have qualified for the UEFA Europa League!",
+    superCupSubtitle: "Champions Cup Winner vs Intercontinental Cup Winner",
+    clDrawSubject: "🏆 Champions Cup Draw!",
+    clDrawQualifiedBody: "Your team qualified! Quarter-final matchups are set.",
+    clDrawNotQualifiedBody: "Champions Cup has started. You didn't qualify this season.",
+    clInvitationSubject: "🏆 Champions Cup Invitation!",
+    clInvitationBody: "{team} has been invited to the Intercontinental Champions Cup!",
+    elInvitationSubject: "⚽ Intercontinental Cup Invitation!",
+    elInvitationBody: "{team} has been invited to the Intercontinental Cup!",
     jobWelcomeSubject: "🏆 Welcome to {team}!",
-    jobWelcomeBody: "You have started as the new manager of {team}. Your weekly salary: €{salary}",
-    returnToProfileConfirm: "Progress will be saved. Are you sure you want to return to profile selector?",
+    jobWelcomeBody: "You are the new manager of {team}. Weekly wage: €{salary}",
+    returnToProfileConfirm: "Progress will be saved. Return to profile selection?",
     sponsorTitle: "Sponsor Selection",
-    sponsorSelect: "Select your seasonal main sponsor.",
+    sponsorSelect: "Select your main seasonal sponsor.",
     minYearly: "Min/Year",
     champYearly: "Champ/Year",
-    seasonEndBonuses: "Season End Bonuses",
-    riskyWarning: "⚠️ Warning: Income is very low in a bad season! But huge rewards if you become champion!",
+    seasonEndBonuses: "End of Season Bonuses",
+    riskyWarning: "⚠️ Warning: Low income if season is bad! Massive reward for title!",
     guaranteedNote: "✓ Safe: Fixed high income regardless of results",
     selectedLabel: "Selected:",
-    selectSponsorLabel: "Select a sponsor",
+    selectSponsorLabel: "Select sponsor",
     confirmDeal: "Confirm Deal",
     midTableLabel: "mid-table",
-    championLabel: "Champion",
-    // Solo Developer Section
+    championLabel: "champion",
+
     guideSoloDev: "Solo Developer Project",
-    guideSoloDevDesc: "This game is developed by a single person. Thank you for your patience with bugs and missing features!",
-    guideFeedback: "I read all reviews and try to add requested features. Examples: Indonesian & French language support was added based on user feedback!",
-    // Design Philosophy
+    guideSoloDevDesc: "This game is developed by one person. Thanks for understanding bugs and missing features!",
+    guideFeedback: "I read all reviews and try to add features. Example: Indonesian and French were added due to requests!",
     guidePhilosophy: "Design Philosophy",
-    guidePhilosophyDesc: "Unlike ultra-detailed games like FM, this game is designed to be accessible to everyone - even casual football fans.",
-    guidePhilosophy1: "Play 10-15 minutes a day, enjoy your time!",
-    guidePhilosophy2: "Main feature: Real-time 2D/2.5D match simulation",
-    guidePhilosophy3: "No complex systems to overwhelm you",
-    // Why Some Features Are Missing
-    guideWhyMissing: "Why Some Features Are Missing?",
-    guideMissing1: "Player loans → Removed for simplicity",
+    guidePhilosophyDesc: "Unlike overly detailed games like FM, this is designed for everyone to enjoy.",
+    guidePhilosophy1: "Play 10-15 minutes a day, enjoy!",
+    guidePhilosophy2: "Core feature: Real-time 2D/2.5D match simulation",
+    guidePhilosophy3: "No overwhelming complex systems",
+    guideWhyMissing: "Why are some features missing?",
+    guideMissing1: "Player Loans → Removed for simplicity",
     guideMissing2: "World Cup → Maybe in the future",
-    guideMissing3: "Complex tactics → Kept simple intentionally",
-    // Future Plans
+    guideMissing3: "Complex tactics → Intentionally kept simple",
     guideFuturePlans: "Future Plans",
-    guideFuture1: "More language support",
+    guideFuture1: "More languages",
     guideFuture2: "Create your own team",
     guideFuture3: "Customize team/player names",
-    completeSeason: "Complete a season to see global records.",
-    seasonSummary: "SEASON SUMMARY",
-    leaguesRecorded: "Leagues Recorded",
-    runnerUpLabel: "Runner-up",
-    topScorerLabel: "Top Scorer",
+    guideFuture4: "World Cup (Maybe)",
+
     updatesTitle: "Updates",
     devLogTitle: "Developer Notes & Roadmap",
     updateApologyTitle: "Development Process",
-    updateApologyDesc: "We update frequently to achieve maximum realism. Changes will move to larger updates with longer intervals soon.",
-    updateCurrentWorkTitle: "Current Focus",
-    updateCurrentWorkDesc: "• League & Team Reputation Systems (Testing)\n• Transfer Conditions & Salary Balance\n• Facility Cost Analysis (Will revert if causing deficits)",
-    updateSimulationTitle: "Match Engine & Simulation",
-    updateSimulationDesc: "Simulate Match is no longer 'Coin Flip'. New realistic formula uses team power and tactics.",
-    updateFuturePlansTitle: "Roadmap",
-    updateFuturePlansDesc: "• New Leagues & National Teams\n• Career Mode (Job Change)\n• Manager Sacking (Fixing Board Confidence bug)",
-    updateReportTitle: "Feedback",
-    updateReportDesc: "Please report any inconsistencies. We aim for the perfect manager experience.",
+    updateApologyDesc: "We update frequently for maximum realism. Updates will become larger and less frequent soon.",
+    updateCurrentWorkTitle: "Currently Working On",
+    updateCurrentWorkDesc: "• League & Team Reputation (Testing)\n• Transfer Logic & Wage Balance\n• Facility Costs (Will revise if causing deficits)",
+    updateSimulationTitle: "Match Engine & Sim",
+    updateSimulationDesc: "Simulate Match is no longer a coin toss. It uses a realistic formula based on power and tactics.",
+    updateFuturePlansTitle: "Future Roadmap",
+    updateFuturePlansDesc: "• New Leagues & Nationals\n• Career Mode (Job changes)\n• Manager Sacking (Fixing confidence bug)",
+    updateReportTitle: "Report to Us",
+    updateReportDesc: "Please report bugs. We aim for a flawless experience.",
     whatsNew: "What's New",
     update200Title: "Transfer & Youth Update",
     update200Item1Title: "Player Willingness System",
-    update200Item1Desc: "Players now show how willing they are to join your team. League prestige, team reputation and player quality all factor in.",
+    update200Item1Desc: "Players now show willingness to join. League prestige, team rep, and player quality matter.",
     update200Item2Title: "League Reputation System",
-    update200Item2Desc: "Each league has a reputation. Win European cups to boost your league's reputation by up to +35.",
-    update200Item3Title: "Youth Academy Balance",
-    update200Item3Desc: "Youth generation rates and potential bonuses rebalanced. 85+ potential players are now rarer.",
-    update200Item4Title: "AI Transfer Improvements",
-    update200Item4Desc: "AI teams make better offers. Youth promotions now appear in news.",
-    update200Item5Title: "Intercontinental Cups",
-    update200Item5Desc: "Champions League and UEFA Cup renamed to 'Intercontinental' - makes more sense for Argentina and Brazil teams.",
-    update200Item6Title: "League Reputation Decay",
-    update200Item6Desc: "League points are now dynamic! 20% decay applied annually if success isn't maintained. Harder to stay at top.",
+    update200Item2Desc: "Leagues have reputation. European success boosts it up to +35.",
+    update200Item3Title: "Youth Balance",
+    update200Item3Desc: "Youth generation balanced. 85+ potential players are now properly rare.",
+    update200Item4Title: "AI Transfers",
+    update200Item4Desc: "AI makes better offers. Youth promotions show in news.",
+    update200Item5Title: "Continental Cups",
+    update200Item5Desc: "Cups renamed to 'Intercontinental' to fit global teams (Brazil, Argentina).",
+    update200Item6Title: "League Points Decay",
+    update200Item6Desc: "League points decay 20% annually if success isn't maintained.",
     update200Item7Title: "Super Cup Fix",
-    update200Item7Desc: "Super Cup is now played at the correct time (Match week of cup finals) and champions are matched correctly.",
+    update200Item7Desc: "Super Cup plays at the right time with correct teams.",
 
+    worldFootballHistory: "World Football History",
+    worldClubRankings: "World Club Rankings",
+    globalArchive: "Global Champions Archive",
+    officialIFFHS: "Official IFFHS Global Union",
+    noHistory: "No history record found yet.",
+    completeSeason: "Complete a season to see global records.",
+    seasonSummary: "SEASON SUMMARY",
+    leaguesRecorded: "Leagues Recorded",
+    runnerUpLabel: "Runner-Up",
+    topScorerLabel: "Top Scorer",
 
-
-    // --- v3.2 UPDATE ---
-    update320Title: "Expert Guide & Giant Killers",
-    update320Item1Title: "Giant Killer System",
-    update320Item1Desc: "Underdogs now get huge rewards! Beating a team from a superior league boosts reputation by up to 3.5x.",
-    update320Item2Title: "Expert Game Guide",
-    update320Item2Desc: "Guide completely rewritten. Now exposes real internal math (Training chances, Transfer percentages).",
-    update320Item3Title: "Transfer Logic V3",
-    update320Item3Desc: "Fixed wage offer impact (1.5x, 2.0x). League prestige penalties optimized.",
-    update320Item4Title: "Tactical Depth",
-    update320Item4Desc: "Added deep dive analysis for Tempo, Width and Passing mechanics to the guide.",
-
-    // Style Keys
-    styleLabel: "Play Style",
-    styleBalanced: "Balanced",
-    mentalityLabel: "Decision Risk",
-    mentalityAttacking: "Risk-Taking",
-    mentalityBalanced: "Balanced",
-    mentalityDefensive: "Cautious",
-    stylePossession: "Possession (Tiki-Taka)",
-    styleCounter: "Counter Attack",
-    styleHighPress: "High Press (Gegenpress)",
-    styleParkTheBus: "Park The Bus",
-
-    // --- v3.2.1 UPDATE ---
-    update321Title: "Dynamic Income & Coefficient System",
-    update321Item1Title: "5-Year League Coefficient System",
-    update321Item1Desc: "UEFA-style 5-year coefficient system added. View each league's last 5 years in World Rankings screen.",
-    update321Item2Title: "Dynamic TV Rights",
-    update321Item2Desc: "TV income now changes based on league coefficient. If Turkey dominates world football, TV rights can double!",
-    update321Item3Title: "Dynamic Ticket Prices",
-    update321Item3Desc: "Ticket prices also increase with league success. Successful leagues = More fan interest = Higher ticket prices.",
-    update321Item4Title: "Champion Protection",
-    update321Item4Desc: "League champion's reputation now NEVER decreases. Championship = Minimum +200 reputation guaranteed.",
-
-    // --- v3.2.5 UPDATE ---
-    update325Title: "Version 3.2.5 – What's New",
-    update325Item1Title: "Match Engine & Gameplay",
-    update325Item1Desc: "• Match engine calibrated.\n• Short Pass & Possession tactics removed (ineffective).\n• Aggressive teams now receive more cards.\n• Shot accuracy reduced, Dribbling/Defense buffed.\n• AI tactics reset based on squad.",
-    update325Item2Title: "League & Tournament System",
-    update325Item2Desc: "• League count increased to 24.\n• Intercontinental Cup replaces European Cup (Top 2 teams qualify).",
-    update325Item3Title: "Management & Club System",
-    update325Item3Desc: "• Manager Sacking active! (Low Board Confidence = Game Over).\n• Red card bans are now active.\n• Reputation points updated.",
-
-    // Developer Letter - v3.4
-    devLetterTitle: "Letter from Developer",
+    devLetterTitle: "Letter from the Developer",
     devLetterGreeting: "Hello Dear Players! 👋",
-    devLetterParagraph1: "First of all, thank you so much for downloading our game and spending your time with it. I know some of you have encountered serious bugs after recent updates, and I sincerely apologize for that.",
-    devLetterParagraph2: "With this update, I've completely rewritten the game's code from scratch. My top priority was making live matches a truly enjoyable experience. The match engine has been rebuilt from the ground up. I discovered critical bugs in Champions League, Europa League, and Super Cup: Live match, quick sim, and mid-match simulation were all working differently. Group standings weren't updating after matches, and in knockout rounds, it was unclear who would advance after a draw. All these inconsistencies have now been fixed.",
-    devLetterParagraph3: "Penalty shootouts are now simulated when knockout matches end in a draw. It currently runs in the background, but I'm planning to add a visual penalty experience in future updates. Improvements for set pieces like free kicks and corners are also in progress.",
-    devLetterParagraph4: "⚠️ Important Note: For the most stable experience, I recommend starting a new game. If you experience issues with old saves, you can clear the app's cache and data from your phone's settings and start fresh.",
-    devLetterParagraph5: "Currently with 48 leagues, weekly simulation takes about 12 seconds on a standard phone. Every week, AI teams run real match simulations, and all transfers happen intelligently. When we had only 8 leagues, this wasn't an issue. I'm not planning to add 2nd divisions to every country because it would hurt performance further. We could add random score assignment as an alternative, but that would compromise realism. I've also limited AI teams to 20% transfer activity per week to prevent chaos. We're working on alternative solutions.",
-    devLetterParagraph6: "I'm developing this game solo. Sharing bugs and suggestions you encounter in reviews is incredibly valuable to me. Your feedback helps me identify and fix issues much faster. Once the foundation is solid, I'll move on to economic balancing, facility limits, and career mode. Thank you for your support! 🙏",
+    devLetterParagraph1: "First of all, thank you so much for downloading the game and spending your valuable time with it. With this version, the core infrastructure of our game is over 95% complete.",
+    devLetterParagraph2: "Thanks to your feedback, we've overhauled everything from the match engine to transfers, league simulations to tactics. We now have a very solid foundation.",
+    devLetterParagraph3: "Moving forward, to avoid breaking the balance of the full game, major updates will first be released in an 'Open Beta' test. This way, we can test new features together before fully integrating them.",
+    devLetterParagraph4: "We have very exciting features in our future plans: I am working on a detailed career system and an achievement system that will level up our manager and grant new traits.",
+    devLetterParagraph5: "There is also a small chance we might add 2nd leagues for certain countries and national teams. But most importantly, I am planning to add an online/offline match mode where you can play against other players.",
+    devLetterParagraph6: "All these massive additions will first meet you in the Open Beta. Thank you endlessly for your interest, support, and amazing feedback. See you on the pitch! 🙏",
     devLetterSignature: "With love,",
     devLetterAuthor: "The Developer",
-    devLetterDate: "February 7, 2026",
+    devLetterDate: "February 23, 2026",
     devLetterContinue: "Continue to Game",
 
-    // --- v3.3 UPDATE ---
-    update330Title: "v3.3 - Economic & FFP Update",
-    update330Item1Title: "Contract-Locked Salaries",
-    update330Item1Desc: "Salaries no longer increase automatically with growth! Only updated upon signing a new contract. Sign young talents cheap!",
-    update330Item2Title: "Global Youth Pool",
-    update330Item2Desc: "No more 'regens' from retired players. Now, a massive pool of 80 global youth talents is generated each season, and teams compete based on Scout power.",
-    update330Item3Title: "Market Inflation",
-    update330Item3Desc: "As clubs get richer over time, player values scale up. In 10 years, players worth Messi today could cost €200M.",
-    update330Item4Title: "FFP Luxury Tax",
-    update330Item4Desc: "Clubs with >€100M budget pay a weekly tax, distributed as a 'Solidarity Fund' to the rest of the league. Price of wealth!",
-    update330Item5Title: "Detailed Finances & FFP",
-    update330Item5Desc: "Finance tab revamped. Added explicit tracking for FFP taxes paid and solidarity funds received.",
-
     ffpSolidarityFund: "FFP Solidarity Fund",
+    update330Item2Title: "Global Youth Pool",
+    update330Item2Desc: "No more 'regens' from retired players. A massive 80-player global youth pool is generated every season. Teams fight for them based on Scout power.",
+    update330Item3Title: "Market Inflation",
+    update330Item3Desc: "As clubs get richer, prices inflate. In 10 years, elite players could cost €200M.",
+    update330Item4Title: "FFP Luxury Tax",
+    update330Item4Desc: "Rich clubs (>€100M budget) pay a weekly tax, distributed to the rest of the league as a Solidarity Fund.",
+    update330Item5Title: "Detailed Finance & FFP",
+    update330Item5Desc: "Finances tab revamped. FFP taxes and solidarity funds are now visible.",
     ffpLuxuryTax: "FFP Luxury Tax",
 
-    // Engine Reports & Attributes
+    update320Title: "Expert Guide & Giant Killers",
+    update320Item1Title: "Giant Killer",
+    update320Item1Desc: "Beating heavy favorites gives massive reputation boosts (up to 3.5x).",
+    update320Item2Title: "Expert Game Guide",
+    update320Item2Desc: "Guide fully rewritten to expose actual math and formulas behind the engine.",
+    update320Item3Title: "Transfer Logic V3",
+    update320Item3Desc: "Wage offer impacts fixed (1.5x, 2.0x). League prestige penalties balanced.",
+    update320Item4Title: "Tactical Depth",
+    update320Item4Desc: "Pass, Tempo, and Width exact mechanical effects added to the guide.",
+
+    update321Title: "Dynamic Income & Coefficients",
+    update321Item1Title: "5-Year League Coefficient",
+    update321Item1Desc: "UEFA-style 5-year system added to World Rankings.",
+    update321Item2Title: "Dynamic TV Rights",
+    update321Item2Desc: "TV income scales with league coefficient.",
+    update321Item3Title: "Dynamic Ticket Prices",
+    update321Item3Desc: "Ticket prices rise with league success and fan interest.",
+    update321Item4Title: "Champion Protection",
+    update321Item4Desc: "League champions' reputation NEVER drops.",
+
+    update325Title: "Version 3.2.5 – What's New",
+    update325Item1Title: "Match Engine & Gameplay",
+    update325Item1Desc: "• Engine calibrated.\n• Short Pass / Possession removed (bugged).\n• Aggressive teams get more cards.\n• Shot accuracy nerfed, defense buffed.\n• AI tactics reset dynamically.",
+    update325Item2Title: "League & Tournaments",
+    update325Item2Desc: "• Expanded to 24 leagues.\n• Intercontinental Cup added (Top 2 qualify).",
+    update325Item3Title: "Management",
+    update325Item3Desc: "• Sacking active (Game Over on low confidence)!\n• Red card bans active.\n• Rep points updated.",
+
     reportGeneralDev: "General Development",
     attrFinishing: "Finishing",
     attrDribbling: "Dribbling",
@@ -1005,39 +1111,52 @@ How to cover budget deficits:
 
     moralePlayed: "Played in match",
     moraleStarting: "Starting XI",
-    moraleBench: "Bench (Neutral)",
+    moraleBench: "Bench - stable",
     moraleReserve: "Reserves",
-    moraleReserveStar: "Star Player in Reserves",
-    moraleReserveStable: "Reserves (Stable)",
+    moraleReserveStar: "Star player in reserves",
+    moraleReserveStable: "Reserves (stable)",
     gameOver: "GAME OVER",
-    fired: "YOU HAVE BEEN SACKED!",
-    firedMessage: "The board has lost confidence in your ability to manage the club. Security will escort you out of the building immediately.",
+    fired: "YOU'RE FIRED!",
+    firedMessage: "The board is unhappy with your performance and you have been sacked. Security will escort you out.",
     returnToMenu: "Return to Main Menu",
 
-    // Performance & Settings
     settings: "Settings",
     comingSoon: "Coming Soon",
     performance: "Performance",
     showAnimations: "Show Animations",
-    showAnimationsDesc: "Display match animations and effects",
-    detailedStats: "Detailed Statistics",
+    showAnimationsDesc: "Show match animations and effects",
+    detailedStats: "Detailed Stats",
     detailedStatsDesc: "Show detailed player and match statistics",
     backgroundSimulation: "Background Simulation",
-    backgroundSimulationDesc: "Show loading screen during week simulation (recommended for mobile)",
+    backgroundSimulationDesc: "Show loading screen during week sim (recommended for mobile)",
     autoSave: "Auto Save",
     always: "Always",
     weekly: "Weekly",
     monthly: "Monthly",
     language: "Language",
     tip: "Tip",
-    performanceSettingsTip: "If you experience slow performance, disable animations and enable background simulation. This will significantly improve speed on mobile devices.",
+    performanceSettingsTip: "If you experience slow performance, disable animations and turn on background simulation. This drastically improves speed on mobile.",
     cancel: "Cancel",
     save: "Save",
     simulatingWeek: "Simulating Week",
-    pleaseWait: "Please wait while matches are being processed...",
+    pleaseWait: "Please wait while matches are processing...",
     progress: "Progress",
     simulatingLeagueMatches: "Simulating league matches...",
     simulatingCupMatches: "Simulating cup matches...",
     updatingStatistics: "Updating player statistics...",
-    performanceTip: "Tip: You can disable animations in Settings for faster simulation"
+    performanceTip: "Tip: Disable animations in Settings for faster simulation",
+
+    // Assistant Coach Modal
+    overallContext: "Overall",
+    againstFormation: "Against {formation}",
+    againstStyle: "Against {style}",
+    playStyle: "Play Style",
+    aggressiveness: "Aggressiveness",
+    myTacticalAdvice: "Based on Past Data",
+    winRateLabel: "win",
+    successfulWith: "You are successful with",
+    needMoreGamesForAdvice: "I need at least 5 matches to give advice. We have played",
+    noEnoughDataForOpponent: "Not enough data against",
+    orLabel: "or",
+    styleLabel: "style. I suggest trying it!"
 };

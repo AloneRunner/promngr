@@ -6,9 +6,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MDO",
     reyting: 89,
     yas: 30,
-    ana_ozellikler: { hiz: 72, sut: 74, pas: 89, dribbling: 84, defans: 83, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 74,
+      pas: 89,
+      dribbling: 84,
+      defans: 83,
+      fizik: 79,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Kane",
@@ -17,9 +24,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SNT",
     reyting: 89,
     yas: 31,
-    ana_ozellikler: { hiz: 64, sut: 92, pas: 83, dribbling: 82, defans: 48, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 92,
+      pas: 83,
+      dribbling: 82,
+      defans: 48,
+      fizik: 82,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Musial",
@@ -28,9 +42,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MOO",
     reyting: 88,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 82, pas: 80, dribbling: 90, defans: 66, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 82,
+      pas: 80,
+      dribbling: 90,
+      defans: 66,
+      fizik: 65,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Taha",
@@ -39,9 +60,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "STP",
     reyting: 87,
     yas: 29,
-    ana_ozellikler: { hiz: 63, sut: 38, pas: 60, dribbling: 63, defans: 87, fizik: 86 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 38,
+      pas: 60,
+      dribbling: 63,
+      defans: 87,
+      fizik: 86,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Olise",
@@ -50,9 +78,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SĞO",
     reyting: 86,
     yas: 23,
-    ana_ozellikler: { hiz: 78, sut: 80, pas: 84, dribbling: 87, defans: 50, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 80,
+      pas: 84,
+      dribbling: 87,
+      defans: 50,
+      fizik: 66,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Diaz",
@@ -61,9 +96,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SLO",
     reyting: 85,
     yas: 27,
-    ana_ozellikler: { hiz: 88, sut: 81, pas: 76, dribbling: 87, defans: 45, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 81,
+      pas: 76,
+      dribbling: 87,
+      defans: 45,
+      fizik: 75,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Upameca",
@@ -72,9 +114,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "STP",
     reyting: 85,
     yas: 26,
-    ana_ozellikler: { hiz: 77, sut: 45, pas: 64, dribbling: 73, defans: 84, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 45,
+      pas: 64,
+      dribbling: 73,
+      defans: 84,
+      fizik: 84,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Davids",
@@ -83,9 +132,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SLB",
     reyting: 84,
     yas: 24,
-    ana_ozellikler: { hiz: 94, sut: 66, pas: 78, dribbling: 85, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 94,
+      sut: 66,
+      pas: 78,
+      dribbling: 85,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Neuer",
@@ -94,9 +150,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "KL",
     reyting: 84,
     yas: 38,
-    ana_ozellikler: { hiz: 81, sut: 81, pas: 90, dribbling: 81, defans: 31, fizik: 86 },
+    ana_ozellikler: {
+      hiz: 81,
+      sut: 81,
+      pas: 90,
+      dribbling: 81,
+      defans: 31,
+      fizik: 86,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
 
   {
@@ -106,9 +169,22 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "KL",
     reyting: 89,
     yas: 20,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 79, refleks: 89, vurus: 84, pozisyon: 81, top_kontrol: 77 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 79,
+      refleks: 89,
+      vurus: 84,
+      pozisyon: 81,
+      top_kontrol: 77,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Perez",
@@ -117,9 +193,22 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "KL",
     reyting: 88,
     yas: 21,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 78, refleks: 88, vurus: 83, pozisyon: 80, top_kontrol: 76 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 78,
+      refleks: 88,
+      vurus: 83,
+      pozisyon: 80,
+      top_kontrol: 76,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Santos",
@@ -128,9 +217,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "STP",
     reyting: 87,
     yas: 22,
-    ana_ozellikler: { hiz: 77, sut: 62, pas: 79, dribbling: 77, defans: 87, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 62,
+      pas: 79,
+      dribbling: 77,
+      defans: 87,
+      fizik: 82,
+    },
     detaylar: { ayakta_mudahale: 87, top_kesme: 82, kafa_isabeti: 77, guc: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Santos",
@@ -139,9 +235,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "STP",
     reyting: 86,
     yas: 23,
-    ana_ozellikler: { hiz: 76, sut: 61, pas: 78, dribbling: 76, defans: 86, fizik: 81 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 61,
+      pas: 78,
+      dribbling: 76,
+      defans: 86,
+      fizik: 81,
+    },
     detaylar: { ayakta_mudahale: 86, top_kesme: 81, kafa_isabeti: 76, guc: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Santos",
@@ -150,9 +253,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SĞB",
     reyting: 85,
     yas: 24,
-    ana_ozellikler: { hiz: 75, sut: 60, pas: 77, dribbling: 75, defans: 85, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 60,
+      pas: 77,
+      dribbling: 75,
+      defans: 85,
+      fizik: 80,
+    },
     detaylar: { ayakta_mudahale: 85, top_kesme: 80, kafa_isabeti: 75, guc: 77 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "João Perez",
@@ -161,9 +271,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SĞB",
     reyting: 84,
     yas: 25,
-    ana_ozellikler: { hiz: 74, sut: 59, pas: 76, dribbling: 74, defans: 84, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 59,
+      pas: 76,
+      dribbling: 74,
+      defans: 84,
+      fizik: 79,
+    },
     detaylar: { ayakta_mudahale: 84, top_kesme: 79, kafa_isabeti: 74, guc: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Silva",
@@ -172,9 +289,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SLB",
     reyting: 83,
     yas: 26,
-    ana_ozellikler: { hiz: 73, sut: 58, pas: 75, dribbling: 73, defans: 83, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 58,
+      pas: 75,
+      dribbling: 73,
+      defans: 83,
+      fizik: 78,
+    },
     detaylar: { ayakta_mudahale: 83, top_kesme: 78, kafa_isabeti: 73, guc: 75 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Santos",
@@ -183,9 +307,21 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MDO",
     reyting: 82,
     yas: 27,
-    ana_ozellikler: { hiz: 67, sut: 62, pas: 77, dribbling: 74, defans: 82, fizik: 77 },
-    detaylar: { top_kesme: 82, ayakta_mudahale: 77, dayaniklilik: 79, kisa_pas: 74 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 62,
+      pas: 77,
+      dribbling: 74,
+      defans: 82,
+      fizik: 77,
+    },
+    detaylar: {
+      top_kesme: 82,
+      ayakta_mudahale: 77,
+      dayaniklilik: 79,
+      kisa_pas: 74,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Perez",
@@ -194,9 +330,21 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MDO",
     reyting: 81,
     yas: 28,
-    ana_ozellikler: { hiz: 66, sut: 61, pas: 76, dribbling: 73, defans: 81, fizik: 76 },
-    detaylar: { top_kesme: 81, ayakta_mudahale: 76, dayaniklilik: 78, kisa_pas: 73 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 61,
+      pas: 76,
+      dribbling: 73,
+      defans: 81,
+      fizik: 76,
+    },
+    detaylar: {
+      top_kesme: 81,
+      ayakta_mudahale: 76,
+      dayaniklilik: 78,
+      kisa_pas: 73,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Martin",
@@ -205,9 +353,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MO",
     reyting: 80,
     yas: 29,
-    ana_ozellikler: { hiz: 68, sut: 70, pas: 80, dribbling: 75, defans: 65, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 70,
+      pas: 80,
+      dribbling: 75,
+      defans: 65,
+      fizik: 70,
+    },
     detaylar: { vizyon: 75, kisa_pas: 80, top_kontrol: 72, dayaniklilik: 68 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Pedro Garcia",
@@ -216,9 +371,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MO",
     reyting: 79,
     yas: 30,
-    ana_ozellikler: { hiz: 67, sut: 69, pas: 79, dribbling: 74, defans: 64, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 69,
+      pas: 79,
+      dribbling: 74,
+      defans: 64,
+      fizik: 69,
+    },
     detaylar: { vizyon: 74, kisa_pas: 79, top_kontrol: 71, dayaniklilik: 67 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Costa",
@@ -227,9 +389,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MO",
     reyting: 83,
     yas: 31,
-    ana_ozellikler: { hiz: 71, sut: 73, pas: 83, dribbling: 78, defans: 68, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 73,
+      pas: 83,
+      dribbling: 78,
+      defans: 68,
+      fizik: 73,
+    },
     detaylar: { vizyon: 78, kisa_pas: 83, top_kontrol: 75, dayaniklilik: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Garcia",
@@ -238,9 +407,16 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "MOO",
     reyting: 83,
     yas: 32,
-    ana_ozellikler: { hiz: 71, sut: 73, pas: 83, dribbling: 78, defans: 68, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 73,
+      pas: 83,
+      dribbling: 78,
+      defans: 68,
+      fizik: 73,
+    },
     detaylar: { vizyon: 78, kisa_pas: 83, top_kontrol: 75, dayaniklilik: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Pedro Garcia",
@@ -249,8 +425,15 @@ export const BAYERN_MUNICH_SQUAD = [
     mevki: "SĞO",
     reyting: 82,
     yas: 33,
-    ana_ozellikler: { hiz: 87, sut: 77, pas: 74, dribbling: 84, defans: 35, fizik: 67 },
+    ana_ozellikler: {
+      hiz: 87,
+      sut: 77,
+      pas: 74,
+      dribbling: 84,
+      defans: 35,
+      fizik: 67,
+    },
     detaylar: { dribbling: 82, ceviklik: 85, orta_acma: 72, sprint: 87 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

@@ -79,7 +79,6 @@ export const SeasonSummaryModal: React.FC<SeasonSummaryModalProps> = ({ isOpen, 
                         <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
                             <h4 className="text-slate-400 text-xs uppercase font-bold mb-2">Your Details</h4>
                             <div className="text-xl font-bold text-white">{userTeam.name}</div>
-                            <div className="text-sm text-slate-500">{userTeam.managerName}</div>
                         </div>
                         <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
                             <h4 className="text-slate-400 text-xs uppercase font-bold mb-2">Final Rank</h4>

@@ -1,4 +1,3 @@
-
 export const BRIGHTON_SEAGULLS_SQUAD = [
   {
     ad: "K. Mito",
@@ -7,9 +6,22 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SLO",
     reyting: 82,
     yas: 28,
-    ana_ozellikler: { hiz: 87, sut: 73, pas: 76, dribbling: 86, defans: 57, fizik: 64 },
-    detaylar: { hizlanma: 89, dribbling: 88, ceviklik: 88, denge: 85, bitiricilik: 76 },
-    oyun_tarzlari: ["Top Cambazı", "Teknik", "İçe Kat Eden"]
+    ana_ozellikler: {
+      hiz: 87,
+      sut: 73,
+      pas: 76,
+      dribbling: 86,
+      defans: 57,
+      fizik: 64,
+    },
+    detaylar: {
+      hizlanma: 89,
+      dribbling: 88,
+      ceviklik: 88,
+      denge: 85,
+      bitiricilik: 76,
+    },
+    oyun_tarzlari: ["Top Cambazı", "İlk Dokunuş"],
   },
   {
     ad: "C. Bale",
@@ -18,9 +30,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MDO",
     reyting: 81,
     yas: 21,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 75, dribbling: 80, defans: 79, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 75,
+      dribbling: 80,
+      defans: 79,
+      fizik: 79,
+    },
     detaylar: { top_kesme: 80, dribbling: 82, dayaniklilik: 82, guc: 80 },
-    oyun_tarzlari: ["Baskıya Dayanıklı", "Genç Yetenek"]
+    oyun_tarzlari: ["Baskıya Dayanıklı"],
   },
   {
     ad: "M. Cuyper",
@@ -29,9 +48,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SLB",
     reyting: 80,
     yas: 24,
-    ana_ozellikler: { hiz: 76, sut: 73, pas: 80, dribbling: 79, defans: 75, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 73,
+      pas: 80,
+      dribbling: 79,
+      defans: 75,
+      fizik: 75,
+    },
     detaylar: { orta_acma: 83, frikik: 80, kisa_pas: 81 },
-    oyun_tarzlari: ["Orta Uzmanı", "Duran Top"]
+    oyun_tarzlari: ["Maestro", "Ölü Top Uzmanı"],
   },
   {
     ad: "J.P. Heck",
@@ -40,9 +66,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "STP",
     reyting: 80,
     yas: 25,
-    ana_ozellikler: { hiz: 67, sut: 46, pas: 72, dribbling: 70, defans: 80, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 46,
+      pas: 72,
+      dribbling: 70,
+      defans: 80,
+      fizik: 78,
+    },
     detaylar: { markaj: 82, ayakta_mudahale: 81, kisa_pas: 78 },
-    oyun_tarzlari: ["Oyun Kurucu Stoper"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "F. Kady",
@@ -51,9 +84,22 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SĞB",
     reyting: 79,
     yas: 26,
-    ana_ozellikler: { hiz: 82, sut: 68, pas: 74, dribbling: 80, defans: 76, fizik: 67 },
-    detaylar: { hizlanma: 84, dayaniklilik: 90, dribbling: 81, ceviklik: 82, orta_acma: 76 },
-    oyun_tarzlari: ["Motor", "Teknik", "İki Yönlü Bek"]
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 68,
+      pas: 74,
+      dribbling: 80,
+      defans: 76,
+      fizik: 67,
+    },
+    detaylar: {
+      hizlanma: 84,
+      dayaniklilik: 90,
+      dribbling: 81,
+      ceviklik: 82,
+      orta_acma: 76,
+    },
+    oyun_tarzlari: ["Amansız", "İlk Dokunuş"],
   },
   {
     ad: "B. Verbru",
@@ -62,9 +108,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "KL",
     reyting: 78,
     yas: 23,
-    ana_ozellikler: { hiz: 56, sut: 79, pas: 76, dribbling: 76, defans: 81, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 79,
+      pas: 76,
+      dribbling: 76,
+      defans: 81,
+      fizik: 75,
+    },
     detaylar: { refleks: 80, ayak_hakimiyeti: 82, ucma: 78 },
-    oyun_tarzlari: ["Ayak Hakimiyeti"]
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Rutt",
@@ -73,9 +126,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MOO",
     reyting: 77,
     yas: 23,
-    ana_ozellikler: { hiz: 77, sut: 75, pas: 75, dribbling: 80, defans: 60, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 75,
+      pas: 75,
+      dribbling: 80,
+      defans: 60,
+      fizik: 74,
+    },
     detaylar: { dribbling: 82, guc: 76, vizyon: 76 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "L. Dun",
@@ -84,9 +144,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "STP",
     reyting: 77,
     yas: 34,
-    ana_ozellikler: { hiz: 37, sut: 52, pas: 66, dribbling: 64, defans: 78, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 37,
+      sut: 52,
+      pas: 66,
+      dribbling: 64,
+      defans: 78,
+      fizik: 78,
+    },
     detaylar: { liderlik: 85, top_kesme: 78, uzun_pas: 75 },
-    oyun_tarzlari: ["Lider", "Uzun Topla Pas"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "Y. Mint",
@@ -95,9 +162,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SĞO",
     reyting: 77,
     yas: 21,
-    ana_ozellikler: { hiz: 94, sut: 67, pas: 66, dribbling: 81, defans: 55, fizik: 57 },
+    ana_ozellikler: {
+      hiz: 94,
+      sut: 67,
+      pas: 66,
+      dribbling: 81,
+      defans: 55,
+      fizik: 57,
+    },
     detaylar: { sprint: 95, hizlanma: 93, dribbling: 83 },
-    oyun_tarzlari: ["Roket", "Genç Yetenek"]
+    oyun_tarzlari: ["Roket"],
   },
   {
     ad: "D. Welb",
@@ -106,9 +180,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SNT",
     reyting: 78,
     yas: 34,
-    ana_ozellikler: { hiz: 60, sut: 78, pas: 74, dribbling: 77, defans: 45, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 78,
+      pas: 74,
+      dribbling: 77,
+      defans: 45,
+      fizik: 77,
+    },
     detaylar: { pozisyon: 82, kafa_isabeti: 78, guc: 79 },
-    oyun_tarzlari: ["Tecrübeli"]
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopez",
@@ -117,9 +198,22 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 20,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Costa",
@@ -128,9 +222,22 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "KL",
     reyting: 69,
     yas: 21,
-    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
-    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 69,
+    },
+    detaylar: {
+      ucma: 59,
+      refleks: 69,
+      vurus: 64,
+      pozisyon: 61,
+      top_kontrol: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Lopez",
@@ -139,9 +246,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 22,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 43,
+      pas: 60,
+      dribbling: 58,
+      defans: 68,
+      fizik: 63,
+    },
     detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Perez",
@@ -150,9 +264,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 23,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Garcia",
@@ -161,9 +282,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SĞB",
     reyting: 66,
     yas: 24,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Rodrig",
@@ -172,9 +300,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SLB",
     reyting: 65,
     yas: 25,
-    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 40,
+      pas: 57,
+      dribbling: 55,
+      defans: 65,
+      fizik: 60,
+    },
     detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Santos",
@@ -183,9 +318,21 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MDO",
     reyting: 64,
     yas: 26,
-    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
-    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 44,
+      pas: 59,
+      dribbling: 56,
+      defans: 64,
+      fizik: 59,
+    },
+    detaylar: {
+      top_kesme: 64,
+      ayakta_mudahale: 59,
+      dayaniklilik: 61,
+      kisa_pas: 56,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Costa",
@@ -194,9 +341,21 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MDO",
     reyting: 63,
     yas: 27,
-    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
-    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 43,
+      pas: 58,
+      dribbling: 55,
+      defans: 63,
+      fizik: 58,
+    },
+    detaylar: {
+      top_kesme: 63,
+      ayakta_mudahale: 58,
+      dayaniklilik: 60,
+      kisa_pas: 55,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrig",
@@ -205,9 +364,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MO",
     reyting: 62,
     yas: 28,
-    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 52,
+      pas: 62,
+      dribbling: 57,
+      defans: 47,
+      fizik: 52,
+    },
     detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Silva",
@@ -216,9 +382,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MO",
     reyting: 61,
     yas: 29,
-    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 51,
+      pas: 61,
+      dribbling: 56,
+      defans: 46,
+      fizik: 51,
+    },
     detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Lopez",
@@ -227,9 +400,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MO",
     reyting: 60,
     yas: 30,
-    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 50,
+      pas: 60,
+      dribbling: 55,
+      defans: 45,
+      fizik: 50,
+    },
     detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Santos",
@@ -238,9 +418,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "MOO",
     reyting: 65,
     yas: 31,
-    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 55,
+      pas: 65,
+      dribbling: 60,
+      defans: 50,
+      fizik: 55,
+    },
     detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Silva",
@@ -249,9 +436,16 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SĞO",
     reyting: 64,
     yas: 32,
-    ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 59,
+      pas: 56,
+      dribbling: 66,
+      defans: 35,
+      fizik: 49,
+    },
     detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Agustino",
@@ -260,8 +454,15 @@ export const BRIGHTON_SEAGULLS_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 21,
-    ana_ozellikler: { hiz: 82, sut: 76, pas: 68, dribbling: 78, defans: 32, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 76,
+      pas: 68,
+      dribbling: 78,
+      defans: 32,
+      fizik: 72,
+    },
     detaylar: { bitiricilik: 78, pozisyon: 80, hizlanma: 84, dribbling: 79 },
-    oyun_tarzlari: ["Genç Yetenek", "Fırsatçı"]
-  }
+    oyun_tarzlari: ["İleride Bekleyen"],
+  },
 ];

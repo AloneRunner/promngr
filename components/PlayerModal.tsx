@@ -15,6 +15,32 @@ interface PlayerModalProps {
     t: Translation;
 }
 
+export const getLocalizedPlaystyle = (style: string, t: Translation): string => {
+    switch (style) {
+        case "Kedi Refleks": return t.styleCatReflexes || style;
+        case "Ortaya Çıkan": return t.styleSweeper || style;
+        case "Penaltı Canavarı": return t.stylePenaltySaver || style;
+        case "Top Kesici": return t.styleInterceptor || style;
+        case "Kaya": return t.styleRock || style;
+        case "Amansız": return t.styleRelentless || style;
+        case "Baskıya Dayanıklı": return t.stylePressResistant || style;
+        case "Seri": return t.styleRapid || style;
+        case "Top Cambazı": return t.styleTrickster || style;
+        case "İlk Dokunuş": return t.styleFirstTouch || style;
+        case "Keskin Pas": return t.styleIncisivePass || style;
+        case "Maestro": return t.styleMaestro || style;
+        case "Ölü Top Uzmanı": return t.styleDeadBall || style;
+        case "Plase Şut": return t.styleFinesse || style;
+        case "Roket": return t.styleRocket || style;
+        case "Aşırtma": return t.styleLob || style;
+        case "Hava Hakimi": return t.styleAerialThreat || style;
+        case "Uzaktan Şutör": return t.styleLongRanger || style;
+        case "Gizli Forvet": return t.styleShadowStriker || style;
+        case "İleride Bekleyen": return t.stylePoacher || style;
+        default: return style;
+    }
+}
+
 export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onTerminateContract, t }) => {
     const [viewMode, setViewMode] = React.useState<'GRID' | 'GRAPH'>('GRAPH');
     if (!player) return null;
@@ -39,7 +65,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
 
     return (
         <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-            <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col my-4 md:my-0 max-h-[90vh]">
+            <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col mt-16 mb-4 md:my-0 max-h-[85vh]">
                 {/* Header - Compacted */}
                 <div className="relative bg-slate-950 p-4 flex flex-col items-start gap-3 border-b border-slate-800 shrink-0">
                     <button onClick={onClose} className="absolute top-3 right-3 text-slate-400 hover:text-white bg-slate-900/50 p-1 rounded-full">
@@ -157,7 +183,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                             <div className="flex flex-wrap gap-1.5">
                                 {player.playStyles.map((style, idx) => (
                                     <span key={idx} className="text-[10px] bg-yellow-900/10 text-yellow-200 border border-yellow-500/20 px-2 py-0.5 rounded shadow-sm">
-                                        {style}
+                                        {getLocalizedPlaystyle(style, t)}
                                     </span>
                                 ))}
                             </div>
@@ -234,29 +260,29 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-emerald-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.technical}</h4>
-                                <AttrRow label="Finishing" value={player.attributes.finishing} />
-                                <AttrRow label="Passing" value={player.attributes.passing} />
-                                <AttrRow label="Dribbling" value={player.attributes.dribbling} />
-                                <AttrRow label="Tackling" value={player.attributes.tackling} />
-                                <AttrRow label="Goalkeeping" value={player.attributes.goalkeeping} />
+                                <AttrRow label={t.attrFinishing || "Finishing"} value={player.attributes.finishing} />
+                                <AttrRow label={t.attrPassing || "Passing"} value={player.attributes.passing} />
+                                <AttrRow label={t.attrDribbling || "Dribbling"} value={player.attributes.dribbling} />
+                                <AttrRow label={t.attrTackling || "Tackling"} value={player.attributes.tackling} />
+                                <AttrRow label={t.attrGoalkeeping || "Goalkeeping"} value={player.attributes.goalkeeping} />
                             </div>
 
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-blue-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.physical}</h4>
-                                <AttrRow label="Speed" value={player.attributes.speed} />
-                                <AttrRow label="Stamina" value={player.attributes.stamina} />
-                                <AttrRow label="Strength" value={player.attributes.strength} />
-                                <AttrRow label="Condition" value={player.condition} />
+                                <AttrRow label={t.attrSpeed || "Speed"} value={player.attributes.speed} />
+                                <AttrRow label={t.attrStamina || "Stamina"} value={player.attributes.stamina} />
+                                <AttrRow label={t.attrStrength || "Strength"} value={player.attributes.strength} />
+                                <AttrRow label={t.condition || "Condition"} value={player.condition} />
                             </div>
 
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-yellow-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.mental}</h4>
-                                <AttrRow label="Decisions" value={player.attributes.decisions || 50} />
-                                <AttrRow label="Positioning" value={player.attributes.positioning} />
-                                <AttrRow label="Vision" value={player.attributes.vision} />
-                                <AttrRow label="Composure" value={player.attributes.composure} />
-                                <AttrRow label="Leadership" value={player.attributes.leadership} />
-                                <AttrRow label="Aggression" value={player.attributes.aggression} />
+                                <AttrRow label={t.attrDecisions || "Decisions"} value={player.attributes.decisions || 50} />
+                                <AttrRow label={t.attrPositioning || "Positioning"} value={player.attributes.positioning} />
+                                <AttrRow label={t.attrVision || "Vision"} value={player.attributes.vision} />
+                                <AttrRow label={t.attrComposure || "Composure"} value={player.attributes.composure} />
+                                <AttrRow label={t.attrLeadership || "Leadership"} value={player.attributes.leadership} />
+                                <AttrRow label={t.attrAggression || "Aggression"} value={player.attributes.aggression} />
                             </div>
                         </div>
                     )}
@@ -265,19 +291,19 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                     {player.careerHistory && player.careerHistory.length > 0 && (
                         <div className="mt-6">
                             <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2 border-l-2 border-blue-500 pl-2">
-                                <History size={14} /> Career History
+                                <History size={14} /> {t.careerHistory || 'Career History'}
                             </h3>
                             <div className="bg-slate-900/40 rounded overflow-hidden border border-slate-700">
                                 <table className="w-full text-[10px] text-left text-slate-300">
                                     <thead className="bg-slate-950 uppercase text-slate-500 font-bold">
                                         <tr>
-                                            <th className="p-2">Season</th>
-                                            <th className="p-2">Team</th>
+                                            <th className="p-2">{t.season || 'Season'}</th>
+                                            <th className="p-2">{t.team || 'Team'}</th>
                                             <th className="p-2 text-center">{t.apps}</th>
-                                            <th className="p-2 text-center">Gls</th>
-                                            <th className="p-2 text-center">Ast</th>
-                                            <th className="p-2 text-center">Yel</th>
-                                            <th className="p-2 text-center">Red</th>
+                                            <th className="p-2 text-center">{t.goals || 'Gls'}</th>
+                                            <th className="p-2 text-center">{t.assists || 'Ast'}</th>
+                                            <th className="p-2 text-center">{t.yellowCards || 'Yel'}</th>
+                                            <th className="p-2 text-center">{t.redCards || 'Red'}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-800">
@@ -310,7 +336,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                             {player.matchSuspension > 0 && (
                                 <div className="bg-yellow-900/10 border border-yellow-500/30 text-yellow-300 px-3 py-1.5 rounded flex items-center gap-2 text-xs">
                                     <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
-                                    {t.suspended} ({player.matchSuspension} match)
+                                    {t.suspended} ({player.matchSuspension} {t.matches || 'match'})
                                 </div>
                             )}
                         </div>

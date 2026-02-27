@@ -6,9 +6,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "KL",
     reyting: 76,
     yas: 29,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 20, defans: 20, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 20,
+      defans: 20,
+      fizik: 76,
+    },
     detaylar: { refleks: 80, ucma: 78, pozisyon: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Bell",
@@ -17,9 +24,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "STP",
     reyting: 76,
     yas: 32,
-    ana_ozellikler: { hiz: 66, sut: 46, pas: 68, dribbling: 64, defans: 80, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 46,
+      pas: 68,
+      dribbling: 64,
+      defans: 80,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 82, liderlik: 82, markaj: 80 },
-    oyun_tarzlari: ["Lider", "Kaptan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "M. da Costa",
@@ -28,9 +42,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 64, dribbling: 60, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 64,
+      dribbling: 60,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { guc: 82, kafa_isabeti: 80 },
-    oyun_tarzlari: ["Kule"]
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Widmer",
@@ -39,9 +60,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SĞB",
     reyting: 75,
     yas: 30,
-    ana_ozellikler: { hiz: 80, sut: 64, pas: 74, dribbling: 76, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 64,
+      pas: 74,
+      dribbling: 76,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 80, dayaniklilik: 80, sprint: 82 },
-    oyun_tarzlari: ["Ofansif Bek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Caci",
@@ -50,9 +78,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SLB",
     reyting: 75,
     yas: 28,
-    ana_ozellikler: { hiz: 80, sut: 60, pas: 74, dribbling: 76, defans: 74, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 60,
+      pas: 74,
+      dribbling: 76,
+      defans: 74,
+      fizik: 74,
+    },
     detaylar: { orta_acma: 80, hizlanma: 82, sprint: 82 },
-    oyun_tarzlari: ["Ofansif Bek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Barreiro",
@@ -61,9 +96,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MDO",
     reyting: 76,
     yas: 26,
-    ana_ozellikler: { hiz: 74, sut: 68, pas: 76, dribbling: 74, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 68,
+      pas: 76,
+      dribbling: 74,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, dayaniklilik: 82, guc: 82 },
-    oyun_tarzlari: ["Kırıcı", "Savaşçı"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "D. Kohr",
@@ -72,9 +114,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 30,
-    ana_ozellikler: { hiz: 72, sut: 66, pas: 74, dribbling: 72, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 78, dayaniklilik: 80 },
-    oyun_tarzlari: ["Kırıcı"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "L. Jae-Sung",
@@ -83,9 +132,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MOO",
     reyting: 77,
     yas: 32,
-    ana_ozellikler: { hiz: 78, sut: 76, pas: 80, dribbling: 80, defans: 48, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 76,
+      pas: 80,
+      dribbling: 80,
+      defans: 48,
+      fizik: 70,
+    },
     detaylar: { vizyon: 84, dribbling: 82, asist: 82 },
-    oyun_tarzlari: ["Teknik", "Asist Kralı"]
+    oyun_tarzlari: ["İlk Dokunuş", "Maestro"],
   },
   {
     ad: "A. Stach",
@@ -94,9 +150,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 25,
-    ana_ozellikler: { hiz: 76, sut: 74, pas: 76, dribbling: 76, defans: 68, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 74,
+      pas: 76,
+      dribbling: 76,
+      defans: 68,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 82, uzaktan_sut: 78 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "K. Onisiwo",
@@ -105,9 +168,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SNT",
     reyting: 76,
     yas: 32,
-    ana_ozellikler: { hiz: 80, sut: 78, pas: 64, dribbling: 76, defans: 36, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 78,
+      pas: 64,
+      dribbling: 76,
+      defans: 36,
+      fizik: 82,
+    },
     detaylar: { guc: 86, kafa_isabeti: 82, dayaniklilik: 84 },
-    oyun_tarzlari: ["Hedef Adam", "Güçlü", "Savaşçı"]
+    oyun_tarzlari: ["Hava Hakimi", "Kaya"],
   },
   {
     ad: "J. Burkardt",
@@ -116,9 +186,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SNT",
     reyting: 77,
     yas: 24,
-    ana_ozellikler: { hiz: 80, sut: 80, pas: 68, dribbling: 78, defans: 30, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 80,
+      pas: 68,
+      dribbling: 78,
+      defans: 30,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 84, pozisyon: 82, kafa_isabeti: 80 },
-    oyun_tarzlari: ["Fırsatçı Golcü", "Hedef Adam"]
+    oyun_tarzlari: ["İleride Bekleyen", "Hava Hakimi"],
   },
   {
     ad: "M. Ingvartsen",
@@ -127,9 +204,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 80, sut: 76, pas: 72, dribbling: 78, defans: 28, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 76,
+      pas: 72,
+      dribbling: 78,
+      defans: 28,
+      fizik: 70,
+    },
     detaylar: { bitiricilik: 78, hizlanma: 82 },
-    oyun_tarzlari: ["Plase Şut"]
+    oyun_tarzlari: ["Plase Şut"],
   },
   {
     ad: "D. Olinga",
@@ -138,9 +222,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 27,
-    ana_ozellikler: { hiz: 86, sut: 70, pas: 68, dribbling: 78, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 70,
+      pas: 68,
+      dribbling: 78,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 88, sprint: 87 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "N. Fernandes",
@@ -149,9 +240,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 70, sut: 44, pas: 66, dribbling: 62, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 44,
+      pas: 66,
+      dribbling: 62,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 77, markaj: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Nebel",
@@ -160,9 +258,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MOO",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 72, pas: 76, dribbling: 78, defans: 34, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 72,
+      pas: 76,
+      dribbling: 78,
+      defans: 34,
+      fizik: 66,
+    },
     detaylar: { dribbling: 80, vizyon: 78 },
-    oyun_tarzlari: ["Çalımlı"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "M. Dahmen",
@@ -171,9 +276,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 48, sut: 12, pas: 52, dribbling: 16, defans: 16, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 12,
+      pas: 52,
+      dribbling: 16,
+      defans: 16,
+      fizik: 74,
+    },
     detaylar: { refleks: 76, ucma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Hack",
@@ -182,9 +294,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 66, sut: 42, pas: 62, dribbling: 58, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 42,
+      pas: 62,
+      dribbling: 58,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { kafa_isabeti: 78, guc: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Aaron",
@@ -193,9 +312,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 80, sut: 56, pas: 70, dribbling: 74, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 56,
+      pas: 70,
+      dribbling: 74,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Amiri",
@@ -204,9 +330,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MOO",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 76, sut: 74, pas: 78, dribbling: 80, defans: 36, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 74,
+      pas: 78,
+      dribbling: 80,
+      defans: 36,
+      fizik: 64,
+    },
     detaylar: { dribbling: 82, vizyon: 80 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "A. Lee",
@@ -215,9 +348,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 23,
-    ana_ozellikler: { hiz: 82, sut: 74, pas: 60, dribbling: 74, defans: 26, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 74,
+      pas: 60,
+      dribbling: 74,
+      defans: 26,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 84, bitiricilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Tauer",
@@ -226,9 +366,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 78, sut: 54, pas: 68, dribbling: 70, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 54,
+      pas: 68,
+      dribbling: 70,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 80, dayaniklilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Caricol",
@@ -237,9 +384,16 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 80, sut: 56, pas: 70, dribbling: 72, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 56,
+      pas: 70,
+      dribbling: 72,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { sprint: 82, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Sander",
@@ -248,8 +402,15 @@ export const MAINZ_CARNIVAL_SQUAD = [
     mevki: "MO",
     reyting: 72,
     yas: 23,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 74, dribbling: 74, defans: 52, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 74,
+      dribbling: 74,
+      defans: 52,
+      fizik: 70,
+    },
     detaylar: { kisa_pas: 76, vizyon: 75 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

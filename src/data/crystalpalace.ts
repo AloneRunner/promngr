@@ -1,4 +1,3 @@
-
 export const CRYSTAL_GLAZIERS_SQUAD = [
   {
     ad: "J. Matet",
@@ -7,9 +6,22 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SNT",
     reyting: 82,
     yas: 28,
-    ana_ozellikler: { hiz: 75, sut: 84, pas: 70, dribbling: 77, defans: 41, fizik: 81 },
-    detaylar: { bitiricilik: 86, guc: 85, kafa_isabeti: 84, pozisyon: 84, sut_gucu: 82 },
-    oyun_tarzlari: ["Hava Hakimi", "Keskin Şut", "Direk Dibine"]
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 84,
+      pas: 70,
+      dribbling: 77,
+      defans: 41,
+      fizik: 81,
+    },
+    detaylar: {
+      bitiricilik: 86,
+      guc: 85,
+      kafa_isabeti: 84,
+      pozisyon: 84,
+      sut_gucu: 82,
+    },
+    oyun_tarzlari: ["Hava Hakimi", "Roket", "Plase Şut"],
   },
   {
     ad: "M. Guehi",
@@ -18,9 +30,21 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "STP",
     reyting: 82,
     yas: 25,
-    ana_ozellikler: { hiz: 69, sut: 39, pas: 69, dribbling: 73, defans: 83, fizik: 78 },
-    detaylar: { top_kesme: 84, defansif_farkindalik: 84, kisa_pas: 75, sogukkanlilik: 80 },
-    oyun_tarzlari: ["Lider", "Temiz Müdahale"]
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 39,
+      pas: 69,
+      dribbling: 73,
+      defans: 83,
+      fizik: 78,
+    },
+    detaylar: {
+      top_kesme: 84,
+      defansif_farkindalik: 84,
+      kisa_pas: 75,
+      sogukkanlilik: 80,
+    },
+    oyun_tarzlari: ["Top Kesici"],
   },
   {
     ad: "D. Henders",
@@ -29,9 +53,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "KL",
     reyting: 81,
     yas: 28,
-    ana_ozellikler: { hiz: 55, sut: 82, pas: 78, dribbling: 77, defans: 82, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 82,
+      pas: 78,
+      dribbling: 77,
+      defans: 82,
+      fizik: 80,
+    },
     detaylar: { refleks: 84, ucma: 81, pozisyon: 80, vurus: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Munoz",
@@ -40,9 +71,21 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SĞB",
     reyting: 81,
     yas: 29,
-    ana_ozellikler: { hiz: 75, sut: 69, pas: 72, dribbling: 76, defans: 79, fizik: 81 },
-    detaylar: { agresiflik: 86, dayaniklilik: 90, ayakta_mudahale: 80, orta_acma: 74 },
-    oyun_tarzlari: ["Motor", "Savaşçı"]
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 69,
+      pas: 72,
+      dribbling: 76,
+      defans: 79,
+      fizik: 81,
+    },
+    detaylar: {
+      agresiflik: 86,
+      dayaniklilik: 90,
+      ayakta_mudahale: 80,
+      orta_acma: 74,
+    },
+    oyun_tarzlari: ["Amansız", "Kaya"],
   },
   {
     ad: "I. Sarr",
@@ -51,9 +94,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MOO",
     reyting: 79,
     yas: 27,
-    ana_ozellikler: { hiz: 91, sut: 78, pas: 76, dribbling: 78, defans: 28, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 91,
+      sut: 78,
+      pas: 76,
+      dribbling: 78,
+      defans: 28,
+      fizik: 69,
+    },
     detaylar: { hizlanma: 93, sprint: 90, bitiricilik: 79, dribbling: 80 },
-    oyun_tarzlari: ["Roket", "Seri"]
+    oyun_tarzlari: ["Roket", "Seri"],
   },
   {
     ad: "M. Lacrox",
@@ -62,9 +112,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "STP",
     reyting: 79,
     yas: 25,
-    ana_ozellikler: { hiz: 88, sut: 40, pas: 57, dribbling: 67, defans: 80, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 40,
+      pas: 57,
+      dribbling: 67,
+      defans: 80,
+      fizik: 82,
+    },
     detaylar: { sprint: 90, hizlanma: 85, guc: 84, ayakta_mudahale: 81 },
-    oyun_tarzlari: ["Hızlı Stoper"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Whart",
@@ -73,9 +130,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MDO",
     reyting: 79,
     yas: 21,
-    ana_ozellikler: { hiz: 62, sut: 62, pas: 81, dribbling: 77, defans: 75, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 62,
+      pas: 81,
+      dribbling: 77,
+      defans: 75,
+      fizik: 69,
+    },
     detaylar: { vizyon: 84, kisa_pas: 83, top_kesme: 78, sogukkanlilik: 82 },
-    oyun_tarzlari: ["Pasör", "Oyun Kurucu", "Genç Yetenek"]
+    oyun_tarzlari: ["Keskin Pas", "Maestro"],
   },
   {
     ad: "E. Nketia",
@@ -84,9 +148,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 81, sut: 73, pas: 58, dribbling: 76, defans: 25, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 81,
+      sut: 73,
+      pas: 58,
+      dribbling: 76,
+      defans: 25,
+      fizik: 64,
+    },
     detaylar: { hizlanma: 83, bitiricilik: 76, ceviklik: 80 },
-    oyun_tarzlari: ["Fırsatçı"]
+    oyun_tarzlari: ["İleride Bekleyen"],
   },
   {
     ad: "J. Lerma",
@@ -95,9 +166,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MDO",
     reyting: 77,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 71, pas: 70, dribbling: 74, defans: 76, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 71,
+      pas: 70,
+      dribbling: 74,
+      defans: 76,
+      fizik: 79,
+    },
     detaylar: { agresiflik: 85, ziplama: 82, guc: 80 },
-    oyun_tarzlari: ["Savaşçı"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "B. Sosa",
@@ -106,9 +184,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 27,
-    ana_ozellikler: { hiz: 71, sut: 53, pas: 77, dribbling: 73, defans: 67, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 53,
+      pas: 77,
+      dribbling: 73,
+      defans: 67,
+      fizik: 70,
+    },
     detaylar: { orta_acma: 84, falso: 82 },
-    oyun_tarzlari: ["Orta Uzmanı"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "C. Perez",
@@ -117,9 +202,22 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 72,
+    },
+    detaylar: {
+      ucma: 62,
+      refleks: 72,
+      vurus: 67,
+      pozisyon: 64,
+      top_kontrol: 60,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Garcia",
@@ -128,9 +226,22 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopez",
@@ -139,9 +250,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "STP",
     reyting: 69,
     yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 44,
+      pas: 61,
+      dribbling: 59,
+      defans: 69,
+      fizik: 64,
+    },
     detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Silva",
@@ -150,9 +268,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 43,
+      pas: 60,
+      dribbling: 58,
+      defans: 68,
+      fizik: 63,
+    },
     detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrig",
@@ -161,9 +286,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SĞB",
     reyting: 67,
     yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Costa",
@@ -172,9 +304,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SLB",
     reyting: 66,
     yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Perez",
@@ -183,9 +322,21 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MDO",
     reyting: 65,
     yas: 26,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 57,
+      defans: 65,
+      fizik: 60,
+    },
+    detaylar: {
+      top_kesme: 65,
+      ayakta_mudahale: 60,
+      dayaniklilik: 62,
+      kisa_pas: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Silva",
@@ -194,9 +345,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MO",
     reyting: 64,
     yas: 27,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 54,
+      pas: 64,
+      dribbling: 59,
+      defans: 49,
+      fizik: 54,
+    },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Costa",
@@ -205,9 +363,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MO",
     reyting: 63,
     yas: 28,
-    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 53,
+      pas: 63,
+      dribbling: 58,
+      defans: 48,
+      fizik: 53,
+    },
     detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Santos",
@@ -216,9 +381,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MO",
     reyting: 62,
     yas: 29,
-    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 52,
+      pas: 62,
+      dribbling: 57,
+      defans: 47,
+      fizik: 52,
+    },
     detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Garcia",
@@ -227,9 +399,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "MOO",
     reyting: 61,
     yas: 30,
-    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 51,
+      pas: 61,
+      dribbling: 56,
+      defans: 46,
+      fizik: 51,
+    },
     detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Silva",
@@ -238,9 +417,16 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SĞO",
     reyting: 66,
     yas: 31,
-    ana_ozellikler: { hiz: 71, sut: 61, pas: 58, dribbling: 68, defans: 35, fizik: 51 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 61,
+      pas: 58,
+      dribbling: 68,
+      defans: 35,
+      fizik: 51,
+    },
     detaylar: { dribbling: 66, ceviklik: 69, orta_acma: 56, sprint: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Lopez",
@@ -249,8 +435,15 @@ export const CRYSTAL_GLAZIERS_SQUAD = [
     mevki: "SĞO",
     reyting: 65,
     yas: 32,
-    ana_ozellikler: { hiz: 70, sut: 60, pas: 57, dribbling: 67, defans: 35, fizik: 50 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 60,
+      pas: 57,
+      dribbling: 67,
+      defans: 35,
+      fizik: 50,
+    },
     detaylar: { dribbling: 65, ceviklik: 68, orta_acma: 55, sprint: 70 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

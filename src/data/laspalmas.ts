@@ -6,9 +6,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "KL",
     reyting: 78,
     yas: 36,
-    ana_ozellikler: { hiz: 48, sut: 18, pas: 55, dribbling: 22, defans: 22, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 18,
+      pas: 55,
+      dribbling: 22,
+      defans: 22,
+      fizik: 72,
+    },
     detaylar: { refleks: 82, ucma: 80, pozisyon: 79, top_kontrol: 58 },
-    oyun_tarzlari: ["Kaleden Çıkma"]
+    oyun_tarzlari: ["Ortaya Çıkan"],
   },
   {
     ad: "M. Viti",
@@ -17,9 +24,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 76,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 45, pas: 68, dribbling: 65, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 45,
+      pas: 68,
+      dribbling: 65,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 79, markaj: 77, kafa_isabeti: 76 },
-    oyun_tarzlari: ["Top Süren Stoper"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "S. Suarez",
@@ -28,9 +42,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 68, sut: 42, pas: 62, dribbling: 58, defans: 77, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 42,
+      pas: 62,
+      dribbling: 58,
+      defans: 77,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 78, markaj: 76, guc: 79 },
-    oyun_tarzlari: ["Sert Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "A. Herzog",
@@ -39,9 +60,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 55, pas: 70, dribbling: 72, defans: 74, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 55,
+      pas: 70,
+      dribbling: 72,
+      defans: 74,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 75, dayaniklilik: 77 },
-    oyun_tarzlari: ["Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "M. Cardona",
@@ -50,9 +78,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 29,
-    ana_ozellikler: { hiz: 76, sut: 52, pas: 68, dribbling: 70, defans: 72, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 52,
+      pas: 68,
+      dribbling: 70,
+      defans: 72,
+      fizik: 70,
+    },
     detaylar: { orta_acma: 74, kosu_temposu: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Sinkgraven",
@@ -61,9 +96,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 30,
-    ana_ozellikler: { hiz: 79, sut: 58, pas: 72, dribbling: 74, defans: 71, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 79,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 71,
+      fizik: 68,
+    },
     detaylar: { orta_acma: 76, vizyon: 73 },
-    oyun_tarzlari: ["Ofansif Bek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Moleiro",
@@ -72,9 +114,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 78,
     yas: 22,
-    ana_ozellikler: { hiz: 76, sut: 72, pas: 79, dribbling: 82, defans: 38, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 72,
+      pas: 79,
+      dribbling: 82,
+      defans: 38,
+      fizik: 58,
+    },
     detaylar: { vizyon: 80, kisa_pas: 81, dribbling: 83, ceviklik: 84 },
-    oyun_tarzlari: ["Teknik", "Oyun Kurucu"]
+    oyun_tarzlari: ["İlk Dokunuş", "Maestro"],
   },
   {
     ad: "K. Essugo",
@@ -83,9 +132,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 20,
-    ana_ozellikler: { hiz: 72, sut: 65, pas: 74, dribbling: 72, defans: 72, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 65,
+      pas: 74,
+      dribbling: 72,
+      defans: 72,
+      fizik: 75,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 73, kisa_pas: 75 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "J. Munoz",
@@ -94,9 +150,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 70, sut: 68, pas: 73, dribbling: 70, defans: 71, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 68,
+      pas: 73,
+      dribbling: 70,
+      defans: 71,
+      fizik: 74,
+    },
     detaylar: { uzaktan_sut: 72, pozisyon: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Fabio",
@@ -105,9 +168,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SĞO",
     reyting: 76,
     yas: 25,
-    ana_ozellikler: { hiz: 85, sut: 72, pas: 70, dribbling: 79, defans: 32, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 85,
+      sut: 72,
+      pas: 70,
+      dribbling: 79,
+      defans: 32,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 87, sprint: 86, ceviklik: 82 },
-    oyun_tarzlari: ["Seri", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Top Cambazı"],
   },
   {
     ad: "S. Marvin",
@@ -116,9 +186,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SLO",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 82, sut: 70, pas: 68, dribbling: 76, defans: 35, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 70,
+      pas: 68,
+      dribbling: 76,
+      defans: 35,
+      fizik: 70,
+    },
     detaylar: { hizlanma: 84, dribbling: 78, bitiricilik: 72 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "M. McBurnie",
@@ -127,9 +204,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 29,
-    ana_ozellikler: { hiz: 68, sut: 76, pas: 62, dribbling: 68, defans: 38, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 76,
+      pas: 62,
+      dribbling: 68,
+      defans: 38,
+      fizik: 82,
+    },
     detaylar: { kafa_isabeti: 82, guc: 84, bitiricilik: 77 },
-    oyun_tarzlari: ["Kule", "Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "S. Rojas",
@@ -138,9 +222,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 74, pas: 58, dribbling: 72, defans: 32, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 74,
+      pas: 58,
+      dribbling: 72,
+      defans: 32,
+      fizik: 74,
+    },
     detaylar: { bitiricilik: 76, pozisyon: 75, hizlanma: 80 },
-    oyun_tarzlari: ["Fırsatçı Golcü"]
+    oyun_tarzlari: ["İleride Bekleyen"],
   },
   {
     ad: "A. Sandro",
@@ -149,9 +240,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 31,
-    ana_ozellikler: { hiz: 74, sut: 75, pas: 60, dribbling: 70, defans: 30, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 75,
+      pas: 60,
+      dribbling: 70,
+      defans: 30,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 77, kafa_isabeti: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Ramirez",
@@ -160,9 +258,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 74, dribbling: 74, defans: 42, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 74,
+      dribbling: 74,
+      defans: 42,
+      fizik: 64,
+    },
     detaylar: { vizyon: 75, kisa_pas: 76 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "B. Perez",
@@ -171,9 +276,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 71,
     yas: 32,
-    ana_ozellikler: { hiz: 62, sut: 40, pas: 58, dribbling: 55, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 40,
+      pas: 58,
+      dribbling: 55,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { markaj: 75, guc: 77 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Gonzalez",
@@ -182,9 +294,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SĞB",
     reyting: 70,
     yas: 22,
-    ana_ozellikler: { hiz: 76, sut: 50, pas: 66, dribbling: 68, defans: 70, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 50,
+      pas: 66,
+      dribbling: 68,
+      defans: 70,
+      fizik: 68,
+    },
     detaylar: { dayaniklilik: 74, orta_acma: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Valles",
@@ -193,9 +312,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 45, sut: 15, pas: 50, dribbling: 20, defans: 20, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 45,
+      sut: 15,
+      pas: 50,
+      dribbling: 20,
+      defans: 20,
+      fizik: 70,
+    },
     detaylar: { refleks: 75, ucma: 74, pozisyon: 73 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Coco",
@@ -204,9 +330,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 70, sut: 44, pas: 64, dribbling: 62, defans: 76, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 44,
+      pas: 64,
+      dribbling: 62,
+      defans: 76,
+      fizik: 79,
+    },
     detaylar: { top_kesme: 77, ziplama: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Clemente",
@@ -215,9 +348,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 71,
     yas: 24,
-    ana_ozellikler: { hiz: 70, sut: 64, pas: 72, dribbling: 68, defans: 70, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 64,
+      pas: 72,
+      dribbling: 68,
+      defans: 70,
+      fizik: 72,
+    },
     detaylar: { dayaniklilik: 76, top_kesme: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Kirian",
@@ -226,9 +366,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MOO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 76, dribbling: 76, defans: 45, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 76,
+      dribbling: 76,
+      defans: 45,
+      fizik: 66,
+    },
     detaylar: { vizyon: 77, dribbling: 78, kisa_pas: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "S. Cardona",
@@ -237,9 +384,16 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 28,
-    ana_ozellikler: { hiz: 80, sut: 68, pas: 70, dribbling: 75, defans: 36, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 68,
+      pas: 70,
+      dribbling: 75,
+      defans: 36,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 82, ceviklik: 79 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "D. Loiodice",
@@ -248,8 +402,15 @@ export const CANARY_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 70, sut: 68, pas: 74, dribbling: 72, defans: 48, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 68,
+      pas: 74,
+      dribbling: 72,
+      defans: 48,
+      fizik: 65,
+    },
     detaylar: { vizyon: 75, kisa_pas: 76 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

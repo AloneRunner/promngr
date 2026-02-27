@@ -6,9 +6,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MDO",
     reyting: 82,
     yas: 28,
-    ana_ozellikler: { hiz: 80, sut: 67, pas: 74, dribbling: 77, defans: 80, fizik: 85 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 67,
+      pas: 74,
+      dribbling: 77,
+      defans: 80,
+      fizik: 85,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Pogbah",
@@ -17,9 +24,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MO",
     reyting: 79,
     yas: 32,
-    ana_ozellikler: { hiz: 64, sut: 76, pas: 81, dribbling: 83, defans: 60, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 76,
+      pas: 81,
+      dribbling: 83,
+      defans: 60,
+      fizik: 78,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Golovynn",
@@ -28,9 +42,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SLO",
     reyting: 79,
     yas: 28,
-    ana_ozellikler: { hiz: 73, sut: 76, pas: 79, dribbling: 82, defans: 61, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 76,
+      pas: 79,
+      dribbling: 82,
+      defans: 61,
+      fizik: 66,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "T. Minamyno",
@@ -39,9 +60,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SLO",
     reyting: 78,
     yas: 30,
-    ana_ozellikler: { hiz: 77, sut: 74, pas: 75, dribbling: 81, defans: 40, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 74,
+      pas: 75,
+      dribbling: 81,
+      defans: 40,
+      fizik: 64,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Balogunn",
@@ -50,9 +78,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SNT",
     reyting: 77,
     yas: 23,
-    ana_ozellikler: { hiz: 84, sut: 77, pas: 62, dribbling: 77, defans: 23, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 77,
+      pas: 62,
+      dribbling: 77,
+      defans: 23,
+      fizik: 68,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
 
   {
@@ -62,9 +97,22 @@ export const MONACO_RED_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 72,
+    },
+    detaylar: {
+      ucma: 62,
+      refleks: 72,
+      vurus: 67,
+      pozisyon: 64,
+      top_kontrol: 60,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopeze",
@@ -73,9 +121,22 @@ export const MONACO_RED_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Martines",
@@ -84,9 +145,22 @@ export const MONACO_RED_SQUAD = [
     mevki: "KL",
     reyting: 69,
     yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 69 },
-    detaylar: { ucma: 59, refleks: 69, vurus: 64, pozisyon: 61, top_kontrol: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 69,
+    },
+    detaylar: {
+      ucma: 59,
+      refleks: 69,
+      vurus: 64,
+      pozisyon: 61,
+      top_kontrol: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Pereze",
@@ -95,9 +169,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 43,
+      pas: 60,
+      dribbling: 58,
+      defans: 68,
+      fizik: 63,
+    },
     detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Rodrigz",
@@ -106,9 +187,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopeze",
@@ -117,9 +205,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "STP",
     reyting: 66,
     yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopeze",
@@ -128,9 +223,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "STP",
     reyting: 65,
     yas: 26,
-    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 40,
+      pas: 57,
+      dribbling: 55,
+      defans: 65,
+      fizik: 60,
+    },
     detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Santoz",
@@ -139,9 +241,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SĞB",
     reyting: 64,
     yas: 27,
-    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 39,
+      pas: 56,
+      dribbling: 54,
+      defans: 64,
+      fizik: 59,
+    },
     detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Martines",
@@ -150,9 +259,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SĞB",
     reyting: 63,
     yas: 28,
-    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 38,
+      pas: 55,
+      dribbling: 53,
+      defans: 63,
+      fizik: 58,
+    },
     detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Pereze",
@@ -161,9 +277,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SLB",
     reyting: 62,
     yas: 29,
-    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 37,
+      pas: 54,
+      dribbling: 52,
+      defans: 62,
+      fizik: 57,
+    },
     detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Lopeze",
@@ -172,9 +295,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "SLB",
     reyting: 61,
     yas: 30,
-    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 36,
+      pas: 53,
+      dribbling: 51,
+      defans: 61,
+      fizik: 56,
+    },
     detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Rodrigz",
@@ -183,9 +313,21 @@ export const MONACO_RED_SQUAD = [
     mevki: "MDO",
     reyting: 66,
     yas: 31,
-    ana_ozellikler: { hiz: 51, sut: 46, pas: 61, dribbling: 58, defans: 66, fizik: 61 },
-    detaylar: { top_kesme: 66, ayakta_mudahale: 61, dayaniklilik: 63, kisa_pas: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 46,
+      pas: 61,
+      dribbling: 58,
+      defans: 66,
+      fizik: 61,
+    },
+    detaylar: {
+      top_kesme: 66,
+      ayakta_mudahale: 61,
+      dayaniklilik: 63,
+      kisa_pas: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Santoz",
@@ -194,9 +336,21 @@ export const MONACO_RED_SQUAD = [
     mevki: "MDO",
     reyting: 65,
     yas: 32,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 57,
+      defans: 65,
+      fizik: 60,
+    },
+    detaylar: {
+      top_kesme: 65,
+      ayakta_mudahale: 60,
+      dayaniklilik: 62,
+      kisa_pas: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrigz",
@@ -205,9 +359,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MO",
     reyting: 65,
     yas: 33,
-    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 55,
+      pas: 65,
+      dribbling: 60,
+      defans: 50,
+      fizik: 55,
+    },
     detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Garcy",
@@ -216,9 +377,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MO",
     reyting: 64,
     yas: 34,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 54,
+      pas: 64,
+      dribbling: 59,
+      defans: 49,
+      fizik: 54,
+    },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Lopeze",
@@ -227,9 +395,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MOO",
     reyting: 64,
     yas: 20,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 54,
+      pas: 64,
+      dribbling: 59,
+      defans: 49,
+      fizik: 54,
+    },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Lopeze",
@@ -238,9 +413,16 @@ export const MONACO_RED_SQUAD = [
     mevki: "MOO",
     reyting: 63,
     yas: 21,
-    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 53,
+      pas: 63,
+      dribbling: 58,
+      defans: 48,
+      fizik: 53,
+    },
     detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Martines",
@@ -249,8 +431,15 @@ export const MONACO_RED_SQUAD = [
     mevki: "SĞO",
     reyting: 63,
     yas: 22,
-    ana_ozellikler: { hiz: 68, sut: 58, pas: 55, dribbling: 65, defans: 35, fizik: 48 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 58,
+      pas: 55,
+      dribbling: 65,
+      defans: 35,
+      fizik: 48,
+    },
     detaylar: { dribbling: 63, ceviklik: 66, orta_acma: 53, sprint: 68 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

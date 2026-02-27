@@ -1,4 +1,3 @@
-
 export const GENCLERBIRLIGI_SQUAD = [
   {
     ad: "S. Koytta",
@@ -7,9 +6,22 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 92, sut: 74, pas: 69, dribbling: 77, defans: 35, fizik: 71 },
-    detaylar: { hizlanma: 91, sprint: 93, ceviklik: 93, denge: 90, bitiricilik: 74 },
-    oyun_tarzlari: ["Aşırtma Şut", "Çabuk Adım", "Seri"]
+    ana_ozellikler: {
+      hiz: 92,
+      sut: 74,
+      pas: 69,
+      dribbling: 77,
+      defans: 35,
+      fizik: 71,
+    },
+    detaylar: {
+      hizlanma: 91,
+      sprint: 93,
+      ceviklik: 93,
+      denge: 90,
+      bitiricilik: 74,
+    },
+    oyun_tarzlari: ["Aşırtma", "Seri"],
   },
   {
     ad: "P. Pereyra",
@@ -18,9 +30,22 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 70, sut: 57, pas: 69, dribbling: 69, defans: 73, fizik: 69 },
-    detaylar: { ceviklik: 75, defansif_farkindalik: 75, ayakta_mudahale: 74, kisa_pas: 74, dayaniklilik: 75 },
-    oyun_tarzlari: ["Sezgili"]
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 57,
+      pas: 69,
+      dribbling: 69,
+      defans: 73,
+      fizik: 69,
+    },
+    detaylar: {
+      ceviklik: 75,
+      defansif_farkindalik: 75,
+      ayakta_mudahale: 74,
+      kisa_pas: 74,
+      dayaniklilik: 75,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Onyekura",
@@ -29,9 +54,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 90, sut: 72, pas: 63, dribbling: 74, defans: 35, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 90,
+      sut: 72,
+      pas: 63,
+      dribbling: 74,
+      defans: 35,
+      fizik: 62,
+    },
     detaylar: { hizlanma: 90, sprint: 90, ceviklik: 88, denge: 84 },
-    oyun_tarzlari: ["Çabuk Adım", "Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Traorey",
@@ -40,9 +72,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SĞO",
     reyting: 72,
     yas: 30,
-    ana_ozellikler: { hiz: 86, sut: 72, pas: 62, dribbling: 75, defans: 26, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 72,
+      pas: 62,
+      dribbling: 75,
+      defans: 26,
+      fizik: 61,
+    },
     detaylar: { sprint: 87, ziplama: 77, sut_gucu: 76 },
-    oyun_tarzlari: ["Plase Şut", "Seri"]
+    oyun_tarzlari: ["Plase Şut", "Seri"],
   },
   {
     ad: "D. Goutass",
@@ -51,9 +90,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 31,
-    ana_ozellikler: { hiz: 51, sut: 45, pas: 48, dribbling: 53, defans: 72, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 45,
+      pas: 48,
+      dribbling: 53,
+      defans: 72,
+      fizik: 79,
+    },
     detaylar: { guc: 83, ziplama: 82, kafa_isabeti: 77 },
-    oyun_tarzlari: ["Hava Hakimi", "Top Kesici", "Uzun Topla Pas"]
+    oyun_tarzlari: ["Hava Hakimi", "Top Kesici", "Maestro"],
   },
   {
     ad: "O. Eteboh",
@@ -62,9 +108,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MDO",
     reyting: 71,
     yas: 30,
-    ana_ozellikler: { hiz: 71, sut: 65, pas: 66, dribbling: 73, defans: 68, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 65,
+      pas: 66,
+      dribbling: 73,
+      defans: 68,
+      fizik: 76,
+    },
     detaylar: { ceviklik: 84, sut_gucu: 80, dayaniklilik: 79, agresiflik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Akkann",
@@ -73,9 +126,24 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "KL",
     reyting: 69,
     yas: 30,
-    ana_ozellikler: { hiz: 70, sut: 20, pas: 40, dribbling: 20, defans: 20, fizik: 69 },
-    detaylar: { ucma: 70, top_kontrol: 66, vurus: 66, pozisyon: 69, refleks: 72, dribbling: 72, guc: 69 },
-    oyun_tarzlari: ["Kaleden Çıkma"]
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 20,
+      pas: 40,
+      dribbling: 20,
+      defans: 20,
+      fizik: 69,
+    },
+    detaylar: {
+      ucma: 70,
+      top_kontrol: 66,
+      vurus: 66,
+      pozisyon: 69,
+      refleks: 72,
+      dribbling: 72,
+      guc: 69,
+    },
+    oyun_tarzlari: ["Ortaya Çıkan"],
   },
   {
     ad: "M. Hanousk",
@@ -84,9 +152,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SLB",
     reyting: 67,
     yas: 32,
-    ana_ozellikler: { hiz: 75, sut: 44, pas: 60, dribbling: 64, defans: 61, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 44,
+      pas: 60,
+      dribbling: 64,
+      defans: 61,
+      fizik: 73,
+    },
     detaylar: { dayaniklilik: 80, sprint: 76, ziplama: 75, guc: 73 },
-    oyun_tarzlari: ["Engel", "Güçlü"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Nalepka",
@@ -95,9 +170,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MO",
     reyting: 66,
     yas: 30,
-    ana_ozellikler: { hiz: 68, sut: 63, pas: 65, dribbling: 66, defans: 59, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 63,
+      pas: 65,
+      dribbling: 66,
+      defans: 59,
+      fizik: 75,
+    },
     detaylar: { denge: 86, agresiflik: 79, dayaniklilik: 78, ceviklik: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Dogann",
@@ -106,9 +188,22 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "KL",
     reyting: 66,
     yas: 20,
-    ana_ozellikler: { hiz: 56, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 66 },
-    detaylar: { ucma: 56, refleks: 66, vurus: 61, pozisyon: 58, top_kontrol: 54 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 66,
+    },
+    detaylar: {
+      ucma: 56,
+      refleks: 66,
+      vurus: 61,
+      pozisyon: 58,
+      top_kontrol: 54,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Bulutt",
@@ -117,9 +212,22 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "KL",
     reyting: 64,
     yas: 21,
-    ana_ozellikler: { hiz: 54, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 64 },
-    detaylar: { ucma: 54, refleks: 64, vurus: 59, pozisyon: 56, top_kontrol: 52 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 64,
+    },
+    detaylar: {
+      ucma: 54,
+      refleks: 64,
+      vurus: 59,
+      pozisyon: 56,
+      top_kontrol: 52,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Polatt",
@@ -128,9 +236,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "STP",
     reyting: 63,
     yas: 22,
-    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 38,
+      pas: 55,
+      dribbling: 53,
+      defans: 63,
+      fizik: 58,
+    },
     detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Karatash",
@@ -139,9 +254,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "STP",
     reyting: 62,
     yas: 23,
-    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 37,
+      pas: 54,
+      dribbling: 52,
+      defans: 62,
+      fizik: 57,
+    },
     detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Yildizz",
@@ -150,9 +272,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "STP",
     reyting: 61,
     yas: 24,
-    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 36,
+      pas: 53,
+      dribbling: 51,
+      defans: 61,
+      fizik: 56,
+    },
     detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Dogann",
@@ -161,9 +290,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SĞB",
     reyting: 60,
     yas: 25,
-    ana_ozellikler: { hiz: 50, sut: 35, pas: 52, dribbling: 50, defans: 60, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 35,
+      pas: 52,
+      dribbling: 50,
+      defans: 60,
+      fizik: 55,
+    },
     detaylar: { ayakta_mudahale: 60, top_kesme: 55, kafa_isabeti: 50, guc: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "V. Polatt",
@@ -172,9 +308,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SLB",
     reyting: 59,
     yas: 26,
-    ana_ozellikler: { hiz: 49, sut: 34, pas: 51, dribbling: 49, defans: 59, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 34,
+      pas: 51,
+      dribbling: 49,
+      defans: 59,
+      fizik: 54,
+    },
     detaylar: { ayakta_mudahale: 59, top_kesme: 54, kafa_isabeti: 49, guc: 51 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Garcy",
@@ -183,9 +326,21 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MDO",
     reyting: 58,
     yas: 27,
-    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
-    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 43,
+      sut: 38,
+      pas: 53,
+      dribbling: 50,
+      defans: 58,
+      fizik: 53,
+    },
+    detaylar: {
+      top_kesme: 58,
+      ayakta_mudahale: 53,
+      dayaniklilik: 55,
+      kisa_pas: 50,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrig",
@@ -194,9 +349,21 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MDO",
     reyting: 57,
     yas: 28,
-    ana_ozellikler: { hiz: 42, sut: 37, pas: 52, dribbling: 49, defans: 57, fizik: 52 },
-    detaylar: { top_kesme: 57, ayakta_mudahale: 52, dayaniklilik: 54, kisa_pas: 49 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 42,
+      sut: 37,
+      pas: 52,
+      dribbling: 49,
+      defans: 57,
+      fizik: 52,
+    },
+    detaylar: {
+      top_kesme: 57,
+      ayakta_mudahale: 52,
+      dayaniklilik: 54,
+      kisa_pas: 49,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Costas",
@@ -205,9 +372,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MO",
     reyting: 56,
     yas: 29,
-    ana_ozellikler: { hiz: 44, sut: 46, pas: 56, dribbling: 51, defans: 41, fizik: 46 },
+    ana_ozellikler: {
+      hiz: 44,
+      sut: 46,
+      pas: 56,
+      dribbling: 51,
+      defans: 41,
+      fizik: 46,
+    },
     detaylar: { vizyon: 51, kisa_pas: 56, top_kontrol: 48, dayaniklilik: 44 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Akinn",
@@ -216,9 +390,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MO",
     reyting: 55,
     yas: 30,
-    ana_ozellikler: { hiz: 43, sut: 45, pas: 55, dribbling: 50, defans: 40, fizik: 45 },
+    ana_ozellikler: {
+      hiz: 43,
+      sut: 45,
+      pas: 55,
+      dribbling: 50,
+      defans: 40,
+      fizik: 45,
+    },
     detaylar: { vizyon: 50, kisa_pas: 55, top_kontrol: 47, dayaniklilik: 43 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Celikk",
@@ -227,9 +408,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MOO",
     reyting: 60,
     yas: 31,
-    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 50,
+      pas: 60,
+      dribbling: 55,
+      defans: 45,
+      fizik: 50,
+    },
     detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Kayya",
@@ -238,9 +426,16 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "MOO",
     reyting: 59,
     yas: 32,
-    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 47,
+      sut: 49,
+      pas: 59,
+      dribbling: 54,
+      defans: 44,
+      fizik: 49,
+    },
     detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Cetinn",
@@ -249,8 +444,15 @@ export const GENCLERBIRLIGI_SQUAD = [
     mevki: "SĞO",
     reyting: 59,
     yas: 33,
-    ana_ozellikler: { hiz: 64, sut: 54, pas: 51, dribbling: 61, defans: 35, fizik: 44 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 54,
+      pas: 51,
+      dribbling: 61,
+      defans: 35,
+      fizik: 44,
+    },
     detaylar: { dribbling: 59, ceviklik: 62, orta_acma: 49, sprint: 64 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

@@ -6,9 +6,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "KL",
     reyting: 82,
     yas: 34,
-    ana_ozellikler: { hiz: 54, sut: 18, pas: 62, dribbling: 26, defans: 26, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 18,
+      pas: 62,
+      dribbling: 26,
+      defans: 26,
+      fizik: 80,
+    },
     detaylar: { refleks: 86, ucma: 84, pozisyon: 84, liderlik: 84 },
-    oyun_tarzlari: ["Refleks Ustası", "Lider", "Kaptan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "R. Koch",
@@ -17,9 +24,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "STP",
     reyting: 78,
     yas: 28,
-    ana_ozellikler: { hiz: 72, sut: 52, pas: 72, dribbling: 68, defans: 82, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 52,
+      pas: 72,
+      dribbling: 68,
+      defans: 82,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 84, markaj: 82, top_surme: 78 },
-    oyun_tarzlari: ["Top Süren Stoper", "Modern Stoper"]
+    oyun_tarzlari: ["Top Cambazı", "Maestro"],
   },
   {
     ad: "W. Pacho",
@@ -28,9 +42,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "STP",
     reyting: 78,
     yas: 23,
-    ana_ozellikler: { hiz: 78, sut: 48, pas: 68, dribbling: 66, defans: 82, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 48,
+      pas: 68,
+      dribbling: 66,
+      defans: 82,
+      fizik: 84,
+    },
     detaylar: { top_kesme: 84, hiz: 82, guc: 86 },
-    oyun_tarzlari: ["Hızlı Stoper", "Güçlü"]
+    oyun_tarzlari: ["Seri", "Kaya"],
   },
   {
     ad: "N. Nkounkou",
@@ -39,9 +60,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SLB",
     reyting: 76,
     yas: 24,
-    ana_ozellikler: { hiz: 84, sut: 64, pas: 74, dribbling: 76, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 64,
+      pas: 74,
+      dribbling: 76,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { sprint: 86, hizlanma: 86, orta_acma: 80 },
-    oyun_tarzlari: ["Ofansif Bek", "Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Knauff",
@@ -50,9 +78,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SĞB",
     reyting: 77,
     yas: 22,
-    ana_ozellikler: { hiz: 88, sut: 70, pas: 74, dribbling: 80, defans: 68, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 70,
+      pas: 74,
+      dribbling: 80,
+      defans: 68,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 90, sprint: 89, orta_acma: 80 },
-    oyun_tarzlari: ["Sprint Ustası", "Ofansif Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "E. Ebimbe",
@@ -61,9 +96,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MDO",
     reyting: 76,
     yas: 24,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 74, dribbling: 76, defans: 74, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 74,
+      dribbling: 76,
+      defans: 74,
+      fizik: 80,
+    },
     detaylar: { dayaniklilik: 84, hizlanma: 82, guc: 82 },
-    oyun_tarzlari: ["Kutu Kutu", "Güçlü"]
+    oyun_tarzlari: ["Amansız", "Kaya"],
   },
   {
     ad: "S. Rode",
@@ -72,9 +114,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MDO",
     reyting: 76,
     yas: 34,
-    ana_ozellikler: { hiz: 68, sut: 68, pas: 76, dribbling: 72, defans: 78, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 68,
+      pas: 76,
+      dribbling: 72,
+      defans: 78,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 80, liderlik: 84, dayaniklilik: 80 },
-    oyun_tarzlari: ["Kırıcı", "Kaptan", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Götze",
@@ -83,9 +132,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MOO",
     reyting: 80,
     yas: 32,
-    ana_ozellikler: { hiz: 72, sut: 78, pas: 84, dribbling: 84, defans: 42, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 78,
+      pas: 84,
+      dribbling: 84,
+      defans: 42,
+      fizik: 64,
+    },
     detaylar: { vizyon: 88, kisa_pas: 88, dribbling: 86 },
-    oyun_tarzlari: ["Oyun Kurucu", "Teknik", "Lider"]
+    oyun_tarzlari: ["Maestro", "İlk Dokunuş"],
   },
   {
     ad: "D. Kamada",
@@ -94,9 +150,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MOO",
     reyting: 78,
     yas: 28,
-    ana_ozellikler: { hiz: 76, sut: 78, pas: 80, dribbling: 82, defans: 38, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 78,
+      pas: 80,
+      dribbling: 82,
+      defans: 38,
+      fizik: 66,
+    },
     detaylar: { vizyon: 84, dribbling: 84, bitiricilik: 80 },
-    oyun_tarzlari: ["Teknik", "Çalımlı"]
+    oyun_tarzlari: ["İlk Dokunuş", "Top Cambazı"],
   },
   {
     ad: "R. Marmoush",
@@ -105,9 +168,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SLO",
     reyting: 79,
     yas: 25,
-    ana_ozellikler: { hiz: 90, sut: 80, pas: 74, dribbling: 84, defans: 30, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 90,
+      sut: 80,
+      pas: 74,
+      dribbling: 84,
+      defans: 30,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 92, sprint: 91, bitiricilik: 82 },
-    oyun_tarzlari: ["Sprint Ustası", "Hızlı Kanat", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Top Cambazı"],
   },
   {
     ad: "H. Ekitike",
@@ -116,9 +186,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SNT",
     reyting: 78,
     yas: 22,
-    ana_ozellikler: { hiz: 86, sut: 78, pas: 68, dribbling: 80, defans: 28, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 78,
+      pas: 68,
+      dribbling: 80,
+      defans: 28,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 88, bitiricilik: 80, dribbling: 82 },
-    oyun_tarzlari: ["Hızlı Forvet", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Top Cambazı"],
   },
   {
     ad: "O. Dina Ebimbe",
@@ -127,9 +204,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 23,
-    ana_ozellikler: { hiz: 82, sut: 76, pas: 62, dribbling: 74, defans: 28, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 76,
+      pas: 62,
+      dribbling: 74,
+      defans: 28,
+      fizik: 76,
+    },
     detaylar: { hizlanma: 84, bitiricilik: 78 },
-    oyun_tarzlari: ["Hızlı Forvet"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "T. Chandler",
@@ -138,9 +222,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 34,
-    ana_ozellikler: { hiz: 76, sut: 58, pas: 72, dribbling: 74, defans: 74, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 74,
+      fizik: 74,
+    },
     detaylar: { orta_acma: 78, liderlik: 78 },
-    oyun_tarzlari: ["Lider"]
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Tuta",
@@ -149,9 +240,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 25,
-    ana_ozellikler: { hiz: 74, sut: 46, pas: 66, dribbling: 64, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 46,
+      pas: 66,
+      dribbling: 64,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, hizlanma: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Lenz",
@@ -160,9 +258,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 72, dribbling: 72, defans: 74, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 72,
+      dribbling: 72,
+      defans: 74,
+      fizik: 74,
+    },
     detaylar: { orta_acma: 78, dayaniklilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Pellegrini",
@@ -171,9 +276,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 80, sut: 60, pas: 74, dribbling: 74, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 60,
+      pas: 74,
+      dribbling: 74,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, orta_acma: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Skhiri",
@@ -182,9 +294,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MDO",
     reyting: 76,
     yas: 29,
-    ana_ozellikler: { hiz: 72, sut: 70, pas: 76, dribbling: 74, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 70,
+      pas: 76,
+      dribbling: 74,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, dayaniklilik: 82 },
-    oyun_tarzlari: ["Kırıcı"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "A. Bahoya",
@@ -193,9 +312,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 19,
-    ana_ozellikler: { hiz: 86, sut: 70, pas: 70, dribbling: 78, defans: 26, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 70,
+      pas: 70,
+      dribbling: 78,
+      defans: 26,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 88, dribbling: 80 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "F. Krösche",
@@ -204,9 +330,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 76, ucma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Alario",
@@ -215,9 +348,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 32,
-    ana_ozellikler: { hiz: 70, sut: 78, pas: 64, dribbling: 72, defans: 28, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 78,
+      pas: 64,
+      dribbling: 72,
+      defans: 28,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 82, pozisyon: 80 },
-    oyun_tarzlari: ["Fırsatçı Golcü"]
+    oyun_tarzlari: ["İleride Bekleyen"],
   },
   {
     ad: "F. Chaïbi",
@@ -226,9 +366,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 21,
-    ana_ozellikler: { hiz: 78, sut: 72, pas: 76, dribbling: 78, defans: 38, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 72,
+      pas: 76,
+      dribbling: 78,
+      defans: 38,
+      fizik: 66,
+    },
     detaylar: { dribbling: 80, vizyon: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "J. Brown",
@@ -237,9 +384,16 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 21,
-    ana_ozellikler: { hiz: 74, sut: 44, pas: 64, dribbling: 62, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 44,
+      pas: 64,
+      dribbling: 62,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 77, hiz: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Fares",
@@ -248,8 +402,15 @@ export const FRANKFURT_EAGLES_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 82, sut: 60, pas: 72, dribbling: 74, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 60,
+      pas: 72,
+      dribbling: 74,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { hizlanma: 84, sprint: 83 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -62,7 +62,7 @@ const App: React.FC = () => {
 
     // Game State
     const [gameState, setGameState] = useState<GameState | null>(null);
-    const [view, setView] = useState<'dashboard' | 'squad' | 'league' | 'match' | 'club' | 'transfers' | 'news' | 'training' | 'rankings' | 'guide' | 'fixtures' | 'manager'>('dashboard');
+    const [view, setView] = useState<'dashboard' | 'squad' | 'league' | 'match' | 'club' | 'transfers' | 'news' | 'training' | 'rankings' | 'guide' | 'fixtures' | 'manager' | 'menu'>('dashboard');
     const [activeMatchId, setActiveMatchId] = useState<string | null>(null);
     const [lang, setLang] = useState<'tr' | 'en' | 'es' | 'fr' | 'ru' | 'id'>('tr'); // Will sync to user's league language
     const [showWelcome, setShowWelcome] = useState(false);
@@ -580,9 +580,9 @@ const App: React.FC = () => {
         }
     };
 
-    const handleRenameProfile = (profileId: string, newName: string) => {
-        updateProfileMetadata(profileId, { name: newName });
-        setProfiles(loadAllProfiles());
+    const handleRenameProfile = async (profileId: string, newName: string) => {
+        await updateProfileMetadata(profileId, { name: newName });
+        setProfiles(await loadAllProfiles());
     };
 
     const handleBackToProfiles = () => {
@@ -1233,7 +1233,7 @@ const App: React.FC = () => {
             type === 'training' ? userTeam.facilities.trainingLevel :
                 userTeam.facilities.academyLevel;
 
-        if (currentLevel >= 25) {
+        if (currentLevel >= 15) {
             alert('Maximum level reached!');
             return;
         }
@@ -2049,7 +2049,7 @@ const App: React.FC = () => {
                             <button onClick={() => setShowGlobalHistory(true)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-400 hover:bg-slate-800 hover:text-white`}><BookOpen size={20} /> <span className="hidden md:inline">{t.history || 'Global History'}</span></button>
                             <button onClick={() => setView('guide')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'guide' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Info size={20} /> <span className="hidden md:inline">{t.gameGuide}</span></button>
                             <button onClick={() => setView('manager')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'manager' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><UserCircle size={20} /> <span className="hidden md:inline">Menajer</span></button>
-                            <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
+                            <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${(view as string) === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                             <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
                             <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
 
@@ -2099,52 +2099,96 @@ const App: React.FC = () => {
                 )
             }
 
-            {/* Mobile Bottom Navigation - Glassmorphism (5 Items) */}
+            {/* Mobile Navigation - Bottom (Portrait) / Left Sidebar (Landscape) */}
             {
                 view !== 'match' && (
-                    <div className="2xl:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
-                        {/* Premium Glass Background */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/98 to-slate-900/95 backdrop-blur-xl border-t border-white/10"></div>
-
-                        <div className="relative z-10 flex justify-between items-stretch px-2 pt-2">
-                            <button onClick={() => setView('dashboard')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'dashboard' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
-                                {view === 'dashboard' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-[0_0_16px_rgba(16,185,129,0.8)] rounded-b-full"></div>}
-                                <LayoutDashboard size={24} className={view === 'dashboard' ? 'drop-shadow-[0_0_12px_rgba(16,185,129,0.6)]' : ''} />
-                                <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.dashboard}</span>
-                            </button>
-
-                            <button onClick={() => setView('squad')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'squad' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
-                                {view === 'squad' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-blue-400 to-blue-500 shadow-[0_0_16px_rgba(59,130,246,0.8)] rounded-b-full"></div>}
-                                <Users size={24} className={view === 'squad' ? 'drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]' : ''} />
-                                <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.squad}</span>
-                            </button>
-
-                            <button onClick={() => setView('news')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'news' ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
-                                {view === 'news' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-cyan-400 to-cyan-500 shadow-[0_0_16px_rgba(34,211,238,0.8)] rounded-b-full"></div>}
-                                <div className="relative">
-                                    <Mail size={24} className={view === 'news' ? 'drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]' : ''} />
-                                    {unreadMessages > 0 && <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 border-2 border-slate-900 shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse"></span>}
-                                </div>
-                                <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.news}</span>
-                            </button>
-
-                            <button onClick={() => setView('transfers')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'transfers' ? 'text-purple-400 bg-purple-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
-                                {view === 'transfers' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-purple-400 to-purple-500 shadow-[0_0_16px_rgba(168,85,247,0.8)] rounded-b-full"></div>}
-                                <ShoppingCart size={24} className={view === 'transfers' ? 'drop-shadow-[0_0_12px_rgba(168,85,247,0.6)]' : ''} />
-                                <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.market}</span>
-                            </button>
-
-                            <button onClick={() => setView(view === 'menu' ? 'dashboard' : 'menu')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'menu' ? 'text-amber-400 bg-amber-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
-                                {view === 'menu' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 shadow-[0_0_16px_rgba(251,191,36,0.8)] rounded-b-full"></div>}
-                                <Menu size={24} className={view === 'menu' ? 'drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]' : ''} />
-                                <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.menu || 'Menu'}</span>
-                            </button>
+                    <>
+                        {/* PORTRAIT: Bottom Navigation */}
+                        <div className="2xl:hidden portrait:block landscape:hidden fixed bottom-0 left-0 w-full z-50 safe-area-bottom pb-1">
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/98 to-slate-900/95 backdrop-blur-xl border-t border-white/10"></div>
+                            <div className="relative z-10 flex justify-between items-stretch px-2 pt-2">
+                                <button onClick={() => setView('dashboard')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'dashboard' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'dashboard' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-[0_0_16px_rgba(16,185,129,0.8)] rounded-b-full"></div>}
+                                    <LayoutDashboard size={24} className={view === 'dashboard' ? 'drop-shadow-[0_0_12px_rgba(16,185,129,0.6)]' : ''} />
+                                    <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.dashboard}</span>
+                                </button>
+                                <button onClick={() => setView('squad')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'squad' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'squad' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-blue-400 to-blue-500 shadow-[0_0_16px_rgba(59,130,246,0.8)] rounded-b-full"></div>}
+                                    <Users size={24} className={view === 'squad' ? 'drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]' : ''} />
+                                    <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.squad}</span>
+                                </button>
+                                <button onClick={() => setView('news')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'news' ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'news' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-cyan-400 to-cyan-500 shadow-[0_0_16px_rgba(34,211,238,0.8)] rounded-b-full"></div>}
+                                    <div className="relative">
+                                        <Mail size={24} className={view === 'news' ? 'drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]' : ''} />
+                                        {unreadMessages > 0 && <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 border-2 border-slate-900 shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse"></span>}
+                                    </div>
+                                    <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.news}</span>
+                                </button>
+                                <button onClick={() => setView('transfers')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'transfers' ? 'text-purple-400 bg-purple-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'transfers' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-purple-400 to-purple-500 shadow-[0_0_16px_rgba(168,85,247,0.8)] rounded-b-full"></div>}
+                                    <ShoppingCart size={24} className={view === 'transfers' ? 'drop-shadow-[0_0_12px_rgba(168,85,247,0.6)]' : ''} />
+                                    <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.market}</span>
+                                </button>
+                                <button onClick={() => setView(view === 'menu' ? 'dashboard' : 'menu')} className={`flex flex-col items-center justify-center py-2.5 flex-1 min-w-[56px] transition-all active:scale-95 rounded-xl ${view === 'menu' ? 'text-amber-400 bg-amber-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'menu' && <div className="absolute top-0 w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 shadow-[0_0_16px_rgba(251,191,36,0.8)] rounded-b-full"></div>}
+                                    <Menu size={24} className={view === 'menu' ? 'drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]' : ''} />
+                                    <span className="text-[10px] mt-1.5 font-bold tracking-tight">{t.menu || 'Menu'}</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+
+                        {/* LANDSCAPE: Left Sidebar Navigation */}
+                        <div className="portrait:hidden landscape:flex landscape:2xl:hidden fixed left-0 top-0 h-full w-16 z-50 flex-col items-center py-3 gap-1">
+                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/98 to-slate-900/95 backdrop-blur-xl border-r border-white/10"></div>
+                            <div className="relative z-10 flex flex-col items-center gap-1 w-full flex-1 overflow-y-auto no-scrollbar py-1">
+                                <button onClick={() => setView('dashboard')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'dashboard' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'dashboard' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-emerald-400 to-emerald-500 rounded-r-full"></div>}
+                                    <LayoutDashboard size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.dashboard}</span>
+                                </button>
+                                <button onClick={() => setView('squad')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'squad' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'squad' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-blue-500 rounded-r-full"></div>}
+                                    <Users size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.squad}</span>
+                                </button>
+                                <button onClick={() => setView('news')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'news' ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'news' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-cyan-400 to-cyan-500 rounded-r-full"></div>}
+                                    <div className="relative"><Mail size={20} />{unreadMessages > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-red-500 border border-slate-900 animate-pulse"></span>}</div>
+                                    <span className="text-[8px] mt-1 font-bold">{t.news}</span>
+                                </button>
+                                <button onClick={() => setView('transfers')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'transfers' ? 'text-purple-400 bg-purple-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'transfers' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-purple-400 to-purple-500 rounded-r-full"></div>}
+                                    <ShoppingCart size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.market}</span>
+                                </button>
+                                <button onClick={() => setView('league')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'league' ? 'text-yellow-400 bg-yellow-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'league' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-yellow-400 to-yellow-500 rounded-r-full"></div>}
+                                    <Trophy size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.standings}</span>
+                                </button>
+                                <button onClick={() => setView('training')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'training' ? 'text-orange-400 bg-orange-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'training' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-500 rounded-r-full"></div>}
+                                    <Activity size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.training}</span>
+                                </button>
+                                <button onClick={() => setView('club')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'club' ? 'text-teal-400 bg-teal-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'club' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-teal-400 to-teal-500 rounded-r-full"></div>}
+                                    <Building2 size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.club}</span>
+                                </button>
+                                <button onClick={() => setView(view === 'menu' ? 'dashboard' : 'menu')} className={`relative flex flex-col items-center justify-center py-2 w-14 transition-all active:scale-95 rounded-xl ${view === 'menu' ? 'text-amber-400 bg-amber-500/10' : 'text-slate-500 hover:text-slate-300'}`}>
+                                    {view === 'menu' && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-amber-400 to-amber-500 rounded-r-full"></div>}
+                                    <Menu size={20} />
+                                    <span className="text-[8px] mt-1 font-bold">{t.menu || 'Menu'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </>
                 )
             }
 
-            <div className={`relative z-10 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-none p-4 2xl:p-8 pb-48 2xl:pb-8 2xl:pt-4 ${view !== 'match' ? '2xl:ml-64' : ''}`}>
+            <div className={`relative z-10 h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-none p-4 2xl:p-8 pb-48 2xl:pb-8 2xl:pt-4 ${view !== 'match' ? '2xl:ml-64 landscape:ml-16 landscape:2xl:ml-64 landscape:pb-4' : 'w-full'}`}>
                 <div className="max-w-7xl mx-auto min-h-full">
                     {view === 'match' && activeMatch && activeHome && activeAway ? (
                         <MatchCenter
@@ -2171,10 +2215,10 @@ const App: React.FC = () => {
                         </div>
                     ) : (
 
-                        <div className="animate-fade-in w-full">
+                        <div key={view} className="animate-fade-in w-full">
                             {/* Navigation Safety: Ensure active match is cleared if user navigates away */}
                             {(() => {
-                                if (view !== 'match' && activeMatchId) {
+                                if ((view as string) !== 'match' && activeMatchId) {
                                     // Use setTimeout to avoid state updates during render
                                     setTimeout(() => handleMatchFinish(), 0);
                                 }
@@ -2379,7 +2423,7 @@ const App: React.FC = () => {
                                         {/* Inbox, Transfer Offers & League Position Widget */}
                                         <div className="grid grid-cols-3 gap-3">
                                             {/* Inbox */}
-                                            <button onClick={() => setView('news')} className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-cyan-500/30 transition-all active:scale-95 overflow-hidden shadow-lg">
+                                            <button onClick={() => setView('news')} className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-cyan-500/50 transition-all active:scale-95">
                                                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                 <div className="relative">
                                                     <Mail size={24} className="text-cyan-400 group-hover:text-cyan-300 transition-colors drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
@@ -2395,7 +2439,7 @@ const App: React.FC = () => {
                                             </button>
 
                                             {/* Transfer Offers */}
-                                            <button onClick={() => { setNewsFilter('TRANSFERS'); setView('news'); }} className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all active:scale-95 overflow-hidden shadow-lg">
+                                            <button onClick={() => { setNewsFilter('TRANSFERS'); setView('news'); }} className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-yellow-500/50 transition-all active:scale-95">
                                                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                 <div className="relative">
                                                     <DollarSign size={24} className="text-yellow-400 group-hover:text-yellow-300 transition-colors drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
@@ -2454,7 +2498,7 @@ const App: React.FC = () => {
                                                             setViewLeagueId(userTeam.leagueId);
                                                             setView('league');
                                                         }}
-                                                        className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-white/10 hover:border-yellow-500/30 transition-all overflow-hidden shadow-lg active:scale-95 cursor-pointer"
+                                                        className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-yellow-500/50 transition-all active:scale-95 cursor-pointer"
                                                     >
                                                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                         <Trophy size={24} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
@@ -2486,7 +2530,7 @@ const App: React.FC = () => {
                                         </div>
 
                                         {/* Next Match Card - Detailed */}
-                                        <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 shadow-xl">
+                                        <div className="fm-card w-full">
                                             <div className="bg-gradient-to-r from-emerald-900/30 to-slate-900/50 p-3 border-b border-white/5 flex justify-between items-center">
                                                 <span className="text-[11px] uppercase font-bold text-emerald-400 flex items-center gap-2 tracking-wider"><Calendar size={14} className="drop-shadow-[0_0_4px_rgba(16,185,129,0.5)]" /> {t.nextMatch}</span>
                                                 <span className="text-[11px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
@@ -2649,24 +2693,31 @@ const App: React.FC = () => {
 
                                                 {/* Quick Actions Bar */}
                                                 <div className="grid grid-cols-2 gap-3 mt-2">
-                                                    <button onClick={handleQuickSimWithBackground} className="group relative bg-gradient-to-r from-emerald-900/40 to-emerald-800/20 hover:from-emerald-800/50 hover:to-emerald-700/30 border border-emerald-500/30 hover:border-emerald-400/50 text-emerald-400 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 overflow-hidden shadow-lg shadow-emerald-900/20">
-                                                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                                        <span className="relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">{t.simulateMatch}</span>
-                                                    </button>
+                                                    {gameState && !teamHasRemainingMatches(gameState, gameState.userTeamId) ? (
+                                                        <button onClick={handleQuickSimWithBackground} className="group relative bg-gradient-to-r from-orange-900/40 to-orange-800/20 hover:from-orange-800/50 hover:to-orange-700/30 border border-orange-500/30 hover:border-orange-400/50 text-orange-400 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 overflow-hidden shadow-lg shadow-orange-900/20">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                            <span className="relative z-10 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]">Hızlı İleri Sar (Sezon Sonu)</span>
+                                                        </button>
+                                                    ) : (
+                                                        <button onClick={handleQuickSimWithBackground} className="group relative bg-gradient-to-r from-emerald-900/40 to-emerald-800/20 hover:from-emerald-800/50 hover:to-emerald-700/30 border border-emerald-500/30 hover:border-emerald-400/50 text-emerald-400 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 overflow-hidden shadow-lg shadow-emerald-900/20">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                            <span className="relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">{t.simulateMatch}</span>
+                                                        </button>
+                                                    )}
                                                     <button onClick={() => setView('squad')} className="group relative bg-gradient-to-r from-slate-800/80 to-slate-700/40 hover:from-slate-700/80 hover:to-slate-600/50 border border-slate-600/50 hover:border-slate-500/60 text-slate-200 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 overflow-hidden shadow-lg">
                                                         <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                         <span className="relative z-10">{t.tactics}</span>
                                                     </button>
-                                                    <button onClick={openDerbySelector} className="group col-span-2 relative bg-gradient-to-r from-yellow-900/30 to-amber-800/20 hover:from-yellow-800/40 hover:to-amber-700/30 border border-yellow-500/30 hover:border-yellow-400/50 text-yellow-400 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden shadow-lg shadow-yellow-900/10">
+                                                    <button onClick={openDerbySelector} className="group col-span-2 relative bg-gradient-to-r from-yellow-900/30 to-amber-800/20 hover:from-yellow-800/40 hover:to-amber-700/30 border border-yellow-500/30 hover:border-yellow-400/50 text-yellow-400 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden">
                                                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                                        <Zap size={16} className="relative z-10 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" /> <span className="relative z-10 drop-shadow-[0_0_8px_rgba(250,204,21,0.3)]">{t.playFriendly}</span>
+                                                        <Zap size={16} className="relative z-10" /> <span className="relative z-10">{t.playFriendly}</span>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Board Confidence & Objectives */}
-                                        <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-xl">
+                                        <div className="fm-panel p-5">
                                             <h3 className="text-[11px] uppercase text-slate-400 font-bold mb-4 flex items-center gap-2 tracking-wider"><Briefcase size={14} className="text-purple-400 drop-shadow-[0_0_4px_rgba(168,85,247,0.5)]" /> {t.boardConfidence}</h3>
                                             <div className="flex items-center gap-4 mb-5">
                                                 <div className="flex-1 bg-slate-900/80 h-3 rounded-full overflow-hidden border border-slate-700/50 shadow-inner">
@@ -2713,6 +2764,7 @@ const App: React.FC = () => {
                                         onDeleteAll={handleDeleteAll}
                                         onAcceptOffer={transferMarket.handleAcceptOffer}
                                         onRejectOffer={transferMarket.handleRejectOffer}
+                                        onCounterOffer={transferMarket.handleCounterOffer}
                                         onViewPlayer={(playerId) => {
                                             const player = gameState.players.find(p => p.id === playerId);
                                             if (player) setSelectedPlayer(player);

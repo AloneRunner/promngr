@@ -6,9 +6,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "KL",
     reyting: 75,
     yas: 32,
-    ana_ozellikler: { hiz: 46, sut: 14, pas: 52, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 46,
+      sut: 14,
+      pas: 52,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 80, ucma: 78, pozisyon: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Mainka",
@@ -17,9 +24,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 31,
-    ana_ozellikler: { hiz: 64, sut: 46, pas: 64, dribbling: 60, defans: 80, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 46,
+      pas: 64,
+      dribbling: 60,
+      defans: 80,
+      fizik: 84,
+    },
     detaylar: { kafa_isabeti: 84, guc: 86, liderlik: 82 },
-    oyun_tarzlari: ["Kule", "Lider", "Kaptan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Gimber",
@@ -28,9 +42,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 66, dribbling: 64, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 66,
+      dribbling: 64,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, markaj: 78 },
-    oyun_tarzlari: ["Sert Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "O. Föhrenbach",
@@ -39,9 +60,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 72, dribbling: 74, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 72,
+      dribbling: 74,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 78, dayaniklilik: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Busch",
@@ -50,9 +78,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 80, sut: 64, pas: 76, dribbling: 76, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 64,
+      pas: 76,
+      dribbling: 76,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 82, hizlanma: 82, asist: 78 },
-    oyun_tarzlari: ["Ofansif Bek", "Orta Açma Ustası"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "L. Maloney",
@@ -61,9 +96,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 76, dribbling: 74, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 76,
+      dribbling: 74,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 78, dayaniklilik: 80, kisa_pas: 78 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "J. Dorsch",
@@ -72,9 +114,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "MDO",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 78, dribbling: 76, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 78,
+      dribbling: 76,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { uzun_pas: 82, top_kesme: 78, vizyon: 80 },
-    oyun_tarzlari: ["Oyun Kurucu", "Uzun Pas"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "P. Beck",
@@ -83,9 +132,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 74, pas: 76, dribbling: 78, defans: 42, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 74,
+      pas: 76,
+      dribbling: 78,
+      defans: 42,
+      fizik: 70,
+    },
     detaylar: { dribbling: 80, hizlanma: 80, vizyon: 78 },
-    oyun_tarzlari: ["Çalımlı"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "J. Pieringer",
@@ -94,9 +150,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 25,
-    ana_ozellikler: { hiz: 76, sut: 78, pas: 62, dribbling: 74, defans: 30, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 78,
+      pas: 62,
+      dribbling: 74,
+      defans: 30,
+      fizik: 80,
+    },
     detaylar: { bitiricilik: 82, kafa_isabeti: 82, guc: 82 },
-    oyun_tarzlari: ["Hedef Adam"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "T. Kleindienst",
@@ -105,9 +168,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SNT",
     reyting: 76,
     yas: 29,
-    ana_ozellikler: { hiz: 74, sut: 80, pas: 66, dribbling: 74, defans: 34, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 80,
+      pas: 66,
+      dribbling: 74,
+      defans: 34,
+      fizik: 84,
+    },
     detaylar: { bitiricilik: 84, kafa_isabeti: 86, guc: 86 },
-    oyun_tarzlari: ["Kule", "Hedef Adam", "Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "M. Wanner",
@@ -116,9 +186,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SĞO",
     reyting: 75,
     yas: 20,
-    ana_ozellikler: { hiz: 82, sut: 74, pas: 76, dribbling: 80, defans: 28, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 74,
+      pas: 76,
+      dribbling: 80,
+      defans: 28,
+      fizik: 66,
+    },
     detaylar: { dribbling: 82, hizlanma: 84, ceviklik: 84 },
-    oyun_tarzlari: ["Çalımlı", "Teknik"]
+    oyun_tarzlari: ["Top Cambazı", "İlk Dokunuş"],
   },
   {
     ad: "A. Schimmer",
@@ -127,9 +204,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 82, sut: 70, pas: 70, dribbling: 76, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 70,
+      pas: 70,
+      dribbling: 76,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 84, sprint: 83 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "M. Breunig",
@@ -138,9 +222,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 72, sut: 76, pas: 60, dribbling: 70, defans: 28, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 76,
+      pas: 60,
+      dribbling: 70,
+      defans: 28,
+      fizik: 80,
+    },
     detaylar: { kafa_isabeti: 80, bitiricilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Theuerkauf",
@@ -149,9 +240,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 37,
-    ana_ozellikler: { hiz: 62, sut: 44, pas: 66, dribbling: 62, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 44,
+      pas: 66,
+      dribbling: 62,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { liderlik: 84, markaj: 78 },
-    oyun_tarzlari: ["Lider"]
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Siersleben",
@@ -160,9 +258,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 68, sut: 42, pas: 62, dribbling: 58, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 42,
+      pas: 62,
+      dribbling: 58,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { guc: 82, kafa_isabeti: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Thomalla",
@@ -171,9 +276,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 80, sut: 68, pas: 68, dribbling: 74, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 68,
+      pas: 68,
+      dribbling: 74,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 82, dribbling: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "V. Eicher",
@@ -182,9 +294,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 26,
-    ana_ozellikler: { hiz: 46, sut: 12, pas: 50, dribbling: 16, defans: 16, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 46,
+      sut: 12,
+      pas: 50,
+      dribbling: 16,
+      defans: 16,
+      fizik: 74,
+    },
     detaylar: { refleks: 74, ucma: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Honsak",
@@ -193,9 +312,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SĞO",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 82, sut: 68, pas: 68, dribbling: 76, defans: 24, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 68,
+      pas: 68,
+      dribbling: 76,
+      defans: 24,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 84, sprint: 83 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Scienza",
@@ -204,9 +330,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "MDO",
     reyting: 71,
     yas: 23,
-    ana_ozellikler: { hiz: 72, sut: 64, pas: 72, dribbling: 70, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 64,
+      pas: 72,
+      dribbling: 70,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Traore",
@@ -215,9 +348,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 74, sut: 42, pas: 62, dribbling: 60, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 42,
+      pas: 62,
+      dribbling: 60,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 77, hiz: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Conteh",
@@ -226,9 +366,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 86, sut: 68, pas: 66, dribbling: 76, defans: 24, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 68,
+      pas: 66,
+      dribbling: 76,
+      defans: 24,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 88, sprint: 87 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Fäller",
@@ -237,9 +384,16 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "MO",
     reyting: 71,
     yas: 24,
-    ana_ozellikler: { hiz: 74, sut: 68, pas: 72, dribbling: 74, defans: 44, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 68,
+      pas: 72,
+      dribbling: 74,
+      defans: 44,
+      fizik: 68,
+    },
     detaylar: { vizyon: 74, kisa_pas: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Rittmüller",
@@ -248,8 +402,15 @@ export const HEIDENHEIM_REDBLUE_SQUAD = [
     mevki: "SĞB",
     reyting: 71,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 54, pas: 68, dribbling: 70, defans: 70, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 54,
+      pas: 68,
+      dribbling: 70,
+      defans: 70,
+      fizik: 72,
+    },
     detaylar: { sprint: 80, dayaniklilik: 76 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

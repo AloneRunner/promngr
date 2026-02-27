@@ -48,10 +48,11 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
     };
 
     const experience = getExperienceLevel();
+    const ExperienceIcon = experience.icon;
 
     // Past matches against this specific opponent
     const pastMatchesVsOpponent = tacticalHistory.filter(
-        m => m.homeTeamId === opponent.id || m.awayTeamId === opponent.id
+        m => m.opponentId === opponent.id
     );
 
     // Get opponent's tactics
@@ -73,7 +74,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                 formation: analysisVsFormation.bestFormation,
                 winRate: analysisVsFormation.bestFormationWinRate,
                 matches: analysisVsFormation.bestFormationMatches,
-                context: `${opponentFormation} karşısında`
+                context: t.againstFormation?.replace('{formation}', opponentFormation) || `Against ${opponentFormation}`
             };
         }
         if (overallAnalysis.bestFormation) {
@@ -81,7 +82,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                 formation: overallAnalysis.bestFormation,
                 winRate: overallAnalysis.bestFormationWinRate,
                 matches: overallAnalysis.bestFormationMatches,
-                context: 'genel'
+                context: t.overallContext || 'Overall'
             };
         }
         return null;
@@ -89,11 +90,12 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
 
     const getBestStyle = () => {
         if (analysisVsStyle.bestStyle && analysisVsStyle.bestStyleMatches >= 3) {
+            const oppStyleLabel = getTacticLabel(opponentStyle, t);
             return {
                 style: analysisVsStyle.bestStyle,
                 winRate: analysisVsStyle.bestStyleWinRate,
                 matches: analysisVsStyle.bestStyleMatches,
-                context: `${getTacticLabel(opponentStyle, t)} karşısında`
+                context: t.againstStyle?.replace('{style}', oppStyleLabel) || `Against ${oppStyleLabel}`
             };
         }
         if (overallAnalysis.bestStyle) {
@@ -101,7 +103,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                 style: overallAnalysis.bestStyle,
                 winRate: overallAnalysis.bestStyleWinRate,
                 matches: overallAnalysis.bestStyleMatches,
-                context: 'genel'
+                context: t.overallContext || 'Overall'
             };
         }
         return null;
@@ -117,10 +119,10 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
 
     // Translation keys
     const experienceLabels: Record<string, string> = {
-        rookie: t.coachRookie || 'Çaylak',
-        experienced: t.coachExperienced || 'Deneyimli',
-        expert: t.coachExpert || 'Uzman',
-        master: t.coachMaster || 'Usta'
+        rookie: t.coachRookie || 'Rookie',
+        experienced: t.coachExperienced || 'Experienced',
+        expert: t.coachExpert || 'Expert',
+        master: t.coachMaster || 'Master'
     };
 
     return (
@@ -133,10 +135,10 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                             <Brain className="text-white" size={28} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-bold text-white">{t.assistantCoach || 'Yardımcı Antrenör'}</h2>
+                            <h2 className="text-lg font-bold text-white">{t.assistantCoach || 'Assistant Coach'}</h2>
                             <div className={`text-xs flex items-center gap-1 text-white/80`}>
-                                <experience.icon size={12} />
-                                <span>{experienceLabels[experience.level]} ({matchCount} {t.matches || 'maç'})</span>
+                                <ExperienceIcon size={12} />
+                                <span>{experienceLabels[experience.level]} ({matchCount} {t.matches || 'matches'})</span>
                             </div>
                         </div>
                     </div>
@@ -150,19 +152,19 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                     <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700">
                         <div className="flex items-center gap-2 mb-2">
                             <Shield className="text-red-400" size={18} />
-                            <span className="font-bold text-white">{t.opponentAnalysis || 'Rakip Analizi'}: {opponent.name}</span>
+                            <span className="font-bold text-white">{t.opponentAnalysis || 'Opponent Analysis'}: {opponent.name}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">{t.formation || 'Diziliş'}</span>
+                                <span className="text-slate-500 text-xs">{t.formation || 'Formation'}</span>
                                 <div className="text-blue-400 font-mono font-bold">{opponentFormation}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded">
-                                <span className="text-slate-500 text-xs">{t.playStyle || 'Oyun Stili'}</span>
+                                <span className="text-slate-500 text-xs">{t.playStyle || 'Play Style'}</span>
                                 <div className="text-purple-400 font-bold">{getTacticLabel(opponentStyle, t)}</div>
                             </div>
                             <div className="bg-slate-900/50 p-2 rounded col-span-2">
-                                <span className="text-slate-500 text-xs">{t.aggressiveness || 'Agresiflik'}</span>
+                                <span className="text-slate-500 text-xs">{t.aggressiveness || 'Aggressiveness'}</span>
                                 <div className="text-orange-400 font-bold">{getTacticLabel(opponentAggression, t)}</div>
                             </div>
                         </div>
@@ -173,7 +175,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-500/30">
                             <div className="flex items-center gap-2 mb-3">
                                 <CheckCircle className="text-emerald-400" size={20} />
-                                <span className="font-bold text-emerald-400 text-lg">📊 {t.myTacticalAdvice || 'Geçmiş Verilerine Göre'}</span>
+                                <span className="font-bold text-emerald-400 text-lg">📊 {t.myTacticalAdvice || 'Based on Past Data'}</span>
                             </div>
 
                             {/* Formation Advice */}
@@ -181,16 +183,16 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                                 <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
                                     <div className="flex items-center gap-2 mb-1">
                                         <Users className="text-blue-400" size={16} />
-                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.formation || 'Diziliş'}</span>
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.formation || 'Formation'}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-2xl font-bold text-blue-400">{bestFormation.formation}</span>
                                         <span className={`text-sm font-bold ${bestFormation.winRate >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
-                                            %{bestFormation.winRate} kazanç
+                                            {bestFormation.winRate}% {t.winRateLabel || 'win'}
                                         </span>
                                     </div>
                                     <p className="text-xs text-slate-400 mt-1">
-                                        📈 {bestFormation.context} ({bestFormation.matches} maç)
+                                        📈 {bestFormation.context} ({bestFormation.matches} {t.matches || 'matches'})
                                     </p>
                                 </div>
                             )}
@@ -200,16 +202,16 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                                 <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
                                     <div className="flex items-center gap-2 mb-1">
                                         <Footprints className="text-purple-400" size={16} />
-                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.playStyle || 'Oyun Stili'}</span>
+                                        <span className="text-slate-400 text-xs uppercase font-bold">{t.playStyle || 'Play Style'}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-xl font-bold text-purple-400">{getTacticLabel(bestStyle.style, t)}</span>
                                         <span className={`text-sm font-bold ${bestStyle.winRate >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
-                                            %{bestStyle.winRate} kazanç
+                                            {bestStyle.winRate}% {t.winRateLabel || 'win'}
                                         </span>
                                     </div>
                                     <p className="text-xs text-slate-400 mt-1">
-                                        � {bestStyle.context} ({bestStyle.matches} maç)
+                                        🛡️ {bestStyle.context} ({bestStyle.matches} {t.matches || 'matches'})
                                     </p>
                                 </div>
                             )}
@@ -218,7 +220,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                             {hasFormationData && hasStyleData && bestFormation && bestStyle && (
                                 <div className="mt-4 p-3 bg-emerald-800/30 rounded-lg border border-emerald-500/20">
                                     <p className="text-sm text-emerald-200 text-center">
-                                        ✅ <strong>{bestFormation.formation}</strong> + <strong>{getTacticLabel(bestStyle.style, t)}</strong> ile başarılısın!
+                                        ✅ {t.successfulWith || 'You are successful with'} <strong>{bestFormation.formation}</strong> + <strong>{getTacticLabel(bestStyle.style, t)}</strong>!
                                     </p>
                                 </div>
                             )}
@@ -227,12 +229,12 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         <div className="bg-amber-900/30 rounded-xl p-3 border border-amber-500/30">
                             <div className="flex items-center gap-2 mb-2">
                                 <AlertTriangle className="text-amber-400" size={18} />
-                                <span className="font-bold text-amber-400">{t.needMoreExperience || 'Veri Yetersiz'}</span>
+                                <span className="font-bold text-amber-400">{t.needMoreExperience || 'Not Enough Data'}</span>
                             </div>
                             <p className="text-sm text-slate-300">
                                 {matchCount < 5
-                                    ? `Tavsiye verebilmem için en az 5 maç gerekli. Şu an ${matchCount} maç oynadık.`
-                                    : `${opponentFormation} veya ${getTacticLabel(opponentStyle, t)} stiline karşı yeterli verin yok. Denemeni öneririm!`
+                                    ? `${t.needMoreGamesForAdvice || 'I need at least 5 matches to give advice. We have played'} ${matchCount} ${t.matches || 'matches'}.`
+                                    : `${t.noEnoughDataForOpponent || 'Not enough data against'} ${opponentFormation} ${t.orLabel || 'or'} ${getTacticLabel(opponentStyle, t)} ${t.styleLabel || 'style. I suggest trying it!'}`
                                 }
                             </p>
                         </div>
@@ -243,7 +245,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700">
                             <div className="flex items-center gap-2 mb-2">
                                 <TrendingUp className="text-blue-400" size={18} />
-                                <span className="font-bold text-white">{t.pastMatches || 'Geçmiş Karşılaşmalar'}</span>
+                                <span className="font-bold text-white">{t.pastMatches || 'Past Matches'}</span>
                             </div>
                             <div className="space-y-1">
                                 {pastMatchesVsOpponent.slice(-3).map((m, i) => {
@@ -251,7 +253,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                                     const oppGoals = m.isUserHome ? m.awayGoals : m.homeGoals;
                                     return (
                                         <div key={i} className={`text-xs px-2 py-1 rounded ${m.userWon ? 'bg-emerald-900/30 text-emerald-400' : userGoals === oppGoals ? 'bg-slate-700 text-slate-400' : 'bg-red-900/30 text-red-400'}`}>
-                                            {t.season || 'Sezon'} {m.season}, {t.week || 'Hafta'} {m.week}: {userGoals}-{oppGoals}
+                                            {t.season || 'Season'} {m.season}, {t.week || 'Week'} {m.week}: {userGoals}-{oppGoals}
                                         </div>
                                     );
                                 })}
@@ -266,7 +268,7 @@ export const AssistantCoachModal: React.FC<AssistantCoachModalProps> = ({
                         onClick={onClose}
                         className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold py-3 px-6 rounded-xl transition-colors"
                     >
-                        {t.understood || 'Anladım'}
+                        {t.understood || 'Understood'}
                     </button>
                 </div>
             </div>

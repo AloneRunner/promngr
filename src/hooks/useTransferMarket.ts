@@ -250,6 +250,59 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         });
     }, [setGameState]);
 
+    // COUNTER-OFFER: User proposes a higher price back to the AI club.
+    // AI will accept if counter <= 1.4x original offer, counter-offer back if <= 1.8x, reject if higher.
+    const handleCounterOffer = useCallback((offerId: string, counterAmount: number) => {
+        setGameState(prev => {
+            if (!prev) return null;
+            const offer = prev.pendingOffers?.find(o => o.id === offerId && o.status === 'PENDING');
+            if (!offer) return prev;
+
+            const player = prev.players.find(p => p.id === offer.playerId);
+            const buyingTeam = prev.teams.find(t => t.id === offer.toTeamId);
+            if (!player || !buyingTeam) return prev;
+
+            const ratio = counterAmount / offer.offerAmount;
+            let newMessages = [...prev.messages];
+            let updatedOffers = [...(prev.pendingOffers || [])];
+
+            if (ratio <= 1.4) {
+                // AI accepts — process as accepted at counter price
+                const updatedOfferObj = { ...offer, offerAmount: counterAmount, status: 'ACCEPTED' as const };
+                updatedOffers = updatedOffers.map(o => o.id === offerId ? updatedOfferObj : o);
+
+                const updatedPlayers = prev.players.map(p => {
+                    if (p.id === player.id) return { ...p, teamId: buyingTeam.id, isTransferListed: false, lastTransferWeek: prev.currentWeek };
+                    return p;
+                });
+                const updatedTeams = prev.teams.map(t => {
+                    if (t.id === prev.userTeamId) {
+                        const fin = t.financials || { lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 }, lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 } };
+                        const st = fin.seasonTotals || { transferIncomeThisSeason: 0, transferExpensesThisSeason: 0 };
+                        return { ...t, budget: t.budget + counterAmount, financials: { ...fin, seasonTotals: { ...st, transferIncomeThisSeason: st.transferIncomeThisSeason + counterAmount } } };
+                    }
+                    if (t.id === buyingTeam.id) return { ...t, budget: t.budget - counterAmount };
+                    return t;
+                });
+                newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.TRANSFER_OFFER, subject: `✅ ${buyingTeam.name} accepted your counter-offer`, body: `${buyingTeam.name} accepted €${(counterAmount / 1000000).toFixed(1)}M for ${player.firstName} ${player.lastName}.`, isRead: false, date: new Date().toISOString() });
+                return { ...prev, players: updatedPlayers, teams: updatedTeams, pendingOffers: updatedOffers, messages: newMessages };
+
+            } else if (ratio <= 1.8) {
+                // AI counters back — split the difference
+                const aiCounter = Math.floor((offer.offerAmount + counterAmount) / 2);
+                updatedOffers = updatedOffers.map(o => o.id === offerId ? { ...o, offerAmount: aiCounter } : o);
+                newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.TRANSFER_OFFER, subject: `💬 ${buyingTeam.name} counters: €${(aiCounter / 1000000).toFixed(1)}M`, body: `${buyingTeam.name} won't go that high, but proposes €${(aiCounter / 1000000).toFixed(1)}M for ${player.lastName}. Accept or negotiate further.`, isRead: false, date: new Date().toISOString(), data: { offerId } });
+                return { ...prev, pendingOffers: updatedOffers, messages: newMessages };
+
+            } else {
+                // Too high — AI walks out
+                updatedOffers = updatedOffers.map(o => o.id === offerId ? { ...o, status: 'REJECTED' as const } : o);
+                newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: `❌ ${buyingTeam.name} withdrew their offer`, body: `${buyingTeam.name} considered your counter of €${(counterAmount / 1000000).toFixed(1)}M too high and walked away from the deal.`, isRead: false, date: new Date().toISOString() });
+                return { ...prev, pendingOffers: updatedOffers, messages: newMessages };
+            }
+        });
+    }, [setGameState]);
+
     return {
         negotiatingPlayer,
         setNegotiatingPlayer,
@@ -257,6 +310,7 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         handleTransferComplete,
         handlePromoteYouth,
         handleAcceptOffer,
-        handleRejectOffer
+        handleRejectOffer,
+        handleCounterOffer
     };
 };

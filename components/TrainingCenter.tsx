@@ -32,7 +32,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
     const [teamB, setTeamB] = useState<Player[]>([]);
 
     // Get available players
-    const availablePlayers = players.filter(p => !p.injury && p.condition > 30);
+    const availablePlayers = players.filter(p => p.condition > 30);
     const unassignedPlayers = availablePlayers.filter(p =>
         !teamA.find(t => t.id === p.id) && !teamB.find(t => t.id === p.id)
     );
@@ -119,8 +119,8 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                     teamBGoals++;
                 }
 
-                events.push(`${minute}' ⚽ ${goalscorer.name} (${scoringTeam === 'A' ? t.orange : t.blue})`);
-                scorers.push({ name: goalscorer.name, team: scoringTeam, minute });
+                events.push(`${minute}' ⚽ ${goalscorer.firstName} ${goalscorer.lastName} (${scoringTeam === 'A' ? t.orange : t.blue})`);
+                scorers.push({ name: `${goalscorer.firstName} ${goalscorer.lastName}`, team: scoringTeam, minute });
             }
         }
 
@@ -307,7 +307,7 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                                 <Trophy className="text-yellow-400" size={24} />
                                 <div>
                                     <div className="text-xs text-yellow-400">{t.motm}</div>
-                                    <div className="font-bold text-white">{trainingMatchResult.mvp.name} ({trainingMatchResult.mvp.overall})</div>
+                                    <div className="font-bold text-white">{trainingMatchResult.mvp.firstName} {trainingMatchResult.mvp.lastName} ({trainingMatchResult.mvp.overall})</div>
                                 </div>
                             </div>
 

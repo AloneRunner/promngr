@@ -26,6 +26,8 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
   const [minAttributes, setMinAttributes] = useState({
     speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0
   });
+  const [ageRange, setAgeRange] = useState({ min: 16, max: 45 });
+  const [ratingRange, setRatingRange] = useState({ min: 40, max: 99 });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 50;
@@ -52,9 +54,13 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
         p.attributes.dribbling >= minAttributes.dribbling &&
         p.attributes.tackling >= minAttributes.tackling;
 
-      return posMatch && listMatch && interestMatch && attrMatch;
+      // Age and Rating Filters
+      const ageMatch = p.age >= ageRange.min && p.age <= ageRange.max;
+      const ratingMatch = p.overall >= ratingRange.min && p.overall <= ratingRange.max;
+
+      return posMatch && listMatch && interestMatch && attrMatch && ageMatch && ratingMatch;
     }).sort((a, b) => b.overall - a.overall);
-  }, [marketPlayers, filterPos, listFilter, showInterestedOnly, minAttributes, userTeam.reputation]);
+  }, [marketPlayers, filterPos, listFilter, showInterestedOnly, minAttributes, ageRange, ratingRange, userTeam.reputation]);
 
   const totalPages = Math.ceil(filteredPlayers.length / itemsPerPage);
   const displayedPlayers = filteredPlayers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -96,13 +102,13 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
           </div>
           <div>
             <h2 className="text-xl font-bold text-white tracking-tight drop-shadow-lg">{t.market}</h2>
-            <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">Transfer Window Open</div>
+            <div className="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">{t.transferWindowOpen || 'Transfer Window Open'}</div>
           </div>
         </div>
         <div className="text-right">
           <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">{t.clubBudget}</div>
           <div className="text-xl font-mono text-emerald-400 font-bold tracking-tight drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">€{(userTeam.budget / 1000000).toFixed(2)}M</div>
-          <div className="text-[9px] text-slate-500 font-mono mt-1 text-right">DB: {marketPlayers.length} Players</div>
+          <div className="text-[9px] text-slate-500 font-mono mt-1 text-right">{t.dbPlayersCount?.replace('{count}', marketPlayers.length.toString()) || `DB: ${marketPlayers.length} Players`}</div>
         </div>
       </div>
 
@@ -118,7 +124,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                 ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-emerald-400/50 shadow-lg shadow-emerald-900/50'
                 : 'bg-slate-800/80 text-slate-400 border-slate-700/50 hover:bg-slate-700/80 hover:text-slate-200 hover:border-slate-600'}`}
             >
-              {pos}
+              {pos === 'ALL' ? (t.filterAll || 'ALL') : ((t as any)[`filter${pos}`] || pos)}
             </button>
           ))}
         </div>
@@ -159,7 +165,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
               }`}
           >
             <Heart size={14} className={showInterestedOnly ? 'fill-white' : ''} />
-            {t.interestedOnly || 'Interested Players Only'}
+            {t.interestedPlayersOnly || t.interestedOnly || 'Interested Players Only'}
           </button>
 
           {/* Advanced Search Toggle */}
@@ -171,38 +177,87 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
               }`}
           >
             <Search size={14} />
-            {t.advancedSearch || 'Has Attribute...'}
+            {t.hasAttribute || t.advancedSearch || 'Has Attribute...'}
             {showAdvancedSearch ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
         </div>
 
         {/* Collapsible Attribute Sliders */}
         {showAdvancedSearch && (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pt-4 border-t border-white/5 animate-fade-in">
-            {Object.entries({
-              speed: 'SPD', finishing: 'SHT', passing: 'PAS', dribbling: 'DRI', tackling: 'DEF'
-            }).map(([key, label]) => (
-              <div key={key} className="space-y-1">
+          <div className="space-y-4 pt-4 border-t border-white/5 animate-fade-in">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Age Range */}
+              <div className="space-y-1">
                 <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
-                  <span>Min {label}</span>
-                  <span className="text-blue-400">{(minAttributes as any)[key]}</span>
+                  <span>{t.age || 'Age'}</span>
+                  <span className="text-white bg-slate-800 px-2 py-0.5 rounded border border-white/10">{ageRange.min} - {ageRange.max}</span>
                 </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="99"
-                  value={(minAttributes as any)[key]}
-                  onChange={(e) => setMinAttributes(prev => ({ ...prev, [key]: parseInt(e.target.value) }))}
-                  className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
-                />
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="range" min="16" max={ageRange.max} value={ageRange.min}
+                    onChange={(e) => setAgeRange(prev => ({ ...prev, min: parseInt(e.target.value) }))}
+                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                  />
+                  <input
+                    type="range" min={Math.max(16, ageRange.min)} max="45" value={ageRange.max}
+                    onChange={(e) => setAgeRange(prev => ({ ...prev, max: parseInt(e.target.value) }))}
+                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                  />
+                </div>
               </div>
-            ))}
-            <div className="flex items-end">
+
+              {/* Rating Range */}
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
+                  <span>OVR Rating</span>
+                  <span className="text-white bg-slate-800 px-2 py-0.5 rounded border border-white/10">{ratingRange.min} - {ratingRange.max}</span>
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="range" min="40" max={ratingRange.max} value={ratingRange.min}
+                    onChange={(e) => setRatingRange(prev => ({ ...prev, min: parseInt(e.target.value) }))}
+                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-amber-500"
+                  />
+                  <input
+                    type="range" min={Math.max(40, ratingRange.min)} max="99" value={ratingRange.max}
+                    onChange={(e) => setRatingRange(prev => ({ ...prev, max: parseInt(e.target.value) }))}
+                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-amber-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {Object.entries({
+                speed: 'SPD', finishing: 'SHT', passing: 'PAS', dribbling: 'DRI', tackling: 'DEF'
+              }).map(([key, label]) => (
+                <div key={key} className="space-y-1">
+                  <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
+                    <span>Min {label}</span>
+                    <span className="text-blue-400">{(minAttributes as any)[key]}</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="99"
+                    value={(minAttributes as any)[key]}
+                    onChange={(e) => setMinAttributes(prev => ({ ...prev, [key]: parseInt(e.target.value) }))}
+                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end pt-2">
               <button
-                onClick={() => setMinAttributes({ speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0 })}
-                className="w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded border border-slate-600 transition-colors"
+                onClick={() => {
+                  setMinAttributes({ speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0 });
+                  setAgeRange({ min: 16, max: 45 });
+                  setRatingRange({ min: 40, max: 99 });
+                }}
+                className="px-6 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded-lg border border-slate-600 transition-colors font-bold"
               >
-                Reset Attributes
+                {t.resetAttributes || 'Reset Search Filters'}
               </button>
             </div>
           </div>
@@ -215,16 +270,16 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
           <table className="fm-table w-full text-left text-sm">
             <thead>
               <tr className="bg-slate-900 border-b border-white/10">
-                <th className="p-3 sticky left-0 bg-slate-900 z-10">Player Info</th>
-                <th className="p-3 text-center hidden md:table-cell">Age</th>
+                <th className="p-3 sticky left-0 bg-slate-900 z-10">{t.playerInfo || 'Player Info'}</th>
+                <th className="p-3 text-center hidden md:table-cell">{t.age || 'Age'}</th>
                 <th className="p-3 text-center">OVR</th>
-                <th className="p-3 text-center hidden sm:table-cell">SPD</th>
-                <th className="p-3 text-center hidden sm:table-cell">SHT</th>
-                <th className="p-3 text-center hidden sm:table-cell">PAS</th>
-                <th className="p-3 text-center hidden sm:table-cell">DRI</th>
-                <th className="p-3 text-center hidden sm:table-cell">DEF</th>
+                <th className="p-3 text-center hidden sm:table-cell">{t.attrSpd || 'SPD'}</th>
+                <th className="p-3 text-center hidden sm:table-cell">{t.attrSht || 'SHT'}</th>
+                <th className="p-3 text-center hidden sm:table-cell">{t.attrPas || 'PAS'}</th>
+                <th className="p-3 text-center hidden sm:table-cell">{t.attrDri || 'DRI'}</th>
+                <th className="p-3 text-center hidden sm:table-cell">{t.attrDef || 'DEF'}</th>
                 <th className="p-3 text-right">{t.value}</th>
-                <th className="p-3 text-right hidden md:table-cell">Maaş</th>
+                <th className="p-3 text-right hidden md:table-cell">{t.wage || 'Wage'}</th>
                 <th className="p-3 text-center">{t.action}</th>
               </tr>
             </thead>
@@ -260,7 +315,7 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                   <td className="p-2 text-right font-mono text-red-400 text-xs hidden md:table-cell">€{Math.floor(player.wage).toLocaleString()}/h</td>
                   <td className="p-2 text-center">
                     {isOwned(player) ? (
-                      <span className="text-[10px] bg-slate-700 text-slate-400 px-2 py-1 rounded font-bold">OWNED</span>
+                      <span className="text-[10px] bg-slate-700 text-slate-400 px-2 py-1 rounded font-bold">{t.owned || 'OWNED'}</span>
                     ) : (
                       <button
                         onClick={() => onBuyPlayer(player)}

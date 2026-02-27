@@ -6,9 +6,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "KL",
     reyting: 76,
     yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 20, defans: 20, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 20,
+      defans: 20,
+      fizik: 78,
+    },
     detaylar: { refleks: 82, ucma: 78, pozisyon: 78 },
-    oyun_tarzlari: ["Refleks Ustası"]
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Saliakas",
@@ -17,9 +24,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SĞB",
     reyting: 76,
     yas: 26,
-    ana_ozellikler: { hiz: 82, sut: 66, pas: 78, dribbling: 78, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 66,
+      pas: 78,
+      dribbling: 78,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 84, hizlanma: 84, asist: 80 },
-    oyun_tarzlari: ["Ofansif Bek", "Orta Açma Ustası"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "H. Smith",
@@ -28,9 +42,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 26,
-    ana_ozellikler: { hiz: 70, sut: 46, pas: 68, dribbling: 66, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 46,
+      pas: 68,
+      dribbling: 66,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, kafa_isabeti: 80, guc: 82 },
-    oyun_tarzlari: ["Kule"]
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Nemeth",
@@ -39,9 +60,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 23,
-    ana_ozellikler: { hiz: 72, sut: 44, pas: 66, dribbling: 64, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 44,
+      pas: 66,
+      dribbling: 64,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 78, hiz: 76 },
-    oyun_tarzlari: ["Hızlı Stoper"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "P. Ziereis",
@@ -50,9 +78,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 64, dribbling: 62, defans: 78, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 64,
+      dribbling: 62,
+      defans: 78,
+      fizik: 82,
+    },
     detaylar: { markaj: 80, guc: 84, liderlik: 78 },
-    oyun_tarzlari: ["Sert Müdahale", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "L. Irvine",
@@ -61,9 +96,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 78, sut: 58, pas: 72, dribbling: 74, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 78, dayaniklilik: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Hartel",
@@ -72,9 +114,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 28,
-    ana_ozellikler: { hiz: 72, sut: 76, pas: 80, dribbling: 78, defans: 50, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 76,
+      pas: 80,
+      dribbling: 78,
+      defans: 50,
+      fizik: 68,
+    },
     detaylar: { vizyon: 84, serbest_vurus: 82, kisa_pas: 82 },
-    oyun_tarzlari: ["Oyun Kurucu", "Serbest Vuruş Uzmanı"]
+    oyun_tarzlari: ["Maestro", "Ölü Top Uzmanı"],
   },
   {
     ad: "J. Mets",
@@ -83,9 +132,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "MDO",
     reyting: 75,
     yas: 32,
-    ana_ozellikler: { hiz: 70, sut: 66, pas: 76, dribbling: 72, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 66,
+      pas: 76,
+      dribbling: 72,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 80, dayaniklilik: 82, liderlik: 80 },
-    oyun_tarzlari: ["Kırıcı", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "C. Metcalfe",
@@ -94,9 +150,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 76, sut: 72, pas: 76, dribbling: 76, defans: 54, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 72,
+      pas: 76,
+      dribbling: 76,
+      defans: 54,
+      fizik: 72,
+    },
     detaylar: { dayaniklilik: 80, vizyon: 78 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "J. Eggestein",
@@ -105,9 +168,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SNT",
     reyting: 76,
     yas: 26,
-    ana_ozellikler: { hiz: 80, sut: 78, pas: 68, dribbling: 78, defans: 32, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 78,
+      pas: 68,
+      dribbling: 78,
+      defans: 32,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 82, hizlanma: 82, pozisyon: 80 },
-    oyun_tarzlari: ["Fırsatçı Golcü", "Hızlı Forvet"]
+    oyun_tarzlari: ["İleride Bekleyen", "Seri"],
   },
   {
     ad: "O. Afolayan",
@@ -116,9 +186,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SLO",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 88, sut: 72, pas: 70, dribbling: 80, defans: 26, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 72,
+      pas: 70,
+      dribbling: 80,
+      defans: 26,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 90, sprint: 89, dribbling: 82 },
-    oyun_tarzlari: ["Sprint Ustası", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Top Cambazı"],
   },
   {
     ad: "E. Sinani",
@@ -127,9 +204,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 80, sut: 74, pas: 74, dribbling: 78, defans: 30, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 74,
+      pas: 74,
+      dribbling: 78,
+      defans: 30,
+      fizik: 68,
+    },
     detaylar: { dribbling: 80, hizlanma: 82 },
-    oyun_tarzlari: ["Çalımlı"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "M. Guilavogui",
@@ -138,9 +222,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 84, sut: 74, pas: 62, dribbling: 76, defans: 26, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 74,
+      pas: 62,
+      dribbling: 76,
+      defans: 26,
+      fizik: 76,
+    },
     detaylar: { hizlanma: 86, bitiricilik: 76, guc: 78 },
-    oyun_tarzlari: ["Hızlı Forvet"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "C. Saad",
@@ -149,9 +240,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 74, dribbling: 72, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Burchert",
@@ -160,9 +258,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 54, pas: 68, dribbling: 70, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 54,
+      pas: 68,
+      dribbling: 70,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 80, sprint: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Banks",
@@ -171,9 +276,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SĞO",
     reyting: 73,
     yas: 23,
-    ana_ozellikler: { hiz: 86, sut: 70, pas: 68, dribbling: 78, defans: 24, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 70,
+      pas: 68,
+      dribbling: 78,
+      defans: 24,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 88, sprint: 87 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "S. Boukhalfa",
@@ -182,9 +294,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "MOO",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 76, sut: 70, pas: 76, dribbling: 76, defans: 38, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 70,
+      pas: 76,
+      dribbling: 76,
+      defans: 38,
+      fizik: 66,
+    },
     detaylar: { dribbling: 78, vizyon: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Dzwigala",
@@ -193,9 +312,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 68, sut: 42, pas: 62, dribbling: 58, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 42,
+      pas: 62,
+      dribbling: 58,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { markaj: 77, guc: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Voll",
@@ -204,9 +330,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 24,
-    ana_ozellikler: { hiz: 48, sut: 12, pas: 52, dribbling: 16, defans: 16, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 12,
+      pas: 52,
+      dribbling: 16,
+      defans: 16,
+      fizik: 76,
+    },
     detaylar: { refleks: 76, ucma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Treu",
@@ -215,9 +348,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 24,
-    ana_ozellikler: { hiz: 80, sut: 54, pas: 68, dribbling: 70, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 54,
+      pas: 68,
+      dribbling: 70,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { sprint: 82, hizlanma: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Stevens",
@@ -226,9 +366,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 84, sut: 68, pas: 68, dribbling: 76, defans: 24, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 68,
+      pas: 68,
+      dribbling: 76,
+      defans: 24,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 86, dribbling: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "W. Wagner",
@@ -237,9 +384,16 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 74, sut: 74, pas: 58, dribbling: 70, defans: 28, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 74,
+      pas: 58,
+      dribbling: 70,
+      defans: 28,
+      fizik: 80,
+    },
     detaylar: { kafa_isabeti: 78, guc: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Albers",
@@ -248,8 +402,15 @@ export const HAMBURG_PIRATES_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 74, pas: 60, dribbling: 72, defans: 26, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 74,
+      pas: 60,
+      dribbling: 72,
+      defans: 26,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 82, bitiricilik: 76 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

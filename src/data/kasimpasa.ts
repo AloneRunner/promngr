@@ -1,4 +1,3 @@
-
 export const KASIMPASA_SQUAD = [
   {
     ad: "H. Hajradinov",
@@ -7,9 +6,22 @@ export const KASIMPASA_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 31,
-    ana_ozellikler: { hiz: 73, sut: 74, pas: 79, dribbling: 76, defans: 56, fizik: 69 },
-    detaylar: { vizyon: 79, kisa_pas: 80, falso: 79, ceviklik: 80, dayaniklilik: 83 },
-    oyun_tarzlari: ["Duran Top", "Kesme Pas", "Plase Şut", "Uzun Topla Pas", "Yakın Markaj"]
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 74,
+      pas: 79,
+      dribbling: 76,
+      defans: 56,
+      fizik: 69,
+    },
+    detaylar: {
+      vizyon: 79,
+      kisa_pas: 80,
+      falso: 79,
+      ceviklik: 80,
+      dayaniklilik: 83,
+    },
+    oyun_tarzlari: ["Ölü Top Uzmanı", "Keskin Pas", "Plase Şut", "Maestro"],
   },
   {
     ad: "C. Winckerr",
@@ -18,9 +30,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 73, sut: 63, pas: 71, dribbling: 70, defans: 69, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 63,
+      pas: 71,
+      dribbling: 70,
+      defans: 69,
+      fizik: 74,
+    },
     detaylar: { orta_acma: 77, falso: 74, dayaniklilik: 87, agresiflik: 76 },
-    oyun_tarzlari: ["Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "M. Fallo",
@@ -29,9 +48,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SĞO",
     reyting: 73,
     yas: 33,
-    ana_ozellikler: { hiz: 88, sut: 71, pas: 66, dribbling: 71, defans: 40, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 71,
+      pas: 66,
+      dribbling: 71,
+      defans: 40,
+      fizik: 74,
+    },
     detaylar: { sprint: 92, hizlanma: 84, ziplama: 86, guc: 78 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "Seri"]
+    oyun_tarzlari: ["Hava Hakimi", "Seri"],
   },
   {
     ad: "A. Giannyoti",
@@ -40,9 +66,23 @@ export const KASIMPASA_SQUAD = [
     mevki: "KL",
     reyting: 73,
     yas: 32,
-    ana_ozellikler: { hiz: 74, sut: 20, pas: 40, dribbling: 20, defans: 20, fizik: 70 },
-    detaylar: { ucma: 74, top_kontrol: 71, vurus: 65, pozisyon: 70, refleks: 74, guc: 70 },
-    oyun_tarzlari: ["Ayak Hakimiyeti", "Ortaya Çıkan"]
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 20,
+      pas: 40,
+      dribbling: 20,
+      defans: 20,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 74,
+      top_kontrol: 71,
+      vurus: 65,
+      pozisyon: 70,
+      refleks: 74,
+      guc: 70,
+    },
+    oyun_tarzlari: ["Ortaya Çıkan"],
   },
   {
     ad: "A. Szalay",
@@ -51,9 +91,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "STP",
     reyting: 70,
     yas: 27,
-    ana_ozellikler: { hiz: 70, sut: 45, pas: 60, dribbling: 62, defans: 68, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 45,
+      pas: 60,
+      dribbling: 62,
+      defans: 68,
+      fizik: 77,
+    },
     detaylar: { guc: 83, sprint: 74, sogukkanlilik: 72, ziplama: 72 },
-    oyun_tarzlari: ["Güçlü"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "G. Frimpon",
@@ -62,9 +109,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SLB",
     reyting: 70,
     yas: 26,
-    ana_ozellikler: { hiz: 79, sut: 39, pas: 57, dribbling: 68, defans: 67, fizik: 67 },
+    ana_ozellikler: {
+      hiz: 79,
+      sut: 39,
+      pas: 57,
+      dribbling: 68,
+      defans: 67,
+      fizik: 67,
+    },
     detaylar: { hizlanma: 80, sprint: 79, denge: 74, top_kesme: 72 },
-    oyun_tarzlari: ["Kesme Pas", "Top Kesici"]
+    oyun_tarzlari: ["Keskin Pas", "Top Kesici"],
   },
   {
     ad: "M. Ben Ouann",
@@ -73,9 +127,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SLB",
     reyting: 69,
     yas: 31,
-    ana_ozellikler: { hiz: 72, sut: 60, pas: 68, dribbling: 68, defans: 66, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 60,
+      pas: 68,
+      dribbling: 68,
+      defans: 66,
+      fizik: 65,
+    },
     detaylar: { hizlanma: 73, sprint: 72, sogukkanlilik: 71, vizyon: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Espinozza",
@@ -84,9 +145,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SĞB",
     reyting: 67,
     yas: 26,
-    ana_ozellikler: { hiz: 74, sut: 45, pas: 60, dribbling: 65, defans: 64, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 45,
+      pas: 60,
+      dribbling: 65,
+      defans: 64,
+      fizik: 73,
+    },
     detaylar: { hizlanma: 78, ziplama: 78, ceviklik: 75, guc: 75 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Kanatsizz",
@@ -95,9 +163,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SNT",
     reyting: 67,
     yas: 28,
-    ana_ozellikler: { hiz: 66, sut: 66, pas: 55, dribbling: 65, defans: 21, fizik: 71 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 66,
+      pas: 55,
+      dribbling: 65,
+      defans: 21,
+      fizik: 71,
+    },
     detaylar: { ziplama: 79, guc: 78, kafa_isabeti: 70, reaksiyon: 60 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "Karşı Koyan"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "L. Sadikku",
@@ -106,9 +181,21 @@ export const KASIMPASA_SQUAD = [
     mevki: "MDO",
     reyting: 67,
     yas: 34,
-    ana_ozellikler: { hiz: 35, sut: 57, pas: 57, dribbling: 60, defans: 66, fizik: 66 },
-    detaylar: { sut_gucu: 77, agresiflik: 72, defansif_farkindalik: 70, dayaniklilik: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 35,
+      sut: 57,
+      pas: 57,
+      dribbling: 60,
+      defans: 66,
+      fizik: 66,
+    },
+    detaylar: {
+      sut_gucu: 77,
+      agresiflik: 72,
+      defansif_farkindalik: 70,
+      dayaniklilik: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Opokku",
@@ -117,9 +204,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 28,
-    ana_ozellikler: { hiz: 61, sut: 37, pas: 46, dribbling: 51, defans: 66, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 61,
+      sut: 37,
+      pas: 46,
+      dribbling: 51,
+      defans: 66,
+      fizik: 79,
+    },
     detaylar: { guc: 86, ziplama: 80, agresiflik: 70, ayakta_mudahale: 69 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Kayya",
@@ -128,9 +222,22 @@ export const KASIMPASA_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 20,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Ozderri",
@@ -139,9 +246,22 @@ export const KASIMPASA_SQUAD = [
     mevki: "KL",
     reyting: 68,
     yas: 21,
-    ana_ozellikler: { hiz: 58, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 68 },
-    detaylar: { ucma: 58, refleks: 68, vurus: 63, pozisyon: 60, top_kontrol: 56 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 68,
+    },
+    detaylar: {
+      ucma: 58,
+      refleks: 68,
+      vurus: 63,
+      pozisyon: 60,
+      top_kontrol: 56,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Aktash",
@@ -150,9 +270,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 22,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Akinn",
@@ -161,9 +288,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "STP",
     reyting: 66,
     yas: 23,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Karatash",
@@ -172,9 +306,21 @@ export const KASIMPASA_SQUAD = [
     mevki: "MDO",
     reyting: 65,
     yas: 24,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 57,
+      defans: 65,
+      fizik: 60,
+    },
+    detaylar: {
+      top_kesme: 65,
+      ayakta_mudahale: 60,
+      dayaniklilik: 62,
+      kisa_pas: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Celikk",
@@ -183,9 +329,21 @@ export const KASIMPASA_SQUAD = [
     mevki: "MDO",
     reyting: 64,
     yas: 25,
-    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
-    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 44,
+      pas: 59,
+      dribbling: 56,
+      defans: 64,
+      fizik: 59,
+    },
+    detaylar: {
+      top_kesme: 64,
+      ayakta_mudahale: 59,
+      dayaniklilik: 61,
+      kisa_pas: 56,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Erdogann",
@@ -194,9 +352,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "MO",
     reyting: 63,
     yas: 26,
-    ana_ozellikler: { hiz: 51, sut: 53, pas: 63, dribbling: 58, defans: 48, fizik: 53 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 53,
+      pas: 63,
+      dribbling: 58,
+      defans: 48,
+      fizik: 53,
+    },
     detaylar: { vizyon: 58, kisa_pas: 63, top_kontrol: 55, dayaniklilik: 51 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Santoz",
@@ -205,9 +370,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "MO",
     reyting: 62,
     yas: 27,
-    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 52,
+      pas: 62,
+      dribbling: 57,
+      defans: 47,
+      fizik: 52,
+    },
     detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Costas",
@@ -216,9 +388,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "MOO",
     reyting: 61,
     yas: 28,
-    ana_ozellikler: { hiz: 49, sut: 51, pas: 61, dribbling: 56, defans: 46, fizik: 51 },
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 51,
+      pas: 61,
+      dribbling: 56,
+      defans: 46,
+      fizik: 51,
+    },
     detaylar: { vizyon: 56, kisa_pas: 61, top_kontrol: 53, dayaniklilik: 49 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Rodrigz",
@@ -227,9 +406,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "MOO",
     reyting: 60,
     yas: 29,
-    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 50,
+      pas: 60,
+      dribbling: 55,
+      defans: 45,
+      fizik: 50,
+    },
     detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Kilicc",
@@ -238,9 +424,16 @@ export const KASIMPASA_SQUAD = [
     mevki: "SĞO",
     reyting: 59,
     yas: 30,
-    ana_ozellikler: { hiz: 64, sut: 54, pas: 51, dribbling: 61, defans: 35, fizik: 44 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 54,
+      pas: 51,
+      dribbling: 61,
+      defans: 35,
+      fizik: 44,
+    },
     detaylar: { dribbling: 59, ceviklik: 62, orta_acma: 49, sprint: 64 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Yildizz",
@@ -249,8 +442,15 @@ export const KASIMPASA_SQUAD = [
     mevki: "SLO",
     reyting: 64,
     yas: 31,
-    ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 59,
+      pas: 56,
+      dribbling: 66,
+      defans: 35,
+      fizik: 49,
+    },
     detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

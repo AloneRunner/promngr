@@ -60,137 +60,170 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
     return (
         <div
             onClick={() => onSelect(player)}
-            className={`grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_2fr_repeat(5,1fr)_auto] gap-2 items-center p-2 border-b border-white/5 text-sm cursor-pointer transition-colors ${isSelected ? 'bg-emerald-900/40' : 'hover:bg-white/5'}`}
+            className={`fm-card relative mb-2 p-0.5 transition-all duration-300 ${isSelected ? 'scale-[1.01] z-10 border-emerald-400/60 shadow-[0_0_20px_rgba(52,211,153,0.4)]' : ''
+                }`}
         >
-            {/* Pos & Name */}
-            <div className="flex items-center gap-2">
-                <span className={`w-6 h-6 flex items-center justify-center rounded text-[10px] font-bold ${player.position === 'GK' ? 'bg-yellow-600/20 text-yellow-400 border border-yellow-600/50' :
-                    player.position === 'DEF' ? 'bg-blue-600/20 text-blue-400 border border-blue-600/50' :
-                        player.position === 'MID' ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/50' :
-                            'bg-red-600/20 text-red-400 border border-red-600/50'
-                    }`}>{player.position}</span>
-                {player.jerseyNumber && (
-                    <span className="w-5 h-5 flex items-center justify-center rounded bg-slate-700 text-[10px] font-bold text-slate-300 border border-slate-600">
-                        {player.jerseyNumber}
-                    </span>
-                )}
-            </div>
+            {/* OVR based Glow Effect (Subtle background gradient) */}
+            {effectiveRating >= 85 && <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-emerald-500/20 to-transparent pointer-events-none"></div>}
+            {effectiveRating >= 75 && effectiveRating < 85 && <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-blue-500/20 to-transparent pointer-events-none"></div>}
 
-            <div className="min-w-0">
-                <div className="font-bold text-white truncate text-xs md:text-sm flex items-center gap-1">
-                    {player.firstName} {player.lastName}
-                    {/* 🏥 INJURY INDICATOR - HIGHLY VISIBLE */}
-                    {player.weeksInjured > 0 && (
-                        <span className="ml-1 px-1.5 py-0.5 bg-orange-600 text-white text-[8px] font-bold rounded animate-pulse flex items-center gap-1">
-                            🏥 {player.weeksInjured}h
-                        </span>
-                    )}
-                    {/* 🟥 SUSPENSION INDICATOR */}
-                    {player.matchSuspension > 0 && (
-                        <span className="ml-1 px-1.5 py-0.5 bg-red-600 text-white text-[8px] font-bold rounded flex items-center gap-1">
-                            🟥 {player.matchSuspension}m
-                        </span>
-                    )}
-                    {/* ⚠️ CONTRACT EXPIRY WARNING */}
-                    {player.contractYears <= 1 && (
-                        <span className="ml-1 px-1.5 py-0.5 bg-amber-600 text-white text-[8px] font-bold rounded flex items-center gap-1" title={`Kontrat: ${player.contractYears} yıl kaldı`}>
-                            📝 {player.contractYears}y
-                        </span>
-                    )}
-                </div>
-                {assignedRole && assignedRole !== normalizePos(player) && (
-                    <div className="text-[9px] text-amber-500 flex items-center gap-1">
-                        <AlertTriangle size={8} /> OOP: {assignedRole}
-                    </div>
-                )}
-            </div>
+            <div className={`relative flex items-center p-2.5 gap-3 rounded-xl`}>
 
-            {/* Hidden on Mobile - Attributes (Different for GK vs Outfield) */}
-            {(player.position as string) === 'GK' || (player.position as string) === 'KL' ? (
-                <>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.goalkeeping)}>GK {player.attributes.goalkeeping}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.composure)}>REF {player.attributes.composure}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.positioning)}>POS {player.attributes.positioning}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.strength)}>STR {player.attributes.strength}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>KCK {player.attributes.passing}</span></div>
-                </>
-            ) : (
-                <>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.speed)}>{player.attributes.speed}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.finishing)}>{player.attributes.finishing}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></div>
-                    <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
-                </>
-            )}
-
-            {/* Status Bars (Mobile friendly) */}
-            <div className="flex flex-col gap-1 w-16 md:w-24 group/status relative">
-                <div className="flex items-center gap-1">
-                    <span className="text-[9px] font-mono text-slate-500 w-3">{t.con}</span>
-                    <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
-                        <div className="h-full bg-emerald-500" style={{ width: `${player.condition}%` }}></div>
+                {/* Ranking / Role Badge (Premium Style) */}
+                <div className="flex flex-col items-center justify-center shrink-0">
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-black shadow-lg shadow-black/40 border-b-2 ${player.position === 'GK' ? 'bg-gradient-to-br from-yellow-500 to-yellow-700 text-white border-yellow-800' :
+                        player.position === 'DEF' ? 'bg-gradient-to-br from-blue-500 to-blue-700 text-white border-blue-800' :
+                            player.position === 'MID' ? 'bg-gradient-to-br from-emerald-500 to-emerald-700 text-white border-emerald-800' :
+                                'bg-gradient-to-br from-red-500 to-red-700 text-white border-red-800'
+                        }`}>
+                        {player.position}
                     </div>
-                </div>
-                <div className="flex items-center gap-1">
-                    <span className="text-[9px] font-mono text-slate-500 w-3">{t.mor}</span>
-                    <div className="h-1.5 flex-1 bg-slate-800 rounded-sm overflow-hidden">
-                        <div className={`h-full ${player.morale > 80 ? 'bg-emerald-400' : player.morale > 50 ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${player.morale}%` }}></div>
-                    </div>
-                </div>
-                {/* Morale Reason Tooltip */}
-                <div className="absolute bottom-full left-0 mb-1 p-2 bg-slate-900 border border-slate-600 rounded shadow-xl opacity-0 group-hover/status:opacity-100 transition-opacity pointer-events-none z-50 w-56 text-[10px]">
-                    <div className="font-bold text-white mb-1">Moral: {player.morale}%</div>
-                    <div className="space-y-0.5 text-slate-400">
-                        {player.playedThisWeek && <div className="text-emerald-400">✅ Bu hafta maçta oynadı (+2)</div>}
-                        {!player.playedThisWeek && player.lineup === 'STARTING' && <div className="text-emerald-400">✓ {t.playingXIBonus || 'Playing in Starting XI (+2/week)'}</div>}
-                        {!player.playedThisWeek && player.lineup === 'BENCH' && <div className="text-blue-400">🪑 {t.benchStable || 'On bench (stable - ready to play)'}</div>}
-                        {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ {t.reserveStarPenalty || 'Reserve, star player (-3/week)'}</div>}
-                        {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ {t.reserveMediumPenalty || 'Reserve (-1/week)'}</div>}
-                        {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 {t.reserveStable || 'Reserve (stable)'}</div>}
-                        {player.weeksInjured > 0 && <div className="text-orange-400">🏥 Sakat ({player.weeksInjured} hafta)</div>}
-                        {player.matchSuspension > 0 && <div className="text-red-400">🟥 Cezalı ({player.matchSuspension} maç)</div>}
-                        {player.form > 7 && <div className="text-emerald-400">🔥 İyi form ({player.form}/10)</div>}
-                        {player.form < 5 && <div className="text-red-400">📉 Kötü form ({player.form}/10)</div>}
-                        {player.morale < 40 && <div className="text-amber-400 mt-1">💬 Motive etmeyi dene!</div>}
-                    </div>
-
-                    {/* Moral History - Son değişiklikler */}
-                    {player.moraleHistory && player.moraleHistory.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-slate-700">
-                            <div className="text-[9px] text-slate-500 mb-1">{t.lastMoraleChanges || 'Last Morale Changes'}:</div>
-                            {player.moraleHistory.slice(-3).reverse().map((h, i) => (
-                                <div key={i} className={`text-[9px] ${h.change > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
-                                    Hafta {h.week}: {h.change > 0 ? '+' : ''}{h.change} ({h.reason})
-                                </div>
-                            ))}
+                    {player.jerseyNumber && (
+                        <div className="mt-1 flex items-center gap-0.5 opacity-70">
+                            <span className="text-[10px] font-mono font-bold text-white">#{player.jerseyNumber}</span>
                         </div>
                     )}
                 </div>
-            </div>
 
-            {/* Actions & Rating */}
-            <div className="flex items-center gap-2 pl-2 border-l border-white/10">
-                <button onClick={(e) => { e.stopPropagation(); onInteractStart(player); }} className="p-1.5 hover:bg-white/10 rounded text-slate-400 hover:text-white">
-                    <MessageSquare size={14} />
-                </button>
-                <div className="flex flex-col items-center" title={`Baz: ${player.overall} | Anlık: ${effectiveRating}`}>
-                    {player.overall !== effectiveRating ? (
-                        <div className="flex items-center gap-0.5">
-                            <span className="text-[9px] text-slate-500 line-through">{player.overall}</span>
-                            <span className="text-[8px] text-slate-600">→</span>
-                            <span className={`font-black text-sm ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : effectiveRating >= 70 ? 'text-slate-300' : 'text-orange-400'}`}>{effectiveRating}</span>
+                {/* Player Name & Traits */}
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`font-bold truncate ${effectiveRating >= 85 ? 'text-glow-emerald text-white text-base' : 'text-slate-100 text-sm'}`}>
+                            {player.firstName} <span className="uppercase">{player.lastName}</span>
+                        </span>
+
+                        {/* Badges */}
+                        {player.weeksInjured > 0 && (
+                            <span className="px-1.5 py-0.5 bg-gradient-to-r from-orange-600 to-red-600 text-white text-[9px] font-bold rounded shadow-md animate-pulse flex items-center gap-1">
+                                🏥 {player.weeksInjured}h
+                            </span>
+                        )}
+                        {player.matchSuspension > 0 && (
+                            <span className="px-1.5 py-0.5 bg-gradient-to-r from-red-600 to-red-800 text-white text-[9px] font-bold rounded shadow-md flex items-center gap-1">
+                                🟥 {player.matchSuspension}m
+                            </span>
+                        )}
+                        {player.form >= 8 && (
+                            <span className="text-[10px] animate-bounce" title="On Fire!">🔥</span>
+                        )}
+                        {/* Playstyles as small floating badges */}
+                        {player.playStyles && player.playStyles.slice(0, 2).map((style, idx) => (
+                            <span key={idx} className="px-1.5 border border-indigo-400/30 bg-indigo-900/40 text-indigo-300 text-[8px] rounded-full uppercase tracking-wider">
+                                {style.split(' ')[0]} {/* Shortened style name */}
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Out of Position Warning */}
+                    {assignedRole && assignedRole !== normalizePos(player) && (
+                        <div className="text-[10px] font-bold text-amber-500 flex items-center gap-1 mt-0.5 bg-amber-900/30 px-1.5 py-0.5 rounded w-max">
+                            <AlertTriangle size={10} /> OOP: {assignedRole} Penalty
                         </div>
-                    ) : (
-                        <span className={`font-black text-sm ${effectiveRating >= 90 ? 'text-emerald-400' : effectiveRating >= 80 ? 'text-green-400' : 'text-slate-300'}`}>{effectiveRating}</span>
                     )}
                 </div>
-                {onMove && (
-                    <div className="flex flex-col gap-0.5">
-                        {!isFirst && <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'UP'); }} className="text-slate-500 hover:text-emerald-400"><ChevronUp size={10} /></button>}
-                        {!isLast && <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'DOWN'); }} className="text-slate-500 hover:text-emerald-400"><ChevronDown size={10} /></button>}
-                    </div>
+
+                {/* Hidden on Mobile - Attributes (Different for GK vs Outfield) */}
+                {(player.position as string) === 'GK' || (player.position as string) === 'KL' ? (
+                    <>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.goalkeeping)}>GK {player.attributes.goalkeeping}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.composure)}>REF {player.attributes.composure}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.positioning)}>POS {player.attributes.positioning}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.strength)}>STR {player.attributes.strength}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>KCK {player.attributes.passing}</span></div>
+                    </>
+                ) : (
+                    <>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.speed)}>{player.attributes.speed}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.finishing)}>{player.attributes.finishing}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></div>
+                        <div className="hidden md:flex items-center justify-center"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></div>
+                    </>
                 )}
+
+                {/* Mobile/Compact Status Bars */}
+                <div className="flex flex-col justify-center gap-1.5 w-20 sm:w-24 group/status relative">
+                    <div className="flex items-center gap-1.5 bg-slate-900/50 px-1.5 py-1 rounded">
+                        <span className="text-[8px] font-black uppercase text-slate-400 w-4">{t.con}</span>
+                        <div className="h-1.5 flex-1 bg-slate-950 rounded-full overflow-hidden shadow-inner">
+                            <div className={`h-full transition-all duration-500 ${player.condition > 80 ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : player.condition > 50 ? 'bg-yellow-400' : 'bg-red-500'}`} style={{ width: `${player.condition}%` }}></div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-slate-900/50 px-1.5 py-1 rounded">
+                        <span className="text-[8px] font-black uppercase text-slate-400 w-4">{t.mor}</span>
+                        <div className="h-1.5 flex-1 bg-slate-950 rounded-full overflow-hidden shadow-inner">
+                            <div className={`h-full transition-all duration-500 ${player.morale > 80 ? 'bg-emerald-400' : player.morale > 50 ? 'bg-yellow-400' : 'bg-red-500'}`} style={{ width: `${player.morale}%` }}></div>
+                        </div>
+                    </div>
+                    {/* Morale Reason Tooltip */}
+                    <div className="absolute bottom-full left-0 mb-1 p-2 bg-slate-900 border border-slate-600 rounded shadow-xl opacity-0 group-hover/status:opacity-100 transition-opacity pointer-events-none z-50 w-56 text-[10px]">
+                        <div className="font-bold text-white mb-1">Moral: {player.morale}%</div>
+                        <div className="space-y-0.5 text-slate-400">
+                            {player.playedThisWeek && <div className="text-emerald-400">✅ {t.playedThisWeek || 'Played this week'} (+2)</div>}
+                            {!player.playedThisWeek && player.lineup === 'STARTING' && <div className="text-emerald-400">✓ {t.playingInStartingXI || t.playingXIBonus || 'Playing in Starting XI (+2/week)'}</div>}
+                            {!player.playedThisWeek && player.lineup === 'BENCH' && <div className="text-blue-400">🪑 {t.benchStable || 'On bench (stable - ready to play)'}</div>}
+                            {player.lineup === 'RESERVE' && player.overall > 75 && <div className="text-red-400">⛔ {t.reserveStarPenalty || 'Reserve, star player (-3/week)'}</div>}
+                            {player.lineup === 'RESERVE' && player.overall > 65 && player.overall <= 75 && <div className="text-yellow-400">⚠ {t.reserveMediumPenalty || 'Reserve (-1/week)'}</div>}
+                            {player.lineup === 'RESERVE' && player.overall <= 65 && <div className="text-slate-500">📋 {t.reserveStable || 'Reserve (stable)'}</div>}
+                            {player.weeksInjured > 0 && <div className="text-orange-400">🏥 {t.injured || 'Injured'} ({player.weeksInjured} {t.weeks || 'weeks'})</div>}
+                            {player.matchSuspension > 0 && <div className="text-red-400">🟥 {t.suspended || 'Suspended'} ({player.matchSuspension} {t.matches || 'matches'})</div>}
+                            {player.form > 7 && <div className="text-emerald-400">🔥 {t.goodForm || 'Good form'} ({player.form}/10)</div>}
+                            {player.form < 5 && <div className="text-red-400">📉 {t.badFormAlert || 'Bad form'} ({player.form}/10)</div>}
+                            {player.morale < 40 && <div className="text-amber-400 mt-1">💬 {t.tryMotivating || 'Try motivating!'}</div>}
+                        </div>
+
+                        {/* Moral History - Son değişiklikler */}
+                        {player.moraleHistory && player.moraleHistory.length > 0 && (
+                            <div className="mt-2 pt-2 border-t border-slate-700">
+                                <div className="text-[9px] text-slate-500 mb-1">{t.lastMoraleChanges || 'Last Morale Changes'}:</div>
+                                {player.moraleHistory.slice(-3).reverse().map((h, i) => (
+                                    <div key={i} className={`text-[9px] ${h.change > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                                        {t.week || 'Week'} {h.week}: {h.change > 0 ? '+' : ''}{h.change} ({h.reason})
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Actions & Big OVR Rating */}
+                <div className="flex items-center gap-2 pl-3 border-l border-white/10 shrink-0">
+                    <button onClick={(e) => { e.stopPropagation(); onInteractStart(player); }} className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-indigo-500/20 border border-white/5 hover:border-indigo-500/50 rounded-lg text-slate-400 hover:text-indigo-300 transition-colors">
+                        <MessageSquare size={14} />
+                    </button>
+
+                    {/* Premium OVR Box */}
+                    <div className={`w-12 h-12 flex flex-col items-center justify-center rounded-xl shadow-lg border-2 ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
+                        effectiveRating >= 80 ? 'bg-gradient-to-b from-slate-200 to-slate-400 border-slate-200 shadow-white/20' :
+                            effectiveRating >= 70 ? 'bg-gradient-to-b from-amber-600 to-amber-800 border-amber-700 shadow-orange-900/40' :
+                                'bg-slate-800 border-slate-700'
+                        }`} title={`Base: ${player.overall} | Live: ${effectiveRating}`}>
+                        <span className={`font-black text-xl leading-none ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
+                            {effectiveRating}
+                        </span>
+                        {player.overall !== effectiveRating && (
+                            <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 ${effectiveRating < player.overall ? 'text-red-900/80 animate-pulse' : 'text-emerald-900'}`}>
+                                {effectiveRating < player.overall ? 'DROP' : 'BUFF'}
+                            </span>
+                        )}
+                    </div>
+
+                    {onMove && (
+                        <div className="flex flex-col gap-1 ml-1">
+                            {!isFirst ?
+                                <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'UP'); }} className="w-6 h-6 flex items-center justify-center bg-white/5 hover:bg-emerald-500/20 rounded text-slate-400 hover:text-emerald-400 border border-white/5">
+                                    <ChevronUp size={14} />
+                                </button>
+                                : <div className="w-6 h-6"></div>}
+
+                            {!isLast ?
+                                <button onClick={(e) => { e.stopPropagation(); onMove(player.id, 'DOWN'); }} className="w-6 h-6 flex items-center justify-center bg-white/5 hover:bg-emerald-500/20 rounded text-slate-400 hover:text-emerald-400 border border-white/5">
+                                    <ChevronDown size={14} />
+                                </button>
+                                : <div className="w-6 h-6"></div>}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -215,7 +248,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     team, players, opponent, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, matchStatus, t
 }) => {
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
-    const [tacticTab, setTacticTab] = useState<'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
+    const [tacticTab, setTacticTab] = useState<'PRESETS' | 'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
     // showAssistant removed - using inline panel instead
     const [advice, setAdvice] = useState<AssistantAdvice[]>([]);
     const [interactingPlayer, setInteractingPlayer] = useState<Player | null>(null);
@@ -380,31 +413,64 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.playStyle || 'Stil'}</div>
-                                <div className="text-purple-400 font-bold text-[10px]">{opponent.tactic?.style || 'Balanced'}</div>
+                                <div className="text-purple-400 font-bold text-[10px]">
+                                    {opponent.tactic?.style === 'Attacking' ? t.styleAttacking :
+                                        opponent.tactic?.style === 'Counter' ? t.styleCounter :
+                                            opponent.tactic?.style === 'Defensive' ? t.styleDefensive :
+                                                opponent.tactic?.style === 'Possession' ? t.stylePossession :
+                                                    t.styleBalanced || 'Balanced'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.aggression || 'Agresif'}</div>
-                                <div className="text-orange-400 font-bold text-[10px]">{opponent.tactic?.aggression || 'Normal'}</div>
+                                <div className="text-orange-400 font-bold text-[10px]">
+                                    {opponent.tactic?.aggression === 'Safe' ? t.safe :
+                                        opponent.tactic?.aggression === 'Aggressive' ? t.aggressive :
+                                            opponent.tactic?.aggression === 'Reckless' ? t.reckless :
+                                                t.normal || 'Normal'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.tempo || 'Tempo'}</div>
-                                <div className="text-cyan-400 font-bold text-[10px]">{opponent.tactic?.tempo || 'Normal'}</div>
+                                <div className="text-cyan-400 font-bold text-[10px]">
+                                    {opponent.tactic?.tempo === 'Slow' ? t.tempoSlow :
+                                        opponent.tactic?.tempo === 'Fast' ? t.tempoFast :
+                                            t.tacticBalanced || 'Normal'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.width || 'Genişlik'}</div>
-                                <div className="text-emerald-400 font-bold text-[10px]">{opponent.tactic?.width || 'Balanced'}</div>
+                                <div className="text-emerald-400 font-bold text-[10px]">
+                                    {opponent.tactic?.width === 'Narrow' ? t.tacticNarrow :
+                                        opponent.tactic?.width === 'Wide' ? t.tacticWide :
+                                            t.tacticBalanced || 'Balanced'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.passingStyle || 'Pas'}</div>
-                                <div className="text-yellow-400 font-bold text-[10px]">{opponent.tactic?.passingStyle || 'Mixed'}</div>
+                                <div className="text-yellow-400 font-bold text-[10px]">
+                                    {opponent.tactic?.passingStyle === 'Short' ? t.tacticShort :
+                                        opponent.tactic?.passingStyle === 'Direct' ? t.tacticDirect :
+                                            opponent.tactic?.passingStyle === 'LongBall' ? t.tacticLongBall :
+                                                t.tacticBalanced || 'Mixed'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.pressingIntensity || 'Press'}</div>
-                                <div className="text-red-400 font-bold text-[10px]">{opponent.tactic?.pressingIntensity || 'Balanced'}</div>
+                                <div className="text-red-400 font-bold text-[10px]">
+                                    {opponent.tactic?.pressingIntensity === 'StandOff' ? t.pressStandOff :
+                                        opponent.tactic?.pressingIntensity === 'HighPress' ? t.pressHigh :
+                                            opponent.tactic?.pressingIntensity === 'Gegenpress' ? t.pressGegen :
+                                                t.pressBalanced || 'Balanced'}
+                                </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.defensiveLine || 'Def'}</div>
-                                <div className="text-blue-300 font-bold text-[10px]">{opponent.tactic?.defensiveLine || 'Balanced'}</div>
+                                <div className="text-blue-300 font-bold text-[10px]">
+                                    {opponent.tactic?.defensiveLine === 'Deep' ? t.tacticDeep :
+                                        opponent.tactic?.defensiveLine === 'High' ? t.tacticHigh :
+                                            t.tacticBalanced || 'Balanced'}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -417,19 +483,22 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         let suggestionIcon = '💡';
 
                         if (oppPressing === 'Gegenpress' || oppPressing === 'HighPress') {
-                            suggestion = t.counterHighPress || 'Uzun paslarla basıncı aş! Pas stilini Direct/LongBall yap.';
+                            suggestion = t.counterHighPress || 'Tehlike: Şok pres altındayız. Topu ayakta çok tutma (Tempo = Hızlı). Defans arkasındaki boşluklara "Uzun/Direkt Pas" ile sız!';
                             suggestionIcon = '🚀';
-                        } else if (oppStyle === 'Possession') {
-                            suggestion = t.counterPossession || 'High Press uygula, tempoyu artır. Topu çal!';
+                        } else if (oppStyle === 'Possession' || oppStyle === 'Tiki-Taka') {
+                            suggestion = t.counterPossession || 'Rakip topu vermiyor. Gegenpress ile boğ ya da tam tersi Derin Defans ("Geride Karşıla") ile sahanı kapat ve Kontraya çık.';
                             suggestionIcon = '⚡';
-                        } else if (oppStyle === 'Counter') {
-                            suggestion = t.counterCounter || 'Sabırlı ol, Possession tarzı oyna. Geniş oyna.';
+                        } else if (oppStyle === 'Counter' || oppStyle === 'FluidCounter') {
+                            suggestion = t.counterCounter || 'Kontra arıyorlar. Savunma hattını çok öne ("High") çıkarma. "Temkinli" veya "Normal" agresiflikte kalarak kanatlara dikkat et.';
                             suggestionIcon = '🎯';
-                        } else if (oppStyle === 'Defensive') {
-                            suggestion = t.counterDefensive || 'Geniş oyna, yavaş tempo. Sabırlı ol, boşluk ara.';
+                        } else if (oppStyle === 'Defensive' || oppStyle === 'ParkTheBus' || oppStyle === 'Catenaccio') {
+                            suggestion = t.counterDefensive || 'Otobüs çekiyorlar. Kesinlikle "Geniş" oyna, stoperleri iki yana aç. "Tempo" düşür, bıkmadan "Paslaşarak Gir" aramalıyız.';
                             suggestionIcon = '🔓';
+                        } else if (oppStyle === 'Attacking' || oppStyle === 'TotalFootball') {
+                            suggestion = t.counterAttacking || 'Aşırı hücuma kalkıyorlar. Savunma arkasında dev boşluklar var. "Kontra" veya "Kanat Oyunu" ile arkaya uzun at, deparlı forvetler lazım! ';
+                            suggestionIcon = '🔥';
                         } else {
-                            suggestion = t.counterBalanced || 'Kendi oyununu oyna, güçlü yönlerini kullan.';
+                            suggestion = t.counterBalanced || 'Taktikleri dengeli. Orta sahadaki ikili mücadeleleri kazanan fişi çeker. Takımın yıldızlarına dayalı standart oyununu oyna.';
                             suggestionIcon = '⚖️';
                         }
 

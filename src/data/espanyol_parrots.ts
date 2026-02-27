@@ -6,11 +6,21 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SNT",
     reyting: 78,
     yas: 27,
-    ana_ozellikler: { hiz: 80, sut: 77, pas: 72, dribbling: 78, defans: 49, fizik: 74 },
-    detaylar: {
-      hizlanma: 82, bitiricilik: 80, penalti: 82, pozisyon: 79
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 77,
+      pas: 72,
+      dribbling: 78,
+      defans: 49,
+      fizik: 74,
     },
-    oyun_tarzlari: ["Fırsatçı", "Lider"]
+    detaylar: {
+      hizlanma: 82,
+      bitiricilik: 80,
+      penalti: 82,
+      pozisyon: 79,
+    },
+    oyun_tarzlari: ["İleride Bekleyen"],
   },
   {
     ad: "M. Dimitro",
@@ -19,11 +29,20 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "KL",
     reyting: 79,
     yas: 33,
-    ana_ozellikler: { hiz: 37, sut: 79, pas: 78, dribbling: 80, defans: 37, fizik: 80 },
-    detaylar: {
-      refleks: 81, ucma: 79, vurus: 80
+    ana_ozellikler: {
+      hiz: 37,
+      sut: 79,
+      pas: 78,
+      dribbling: 80,
+      defans: 37,
+      fizik: 80,
     },
-    oyun_tarzlari: ["Tecrübeli"]
+    detaylar: {
+      refleks: 81,
+      ucma: 79,
+      vurus: 80,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Cabre",
@@ -32,11 +51,20 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 34,
-    ana_ozellikler: { hiz: 49, sut: 45, pas: 58, dribbling: 54, defans: 76, fizik: 79 },
-    detaylar: {
-      kafa_isabeti: 83, guc: 82, agresiflik: 84
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 45,
+      pas: 58,
+      dribbling: 54,
+      defans: 76,
+      fizik: 79,
     },
-    oyun_tarzlari: ["Hava Hakimi", "Sert Müdahale"]
+    detaylar: {
+      kafa_isabeti: 83,
+      guc: 82,
+      agresiflik: 84,
+    },
+    oyun_tarzlari: ["Hava Hakimi", "Kaya"],
   },
   {
     ad: "O. Hilali",
@@ -45,11 +73,20 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SĞB",
     reyting: 77,
     yas: 22,
-    ana_ozellikler: { hiz: 85, sut: 41, pas: 67, dribbling: 69, defans: 74, fizik: 77 },
-    detaylar: {
-      sprint: 86, hizlanma: 84, ayakta_mudahale: 76
+    ana_ozellikler: {
+      hiz: 85,
+      sut: 41,
+      pas: 67,
+      dribbling: 69,
+      defans: 74,
+      fizik: 77,
     },
-    oyun_tarzlari: ["Hızlı Bek"]
+    detaylar: {
+      sprint: 86,
+      hizlanma: 84,
+      ayakta_mudahale: 76,
+    },
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "E. Expos",
@@ -58,11 +95,20 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MOO",
     reyting: 75,
     yas: 29,
-    ana_ozellikler: { hiz: 62, sut: 73, pas: 75, dribbling: 77, defans: 70, fizik: 69 },
-    detaylar: {
-      uzaktan_sut: 80, kisa_pas: 78, sut_gucu: 82
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 73,
+      pas: 75,
+      dribbling: 77,
+      defans: 70,
+      fizik: 69,
     },
-    oyun_tarzlari: ["Uzaktan Şut"]
+    detaylar: {
+      uzaktan_sut: 80,
+      kisa_pas: 78,
+      sut_gucu: 82,
+    },
+    oyun_tarzlari: ["Uzaktan Şutör"],
   },
   {
     ad: "P. Milla",
@@ -71,11 +117,19 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SNT",
     reyting: 71,
     yas: 33,
-    ana_ozellikler: { hiz: 72, sut: 71, pas: 70, dribbling: 71, defans: 51, fizik: 67 },
-    detaylar: {
-      kafa_isabeti: 75, pozisyon: 74
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 71,
+      pas: 70,
+      dribbling: 71,
+      defans: 51,
+      fizik: 67,
     },
-    oyun_tarzlari: []
+    detaylar: {
+      kafa_isabeti: 75,
+      pozisyon: 74,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Costas",
@@ -84,9 +138,22 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 72,
+    },
+    detaylar: {
+      ucma: 62,
+      refleks: 72,
+      vurus: 67,
+      pozisyon: 64,
+      top_kontrol: 60,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "David Lopez",
@@ -95,9 +162,22 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrig",
@@ -106,9 +186,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "STP",
     reyting: 69,
     yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 44,
+      pas: 61,
+      dribbling: 59,
+      defans: 69,
+      fizik: 64,
+    },
     detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Garcy",
@@ -117,9 +204,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 43,
+      pas: 60,
+      dribbling: 58,
+      defans: 68,
+      fizik: 63,
+    },
     detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Sylva",
@@ -128,9 +222,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Lopez",
@@ -139,9 +240,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SĞB",
     reyting: 66,
     yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Martin",
@@ -150,9 +258,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SLB",
     reyting: 65,
     yas: 26,
-    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 40,
+      pas: 57,
+      dribbling: 55,
+      defans: 65,
+      fizik: 60,
+    },
     detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Santos",
@@ -161,9 +276,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SLB",
     reyting: 64,
     yas: 27,
-    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 39,
+      pas: 56,
+      dribbling: 54,
+      defans: 64,
+      fizik: 59,
+    },
     detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Sylva",
@@ -172,9 +294,21 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MDO",
     reyting: 63,
     yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
-    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 43,
+      pas: 58,
+      dribbling: 55,
+      defans: 63,
+      fizik: 58,
+    },
+    detaylar: {
+      top_kesme: 63,
+      ayakta_mudahale: 58,
+      dayaniklilik: 60,
+      kisa_pas: 55,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Marco Costa",
@@ -183,9 +317,21 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MDO",
     reyting: 62,
     yas: 29,
-    ana_ozellikler: { hiz: 47, sut: 42, pas: 57, dribbling: 54, defans: 62, fizik: 57 },
-    detaylar: { top_kesme: 62, ayakta_mudahale: 57, dayaniklilik: 59, kisa_pas: 54 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 47,
+      sut: 42,
+      pas: 57,
+      dribbling: 54,
+      defans: 62,
+      fizik: 57,
+    },
+    detaylar: {
+      top_kesme: 62,
+      ayakta_mudahale: 57,
+      dayaniklilik: 59,
+      kisa_pas: 54,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Perez",
@@ -194,9 +340,21 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MDO",
     reyting: 61,
     yas: 30,
-    ana_ozellikler: { hiz: 46, sut: 41, pas: 56, dribbling: 53, defans: 61, fizik: 56 },
-    detaylar: { top_kesme: 61, ayakta_mudahale: 56, dayaniklilik: 58, kisa_pas: 53 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 46,
+      sut: 41,
+      pas: 56,
+      dribbling: 53,
+      defans: 61,
+      fizik: 56,
+    },
+    detaylar: {
+      top_kesme: 61,
+      ayakta_mudahale: 56,
+      dayaniklilik: 58,
+      kisa_pas: 53,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Marco Costa",
@@ -205,9 +363,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MO",
     reyting: 66,
     yas: 31,
-    ana_ozellikler: { hiz: 54, sut: 56, pas: 66, dribbling: 61, defans: 51, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 56,
+      pas: 66,
+      dribbling: 61,
+      defans: 51,
+      fizik: 56,
+    },
     detaylar: { vizyon: 61, kisa_pas: 66, top_kontrol: 58, dayaniklilik: 54 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Sylva",
@@ -216,9 +381,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MO",
     reyting: 65,
     yas: 32,
-    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 55,
+      pas: 65,
+      dribbling: 60,
+      defans: 50,
+      fizik: 55,
+    },
     detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "David Lopez",
@@ -227,9 +399,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MO",
     reyting: 65,
     yas: 33,
-    ana_ozellikler: { hiz: 53, sut: 55, pas: 65, dribbling: 60, defans: 50, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 55,
+      pas: 65,
+      dribbling: 60,
+      defans: 50,
+      fizik: 55,
+    },
     detaylar: { vizyon: 60, kisa_pas: 65, top_kontrol: 57, dayaniklilik: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Rodrig",
@@ -238,9 +417,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "MOO",
     reyting: 64,
     yas: 34,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 54,
+      pas: 64,
+      dribbling: 59,
+      defans: 49,
+      fizik: 54,
+    },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Costas",
@@ -249,9 +435,16 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SĞO",
     reyting: 64,
     yas: 20,
-    ana_ozellikler: { hiz: 69, sut: 59, pas: 56, dribbling: 66, defans: 35, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 59,
+      pas: 56,
+      dribbling: 66,
+      defans: 35,
+      fizik: 49,
+    },
     detaylar: { dribbling: 64, ceviklik: 67, orta_acma: 54, sprint: 69 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Lopez",
@@ -260,9 +453,15 @@ export const ESPANYOL_PARROTS_SQUAD = [
     mevki: "SĞO",
     reyting: 63,
     yas: 21,
-    ana_ozellikler: { hiz: 68, sut: 58, pas: 55, dribbling: 65, defans: 35, fizik: 48 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 58,
+      pas: 55,
+      dribbling: 65,
+      defans: 35,
+      fizik: 48,
+    },
     detaylar: { dribbling: 63, ceviklik: 66, orta_acma: 53, sprint: 68 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];
-

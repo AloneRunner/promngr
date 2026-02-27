@@ -1,4 +1,3 @@
-
 export const KOCAELISPOR_SQUAD = [
   {
     ad: "B. Petkovick",
@@ -7,9 +6,23 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SNT",
     reyting: 76,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 73, pas: 78, dribbling: 77, defans: 41, fizik: 75 },
-    detaylar: { gorus: 84, kisa_pas: 82, top_kontrol: 84, sut_gucu: 82, penalti: 84, guc: 90 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "İlk Dokunuş", "Teknik"]
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 73,
+      pas: 78,
+      dribbling: 77,
+      defans: 41,
+      fizik: 75,
+    },
+    detaylar: {
+      gorus: 84,
+      kisa_pas: 82,
+      top_kontrol: 84,
+      sut_gucu: 82,
+      penalti: 84,
+      guc: 90,
+    },
+    oyun_tarzlari: ["Hava Hakimi", "İlk Dokunuş"],
   },
   {
     ad: "M. Haidarra",
@@ -18,9 +31,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 33,
-    ana_ozellikler: { hiz: 75, sut: 60, pas: 63, dribbling: 70, defans: 70, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 60,
+      pas: 63,
+      dribbling: 70,
+      defans: 70,
+      fizik: 77,
+    },
     detaylar: { sut_gucu: 79, ziplama: 81, dayaniklilik: 78, agresiflik: 77 },
-    oyun_tarzlari: ["Kayarak Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "K. Linettyy",
@@ -29,9 +49,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 56, sut: 64, pas: 71, dribbling: 73, defans: 70, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 64,
+      pas: 71,
+      dribbling: 73,
+      defans: 70,
+      fizik: 64,
+    },
     detaylar: { kisa_pas: 78, denge: 79, agresiflik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Wietesky",
@@ -40,9 +67,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 57, sut: 38, pas: 51, dribbling: 61, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 38,
+      pas: 51,
+      dribbling: 61,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { ziplama: 76, guc: 75, agresiflik: 75, kafa_isabeti: 74 },
-    oyun_tarzlari: ["Engel"]
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Smolchyc",
@@ -51,9 +85,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 68, sut: 28, pas: 49, dribbling: 58, defans: 72, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 28,
+      pas: 49,
+      dribbling: 58,
+      defans: 72,
+      fizik: 75,
+    },
     detaylar: { ziplama: 82, guc: 79, ayakta_mudahale: 75, kafa_isabeti: 73 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "A. Oguzz",
@@ -62,9 +103,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SĞB",
     reyting: 71,
     yas: 32,
-    ana_ozellikler: { hiz: 72, sut: 59, pas: 67, dribbling: 69, defans: 68, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 59,
+      pas: 67,
+      dribbling: 69,
+      defans: 68,
+      fizik: 77,
+    },
     detaylar: { ziplama: 77, guc: 77, agresiflik: 77, dayaniklilik: 77 },
-    oyun_tarzlari: ["Engel", "Güçlü", "Top Kesici", "Uzun Taç", "Yakın Markaj"]
+    oyun_tarzlari: ["Kaya", "Top Kesici"],
   },
   {
     ad: "R. Mendess",
@@ -73,9 +121,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SLO",
     reyting: 71,
     yas: 35,
-    ana_ozellikler: { hiz: 74, sut: 67, pas: 69, dribbling: 74, defans: 28, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 67,
+      pas: 69,
+      dribbling: 74,
+      defans: 28,
+      fizik: 54,
+    },
     detaylar: { ceviklik: 77, denge: 77, hizlanma: 76, dribbling: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Demirky",
@@ -84,9 +139,22 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "KL",
     reyting: 66,
     yas: 20,
-    ana_ozellikler: { hiz: 56, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 66 },
-    detaylar: { ucma: 56, refleks: 66, vurus: 61, pozisyon: 58, top_kontrol: 54 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 66,
+    },
+    detaylar: {
+      ucma: 56,
+      refleks: 66,
+      vurus: 61,
+      pozisyon: 58,
+      top_kontrol: 54,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Shenn",
@@ -95,9 +163,22 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "KL",
     reyting: 64,
     yas: 21,
-    ana_ozellikler: { hiz: 54, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 64 },
-    detaylar: { ucma: 54, refleks: 64, vurus: 59, pozisyon: 56, top_kontrol: 52 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 64,
+    },
+    detaylar: {
+      ucma: 54,
+      refleks: 64,
+      vurus: 59,
+      pozisyon: 56,
+      top_kontrol: 52,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Kocc",
@@ -106,9 +187,22 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "KL",
     reyting: 63,
     yas: 22,
-    ana_ozellikler: { hiz: 53, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 63 },
-    detaylar: { ucma: 53, refleks: 63, vurus: 58, pozisyon: 55, top_kontrol: 51 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 63,
+    },
+    detaylar: {
+      ucma: 53,
+      refleks: 63,
+      vurus: 58,
+      pozisyon: 55,
+      top_kontrol: 51,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Yildizz",
@@ -117,9 +211,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "STP",
     reyting: 62,
     yas: 23,
-    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 37,
+      pas: 54,
+      dribbling: 52,
+      defans: 62,
+      fizik: 57,
+    },
     detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "V. Ozgurr",
@@ -128,9 +229,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "STP",
     reyting: 61,
     yas: 24,
-    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 36,
+      pas: 53,
+      dribbling: 51,
+      defans: 61,
+      fizik: 56,
+    },
     detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Ozdemirr",
@@ -139,9 +247,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SĞB",
     reyting: 60,
     yas: 25,
-    ana_ozellikler: { hiz: 50, sut: 35, pas: 52, dribbling: 50, defans: 60, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 35,
+      pas: 52,
+      dribbling: 50,
+      defans: 60,
+      fizik: 55,
+    },
     detaylar: { ayakta_mudahale: 60, top_kesme: 55, kafa_isabeti: 50, guc: 52 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Sahinn",
@@ -150,9 +265,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SLB",
     reyting: 59,
     yas: 26,
-    ana_ozellikler: { hiz: 49, sut: 34, pas: 51, dribbling: 49, defans: 59, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 34,
+      pas: 51,
+      dribbling: 49,
+      defans: 59,
+      fizik: 54,
+    },
     detaylar: { ayakta_mudahale: 59, top_kesme: 54, kafa_isabeti: 49, guc: 51 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Pereze",
@@ -161,9 +283,21 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MDO",
     reyting: 58,
     yas: 27,
-    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
-    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 43,
+      sut: 38,
+      pas: 53,
+      dribbling: 50,
+      defans: 58,
+      fizik: 53,
+    },
+    detaylar: {
+      top_kesme: 58,
+      ayakta_mudahale: 53,
+      dayaniklilik: 55,
+      kisa_pas: 50,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Costas",
@@ -172,9 +306,21 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MDO",
     reyting: 57,
     yas: 28,
-    ana_ozellikler: { hiz: 42, sut: 37, pas: 52, dribbling: 49, defans: 57, fizik: 52 },
-    detaylar: { top_kesme: 57, ayakta_mudahale: 52, dayaniklilik: 54, kisa_pas: 49 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 42,
+      sut: 37,
+      pas: 52,
+      dribbling: 49,
+      defans: 57,
+      fizik: 52,
+    },
+    detaylar: {
+      top_kesme: 57,
+      ayakta_mudahale: 52,
+      dayaniklilik: 54,
+      kisa_pas: 49,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Costas",
@@ -183,9 +329,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MO",
     reyting: 56,
     yas: 29,
-    ana_ozellikler: { hiz: 44, sut: 46, pas: 56, dribbling: 51, defans: 41, fizik: 46 },
+    ana_ozellikler: {
+      hiz: 44,
+      sut: 46,
+      pas: 56,
+      dribbling: 51,
+      defans: 41,
+      fizik: 46,
+    },
     detaylar: { vizyon: 51, kisa_pas: 56, top_kontrol: 48, dayaniklilik: 44 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Shenn",
@@ -194,9 +347,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MO",
     reyting: 55,
     yas: 30,
-    ana_ozellikler: { hiz: 43, sut: 45, pas: 55, dribbling: 50, defans: 40, fizik: 45 },
+    ana_ozellikler: {
+      hiz: 43,
+      sut: 45,
+      pas: 55,
+      dribbling: 50,
+      defans: 40,
+      fizik: 45,
+    },
     detaylar: { vizyon: 50, kisa_pas: 55, top_kontrol: 47, dayaniklilik: 43 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Erdogann",
@@ -205,9 +365,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MO",
     reyting: 60,
     yas: 31,
-    ana_ozellikler: { hiz: 48, sut: 50, pas: 60, dribbling: 55, defans: 45, fizik: 50 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 50,
+      pas: 60,
+      dribbling: 55,
+      defans: 45,
+      fizik: 50,
+    },
     detaylar: { vizyon: 55, kisa_pas: 60, top_kontrol: 52, dayaniklilik: 48 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Sahinn",
@@ -216,9 +383,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MOO",
     reyting: 59,
     yas: 32,
-    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 47,
+      sut: 49,
+      pas: 59,
+      dribbling: 54,
+      defans: 44,
+      fizik: 49,
+    },
     detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Dogann",
@@ -227,9 +401,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "MOO",
     reyting: 59,
     yas: 33,
-    ana_ozellikler: { hiz: 47, sut: 49, pas: 59, dribbling: 54, defans: 44, fizik: 49 },
+    ana_ozellikler: {
+      hiz: 47,
+      sut: 49,
+      pas: 59,
+      dribbling: 54,
+      defans: 44,
+      fizik: 49,
+    },
     detaylar: { vizyon: 54, kisa_pas: 59, top_kontrol: 51, dayaniklilik: 47 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Gulerr",
@@ -238,9 +419,16 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SĞO",
     reyting: 58,
     yas: 34,
-    ana_ozellikler: { hiz: 63, sut: 53, pas: 50, dribbling: 60, defans: 35, fizik: 43 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 53,
+      pas: 50,
+      dribbling: 60,
+      defans: 35,
+      fizik: 43,
+    },
     detaylar: { dribbling: 58, ceviklik: 61, orta_acma: 48, sprint: 63 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Polatt",
@@ -249,8 +437,15 @@ export const KOCAELISPOR_SQUAD = [
     mevki: "SĞO",
     reyting: 58,
     yas: 20,
-    ana_ozellikler: { hiz: 63, sut: 53, pas: 50, dribbling: 60, defans: 35, fizik: 43 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 53,
+      pas: 50,
+      dribbling: 60,
+      defans: 35,
+      fizik: 43,
+    },
     detaylar: { dribbling: 58, ceviklik: 61, orta_acma: 48, sprint: 63 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

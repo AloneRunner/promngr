@@ -6,9 +6,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "KL",
     reyting: 85,
     yas: 34,
-    ana_ozellikler: { hiz: 83, sut: 83, pas: 74, dribbling: 84, defans: 43, fizik: 87 },
+    ana_ozellikler: {
+      hiz: 83,
+      sut: 83,
+      pas: 74,
+      dribbling: 84,
+      defans: 43,
+      fizik: 87,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Bitshiab",
@@ -17,9 +24,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 19,
-    ana_ozellikler: { hiz: 72, sut: 36, pas: 60, dribbling: 56, defans: 74, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 36,
+      pas: 60,
+      dribbling: 56,
+      defans: 74,
+      fizik: 79,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
 
   {
@@ -29,9 +43,22 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "KL",
     reyting: 82,
     yas: 20,
-    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 72,
+      refleks: 82,
+      vurus: 77,
+      pozisyon: 74,
+      top_kontrol: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrigz",
@@ -40,9 +67,22 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "KL",
     reyting: 81,
     yas: 21,
-    ana_ozellikler: { hiz: 71, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 71, refleks: 81, vurus: 76, pozisyon: 73, top_kontrol: 69 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 71,
+      refleks: 81,
+      vurus: 76,
+      pozisyon: 73,
+      top_kontrol: 69,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Garcy",
@@ -51,9 +91,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "STP",
     reyting: 80,
     yas: 22,
-    ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 80, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 55,
+      pas: 72,
+      dribbling: 70,
+      defans: 80,
+      fizik: 75,
+    },
     detaylar: { ayakta_mudahale: 80, top_kesme: 75, kafa_isabeti: 70, guc: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Pereze",
@@ -62,9 +109,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "STP",
     reyting: 79,
     yas: 23,
-    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 54,
+      pas: 71,
+      dribbling: 69,
+      defans: 79,
+      fizik: 74,
+    },
     detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Martines",
@@ -73,9 +127,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "STP",
     reyting: 78,
     yas: 24,
-    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 53,
+      pas: 70,
+      dribbling: 68,
+      defans: 78,
+      fizik: 73,
+    },
     detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Garcy",
@@ -84,9 +145,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SĞB",
     reyting: 77,
     yas: 25,
-    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 52,
+      pas: 69,
+      dribbling: 67,
+      defans: 77,
+      fizik: 72,
+    },
     detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Santoz",
@@ -95,9 +163,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SĞB",
     reyting: 76,
     yas: 26,
-    ana_ozellikler: { hiz: 66, sut: 51, pas: 68, dribbling: 66, defans: 76, fizik: 71 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 51,
+      pas: 68,
+      dribbling: 66,
+      defans: 76,
+      fizik: 71,
+    },
     detaylar: { ayakta_mudahale: 76, top_kesme: 71, kafa_isabeti: 66, guc: 68 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Garcy",
@@ -106,9 +181,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SLB",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 65, sut: 50, pas: 67, dribbling: 65, defans: 75, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 50,
+      pas: 67,
+      dribbling: 65,
+      defans: 75,
+      fizik: 70,
+    },
     detaylar: { ayakta_mudahale: 75, top_kesme: 70, kafa_isabeti: 65, guc: 67 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrigz",
@@ -117,9 +199,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 64, sut: 49, pas: 66, dribbling: 64, defans: 74, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 49,
+      pas: 66,
+      dribbling: 64,
+      defans: 74,
+      fizik: 69,
+    },
     detaylar: { ayakta_mudahale: 74, top_kesme: 69, kafa_isabeti: 64, guc: 66 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Sylva",
@@ -128,9 +217,21 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 29,
-    ana_ozellikler: { hiz: 58, sut: 53, pas: 68, dribbling: 65, defans: 73, fizik: 68 },
-    detaylar: { top_kesme: 73, ayakta_mudahale: 68, dayaniklilik: 70, kisa_pas: 65 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 53,
+      pas: 68,
+      dribbling: 65,
+      defans: 73,
+      fizik: 68,
+    },
+    detaylar: {
+      top_kesme: 73,
+      ayakta_mudahale: 68,
+      dayaniklilik: 70,
+      kisa_pas: 65,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Sylva",
@@ -139,9 +240,21 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MDO",
     reyting: 72,
     yas: 30,
-    ana_ozellikler: { hiz: 57, sut: 52, pas: 67, dribbling: 64, defans: 72, fizik: 67 },
-    detaylar: { top_kesme: 72, ayakta_mudahale: 67, dayaniklilik: 69, kisa_pas: 64 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 52,
+      pas: 67,
+      dribbling: 64,
+      defans: 72,
+      fizik: 67,
+    },
+    detaylar: {
+      top_kesme: 72,
+      ayakta_mudahale: 67,
+      dayaniklilik: 69,
+      kisa_pas: 64,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Sylva",
@@ -150,9 +263,21 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MDO",
     reyting: 77,
     yas: 31,
-    ana_ozellikler: { hiz: 62, sut: 57, pas: 72, dribbling: 69, defans: 77, fizik: 72 },
-    detaylar: { top_kesme: 77, ayakta_mudahale: 72, dayaniklilik: 74, kisa_pas: 69 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 57,
+      pas: 72,
+      dribbling: 69,
+      defans: 77,
+      fizik: 72,
+    },
+    detaylar: {
+      top_kesme: 77,
+      ayakta_mudahale: 72,
+      dayaniklilik: 74,
+      kisa_pas: 69,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Garcy",
@@ -161,9 +286,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 32,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 66,
+      pas: 76,
+      dribbling: 71,
+      defans: 61,
+      fizik: 66,
+    },
     detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Rodrigz",
@@ -172,9 +304,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 33,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 66,
+      pas: 76,
+      dribbling: 71,
+      defans: 61,
+      fizik: 66,
+    },
     detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Pereze",
@@ -183,9 +322,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MO",
     reyting: 75,
     yas: 34,
-    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 65,
+      pas: 75,
+      dribbling: 70,
+      defans: 60,
+      fizik: 65,
+    },
     detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Pereze",
@@ -194,9 +340,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MOO",
     reyting: 75,
     yas: 20,
-    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 65,
+      pas: 75,
+      dribbling: 70,
+      defans: 60,
+      fizik: 65,
+    },
     detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Rodrigz",
@@ -205,9 +358,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "MOO",
     reyting: 75,
     yas: 21,
-    ana_ozellikler: { hiz: 63, sut: 65, pas: 75, dribbling: 70, defans: 60, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 65,
+      pas: 75,
+      dribbling: 70,
+      defans: 60,
+      fizik: 65,
+    },
     detaylar: { vizyon: 70, kisa_pas: 75, top_kontrol: 67, dayaniklilik: 63 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Garcy",
@@ -216,9 +376,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 79, sut: 69, pas: 66, dribbling: 76, defans: 35, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 79,
+      sut: 69,
+      pas: 66,
+      dribbling: 76,
+      defans: 35,
+      fizik: 59,
+    },
     detaylar: { dribbling: 74, ceviklik: 77, orta_acma: 64, sprint: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Pereze",
@@ -227,9 +394,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 23,
-    ana_ozellikler: { hiz: 79, sut: 69, pas: 66, dribbling: 76, defans: 35, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 79,
+      sut: 69,
+      pas: 66,
+      dribbling: 76,
+      defans: 35,
+      fizik: 59,
+    },
     detaylar: { dribbling: 74, ceviklik: 77, orta_acma: 64, sprint: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Martines",
@@ -238,9 +412,16 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 78, sut: 68, pas: 65, dribbling: 75, defans: 35, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 68,
+      pas: 65,
+      dribbling: 75,
+      defans: 35,
+      fizik: 58,
+    },
     detaylar: { dribbling: 73, ceviklik: 76, orta_acma: 63, sprint: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Garcy",
@@ -249,8 +430,15 @@ export const LEIPZIG_BULLS_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 68, pas: 65, dribbling: 75, defans: 35, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 68,
+      pas: 65,
+      dribbling: 75,
+      defans: 35,
+      fizik: 58,
+    },
     detaylar: { dribbling: 73, ceviklik: 76, orta_acma: 63, sprint: 78 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

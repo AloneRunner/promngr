@@ -6,9 +6,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SNT",
     reyting: 87,
     yas: 29,
-    ana_ozellikler: { hiz: 72, sut: 88, pas: 76, dribbling: 83, defans: 45, fizik: 83 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 88,
+      pas: 76,
+      dribbling: 83,
+      defans: 45,
+      fizik: 83,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Kobell",
@@ -17,9 +24,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "KL",
     reyting: 86,
     yas: 27,
-    ana_ozellikler: { hiz: 87, sut: 83, pas: 64, dribbling: 87, defans: 44, fizik: 86 },
+    ana_ozellikler: {
+      hiz: 87,
+      sut: 83,
+      pas: 64,
+      dribbling: 87,
+      defans: 44,
+      fizik: 86,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Schlotter",
@@ -28,9 +42,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 85,
     yas: 25,
-    ana_ozellikler: { hiz: 74, sut: 60, pas: 75, dribbling: 73, defans: 85, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 60,
+      pas: 75,
+      dribbling: 73,
+      defans: 85,
+      fizik: 82,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Bellford",
@@ -39,9 +60,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 19,
-    ana_ozellikler: { hiz: 70, sut: 68, pas: 71, dribbling: 74, defans: 72, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 68,
+      pas: 71,
+      dribbling: 74,
+      defans: 72,
+      fizik: 78,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
 
   {
@@ -51,9 +79,22 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "KL",
     reyting: 83,
     yas: 20,
-    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 73, refleks: 83, vurus: 78, pozisyon: 75, top_kontrol: 71 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 73,
+      refleks: 83,
+      vurus: 78,
+      pozisyon: 75,
+      top_kontrol: 71,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "João Costa",
@@ -62,9 +103,22 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "KL",
     reyting: 82,
     yas: 21,
-    ana_ozellikler: { hiz: 72, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 72, refleks: 82, vurus: 77, pozisyon: 74, top_kontrol: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 72,
+      refleks: 82,
+      vurus: 77,
+      pozisyon: 74,
+      top_kontrol: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Marco Costa",
@@ -73,9 +127,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 81,
     yas: 22,
-    ana_ozellikler: { hiz: 71, sut: 56, pas: 73, dribbling: 71, defans: 81, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 56,
+      pas: 73,
+      dribbling: 71,
+      defans: 81,
+      fizik: 76,
+    },
     detaylar: { ayakta_mudahale: 81, top_kesme: 76, kafa_isabeti: 71, guc: 73 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "João Perez",
@@ -84,9 +145,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 80,
     yas: 23,
-    ana_ozellikler: { hiz: 70, sut: 55, pas: 72, dribbling: 70, defans: 80, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 55,
+      pas: 72,
+      dribbling: 70,
+      defans: 80,
+      fizik: 75,
+    },
     detaylar: { ayakta_mudahale: 80, top_kesme: 75, kafa_isabeti: 70, guc: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "David Costa",
@@ -95,9 +163,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "STP",
     reyting: 79,
     yas: 24,
-    ana_ozellikler: { hiz: 69, sut: 54, pas: 71, dribbling: 69, defans: 79, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 54,
+      pas: 71,
+      dribbling: 69,
+      defans: 79,
+      fizik: 74,
+    },
     detaylar: { ayakta_mudahale: 79, top_kesme: 74, kafa_isabeti: 69, guc: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Marco Silva",
@@ -106,9 +181,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SĞB",
     reyting: 78,
     yas: 25,
-    ana_ozellikler: { hiz: 68, sut: 53, pas: 70, dribbling: 68, defans: 78, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 53,
+      pas: 70,
+      dribbling: 68,
+      defans: 78,
+      fizik: 73,
+    },
     detaylar: { ayakta_mudahale: 78, top_kesme: 73, kafa_isabeti: 68, guc: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Carlos Silva",
@@ -117,9 +199,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SĞB",
     reyting: 77,
     yas: 26,
-    ana_ozellikler: { hiz: 67, sut: 52, pas: 69, dribbling: 67, defans: 77, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 52,
+      pas: 69,
+      dribbling: 67,
+      defans: 77,
+      fizik: 72,
+    },
     detaylar: { ayakta_mudahale: 77, top_kesme: 72, kafa_isabeti: 67, guc: 69 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Diego Perez",
@@ -128,9 +217,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SLB",
     reyting: 76,
     yas: 27,
-    ana_ozellikler: { hiz: 66, sut: 51, pas: 68, dribbling: 66, defans: 76, fizik: 71 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 51,
+      pas: 68,
+      dribbling: 66,
+      defans: 76,
+      fizik: 71,
+    },
     detaylar: { ayakta_mudahale: 76, top_kesme: 71, kafa_isabeti: 66, guc: 68 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Andre Martinez",
@@ -139,9 +235,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SLB",
     reyting: 75,
     yas: 28,
-    ana_ozellikler: { hiz: 65, sut: 50, pas: 67, dribbling: 65, defans: 75, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 50,
+      pas: 67,
+      dribbling: 65,
+      defans: 75,
+      fizik: 70,
+    },
     detaylar: { ayakta_mudahale: 75, top_kesme: 70, kafa_isabeti: 65, guc: 67 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Andre Martinez",
@@ -150,9 +253,21 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 29,
-    ana_ozellikler: { hiz: 59, sut: 54, pas: 69, dribbling: 66, defans: 74, fizik: 69 },
-    detaylar: { top_kesme: 74, ayakta_mudahale: 69, dayaniklilik: 71, kisa_pas: 66 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 54,
+      pas: 69,
+      dribbling: 66,
+      defans: 74,
+      fizik: 69,
+    },
+    detaylar: {
+      top_kesme: 74,
+      ayakta_mudahale: 69,
+      dayaniklilik: 71,
+      kisa_pas: 66,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Pedro Rodriguez",
@@ -161,9 +276,21 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 58, sut: 53, pas: 68, dribbling: 65, defans: 73, fizik: 68 },
-    detaylar: { top_kesme: 73, ayakta_mudahale: 68, dayaniklilik: 70, kisa_pas: 65 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 53,
+      pas: 68,
+      dribbling: 65,
+      defans: 73,
+      fizik: 68,
+    },
+    detaylar: {
+      top_kesme: 73,
+      ayakta_mudahale: 68,
+      dayaniklilik: 70,
+      kisa_pas: 65,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Pedro Costa",
@@ -172,9 +299,21 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MDO",
     reyting: 78,
     yas: 31,
-    ana_ozellikler: { hiz: 63, sut: 58, pas: 73, dribbling: 70, defans: 78, fizik: 73 },
-    detaylar: { top_kesme: 78, ayakta_mudahale: 73, dayaniklilik: 75, kisa_pas: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 58,
+      pas: 73,
+      dribbling: 70,
+      defans: 78,
+      fizik: 73,
+    },
+    detaylar: {
+      top_kesme: 78,
+      ayakta_mudahale: 73,
+      dayaniklilik: 75,
+      kisa_pas: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Diego Lopez",
@@ -183,9 +322,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 77,
     yas: 32,
-    ana_ozellikler: { hiz: 65, sut: 67, pas: 77, dribbling: 72, defans: 62, fizik: 67 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 67,
+      pas: 77,
+      dribbling: 72,
+      defans: 62,
+      fizik: 67,
+    },
     detaylar: { vizyon: 72, kisa_pas: 77, top_kontrol: 69, dayaniklilik: 65 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Diego Garcia",
@@ -194,9 +340,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MO",
     reyting: 77,
     yas: 33,
-    ana_ozellikler: { hiz: 65, sut: 67, pas: 77, dribbling: 72, defans: 62, fizik: 67 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 67,
+      pas: 77,
+      dribbling: 72,
+      defans: 62,
+      fizik: 67,
+    },
     detaylar: { vizyon: 72, kisa_pas: 77, top_kontrol: 69, dayaniklilik: 65 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Andre Rodriguez",
@@ -205,9 +358,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MOO",
     reyting: 76,
     yas: 34,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 66,
+      pas: 76,
+      dribbling: 71,
+      defans: 61,
+      fizik: 66,
+    },
     detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Andre Perez",
@@ -216,9 +376,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "MOO",
     reyting: 76,
     yas: 20,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 71, defans: 61, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 66,
+      pas: 76,
+      dribbling: 71,
+      defans: 61,
+      fizik: 66,
+    },
     detaylar: { vizyon: 71, kisa_pas: 76, top_kontrol: 68, dayaniklilik: 64 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Carlos Costa",
@@ -227,9 +394,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SĞO",
     reyting: 76,
     yas: 21,
-    ana_ozellikler: { hiz: 81, sut: 71, pas: 68, dribbling: 78, defans: 35, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 81,
+      sut: 71,
+      pas: 68,
+      dribbling: 78,
+      defans: 35,
+      fizik: 61,
+    },
     detaylar: { dribbling: 76, ceviklik: 79, orta_acma: 66, sprint: 81 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Marco Costa",
@@ -238,9 +412,16 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SĞO",
     reyting: 75,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 67, dribbling: 77, defans: 35, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 67,
+      dribbling: 77,
+      defans: 35,
+      fizik: 60,
+    },
     detaylar: { dribbling: 75, ceviklik: 78, orta_acma: 65, sprint: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Carlos Perez",
@@ -249,8 +430,15 @@ export const WESTPHALIA_YELLOWS_SQUAD = [
     mevki: "SLO",
     reyting: 75,
     yas: 23,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 67, dribbling: 77, defans: 35, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 67,
+      dribbling: 77,
+      defans: 35,
+      fizik: 60,
+    },
     detaylar: { dribbling: 75, ceviklik: 78, orta_acma: 65, sprint: 80 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

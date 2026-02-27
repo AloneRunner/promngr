@@ -46,6 +46,7 @@ export interface Player {
     lineupIndex: number; jerseyNumber?: number; playStyles: string[]; details?: any;
     moraleHistory?: { week: number; change: number; reason: string }[];
     playedThisWeek?: boolean; lastTransferWeek?: number; personality?: any;
+    careerHistory?: any[];
 }
 
 export interface TeamTactic {
@@ -94,7 +95,7 @@ export interface FinancialRecord {
 }
 
 export interface Team {
-    id: string; name: string; city: string; primaryColor: string; secondaryColor: string;
+    id: string; name: string; shortName?: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number; boardConfidence: number; leagueId: string; wages: number;
     facilities: { stadiumCapacity: number; stadiumLevel: number; trainingLevel: number; academyLevel: number; stadiumConstructionWeeks?: number; trainingConstructionWeeks?: number; academyConstructionWeeks?: number; };
     staff: { headCoachLevel: number; scoutLevel: number; physioLevel: number; };
