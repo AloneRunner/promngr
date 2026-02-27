@@ -6,11 +6,22 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "SNT",
     reyting: 82,
     yas: 28,
-    ana_ozellikler: { hiz: 77, sut: 83, pas: 81, dribbling: 82, defans: 42, fizik: 65 },
-    detaylar: {
-      penalti: 88, bitiricilik: 85, pozisyon: 86, vizyon: 83, kisa_pas: 82
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 83,
+      pas: 81,
+      dribbling: 82,
+      defans: 42,
+      fizik: 65,
     },
-    oyun_tarzlari: ["Lider", "Plase Şut", "Penaltı Uzmanı"]
+    detaylar: {
+      penalti: 88,
+      bitiricilik: 85,
+      pozisyon: 86,
+      vizyon: 83,
+      kisa_pas: 82,
+    },
+    oyun_tarzlari: ["Plase Şut", "Penaltı Canavarı"],
   },
   {
     ad: "T. Kuboh",
@@ -19,11 +30,22 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "SĞO",
     reyting: 82,
     yas: 24,
-    ana_ozellikler: { hiz: 86, sut: 77, pas: 78, dribbling: 85, defans: 40, fizik: 64 },
-    detaylar: {
-      hizlanma: 89, ceviklik: 90, denge: 88, dribbling: 87, vizyon: 80
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 77,
+      pas: 78,
+      dribbling: 85,
+      defans: 40,
+      fizik: 64,
     },
-    oyun_tarzlari: ["Top Cambazı", "Teknik", "Seri"]
+    detaylar: {
+      hizlanma: 89,
+      ceviklik: 90,
+      denge: 88,
+      dribbling: 87,
+      vizyon: 80,
+    },
+    oyun_tarzlari: ["Top Cambazı", "İlk Dokunuş", "Seri"],
   },
   {
     ad: "B. Menden",
@@ -32,11 +54,21 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "MO",
     reyting: 81,
     yas: 28,
-    ana_ozellikler: { hiz: 70, sut: 80, pas: 82, dribbling: 81, defans: 65, fizik: 73 },
-    detaylar: {
-      uzaktan_sut: 84, frikik: 82, kisa_pas: 83, top_kontrol: 82
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 80,
+      pas: 82,
+      dribbling: 81,
+      defans: 65,
+      fizik: 73,
     },
-    oyun_tarzlari: ["Uzaktan Şut", "Duran Top"]
+    detaylar: {
+      uzaktan_sut: 84,
+      frikik: 82,
+      kisa_pas: 83,
+      top_kontrol: 82,
+    },
+    oyun_tarzlari: ["Uzaktan Şutör", "Ölü Top Uzmanı"],
   },
   {
     ad: "A. Remiroh",
@@ -45,11 +77,20 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "KL",
     reyting: 83,
     yas: 30,
-    ana_ozellikler: { hiz: 45, sut: 83, pas: 78, dribbling: 80, defans: 45, fizik: 84 },
-    detaylar: {
-      refleks: 85, pozisyon: 84, ucma: 82
+    ana_ozellikler: {
+      hiz: 45,
+      sut: 83,
+      pas: 78,
+      dribbling: 80,
+      defans: 45,
+      fizik: 84,
     },
-    oyun_tarzlari: []
+    detaylar: {
+      refleks: 85,
+      pozisyon: 84,
+      ucma: 82,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Zubeld",
@@ -58,11 +99,20 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "STP",
     reyting: 78,
     yas: 28,
-    ana_ozellikler: { hiz: 76, sut: 63, pas: 73, dribbling: 72, defans: 78, fizik: 81 },
-    detaylar: {
-      agresiflik: 84, top_kesme: 80, guc: 82
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 63,
+      pas: 73,
+      dribbling: 72,
+      defans: 78,
+      fizik: 81,
     },
-    oyun_tarzlari: ["Savaşçı"]
+    detaylar: {
+      agresiflik: 84,
+      top_kesme: 80,
+      guc: 82,
+    },
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "L. Sucicc",
@@ -71,11 +121,20 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "MO",
     reyting: 78,
     yas: 23,
-    ana_ozellikler: { hiz: 76, sut: 76, pas: 78, dribbling: 77, defans: 68, fizik: 72 },
-    detaylar: {
-      uzaktan_sut: 82, vizyon: 80, kisa_pas: 79
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 76,
+      pas: 78,
+      dribbling: 77,
+      defans: 68,
+      fizik: 72,
     },
-    oyun_tarzlari: ["Uzaktan Şut", "Genç Yetenek"]
+    detaylar: {
+      uzaktan_sut: 82,
+      vizyon: 80,
+      kisa_pas: 79,
+    },
+    oyun_tarzlari: ["Uzaktan Şutör"],
   },
   {
     ad: "S. Gomeze",
@@ -84,15 +143,22 @@ export const SAN_SEBASTIAN_SQUAD = [
     mevki: "SLO",
     reyting: 79,
     yas: 25,
-    ana_ozellikler: { hiz: 73, sut: 74, pas: 80, dribbling: 79, defans: 71, fizik: 65 },
-    detaylar: {
-      orta_acma: 83, kisa_pas: 81, teknik: 80
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 74,
+      pas: 80,
+      dribbling: 79,
+      defans: 71,
+      fizik: 65,
     },
-    oyun_tarzlari: ["Orta Uzmanı"]
-  }
+    detaylar: {
+      orta_acma: 83,
+      kisa_pas: 81,
+      teknik: 80,
+    },
+    oyun_tarzlari: ["Maestro"],
+  },
 ];
-
-
 
 export const SAN_SEBASTIAN_RESERVES = [
   {
@@ -102,9 +168,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SĞB",
     reyting: 79,
     yas: 33,
-    ana_ozellikler: { hiz: 78, sut: 60, pas: 72, dribbling: 74, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 60,
+      pas: 72,
+      dribbling: 74,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 88, liderlik: 82, agresiflik: 84 },
-    oyun_tarzlari: ["Savaşçı", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "S. Beckere", // Listede Osasuna'da da görünüyor, Sociedad'da ise buradan devam
@@ -113,9 +186,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SNT",
     reyting: 77,
     yas: 30,
-    ana_ozellikler: { hiz: 92, sut: 72, pas: 70, dribbling: 76, defans: 35, fizik: 71 },
+    ana_ozellikler: {
+      hiz: 92,
+      sut: 72,
+      pas: 70,
+      dribbling: 76,
+      defans: 35,
+      fizik: 71,
+    },
     detaylar: { hizlanma: 93, sprint: 91, guc: 75 },
-    oyun_tarzlari: ["Roket"]
+    oyun_tarzlari: ["Roket"],
   },
   {
     ad: "A. Zakhary",
@@ -124,9 +204,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "MO",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 78, sut: 71, pas: 74, dribbling: 72, defans: 53, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 71,
+      pas: 74,
+      dribbling: 72,
+      defans: 53,
+      fizik: 59,
+    },
     detaylar: { vizyon: 76, uzaktan_sut: 75, teknik: 78 },
-    oyun_tarzlari: ["Genç Yetenek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "U. Sadiqq",
@@ -135,9 +222,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SNT",
     reyting: 77,
     yas: 28,
-    ana_ozellikler: { hiz: 82, sut: 76, pas: 62, dribbling: 71, defans: 30, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 76,
+      pas: 62,
+      dribbling: 71,
+      defans: 30,
+      fizik: 76,
+    },
     detaylar: { guc: 84, bitiricilik: 77 },
-    oyun_tarzlari: ["Güçlü"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "A. Munnoze",
@@ -146,9 +240,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SLB",
     reyting: 75,
     yas: 28,
-    ana_ozellikler: { hiz: 75, sut: 54, pas: 70, dribbling: 73, defans: 72, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 54,
+      pas: 70,
+      dribbling: 73,
+      defans: 72,
+      fizik: 70,
+    },
     detaylar: { orta_acma: 76, dayaniklilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Eluston",
@@ -157,9 +258,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "STP",
     reyting: 77,
     yas: 31,
-    ana_ozellikler: { hiz: 62, sut: 39, pas: 63, dribbling: 60, defans: 76, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 39,
+      pas: 63,
+      dribbling: 60,
+      defans: 76,
+      fizik: 76,
+    },
     detaylar: { liderlik: 80, markaj: 78 },
-    oyun_tarzlari: ["Lider"]
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Martines",
@@ -168,9 +276,22 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "KL",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-    detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 72,
+    },
+    detaylar: {
+      ucma: 62,
+      refleks: 72,
+      vurus: 67,
+      pozisyon: 64,
+      top_kontrol: 60,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Pereze",
@@ -179,9 +300,22 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "KL",
     reyting: 70,
     yas: 21,
-    ana_ozellikler: { hiz: 60, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 70 },
-    detaylar: { ucma: 60, refleks: 70, vurus: 65, pozisyon: 62, top_kontrol: 58 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 60,
+      refleks: 70,
+      vurus: 65,
+      pozisyon: 62,
+      top_kontrol: 58,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Lopeze",
@@ -190,9 +324,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "STP",
     reyting: 69,
     yas: 22,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 44,
+      pas: 61,
+      dribbling: 59,
+      defans: 69,
+      fizik: 64,
+    },
     detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Lopeze",
@@ -201,9 +342,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "STP",
     reyting: 68,
     yas: 23,
-    ana_ozellikler: { hiz: 58, sut: 43, pas: 60, dribbling: 58, defans: 68, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 43,
+      pas: 60,
+      dribbling: 58,
+      defans: 68,
+      fizik: 63,
+    },
     detaylar: { ayakta_mudahale: 68, top_kesme: 63, kafa_isabeti: 58, guc: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Costas",
@@ -212,9 +360,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SĞB",
     reyting: 67,
     yas: 24,
-    ana_ozellikler: { hiz: 57, sut: 42, pas: 59, dribbling: 57, defans: 67, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 57,
+      sut: 42,
+      pas: 59,
+      dribbling: 57,
+      defans: 67,
+      fizik: 62,
+    },
     detaylar: { ayakta_mudahale: 67, top_kesme: 62, kafa_isabeti: 57, guc: 59 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Rodrigz",
@@ -223,9 +378,16 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "SLB",
     reyting: 66,
     yas: 25,
-    ana_ozellikler: { hiz: 56, sut: 41, pas: 58, dribbling: 56, defans: 66, fizik: 61 },
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 41,
+      pas: 58,
+      dribbling: 56,
+      defans: 66,
+      fizik: 61,
+    },
     detaylar: { ayakta_mudahale: 66, top_kesme: 61, kafa_isabeti: 56, guc: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Santoz",
@@ -234,9 +396,21 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "MDO",
     reyting: 65,
     yas: 26,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 57,
+      defans: 65,
+      fizik: 60,
+    },
+    detaylar: {
+      top_kesme: 65,
+      ayakta_mudahale: 60,
+      dayaniklilik: 62,
+      kisa_pas: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Sylva",
@@ -245,9 +419,21 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "MDO",
     reyting: 64,
     yas: 27,
-    ana_ozellikler: { hiz: 49, sut: 44, pas: 59, dribbling: 56, defans: 64, fizik: 59 },
-    detaylar: { top_kesme: 64, ayakta_mudahale: 59, dayaniklilik: 61, kisa_pas: 56 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 49,
+      sut: 44,
+      pas: 59,
+      dribbling: 56,
+      defans: 64,
+      fizik: 59,
+    },
+    detaylar: {
+      top_kesme: 64,
+      ayakta_mudahale: 59,
+      dayaniklilik: 61,
+      kisa_pas: 56,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Pereze",
@@ -256,9 +442,21 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "MDO",
     reyting: 63,
     yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 43, pas: 58, dribbling: 55, defans: 63, fizik: 58 },
-    detaylar: { top_kesme: 63, ayakta_mudahale: 58, dayaniklilik: 60, kisa_pas: 55 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 43,
+      pas: 58,
+      dribbling: 55,
+      defans: 63,
+      fizik: 58,
+    },
+    detaylar: {
+      top_kesme: 63,
+      ayakta_mudahale: 58,
+      dayaniklilik: 60,
+      kisa_pas: 55,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Pereze",
@@ -267,9 +465,15 @@ export const SAN_SEBASTIAN_RESERVES = [
     mevki: "MOO",
     reyting: 62,
     yas: 29,
-    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 52,
+      pas: 62,
+      dribbling: 57,
+      defans: 47,
+      fizik: 52,
+    },
     detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];
-

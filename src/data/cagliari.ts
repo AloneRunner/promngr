@@ -1,519 +1,520 @@
-
 export const CAGLIARI_ISLANDERS_SQUAD = [
-    {
-        ad: "G. Gaeta",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "MOO",
-        reyting: 76,
-        yas: 25,
-        ana_ozellikler: {
-            hiz: 74,
-            sut: 75,
-            pas: 74,
-            dribbling: 78,
-            defans: 55,
-            fizik: 72
-        },
-        detaylar: {
-            bitiricilik: 77,
-            top_kontrol: 80,
-            dribbling: 79,
-            ceviklik: 78
-        },
-        oyun_tarzlari: [
-            "Teknik",
-            "Gizli Forvet"
-        ]
+  {
+    ad: "G. Gaeta",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "MOO",
+    reyting: 76,
+    yas: 25,
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 75,
+      pas: 74,
+      dribbling: 78,
+      defans: 55,
+      fizik: 72,
     },
-    {
-        ad: "Y. Mina",
-        takim: "Cagliari Islanders",
-        uyruk: "Kolombiya",
-        mevki: "STP",
-        reyting: 76,
-        yas: 30,
-        ana_ozellikler: {
-            hiz: 50,
-            sut: 45,
-            pas: 60,
-            dribbling: 55,
-            defans: 78,
-            fizik: 84
-        },
-        detaylar: {
-            guc: 90,
-            agresiflik: 92,
-            kafa_isabeti: 82,
-            ayakta_mudahale: 78
-        },
-        oyun_tarzlari: [
-            "Hava Hakimi",
-            "Savaşçı"
-        ]
+    detaylar: {
+      bitiricilik: 77,
+      top_kontrol: 80,
+      dribbling: 79,
+      ceviklik: 78,
     },
-    {
-        ad: "Z. Luvum",
-        takim: "Cagliari Islanders",
-        uyruk: "Angola",
-        mevki: "SNT",
-        reyting: 75,
-        yas: 23,
-        ana_ozellikler: {
-            hiz: 88,
-            sut: 70,
-            pas: 65,
-            dribbling: 78,
-            defans: 35,
-            fizik: 70
-        },
-        detaylar: {
-            hizlanma: 90,
-            sprint: 86,
-            ceviklik: 85,
-            dribbling: 80
-        },
-        oyun_tarzlari: [
-            "Seri"
-        ]
+    oyun_tarzlari: ["Teknik", "Gizli Forvet"],
+  },
+  {
+    ad: "Y. Mina",
+    takim: "Cagliari Islanders",
+    uyruk: "Kolombiya",
+    mevki: "STP",
+    reyting: 76,
+    yas: 30,
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 55,
+      defans: 78,
+      fizik: 84,
     },
-    {
-        ad: "S. Scuff",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "KL",
-        reyting: 76,
-        yas: 29,
-        ana_ozellikler: {
-            hiz: 40,
-            sut: 77,
-            pas: 70,
-            dribbling: 65,
-            defans: 40,
-            fizik: 75
-        },
-        detaylar: {
-            refleks: 80,
-            ucma: 75
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      guc: 90,
+      agresiflik: 92,
+      kafa_isabeti: 82,
+      ayakta_mudahale: 78,
     },
-    {
-        ad: "R. Marin",
-        takim: "Cagliari Islanders",
-        uyruk: "Romanya",
-        mevki: "MO",
-        reyting: 75,
-        yas: 28,
-        ana_ozellikler: {
-            hiz: 68,
-            sut: 72,
-            pas: 76,
-            dribbling: 74,
-            defans: 65,
-            fizik: 70
-        },
-        detaylar: {
-            kisa_pas: 78,
-            vizyon: 77,
-            frikik: 76
-        },
-        oyun_tarzlari: [
-            "Oyun Kurucu"
-        ]
+    oyun_tarzlari: ["Hava Hakimi", "Savaşçı"],
+  },
+  {
+    ad: "Z. Luvum",
+    takim: "Cagliari Islanders",
+    uyruk: "Angola",
+    mevki: "SNT",
+    reyting: 75,
+    yas: 23,
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 70,
+      pas: 65,
+      dribbling: 78,
+      defans: 35,
+      fizik: 70,
     },
-    {
-        ad: "T. Augu",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "SLB",
-        reyting: 74,
-        yas: 31,
-        ana_ozellikler: {
-            hiz: 76,
-            sut: 60,
-            pas: 70,
-            dribbling: 72,
-            defans: 72,
-            fizik: 70
-        },
-        detaylar: {
-            orta_acma: 76,
-            dayaniklilik: 78
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      hizlanma: 90,
+      sprint: 86,
+      ceviklik: 85,
+      dribbling: 80,
     },
-    {
-        ad: "M. Prati",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "MDO",
-        reyting: 72,
-        yas: 21,
-        ana_ozellikler: {
-            hiz: 68,
-            sut: 60,
-            pas: 72,
-            dribbling: 70,
-            defans: 70,
-            fizik: 65
-        },
-        detaylar: {
-            vizyon: 74,
-            kisa_pas: 75
-        },
-        oyun_tarzlari: [
-            "Genç Yetenek"
-        ]
+    oyun_tarzlari: ["Seri"],
+  },
+  {
+    ad: "S. Scuff",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "KL",
+    reyting: 76,
+    yas: 29,
+    ana_ozellikler: {
+      hiz: 40,
+      sut: 77,
+      pas: 70,
+      dribbling: 65,
+      defans: 40,
+      fizik: 75,
     },
-    {
-        ad: "S. Luper",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "STP",
-        reyting: 75,
-        yas: 28,
-        ana_ozellikler: {
-            hiz: 65,
-            sut: 35,
-            pas: 60,
-            dribbling: 60,
-            defans: 76,
-            fizik: 77
-        },
-        detaylar: {
-            markaj: 78,
-            ayakta_mudahale: 77
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      refleks: 80,
+      ucma: 75,
     },
-    {
-        ad: "N. Zortea",
-        takim: "Cagliari Islanders",
-        uyruk: "Cezayir",
-        mevki: "SĞB",
-        reyting: 74,
-        yas: 26,
-        ana_ozellikler: {
-            hiz: 82,
-            sut: 55,
-            pas: 68,
-            dribbling: 70,
-            defans: 70,
-            fizik: 72
-        },
-        detaylar: {
-            sprint: 84,
-            orta_acma: 72
-        },
-        oyun_tarzlari: []
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "R. Marin",
+    takim: "Cagliari Islanders",
+    uyruk: "Romanya",
+    mevki: "MO",
+    reyting: 75,
+    yas: 28,
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 72,
+      pas: 76,
+      dribbling: 74,
+      defans: 65,
+      fizik: 70,
     },
-    {
-        ad: "R. Piccoli",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "SNT",
-        reyting: 73,
-        yas: 24,
-        ana_ozellikler: {
-            hiz: 76,
-            sut: 74,
-            pas: 60,
-            dribbling: 70,
-            defans: 30,
-            fizik: 76
-        },
-        detaylar: {
-            bitiricilik: 75,
-            kafa_isabeti: 74
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      kisa_pas: 78,
+      vizyon: 77,
+      frikik: 76,
     },
-    {
-        ad: "A. Obert",
-        takim: "Cagliari Islanders",
-        uyruk: "Slovakya",
-        mevki: "STP",
-        reyting: 70,
-        yas: 23,
-        ana_ozellikler: {
-            hiz: 68,
-            sut: 30,
-            pas: 60,
-            dribbling: 60,
-            defans: 71,
-            fizik: 72
-        },
-        detaylar: {
-            markaj: 73,
-            ayakta_mudahale: 72
-        },
-        oyun_tarzlari: []
+    oyun_tarzlari: ["Oyun Kurucu"],
+  },
+  {
+    ad: "T. Augu",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "SLB",
+    reyting: 74,
+    yas: 31,
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 60,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 70,
     },
-    {
-        ad: "G. Lapad",
-        takim: "Cagliari Islanders",
-        uyruk: "Peru",
-        mevki: "SNT",
-        reyting: 74,
-        yas: 35,
-        ana_ozellikler: {
-            hiz: 68,
-            sut: 76,
-            pas: 65,
-            dribbling: 72,
-            defans: 40,
-            fizik: 72
-        },
-        detaylar: {
-            bitiricilik: 78,
-            penalti: 80
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      orta_acma: 76,
+      dayaniklilik: 78,
     },
-    {
-        ad: "A. Bell",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "SNT",
-        forma_no: 9,
-        reyting: 77,
-        yas: 31,
-        ana_ozellikler: {
-            hiz: 68,
-            sut: 76,
-            pas: 58,
-            dribbling: 74,
-            defans: 38,
-            fizik: 80
-        },
-        detaylar: {
-            guc: 84,
-            agresiflik: 88,
-            bitiricilik: 79,
-            pozisyon: 82,
-            voleler: 80,
-            penalti: 80
-        },
-        oyun_tarzlari: [
-            "Savaşçı",
-            "Fırsatçı",
-            "Amansız"
-        ]
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "M. Prati",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "MDO",
+    reyting: 72,
+    yas: 21,
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 60,
+      pas: 72,
+      dribbling: 70,
+      defans: 70,
+      fizik: 65,
     },
-    {
-        ad: "J. Mine",
-        takim: "Cagliari Islanders",
-        uyruk: "Kolombiya",
-        mevki: "STP",
-        forma_no: 26,
-        reyting: 77,
-        yas: 31,
-        ana_ozellikler: {
-            hiz: 34,
-            sut: 50,
-            pas: 52,
-            dribbling: 55,
-            defans: 77,
-            fizik: 84
-        },
-        detaylar: {
-            guc: 90,
-            agresiflik: 92,
-            kafa_isabeti: 85,
-            ayakta_mudahale: 78,
-            top_kesme: 76,
-            ziplama: 70
-        },
-        oyun_tarzlari: [
-            "Tank",
-            "Hava Hakimi",
-            "Sert Müdahale"
-        ]
+    detaylar: {
+      vizyon: 74,
+      kisa_pas: 75,
     },
-    {
-        ad: "M. Folor",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "MOO",
-        forma_no: 90,
-        reyting: 75,
-        yas: 27,
-        ana_ozellikler: {
-            hiz: 73,
-            sut: 76,
-            pas: 73,
-            dribbling: 74,
-            defans: 71,
-            fizik: 76
-        },
-        detaylar: {
-            sut_gucu: 84,
-            uzaktan_sut: 82,
-            guc: 80,
-            ziplama: 82
-        },
-        oyun_tarzlari: [
-            "Kuvvetli Şut"
-        ]
+    oyun_tarzlari: ["Genç Yetenek"],
+  },
+  {
+    ad: "S. Luper",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "STP",
+    reyting: 75,
+    yas: 28,
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 35,
+      pas: 60,
+      dribbling: 60,
+      defans: 76,
+      fizik: 77,
     },
-    {
-        ad: "S. Espo",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "SNT",
-        forma_no: 19,
-        reyting: 75,
-        yas: 23,
-        ana_ozellikler: {
-            hiz: 75,
-            sut: 76,
-            pas: 74,
-            dribbling: 77,
-            defans: 35,
-            fizik: 62
-        },
-        detaylar: {
-            frikik: 82,
-            bitiricilik: 77,
-            top_kontrol: 78,
-            ceviklik: 76
-        },
-        oyun_tarzlari: [
-            "Duran Top",
-            "Teknik"
-        ]
+    detaylar: {
+      markaj: 78,
+      ayakta_mudahale: 77,
     },
-    {
-        ad: "G. Zappa",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "SĞB",
-        forma_no: 28,
-        reyting: 74,
-        yas: 25,
-        ana_ozellikler: {
-            hiz: 75,
-            sut: 62,
-            pas: 65,
-            dribbling: 69,
-            defans: 69,
-            fizik: 71
-        },
-        detaylar: {
-            sprint: 76,
-            dayaniklilik: 78,
-            orta_acma: 70
-        },
-        oyun_tarzlari: []
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "N. Zortea",
+    takim: "Cagliari Islanders",
+    uyruk: "Cezayir",
+    mevki: "SĞB",
+    reyting: 74,
+    yas: 26,
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 55,
+      pas: 68,
+      dribbling: 70,
+      defans: 70,
+      fizik: 72,
     },
-    {
-        ad: "Z. Luvu",
-        takim: "Cagliari Islanders",
-        uyruk: "Angola",
-        mevki: "SNT",
-        forma_no: 77,
-        reyting: 71,
-        yas: 23,
-        ana_ozellikler: {
-            hiz: 86,
-            sut: 69,
-            pas: 64,
-            dribbling: 76,
-            defans: 44,
-            fizik: 66
-        },
-        detaylar: {
-            hizlanma: 88,
-            sprint: 85,
-            ceviklik: 86,
-            dribbling: 77
-        },
-        oyun_tarzlari: [
-            "Hızlı Forvet"
-        ]
+    detaylar: {
+      sprint: 84,
+      orta_acma: 72,
     },
-    {
-        ad: "S. Kilic",
-        takim: "Cagliari Islanders",
-        uyruk: "Türkiye",
-        mevki: "SNT",
-        forma_no: 18,
-        reyting: 70,
-        yas: 20,
-        ana_ozellikler: {
-            hiz: 77,
-            sut: 70,
-            pas: 63,
-            dribbling: 72,
-            defans: 31,
-            fizik: 71
-        },
-        detaylar: {
-            guc: 76,
-            bitiricilik: 73,
-            potansiyel: 85,
-            denge: 75
-        },
-        oyun_tarzlari: [
-            "Genç Yetenek",
-            "Güçlü"
-        ]
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "R. Piccoli",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "SNT",
+    reyting: 73,
+    yas: 24,
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 74,
+      pas: 60,
+      dribbling: 70,
+      defans: 30,
+      fizik: 76,
     },
-    {
-        ad: "E. Capr",
-        takim: "Cagliari Islanders",
-        uyruk: "İtalya",
-        mevki: "KL",
-        forma_no: 1,
-        reyting: 76,
-        yas: 24,
-        ana_ozellikler: {
-            hiz: 51,
-            sut: 75,
-            pas: 72,
-            dribbling: 72,
-            defans: 51,
-            fizik: 74
-        },
-        detaylar: {
-            refleks: 78,
-            ucma: 76,
-            pozisyon: 74
-        },
-        oyun_tarzlari: []
+    detaylar: {
+      bitiricilik: 75,
+      kafa_isabeti: 74,
     },
-    {
-        ad: "C. Silva",
-        takim: "Cagliari Islanders",
-        uyruk: "Brezilya",
-        mevki: "KL",
-        reyting: 72,
-        yas: 20,
-        ana_ozellikler: { hiz: 62, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 72 },
-        detaylar: { ucma: 62, refleks: 72, vurus: 67, pozisyon: 64, top_kontrol: 60 },
-        oyun_tarzlari: []
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "A. Obert",
+    takim: "Cagliari Islanders",
+    uyruk: "Slovakya",
+    mevki: "STP",
+    reyting: 70,
+    yas: 23,
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 30,
+      pas: 60,
+      dribbling: 60,
+      defans: 71,
+      fizik: 72,
     },
-    {
-        ad: "D. Silva",
-        takim: "Cagliari Islanders",
-        uyruk: "Arjantin",
-        mevki: "SLB",
-        reyting: 70,
-        yas: 21,
-        ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
-        detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-        oyun_tarzlari: []
+    detaylar: {
+      markaj: 73,
+      ayakta_mudahale: 72,
     },
-    {
-        ad: "M. Rodrig",
-        takim: "Cagliari Islanders",
-        uyruk: "İspanya",
-        mevki: "MDO",
-        reyting: 69,
-        yas: 22,
-        ana_ozellikler: { hiz: 54, sut: 49, pas: 64, dribbling: 61, defans: 69, fizik: 64 },
-        detaylar: { top_kesme: 69, ayakta_mudahale: 64, dayaniklilik: 66, kisa_pas: 61 },
-        oyun_tarzlari: []
-    }
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "G. Lapad",
+    takim: "Cagliari Islanders",
+    uyruk: "Peru",
+    mevki: "SNT",
+    reyting: 74,
+    yas: 35,
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 76,
+      pas: 65,
+      dribbling: 72,
+      defans: 40,
+      fizik: 72,
+    },
+    detaylar: {
+      bitiricilik: 78,
+      penalti: 80,
+    },
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "A. Bell",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "SNT",
+    forma_no: 9,
+    reyting: 77,
+    yas: 31,
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 76,
+      pas: 58,
+      dribbling: 74,
+      defans: 38,
+      fizik: 80,
+    },
+    detaylar: {
+      guc: 84,
+      agresiflik: 88,
+      bitiricilik: 79,
+      pozisyon: 82,
+      voleler: 80,
+      penalti: 80,
+    },
+    oyun_tarzlari: ["Savaşçı", "Fırsatçı", "Amansız"],
+  },
+  {
+    ad: "J. Mine",
+    takim: "Cagliari Islanders",
+    uyruk: "Kolombiya",
+    mevki: "STP",
+    forma_no: 26,
+    reyting: 77,
+    yas: 31,
+    ana_ozellikler: {
+      hiz: 34,
+      sut: 50,
+      pas: 52,
+      dribbling: 55,
+      defans: 77,
+      fizik: 84,
+    },
+    detaylar: {
+      guc: 90,
+      agresiflik: 92,
+      kafa_isabeti: 85,
+      ayakta_mudahale: 78,
+      top_kesme: 76,
+      ziplama: 70,
+    },
+    oyun_tarzlari: ["Tank", "Hava Hakimi", "Sert Müdahale"],
+  },
+  {
+    ad: "M. Folor",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "MOO",
+    forma_no: 90,
+    reyting: 75,
+    yas: 27,
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 76,
+      pas: 73,
+      dribbling: 74,
+      defans: 71,
+      fizik: 76,
+    },
+    detaylar: {
+      sut_gucu: 84,
+      uzaktan_sut: 82,
+      guc: 80,
+      ziplama: 82,
+    },
+    oyun_tarzlari: ["Kuvvetli Şut"],
+  },
+  {
+    ad: "S. Espo",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "SNT",
+    forma_no: 19,
+    reyting: 75,
+    yas: 23,
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 76,
+      pas: 74,
+      dribbling: 77,
+      defans: 35,
+      fizik: 62,
+    },
+    detaylar: {
+      frikik: 82,
+      bitiricilik: 77,
+      top_kontrol: 78,
+      ceviklik: 76,
+    },
+    oyun_tarzlari: ["Duran Top", "Teknik"],
+  },
+  {
+    ad: "G. Zappa",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "SĞB",
+    forma_no: 28,
+    reyting: 74,
+    yas: 25,
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 62,
+      pas: 65,
+      dribbling: 69,
+      defans: 69,
+      fizik: 71,
+    },
+    detaylar: {
+      sprint: 76,
+      dayaniklilik: 78,
+      orta_acma: 70,
+    },
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "Z. Luvu",
+    takim: "Cagliari Islanders",
+    uyruk: "Angola",
+    mevki: "SNT",
+    forma_no: 77,
+    reyting: 71,
+    yas: 23,
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 69,
+      pas: 64,
+      dribbling: 76,
+      defans: 44,
+      fizik: 66,
+    },
+    detaylar: {
+      hizlanma: 88,
+      sprint: 85,
+      ceviklik: 86,
+      dribbling: 77,
+    },
+    oyun_tarzlari: ["Hızlı Forvet"],
+  },
+  {
+    ad: "S. Kilic",
+    takim: "Cagliari Islanders",
+    uyruk: "Türkiye",
+    mevki: "SNT",
+    forma_no: 18,
+    reyting: 70,
+    yas: 20,
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 70,
+      pas: 63,
+      dribbling: 72,
+      defans: 31,
+      fizik: 71,
+    },
+    detaylar: {
+      guc: 76,
+      bitiricilik: 73,
+      potansiyel: 85,
+      denge: 75,
+    },
+    oyun_tarzlari: ["Genç Yetenek", "Güçlü"],
+  },
+  {
+    ad: "E. Capr",
+    takim: "Cagliari Islanders",
+    uyruk: "İtalya",
+    mevki: "KL",
+    forma_no: 1,
+    reyting: 76,
+    yas: 24,
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 75,
+      pas: 72,
+      dribbling: 72,
+      defans: 51,
+      fizik: 74,
+    },
+    detaylar: {
+      refleks: 78,
+      ucma: 76,
+      pozisyon: 74,
+    },
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "C. Silva",
+    takim: "Cagliari Islanders",
+    uyruk: "Brezilya",
+    mevki: "KL",
+    reyting: 72,
+    yas: 20,
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 72,
+    },
+    detaylar: {
+      ucma: 62,
+      refleks: 72,
+      vurus: 67,
+      pozisyon: 64,
+      top_kontrol: 60,
+    },
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "D. Silva",
+    takim: "Cagliari Islanders",
+    uyruk: "Arjantin",
+    mevki: "SLB",
+    reyting: 70,
+    yas: 21,
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 45,
+      pas: 62,
+      dribbling: 60,
+      defans: 70,
+      fizik: 65,
+    },
+    detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
+    oyun_tarzlari: [],
+  },
+  {
+    ad: "M. Rodrig",
+    takim: "Cagliari Islanders",
+    uyruk: "İspanya",
+    mevki: "MDO",
+    reyting: 69,
+    yas: 22,
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 49,
+      pas: 64,
+      dribbling: 61,
+      defans: 69,
+      fizik: 64,
+    },
+    detaylar: {
+      top_kesme: 69,
+      ayakta_mudahale: 64,
+      dayaniklilik: 66,
+      kisa_pas: 61,
+    },
+    oyun_tarzlari: [],
+  },
 ];

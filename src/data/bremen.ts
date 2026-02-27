@@ -6,9 +6,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "KL",
     reyting: 77,
     yas: 32,
-    ana_ozellikler: { hiz: 50, sut: 16, pas: 58, dribbling: 22, defans: 22, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 16,
+      pas: 58,
+      dribbling: 22,
+      defans: 22,
+      fizik: 78,
+    },
     detaylar: { refleks: 82, ucma: 80, pozisyon: 79 },
-    oyun_tarzlari: ["Refleks Ustası"]
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Friedl",
@@ -17,9 +24,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "STP",
     reyting: 76,
     yas: 26,
-    ana_ozellikler: { hiz: 68, sut: 48, pas: 72, dribbling: 68, defans: 80, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 48,
+      pas: 72,
+      dribbling: 68,
+      defans: 80,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 82, top_surme: 78, liderlik: 78 },
-    oyun_tarzlari: ["Top Süren Stoper", "Lider", "Kaptan"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "A. Pieper",
@@ -28,9 +42,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 72, sut: 46, pas: 66, dribbling: 64, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 46,
+      pas: 66,
+      dribbling: 64,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 79, guc: 82 },
-    oyun_tarzlari: ["Güçlü"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "L. Mai",
@@ -39,9 +60,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 70, dribbling: 72, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 70,
+      dribbling: 72,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 80, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Jung",
@@ -50,9 +78,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SLB",
     reyting: 75,
     yas: 33,
-    ana_ozellikler: { hiz: 74, sut: 58, pas: 74, dribbling: 74, defans: 76, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 58,
+      pas: 74,
+      dribbling: 74,
+      defans: 76,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 78, dayaniklilik: 80, liderlik: 78 },
-    oyun_tarzlari: ["Lider"]
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Bittencourt",
@@ -61,9 +96,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MOO",
     reyting: 77,
     yas: 30,
-    ana_ozellikler: { hiz: 76, sut: 76, pas: 80, dribbling: 80, defans: 40, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 76,
+      pas: 80,
+      dribbling: 80,
+      defans: 40,
+      fizik: 66,
+    },
     detaylar: { vizyon: 84, dribbling: 82, serbest_vurus: 80 },
-    oyun_tarzlari: ["Teknik", "Oyun Kurucu"]
+    oyun_tarzlari: ["İlk Dokunuş", "Maestro"],
   },
   {
     ad: "J. Stage",
@@ -72,9 +114,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 28,
-    ana_ozellikler: { hiz: 76, sut: 78, pas: 74, dribbling: 74, defans: 58, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 78,
+      pas: 74,
+      dribbling: 74,
+      defans: 58,
+      fizik: 78,
+    },
     detaylar: { uzaktan_sut: 82, dayaniklilik: 82, bitiricilik: 80 },
-    oyun_tarzlari: ["Uzaktan Vuruş", "Kutu Kutu"]
+    oyun_tarzlari: ["Uzaktan Şutör", "Amansız"],
   },
   {
     ad: "C. Groß",
@@ -83,9 +132,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MDO",
     reyting: 76,
     yas: 33,
-    ana_ozellikler: { hiz: 68, sut: 68, pas: 78, dribbling: 74, defans: 78, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 68,
+      pas: 78,
+      dribbling: 74,
+      defans: 78,
+      fizik: 76,
+    },
     detaylar: { top_kesme: 80, vizyon: 80, liderlik: 80 },
-    oyun_tarzlari: ["Kırıcı", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Ducksch",
@@ -94,9 +150,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SNT",
     reyting: 77,
     yas: 30,
-    ana_ozellikler: { hiz: 74, sut: 82, pas: 70, dribbling: 76, defans: 30, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 82,
+      pas: 70,
+      dribbling: 76,
+      defans: 30,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 86, pozisyon: 84, asist: 78 },
-    oyun_tarzlari: ["Fırsatçı Golcü", "Plase Şut"]
+    oyun_tarzlari: ["İleride Bekleyen", "Plase Şut"],
   },
   {
     ad: "N. Füllkrug",
@@ -105,9 +168,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SNT",
     reyting: 78,
     yas: 31,
-    ana_ozellikler: { hiz: 72, sut: 84, pas: 66, dribbling: 72, defans: 34, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 84,
+      pas: 66,
+      dribbling: 72,
+      defans: 34,
+      fizik: 82,
+    },
     detaylar: { kafa_isabeti: 90, bitiricilik: 86, guc: 84 },
-    oyun_tarzlari: ["Kule", "Hedef Adam", "Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "M. Weiser",
@@ -116,9 +186,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SĞO",
     reyting: 76,
     yas: 31,
-    ana_ozellikler: { hiz: 82, sut: 74, pas: 76, dribbling: 78, defans: 36, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 74,
+      pas: 76,
+      dribbling: 78,
+      defans: 36,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 82, hizlanma: 84 },
-    oyun_tarzlari: ["Orta Açma Ustası"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "R. Schmid",
@@ -127,9 +204,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 74, sut: 74, pas: 76, dribbling: 76, defans: 50, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 74,
+      pas: 76,
+      dribbling: 76,
+      defans: 50,
+      fizik: 70,
+    },
     detaylar: { vizyon: 78, kisa_pas: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Agu",
@@ -138,9 +222,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 84, sut: 58, pas: 70, dribbling: 74, defans: 70, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 58,
+      pas: 70,
+      dribbling: 74,
+      defans: 70,
+      fizik: 72,
+    },
     detaylar: { sprint: 86, hizlanma: 86 },
-    oyun_tarzlari: ["Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "O. Burke",
@@ -149,9 +240,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SĞO",
     reyting: 73,
     yas: 27,
-    ana_ozellikler: { hiz: 88, sut: 70, pas: 66, dribbling: 76, defans: 26, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 70,
+      pas: 66,
+      dribbling: 76,
+      defans: 26,
+      fizik: 76,
+    },
     detaylar: { hizlanma: 90, sprint: 89 },
-    oyun_tarzlari: ["Sprint Ustası"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "N. Stark",
@@ -160,9 +258,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 29,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 66, dribbling: 62, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 66,
+      dribbling: 62,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { markaj: 79, guc: 81 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Weiser",
@@ -171,9 +276,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 80, sut: 58, pas: 72, dribbling: 74, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 76, sprint: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Zetterer",
@@ -182,9 +294,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 76, ucma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Njinmah",
@@ -193,9 +312,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 22,
-    ana_ozellikler: { hiz: 86, sut: 70, pas: 68, dribbling: 76, defans: 24, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 70,
+      pas: 68,
+      dribbling: 76,
+      defans: 24,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 88, dribbling: 78 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "L. Lynen",
@@ -204,9 +330,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 66, pas: 74, dribbling: 72, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Veljkovic",
@@ -215,9 +348,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 66, sut: 48, pas: 70, dribbling: 66, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 48,
+      pas: 70,
+      dribbling: 66,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_surme: 76, kafa_isabeti: 78 },
-    oyun_tarzlari: ["Top Süren Stoper"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "S. Malatini",
@@ -226,9 +366,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "MDO",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 74, dribbling: 72, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { dayaniklilik: 76, kisa_pas: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Woltemade",
@@ -237,9 +384,16 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 76, sut: 74, pas: 58, dribbling: 70, defans: 26, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 74,
+      pas: 58,
+      dribbling: 70,
+      defans: 26,
+      fizik: 78,
+    },
     detaylar: { kafa_isabeti: 78, bitiricilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Köhlert",
@@ -248,8 +402,15 @@ export const BREMEN_RIVER_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 82, sut: 68, pas: 70, dribbling: 76, defans: 26, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 68,
+      pas: 70,
+      dribbling: 76,
+      defans: 26,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 84, orta_acma: 74 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

@@ -22,7 +22,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, bannerPosition = 'top'
     }, []);
 
     return (
-        <div className="w-full h-full relative bg-slate-950 flex flex-col">
+        <div className="w-full h-full relative bg-transparent flex flex-col">
             {/* Üst Reklam Boşluğu - Sadece reklam görünürse açılır */}
             {isBannerVisible && bannerPosition === 'top' && (
                 <div className="w-full h-[50px] bg-black/50 shrink-0 transition-all duration-300" />

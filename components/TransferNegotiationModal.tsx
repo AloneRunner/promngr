@@ -17,6 +17,8 @@ type NegotiationState = 'INITIAL' | 'NEGOTIATING' | 'AGREED' | 'REJECTED' | 'WAL
 
 export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> = ({ player, userTeam, sellingTeam, onClose, onComplete, t }) => {
     const [offer, setOffer] = useState<number>(player.value);
+    // Wage offer: start at player's current wage (minimum sensible offer)
+    const [offeredWage, setOfferedWage] = useState<number>(Math.ceil((player.wage || 1000) * 1.1));
     const [status, setStatus] = useState<NegotiationState>('INITIAL');
     const [clubMessage, setClubMessage] = useState<string>('');
     const [patience, setPatience] = useState<number>(3); // 3 attempts before walkout
@@ -25,18 +27,21 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
 
     // Calculate player willingness based on league reputation, team rep, etc.
     useEffect(() => {
-        const fromLeague = sellingTeam?.leagueId || 'en'; // Default to top league if unknown
-        const fromTeamRep = sellingTeam?.reputation || 8000;
+        // Use neutral defaults when selling team is unknown (DB players from other leagues).
+        // Defaulting to 'en'/8000 unfairly maximised penalties for most market players.
+        const fromLeague = sellingTeam?.leagueId || userTeam.leagueId || 'tr';
+        const fromTeamRep = sellingTeam?.reputation || userTeam.reputation;
 
         const willingness = calculateTransferWillingness(
-            { overall: player.overall, age: player.age, potential: player.potential, morale: player.morale },
+            { overall: player.overall, age: player.age, potential: player.potential, morale: player.morale, wage: player.wage },
             fromTeamRep,
             userTeam.reputation,
             fromLeague,
-            userTeam.leagueId || 'tr'
+            userTeam.leagueId || 'tr',
+            offeredWage > 0 ? offeredWage : undefined
         );
         setPlayerWillingness(willingness);
-    }, [player, userTeam, sellingTeam]);
+    }, [player, userTeam, sellingTeam, offeredWage]);
 
     // Initial calculation of AI asking price
     useEffect(() => {
@@ -76,11 +81,11 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
             setClubMessage(t.negotiationOpen
                 .replace('{name}', player.lastName)
                 .replace('{value}', `€${(player.value / 1000000).toFixed(1)}M`));
+            setPatience(3);
         } else {
             const messages = t.negotiationUnlisted as string[];
             setClubMessage(messages[Math.floor(Math.random() * messages.length)].replace('{name}', player.lastName));
-            // Reduce patience for unlisted players
-            setPatience(2);
+            setPatience(3); // Was 2, now 3 — gives user a fair chance to negotiate up
         }
     }, [player, t, playerWillingness]);
 
@@ -91,25 +96,28 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
             return;
         }
 
-        // For unlisted players, they are stricter
-        const strictness = !player.isTransferListed ? 1.1 : 1.0;
-
         if (amount >= requiredPrice) {
             setStatus('AGREED');
             setClubMessage(!player.isTransferListed ? t.negotiationAcceptUnlisted : t.negotiationAccept);
-        } else if (amount >= requiredPrice * 0.85) {
-            // Close, counter offer
+        } else if (amount >= requiredPrice * 0.9) {
+            // Very close — counter offer, NO patience cost (good faith negotiation)
             const counter = Math.floor((amount + requiredPrice) / 2);
             setStatus('NEGOTIATING');
             setClubMessage(t.negotiationCounter.replace('{amount}', `€${(counter / 1000000).toFixed(2)}M`));
-            setRequiredPrice(counter); // AI compromises
+            setRequiredPrice(counter);
+            // No patience reduction when within 10% — keeps negotiation alive
+        } else if (amount >= requiredPrice * 0.75) {
+            // Reasonable offer — counter, costs 1 patience
+            const counter = Math.floor(requiredPrice * 0.95);
+            setStatus('NEGOTIATING');
+            setClubMessage(t.negotiationCounter.replace('{amount}', `€${(counter / 1000000).toFixed(2)}M`));
+            setRequiredPrice(counter);
             setPatience(p => p - 1);
         } else {
-            // Reject
+            // Low offer — hard reject, costs 1 patience
             const rejectMsgs = !player.isTransferListed
                 ? (t.negotiationRejectUnlisted as string[])
                 : (t.negotiationReject as string[]);
-
             setStatus('NEGOTIATING');
             setClubMessage(rejectMsgs[Math.floor(Math.random() * rejectMsgs.length)]);
             setPatience(p => p - 1);
@@ -187,25 +195,46 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
 
                 {/* Negotiation Controls */}
                 {status !== 'AGREED' && status !== 'WALKOUT' && status !== 'PLAYER_REFUSED' && (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
+                        {/* Transfer Fee */}
                         <div>
                             <label className="block text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between">
-                                <span>{t.value || 'Your Offer'}</span>
+                                <span>{t.value || 'Transfer Fee'}</span>
                                 <span className={userTeam.budget < offer ? 'text-red-500' : 'text-emerald-500'}>{t.clubBudget}: {formatMoney(userTeam.budget)}</span>
                             </label>
                             <div className="flex items-center gap-2">
                                 <button onClick={() => setOffer(Math.max(0, offer - 500000))} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">-</button>
                                 <div className="flex-1 relative">
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" size={16} />
-                                    <div
-                                        className="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white font-mono font-bold text-center"
-                                    >
+                                    <div className="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white font-mono font-bold text-center">
                                         €{Math.round(offer).toLocaleString('tr-TR')}
                                     </div>
                                 </div>
                                 <button onClick={() => setOffer(offer + 500000)} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">+</button>
                             </div>
                             {userTeam.budget < offer && <div className="text-[10px] text-red-500 mt-1 font-bold">⚠️ {t.insufficientFunds}</div>}
+                        </div>
+
+                        {/* Weekly Wage Offer */}
+                        <div>
+                            <label className="block text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between">
+                                <span>{t.weeklyWageOffer || 'Weekly Wage'}</span>
+                                <span className={`text-xs font-mono ${offeredWage >= (player.wage || 0) * 2 ? 'text-emerald-400' : offeredWage >= (player.wage || 0) * 1.5 ? 'text-yellow-400' : 'text-slate-400'}`}>
+                                    {offeredWage >= (player.wage || 0) * 2 ? '💰 2x+' : offeredWage >= (player.wage || 0) * 1.5 ? '⬆ 1.5x' : ''}
+                                    {t.currentWageLabel || 'Current'}: €{(player.wage || 0).toLocaleString()}/wk
+                                </span>
+                            </label>
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => setOfferedWage(w => Math.max(player.wage || 250, w - 250))} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">-</button>
+                                <div className="flex-1 bg-slate-950 border border-slate-700 rounded-lg py-3 px-4 text-white font-mono font-bold text-center">
+                                    €{offeredWage.toLocaleString()}<span className="text-slate-500 text-xs">/wk</span>
+                                </div>
+                                <button onClick={() => setOfferedWage(w => w + 250)} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">+</button>
+                            </div>
+                            {/* Willingness hint */}
+                            <div className={`text-[10px] mt-1 ${playerWillingness >= 60 ? 'text-emerald-400' : playerWillingness >= 35 ? 'text-yellow-400' : 'text-orange-400'}`}>
+                                {t.playerInterest || 'Player interest'}: {playerWillingness}% — {playerWillingness >= 60 ? (t.interestedLabel || 'Interested') : playerWillingness >= 35 ? (t.hesitantLabel || 'Hesitant') : (t.reluctantLabel || 'Reluctant')}
+                            </div>
                         </div>
 
                         <div className="flex gap-3">

@@ -25,9 +25,9 @@ const getCupPrizes = (t: any, gameState: GameState) => {
         prizes.championsLeague = {
             name: t.championsLeagueLabel || 'Champions League',
             rounds: [
-                { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 9600000 },
-                { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 10600000 },
-                { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 12500000 },
+                { round: t.roundOf16ToQF || t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 9600000 },
+                { round: t.qfToSf || t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 10600000 },
+                { round: t.sfToFinal || t.sfToFinalLabel || 'Semi-Final → Final', prize: 12500000 },
                 { round: t.championshipLabel || 'Championship', prize: 20000000 }
             ],
             total: 52700000
@@ -38,9 +38,9 @@ const getCupPrizes = (t: any, gameState: GameState) => {
         prizes.uefaCup = {
             name: t.europaLeagueLabel || 'Europa League',
             rounds: [
-                { round: t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 4800000 },
-                { round: t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 5300000 },
-                { round: t.sfToFinalLabel || 'Semi-Final → Final', prize: 6250000 },
+                { round: t.roundOf16ToQF || t.roundOf16ToQFLabel || 'Round of 16 → Quarter-Final', prize: 4800000 },
+                { round: t.qfToSf || t.qfToSFLabel || 'Quarter-Final → Semi-Final', prize: 5300000 },
+                { round: t.sfToFinal || t.sfToFinalLabel || 'Semi-Final → Final', prize: 6250000 },
                 { round: t.championshipLabel || 'Championship', prize: 10000000 }
             ],
             total: 26350000
@@ -90,7 +90,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                     <span>←</span>
                     <span>{t.back || 'Geri'}</span>
                 </button>
-                <h1 className="text-2xl font-bold text-white">👔 {t.managerProfileTitle || 'Manager Profile'}</h1>
+                <h1 className="text-2xl font-bold text-white">👔 {t.managerProfile || t.managerProfileTitle || 'Manager Profile'}</h1>
                 <div className="w-20"></div>
             </div>
 
@@ -106,7 +106,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                         </div>
 
                         <div className="flex-1">
-                            <div className="text-gray-400 text-sm">{t.currentTeamLabel || 'Current Team'}</div>
+                            <div className="text-gray-400 text-sm">{t.currentTeam || t.currentTeamLabel || 'Current Team'}</div>
                             <div className="flex items-center gap-3 mt-1">
                                 <img
                                     src={getTeamLogo(userTeam?.name || '')}
@@ -128,13 +128,13 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-400 text-sm">{t.weeklySalaryLabel || 'Weekly Salary'}</div>
+                                    <div className="text-gray-400 text-sm">{t.weeklySalaryWord || t.weeklySalaryLabel || 'Weekly Salary'}</div>
                                     <div className="text-2xl font-bold text-green-400">
                                         {formatMoney(salary)}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-400 text-sm">{t.seasonLabel || 'Season'}</div>
+                                    <div className="text-gray-400 text-sm">{t.seasonWord || t.seasonLabel || 'Season'}</div>
                                     <div className="text-2xl font-bold text-white">
                                         {gameState.currentSeason}
                                     </div>
@@ -157,7 +157,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                       text-center border border-amber-600/30">
                             <div className="text-4xl mb-2">🏆</div>
                             <div className="text-amber-400 font-bold text-2xl">{trophies.leagueTitles}</div>
-                            <div className="text-gray-400 text-sm">{t.leagueTitleLabel || 'League Title'}</div>
+                            <div className="text-gray-400 text-sm">{t.leagueTitleMatch || t.leagueTitleLabel || 'League Title'}</div>
                         </div>
 
                         {/* Champions League */}
@@ -165,7 +165,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                       text-center border border-blue-600/30">
                             <div className="text-4xl mb-2">🏆</div>
                             <div className="text-blue-400 font-bold text-2xl">{trophies.championsLeagueTitles}</div>
-                            <div className="text-gray-400 text-sm">{t.championsLeagueLabel || 'Champions League'}</div>
+                            <div className="text-gray-400 text-sm">{t.championsLeague || t.championsLeagueLabel || 'Champions League'}</div>
                         </div>
 
                         {/* Europa League - Only show if exists */}
@@ -174,7 +174,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                           text-center border border-orange-600/30">
                                 <div className="text-4xl mb-2">🥈</div>
                                 <div className="text-orange-400 font-bold text-2xl">{trophies.uefaCupTitles}</div>
-                                <div className="text-gray-400 text-sm">{t.europaLeagueLabel || 'Europa League'}</div>
+                                <div className="text-gray-400 text-sm">{t.europaLeague || t.europaLeagueLabel || 'Europa League'}</div>
                             </div>
                         )}
 
@@ -192,18 +192,18 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
 
                 {/* Career History */}
                 <div className="bg-slate-800/60 rounded-2xl p-6 border border-slate-600/30">
-                    <h2 className="text-xl font-bold text-white mb-4">📊 {t.careerHistoryTitle || 'Career History'}</h2>
+                    <h2 className="text-xl font-bold text-white mb-4">📊 {t.careerHistory || t.careerHistoryTitle || 'Career History'}</h2>
 
                     {careerHistory.length === 0 ? (
                         <div className="text-center text-gray-400 py-8">
-                            {t.noCareerHistoryYet || 'No career history yet. Complete your first season!'}
+                            {t.noCareerHistory || t.noCareerHistoryYet || 'No career history yet. Complete your first season!'}
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
                                     <tr className="text-left text-gray-400 border-b border-slate-600">
-                                        <th className="pb-3">Sezon</th>
+                                        <th className="pb-3">{t.season || 'Season'}</th>
                                         <th className="pb-3">{t.team || 'Team'}</th>
                                         <th className="pb-3 text-center">{t.positionLabel || 'Position'}</th>
                                         <th className="pb-3 text-center">{t.rating}</th>
@@ -248,7 +248,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
 
                 {/* Cup Prize Info */}
                 <div className="bg-slate-800/60 rounded-2xl p-6 border border-slate-600/30">
-                    <h2 className="text-xl font-bold text-white mb-4">💰 {t.cupPrizeInfoTitle || 'Cup Prize Info'}</h2>
+                    <h2 className="text-xl font-bold text-white mb-4">💰 {t.cupPrizeInfo || t.cupPrizeInfoTitle || 'Cup Prize Info'}</h2>
 
                     <div className="grid md:grid-cols-3 gap-4">
                         {Object.entries(getCupPrizes(t, gameState)).map(([key, cup]: [string, any]) => (
@@ -262,7 +262,7 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                                         </div>
                                     ))}
                                     <div className="border-t border-slate-600 pt-2 mt-2 flex justify-between font-bold">
-                                        <span className="text-white">{t.totalLabel || 'Total'}</span>
+                                        <span className="text-white">{t.totalPrizeLabel || t.totalLabel || 'Total'}</span>
                                         <span className="text-green-400">{formatMoney(cup.total)}</span>
                                     </div>
                                 </div>

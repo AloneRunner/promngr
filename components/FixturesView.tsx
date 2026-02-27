@@ -540,7 +540,7 @@ export const FixturesView: React.FC<FixturesViewProps> = ({ matches, teams, play
                     )}
 
                     {['ROUND_16', 'QUARTER', 'SEMI', 'FINAL'].map(round => {
-                        const roundMatches = europaLeague.knockoutMatches ? europaLeague.knockoutMatches.filter(m => m.stage === round) : (europaLeague.matches ? europaLeague.matches.filter(m => m.stage === round) : []);
+                        const roundMatches = europaLeague.knockoutMatches ? europaLeague.knockoutMatches.filter(m => m.stage === round) : [];
                         if (roundMatches.length === 0) return null;
 
                         return (

@@ -6,9 +6,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "KL",
     reyting: 76,
     yas: 36,
-    ana_ozellikler: { hiz: 46, sut: 14, pas: 54, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 46,
+      sut: 14,
+      pas: 54,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 82, ucma: 80, liderlik: 82 },
-    oyun_tarzlari: ["Lider", "Kaptan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Schlotterbeck",
@@ -17,9 +24,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 66, sut: 46, pas: 66, dribbling: 62, defans: 80, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 46,
+      pas: 66,
+      dribbling: 62,
+      defans: 80,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 82, kafa_isabeti: 80, guc: 84 },
-    oyun_tarzlari: ["Kule", "Sert Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "I. Ordets",
@@ -28,9 +42,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 64, dribbling: 60, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 64,
+      dribbling: 60,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { markaj: 80, top_kesme: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Gamboa",
@@ -39,9 +60,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 34,
-    ana_ozellikler: { hiz: 78, sut: 58, pas: 72, dribbling: 74, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { orta_acma: 78, dayaniklilik: 80, liderlik: 78 },
-    oyun_tarzlari: ["Lider"]
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Heintz",
@@ -50,9 +78,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 64, sut: 44, pas: 68, dribbling: 62, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 44,
+      pas: 68,
+      dribbling: 62,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { uzun_pas: 76, top_kesme: 79 },
-    oyun_tarzlari: ["Top Süren Stoper"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "M. Tolba",
@@ -61,9 +96,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 54, pas: 70, dribbling: 72, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 54,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { sprint: 82, hizlanma: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Stöger",
@@ -72,9 +114,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "MOO",
     reyting: 75,
     yas: 31,
-    ana_ozellikler: { hiz: 70, sut: 76, pas: 78, dribbling: 78, defans: 38, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 76,
+      pas: 78,
+      dribbling: 78,
+      defans: 38,
+      fizik: 66,
+    },
     detaylar: { serbest_vurus: 84, vizyon: 80, dribbling: 80 },
-    oyun_tarzlari: ["Serbest Vuruş Uzmanı", "Teknik"]
+    oyun_tarzlari: ["Ölü Top Uzmanı", "İlk Dokunuş"],
   },
   {
     ad: "P. Losilla",
@@ -83,9 +132,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 38,
-    ana_ozellikler: { hiz: 62, sut: 64, pas: 76, dribbling: 70, defans: 78, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 64,
+      pas: 76,
+      dribbling: 70,
+      defans: 78,
+      fizik: 76,
+    },
     detaylar: { liderlik: 88, top_kesme: 80, vizyon: 78 },
-    oyun_tarzlari: ["Lider", "Kaptan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Oermann",
@@ -94,9 +150,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 66, pas: 74, dribbling: 72, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, top_kesme: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "T. Miyoshi",
@@ -105,9 +168,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SLO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 82, sut: 72, pas: 74, dribbling: 80, defans: 28, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 72,
+      pas: 74,
+      dribbling: 80,
+      defans: 28,
+      fizik: 64,
+    },
     detaylar: { dribbling: 82, hizlanma: 84, ceviklik: 84 },
-    oyun_tarzlari: ["Çalımlı", "Teknik"]
+    oyun_tarzlari: ["Top Cambazı", "İlk Dokunuş"],
   },
   {
     ad: "P. Hofmann",
@@ -116,9 +186,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 68, sut: 78, pas: 62, dribbling: 70, defans: 32, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 78,
+      pas: 62,
+      dribbling: 70,
+      defans: 32,
+      fizik: 84,
+    },
     detaylar: { kafa_isabeti: 86, bitiricilik: 80, guc: 86 },
-    oyun_tarzlari: ["Kule", "Hedef Adam"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "M. Locadia",
@@ -127,9 +204,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 78, sut: 76, pas: 60, dribbling: 74, defans: 28, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 76,
+      pas: 60,
+      dribbling: 74,
+      defans: 28,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 78, hizlanma: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Holtmann",
@@ -138,9 +222,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 29,
-    ana_ozellikler: { hiz: 90, sut: 70, pas: 70, dribbling: 78, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 90,
+      sut: 70,
+      pas: 70,
+      dribbling: 78,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 94, sprint: 92 },
-    oyun_tarzlari: ["Sprint Ustası"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "M. Bero",
@@ -149,9 +240,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 74, sut: 72, pas: 76, dribbling: 76, defans: 52, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 72,
+      pas: 76,
+      dribbling: 76,
+      defans: 52,
+      fizik: 72,
+    },
     detaylar: { vizyon: 78, dayaniklilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Soares",
@@ -160,9 +258,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 70, dribbling: 72, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { orta_acma: 76, dayaniklilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Passlack",
@@ -171,9 +276,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SĞB",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 80, sut: 56, pas: 70, dribbling: 74, defans: 70, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 56,
+      pas: 70,
+      dribbling: 74,
+      defans: 70,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Drexler",
@@ -182,9 +294,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 28,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 76, ucma: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "T. Asano",
@@ -193,9 +312,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 88, sut: 74, pas: 60, dribbling: 76, defans: 26, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 74,
+      pas: 60,
+      dribbling: 76,
+      defans: 26,
+      fizik: 70,
+    },
     detaylar: { hizlanma: 92, sprint: 90 },
-    oyun_tarzlari: ["Sprint Ustası"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Zoller",
@@ -204,9 +330,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 30,
-    ana_ozellikler: { hiz: 78, sut: 76, pas: 60, dribbling: 72, defans: 26, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 76,
+      pas: 60,
+      dribbling: 72,
+      defans: 26,
+      fizik: 78,
+    },
     detaylar: { bitiricilik: 78, kafa_isabeti: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "T. Broschinski",
@@ -215,9 +348,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SĞO",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 84, sut: 68, pas: 68, dribbling: 76, defans: 24, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 68,
+      pas: 68,
+      dribbling: 76,
+      defans: 24,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 86, dribbling: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Sissoko",
@@ -226,9 +366,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 23,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 74, dribbling: 72, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, guc: 80 },
-    oyun_tarzlari: ["Güçlü"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Araujo",
@@ -237,9 +384,16 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 24,
-    ana_ozellikler: { hiz: 70, sut: 42, pas: 62, dribbling: 60, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 42,
+      pas: 62,
+      dribbling: 60,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { guc: 82, top_kesme: 77 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Medina",
@@ -248,8 +402,15 @@ export const BOCHUM_BLUE_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 24,
-    ana_ozellikler: { hiz: 82, sut: 68, pas: 68, dribbling: 76, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 68,
+      pas: 68,
+      dribbling: 76,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 84, sprint: 83 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

@@ -96,7 +96,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                         onClick={() => onPlayMatch(match)}
                         className={`w-full mt-2 py-2 bg-gradient-to-r ${buttonGradient} text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-1`}
                     >
-                        <Trophy size={14} /> Maçı Oyna
+                        <Trophy size={14} /> {t.playMatch || 'Play Match'}
                     </button>
                 )}
             </div>
@@ -183,7 +183,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                         </h1>
                         <Trophy className={iconColor} size={24} />
                     </div>
-                    <p className="text-purple-500/70 text-sm">Sezon {cup.season} • {t.internationalTournament || 'International Tournament'}</p>
+                    <p className="text-purple-500/70 text-sm">{t.season || 'Season'} {cup.season} • {t.internationalTournament || 'International Tournament'}</p>
 
                     {/* Tabs */}
                     <div className="flex justify-center gap-4 mt-6">
@@ -286,7 +286,7 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                 </div>
 
                 {/* Close Button */}
-                <div className="p-4 border-t border-slate-800 shrink-0">
+                <div className="p-4 pb-24 border-t border-slate-800 shrink-0">
                     <button
                         onClick={onClose}
                         className="w-full py-3 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-all"

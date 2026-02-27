@@ -3,22 +3,28 @@
  * Handles banner advertisement display and management
  */
 
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, AdMobBannerSize } from '@capacitor-community/admob';
-import { Capacitor } from '@capacitor/core';
+import {
+  AdMob,
+  BannerAdOptions,
+  BannerAdSize,
+  BannerAdPosition,
+  AdMobBannerSize,
+} from "@capacitor-community/admob";
+import { Capacitor } from "@capacitor/core";
 
 // AdMob Configuration
 const ADMOB_CONFIG = {
-  appId: 'ca-app-pub-1337451525993562~6785044311',
+  appId: "ca-app-pub-1337451525993562~6785044311",
   bannerAdUnitId: {
-    production: 'ca-app-pub-1337451525993562/8773925168',
-    test: 'ca-app-pub-3940256099942544/6300978111' // Google test banner ID
-  }
+    production: "ca-app-pub-1337451525993562/8773925168",
+    test: "ca-app-pub-3940256099942544/6300978111", // Google test banner ID
+  },
 };
 
 class AdMobService {
   private isInitialized = false;
   private isBannerShowing = false;
-  private currentPosition: 'top' | 'bottom' | null = null;
+  private currentPosition: "top" | "bottom" | null = null;
   private useTestAds = false; // Production mode by default
   private webPlatformLogged = false; // Prevent log spam on web
 
@@ -31,7 +37,7 @@ class AdMobService {
     // Only run on native platforms
     if (!Capacitor.isNativePlatform()) {
       if (!this.webPlatformLogged) {
-        console.log('AdMob: Web platform detected, skipping initialization');
+        console.log("AdMob: Web platform detected, skipping initialization");
         this.webPlatformLogged = true;
       }
       return;
@@ -44,9 +50,9 @@ class AdMobService {
       });
 
       this.isInitialized = true;
-      console.log('AdMob initialized successfully');
+      console.log("AdMob initialized successfully");
     } catch (error) {
-      console.error('AdMob initialization failed:', error);
+      console.error("AdMob initialization failed:", error);
     }
   }
 
@@ -54,7 +60,7 @@ class AdMobService {
    * Show banner ad at specified position
    * @param position 'top' or 'bottom' (default: 'top')
    */
-  async showBanner(position: 'top' | 'bottom' = 'top') {
+  async showBanner(position: "top" | "bottom" = "top") {
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -66,7 +72,7 @@ class AdMobService {
 
     // If banner is already showing at the same position, skip
     if (this.isBannerShowing && this.currentPosition === position) {
-      console.log('AdMob: Banner already showing at same position');
+      console.log("AdMob: Banner already showing at same position");
       return;
     }
 
@@ -74,7 +80,7 @@ class AdMobService {
     if (this.isBannerShowing && this.currentPosition !== position) {
       await this.removeBanner();
       // Small delay to ensure banner is fully removed
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     try {
@@ -85,7 +91,10 @@ class AdMobService {
       const options: BannerAdOptions = {
         adId,
         adSize: BannerAdSize.BANNER, // 320x50
-        position: position === 'top' ? BannerAdPosition.TOP_CENTER : BannerAdPosition.BOTTOM_CENTER,
+        position:
+          position === "top"
+            ? BannerAdPosition.TOP_CENTER
+            : BannerAdPosition.BOTTOM_CENTER,
         margin: 0,
         isTesting: this.useTestAds,
       };
@@ -95,7 +104,7 @@ class AdMobService {
       this.currentPosition = position;
       console.log(`AdMob: Banner shown at ${position}`);
     } catch (error) {
-      console.error('AdMob: Failed to show banner:', error);
+      console.error("AdMob: Failed to show banner:", error);
     }
   }
 
@@ -112,9 +121,9 @@ class AdMobService {
     try {
       await AdMob.hideBanner();
       this.isBannerShowing = false;
-      console.log('AdMob: Banner hidden');
+      console.log("AdMob: Banner hidden");
     } catch (error) {
-      console.error('AdMob: Failed to hide banner:', error);
+      console.error("AdMob: Failed to hide banner:", error);
     }
   }
 
@@ -130,9 +139,9 @@ class AdMobService {
       await AdMob.removeBanner();
       this.isBannerShowing = false;
       this.currentPosition = null;
-      console.log('AdMob: Banner removed');
+      console.log("AdMob: Banner removed");
     } catch (error) {
-      console.error('AdMob: Failed to remove banner:', error);
+      console.error("AdMob: Failed to remove banner:", error);
     }
   }
 
@@ -148,9 +157,9 @@ class AdMobService {
 
     try {
       await AdMob.resumeBanner();
-      console.log('AdMob: Banner resumed');
+      console.log("AdMob: Banner resumed");
     } catch (error) {
-      console.error('AdMob: Failed to resume banner:', error);
+      console.error("AdMob: Failed to resume banner:", error);
     }
   }
 
@@ -160,7 +169,7 @@ class AdMobService {
    */
   enableTestMode() {
     this.useTestAds = true;
-    console.log('AdMob: Test mode enabled');
+    console.log("AdMob: Test mode enabled");
   }
 
   /**
@@ -169,7 +178,7 @@ class AdMobService {
    */
   disableTestMode() {
     this.useTestAds = false;
-    console.log('AdMob: Test mode disabled - using production ads');
+    console.log("AdMob: Test mode disabled - using production ads");
   }
 
   /**
@@ -182,7 +191,7 @@ class AdMobService {
   /**
    * Get current banner position
    */
-  getBannerPosition(): 'top' | 'bottom' | null {
+  getBannerPosition(): "top" | "bottom" | null {
     return this.currentPosition;
   }
 
@@ -198,5 +207,4 @@ class AdMobService {
 export const adMobService = new AdMobService();
 
 // Export types for use in components
-export { BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
-
+export { BannerAdPosition, BannerAdSize } from "@capacitor-community/admob";

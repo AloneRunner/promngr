@@ -1,4 +1,3 @@
-
 export const KARAGUMRUK_SQUAD = [
   {
     ad: "M. Kranevikk",
@@ -7,9 +6,21 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 32,
-    ana_ozellikler: { hiz: 67, sut: 49, pas: 69, dribbling: 72, defans: 72, fizik: 70 },
-    detaylar: { kisa_pas: 76, sogukkanlilik: 76, agresiflik: 78, ayakta_mudahale: 74 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 49,
+      pas: 69,
+      dribbling: 72,
+      defans: 72,
+      fizik: 70,
+    },
+    detaylar: {
+      kisa_pas: 76,
+      sogukkanlilik: 76,
+      agresiflik: 78,
+      ayakta_mudahale: 74,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "R. Esgaro",
@@ -18,9 +29,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 32,
-    ana_ozellikler: { hiz: 68, sut: 66, pas: 72, dribbling: 73, defans: 70, fizik: 63 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 66,
+      pas: 72,
+      dribbling: 73,
+      defans: 70,
+      fizik: 63,
+    },
     detaylar: { falso: 78, sogukkanlilik: 76, denge: 80, orta_acma: 75 },
-    oyun_tarzlari: ["Sezgili"]
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Camachoh",
@@ -29,9 +47,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 31,
-    ana_ozellikler: { hiz: 80, sut: 71, pas: 68, dribbling: 75, defans: 33, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 71,
+      pas: 68,
+      dribbling: 75,
+      defans: 33,
+      fizik: 62,
+    },
     detaylar: { ceviklik: 82, denge: 80, sut_gucu: 76, sogukkanlilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Grbecc",
@@ -40,9 +65,24 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 29,
-    ana_ozellikler: { hiz: 73, sut: 20, pas: 40, dribbling: 20, defans: 20, fizik: 73 },
-    detaylar: { ucma: 73, top_kontrol: 69, vurus: 70, pozisyon: 69, refleks: 73, dribbling: 73, guc: 73 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 20,
+      pas: 40,
+      dribbling: 20,
+      defans: 20,
+      fizik: 73,
+    },
+    detaylar: {
+      ucma: 73,
+      top_kontrol: 69,
+      vurus: 70,
+      pozisyon: 69,
+      refleks: 73,
+      dribbling: 73,
+      guc: 73,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Balkovv",
@@ -51,9 +91,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SLB",
     reyting: 71,
     yas: 31,
-    ana_ozellikler: { hiz: 66, sut: 57, pas: 68, dribbling: 66, defans: 70, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 57,
+      pas: 68,
+      dribbling: 66,
+      defans: 70,
+      fizik: 72,
+    },
     detaylar: { sut_gucu: 81, serbest_vurus: 80, falso: 78, uzaktan_sut: 76 },
-    oyun_tarzlari: ["Kuvvetli Şut", "Uzun Topla Pas"]
+    oyun_tarzlari: ["Roket", "Maestro"],
   },
   {
     ad: "A. Graysonn",
@@ -62,9 +109,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SNT",
     reyting: 70,
     yas: 34,
-    ana_ozellikler: { hiz: 78, sut: 70, pas: 61, dribbling: 68, defans: 30, fizik: 71 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 70,
+      pas: 61,
+      dribbling: 68,
+      defans: 30,
+      fizik: 71,
+    },
     detaylar: { sprint: 80, sut_gucu: 77, ziplama: 77, ceviklik: 75 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Ozgurr",
@@ -73,9 +127,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MO",
     reyting: 69,
     yas: 27,
-    ana_ozellikler: { hiz: 70, sut: 64, pas: 70, dribbling: 71, defans: 54, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 64,
+      pas: 70,
+      dribbling: 71,
+      defans: 54,
+      fizik: 69,
+    },
     detaylar: { dayaniklilik: 80, denge: 75, falso: 73, hizlanma: 72 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "E. Rocco",
@@ -84,9 +145,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 33,
-    ana_ozellikler: { hiz: 34, sut: 41, pas: 54, dribbling: 56, defans: 68, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 34,
+      sut: 41,
+      pas: 54,
+      dribbling: 56,
+      defans: 68,
+      fizik: 66,
+    },
     detaylar: { guc: 79, kafa_isabeti: 72, ziplama: 71, ayakta_mudahale: 70 },
-    oyun_tarzlari: ["Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "Serginno",
@@ -95,9 +163,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SĞO",
     reyting: 67,
     yas: 30,
-    ana_ozellikler: { hiz: 68, sut: 65, pas: 64, dribbling: 69, defans: 37, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 65,
+      pas: 64,
+      dribbling: 69,
+      defans: 37,
+      fizik: 64,
+    },
     detaylar: { denge: 73, dribbling: 72, top_kontrol: 70, guc: 69 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "E. Yilmy",
@@ -106,9 +181,21 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "STP",
     reyting: 66,
     yas: 28,
-    ana_ozellikler: { hiz: 62, sut: 45, pas: 58, dribbling: 60, defans: 66, fizik: 68 },
-    detaylar: { kafa_isabeti: 70, ayakta_mudahale: 68, guc: 72, agresiflik: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 45,
+      pas: 58,
+      dribbling: 60,
+      defans: 66,
+      fizik: 68,
+    },
+    detaylar: {
+      kafa_isabeti: 70,
+      ayakta_mudahale: 68,
+      guc: 72,
+      agresiflik: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Cetinn",
@@ -117,9 +204,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MOO",
     reyting: 65,
     yas: 25,
-    ana_ozellikler: { hiz: 68, sut: 62, pas: 65, dribbling: 67, defans: 56, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 62,
+      pas: 65,
+      dribbling: 67,
+      defans: 56,
+      fizik: 64,
+    },
     detaylar: { uzun_pas: 68, vizyon: 66, top_kontrol: 68, dayaniklilik: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Demirr",
@@ -128,9 +222,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SĞB",
     reyting: 64,
     yas: 24,
-    ana_ozellikler: { hiz: 70, sut: 58, pas: 62, dribbling: 65, defans: 64, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 58,
+      pas: 62,
+      dribbling: 65,
+      defans: 64,
+      fizik: 60,
+    },
     detaylar: { hizlanma: 72, orta_acma: 64, top_kesme: 65, denge: 66 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Arslann",
@@ -139,9 +240,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SNT",
     reyting: 63,
     yas: 23,
-    ana_ozellikler: { hiz: 73, sut: 64, pas: 58, dribbling: 65, defans: 28, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 64,
+      pas: 58,
+      dribbling: 65,
+      defans: 28,
+      fizik: 62,
+    },
     detaylar: { sprint: 75, bitiricilik: 62, pozisyon: 64, sut_gucu: 66 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Aydinn",
@@ -150,9 +258,21 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MDO",
     reyting: 62,
     yas: 26,
-    ana_ozellikler: { hiz: 64, sut: 55, pas: 63, dribbling: 60, defans: 65, fizik: 66 },
-    detaylar: { top_kesme: 67, ayakta_mudahale: 66, agresiflik: 68, dayaniklilik: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 55,
+      pas: 63,
+      dribbling: 60,
+      defans: 65,
+      fizik: 66,
+    },
+    detaylar: {
+      top_kesme: 67,
+      ayakta_mudahale: 66,
+      agresiflik: 68,
+      dayaniklilik: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Kayya",
@@ -161,9 +281,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SLB",
     reyting: 61,
     yas: 22,
-    ana_ozellikler: { hiz: 67, sut: 52, pas: 60, dribbling: 62, defans: 62, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 67,
+      sut: 52,
+      pas: 60,
+      dribbling: 62,
+      defans: 62,
+      fizik: 64,
+    },
     detaylar: { hizlanma: 68, top_kesme: 63, denge: 64, orta_acma: 58 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Ozturkk",
@@ -172,9 +299,22 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "KL",
     reyting: 60,
     yas: 28,
-    ana_ozellikler: { hiz: 68, sut: 18, pas: 42, dribbling: 22, defans: 22, fizik: 70 },
-    detaylar: { ucma: 65, refleks: 68, vurus: 66, pozisyon: 64, top_kontrol: 62 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 18,
+      pas: 42,
+      dribbling: 22,
+      defans: 22,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 65,
+      refleks: 68,
+      vurus: 66,
+      pozisyon: 64,
+      top_kontrol: 62,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Yavuzzo",
@@ -183,9 +323,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SĞO",
     reyting: 60,
     yas: 21,
-    ana_ozellikler: { hiz: 71, sut: 58, pas: 60, dribbling: 66, defans: 32, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 58,
+      pas: 60,
+      dribbling: 66,
+      defans: 32,
+      fizik: 58,
+    },
     detaylar: { ceviklik: 70, dribbling: 68, sprint: 72, orta_acma: 62 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Sahinn",
@@ -194,9 +341,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MO",
     reyting: 59,
     yas: 24,
-    ana_ozellikler: { hiz: 65, sut: 58, pas: 62, dribbling: 63, defans: 58, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 58,
+      pas: 62,
+      dribbling: 63,
+      defans: 58,
+      fizik: 62,
+    },
     detaylar: { kisa_pas: 64, vizyon: 62, top_kontrol: 65, dayaniklilik: 68 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Polatt",
@@ -205,9 +359,21 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "STP",
     reyting: 58,
     yas: 29,
-    ana_ozellikler: { hiz: 58, sut: 42, pas: 55, dribbling: 56, defans: 60, fizik: 64 },
-    detaylar: { kafa_isabeti: 66, ayakta_mudahale: 62, guc: 68, agresiflik: 65 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 42,
+      pas: 55,
+      dribbling: 56,
+      defans: 60,
+      fizik: 64,
+    },
+    detaylar: {
+      kafa_isabeti: 66,
+      ayakta_mudahale: 62,
+      guc: 68,
+      agresiflik: 65,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Erenn",
@@ -216,9 +382,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SNT",
     reyting: 57,
     yas: 20,
-    ana_ozellikler: { hiz: 70, sut: 60, pas: 54, dribbling: 62, defans: 26, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 60,
+      pas: 54,
+      dribbling: 62,
+      defans: 26,
+      fizik: 56,
+    },
     detaylar: { hizlanma: 72, ceviklik: 68, bitiricilik: 58, pozisyon: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Kocc",
@@ -227,9 +400,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "MDO",
     reyting: 56,
     yas: 23,
-    ana_ozellikler: { hiz: 62, sut: 50, pas: 58, dribbling: 56, defans: 60, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 62,
+      sut: 50,
+      pas: 58,
+      dribbling: 56,
+      defans: 60,
+      fizik: 60,
+    },
     detaylar: { top_kesme: 62, dayaniklilik: 66, agresiflik: 64, kisa_pas: 60 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Yildizz",
@@ -238,9 +418,16 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "SLO",
     reyting: 55,
     yas: 21,
-    ana_ozellikler: { hiz: 68, sut: 56, pas: 58, dribbling: 64, defans: 30, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 56,
+      pas: 58,
+      dribbling: 64,
+      defans: 30,
+      fizik: 54,
+    },
     detaylar: { dribbling: 66, ceviklik: 68, orta_acma: 60, sprint: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Aslann",
@@ -249,8 +436,21 @@ export const KARAGUMRUK_SQUAD = [
     mevki: "KL",
     reyting: 54,
     yas: 19,
-    ana_ozellikler: { hiz: 64, sut: 16, pas: 38, dribbling: 20, defans: 20, fizik: 62 },
-    detaylar: { refleks: 60, ucma: 58, vurus: 62, pozisyon: 58, top_kontrol: 56 },
-    oyun_tarzlari: []
-  }
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 16,
+      pas: 38,
+      dribbling: 20,
+      defans: 20,
+      fizik: 62,
+    },
+    detaylar: {
+      refleks: 60,
+      ucma: 58,
+      vurus: 62,
+      pozisyon: 58,
+      top_kontrol: 56,
+    },
+    oyun_tarzlari: [],
+  },
 ];

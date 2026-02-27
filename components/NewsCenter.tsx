@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Message, MessageType, Translation, TransferOffer } from '../types';
-import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye, Star, Filter } from 'lucide-react';
+import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye, Star, Filter, ArrowUpCircle } from 'lucide-react';
 
 interface NewsCenterProps {
    messages: Message[];
@@ -12,6 +12,7 @@ interface NewsCenterProps {
    onDeleteAll?: () => void;
    onAcceptOffer?: (offerId: string) => void;
    onRejectOffer?: (offerId: string) => void;
+   onCounterOffer?: (offerId: string, counterAmount: number) => void;
    onViewPlayer?: (playerId: string) => void;
    t: Translation;
    initialTab?: MessageTab;
@@ -19,8 +20,9 @@ interface NewsCenterProps {
 
 export type MessageTab = 'ALL' | 'TRANSFERS' | 'INJURIES' | 'YOUTH' | 'BOARD';
 
-export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onViewPlayer, t, initialTab }) => {
+export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onCounterOffer, onViewPlayer, t, initialTab }) => {
    const [activeTab, setActiveTab] = useState<MessageTab>(initialTab || 'ALL');
+   const [counterAmounts, setCounterAmounts] = useState<Record<string, number>>({});
 
    // Filter messages by tab
    const filterMessages = (msgs: Message[]): Message[] => {
@@ -62,8 +64,8 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
    const criticalUnread = messages.filter(m => !m.isRead && (
       m.type === MessageType.INJURY ||
       m.type === MessageType.TRANSFER_OFFER ||
-      m.subject?.includes('Kırmızı') ||
-      m.subject?.includes('Sakatl')
+      m.subject?.includes('Kırmızı') || m.subject?.includes('Red') ||
+      m.subject?.includes('Sakatl') || m.subject?.includes('Injur')
    )).length;
 
    const readMessages = messages.filter(m => m.isRead).length;
@@ -190,33 +192,58 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                            <p className="text-sm text-slate-400 leading-relaxed">{msg.body}</p>
 
                            {/* Transfer Offer Actions */}
-                           {pendingOffer && (
-                              <div className="mt-3 flex flex-wrap gap-2">
-                                 {onViewPlayer && (
-                                    <button
-                                       onClick={(e) => { e.stopPropagation(); onViewPlayer(pendingOffer.playerId); }}
-                                       className="flex items-center gap-1 px-3 py-2 bg-slate-600 hover:bg-slate-500 text-white text-sm font-bold rounded-lg transition-all"
-                                    >
-                                       <Eye size={16} /> {t.detail}
-                                    </button>
-                                 )}
-                                 <button
-                                    onClick={(e) => { e.stopPropagation(); onAcceptOffer && onAcceptOffer(pendingOffer.id); }}
-                                    className="flex items-center gap-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition-all"
-                                 >
-                                    <Check size={16} /> {t.accept}
-                                 </button>
-                                 <button
-                                    onClick={(e) => { e.stopPropagation(); onRejectOffer && onRejectOffer(pendingOffer.id); }}
-                                    className="flex items-center gap-1 px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-lg transition-all"
-                                 >
-                                    <X size={16} /> {t.reject}
-                                 </button>
-                                 <span className="ml-auto text-yellow-400 font-mono text-sm self-center">
-                                    €{(pendingOffer.offerAmount / 1000000).toFixed(1)}M
-                                 </span>
-                              </div>
-                           )}
+                           {pendingOffer && (() => {
+                              const counterVal = counterAmounts[pendingOffer.id] ?? Math.ceil(pendingOffer.offerAmount * 1.2);
+                              const setCounter = (v: number) => setCounterAmounts(prev => ({ ...prev, [pendingOffer.id]: v }));
+                              return (
+                                 <div className="mt-3 space-y-2">
+                                    {/* Offer amount + view */}
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                       <span className="text-yellow-400 font-mono text-sm font-bold">
+                                          {t.offerReceived || 'Offer'}: €{(pendingOffer.offerAmount / 1000000).toFixed(1)}M
+                                       </span>
+                                       {onViewPlayer && (
+                                          <button
+                                             onClick={(e) => { e.stopPropagation(); onViewPlayer(pendingOffer.playerId); }}
+                                             className="flex items-center gap-1 px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold rounded-lg transition-all"
+                                          >
+                                             <Eye size={14} /> {t.detail}
+                                          </button>
+                                       )}
+                                    </div>
+                                    {/* Accept / Reject */}
+                                    <div className="flex gap-2 flex-wrap">
+                                       <button
+                                          onClick={(e) => { e.stopPropagation(); onAcceptOffer && onAcceptOffer(pendingOffer.id); }}
+                                          className="flex items-center gap-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition-all"
+                                       >
+                                          <Check size={16} /> {t.accept}
+                                       </button>
+                                       <button
+                                          onClick={(e) => { e.stopPropagation(); onRejectOffer && onRejectOffer(pendingOffer.id); }}
+                                          className="flex items-center gap-1 px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-lg transition-all"
+                                       >
+                                          <X size={16} /> {t.reject}
+                                       </button>
+                                    </div>
+                                    {/* Counter-offer row */}
+                                    {onCounterOffer && (
+                                       <div className="flex items-center gap-2 bg-slate-800/60 rounded-lg p-2 border border-amber-500/20">
+                                          <span className="text-[10px] text-amber-400 font-bold uppercase whitespace-nowrap">{t.counterOffer || 'Counter'}</span>
+                                          <button onClick={(e) => { e.stopPropagation(); setCounter(Math.max(pendingOffer.offerAmount, counterVal - 500000)); }} className="px-2 py-1 bg-slate-700 rounded text-white text-xs hover:bg-slate-600">-</button>
+                                          <span className="flex-1 text-center font-mono text-amber-300 text-sm font-bold">€{(counterVal / 1000000).toFixed(1)}M</span>
+                                          <button onClick={(e) => { e.stopPropagation(); setCounter(counterVal + 500000); }} className="px-2 py-1 bg-slate-700 rounded text-white text-xs hover:bg-slate-600">+</button>
+                                          <button
+                                             onClick={(e) => { e.stopPropagation(); onCounterOffer(pendingOffer.id, counterVal); }}
+                                             className="flex items-center gap-1 px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition-all"
+                                          >
+                                             <ArrowUpCircle size={14} /> {t.send || 'Send'}
+                                          </button>
+                                       </div>
+                                    )}
+                                 </div>
+                              );
+                           })()}
                         </div>
                      </div>
                   </div>

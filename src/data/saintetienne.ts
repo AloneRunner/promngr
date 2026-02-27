@@ -6,9 +6,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "KL",
     reyting: 75,
     yas: 31,
-    ana_ozellikler: { hiz: 50, sut: 14, pas: 54, dribbling: 20, defans: 20, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 14,
+      pas: 54,
+      dribbling: 20,
+      defans: 20,
+      fizik: 76,
+    },
     detaylar: { refleks: 80, ucma: 78, pozisyon: 77 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Batubinsika",
@@ -17,9 +24,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 70, sut: 44, pas: 62, dribbling: 60, defans: 78, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 44,
+      pas: 62,
+      dribbling: 60,
+      defans: 78,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 79, guc: 84, kafa_isabeti: 78 },
-    oyun_tarzlari: ["Güçlü", "Kule"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "Y. Nadé",
@@ -28,9 +42,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 23,
-    ana_ozellikler: { hiz: 72, sut: 44, pas: 64, dribbling: 62, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 44,
+      pas: 64,
+      dribbling: 62,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 77, hiz: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Appiah",
@@ -39,9 +60,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SĞB",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 82, sut: 56, pas: 72, dribbling: 74, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 56,
+      pas: 72,
+      dribbling: 74,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { sprint: 84, hizlanma: 84, orta_acma: 76 },
-    oyun_tarzlari: ["Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "Y. Maçon",
@@ -50,9 +78,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 80, sut: 56, pas: 70, dribbling: 72, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 56,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Ekwah",
@@ -61,9 +96,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 23,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 76, dribbling: 74, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 76,
+      dribbling: 74,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, kisa_pas: 78, top_kesme: 76 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "A. Mouton",
@@ -72,9 +114,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 70, sut: 72, pas: 78, dribbling: 76, defans: 52, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 72,
+      pas: 78,
+      dribbling: 76,
+      defans: 52,
+      fizik: 68,
+    },
     detaylar: { vizyon: 80, kisa_pas: 80, liderlik: 76 },
-    oyun_tarzlari: ["Oyun Kurucu", "Lider"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "D. Bouchouari",
@@ -83,9 +132,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MO",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 70, pas: 76, dribbling: 74, defans: 48, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 70,
+      pas: 76,
+      dribbling: 74,
+      defans: 48,
+      fizik: 66,
+    },
     detaylar: { vizyon: 78, kisa_pas: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "M. Cafaro",
@@ -94,9 +150,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MOO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 78, sut: 74, pas: 76, dribbling: 78, defans: 32, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 74,
+      pas: 76,
+      dribbling: 78,
+      defans: 32,
+      fizik: 66,
+    },
     detaylar: { dribbling: 80, serbest_vurus: 78, vizyon: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "I. Sissoko",
@@ -105,9 +168,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 26,
-    ana_ozellikler: { hiz: 84, sut: 76, pas: 60, dribbling: 74, defans: 28, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 76,
+      pas: 60,
+      dribbling: 74,
+      defans: 28,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 86, bitiricilik: 78, sprint: 85 },
-    oyun_tarzlari: ["Hızlı Forvet"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "B. Boisgard",
@@ -116,9 +186,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SĞO",
     reyting: 73,
     yas: 25,
-    ana_ozellikler: { hiz: 82, sut: 70, pas: 70, dribbling: 76, defans: 28, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 70,
+      pas: 70,
+      dribbling: 76,
+      defans: 28,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 84, sprint: 83, orta_acma: 74 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "J. Krasso",
@@ -127,9 +204,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 76, sut: 76, pas: 60, dribbling: 72, defans: 30, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 76,
+      pas: 60,
+      dribbling: 72,
+      defans: 30,
+      fizik: 80,
+    },
     detaylar: { bitiricilik: 78, guc: 82, kafa_isabeti: 78 },
-    oyun_tarzlari: ["Hedef Adam"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "L. Wadji",
@@ -138,9 +222,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 27,
-    ana_ozellikler: { hiz: 80, sut: 74, pas: 56, dribbling: 70, defans: 26, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 74,
+      pas: 56,
+      dribbling: 70,
+      defans: 26,
+      fizik: 74,
+    },
     detaylar: { bitiricilik: 76, hizlanma: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Amougou",
@@ -149,9 +240,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 19,
-    ana_ozellikler: { hiz: 76, sut: 64, pas: 74, dribbling: 72, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 64,
+      pas: 74,
+      dribbling: 72,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Aiki",
@@ -160,9 +258,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SLO",
     reyting: 73,
     yas: 22,
-    ana_ozellikler: { hiz: 86, sut: 68, pas: 68, dribbling: 76, defans: 24, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 68,
+      pas: 68,
+      dribbling: 76,
+      defans: 24,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 88, sprint: 87 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "T. Petrot",
@@ -171,9 +276,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 24,
-    ana_ozellikler: { hiz: 68, sut: 42, pas: 62, dribbling: 58, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 42,
+      pas: 62,
+      dribbling: 58,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { markaj: 75, guc: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Cornud",
@@ -182,9 +294,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 70, dribbling: 70, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 70,
+      dribbling: 70,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 76, dayaniklilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Stassin",
@@ -193,9 +312,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 78, sut: 74, pas: 58, dribbling: 70, defans: 24, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 74,
+      pas: 58,
+      dribbling: 70,
+      defans: 24,
+      fizik: 72,
+    },
     detaylar: { bitiricilik: 76, pozisyon: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Fall",
@@ -204,9 +330,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "KL",
     reyting: 70,
     yas: 25,
-    ana_ozellikler: { hiz: 48, sut: 12, pas: 50, dribbling: 16, defans: 16, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 12,
+      pas: 50,
+      dribbling: 16,
+      defans: 16,
+      fizik: 74,
+    },
     detaylar: { refleks: 74, ucma: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Fomba",
@@ -215,9 +348,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "MDO",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 72, dribbling: 70, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 72,
+      dribbling: 70,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 78, top_kesme: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Cornud",
@@ -226,9 +366,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SĞB",
     reyting: 71,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 52, pas: 68, dribbling: 70, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 52,
+      pas: 68,
+      dribbling: 70,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { sprint: 80, dayaniklilik: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Diouf",
@@ -237,9 +384,16 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 66, sut: 42, pas: 60, dribbling: 56, defans: 74, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 42,
+      pas: 60,
+      dribbling: 56,
+      defans: 74,
+      fizik: 80,
+    },
     detaylar: { guc: 82, kafa_isabeti: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Cimignani",
@@ -248,8 +402,15 @@ export const SAINT_GREEN_SQUAD = [
     mevki: "SLO",
     reyting: 71,
     yas: 21,
-    ana_ozellikler: { hiz: 82, sut: 66, pas: 68, dribbling: 74, defans: 24, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 66,
+      pas: 68,
+      dribbling: 74,
+      defans: 24,
+      fizik: 64,
+    },
     detaylar: { hizlanma: 84, dribbling: 76 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

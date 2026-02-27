@@ -33,7 +33,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         <div style={{
             position: 'fixed',
             inset: 0,
-            background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+            background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.6) 0%, rgba(22, 33, 62, 0.7) 100%)',
+            backdropFilter: 'blur(20px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

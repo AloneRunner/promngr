@@ -1,4 +1,3 @@
-
 export const GOZTEPE_SQUAD = [
   {
     ad: "M. Lise",
@@ -7,9 +6,24 @@ export const GOZTEPE_SQUAD = [
     mevki: "KL",
     reyting: 73,
     yas: 28,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 20, defans: 20, fizik: 70 },
-    detaylar: { ucma: 75, top_kontrol: 73, vurus: 68, pozisyon: 75, refleks: 74, guc: 70, fizik_gucu: 75 },
-    oyun_tarzlari: ["Ayak Hakimiyeti"]
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 20,
+      pas: 40,
+      dribbling: 20,
+      defans: 20,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 75,
+      top_kontrol: 73,
+      vurus: 68,
+      pozisyon: 75,
+      refleks: 74,
+      guc: 70,
+      fizik_gucu: 75,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Dennise",
@@ -18,9 +32,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "MO",
     reyting: 70,
     yas: 21,
-    ana_ozellikler: { hiz: 74, sut: 58, pas: 65, dribbling: 70, defans: 68, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 58,
+      pas: 65,
+      dribbling: 70,
+      defans: 68,
+      fizik: 74,
+    },
     detaylar: { dayaniklilik: 79, ziplama: 77, sprint: 76, agresiflik: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Bekiroglu",
@@ -29,9 +50,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "MOO",
     reyting: 70,
     yas: 30,
-    ana_ozellikler: { hiz: 69, sut: 67, pas: 69, dribbling: 71, defans: 46, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 67,
+      pas: 69,
+      dribbling: 71,
+      defans: 46,
+      fizik: 69,
+    },
     detaylar: { serbest_vurus: 75, guc: 73, sut_gucu: 73, uzaktan_sut: 72 },
-    oyun_tarzlari: ["Keskin Pas", "Teknik"]
+    oyun_tarzlari: ["Keskin Pas", "İlk Dokunuş"],
   },
   {
     ad: "Helitonn",
@@ -40,9 +68,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 30,
-    ana_ozellikler: { hiz: 69, sut: 35, pas: 43, dribbling: 46, defans: 68, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 35,
+      pas: 43,
+      dribbling: 46,
+      defans: 68,
+      fizik: 76,
+    },
     detaylar: { ziplama: 84, guc: 81, kafa_isabeti: 72, top_kesme: 67 },
-    oyun_tarzlari: ["Hava Hakimi", "Sezgili"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "I. Koybashy",
@@ -51,9 +86,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SLB",
     reyting: 67,
     yas: 36,
-    ana_ozellikler: { hiz: 71, sut: 64, pas: 68, dribbling: 71, defans: 61, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 64,
+      pas: 68,
+      dribbling: 71,
+      defans: 61,
+      fizik: 65,
+    },
     detaylar: { sut_gucu: 75, falso: 76, ceviklik: 77, serbest_vurus: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Ildyze",
@@ -62,9 +104,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "MO",
     reyting: 67,
     yas: 29,
-    ana_ozellikler: { hiz: 68, sut: 64, pas: 68, dribbling: 69, defans: 59, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 64,
+      pas: 68,
+      dribbling: 69,
+      defans: 59,
+      fizik: 64,
+    },
     detaylar: { ceviklik: 74, denge: 72, falso: 71, dayaniklilik: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "T. Altikardes",
@@ -73,9 +122,21 @@ export const GOZTEPE_SQUAD = [
     mevki: "STP",
     reyting: 67,
     yas: 22,
-    ana_ozellikler: { hiz: 64, sut: 43, pas: 54, dribbling: 65, defans: 67, fizik: 71 },
-    detaylar: { agresiflik: 74, guc: 71, ayakta_mudahale: 70, dayaniklilik: 70 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 43,
+      pas: 54,
+      dribbling: 65,
+      defans: 67,
+      fizik: 71,
+    },
+    detaylar: {
+      agresiflik: 74,
+      guc: 71,
+      ayakta_mudahale: 70,
+      dayaniklilik: 70,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Jandersun",
@@ -84,9 +145,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SNT",
     reyting: 67,
     yas: 26,
-    ana_ozellikler: { hiz: 63, sut: 68, pas: 49, dribbling: 62, defans: 25, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 68,
+      pas: 49,
+      dribbling: 62,
+      defans: 25,
+      fizik: 73,
+    },
     detaylar: { guc: 88, ziplama: 85, kafa_isabeti: 75, bitiricilik: 72 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Polatt",
@@ -95,9 +163,22 @@ export const GOZTEPE_SQUAD = [
     mevki: "KL",
     reyting: 68,
     yas: 20,
-    ana_ozellikler: { hiz: 58, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 68 },
-    detaylar: { ucma: 58, refleks: 68, vurus: 63, pozisyon: 60, top_kontrol: 56 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 58,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 68,
+    },
+    detaylar: {
+      ucma: 58,
+      refleks: 68,
+      vurus: 63,
+      pozisyon: 60,
+      top_kontrol: 56,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Yilmi",
@@ -106,9 +187,22 @@ export const GOZTEPE_SQUAD = [
     mevki: "KL",
     reyting: 66,
     yas: 21,
-    ana_ozellikler: { hiz: 56, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 66 },
-    detaylar: { ucma: 56, refleks: 66, vurus: 61, pozisyon: 58, top_kontrol: 54 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 56,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 66,
+    },
+    detaylar: {
+      ucma: 56,
+      refleks: 66,
+      vurus: 61,
+      pozisyon: 58,
+      top_kontrol: 54,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Demirky",
@@ -117,9 +211,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "STP",
     reyting: 65,
     yas: 22,
-    ana_ozellikler: { hiz: 55, sut: 40, pas: 57, dribbling: 55, defans: 65, fizik: 60 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 40,
+      pas: 57,
+      dribbling: 55,
+      defans: 65,
+      fizik: 60,
+    },
     detaylar: { ayakta_mudahale: 65, top_kesme: 60, kafa_isabeti: 55, guc: 57 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Kurtt",
@@ -128,9 +229,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "STP",
     reyting: 64,
     yas: 23,
-    ana_ozellikler: { hiz: 54, sut: 39, pas: 56, dribbling: 54, defans: 64, fizik: 59 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 39,
+      pas: 56,
+      dribbling: 54,
+      defans: 64,
+      fizik: 59,
+    },
     detaylar: { ayakta_mudahale: 64, top_kesme: 59, kafa_isabeti: 54, guc: 56 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Yavuze",
@@ -139,9 +247,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SĞB",
     reyting: 63,
     yas: 24,
-    ana_ozellikler: { hiz: 53, sut: 38, pas: 55, dribbling: 53, defans: 63, fizik: 58 },
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 38,
+      pas: 55,
+      dribbling: 53,
+      defans: 63,
+      fizik: 58,
+    },
     detaylar: { ayakta_mudahale: 63, top_kesme: 58, kafa_isabeti: 53, guc: 55 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Demirky",
@@ -150,9 +265,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SĞB",
     reyting: 62,
     yas: 25,
-    ana_ozellikler: { hiz: 52, sut: 37, pas: 54, dribbling: 52, defans: 62, fizik: 57 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 37,
+      pas: 54,
+      dribbling: 52,
+      defans: 62,
+      fizik: 57,
+    },
     detaylar: { ayakta_mudahale: 62, top_kesme: 57, kafa_isabeti: 52, guc: 54 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Karatash",
@@ -161,9 +283,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SLB",
     reyting: 61,
     yas: 26,
-    ana_ozellikler: { hiz: 51, sut: 36, pas: 53, dribbling: 51, defans: 61, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 51,
+      sut: 36,
+      pas: 53,
+      dribbling: 51,
+      defans: 61,
+      fizik: 56,
+    },
     detaylar: { ayakta_mudahale: 61, top_kesme: 56, kafa_isabeti: 51, guc: 53 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Santoz",
@@ -172,9 +301,21 @@ export const GOZTEPE_SQUAD = [
     mevki: "MDO",
     reyting: 60,
     yas: 27,
-    ana_ozellikler: { hiz: 45, sut: 40, pas: 55, dribbling: 52, defans: 60, fizik: 55 },
-    detaylar: { top_kesme: 60, ayakta_mudahale: 55, dayaniklilik: 57, kisa_pas: 52 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 45,
+      sut: 40,
+      pas: 55,
+      dribbling: 52,
+      defans: 60,
+      fizik: 55,
+    },
+    detaylar: {
+      top_kesme: 60,
+      ayakta_mudahale: 55,
+      dayaniklilik: 57,
+      kisa_pas: 52,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Martines",
@@ -183,9 +324,21 @@ export const GOZTEPE_SQUAD = [
     mevki: "MDO",
     reyting: 59,
     yas: 28,
-    ana_ozellikler: { hiz: 44, sut: 39, pas: 54, dribbling: 51, defans: 59, fizik: 54 },
-    detaylar: { top_kesme: 59, ayakta_mudahale: 54, dayaniklilik: 56, kisa_pas: 51 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 44,
+      sut: 39,
+      pas: 54,
+      dribbling: 51,
+      defans: 59,
+      fizik: 54,
+    },
+    detaylar: {
+      top_kesme: 59,
+      ayakta_mudahale: 54,
+      dayaniklilik: 56,
+      kisa_pas: 51,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Sylva",
@@ -194,9 +347,21 @@ export const GOZTEPE_SQUAD = [
     mevki: "MDO",
     reyting: 58,
     yas: 29,
-    ana_ozellikler: { hiz: 43, sut: 38, pas: 53, dribbling: 50, defans: 58, fizik: 53 },
-    detaylar: { top_kesme: 58, ayakta_mudahale: 53, dayaniklilik: 55, kisa_pas: 50 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 43,
+      sut: 38,
+      pas: 53,
+      dribbling: 50,
+      defans: 58,
+      fizik: 53,
+    },
+    detaylar: {
+      top_kesme: 58,
+      ayakta_mudahale: 53,
+      dayaniklilik: 55,
+      kisa_pas: 50,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Kayya",
@@ -205,9 +370,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "MO",
     reyting: 57,
     yas: 30,
-    ana_ozellikler: { hiz: 45, sut: 47, pas: 57, dribbling: 52, defans: 42, fizik: 47 },
+    ana_ozellikler: {
+      hiz: 45,
+      sut: 47,
+      pas: 57,
+      dribbling: 52,
+      defans: 42,
+      fizik: 47,
+    },
     detaylar: { vizyon: 52, kisa_pas: 57, top_kontrol: 49, dayaniklilik: 45 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Polatt",
@@ -216,9 +388,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "MOO",
     reyting: 62,
     yas: 31,
-    ana_ozellikler: { hiz: 50, sut: 52, pas: 62, dribbling: 57, defans: 47, fizik: 52 },
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 52,
+      pas: 62,
+      dribbling: 57,
+      defans: 47,
+      fizik: 52,
+    },
     detaylar: { vizyon: 57, kisa_pas: 62, top_kontrol: 54, dayaniklilik: 50 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Demirky",
@@ -227,9 +406,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SĞO",
     reyting: 61,
     yas: 32,
-    ana_ozellikler: { hiz: 66, sut: 56, pas: 53, dribbling: 63, defans: 35, fizik: 46 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 56,
+      pas: 53,
+      dribbling: 63,
+      defans: 35,
+      fizik: 46,
+    },
     detaylar: { dribbling: 61, ceviklik: 64, orta_acma: 51, sprint: 66 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Aktash",
@@ -238,9 +424,16 @@ export const GOZTEPE_SQUAD = [
     mevki: "SĞO",
     reyting: 61,
     yas: 33,
-    ana_ozellikler: { hiz: 66, sut: 56, pas: 53, dribbling: 63, defans: 35, fizik: 46 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 56,
+      pas: 53,
+      dribbling: 63,
+      defans: 35,
+      fizik: 46,
+    },
     detaylar: { dribbling: 61, ceviklik: 64, orta_acma: 51, sprint: 66 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "O. Ozere",
@@ -249,8 +442,15 @@ export const GOZTEPE_SQUAD = [
     mevki: "SLO",
     reyting: 60,
     yas: 34,
-    ana_ozellikler: { hiz: 65, sut: 55, pas: 52, dribbling: 62, defans: 35, fizik: 45 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 55,
+      pas: 52,
+      dribbling: 62,
+      defans: 35,
+      fizik: 45,
+    },
     detaylar: { dribbling: 60, ceviklik: 63, orta_acma: 50, sprint: 65 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

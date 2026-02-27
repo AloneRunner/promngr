@@ -58,7 +58,7 @@ export const JobOffersModal: React.FC<JobOffersModalProps> = ({
                         <div className="text-center py-12 text-slate-500">
                             <Briefcase size={48} className="mx-auto mb-4 opacity-30" />
                             <p>Henüz iş teklifi yok</p>
-                            <p className="text-xs mt-2">Sezon sonunda performansına göre teklifler gelecek</p>
+                            <p className="text-xs mt-2">{t.offersEndSeason || 'Offers will arrive at the end of the season based on your performance'}</p>
                         </div>
                     ) : (
                         offers.map((offer, idx) => (
@@ -93,7 +93,7 @@ export const JobOffersModal: React.FC<JobOffersModalProps> = ({
                                         <div className="mt-3 flex items-center gap-2">
                                             <DollarSign size={14} className="text-emerald-400" />
                                             <span className="text-emerald-400 font-bold">€{offer.salary.toLocaleString()}</span>
-                                            <span className="text-slate-500 text-xs">/hafta</span>
+                                            <span className="text-slate-500 text-xs">/{t.weekPeriod || 'wk'}</span>
                                         </div>
                                     </div>
 

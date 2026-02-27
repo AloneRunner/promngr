@@ -6,9 +6,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "KL",
     reyting: 77,
     yas: 24,
-    ana_ozellikler: { hiz: 54, sut: 16, pas: 58, dribbling: 24, defans: 24, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 54,
+      sut: 16,
+      pas: 58,
+      dribbling: 24,
+      defans: 24,
+      fizik: 78,
+    },
     detaylar: { refleks: 82, ucma: 80, pozisyon: 79 },
-    oyun_tarzlari: ["Refleks Ustası"]
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Agbadou",
@@ -17,9 +24,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "STP",
     reyting: 76,
     yas: 27,
-    ana_ozellikler: { hiz: 72, sut: 48, pas: 66, dribbling: 64, defans: 78, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 48,
+      pas: 66,
+      dribbling: 64,
+      defans: 78,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 80, hiz: 76, kafa_isabeti: 80 },
-    oyun_tarzlari: ["Hızlı Stoper", "Kule"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Okumu",
@@ -28,9 +42,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 70, sut: 44, pas: 64, dribbling: 62, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 44,
+      pas: 64,
+      dribbling: 62,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 79, markaj: 78 },
-    oyun_tarzlari: ["Sert Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "T. Foket",
@@ -39,9 +60,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SĞB",
     reyting: 75,
     yas: 30,
-    ana_ozellikler: { hiz: 80, sut: 60, pas: 74, dribbling: 74, defans: 74, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 60,
+      pas: 74,
+      dribbling: 74,
+      defans: 74,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 80, dayaniklilik: 78, sprint: 82 },
-    oyun_tarzlari: ["Ofansif Bek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Gravillon",
@@ -50,9 +78,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 52, pas: 68, dribbling: 70, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 52,
+      pas: 68,
+      dribbling: 70,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 80, top_kesme: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Matusiwa",
@@ -61,9 +96,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MDO",
     reyting: 75,
     yas: 26,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 74, dribbling: 72, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 74,
+      dribbling: 72,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 78, dayaniklilik: 82, guc: 80 },
-    oyun_tarzlari: ["Kırıcı", "Savaşçı"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "J. Munetsi",
@@ -72,9 +114,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 72, dribbling: 70, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 72,
+      dribbling: 70,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, top_kesme: 76, guc: 79 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "M. Bülter",
@@ -83,9 +132,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SĞO",
     reyting: 75,
     yas: 31,
-    ana_ozellikler: { hiz: 84, sut: 74, pas: 70, dribbling: 76, defans: 30, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 74,
+      pas: 70,
+      dribbling: 76,
+      defans: 30,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 86, sprint: 85, orta_acma: 76 },
-    oyun_tarzlari: ["Seri", "Hızlı Kanat"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "J. Cajuste",
@@ -94,9 +150,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 74, dribbling: 72, defans: 70, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 74,
+      dribbling: 72,
+      defans: 70,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, kisa_pas: 76, guc: 80 },
-    oyun_tarzlari: ["Kutu Kutu", "Güçlü"]
+    oyun_tarzlari: ["Amansız", "Kaya"],
   },
   {
     ad: "K. Doumbia",
@@ -105,9 +168,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SNT",
     reyting: 75,
     yas: 23,
-    ana_ozellikler: { hiz: 86, sut: 76, pas: 58, dribbling: 74, defans: 28, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 76,
+      pas: 58,
+      dribbling: 74,
+      defans: 28,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 90, sprint: 88, bitiricilik: 78 },
-    oyun_tarzlari: ["Sprint Ustası", "Kontra Atak"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "J. Ito",
@@ -116,9 +186,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SĞO",
     reyting: 76,
     yas: 32,
-    ana_ozellikler: { hiz: 88, sut: 74, pas: 72, dribbling: 80, defans: 28, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 88,
+      sut: 74,
+      pas: 72,
+      dribbling: 80,
+      defans: 28,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 92, sprint: 90, dribbling: 82 },
-    oyun_tarzlari: ["Sprint Ustası", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Top Cambazı"],
   },
   {
     ad: "O. Diakité",
@@ -127,9 +204,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 80, sut: 54, pas: 70, dribbling: 72, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 54,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, hizlanma: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Locko",
@@ -138,9 +222,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 82, sut: 54, pas: 70, dribbling: 74, defans: 70, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 54,
+      pas: 70,
+      dribbling: 74,
+      defans: 70,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 84, orta_acma: 74 },
-    oyun_tarzlari: ["Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "N. Mbuku",
@@ -149,9 +240,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SLO",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 84, sut: 72, pas: 70, dribbling: 78, defans: 28, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 72,
+      pas: 70,
+      dribbling: 78,
+      defans: 28,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 86, dribbling: 80 },
-    oyun_tarzlari: ["Hızlı Kanat"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Zeneli",
@@ -160,9 +258,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MOO",
     reyting: 74,
     yas: 29,
-    ana_ozellikler: { hiz: 78, sut: 74, pas: 76, dribbling: 78, defans: 34, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 74,
+      pas: 76,
+      dribbling: 78,
+      defans: 34,
+      fizik: 64,
+    },
     detaylar: { dribbling: 80, serbest_vurus: 78, vizyon: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "Y. Nakamura",
@@ -171,9 +276,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 24,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 76, dribbling: 76, defans: 48, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 76,
+      dribbling: 76,
+      defans: 48,
+      fizik: 66,
+    },
     detaylar: { vizyon: 78, kisa_pas: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "J. Balde",
@@ -182,9 +294,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 82, sut: 74, pas: 56, dribbling: 72, defans: 26, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 74,
+      pas: 56,
+      dribbling: 72,
+      defans: 26,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 84, bitiricilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Carlgren",
@@ -193,9 +312,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "KL",
     reyting: 71,
     yas: 32,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 54, dribbling: 18, defans: 18, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 54,
+      dribbling: 18,
+      defans: 18,
+      fizik: 74,
+    },
     detaylar: { refleks: 76, ucma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "W. Faes",
@@ -204,9 +330,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 66, sut: 46, pas: 64, dribbling: 58, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 46,
+      pas: 64,
+      dribbling: 58,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { markaj: 78, kafa_isabeti: 78 },
-    oyun_tarzlari: ["Kule"]
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Attal",
@@ -215,9 +348,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 28,
-    ana_ozellikler: { hiz: 80, sut: 58, pas: 72, dribbling: 74, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 58,
+      pas: 72,
+      dribbling: 74,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { orta_acma: 76, hizlanma: 82 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Berisha",
@@ -226,9 +366,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 76, sut: 74, pas: 56, dribbling: 70, defans: 26, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 74,
+      pas: 56,
+      dribbling: 70,
+      defans: 26,
+      fizik: 74,
+    },
     detaylar: { bitiricilik: 76, pozisyon: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Kipré",
@@ -237,9 +384,16 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "STP",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 68, sut: 42, pas: 60, dribbling: 56, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 42,
+      pas: 60,
+      dribbling: 56,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { guc: 80, markaj: 75 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Flips",
@@ -248,8 +402,15 @@ export const REIMS_ROYALS_SQUAD = [
     mevki: "MOO",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 78, sut: 70, pas: 74, dribbling: 76, defans: 32, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 70,
+      pas: 74,
+      dribbling: 76,
+      defans: 32,
+      fizik: 64,
+    },
     detaylar: { dribbling: 78, ceviklik: 80 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

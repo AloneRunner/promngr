@@ -245,7 +245,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className={`text-lg font-mono font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
                                             {isPositive ? '=' : ''} €{netBalance.toLocaleString()}
-                                            <span className="text-[10px] text-slate-500 ml-1">/hafta</span>
+                                            <span className="text-[10px] text-slate-500 ml-1">/{t.weekPeriod || 'wk'}</span>
                                         </div>
                                     </div>
                                 );
@@ -371,7 +371,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className="flex justify-between items-center pt-2 font-bold">
                                             <span className="text-white">{t.totalMaintenance}</span>
-                                            <span className="font-mono text-red-400">-€{totalMaint.toLocaleString()}/hafta</span>
+                                            <span className="font-mono text-red-400">-€{totalMaint.toLocaleString()}/{t.weekPeriod || 'wk'}</span>
                                         </div>
                                     </div>
                                 );
@@ -403,14 +403,14 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className="text-right">
                                             <span className="font-mono text-red-400 font-bold">-€{player.wage.toLocaleString()}</span>
-                                            <div className="text-[10px] text-slate-500">/hafta</div>
+                                            <div className="text-[10px] text-slate-500">/{t.weekPeriod || 'wk'}</div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                             <div className="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center">
                                 <span className="text-slate-400 text-sm">{t.totalWages} ({players.length} {t.people || 'players'})</span>
-                                <span className="font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}/hafta</span>
+                                <span className="font-mono text-red-400 font-bold">-€{totalWages.toLocaleString()}/{t.weekPeriod || 'wk'}</span>
                             </div>
                         </div>
                     </div>
@@ -485,25 +485,25 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <h3 className="text-sm font-bold text-blue-400 flex items-center gap-2">
                                     <ClipboardList size={16} /> {t.financialHistory || "Muhasebe Defteri"}
                                 </h3>
-                                <p className="text-[10px] text-slate-400 mt-1">{t.lastWeeksRecords || "Son haftalardaki mali işlemler"}</p>
+                                <p className="text-[10px] text-slate-400 mt-1">{t.lastWeeksRecords || "Recent financial transactions"}</p>
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-xs">
                                     <thead className="bg-slate-900/50 border-b border-slate-700">
                                         <tr>
-                                            <th className="p-2 text-left text-slate-400 font-bold">Hafta</th>
-                                            <th className="p-2 text-right text-emerald-400 font-bold">Gelir</th>
-                                            <th className="p-2 text-right text-red-400 font-bold">Gider</th>
-                                            <th className="p-2 text-right text-blue-400 font-bold">Net</th>
-                                            <th className="p-2 text-right text-slate-400 font-bold">Bütçe</th>
+                                            <th className="p-2 text-left text-slate-400 font-bold">{t.week || 'Week'}</th>
+                                            <th className="p-2 text-right text-emerald-400 font-bold">{t.income || 'Income'}</th>
+                                            <th className="p-2 text-right text-red-400 font-bold">{t.expenses || 'Expenses'}</th>
+                                            <th className="p-2 text-right text-blue-400 font-bold">{t.netLabel || 'Net'}</th>
+                                            <th className="p-2 text-right text-slate-400 font-bold">{t.budgetLabel || 'Budget'}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {[...fin.history].reverse().map((record: any, idx: number) => (
                                             <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                                                 <td className="p-2 text-slate-300">
-                                                    <div className="font-bold">H{record.week}</div>
-                                                    <div className="text-[10px] text-slate-500">S{record.season}</div>
+                                                    <div className="font-bold">{t.weekShort || 'W'}{record.week}</div>
+                                                    <div className="text-[10px] text-slate-500">{t.seasonShort || 'S'}{record.season}</div>
                                                 </td>
                                                 <td className="p-2 text-right">
                                                     <div className="font-mono text-emerald-400 font-bold">+€{(record.income.total / 1000000).toFixed(2)}M</div>
@@ -563,16 +563,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487466365202-1afdb86c764e?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40"></div>
                             <div className="absolute bottom-1 left-2">
                                 <div className="text-white font-bold text-sm">{team.city} Arena</div>
-                                <div className="text-emerald-400 text-[10px] font-mono">{team.facilities.stadiumCapacity.toLocaleString()} Koltuk</div>
+                                <div className="text-emerald-400 text-[10px] font-mono">{team.facilities.stadiumCapacity.toLocaleString()} {t.seatsLabel || 'seats'}</div>
                             </div>
                             {/* Construction Overlay */}
                             {team.facilities.stadiumConstructionWeeks && team.facilities.stadiumConstructionWeeks > 0 ? (
                                 <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-2 backdrop-blur-sm">
                                     <div className="text-yellow-400 font-bold text-xs flex items-center gap-1 animate-pulse">
-                                        <Hammer size={12} /> İNŞAAT SÜRÜYOR
+                                        <Hammer size={12} /> {t.constructionInProgress?.toUpperCase() || 'CONSTRUCTION IN PROGRESS'}
                                     </div>
                                     <div className="text-white text-[10px] mt-1">
-                                        Bitiş: {team.facilities.stadiumConstructionWeeks} hafta
+                                        {t.finishesIn || 'Finishes in'}: {team.facilities.stadiumConstructionWeeks} {t.weeks || 'weeks'}
                                     </div>
                                     <div className="w-full max-w-[120px] bg-slate-700 h-1.5 rounded-full mt-1 overflow-hidden">
                                         <div className="bg-yellow-500 h-full animate-pulse-slow w-full"></div>
@@ -582,7 +582,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         </div>
 
                         {/* Upgrade Info */}
-                        {team.facilities.stadiumLevel < 25 && (
+                        {team.facilities.stadiumLevel < 15 && (
                             <div className="bg-slate-900/50 rounded p-2 mb-2 text-[10px]">
                                 <div className="flex justify-between text-slate-400 mb-1">
                                     <span>{t.currentLabel || 'Current'}:</span>
@@ -596,7 +596,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                             <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
-                                            <span className="text-red-400">+€{(getProjectedMaintenance('stadium', team.facilities.stadiumLevel + 1) - getProjectedMaintenance('stadium', team.facilities.stadiumLevel)).toLocaleString()}/hafta</span>
+                                            <span className="text-red-400">+€{(getProjectedMaintenance('stadium', team.facilities.stadiumLevel + 1) - getProjectedMaintenance('stadium', team.facilities.stadiumLevel)).toLocaleString()}/{t.weekPeriod || 'wk'}</span>
                                         </div>
                                     </>
                                 ) : (
@@ -608,16 +608,16 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                         <div className="mb-2">
                             <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
                                 <span>Level Progress</span>
-                                <span>{(team.facilities.stadiumLevel / 25 * 100).toFixed(0)}%</span>
+                                <span>{(team.facilities.stadiumLevel / 15 * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 25) * 100}%` }}></div>
+                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(team.facilities.stadiumLevel / 15) * 100}%` }}></div>
                             </div>
                         </div>
 
                         <button
                             onClick={() => onUpgradeFacility && onUpgradeFacility('stadium')}
-                            disabled={team.facilities.stadiumLevel >= 25 || (team.facilities.stadiumConstructionWeeks || 0) > 0 || (() => {
+                            disabled={team.facilities.stadiumLevel >= 15 || (team.facilities.stadiumConstructionWeeks || 0) > 0 || (() => {
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const baseCost = 200000;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
@@ -630,8 +630,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     : 'bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white'}`}
                         >
                             {team.facilities.stadiumConstructionWeeks && team.facilities.stadiumConstructionWeeks > 0 ? (
-                                <><Hammer size={14} className="animate-spin-slow" /> İnşaat Sürüyor ({team.facilities.stadiumConstructionWeeks}h)</>
-                            ) : team.facilities.stadiumLevel >= 25 ? 'MAX LEVEL' : (() => {
+                                <><Hammer size={14} className="animate-spin-slow" /> {t.constructionInProgress || 'Construction'} ({team.facilities.stadiumConstructionWeeks}w)</>
+                            ) : team.facilities.stadiumLevel >= 15 ? 'MAX LEVEL' : (() => {
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const baseCost = 200000;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
@@ -673,10 +673,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             {team.facilities.trainingConstructionWeeks && team.facilities.trainingConstructionWeeks > 0 ? (
                                 <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-2 backdrop-blur-sm">
                                     <div className="text-emerald-400 font-bold text-xs flex items-center gap-1 animate-pulse">
-                                        <Hammer size={12} /> İNŞAAT SÜRÜYOR
+                                        <Hammer size={12} /> {t.constructionInProgress?.toUpperCase() || 'CONSTRUCTION IN PROGRESS'}
                                     </div>
                                     <div className="text-white text-[10px] mt-1">
-                                        Bitiş: {team.facilities.trainingConstructionWeeks} hafta
+                                        {t.finishesIn || 'Finishes in'}: {team.facilities.trainingConstructionWeeks} {t.weeks || 'weeks'}
                                     </div>
                                     <div className="w-full max-w-[120px] bg-slate-700 h-1.5 rounded-full mt-1 overflow-hidden">
                                         <div className="bg-emerald-500 h-full animate-pulse-slow w-full"></div>
@@ -698,7 +698,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 </div>
                                 <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                     <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
-                                    <span className="text-red-400">+€{(getProjectedMaintenance('training', team.facilities.trainingLevel + 1) - getProjectedMaintenance('training', team.facilities.trainingLevel)).toLocaleString()}/hafta</span>
+                                    <span className="text-red-400">+€{(getProjectedMaintenance('training', team.facilities.trainingLevel + 1) - getProjectedMaintenance('training', team.facilities.trainingLevel)).toLocaleString()}/{t.weekPeriod || 'wk'}</span>
                                 </div>
                             </div>
                         )}
@@ -726,7 +726,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     : 'bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white'}`}
                         >
                             {team.facilities.trainingConstructionWeeks && team.facilities.trainingConstructionWeeks > 0 ? (
-                                <><Hammer size={14} className="animate-spin-slow" /> İnşaat Sürüyor ({team.facilities.trainingConstructionWeeks}h)</>
+                                <><Hammer size={14} className="animate-spin-slow" /> {t.constructionInProgress || 'Construction'} ({team.facilities.trainingConstructionWeeks}w)</>
                             ) : team.facilities.trainingLevel >= 25 ? 'MAX' : (() => {
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
@@ -769,10 +769,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 {team.facilities.academyConstructionWeeks && team.facilities.academyConstructionWeeks > 0 ? (
                                     <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-2 backdrop-blur-sm z-10">
                                         <div className="text-purple-400 font-bold text-xs flex items-center gap-1 animate-pulse">
-                                            <Hammer size={12} /> İNŞAAT SÜRÜYOR
+                                            <Hammer size={12} /> {t.constructionInProgress?.toUpperCase() || 'CONSTRUCTION IN PROGRESS'}
                                         </div>
                                         <div className="text-white text-[10px] mt-1">
-                                            Bitiş: {team.facilities.academyConstructionWeeks} hafta
+                                            {t.finishesIn || 'Finishes in'}: {team.facilities.academyConstructionWeeks} {t.weeks || 'weeks'}
                                         </div>
                                         <div className="w-full max-w-[120px] bg-slate-700 h-1.5 rounded-full mt-1 overflow-hidden">
                                             <div className="bg-purple-500 h-full animate-pulse-slow w-full"></div>
@@ -795,7 +795,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         </div>
                                         <div className="flex justify-between text-slate-500 mt-1 border-t border-slate-700/50 pt-1">
                                             <span>{t.maintIncreaseLabel || 'Maintenance increase'}:</span>
-                                            <span className="text-red-400">+€{(getProjectedMaintenance('academy', team.facilities.academyLevel + 1) - getProjectedMaintenance('academy', team.facilities.academyLevel)).toLocaleString()}/hafta</span>
+                                            <span className="text-red-400">+€{(getProjectedMaintenance('academy', team.facilities.academyLevel + 1) - getProjectedMaintenance('academy', team.facilities.academyLevel)).toLocaleString()}/{t.weekPeriod || 'wk'}</span>
                                         </div>
                                     </div>
                                 )}
@@ -823,8 +823,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                             : 'bg-yellow-600 hover:bg-yellow-500 disabled:bg-slate-700 disabled:text-slate-500 text-white'}`}
                                 >
                                     {team.facilities.academyConstructionWeeks && team.facilities.academyConstructionWeeks > 0 ? (
-                                        <><Hammer size={16} className="animate-spin-slow" /> İnşaat Sürüyor ({team.facilities.academyConstructionWeeks}h)</>
-                                    ) : team.facilities.academyLevel >= 25 ? 'MAX SEVİYE' : (() => {
+                                        <><Hammer size={16} className="animate-spin-slow" /> {t.constructionInProgress || 'Construction'} ({team.facilities.academyConstructionWeeks}w)</>
+                                    ) : team.facilities.academyLevel >= 25 ? 'MAX LEVEL' : (() => {
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
                                         const cost = Math.floor(250000 * levelMultiplier * (1 + nextLevel * 0.05));
@@ -849,7 +849,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                     </h2>
                                     <p className="text-slate-400 text-sm mt-1">{t.scoutReport}</p>
                                     <p className="text-purple-400/80 text-xs mt-2 bg-purple-900/20 px-2 py-1 rounded border border-purple-500/20">
-                                        🌍 Scoutlar dünya genelinden genç yetenekler bulur. Bu oyuncular başka kulüplerin altyapısından gelir.
+                                        🌍 {t.scoutReportDesc || 'Scouts travel the world to find young talents. These players might come from other clubs\' academies.'}
                                     </p>
                                 </div>
                                 <div className="text-right">

@@ -6,9 +6,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "KL",
     reyting: 78,
     yas: 30,
-    ana_ozellikler: { hiz: 52, sut: 16, pas: 60, dribbling: 24, defans: 24, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 16,
+      pas: 60,
+      dribbling: 24,
+      defans: 24,
+      fizik: 78,
+    },
     detaylar: { refleks: 82, ucma: 80, pozisyon: 80 },
-    oyun_tarzlari: ["Refleks Ustası"]
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Koné",
@@ -17,9 +24,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "STP",
     reyting: 78,
     yas: 23,
-    ana_ozellikler: { hiz: 76, sut: 50, pas: 70, dribbling: 68, defans: 80, fizik: 84 },
+    ana_ozellikler: {
+      hiz: 76,
+      sut: 50,
+      pas: 70,
+      dribbling: 68,
+      defans: 80,
+      fizik: 84,
+    },
     detaylar: { top_kesme: 82, guc: 86, top_surme: 76 },
-    oyun_tarzlari: ["Güçlü", "Top Süren Stoper"]
+    oyun_tarzlari: ["Kaya", "Top Cambazı"],
   },
   {
     ad: "N. Elvedi",
@@ -28,9 +42,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "STP",
     reyting: 79,
     yas: 28,
-    ana_ozellikler: { hiz: 74, sut: 48, pas: 72, dribbling: 70, defans: 82, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 48,
+      pas: 72,
+      dribbling: 70,
+      defans: 82,
+      fizik: 82,
+    },
     detaylar: { top_kesme: 84, markaj: 82, top_surme: 78 },
-    oyun_tarzlari: ["Top Süren Stoper", "Lider"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "J. Scally",
@@ -39,9 +60,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SĞB",
     reyting: 76,
     yas: 21,
-    ana_ozellikler: { hiz: 84, sut: 62, pas: 74, dribbling: 76, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 62,
+      pas: 74,
+      dribbling: 76,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { sprint: 86, hizlanma: 86, orta_acma: 78 },
-    oyun_tarzlari: ["Hızlı Bek", "Ofansif Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "R. Bensebaini",
@@ -50,9 +78,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SLB",
     reyting: 77,
     yas: 29,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 76, dribbling: 76, defans: 78, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 76,
+      dribbling: 76,
+      defans: 78,
+      fizik: 80,
+    },
     detaylar: { orta_acma: 80, sprint: 82, guc: 82 },
-    oyun_tarzlari: ["Güçlü", "Ofansif Bek"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Weigl",
@@ -61,9 +96,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "MDO",
     reyting: 78,
     yas: 29,
-    ana_ozellikler: { hiz: 68, sut: 68, pas: 82, dribbling: 76, defans: 78, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 68,
+      pas: 82,
+      dribbling: 76,
+      defans: 78,
+      fizik: 74,
+    },
     detaylar: { vizyon: 84, kisa_pas: 86, top_kesme: 80 },
-    oyun_tarzlari: ["Oyun Kurucu", "Regista"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "J. Hofmann",
@@ -72,9 +114,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SĞO",
     reyting: 79,
     yas: 32,
-    ana_ozellikler: { hiz: 80, sut: 78, pas: 82, dribbling: 80, defans: 42, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 78,
+      pas: 82,
+      dribbling: 80,
+      defans: 42,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 88, vizyon: 84, asist: 86 },
-    oyun_tarzlari: ["Orta Açma Ustası", "Asist Kralı", "Kaptan"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "A. Stöger",
@@ -83,9 +132,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "MO",
     reyting: 75,
     yas: 34,
-    ana_ozellikler: { hiz: 68, sut: 74, pas: 80, dribbling: 78, defans: 48, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 74,
+      pas: 80,
+      dribbling: 78,
+      defans: 48,
+      fizik: 66,
+    },
     detaylar: { vizyon: 82, serbest_vurus: 82, liderlik: 78 },
-    oyun_tarzlari: ["Oyun Kurucu", "Lider"]
+    oyun_tarzlari: ["Maestro"],
   },
   {
     ad: "F. Neuhaus",
@@ -94,9 +150,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "MO",
     reyting: 77,
     yas: 27,
-    ana_ozellikler: { hiz: 74, sut: 76, pas: 80, dribbling: 78, defans: 60, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 76,
+      pas: 80,
+      dribbling: 78,
+      defans: 60,
+      fizik: 74,
+    },
     detaylar: { uzaktan_sut: 82, vizyon: 82, kisa_pas: 82 },
-    oyun_tarzlari: ["Oyun Kurucu", "Uzaktan Vuruş"]
+    oyun_tarzlari: ["Maestro", "Uzaktan Şutör"],
   },
   {
     ad: "A. Plea",
@@ -105,9 +168,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SNT",
     reyting: 79,
     yas: 31,
-    ana_ozellikler: { hiz: 82, sut: 82, pas: 74, dribbling: 80, defans: 30, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 82,
+      pas: 74,
+      dribbling: 80,
+      defans: 30,
+      fizik: 74,
+    },
     detaylar: { bitiricilik: 86, hizlanma: 84, pozisyon: 84 },
-    oyun_tarzlari: ["Fırsatçı Golcü", "Plase Şut"]
+    oyun_tarzlari: ["İleride Bekleyen", "Plase Şut"],
   },
   {
     ad: "M. Thuram",
@@ -116,9 +186,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SLO",
     reyting: 78,
     yas: 27,
-    ana_ozellikler: { hiz: 86, sut: 78, pas: 72, dribbling: 82, defans: 28, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 78,
+      pas: 72,
+      dribbling: 82,
+      defans: 28,
+      fizik: 78,
+    },
     detaylar: { hizlanma: 88, dribbling: 84, guc: 80 },
-    oyun_tarzlari: ["Hızlı Kanat", "Güçlü", "Çalımlı"]
+    oyun_tarzlari: ["Seri", "Kaya", "Top Cambazı"],
   },
   {
     ad: "L. Netz",
@@ -127,9 +204,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 58, pas: 74, dribbling: 74, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 58,
+      pas: 74,
+      dribbling: 74,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { sprint: 82, orta_acma: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Beyer",
@@ -138,9 +222,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 44, pas: 66, dribbling: 64, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 44,
+      pas: 66,
+      dribbling: 64,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 77, hizlanma: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Kramer",
@@ -149,9 +240,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 33,
-    ana_ozellikler: { hiz: 64, sut: 66, pas: 76, dribbling: 70, defans: 78, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 64,
+      sut: 66,
+      pas: 76,
+      dribbling: 70,
+      defans: 78,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 80, liderlik: 82 },
-    oyun_tarzlari: ["Kırıcı", "Lider"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "H. Wolf",
@@ -160,9 +258,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 84, sut: 72, pas: 72, dribbling: 78, defans: 28, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 72,
+      pas: 72,
+      dribbling: 78,
+      defans: 28,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 86, sprint: 85 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "T. Sommer",
@@ -171,9 +276,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "KL",
     reyting: 74,
     yas: 32,
-    ana_ozellikler: { hiz: 48, sut: 14, pas: 58, dribbling: 18, defans: 18, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 48,
+      sut: 14,
+      pas: 58,
+      dribbling: 18,
+      defans: 18,
+      fizik: 76,
+    },
     detaylar: { refleks: 78, ucma: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Itakura",
@@ -182,9 +294,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "STP",
     reyting: 75,
     yas: 27,
-    ana_ozellikler: { hiz: 72, sut: 48, pas: 70, dribbling: 68, defans: 78, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 48,
+      pas: 70,
+      dribbling: 68,
+      defans: 78,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 80, top_surme: 76 },
-    oyun_tarzlari: ["Top Süren Stoper"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "N. Hack",
@@ -193,9 +312,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SĞB",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 54, pas: 70, dribbling: 72, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 54,
+      pas: 70,
+      dribbling: 72,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { dayaniklilik: 78, orta_acma: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "R. Reitz",
@@ -204,9 +330,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "MO",
     reyting: 73,
     yas: 22,
-    ana_ozellikler: { hiz: 74, sut: 72, pas: 76, dribbling: 74, defans: 50, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 72,
+      pas: 76,
+      dribbling: 74,
+      defans: 50,
+      fizik: 68,
+    },
     detaylar: { vizyon: 78, kisa_pas: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Honorat",
@@ -215,9 +348,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 27,
-    ana_ozellikler: { hiz: 86, sut: 74, pas: 72, dribbling: 78, defans: 26, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 74,
+      pas: 72,
+      dribbling: 78,
+      defans: 26,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 88, sprint: 87 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "T. Cvancara",
@@ -226,9 +366,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 24,
-    ana_ozellikler: { hiz: 78, sut: 76, pas: 58, dribbling: 72, defans: 26, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 76,
+      pas: 58,
+      dribbling: 72,
+      defans: 26,
+      fizik: 78,
+    },
     detaylar: { bitiricilik: 78, kafa_isabeti: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Herrmann",
@@ -237,9 +384,16 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 22,
-    ana_ozellikler: { hiz: 82, sut: 68, pas: 70, dribbling: 76, defans: 26, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 68,
+      pas: 70,
+      dribbling: 76,
+      defans: 26,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 84, dribbling: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Engels",
@@ -248,8 +402,15 @@ export const GLADBACH_FOALS_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 21,
-    ana_ozellikler: { hiz: 80, sut: 74, pas: 56, dribbling: 70, defans: 24, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 74,
+      pas: 56,
+      dribbling: 70,
+      defans: 24,
+      fizik: 74,
+    },
     detaylar: { hizlanma: 82, bitiricilik: 76 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

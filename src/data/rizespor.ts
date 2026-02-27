@@ -1,4 +1,3 @@
-
 export const RIZESPOR_SQUAD = [
   {
     ad: "Q. Lachy",
@@ -7,9 +6,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "MO",
     reyting: 74,
     yas: 29,
-    ana_ozellikler: { hiz: 72, sut: 69, pas: 74, dribbling: 75, defans: 69, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 69,
+      pas: 74,
+      dribbling: 75,
+      defans: 69,
+      fizik: 77,
+    },
     detaylar: { ceviklik: 83, kisa_pas: 77, agresiflik: 87, ziplama: 79 },
-    oyun_tarzlari: ["Amansız", "Güçlü", "Keskin Pas"]
+    oyun_tarzlari: ["Amansız", "Kaya", "Keskin Pas"],
   },
   {
     ad: "A. Sowey",
@@ -18,9 +24,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SNT",
     reyting: 74,
     yas: 31,
-    ana_ozellikler: { hiz: 75, sut: 72, pas: 60, dribbling: 72, defans: 32, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 72,
+      pas: 60,
+      dribbling: 72,
+      defans: 32,
+      fizik: 79,
+    },
     detaylar: { sprint: 77, bitiricilik: 79, guc: 85, ziplama: 88 },
-    oyun_tarzlari: ["Karşı Koyan"]
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Fofann",
@@ -29,9 +42,23 @@ export const RIZESPOR_SQUAD = [
     mevki: "KL",
     reyting: 76,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 20, pas: 40, dribbling: 20, defans: 20, fizik: 70 },
-    detaylar: { ucma: 78, top_kontrol: 71, vurus: 70, pozisyon: 74, refleks: 79, guc: 77 },
-    oyun_tarzlari: ["Ayak Hakimiyeti", "Ortaya Çıkan"]
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 20,
+      pas: 40,
+      dribbling: 20,
+      defans: 20,
+      fizik: 70,
+    },
+    detaylar: {
+      ucma: 78,
+      top_kontrol: 71,
+      vurus: 70,
+      pozisyon: 74,
+      refleks: 79,
+      guc: 77,
+    },
+    oyun_tarzlari: ["Ortaya Çıkan"],
   },
   {
     ad: "C. Hojerr",
@@ -40,9 +67,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SLB",
     reyting: 73,
     yas: 31,
-    ana_ozellikler: { hiz: 74, sut: 69, pas: 76, dribbling: 70, defans: 67, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 69,
+      pas: 76,
+      dribbling: 70,
+      defans: 67,
+      fizik: 73,
+    },
     detaylar: { sut_gucu: 85, falso: 80, uzaktan_sut: 76, serbest_vurus: 76 },
-    oyun_tarzlari: ["Duran Top", "Kuvvetli Şut"]
+    oyun_tarzlari: ["Ölü Top Uzmanı", "Roket"],
   },
   {
     ad: "M. Sagnann",
@@ -51,9 +85,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "STP",
     reyting: 73,
     yas: 26,
-    ana_ozellikler: { hiz: 66, sut: 32, pas: 58, dribbling: 56, defans: 73, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 32,
+      pas: 58,
+      dribbling: 56,
+      defans: 73,
+      fizik: 77,
+    },
     detaylar: { guc: 82, ziplama: 79, ayakta_mudahale: 75, agresiflik: 76 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "Yakın Markaj"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "V. Mihailah",
@@ -62,9 +103,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 92, sut: 66, pas: 65, dribbling: 73, defans: 33, fizik: 56 },
+    ana_ozellikler: {
+      hiz: 92,
+      sut: 66,
+      pas: 65,
+      dribbling: 73,
+      defans: 33,
+      fizik: 56,
+    },
     detaylar: { hizlanma: 93, sprint: 92, ceviklik: 85, denge: 80 },
-    oyun_tarzlari: ["Çabuk Adım", "Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "T. Shahinn",
@@ -73,9 +121,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SĞB",
     reyting: 71,
     yas: 25,
-    ana_ozellikler: { hiz: 77, sut: 46, pas: 60, dribbling: 70, defans: 66, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 46,
+      pas: 60,
+      dribbling: 70,
+      defans: 66,
+      fizik: 62,
+    },
     detaylar: { dayaniklilik: 78, sprint: 77, hizlanma: 77, denge: 76 },
-    oyun_tarzlari: ["Kesme Pas", "Top Kesici"]
+    oyun_tarzlari: ["Keskin Pas", "Top Kesici"],
   },
   {
     ad: "V. Jurecka",
@@ -84,9 +139,21 @@ export const RIZESPOR_SQUAD = [
     mevki: "SNT",
     reyting: 70,
     yas: 31,
-    ana_ozellikler: { hiz: 74, sut: 70, pas: 65, dribbling: 69, defans: 45, fizik: 76 },
-    detaylar: { dayaniklilik: 84, ziplama: 78, sut_gucu: 73, sogukkanlilik: 72 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 70,
+      pas: 65,
+      dribbling: 69,
+      defans: 45,
+      fizik: 76,
+    },
+    detaylar: {
+      dayaniklilik: 84,
+      ziplama: 78,
+      sut_gucu: 73,
+      sogukkanlilik: 72,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Olawayo",
@@ -95,9 +162,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "MOO",
     reyting: 70,
     yas: 28,
-    ana_ozellikler: { hiz: 82, sut: 63, pas: 65, dribbling: 73, defans: 44, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 63,
+      pas: 65,
+      dribbling: 73,
+      defans: 44,
+      fizik: 65,
+    },
     detaylar: { sprint: 82, ceviklik: 80, ziplama: 78, dayaniklilik: 75 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "Hava Hakimi", "Teknik", "Top Kesici"]
+    oyun_tarzlari: ["Hava Hakimi", "İlk Dokunuş", "Top Kesici"],
   },
   {
     ad: "S. Akaydinn",
@@ -106,9 +180,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "STP",
     reyting: 70,
     yas: 31,
-    ana_ozellikler: { hiz: 55, sut: 37, pas: 43, dribbling: 48, defans: 70, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 55,
+      sut: 37,
+      pas: 43,
+      dribbling: 48,
+      defans: 70,
+      fizik: 76,
+    },
     detaylar: { guc: 78, ziplama: 78, agresiflik: 76 },
-    oyun_tarzlari: ["Hava Hakimi"]
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "K. Alikulov",
@@ -117,9 +198,21 @@ export const RIZESPOR_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 26,
-    ana_ozellikler: { hiz: 63, sut: 33, pas: 48, dribbling: 49, defans: 69, fizik: 69 },
-    detaylar: { ziplama: 77, denge: 76, dayaniklilik: 73, defansif_farkindalik: 70 },
-    oyun_tarzlari: ["Hassas Kafa Vuruşu", "Hava Hakimi"]
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 33,
+      pas: 48,
+      dribbling: 49,
+      defans: 69,
+      fizik: 69,
+    },
+    detaylar: {
+      ziplama: 77,
+      denge: 76,
+      dayaniklilik: 73,
+      defansif_farkindalik: 70,
+    },
+    oyun_tarzlari: ["Hava Hakimi"],
   },
   {
     ad: "A. Mocsik",
@@ -128,9 +221,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "STP",
     reyting: 68,
     yas: 25,
-    ana_ozellikler: { hiz: 63, sut: 34, pas: 42, dribbling: 49, defans: 66, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 34,
+      pas: 42,
+      dribbling: 49,
+      defans: 66,
+      fizik: 75,
+    },
     detaylar: { guc: 79, ziplama: 75, ayakta_mudahale: 71, top_kesme: 69 },
-    oyun_tarzlari: ["Sezgili"]
+    oyun_tarzlari: [],
   },
   {
     ad: "H. Dervish",
@@ -139,9 +239,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SNT",
     reyting: 67,
     yas: 26,
-    ana_ozellikler: { hiz: 72, sut: 65, pas: 63, dribbling: 73, defans: 39, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 65,
+      pas: 63,
+      dribbling: 73,
+      defans: 39,
+      fizik: 62,
+    },
     detaylar: { top_kontrol: 76, dribbling: 75, sprint: 72, ziplama: 71 },
-    oyun_tarzlari: ["Alçak Sert Şut", "Baskıya Dayanıklı"]
+    oyun_tarzlari: ["Roket", "Baskıya Dayanıklı"],
   },
   {
     ad: "A. Zeqiry",
@@ -150,9 +257,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SLO",
     reyting: 67,
     yas: 25,
-    ana_ozellikler: { hiz: 72, sut: 71, pas: 62, dribbling: 68, defans: 32, fizik: 55 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 71,
+      pas: 62,
+      dribbling: 68,
+      defans: 32,
+      fizik: 55,
+    },
     detaylar: { sut_gucu: 79, hizlanma: 74, voleler: 73, uzaktan_sut: 72 },
-    oyun_tarzlari: ["Alçak Sert Şut"]
+    oyun_tarzlari: ["Roket"],
   },
   {
     ad: "D. Varesan",
@@ -161,9 +275,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "MOO",
     reyting: 67,
     yas: 24,
-    ana_ozellikler: { hiz: 65, sut: 62, pas: 65, dribbling: 70, defans: 40, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 65,
+      sut: 62,
+      pas: 65,
+      dribbling: 70,
+      defans: 40,
+      fizik: 54,
+    },
     detaylar: { dribbling: 71, falso: 71, vizyon: 70, denge: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Kilicc",
@@ -172,9 +293,22 @@ export const RIZESPOR_SQUAD = [
     mevki: "KL",
     reyting: 73,
     yas: 20,
-    ana_ozellikler: { hiz: 63, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 73 },
-    detaylar: { ucma: 63, refleks: 73, vurus: 68, pozisyon: 65, top_kontrol: 61 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 63,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 73,
+    },
+    detaylar: {
+      ucma: 63,
+      refleks: 73,
+      vurus: 68,
+      pozisyon: 65,
+      top_kontrol: 61,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "S. Shenn",
@@ -183,9 +317,22 @@ export const RIZESPOR_SQUAD = [
     mevki: "KL",
     reyting: 71,
     yas: 21,
-    ana_ozellikler: { hiz: 61, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 71 },
-    detaylar: { ucma: 61, refleks: 71, vurus: 66, pozisyon: 63, top_kontrol: 59 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 61,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 71,
+    },
+    detaylar: {
+      ucma: 61,
+      refleks: 71,
+      vurus: 66,
+      pozisyon: 63,
+      top_kontrol: 59,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "Y. Demirky",
@@ -194,9 +341,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SĞB",
     reyting: 70,
     yas: 22,
-    ana_ozellikler: { hiz: 60, sut: 45, pas: 62, dribbling: 60, defans: 70, fizik: 65 },
+    ana_ozellikler: {
+      hiz: 60,
+      sut: 45,
+      pas: 62,
+      dribbling: 60,
+      defans: 70,
+      fizik: 65,
+    },
     detaylar: { ayakta_mudahale: 70, top_kesme: 65, kafa_isabeti: 60, guc: 62 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Ozgurr",
@@ -205,9 +359,16 @@ export const RIZESPOR_SQUAD = [
     mevki: "SLB",
     reyting: 69,
     yas: 23,
-    ana_ozellikler: { hiz: 59, sut: 44, pas: 61, dribbling: 59, defans: 69, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 59,
+      sut: 44,
+      pas: 61,
+      dribbling: 59,
+      defans: 69,
+      fizik: 64,
+    },
     detaylar: { ayakta_mudahale: 69, top_kesme: 64, kafa_isabeti: 59, guc: 61 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "V. Polatt",
@@ -216,9 +377,21 @@ export const RIZESPOR_SQUAD = [
     mevki: "MDO",
     reyting: 68,
     yas: 24,
-    ana_ozellikler: { hiz: 53, sut: 48, pas: 63, dribbling: 60, defans: 68, fizik: 63 },
-    detaylar: { top_kesme: 68, ayakta_mudahale: 63, dayaniklilik: 65, kisa_pas: 60 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 53,
+      sut: 48,
+      pas: 63,
+      dribbling: 60,
+      defans: 68,
+      fizik: 63,
+    },
+    detaylar: {
+      top_kesme: 68,
+      ayakta_mudahale: 63,
+      dayaniklilik: 65,
+      kisa_pas: 60,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Dogann",
@@ -227,9 +400,21 @@ export const RIZESPOR_SQUAD = [
     mevki: "MDO",
     reyting: 67,
     yas: 25,
-    ana_ozellikler: { hiz: 52, sut: 47, pas: 62, dribbling: 59, defans: 67, fizik: 62 },
-    detaylar: { top_kesme: 67, ayakta_mudahale: 62, dayaniklilik: 64, kisa_pas: 59 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 47,
+      pas: 62,
+      dribbling: 59,
+      defans: 67,
+      fizik: 62,
+    },
+    detaylar: {
+      top_kesme: 67,
+      ayakta_mudahale: 62,
+      dayaniklilik: 64,
+      kisa_pas: 59,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "E. Erenn",
@@ -238,9 +423,21 @@ export const RIZESPOR_SQUAD = [
     mevki: "MDO",
     reyting: 65,
     yas: 26,
-    ana_ozellikler: { hiz: 50, sut: 45, pas: 60, dribbling: 57, defans: 65, fizik: 60 },
-    detaylar: { top_kesme: 65, ayakta_mudahale: 60, dayaniklilik: 62, kisa_pas: 57 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 50,
+      sut: 45,
+      pas: 60,
+      dribbling: 57,
+      defans: 65,
+      fizik: 60,
+    },
+    detaylar: {
+      top_kesme: 65,
+      ayakta_mudahale: 60,
+      dayaniklilik: 62,
+      kisa_pas: 57,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Garcy",
@@ -249,8 +446,15 @@ export const RIZESPOR_SQUAD = [
     mevki: "MO",
     reyting: 64,
     yas: 27,
-    ana_ozellikler: { hiz: 52, sut: 54, pas: 64, dribbling: 59, defans: 49, fizik: 54 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 54,
+      pas: 64,
+      dribbling: 59,
+      defans: 49,
+      fizik: 54,
+    },
     detaylar: { vizyon: 59, kisa_pas: 64, top_kontrol: 56, dayaniklilik: 52 },
-    oyun_tarzlari: []
-  }
+    oyun_tarzlari: [],
+  },
 ];

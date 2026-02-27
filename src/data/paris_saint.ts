@@ -6,9 +6,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SNT",
     reyting: 90,
     yas: 28,
-    ana_ozellikler: { hiz: 91, sut: 88, pas: 83, dribbling: 93, defans: 50, fizik: 69 },
+    ana_ozellikler: {
+      hiz: 91,
+      sut: 88,
+      pas: 83,
+      dribbling: 93,
+      defans: 50,
+      fizik: 69,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Hakimmy",
@@ -17,9 +24,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SĞB",
     reyting: 89,
     yas: 26,
-    ana_ozellikler: { hiz: 92, sut: 79, pas: 82, dribbling: 83, defans: 82, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 92,
+      sut: 79,
+      pas: 82,
+      dribbling: 83,
+      defans: 82,
+      fizik: 79,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "V. Vitinhah",
@@ -28,9 +42,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MO",
     reyting: 89,
     yas: 25,
-    ana_ozellikler: { hiz: 72, sut: 80, pas: 86, dribbling: 90, defans: 75, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 80,
+      pas: 86,
+      dribbling: 90,
+      defans: 75,
+      fizik: 70,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "K. Kavarasky",
@@ -39,9 +60,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SLK",
     reyting: 87,
     yas: 24,
-    ana_ozellikler: { hiz: 86, sut: 80, pas: 83, dribbling: 88, defans: 58, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 86,
+      sut: 80,
+      pas: 83,
+      dribbling: 88,
+      defans: 58,
+      fizik: 78,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Markinhoss",
@@ -50,9 +78,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "STP",
     reyting: 87,
     yas: 31,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 75, dribbling: 74, defans: 89, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 75,
+      dribbling: 74,
+      defans: 89,
+      fizik: 80,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "N. Mendeze",
@@ -61,9 +96,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SLB",
     reyting: 86,
     yas: 23,
-    ana_ozellikler: { hiz: 95, sut: 65, pas: 76, dribbling: 82, defans: 80, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 95,
+      sut: 65,
+      pas: 76,
+      dribbling: 82,
+      defans: 80,
+      fizik: 77,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "W. Pachoh",
@@ -72,9 +114,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "STP",
     reyting: 86,
     yas: 23,
-    ana_ozellikler: { hiz: 80, sut: 34, pas: 62, dribbling: 62, defans: 86, fizik: 86 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 34,
+      pas: 62,
+      dribbling: 62,
+      defans: 86,
+      fizik: 86,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Nevese",
@@ -83,9 +132,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MO",
     reyting: 85,
     yas: 20,
-    ana_ozellikler: { hiz: 74, sut: 69, pas: 80, dribbling: 84, defans: 82, fizik: 83 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 69,
+      pas: 80,
+      dribbling: 84,
+      defans: 82,
+      fizik: 83,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Douee",
@@ -94,9 +150,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SĞK",
     reyting: 85,
     yas: 20,
-    ana_ozellikler: { hiz: 83, sut: 80, pas: 77, dribbling: 90, defans: 55, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 83,
+      sut: 80,
+      pas: 77,
+      dribbling: 90,
+      defans: 55,
+      fizik: 74,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Ruize",
@@ -105,9 +168,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MO",
     reyting: 85,
     yas: 29,
-    ana_ozellikler: { hiz: 61, sut: 77, pas: 80, dribbling: 81, defans: 75, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 61,
+      sut: 77,
+      pas: 80,
+      dribbling: 81,
+      defans: 75,
+      fizik: 72,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "B. Barcollah",
@@ -116,9 +186,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SLK",
     reyting: 84,
     yas: 22,
-    ana_ozellikler: { hiz: 90, sut: 77, pas: 78, dribbling: 84, defans: 39, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 90,
+      sut: 77,
+      pas: 78,
+      dribbling: 84,
+      defans: 39,
+      fizik: 66,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Chevalyer",
@@ -127,9 +204,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "KL",
     reyting: 83,
     yas: 23,
-    ana_ozellikler: { hiz: 84, sut: 79, pas: 73, dribbling: 86, defans: 50, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 84,
+      sut: 79,
+      pas: 73,
+      dribbling: 86,
+      defans: 50,
+      fizik: 80,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Hernandeze",
@@ -138,9 +222,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "STP",
     reyting: 81,
     yas: 29,
-    ana_ozellikler: { hiz: 71, sut: 54, pas: 72, dribbling: 70, defans: 82, fizik: 77 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 54,
+      pas: 72,
+      dribbling: 70,
+      defans: 82,
+      fizik: 77,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Ramoss",
@@ -149,9 +240,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SNT",
     reyting: 80,
     yas: 23,
-    ana_ozellikler: { hiz: 73, sut: 79, pas: 64, dribbling: 77, defans: 48, fizik: 79 },
+    ana_ozellikler: {
+      hiz: 73,
+      sut: 79,
+      pas: 64,
+      dribbling: 77,
+      defans: 48,
+      fizik: 79,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "I. Zabarnye",
@@ -160,9 +258,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "STP",
     reyting: 79,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 37, pas: 64, dribbling: 64, defans: 80, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 37,
+      pas: 64,
+      dribbling: 64,
+      defans: 80,
+      fizik: 78,
+    },
     detaylar: {},
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
 
   {
@@ -172,9 +277,22 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "KL",
     reyting: 90,
     yas: 20,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 80, refleks: 90, vurus: 85, pozisyon: 82, top_kontrol: 78 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 80,
+      refleks: 90,
+      vurus: 85,
+      pozisyon: 82,
+      top_kontrol: 78,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Santoz",
@@ -183,9 +301,22 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "KL",
     reyting: 89,
     yas: 21,
-    ana_ozellikler: { hiz: 75, sut: 20, pas: 40, dribbling: 25, defans: 25, fizik: 80 },
-    detaylar: { ucma: 79, refleks: 89, vurus: 84, pozisyon: 81, top_kontrol: 77 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 75,
+      sut: 20,
+      pas: 40,
+      dribbling: 25,
+      defans: 25,
+      fizik: 80,
+    },
+    detaylar: {
+      ucma: 79,
+      refleks: 89,
+      vurus: 84,
+      pozisyon: 81,
+      top_kontrol: 77,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Garcy",
@@ -194,9 +325,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SĞB",
     reyting: 88,
     yas: 22,
-    ana_ozellikler: { hiz: 78, sut: 63, pas: 80, dribbling: 78, defans: 88, fizik: 83 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 63,
+      pas: 80,
+      dribbling: 78,
+      defans: 88,
+      fizik: 83,
+    },
     detaylar: { ayakta_mudahale: 88, top_kesme: 83, kafa_isabeti: 78, guc: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "C. Costas",
@@ -205,9 +343,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "SLB",
     reyting: 87,
     yas: 23,
-    ana_ozellikler: { hiz: 77, sut: 62, pas: 79, dribbling: 77, defans: 87, fizik: 82 },
+    ana_ozellikler: {
+      hiz: 77,
+      sut: 62,
+      pas: 79,
+      dribbling: 77,
+      defans: 87,
+      fizik: 82,
+    },
     detaylar: { ayakta_mudahale: 87, top_kesme: 82, kafa_isabeti: 77, guc: 79 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Costas",
@@ -216,9 +361,21 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MDO",
     reyting: 86,
     yas: 24,
-    ana_ozellikler: { hiz: 71, sut: 66, pas: 81, dribbling: 78, defans: 86, fizik: 81 },
-    detaylar: { top_kesme: 86, ayakta_mudahale: 81, dayaniklilik: 83, kisa_pas: 78 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 66,
+      pas: 81,
+      dribbling: 78,
+      defans: 86,
+      fizik: 81,
+    },
+    detaylar: {
+      top_kesme: 86,
+      ayakta_mudahale: 81,
+      dayaniklilik: 83,
+      kisa_pas: 78,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Rodrigz",
@@ -227,9 +384,21 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MDO",
     reyting: 85,
     yas: 25,
-    ana_ozellikler: { hiz: 70, sut: 65, pas: 80, dribbling: 77, defans: 85, fizik: 80 },
-    detaylar: { top_kesme: 85, ayakta_mudahale: 80, dayaniklilik: 82, kisa_pas: 77 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 65,
+      pas: 80,
+      dribbling: 77,
+      defans: 85,
+      fizik: 80,
+    },
+    detaylar: {
+      top_kesme: 85,
+      ayakta_mudahale: 80,
+      dayaniklilik: 82,
+      kisa_pas: 77,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "P. Santoz",
@@ -238,9 +407,21 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MDO",
     reyting: 84,
     yas: 26,
-    ana_ozellikler: { hiz: 69, sut: 64, pas: 79, dribbling: 76, defans: 84, fizik: 79 },
-    detaylar: { top_kesme: 84, ayakta_mudahale: 79, dayaniklilik: 81, kisa_pas: 76 },
-    oyun_tarzlari: []
+    ana_ozellikler: {
+      hiz: 69,
+      sut: 64,
+      pas: 79,
+      dribbling: 76,
+      defans: 84,
+      fizik: 79,
+    },
+    detaylar: {
+      top_kesme: 84,
+      ayakta_mudahale: 79,
+      dayaniklilik: 81,
+      kisa_pas: 76,
+    },
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Lopeze",
@@ -249,9 +430,16 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MOO",
     reyting: 83,
     yas: 27,
-    ana_ozellikler: { hiz: 71, sut: 73, pas: 83, dribbling: 78, defans: 68, fizik: 73 },
+    ana_ozellikler: {
+      hiz: 71,
+      sut: 73,
+      pas: 83,
+      dribbling: 78,
+      defans: 68,
+      fizik: 73,
+    },
     detaylar: { vizyon: 78, kisa_pas: 83, top_kontrol: 75, dayaniklilik: 71 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Kasongo",
@@ -260,8 +448,15 @@ export const PARIS_SAINT_SQUAD = [
     mevki: "MO",
     reyting: 77,
     yas: 20,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 78, dribbling: 82, defans: 60, fizik: 75 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 78,
+      dribbling: 82,
+      defans: 60,
+      fizik: 75,
+    },
     detaylar: { top_kontrol: 84, vizyon: 80, kisa_pas: 79, dayaniklilik: 78 },
-    oyun_tarzlari: ["Genç Yetenek", "Kutu Kutu"]
-  }
+    oyun_tarzlari: ["Amansız"],
+  },
 ];

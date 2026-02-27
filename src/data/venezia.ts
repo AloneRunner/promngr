@@ -6,9 +6,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "KL",
     reyting: 75,
     yas: 22,
-    ana_ozellikler: { hiz: 52, sut: 16, pas: 56, dribbling: 22, defans: 22, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 52,
+      sut: 16,
+      pas: 56,
+      dribbling: 22,
+      defans: 22,
+      fizik: 74,
+    },
     detaylar: { refleks: 79, ucma: 77, pozisyon: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "G. Altare",
@@ -17,9 +24,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 26,
-    ana_ozellikler: { hiz: 68, sut: 44, pas: 62, dribbling: 58, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 68,
+      sut: 44,
+      pas: 62,
+      dribbling: 58,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 77, markaj: 75, guc: 79 },
-    oyun_tarzlari: ["Sert Müdahale"]
+    oyun_tarzlari: ["Kaya"],
   },
   {
     ad: "M. Sverko",
@@ -28,9 +42,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 70, sut: 42, pas: 64, dribbling: 60, defans: 76, fizik: 80 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 42,
+      pas: 64,
+      dribbling: 60,
+      defans: 76,
+      fizik: 80,
+    },
     detaylar: { top_kesme: 77, kafa_isabeti: 78, ziplama: 82 },
-    oyun_tarzlari: ["Kule"]
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Zampano",
@@ -39,9 +60,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SĞB",
     reyting: 73,
     yas: 31,
-    ana_ozellikler: { hiz: 78, sut: 58, pas: 72, dribbling: 72, defans: 72, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 58,
+      pas: 72,
+      dribbling: 72,
+      defans: 72,
+      fizik: 72,
+    },
     detaylar: { orta_acma: 77, sprint: 80 },
-    oyun_tarzlari: ["Ofansif Bek"]
+    oyun_tarzlari: [],
   },
   {
     ad: "R. Haps",
@@ -50,9 +78,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SLB",
     reyting: 74,
     yas: 28,
-    ana_ozellikler: { hiz: 82, sut: 60, pas: 72, dribbling: 74, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 60,
+      pas: 72,
+      dribbling: 74,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { sprint: 84, hizlanma: 83, orta_acma: 75 },
-    oyun_tarzlari: ["Hızlı Bek"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "A. Duncan",
@@ -61,9 +96,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MDO",
     reyting: 74,
     yas: 32,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 74, dribbling: 72, defans: 74, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 74,
+      dribbling: 72,
+      defans: 74,
+      fizik: 78,
+    },
     detaylar: { dayaniklilik: 80, top_kesme: 76, liderlik: 76 },
-    oyun_tarzlari: ["Kutu Kutu", "Lider"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "H. Nicolussi Caviglia",
@@ -72,9 +114,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MDO",
     reyting: 75,
     yas: 24,
-    ana_ozellikler: { hiz: 72, sut: 70, pas: 76, dribbling: 74, defans: 72, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 70,
+      pas: 76,
+      dribbling: 74,
+      defans: 72,
+      fizik: 74,
+    },
     detaylar: { kisa_pas: 78, vizyon: 77, dayaniklilik: 78 },
-    oyun_tarzlari: ["Teknik"]
+    oyun_tarzlari: ["İlk Dokunuş"],
   },
   {
     ad: "G. Busio",
@@ -83,9 +132,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MO",
     reyting: 76,
     yas: 23,
-    ana_ozellikler: { hiz: 70, sut: 72, pas: 78, dribbling: 76, defans: 52, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 70,
+      sut: 72,
+      pas: 78,
+      dribbling: 76,
+      defans: 52,
+      fizik: 66,
+    },
     detaylar: { vizyon: 80, kisa_pas: 80, uzun_pas: 77 },
-    oyun_tarzlari: ["Oyun Kurucu", "Teknik"]
+    oyun_tarzlari: ["Maestro", "İlk Dokunuş"],
   },
   {
     ad: "J. Pohjanpalo",
@@ -94,9 +150,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SNT",
     reyting: 76,
     yas: 30,
-    ana_ozellikler: { hiz: 74, sut: 80, pas: 60, dribbling: 70, defans: 30, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 80,
+      pas: 60,
+      dribbling: 70,
+      defans: 30,
+      fizik: 76,
+    },
     detaylar: { bitiricilik: 84, pozisyon: 82, kafa_isabeti: 78 },
-    oyun_tarzlari: ["Fırsatçı Golcü", "Plase Şut"]
+    oyun_tarzlari: ["İleride Bekleyen", "Plase Şut"],
   },
   {
     ad: "G. Oristanio",
@@ -105,9 +168,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SLO",
     reyting: 74,
     yas: 22,
-    ana_ozellikler: { hiz: 80, sut: 70, pas: 74, dribbling: 80, defans: 32, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 80,
+      sut: 70,
+      pas: 74,
+      dribbling: 80,
+      defans: 32,
+      fizik: 62,
+    },
     detaylar: { dribbling: 82, ceviklik: 84, hizlanma: 82 },
-    oyun_tarzlari: ["Çalımlı", "Teknik"]
+    oyun_tarzlari: ["Top Cambazı", "İlk Dokunuş"],
   },
   {
     ad: "M. Ellertsson",
@@ -116,9 +186,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SĞO",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 82, sut: 72, pas: 70, dribbling: 76, defans: 34, fizik: 72 },
+    ana_ozellikler: {
+      hiz: 82,
+      sut: 72,
+      pas: 70,
+      dribbling: 76,
+      defans: 34,
+      fizik: 72,
+    },
     detaylar: { hizlanma: 84, sprint: 83, orta_acma: 74 },
-    oyun_tarzlari: ["Seri"]
+    oyun_tarzlari: ["Seri"],
   },
   {
     ad: "C. Gytkjaer",
@@ -127,9 +204,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SNT",
     reyting: 73,
     yas: 34,
-    ana_ozellikler: { hiz: 66, sut: 76, pas: 58, dribbling: 66, defans: 32, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 76,
+      pas: 58,
+      dribbling: 66,
+      defans: 32,
+      fizik: 78,
+    },
     detaylar: { bitiricilik: 78, pozisyon: 76, kafa_isabeti: 76 },
-    oyun_tarzlari: ["Fırsatçı Golcü"]
+    oyun_tarzlari: ["İleride Bekleyen"],
   },
   {
     ad: "A. Raimondo",
@@ -138,9 +222,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SNT",
     reyting: 72,
     yas: 21,
-    ana_ozellikler: { hiz: 78, sut: 72, pas: 58, dribbling: 72, defans: 28, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 72,
+      pas: 58,
+      dribbling: 72,
+      defans: 28,
+      fizik: 70,
+    },
     detaylar: { hizlanma: 80, bitiricilik: 74 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "J. Idzes",
@@ -149,9 +240,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "STP",
     reyting: 74,
     yas: 25,
-    ana_ozellikler: { hiz: 72, sut: 46, pas: 66, dribbling: 64, defans: 76, fizik: 78 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 46,
+      pas: 66,
+      dribbling: 64,
+      defans: 76,
+      fizik: 78,
+    },
     detaylar: { top_kesme: 78, top_surme: 72 },
-    oyun_tarzlari: ["Top Süren Stoper"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "M. Sagrado",
@@ -160,9 +258,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "STP",
     reyting: 71,
     yas: 23,
-    ana_ozellikler: { hiz: 66, sut: 40, pas: 58, dribbling: 56, defans: 74, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 66,
+      sut: 40,
+      pas: 58,
+      dribbling: 56,
+      defans: 74,
+      fizik: 76,
+    },
     detaylar: { markaj: 75, guc: 77 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "A. Candela",
@@ -171,9 +276,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SĞB",
     reyting: 71,
     yas: 22,
-    ana_ozellikler: { hiz: 78, sut: 52, pas: 66, dribbling: 68, defans: 70, fizik: 68 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 52,
+      pas: 66,
+      dribbling: 68,
+      defans: 70,
+      fizik: 68,
+    },
     detaylar: { hizlanma: 80, orta_acma: 70 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "F. Carboni",
@@ -182,9 +294,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SLO",
     reyting: 72,
     yas: 20,
-    ana_ozellikler: { hiz: 78, sut: 68, pas: 72, dribbling: 76, defans: 30, fizik: 62 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 68,
+      pas: 72,
+      dribbling: 76,
+      defans: 30,
+      fizik: 62,
+    },
     detaylar: { dribbling: 78, ceviklik: 80 },
-    oyun_tarzlari: ["Çalımlı"]
+    oyun_tarzlari: ["Top Cambazı"],
   },
   {
     ad: "F. Joronen",
@@ -193,9 +312,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "KL",
     reyting: 72,
     yas: 31,
-    ana_ozellikler: { hiz: 46, sut: 14, pas: 50, dribbling: 18, defans: 18, fizik: 74 },
+    ana_ozellikler: {
+      hiz: 46,
+      sut: 14,
+      pas: 50,
+      dribbling: 18,
+      defans: 18,
+      fizik: 74,
+    },
     detaylar: { refleks: 76, ucma: 74, boy: 80 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "D. Crnigoj",
@@ -204,9 +330,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MDO",
     reyting: 72,
     yas: 27,
-    ana_ozellikler: { hiz: 74, sut: 66, pas: 72, dribbling: 70, defans: 70, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 66,
+      pas: 72,
+      dribbling: 70,
+      defans: 70,
+      fizik: 76,
+    },
     detaylar: { dayaniklilik: 78, kosu_temposu: 80 },
-    oyun_tarzlari: ["Kutu Kutu"]
+    oyun_tarzlari: ["Amansız"],
   },
   {
     ad: "A. Tessmann",
@@ -215,9 +348,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MDO",
     reyting: 73,
     yas: 23,
-    ana_ozellikler: { hiz: 72, sut: 68, pas: 74, dribbling: 72, defans: 72, fizik: 76 },
+    ana_ozellikler: {
+      hiz: 72,
+      sut: 68,
+      pas: 74,
+      dribbling: 72,
+      defans: 72,
+      fizik: 76,
+    },
     detaylar: { kisa_pas: 76, dayaniklilik: 78 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "M. Bjarkason",
@@ -226,9 +366,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MOO",
     reyting: 72,
     yas: 25,
-    ana_ozellikler: { hiz: 78, sut: 68, pas: 72, dribbling: 74, defans: 38, fizik: 66 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 68,
+      pas: 72,
+      dribbling: 74,
+      defans: 38,
+      fizik: 66,
+    },
     detaylar: { hizlanma: 80, dribbling: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "L. Andersen",
@@ -237,9 +384,16 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "SLB",
     reyting: 72,
     yas: 26,
-    ana_ozellikler: { hiz: 78, sut: 56, pas: 70, dribbling: 72, defans: 70, fizik: 70 },
+    ana_ozellikler: {
+      hiz: 78,
+      sut: 56,
+      pas: 70,
+      dribbling: 72,
+      defans: 70,
+      fizik: 70,
+    },
     detaylar: { orta_acma: 74, dayaniklilik: 76 },
-    oyun_tarzlari: []
+    oyun_tarzlari: [],
   },
   {
     ad: "S. El Haddad",
@@ -248,8 +402,15 @@ export const VENICE_GONDOLIERS_SQUAD = [
     mevki: "MO",
     reyting: 71,
     yas: 24,
-    ana_ozellikler: { hiz: 74, sut: 68, pas: 74, dribbling: 74, defans: 44, fizik: 64 },
+    ana_ozellikler: {
+      hiz: 74,
+      sut: 68,
+      pas: 74,
+      dribbling: 74,
+      defans: 44,
+      fizik: 64,
+    },
     detaylar: { vizyon: 75, dribbling: 76 },
-    oyun_tarzlari: ["Teknik"]
-  }
+    oyun_tarzlari: ["İlk Dokunuş"],
+  },
 ];
