@@ -12,6 +12,7 @@ interface NewsCenterProps {
    onDeleteAll?: () => void;
    onAcceptOffer?: (offerId: string) => void;
    onRejectOffer?: (offerId: string) => void;
+   onRejectAllOffers?: () => void;
    onCounterOffer?: (offerId: string, counterAmount: number) => void;
    onViewPlayer?: (playerId: string) => void;
    t: Translation;
@@ -20,7 +21,7 @@ interface NewsCenterProps {
 
 export type MessageTab = 'ALL' | 'TRANSFERS' | 'INJURIES' | 'YOUTH' | 'BOARD';
 
-export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onCounterOffer, onViewPlayer, t, initialTab }) => {
+export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers, onMarkAsRead, onDeleteMessage, onDeleteAllRead, onDeleteAll, onAcceptOffer, onRejectOffer, onRejectAllOffers, onCounterOffer, onViewPlayer, t, initialTab }) => {
    const [activeTab, setActiveTab] = useState<MessageTab>(initialTab || 'ALL');
    const [counterAmounts, setCounterAmounts] = useState<Record<string, number>>({});
 
@@ -129,6 +130,17 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                   </button>
                )}
             </div>
+            {/* Reject All Offers button — only shown when pending offers exist */}
+            {(pendingOffers?.filter(o => o.status === 'PENDING').length || 0) > 0 && onRejectAllOffers && (
+               <div className="mt-3 pt-3 border-t border-slate-700">
+                  <button
+                     onClick={onRejectAllOffers}
+                     className="flex items-center gap-2 px-4 py-2 bg-red-900/40 hover:bg-red-800/60 text-red-400 hover:text-red-300 text-sm font-bold rounded-lg border border-red-500/30 transition-all"
+                  >
+                     <X size={16} /> {t.rejectAllOffers || 'Tüm Teklifleri Reddet'} ({pendingOffers!.filter(o => o.status === 'PENDING').length})
+                  </button>
+               </div>
+            )}
          </div>
 
          {/* Tab Buttons */}

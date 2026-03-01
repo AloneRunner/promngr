@@ -4,7 +4,9 @@ import { Play, Pause, FastForward, SkipForward, X, List, BarChart2, Video, Monit
 import { TeamLogo } from './TeamLogo';
 import { getTeamLogo } from '../logoMapping';
 import { TeamManagement } from './TeamManagement';
-import { simulateTick, getActiveEngine } from '../services/engine';
+import { simulateTick, getActiveEngine, getLivePlayerStamina } from '../services/engine';
+import { calculateEffectiveRating } from '../services/MatchEngine';
+import { getEngineChoice } from '../services/engines';
 import { soundManager } from '../services/soundManager';
 
 interface MatchCenterProps {
@@ -1436,9 +1438,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
     // Merge live stamina data into players for the management view
     const livePlayers = myPlayers.map(p => {
-        const simP = nextTickState.current?.players?.[p.id];
-        if (simP && simP.stamina !== undefined) {
-            return { ...p, condition: Math.floor(simP.stamina) };
+        const liveStamina = getLivePlayerStamina(p.id);
+        if (liveStamina !== undefined) {
+            return { ...p, condition: Math.floor(liveStamina) };
         }
         return p;
     });
@@ -1504,6 +1506,25 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full drop-shadow-md">{homeTeam.name}</h1>
                     </div>
+                    {(() => {
+                        const starters = homePlayersRef.current.filter(p => p.lineup === 'STARTING');
+                        const defs = starters.filter(p => p.position === 'DEF');
+                        const mids = starters.filter(p => p.position === 'MID');
+                        const fwds = starters.filter(p => p.position === 'FWD');
+                        const avg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => s + p.overall, 0) / arr.length) : 0;
+                        const liveAvg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => {
+                            const stam = getLivePlayerStamina(p.id) ?? 100;
+                            return s + calculateEffectiveRating(p, p.position as any, stam);
+                        }, 0) / arr.length) : 0;
+                        return (
+                            <div className="flex items-center gap-1 text-[8px] md:text-[10px] font-mono">
+                                <span className="text-sky-400">D:{avg(defs)}<span className="text-sky-600">({liveAvg(defs)})</span></span>
+                                <span className="text-emerald-400">M:{avg(mids)}<span className="text-emerald-600">({liveAvg(mids)})</span></span>
+                                <span className="text-orange-400">F:{avg(fwds)}<span className="text-orange-600">({liveAvg(fwds)})</span></span>
+                                <span className="text-white font-bold">⌀{avg(starters)}<span className="text-slate-400">({liveAvg(starters)})</span></span>
+                            </div>
+                        );
+                    })()}
                 </div>
 
                 {/* Score */}
@@ -1538,12 +1559,76 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     <div className="hidden xs:block">
                         <h1 className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter truncate max-w-[80px] md:max-w-full drop-shadow-md">{awayTeam.name}</h1>
                     </div>
+                    {(() => {
+                        const starters = awayPlayersRef.current.filter(p => p.lineup === 'STARTING');
+                        const defs = starters.filter(p => p.position === 'DEF');
+                        const mids = starters.filter(p => p.position === 'MID');
+                        const fwds = starters.filter(p => p.position === 'FWD');
+                        const avg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => s + p.overall, 0) / arr.length) : 0;
+                        const liveAvg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => {
+                            const stam = getLivePlayerStamina(p.id) ?? 100;
+                            return s + calculateEffectiveRating(p, p.position as any, stam);
+                        }, 0) / arr.length) : 0;
+                        return (
+                            <div className="flex items-center gap-1 text-[8px] md:text-[10px] font-mono">
+                                <span className="text-sky-400">D:{avg(defs)}<span className="text-sky-600">({liveAvg(defs)})</span></span>
+                                <span className="text-emerald-400">M:{avg(mids)}<span className="text-emerald-600">({liveAvg(mids)})</span></span>
+                                <span className="text-orange-400">F:{avg(fwds)}<span className="text-orange-600">({liveAvg(fwds)})</span></span>
+                                <span className="text-white font-bold">⌀{avg(starters)}<span className="text-slate-400">({liveAvg(starters)})</span></span>
+                            </div>
+                        );
+                    })()}
                     <TeamLogo
                         team={awayTeam}
                         className="w-10 h-10 md:w-16 md:h-16 rounded-xl border-2 border-slate-600/50 bg-slate-800/50 shadow-lg shadow-black/50"
                     />
                 </div>
             </div>
+
+            {/* LANDSCAPE OVR OVERLAY - Shows when scoreboard is hidden, flanking the score */}
+            {isSmallLandscape && (
+                <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-8 pointer-events-none">
+                    {(() => {
+                        const starters = homePlayersRef.current.filter(p => p.lineup === 'STARTING');
+                        const defs = starters.filter(p => p.position === 'DEF');
+                        const mids = starters.filter(p => p.position === 'MID');
+                        const fwds = starters.filter(p => p.position === 'FWD');
+                        const avg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => s + p.overall, 0) / arr.length) : 0;
+                        const liveAvg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => {
+                            const stam = getLivePlayerStamina(p.id) ?? 100;
+                            return s + calculateEffectiveRating(p, p.position as any, stam);
+                        }, 0) / arr.length) : 0;
+                        return (
+                            <div className="flex items-center gap-1 text-[8px] font-mono bg-slate-900/70 backdrop-blur px-1.5 py-0.5 rounded-full border border-emerald-500/30">
+                                <span className="text-sky-400">D:{avg(defs)}<span className="text-sky-600">({liveAvg(defs)})</span></span>
+                                <span className="text-emerald-400">M:{avg(mids)}<span className="text-emerald-600">({liveAvg(mids)})</span></span>
+                                <span className="text-orange-400">F:{avg(fwds)}<span className="text-orange-600">({liveAvg(fwds)})</span></span>
+                                <span className="text-white font-bold">⌀{avg(starters)}<span className="text-slate-400">({liveAvg(starters)})</span></span>
+                            </div>
+                        );
+                    })()}
+                    <span className="text-[8px] text-slate-600 font-mono">vs</span>
+                    {(() => {
+                        const starters = awayPlayersRef.current.filter(p => p.lineup === 'STARTING');
+                        const defs = starters.filter(p => p.position === 'DEF');
+                        const mids = starters.filter(p => p.position === 'MID');
+                        const fwds = starters.filter(p => p.position === 'FWD');
+                        const avg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => s + p.overall, 0) / arr.length) : 0;
+                        const liveAvg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => {
+                            const stam = getLivePlayerStamina(p.id) ?? 100;
+                            return s + calculateEffectiveRating(p, p.position as any, stam);
+                        }, 0) / arr.length) : 0;
+                        return (
+                            <div className="flex items-center gap-1 text-[8px] font-mono bg-slate-900/70 backdrop-blur px-1.5 py-0.5 rounded-full border border-blue-500/30">
+                                <span className="text-sky-400">D:{avg(defs)}<span className="text-sky-600">({liveAvg(defs)})</span></span>
+                                <span className="text-emerald-400">M:{avg(mids)}<span className="text-emerald-600">({liveAvg(mids)})</span></span>
+                                <span className="text-orange-400">F:{avg(fwds)}<span className="text-orange-600">({liveAvg(fwds)})</span></span>
+                                <span className="text-white font-bold">⌀{avg(starters)}<span className="text-slate-400">({liveAvg(starters)})</span></span>
+                            </div>
+                        );
+                    })()}
+                </div>
+            )}
 
             {/* MOBILE TABS (Hidden on small landscape) */}
             <div className={`lg:hidden flex bg-slate-900 border-b border-slate-800 h-10 shrink-0 ${isSmallLandscape ? 'hidden' : 'flex'}`}>
