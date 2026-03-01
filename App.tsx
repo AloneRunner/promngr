@@ -901,6 +901,16 @@ const App: React.FC = () => {
         setGameState(prev => prev ? { ...prev, messages: [], pendingOffers: [] } : null);
     };
 
+    const handleRejectAllOffers = () => {
+        setGameState(prev => {
+            if (!prev) return null;
+            const updatedOffers = (prev.pendingOffers || []).map(o =>
+                o.status === 'PENDING' ? { ...o, status: 'REJECTED' as const } : o
+            );
+            return { ...prev, pendingOffers: updatedOffers };
+        });
+    };
+
     const handleToggleTransferList = (player: Player) => {
         if (!gameState) return;
         // Ownership Check
@@ -1201,8 +1211,12 @@ const App: React.FC = () => {
         if (!userTeam) return;
 
         const currentLevel = userTeam.staff ? userTeam.staff[role] : 1;
+        if (currentLevel >= 7) {
+            alert('Maximum level reached!');
+            return;
+        }
         // EXPENSIVE UPGRADES: Exponential scaling - 2x more expensive
-        const cost = Math.floor(100000 * Math.pow(1.5, currentLevel)); // Lv1→2: €150K, Lv10: ~€5.7M (Reasonable)
+        const cost = Math.floor(100000 * Math.pow(1.5, currentLevel)); // Lv1→2: €150K, Lv7: ~€1.1M
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
@@ -1233,19 +1247,20 @@ const App: React.FC = () => {
             type === 'training' ? userTeam.facilities.trainingLevel :
                 userTeam.facilities.academyLevel;
 
-        if (currentLevel >= 15) {
+        const maxLevel = type === 'stadium' ? 10 : 7;
+        if (currentLevel >= maxLevel) {
             alert('Maximum level reached!');
             return;
         }
 
-        // ========== BALANCED UPGRADE COSTS ==========
+        // ========== BALANCED UPGRADE COSTS (Max Lv 10) ==========
         let baseCost = 0;
         let nextLevel = 0;
         let description = '';
 
         if (type === 'stadium') {
             nextLevel = userTeam.facilities.stadiumLevel + 1;
-            baseCost = 200000;  // €200K base
+            baseCost = 3000000;  // €3M base for stadium (120k capacity = world's largest)
             description = 'Stadium Expansion';
 
             // Check if already under construction
@@ -1255,7 +1270,7 @@ const App: React.FC = () => {
             }
         } else if (type === 'training') {
             nextLevel = userTeam.facilities.trainingLevel + 1;
-            baseCost = 300000; // €300K base
+            baseCost = 1200000; // €1.2M base for training
             description = 'Training Ground';
 
             if (userTeam.facilities.trainingConstructionWeeks && userTeam.facilities.trainingConstructionWeeks > 0) {
@@ -1264,7 +1279,7 @@ const App: React.FC = () => {
             }
         } else if (type === 'academy') {
             nextLevel = userTeam.facilities.academyLevel + 1;
-            baseCost = 250000; // €250K base
+            baseCost = 1000000; // €1M base for academy
             description = 'Youth Academy';
 
             if (userTeam.facilities.academyConstructionWeeks && userTeam.facilities.academyConstructionWeeks > 0) {
@@ -1273,23 +1288,32 @@ const App: React.FC = () => {
             }
         }
 
-        // Linear progression with slight exponential at higher levels
-        // Level 1→2: Stadium ~€600K, Level 10→11: ~€4M, Level 20→21: ~€12M, Level 24→25: ~€20M
-        const levelMultiplier = nextLevel + (nextLevel > 15 ? (nextLevel - 15) * 0.5 : 0);
-        const cost = Math.floor(baseCost * levelMultiplier * (1 + nextLevel * 0.05));
+        // Exponential progression for 1-10 scale
+        // Lv 1->2: ~2.5M, Lv 5->6: ~12M, Lv 9->10: ~45M
+        const multiplier = Math.pow(1.4, nextLevel - 1);
+        const cost = Math.floor(baseCost * multiplier);
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
             return;
         }
-        // Construction Time Logic
+        // Construction Time Logic (Scaled per facility type)
         let constructionWeeks = 0;
         let constructionMessage = '';
 
-        // Logic for all facilities
-        if (nextLevel <= 5) constructionWeeks = 5;       // ~1 month
-        else if (nextLevel <= 15) constructionWeeks = 12; // ~3 months
-        else constructionWeeks = 24;                     // ~6 months
+        if (type === 'stadium') {
+            // Stadium goes to level 10 — longer construction for bigger expansions
+            if (nextLevel <= 3) constructionWeeks = 8;        // 2 months
+            else if (nextLevel <= 6) constructionWeeks = 13;  // ~3 months
+            else if (nextLevel <= 8) constructionWeeks = 20;  // 5 months
+            else constructionWeeks = 26;                      // 6.5 months (elite project)
+        } else {
+            // Training/Academy max level 7 — scaled shorter
+            if (nextLevel <= 2) constructionWeeks = 4;        // 1 month
+            else if (nextLevel <= 4) constructionWeeks = 8;   // 2 months
+            else if (nextLevel <= 6) constructionWeeks = 12;  // 3 months
+            else constructionWeeks = 16;                      // 4 months (top tier)
+        }
 
         constructionMessage = `\n\n🚧 CONSTRUCTION REQUIRED 🚧\nDuration: ${constructionWeeks} Weeks\nFacility level will increase after construction is complete.`;
 
@@ -2764,6 +2788,7 @@ const App: React.FC = () => {
                                         onDeleteAll={handleDeleteAll}
                                         onAcceptOffer={transferMarket.handleAcceptOffer}
                                         onRejectOffer={transferMarket.handleRejectOffer}
+                                        onRejectAllOffers={handleRejectAllOffers}
                                         onCounterOffer={transferMarket.handleCounterOffer}
                                         onViewPlayer={(playerId) => {
                                             const player = gameState.players.find(p => p.id === playerId);

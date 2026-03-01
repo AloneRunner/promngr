@@ -805,7 +805,7 @@ export class MatchEngine {
   private _awayDefLine: number = 55;
 
   // === ENGINE IDENTIFIER ===
-  public engineVersion: string = "MATCH ENGINE (BETA v5.0 - EXPERIMENTAL)";
+  public engineVersion: string = "ME v5.0";
 
   constructor(
     match: Match,
@@ -1480,94 +1480,89 @@ export class MatchEngine {
   }
 
   // AI-driven substitutions for non-user teams
+  // Called at fixed minutes (35, 55, 65, 80) — loops to make multiple subs per window
   private processAISubstitutions(isHome: boolean) {
     const team = isHome ? this.homeTeam : this.awayTeam;
     const players = isHome ? this.homePlayers : this.awayPlayers;
-    const subsMade = isHome ? this.homeSubsMade : this.awaySubsMade;
 
-    // REMOVED: if (subsMade >= this.MAX_SUBS) return; // Limitless subs for AI to match user's "pocket football" style
+    // Batch substitution loop — keep subbing while there are tired players and bench available
+    const MAX_SUBS_PER_WINDOW = 3;
+    let subsThisWindow = 0;
 
-    // === AGGRESSIVE AI SUBSTITUTIONS ===
-    if (this.internalMinute < 20) return; // Allow subs early if exhausted
+    while (subsThisWindow < MAX_SUBS_PER_WINDOW) {
+      const starters = players.filter((p) => p.lineup === "STARTING");
+      const bench = players.filter(
+        (p) => p.lineup === "BENCH" && !this.substitutedOutPlayerIds.has(p.id),
+      );
 
-    const starters = players.filter((p) => p.lineup === "STARTING");
-    // IMPORTANT: Filter out players who were already substituted out - they can't return!
-    const bench = players.filter(
-      (p) => p.lineup === "BENCH" && !this.substitutedOutPlayerIds.has(p.id),
-    );
+      if (bench.length === 0) break;
 
-    if (bench.length === 0) return;
+      // Find player with worst stamina/performance
+      let worstPlayer: Player | null = null;
+      let worstScore = Infinity;
 
-    // Find player with worst stamina/performance
-    let worstPlayer: Player | null = null;
-    let worstScore = Infinity;
+      for (const p of starters) {
+        if (normalizePos(p) === Position.GK) continue;
 
-    for (const p of starters) {
-      if (normalizePos(p) === Position.GK) continue; // Don't sub GK unless injured
+        const state = this.playerStates[p.id];
+        if (!state) continue;
 
-      const state = this.playerStates[p.id];
-      if (!state) continue;
+        let score = state.currentStamina;
 
-      // Score based on stamina and position match
-      let score = state.currentStamina;
+        const role = this.playerRoles[p.id];
+        if (role === Position.MID && state.currentStamina < 55) {
+          score -= 20;
+        }
 
-      // === POZİSYONA GÖRE DEĞİŞİKLİK ÖNCELİĞİ ===
-      // Orta sahalar daha çabuk yorulduğu için öncelikli değiştirilmeli
-      const role = this.playerRoles[p.id];
-      if (role === Position.MID && state.currentStamina < 55) {
-        score -= 20; // Orta saha yorgunsa daha acil
+        if (state.currentStamina < 45) {
+          score -= 40;
+        } else if (state.currentStamina < 55) {
+          score -= 25;
+        }
+
+        if (score < worstScore) {
+          worstScore = score;
+          worstPlayer = p;
+        }
       }
 
-      // If very tired (below 45%), prioritize subbing greatly
-      if (state.currentStamina < 45) {
-        score -= 40;
-      } else if (state.currentStamina < 55) {
-        score -= 25;
+      // Sub thresholds based on match minute
+      let subThreshold = 55;
+      if (this.internalMinute >= 80) {
+        subThreshold = 75;
+      } else if (this.internalMinute >= 65) {
+        subThreshold = 65;
+      } else if (this.internalMinute >= 55) {
+        subThreshold = 60;
+      } else if (this.internalMinute >= 35) {
+        subThreshold = 55;
       }
 
-      if (score < worstScore) {
-        worstScore = score;
-        worstPlayer = p;
+      if (!worstPlayer || worstScore > subThreshold) break;
+
+      const neededPos = normalizePos(worstPlayer);
+      let bestSub: Player | null = null;
+      let bestSubScore = -Infinity;
+
+      for (const sub of bench) {
+        const subState = this.playerStates[sub.id];
+        const stamina = subState ? subState.currentStamina : sub.condition || 100;
+
+        const subIsGK = normalizePos(sub) === Position.GK;
+        const neededIsGK = neededPos === Position.GK;
+        if (subIsGK !== neededIsGK) continue;
+
+        const posMatch = normalizePos(sub) === neededPos ? 10 : 0;
+        const score = sub.overall + posMatch + stamina / 10;
+
+        if (score > bestSubScore) {
+          bestSubScore = score;
+          bestSub = sub;
+        }
       }
-    }
 
-    // === AGGRESSIVE AI THRESHOLDS ===
-    let subThreshold = 55; // Always sub if stamina falls below 55
-    if (this.internalMinute >= 75) {
-      subThreshold = 75; // Late game freshness
-    } else if (this.internalMinute >= 60) {
-      subThreshold = 65; // Mid second half
-    }
+      if (!bestSub) break;
 
-    if (!worstPlayer || worstScore > subThreshold) return;
-
-    // Find best bench replacement for the position
-    const neededPos = normalizePos(worstPlayer);
-    let bestSub: Player | null = null;
-    let bestSubScore = -Infinity;
-
-    for (const sub of bench) {
-      const subState = this.playerStates[sub.id];
-      const stamina = subState ? subState.currentStamina : sub.condition || 100;
-
-      // CRITICAL FIX: NEVER SUB A GK FOR A FIELD PLAYER OR VICE VERSA
-      const subIsGK = normalizePos(sub) === Position.GK;
-      const neededIsGK = neededPos === Position.GK; // This theoretically won't happen for subs as we filtered GK out of 'starters' loop, but for safety.
-
-      if (subIsGK !== neededIsGK) continue;
-
-      // Prefer same position
-      const posMatch = normalizePos(sub) === neededPos ? 10 : 0;
-      const score = sub.overall + posMatch + stamina / 10;
-
-      if (score > bestSubScore) {
-        bestSubScore = score;
-        bestSub = sub;
-      }
-    }
-
-    if (bestSub) {
-      // Update lineup statuses
       worstPlayer.lineup = "BENCH";
       bestSub.lineup = "STARTING";
       bestSub.lineupIndex = worstPlayer.lineupIndex;
@@ -1576,6 +1571,7 @@ export class MatchEngine {
       this.traceLog.push(
         `AI DEĞİŞİKLİK: ${team.name} - ${worstPlayer.lastName} çıktı, ${bestSub.lastName} girdi (yorgunluk: ${Math.round(worstScore)}%)`,
       );
+      subsThisWindow++;
     }
   }
 
@@ -2366,8 +2362,8 @@ export class MatchEngine {
         }
       }
 
-      // AI substitution check every 5 minutes for non-user teams
-      if (this.internalMinute >= 40 && this.internalMinute % 5 === 0) {
+      // AI substitution at fixed minutes (35, 55, 65, 80) with batch subs
+      if ([35, 55, 65, 80].includes(this.internalMinute)) {
         // Only process AI subs for teams that are NOT user-controlled
         if (this.userTeamId !== this.homeTeam.id) {
           this.processAISubstitutions(true);
@@ -7967,8 +7963,8 @@ export class MatchEngine {
     const sprintCost = isGK ? sprintFields * 0.2 : sprintFields; // Kaleci sprintte daha az yorulur
     const runCost = isGK ? runFields * 0.05 : runFields;
 
-    // Yorgunluk puanı (tam saha cinsinden) - DENGELENMİŞ ÇARPANLAR (Biraz daha yavaş yorulma)
-    const fatigueScore = sprintCost * 1.6 + runCost * 0.4;
+    // ~%30 az yorgunluk (eski: 1.6/0.4 → yeni: 1.12/0.28)
+    const fatigueScore = sprintCost * 1.12 + runCost * 0.28;
 
     // === STAMINA ATTRIBUTE ETKİSİ ===
     // Yüksek dayanıklılık = yorgunluk eşiği yükselir

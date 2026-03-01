@@ -248,10 +248,10 @@ export const TrainingCenter: React.FC<TrainingCenterProps> = ({ team, players, o
                 <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl">
                     <h3 className="text-lg font-bold text-white mb-4">{t.efficiency}</h3>
                     <div className="flex items-end gap-2 mb-2">
-                        <span className="text-4xl font-bold text-emerald-400">{Math.round(team.facilities.trainingLevel * 4)}%</span>
+                        <span className="text-4xl font-bold text-emerald-400">{Math.round(team.facilities.trainingLevel * 10)}%</span>
                     </div>
                     <div className="w-full bg-slate-700 rounded-full h-2 mb-4">
-                        <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${team.facilities.trainingLevel * 4}%` }}></div>
+                        <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${team.facilities.trainingLevel * 10}%` }}></div>
                     </div>
                     <p className="text-xs text-slate-400">
                         {t.upgradeTrainingTip || 'Upgrade your Training Facilities in the Club menu to improve weekly player growth rates.'}
