@@ -1248,6 +1248,37 @@ const generatePlayer = (
   };
 };
 
+export const assignAIPlayerInstructions = (tactic: TeamTactic, players: Player[]) => {
+  if (!tactic.slotInstructions) tactic.slotInstructions = {};
+
+  const startingPlayers = players.filter(p => p.lineup === 'STARTING');
+
+  startingPlayers.forEach(p => {
+    let instruction = 'Default';
+    const pos = p.position;
+
+    if (pos === Position.DEF) {
+      if (tactic.mentality === 'Defensive' || p.attributes.speed < 60) instruction = 'StayBack';
+      else if (p.attributes.speed > 75 && p.attributes.dribbling > 65) instruction = 'JoinAttack';
+    } else if (pos === Position.MID) {
+      if (p.attributes.tackling > 75 && p.attributes.finishing < 60) instruction = 'DefendMore';
+      else if (p.attributes.finishing > 80) instruction = 'ShootOnSight';
+      else if (p.attributes.vision > 80 && tactic.mentality === 'Attacking') instruction = 'AttackMore';
+      else if (p.attributes.tackling > 70 && p.attributes.passing > 70) instruction = 'HoldPosition';
+    } else if (pos === Position.FWD) {
+      if (p.attributes.passing > 75 && p.attributes.vision > 75) instruction = 'DropDeep';
+      else if (p.attributes.stamina > 80 && p.attributes.aggression > 75) instruction = 'PressHigher';
+      else if (p.attributes.finishing > 85) instruction = 'ShootOnSight';
+    }
+
+    if (instruction !== 'Default') {
+      tactic.slotInstructions![p.lineupIndex] = instruction;
+    } else {
+      delete tactic.slotInstructions![p.lineupIndex];
+    }
+  });
+};
+
 export const autoPickLineup = (
   players: Player[],
   preferredFormation?: TacticType,
@@ -3156,7 +3187,7 @@ export const handlePlayerInteraction = (
   };
 };
 
-export const processWeeklyEvents = (gameState: GameState, t: any) => {
+export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActivity: 'LOW' | 'NORMAL' | 'HIGH' = 'NORMAL') => {
   // === STADIUM CAPACITY MIGRATION (v2: 120k max system) ===
   // Old formula: 5000 + (level-1)*6000 → level 10 = 59k
   // New formula: 7500 + (level-1)*12500 → level 10 = 120k
@@ -4200,21 +4231,29 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
       baseTvRightsValues[team.leagueId] || baseTvRightsValues["default"];
     const positionMultiplier = Math.max(0.5, 1.5 - (leaguePosition - 1) * 0.05);
     const repMultiplier = 0.8 + ((team.reputation - 5000) / 10000) * 0.4;
+    // Budget-scaled income boost: small clubs need the full 1.3x to survive,
+    // rich clubs get diminishing returns to prevent endless accumulation.
+    // leagueMult / teamCoeffMult still handle league-tier differences.
+    const incomeBoost =
+      team.budget < 80_000_000  ? 1.30 :  // Poor clubs: full boost
+      team.budget < 250_000_000 ? 1.15 :  // Mid clubs: reduced
+                                   1.00;   // Rich clubs: no artificial boost
+
     const tvRights = Math.floor(
-      tvBase * positionMultiplier * repMultiplier * 1.3,
+      tvBase * positionMultiplier * repMultiplier * incomeBoost,
     );
 
     // Merchandise and sponsor income
     const starPlayerBonus =
       teamPlayers.filter((p) => p.overall > 85).length * 5000;
     const merchandise = Math.floor(
-      (team.reputation * 2 + starPlayerBonus) * (0.7 + leagueMult * 0.3) * 1.3,
+      (team.reputation * 2 + starPlayerBonus) * (0.7 + leagueMult * 0.3) * incomeBoost,
     );
     // DYNAMIC: AI teams also benefit from league coefficient scaling for sponsors
     const teamCoeffMult = getCoefficientMultiplier(team.leagueId || "default");
     const sponsorIncome = team.sponsor
-      ? Math.floor(team.sponsor.weeklyIncome * 1.3 * teamCoeffMult)
-      : Math.floor(50000 * Math.sqrt(leagueMult) * 1.3 * teamCoeffMult);
+      ? Math.floor(team.sponsor.weeklyIncome * teamCoeffMult * incomeBoost)
+      : Math.floor(50000 * Math.sqrt(leagueMult) * teamCoeffMult * incomeBoost);
 
     // Ticket income (simplified - AI teams don't track home/away like user)
     const STADIUM_MIN = 5000;
@@ -4231,7 +4270,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
       effectiveCapacity *
       dynamicTicketPrice *
       Math.max(0.4, Math.min(0.93, avgAttendance)) *
-      1.3 *
+      incomeBoost *
       0.5,
     ); // Half of weeks are home
 
@@ -4246,7 +4285,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
       finalStaffCostsAI = 0;
     }
 
-    const weeklyIncome = ticketIncome + merchandise + tvRights + sponsorIncome;
+    // Off-season: AI income is fully paused (no matches = no revenue streams active).
+    // Expenses are already zeroed above. This prevents budget accumulation during empty weeks.
+    const weeklyIncome = hasMatchesLeft
+      ? ticketIncome + merchandise + tvRights + sponsorIncome
+      : 0;
     const weeklyExpenses = finalWeeklyWagesAI + finalMaintenanceAI + finalStaffCostsAI;
 
     // Update AI team budget
@@ -4507,11 +4550,18 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     return team;
   });
 
-  // ========== FFP LUXURY TAX SYSTEM ==========
-  // Teams with budget > 100M pay 10% weekly tax on excess
-  // Tax is distributed equally to all teams in the same league (solidarity fund)
-  const LUXURY_TAX_THRESHOLD = 100_000_000; // €100M
-  const LUXURY_TAX_RATE = 0.1 / 52; // 10% annual, paid weekly
+  // ========== FFP LUXURY TAX SYSTEM (Progressive Brackets) ==========
+  // Progressive wealth tax: richer clubs pay proportionally more.
+  // Tax is distributed equally to all teams in the same league (solidarity fund).
+  // Brackets (annual rate, applied weekly):
+  //   €100M – €300M : 10%  → drains slow accumulation
+  //   €300M – €600M : 35%  → strong drain on mid-rich clubs
+  //   €600M+         : 60%  → hard cap effect on mega-rich clubs
+  const LUXURY_TAX_BRACKETS = [
+    { low: 100_000_000, high: 300_000_000, rate: 0.10 / 52 },
+    { low: 300_000_000, high: 600_000_000, rate: 0.35 / 52 },
+    { low: 600_000_000, high: Infinity,    rate: 0.60 / 52 },
+  ];
 
   // Track FFP amounts per team for financial reporting
   const ffpTaxPaid: Record<string, number> = {};
@@ -4530,11 +4580,16 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     const leagueTeams = leagueTeamMap[leagueId];
     let solidarityFund = 0;
 
-    // Collect taxes from rich teams
+    // Collect progressive taxes from rich teams
     leagueTeams.forEach((team) => {
-      if (team.budget > LUXURY_TAX_THRESHOLD) {
-        const excess = team.budget - LUXURY_TAX_THRESHOLD;
-        const tax = Math.floor(excess * LUXURY_TAX_RATE);
+      let tax = 0;
+      for (const bracket of LUXURY_TAX_BRACKETS) {
+        if (team.budget > bracket.low) {
+          const taxableInBracket = Math.min(team.budget, bracket.high === Infinity ? team.budget : bracket.high) - bracket.low;
+          tax += Math.floor(taxableInBracket * bracket.rate);
+        }
+      }
+      if (tax > 0) {
         team.budget -= tax;
         solidarityFund += tax;
         ffpTaxPaid[team.id] = tax; // Track for finance UI
@@ -4655,19 +4710,24 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
   // only 1 rejection roll happens — rest auto-reject
   const rejectedThisWeek = new Set<string>();
 
-  // THROTTLING: Process ~35% of teams per week to reduce computation spike
-  // BUT: Always process teams that are in "Crisis" (low squad size)
-  // Over 8-week summer window, each team gets ~2-3 active weeks on average
+  // THROTTLING: Process X% of teams per week based on aiTransferActivity setting
+  // Crisis teams (low squad size) are always processed regardless of setting
+  const aiThrottleRate = aiTransferActivity === 'HIGH' ? 0.65 : aiTransferActivity === 'LOW' ? 0.20 : 0.35;
   const activeAiTeams = allAiTeams.filter((t) => {
-    // Find squad size from updatedPlayers list
     const squadSize = updatedPlayers.filter((p) => p.teamId === t.id).length;
-
-    // Crisis check: Always active if squad is too small
-    if (squadSize < 18) return true;
-
-    // Random selection for others — 35% per week, spreads load across window
-    return Math.random() < 0.35;
+    if (squadSize < 18) return true; // Crisis: always active
+    return Math.random() < aiThrottleRate;
   });
+
+  // Pre-build targetable user players list ONCE (outside AI team loop) for performance.
+  // isNotForSale players are completely invisible to all AI teams — not scanned, not offered.
+  const targetableUserPlayers = updatedPlayers.filter(
+    (p) =>
+      p.teamId === gameState.userTeamId &&
+      !p.isTransferListed &&
+      !p.isNotForSale &&
+      p.overall >= 72,
+  );
 
   // console.log(`[AI Market] Active buyers this week: ${activeAiTeams.length}/${allAiTeams.length}`);
 
@@ -4707,9 +4767,34 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     let buyChance = 0.70;
     if (currentSquadSize < 20) { buyUrgencyThreshold = 20; buyChance = 0.90; } // URGENT: thin squad
     else if (currentSquadSize < 22) { buyUrgencyThreshold = 30; buyChance = 0.80; }
-    // Allow 2 buys per week for rich teams with weak squads
-    const maxBuysThisWeek = (aiTeam.budget > 30_000_000 && avgOverall < (aiTeam.reputation / 120)) ? 2 : 1;
+    // Wealthier teams buy more aggressively — prevents budget accumulation over seasons
+    let maxBuysThisWeek = 1;
+    if (aiTeam.budget > 500_000_000) { maxBuysThisWeek = 4; buyChance = 0.95; buyUrgencyThreshold = 15; }
+    else if (aiTeam.budget > 200_000_000) { maxBuysThisWeek = 3; buyChance = 0.90; buyUrgencyThreshold = 20; }
+    else if (aiTeam.budget > 50_000_000) { maxBuysThisWeek = 2; buyChance = 0.80; }
+    else if (aiTeam.budget > 30_000_000 && avgOverall < (aiTeam.reputation / 120)) { maxBuysThisWeek = 2; }
     let buysThisWeek = 0;
+
+    // For very rich teams with no acute needs: inject upgrade opportunities so budget drains
+    // A 3B budget club should still be buying the best available even without "urgent" needs
+    if (aiTeam.budget > 200_000_000 && squadNeeds.filter(n => n.urgency > buyUrgencyThreshold).length === 0) {
+      const positions: Position[] = [Position.GK, Position.DEF, Position.MID, Position.FWD];
+      positions.forEach(pos => {
+        const worstStarter = teamPlayers
+          .filter(p => p.position === pos && p.lineup === "STARTING")
+          .sort((a, b) => a.overall - b.overall)[0];
+        if (worstStarter && worstStarter.overall < avgOverall + 3) {
+          // Push synthetic upgrade need for this position
+          squadNeeds.push({
+            position: pos,
+            role: "STANDARD",
+            urgency: 25,
+            targetRating: worstStarter.overall + 4,
+            reason: `Proactive upgrade: replace ${pos} ${worstStarter.overall} OVR`,
+          });
+        }
+      });
+    }
 
     while (
       buysThisWeek < maxBuysThisWeek &&
@@ -4730,9 +4815,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
           !transferredPlayerIds.has(p.id) && // FIX: Exclude recent transfers
           !rejectedThisWeek.has(p.id) && // ANTI-SPAM: Already rejected this week
           gameState.currentWeek - (p.lastTransferWeek || -99) >= 15 && // ANTI-LOOP: 15 week cooldown
+          // CONTRACT PROTECTION: AI can only buy listed players or those with expiring contracts (≤1 yr)
+          // This prevents top European clubs from systematically draining mid-tier league talent
+          (p.isTransferListed || (p.contractYears ?? 99) <= 1 || p.teamId === 'FREE_AGENT') &&
           p.overall >= topNeed.targetRating - 2 && // AMBITION: Must be closer to target
-          (aiTeam.reputation > 8500 || p.overall <= avgOverall + 15) && // QUALITY GATE: Big clubs can always buy the best
-          p.value < aiTeam.budget * 0.95, // Spend up to 95% of cash
+          (aiTeam.reputation > 8500 || aiTeam.budget > 300_000_000 || p.overall <= avgOverall + 15) && // QUALITY GATE: Big clubs and rich clubs buy the best
+          p.value < aiTeam.budget * 0.6, // Spend up to 60% of cash (leave room for multiple buys)
       );
 
       if (availablePlayers.length > 0) {
@@ -4771,7 +4859,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
           const wouldLeaveShort = positionPlayersCount <= 3;
 
           let rejectChance = 0.1; // Base 10%
-          if (isStarter) rejectChance += 0.25; // Starter 
+          if (isStarter) rejectChance += 0.25; // Starter
           if (wouldLeaveShort) rejectChance += 0.3; // Depth issue
           if (!targetPlayer.isTransferListed) rejectChance += 0.2; // Not listed
 
@@ -4780,25 +4868,37 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
           if (repDiff < -1000) rejectChance += 0.4; // Huge step down
           else if (repDiff > 1000) rejectChance -= 0.3; // Huge step up, player forces move
 
-          // ★ ABSOLUTE STAR PLAYER PROTECTION ★
-          // 90+ OVR players are COMPLETELY UNSELLABLE
-          if (targetPlayer.overall >= 90) {
-            rejectChance = 1.0; // IMPOSSIBLE to buy
-          } else {
-            const sortedByOvr = [...sellingTeamPlayers].sort((a, b) => b.overall - a.overall);
-            const isTop5 = sortedByOvr.slice(0, 5).some(p => p.id === targetPlayer.id);
+          // Financial power discount: rich clubs offering huge fees are harder to refuse
+          // Prevents budget accumulation — a 3B club should be able to buy an 80 OVR player
+          const offerRatio = aiTeam.budget / Math.max(1, targetPlayer.value);
+          if (offerRatio > 50) rejectChance -= 0.40; // Insane wealth — selling team pockets life-changing fee
+          else if (offerRatio > 20) rejectChance -= 0.25;
+          else if (offerRatio > 10) rejectChance -= 0.15;
 
-            if (targetPlayer.overall >= 85 && isTop5) {
-              rejectChance = 0.99; // 1% per week → 8% per window (was 34%!)
-            } else if (targetPlayer.overall >= 80 && isTop5) {
-              rejectChance = 0.97; // 3% per week → 22% per window
-            } else {
-              // Wonderkid protection
-              if (targetPlayer.age <= 22 && targetPlayer.overall >= 75) rejectChance += 0.25;
-              if (targetPlayer.overall >= 80) rejectChance += 0.30;
-              // Cap at 95% for non-elite
-              rejectChance = Math.min(0.95, Math.max(0.05, rejectChance));
-            }
+          // ★ STAR PLAYER PROTECTION — scaled by financial power ★
+          // Rich clubs offering a king's ransom can eventually unlock any player
+          const sortedByOvr = [...sellingTeamPlayers].sort((a, b) => b.overall - a.overall);
+          const isTop3 = sortedByOvr.slice(0, 3).some(p => p.id === targetPlayer.id);
+          const isTop5 = sortedByOvr.slice(0, 5).some(p => p.id === targetPlayer.id);
+
+          if (targetPlayer.overall >= 90) {
+            // 90+ OVR: hard to buy, but unhappy/listed players open the door
+            let base90 = offerRatio > 30 ? 0.75 : offerRatio > 15 ? 0.90 : 1.0;
+            if (targetPlayer.isTransferListed) base90 -= 0.20; // Player wants out
+            if ((targetPlayer.morale || 70) < 35) base90 -= 0.15; // Deeply unhappy
+            rejectChance = Math.max(0.35, base90);
+          } else if (targetPlayer.overall >= 85 && isTop3) {
+            if (offerRatio > 20) rejectChance = Math.max(0.55, 0.95 - (offerRatio - 20) * 0.01);
+            else rejectChance = 0.95;
+          } else if (targetPlayer.overall >= 85 && isTop5) {
+            rejectChance = Math.max(0.50, 0.90 - (offerRatio > 10 ? 0.20 : 0));
+          } else if (targetPlayer.overall >= 80 && isTop5) {
+            rejectChance = Math.max(0.35, 0.85 - (offerRatio > 10 ? 0.25 : 0));
+          } else {
+            // Wonderkid protection
+            if (targetPlayer.age <= 22 && targetPlayer.overall >= 75) rejectChance += 0.25;
+            if (targetPlayer.overall >= 80) rejectChance += 0.20;
+            rejectChance = Math.min(0.90, Math.max(0.05, rejectChance));
           }
 
           // Roll the dice
@@ -4919,13 +5019,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
 
       // Only proceed if AI has positional needs
       if (aiNeededPositions.length > 0) {
-        const userPlayers = updatedPlayers.filter(
+        const userPlayers = targetableUserPlayers.filter(
           (p) =>
-            p.teamId === gameState.userTeamId &&
-            !p.isTransferListed &&
             gameState.currentWeek - (p.lastTransferWeek || -99) >= 15 && // ANTI-LOOP
             aiNeededPositions.includes(p.position) && // MUST match needed position
-            p.overall >= 72 && // Target good players
             p.value < aiTeam.budget * 0.6,
         );
 
@@ -5097,11 +5194,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any) => {
     // ========== 5. SMART CONTRACT RENEWAL ==========
     // AI teams renew contracts of important players before they expire
     teamPlayers.forEach((player) => {
-      if (player.contractYears <= 1 && player.overall >= avgOverall) {
-        // Important player with expiring contract - renew!
+      if (player.contractYears <= 1 && player.overall >= avgOverall - 5) {
+        // Important player with expiring contract - renew! (also renew players slightly below avg to prevent squad holes)
         const renewalCost = Math.floor(player.value * 0.05); // 5% of value as bonus
-        if (aiTeam.budget > renewalCost * 3) {
-          // Only if can comfortably afford
+        if (aiTeam.budget > renewalCost * 1.5) {
+          // Lowered threshold: budget just needs to cover the bonus comfortably (was 3x, too strict for mid-tier clubs)
           player.contractYears += 2 + Math.floor(Math.random() * 2); // 2-3 year extension
           // Deduct small signing bonus
           updatedTeams = updatedTeams.map((t) =>
@@ -5418,14 +5515,19 @@ export const processSeasonEnd = (gameState: GameState) => {
     const getCost = (level: number) =>
       Math.floor(500000 * (level + 1) * (1 + (level + 1) * 0.05));
 
+    // Rich teams upgrade more aggressively — otherwise budget piles up indefinitely
+    const isRich = team.budget > 200_000_000;
+    const upgradeChanceBoost = isRich ? 0.2 : 0;
+
     // Check Academy (Priority 1) — max level 7
-    if (team.facilities.academyLevel < 7 && Math.random() < 0.7) {
+    if (team.facilities.academyLevel < 7 && Math.random() < 0.7 + upgradeChanceBoost) {
       const cost = Math.floor(
         600000 *
         (team.facilities.academyLevel + 1) *
         (1 + (team.facilities.academyLevel + 1) * 0.1),
       );
-      if (team.budget > cost * 2.5) {
+      const budgetMultiplier = isRich ? 1.5 : 2.5;
+      if (team.budget > cost * budgetMultiplier) {
         team.budget -= cost;
         team.facilities.academyLevel += 1;
         console.log(
@@ -5435,9 +5537,10 @@ export const processSeasonEnd = (gameState: GameState) => {
     }
 
     // Check Training (Priority 2) — max level 7
-    if (team.facilities.trainingLevel < 7 && Math.random() < 0.6) {
+    if (team.facilities.trainingLevel < 7 && Math.random() < 0.6 + upgradeChanceBoost) {
       const cost = getCost(team.facilities.trainingLevel);
-      if (team.budget > cost * 2.5) {
+      const budgetMultiplier = isRich ? 1.5 : 2.5;
+      if (team.budget > cost * budgetMultiplier) {
         team.budget -= cost;
         team.facilities.trainingLevel += 1;
         console.log(
@@ -5447,9 +5550,10 @@ export const processSeasonEnd = (gameState: GameState) => {
     }
 
     // Check Stadium (Priority 3) — max level 10
-    if (team.facilities.stadiumLevel < 10 && Math.random() < 0.4) {
+    if (team.facilities.stadiumLevel < 10 && Math.random() < 0.4 + upgradeChanceBoost) {
       const cost = getCost(team.facilities.stadiumLevel);
-      if (team.budget > cost * 3) {
+      const budgetMultiplier = isRich ? 2 : 3;
+      if (team.budget > cost * budgetMultiplier) {
         team.budget -= cost;
         team.facilities.stadiumLevel += 1;
         team.facilities.stadiumCapacity += 12500;
@@ -5480,10 +5584,12 @@ export const processSeasonEnd = (gameState: GameState) => {
     (sum, t) => sum + Math.max(0, t.budget),
     0,
   );
-  const inflationMultiplier = Math.max(
-    1.0,
-    Math.min(2.0, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS),
-  );
+  // Budget-driven inflation: scales with total money in the economy (no hard cap)
+  const budgetInflation = Math.max(1.0, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS);
+  // Season-based compound inflation: ~8% per year regardless of budget (realistic market growth)
+  const seasonInflation = Math.pow(1.08, Math.max(0, gameState.currentSeason - 1));
+  // Combined: whichever is higher drives the market (capped at 6x to prevent absurdity)
+  const inflationMultiplier = Math.min(6.0, Math.max(budgetInflation, seasonInflation));
 
   console.log(
     `[Season End] Market Inflation: Total Budgets €${(totalLeagueBudgets / 1000000).toFixed(0)}M, Multiplier: ${inflationMultiplier.toFixed(2)}x`,
@@ -6053,6 +6159,7 @@ export const processSeasonEnd = (gameState: GameState) => {
   // 3. Player Lifecycle (Aging, Progression, Contracts, Retirement)
   const retiredPlayerNames: string[] = [];
   const promotedPlayerNames: string[] = []; // Regens
+  const contractRenewalDemands: Array<{ playerId: string; playerName: string; demandedSalary: number; position: string; overall: number; hasAlternatives: boolean; isLoyal: boolean }> = [];
 
   let updatedPlayers = gameState.players.map((p) => {
     const age = p.age + 1;
@@ -6120,33 +6227,76 @@ export const processSeasonEnd = (gameState: GameState) => {
 
     if (contractYears <= 0) {
       if (p.teamId === gameState.userTeamId) {
-        // User's players with expired contracts - good ones go to bigger clubs!
-        if (overall >= 75) {
-          // Good player leaves - find a better team
-          const betterTeams = gameState.teams
-            .filter(
-              (t) =>
-                t.id !== gameState.userTeamId &&
-                t.reputation >
-                (gameState.teams.find((ut) => ut.id === gameState.userTeamId)
-                  ?.reputation || 0),
-            )
-            .sort((a, b) => b.reputation - a.reputation);
+        // Check if we already sent an unread renewal demand — player waited, now leaving
+        const alreadyDemanded = gameState.messages.some(
+          (m) => m.type === MessageType.CONTRACT_RENEWAL && (m.data as any)?.playerId === p.id && !m.isRead
+        );
 
-          if (betterTeams.length > 0) {
-            // Join a top team (with some randomness)
-            const targetTeam =
-              betterTeams[
-              Math.floor(Math.random() * Math.min(3, betterTeams.length))
-              ];
-            teamId = targetTeam.id;
-            contractYears = 3; // Signs 3-year deal
-            newContractSigned = true; // NEW CONTRACT = NEW SALARY
+        if (alreadyDemanded) {
+          // Player waited, user ignored — they leave
+          if (overall >= 75) {
+            const betterTeams = gameState.teams
+              .filter(
+                (t) =>
+                  t.id !== gameState.userTeamId &&
+                  t.reputation >
+                  (gameState.teams.find((ut) => ut.id === gameState.userTeamId)
+                    ?.reputation || 0),
+              )
+              .sort((a, b) => b.reputation - a.reputation);
+            if (betterTeams.length > 0) {
+              const targetTeam = betterTeams[Math.floor(Math.random() * Math.min(3, betterTeams.length))];
+              teamId = targetTeam.id;
+              contractYears = 3;
+              newContractSigned = true;
+            } else {
+              teamId = "FREE_AGENT";
+            }
           } else {
             teamId = "FREE_AGENT";
           }
         } else {
-          teamId = "FREE_AGENT";
+          // First expiry — calculate demanded salary and send renewal demand
+          const userTeamLeague = gameState.teams.find((t) => t.id === gameState.userTeamId)?.leagueId || "en";
+          const leagueMult = getLeagueMultiplier(userTeamLeague);
+          const baseWage = Math.floor(Math.pow(1.13, overall - 50) * 100000 * 0.005);
+          const scaledWage = Math.floor(baseWage * (0.8 + leagueMult * 0.2));
+
+          // Leverage premium: good players who have better-club options demand more
+          // OVR 85+: elite, many suitors → +50% premium
+          // OVR 80-84: quality player, likely alternatives → +30% premium
+          // OVR 75-79: solid player, some alternatives → +15% premium
+          // OVR <75: limited options → market rate
+          const userTeamRep = gameState.teams.find((t) => t.id === gameState.userTeamId)?.reputation || 0;
+          const hasBetterOptions = gameState.teams.some(
+            (t) => t.id !== gameState.userTeamId && t.reputation > userTeamRep
+          );
+          let leverageMult = 1.0;
+          if (hasBetterOptions) {
+            if (overall >= 85) leverageMult = 1.50;
+            else if (overall >= 80) leverageMult = 1.30;
+            else if (overall >= 75) leverageMult = 1.15;
+          }
+
+          // Loyalty (morale) modifier: happy players give a discount, unhappy demand extra
+          const morale = p.morale || 70;
+          let loyaltyMult = 1.0;
+          if (morale >= 85) loyaltyMult = 0.82;       // Çok mutlu → %18 indirim (seni seviyor)
+          else if (morale >= 72) loyaltyMult = 0.92;  // Mutlu → %8 indirim
+          else if (morale < 50) loyaltyMult = 1.15;   // Mutsuz → %15 zam (bıkmış, kazanmak istiyor)
+          else if (morale < 62) loyaltyMult = 1.07;   // Biraz mutsuz → %7 zam
+
+          const demandedWage = Math.max(250, Math.floor(scaledWage * leverageMult * loyaltyMult));
+          contractRenewalDemands.push({
+            playerId: p.id,
+            playerName: `${p.firstName} ${p.lastName}`,
+            demandedSalary: demandedWage * 52,
+            position: p.position,
+            overall,
+            hasAlternatives: hasBetterOptions && overall >= 75,
+            isLoyal: morale >= 72,
+          });
+          contractYears = 1; // Grace period — awaiting user's decision
         }
       } else {
         // AI Logic: Renew key players, release others
@@ -6662,6 +6812,27 @@ export const processSeasonEnd = (gameState: GameState) => {
         isRead: false,
         date: new Date().toISOString(),
       },
+      // Contract renewal demands from players whose contracts just expired
+      ...contractRenewalDemands.map((demand) => ({
+        id: uuid(),
+        week: 1,
+        type: MessageType.CONTRACT_RENEWAL,
+        subject: `${demand.playerName} yeni sözleşme talep ediyor`,
+        body: demand.hasAlternatives && !demand.isLoyal
+          ? `${demand.playerName} (OVR ${demand.overall} | ${demand.position}) sözleşmesi bitti. Başka kulüplerden teklif aldığını belirtiyor — haftada €${Math.round(demand.demandedSalary / 52).toLocaleString()} istiyor. Kabul etmezsen ayrılır.`
+          : demand.hasAlternatives && demand.isLoyal
+          ? `${demand.playerName} (OVR ${demand.overall} | ${demand.position}) sözleşmesi bitti. Başka teklifleri olmasına rağmen burada kalmak istediğini söylüyor — haftada €${Math.round(demand.demandedSalary / 52).toLocaleString()} ile anlaşabiliriz diyor. Kabul etmezsen gider.`
+          : demand.isLoyal
+          ? `${demand.playerName} (OVR ${demand.overall} | ${demand.position}) sözleşmesi bitti. Kulübe bağlılığını belirterek makul bir teklifle uzatmak istediğini söylüyor — haftada €${Math.round(demand.demandedSalary / 52).toLocaleString()} yeterli olur diyor.`
+          : `${demand.playerName} (OVR ${demand.overall} | ${demand.position}) sözleşmesi bitti. Haftada €${Math.round(demand.demandedSalary / 52).toLocaleString()} maaş talep ediyor. Kabul etmezsen kulübü terk eder.`,
+        isRead: false,
+        date: new Date().toISOString(),
+        data: {
+          playerId: demand.playerId,
+          playerName: demand.playerName,
+          demandedSalary: demand.demandedSalary,
+        },
+      })),
       ...gameState.messages,
     ],
 

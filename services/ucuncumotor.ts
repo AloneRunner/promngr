@@ -807,6 +807,14 @@ export class MatchEngine {
   // === ENGINE IDENTIFIER ===
   public engineVersion: string = "ME v5.0";
 
+  // === PLAYER INSTRUCTION HELPER ===
+  private getPlayerInstruction(p: Player): string {
+    const isHome = this.homePlayers.includes(p);
+    const team = isHome ? this.homeTeam : this.awayTeam;
+    if (!team.tactic.slotInstructions) return 'Default';
+    return team.tactic.slotInstructions[p.lineupIndex ?? 0] ?? 'Default';
+  }
+
   constructor(
     match: Match,
     homeTeam: Team,
@@ -4427,7 +4435,9 @@ export class MatchEngine {
       const instructions = tactic.instructions || [];
 
       // 1. Paslaşarak Gir (WorkBallIntoBox)
-      if (instructions.includes("WorkBallIntoBox")) {
+      // Player-level ShootOnSight overrides team WorkBallIntoBox for that specific player
+      const playerInstrForShoot = this.getPlayerInstruction(p);
+      if (instructions.includes("WorkBallIntoBox") && playerInstrForShoot !== 'ShootOnSight') {
         // Ceza sahası dışından şuta AĞIR CEZA (-50) - AMACINA GÖRE GÜNCELLENDİ
         if (distToGoal > 20) {
           // Sadece iyi şutör değillerse ceza sahası dışından yasakla
@@ -4589,6 +4599,19 @@ export class MatchEngine {
         shootThreshold = 600 * attackerBonus; // Uzaktan vurmak zorlaştı
       } else {
         shootThreshold = 999; // 30 metreden mucize bekleme, pas ver!
+      }
+
+      // === PLAYER INSTRUCTION: SHOOT/PASS MODIFIER ===
+      const playerInstruction = this.getPlayerInstruction(p);
+      if (playerInstruction === 'ShootOnSight' && distToGoal < 35) {
+        shootScore += 250;
+        shootThreshold = Math.max(50, shootThreshold - 200);
+      } else if (playerInstruction === 'AttackMore' && distToGoal < 28) {
+        shootScore += 80;
+        shootThreshold = Math.max(80, shootThreshold - 80);
+      } else if (playerInstruction === 'DefendMore') {
+        shootScore -= 100;
+        passScore += 80;
       }
 
       // [KRİTİK]: "Al da At" Kuralı - Arkadaşın çok daha boşsa bencillik yapma
@@ -5884,6 +5907,15 @@ export class MatchEngine {
     let maxDriftX = teamHasBall ? 35 : hasCustomPos ? 8 : 12;
     let maxDriftY = teamHasBall ? 15 : hasCustomPos ? 6 : 10;
 
+    // === PLAYER INSTRUCTION: Read instruction early, enforce AFTER lineH ===
+    const offBallInstruction = this.getPlayerInstruction(p);
+
+    // Pre-lineH: Only apply HoldPosition drift limits
+    if (offBallInstruction === 'HoldPosition') {
+      maxDriftX = Math.min(maxDriftX, 6);
+      maxDriftY = Math.min(maxDriftY, 5);
+    }
+
     // PHASE 10: Run Flags (Top Level Scope)
     let isMakingRun = false;
     let bypassDriftLimit = false;
@@ -6008,6 +6040,8 @@ export class MatchEngine {
 
       targetX = isHome ? Math.max(targetX, lineH) : Math.min(targetX, lineH);
 
+      targetX = isHome ? Math.max(targetX, lineH) : Math.min(targetX, lineH);
+
       // 2. Support Runs (DESTEK KOŞULARI - STİL MANTIĞI)
       const ballCarrierId = this.sim.ball.ownerId;
       const distToBall = dist(simP.x, simP.y, ballX, ballY);
@@ -6034,8 +6068,9 @@ export class MatchEngine {
       }
 
       // === ORTA SAHA & KANAT DESTEK KOŞUSU ===
-      // Takım arkadaşı topla ileri gidince MID/kanat beklemez, ileri çıkar.
-      if (role === Position.MID && ballCarrierId && ballCarrierId !== p.id) {
+      // GUARD: DefendMore/HoldPosition/StayBack oyuncuları destek koşusu YAPMAZ!
+      if (role === Position.MID && ballCarrierId && ballCarrierId !== p.id
+        && offBallInstruction !== 'DefendMore' && offBallInstruction !== 'HoldPosition' && offBallInstruction !== 'StayBack') {
         const carrier = this.getPlayer(ballCarrierId);
         const carrierPos = this.sim.players[ballCarrierId];
         if (carrier && carrierPos && carrier.teamId === p.teamId) {
@@ -6712,8 +6747,9 @@ export class MatchEngine {
       const hasRoamInstruction =
         tactic.instructions && tactic.instructions.includes("RoamFromPosition");
 
-      if (hasRoamInstruction) {
+      if (hasRoamInstruction && offBallInstruction !== 'HoldPosition') {
         // Instruction: Significant boost, but not broken
+        // HoldPosition player instruction takes priority over team RoamFromPosition
         // Base 6m -> 15m
         maxDriftX = 15;
         maxDriftY = 12;
@@ -6731,7 +6767,7 @@ export class MatchEngine {
         // orta sahalar daha erken öne çıkmaya başlasın
         const isAttackingHalf = isHome ? ballX > 40 : ballX < 65;
         if (isAttackingHalf) {
-          if (role === Position.MID && !isMakingRun) {
+          if (role === Position.MID && !isMakingRun && offBallInstruction !== 'HoldPosition') {
             // Kademeli sistem lineH'de doğru hedefi zaten belirledi (CDM/CM/CAM farklı konumlanır)
             // targetX'i EZME — sadece drift limitini kaldır ve hızı artır
             bypassDriftLimit = true;
@@ -6770,9 +6806,9 @@ export class MatchEngine {
         const driftX = targetX - baseTargetX;
         const driftY = targetY - baseTargetY;
 
-        // Orta sahalar hücumdayken drift limitine takılmasın
+        // Orta sahalar hücumdayken drift limitine takılmasın (HoldPosition hariç)
         let effectiveMaxDriftX = maxDriftX;
-        if (role === Position.MID && teamHasBall) effectiveMaxDriftX = 55; // 45 -> 55 (Allow box entry)
+        if (role === Position.MID && teamHasBall && offBallInstruction !== 'HoldPosition') effectiveMaxDriftX = 55; // 45 -> 55 (Allow box entry)
 
         if (Math.abs(driftX) > effectiveMaxDriftX) {
           targetX = baseTargetX + Math.sign(driftX) * effectiveMaxDriftX;
@@ -6799,6 +6835,39 @@ export class MatchEngine {
           );
           speedMod = MAX_PLAYER_SPEED * 0.85;
         }
+      }
+
+      // === PLAYER INSTRUCTION: ABSOLUTE ENFORCEMENT (POST-ALL ATTACKING PATTERNS) ===
+      if (offBallInstruction === 'StayBack') {
+        if (isHome) { targetX = Math.min(targetX, PITCH_CENTER_X - 5); }
+        else { targetX = Math.max(targetX, PITCH_CENTER_X + 5); }
+        maxDriftX = Math.min(maxDriftX, 8);
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'DefendMore') {
+        const maxForward = isHome ? Math.min(ballX - 10, PITCH_CENTER_X + 10) : Math.max(ballX + 10, PITCH_CENTER_X - 10);
+        if (isHome) { targetX = Math.min(targetX, maxForward); }
+        else { targetX = Math.max(targetX, maxForward); }
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'JoinAttack') {
+        const atkPush = isHome ? ballX - 15 : ballX + 15;
+        if (isHome) { targetX = Math.max(targetX, Math.min(atkPush, PITCH_LENGTH - 20)); }
+        else { targetX = Math.min(targetX, Math.max(atkPush, 20)); }
+        maxDriftX = Math.max(maxDriftX, 30);
+      } else if (offBallInstruction === 'AttackMore') {
+        const atkBoost = 12;
+        targetX = isHome ? targetX + atkBoost : targetX - atkBoost;
+        maxDriftX = Math.max(maxDriftX, 25);
+      } else if (offBallInstruction === 'DropDeep') {
+        const maxFwd = isHome ? Math.min(ballX - 5, PITCH_CENTER_X + 15) : Math.max(ballX + 5, PITCH_CENTER_X - 15);
+        if (isHome) { targetX = Math.min(targetX, maxFwd); }
+        else { targetX = Math.max(targetX, maxFwd); }
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'HoldPosition') {
+        // MID: Enforce strict positional discipline — clamp directly after all bypass logic
+        const driftX = targetX - baseTargetX;
+        const driftY = targetY - baseTargetY;
+        if (Math.abs(driftX) > 6) targetX = baseTargetX + Math.sign(driftX) * 6;
+        if (Math.abs(driftY) > 5) targetY = baseTargetY + Math.sign(driftY) * 5;
       }
 
       if (simP.state !== "SPRINT") simP.state = "RUN"; // FIX: SPRINT override edilmesini engelle!
@@ -7661,6 +7730,21 @@ export class MatchEngine {
           // === INSTRUCTION: ROAM FROM POSITION (SAVUNMADA MARKTAN KURTULMA) ===
           // Jitter'a (titremeye) sebep olduğu için rastgele konum kaydırması tamamen kaldırıldı.
           // Zaten 'maxDriftX' onlara yeterli hareket alanı veriyor.
+
+          // === PLAYER INSTRUCTION: ABSOLUTE ENFORCEMENT (DEFENSIVE PHASE) ===
+          if (offBallInstruction === 'PressHigher') {
+            const minPush = isHome ? ballX + 5 : ballX - 5;
+            if (isHome) { targetX = Math.max(targetX, minPush); }
+            else { targetX = Math.min(targetX, minPush); }
+            this.playerStates[p.id].isPressing = true;
+          } else if (offBallInstruction === 'StayBack') {
+            if (isHome) { targetX = Math.min(targetX, PITCH_CENTER_X - 5); }
+            else { targetX = Math.max(targetX, PITCH_CENTER_X + 5); }
+          } else if (offBallInstruction === 'DefendMore') {
+            const maxForward = isHome ? Math.min(ballX - 10, PITCH_CENTER_X + 10) : Math.max(ballX + 10, PITCH_CENTER_X - 10);
+            if (isHome) { targetX = Math.min(targetX, maxForward); }
+            else { targetX = Math.max(targetX, maxForward); }
+          }
 
           targetY = clamp(targetY, 2, PITCH_WIDTH - 2);
           targetX = clamp(targetX, 0, PITCH_LENGTH);

@@ -8,7 +8,7 @@ export enum MatchEventType {
     OFFSIDE = 'OFFSIDE'
 }
 
-export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING' }
+export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING', CONTRACT_RENEWAL = 'CONTRACT_RENEWAL' }
 export type LineupStatus = 'STARTING' | 'BENCH' | 'RESERVE';
 export enum CoachArchetype { TACTICIAN = 'TACTICIAN', MOTIVATOR = 'MOTIVATOR', DEVELOPER = 'DEVELOPER' }
 export type TrainingFocus = 'BALANCED' | 'ATTACK' | 'DEFENSE' | 'PHYSICAL' | 'TECHNICAL' | 'POSITION_BASED';
@@ -42,7 +42,7 @@ export interface Player {
     attributes: PlayerAttributes; hiddenAttributes: { consistency: number; importantMatches: number; injuryProneness: number; };
     visual?: any; stats: any; overall: number; potential: number; value: number; wage: number; salary: number;
     contractYears: number; morale: number; condition: number; form: number; teamId: string;
-    isTransferListed: boolean; weeksInjured: number; matchSuspension: number; lineup: LineupStatus;
+    isTransferListed: boolean; isNotForSale?: boolean; weeksInjured: number; matchSuspension: number; lineup: LineupStatus;
     lineupIndex: number; jerseyNumber?: number; playStyles: string[]; details?: any;
     moraleHistory?: { week: number; change: number; reason: string }[];
     playedThisWeek?: boolean; lastTransferWeek?: number; personality?: any;
@@ -56,6 +56,7 @@ export interface TeamTactic {
     instructions?: string[]; // YENİ: Takım Talimatları (WorkBallIntoBox, ShootOnSight, vb)
     customPositions?: Record<string, { x: number, y: number }>;
     mentality?: string;
+    slotInstructions?: Record<number, string>; // YENİ: Oyuncu bazlı talimat (lineupIndex → instruction)
 }
 
 
@@ -136,6 +137,7 @@ export interface PerformanceSettings {
     detailedStats: boolean;            // Detaylı istatistikler göster/gizle
     backgroundSimulation: boolean;     // Hafta simülasyonu arka planda çalışsın (loading ekranı)
     autoSave: 'ALWAYS' | 'WEEKLY' | 'MONTHLY'; // Otomatik kayıt sıklığı
+    aiTransferActivity: 'LOW' | 'NORMAL' | 'HIGH'; // AI takımların transfer piyasası aktivitesi
 }
 
 export interface GameState {

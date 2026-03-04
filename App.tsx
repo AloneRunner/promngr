@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -77,6 +77,7 @@ const App: React.FC = () => {
     const [viewLeagueRegion, setViewLeagueRegion] = useState<string>('ALL'); // NEW: Region Filter State
     const [debugLog, setDebugLog] = useState<string[]>([]);
     const [offerToProcess, setOfferToProcess] = useState<Message | null>(null);
+    const [renewalToProcess, setRenewalToProcess] = useState<Message | null>(null);
     const [assistantAdvice, setAssistantAdvice] = useState<AssistantAdvice[] | null>(null);
 
 
@@ -234,7 +235,8 @@ const App: React.FC = () => {
             showAnimations: true,
             detailedStats: true,
             backgroundSimulation: true,
-            autoSave: 'WEEKLY' as const
+            autoSave: 'WEEKLY' as const,
+            aiTransferActivity: 'NORMAL' as const
         };
 
         if (performanceSettings.backgroundSimulation) {
@@ -877,6 +879,11 @@ const App: React.FC = () => {
         const message = gameState.messages.find(m => m.id === id);
         if (message && message.type === MessageType.TRANSFER_OFFER && !message.isRead) {
             setOfferToProcess(message);
+        } else if (message && message.type === MessageType.CONTRACT_RENEWAL && !message.isRead) {
+            setRenewalToProcess(message);
+            // Mark as read so the player doesn't get an infinite loop next season
+            const updatedMessages = gameState.messages.map(m => m.id === id ? { ...m, isRead: true } : m);
+            setGameState(prev => prev ? { ...prev, messages: updatedMessages } : null);
         } else {
             const updatedMessages = gameState.messages.map(m => m.id === id ? { ...m, isRead: true } : m);
             setGameState(prev => prev ? { ...prev, messages: updatedMessages } : null);
@@ -913,15 +920,38 @@ const App: React.FC = () => {
 
     const handleToggleTransferList = (player: Player) => {
         if (!gameState) return;
-        // Ownership Check
         if (player.teamId !== gameState.userTeamId) return;
 
+        const newStatus = !player.isTransferListed;
         const updatedPlayers = gameState.players.map(p =>
-            p.id === player.id ? { ...p, isTransferListed: !p.isTransferListed } : p
+            p.id === player.id ? { ...p, isTransferListed: newStatus, isNotForSale: newStatus ? false : p.isNotForSale } : p
         );
         setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
         if (selectedPlayer && selectedPlayer.id === player.id) {
-            setSelectedPlayer(prev => prev ? { ...prev, isTransferListed: !prev.isTransferListed } : null);
+            setSelectedPlayer(prev => prev ? { ...prev, isTransferListed: newStatus, isNotForSale: newStatus ? false : prev.isNotForSale } : null);
+        }
+    };
+
+    const handleToggleNotForSale = (player: Player) => {
+        if (!gameState) return;
+        if (player.teamId !== gameState.userTeamId) return;
+
+        const newStatus = !player.isNotForSale;
+        const updatedPlayers = gameState.players.map(p =>
+            p.id === player.id ? { ...p, isNotForSale: newStatus, isTransferListed: newStatus ? false : p.isTransferListed } : p
+        );
+        setGameState(prev => {
+            if (!prev) return null;
+            // "Satılığa kapalı" işaretlenince o oyuncunun mevcut PENDING tekliflerini otomatik reddet
+            const updatedOffers = newStatus
+                ? (prev.pendingOffers || []).map(o =>
+                    o.playerId === player.id && o.status === 'PENDING' ? { ...o, status: 'REJECTED' as const } : o
+                  )
+                : prev.pendingOffers;
+            return { ...prev, players: updatedPlayers, pendingOffers: updatedOffers };
+        });
+        if (selectedPlayer && selectedPlayer.id === player.id) {
+            setSelectedPlayer(prev => prev ? { ...prev, isNotForSale: newStatus, isTransferListed: newStatus ? false : prev.isTransferListed } : null);
         }
     };
 
@@ -941,17 +971,54 @@ const App: React.FC = () => {
             alert(t.notEnoughFunds);
             return;
         }
-        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: €${(renewalCost / 1000).toFixed(0)}k`)) {
+        // Calculate new market-rate salary (proactive renewal = 80% of demand leverage + loyalty discount)
+        const leagueMult = getLeagueMultiplier(userTeam.leagueId || 'tr');
+        const baseWage = Math.floor(Math.pow(1.13, player.overall - 50) * 100000 * 0.005);
+        const scaledWage = Math.floor(baseWage * (0.8 + leagueMult * 0.2));
+        const loyaltyFactor = (player.morale || 70) >= 72 ? 0.88 : 1.0;
+        const newWage = Math.max(player.wage || 250, Math.floor(scaledWage * 0.80 * loyaltyFactor));
+        const newSalary = newWage * 52;
+        const newWageDisplay = (newWage * 52 / 1000000).toFixed(2);
+
+        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: €${(renewalCost / 1000).toFixed(0)}k\nNew salary: €${newWageDisplay}M/yr`)) {
             const updatedPlayers = gameState.players.map(p =>
-                p.id === player.id ? { ...p, contractYears: p.contractYears + 2, morale: Math.min(100, p.morale + 10) } : p
+                p.id === player.id ? { ...p, contractYears: p.contractYears + 2, wage: newWage, salary: newSalary, morale: Math.min(100, p.morale + 10) } : p
             );
             const updatedTeams = gameState.teams.map(t =>
                 t.id === userTeam.id ? { ...t, budget: t.budget - renewalCost } : t
             );
             setGameState(prev => prev ? { ...prev, players: updatedPlayers, teams: updatedTeams } : null);
             alert(t.contractExtended);
-            setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2 } : null);
+            setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2, wage: newWage, salary: newSalary } : null);
         }
+    };
+
+    // === CONTRACT RENEWAL DEMAND: Accept ===
+    const handleAcceptContractRenewal = () => {
+        if (!gameState || !renewalToProcess?.data) return;
+        const { playerId, demandedSalary } = renewalToProcess.data as any;
+        const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+        if (!userTeam) return;
+
+        const updatedPlayers = gameState.players.map(p =>
+            p.id === playerId
+                ? { ...p, salary: demandedSalary, wage: Math.round(demandedSalary / 52), contractYears: 3, morale: Math.min(100, p.morale + 15) }
+                : p
+        );
+        setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
+        setRenewalToProcess(null);
+    };
+
+    // === CONTRACT RENEWAL DEMAND: Decline ===
+    const handleDeclineContractRenewal = () => {
+        if (!gameState || !renewalToProcess?.data) return;
+        const { playerId } = renewalToProcess.data as any;
+
+        const updatedPlayers = gameState.players.map(p =>
+            p.id === playerId ? { ...p, teamId: 'FREE_AGENT', contractYears: 0 } : p
+        );
+        setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
+        setRenewalToProcess(null);
     };
 
     // === BUG FIX: Handler to actually update player morale after interactions ===
@@ -1290,8 +1357,18 @@ const App: React.FC = () => {
 
         // Exponential progression for 1-10 scale
         // Lv 1->2: ~2.5M, Lv 5->6: ~12M, Lv 9->10: ~45M
+        // League multiplier: PL pays ~1.8x, lower leagues get 0.7x discount (reflects real-world construction costs)
+        const FACILITY_LEAGUE_MULT: Record<string, number> = {
+            en: 1.8, es: 1.6, de: 1.5, it: 1.4, fr: 1.3,
+            pt: 1.1, nl: 1.1, ru: 0.9, tr: 0.8, be: 0.9,
+            br: 0.8, ar: 0.7, sa: 1.0, us: 1.1, jp: 0.9,
+            kr: 0.8, cn: 0.9, sco: 1.0, at: 0.9, gr: 0.8,
+            ch: 1.0, pl: 0.8, cz: 0.8, ro: 0.7, hr: 0.7,
+            default: 0.7,
+        };
+        const facilityLeagueMult = FACILITY_LEAGUE_MULT[userTeam.leagueId] ?? FACILITY_LEAGUE_MULT.default;
         const multiplier = Math.pow(1.4, nextLevel - 1);
-        const cost = Math.floor(baseCost * multiplier);
+        const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
@@ -1919,6 +1996,7 @@ const App: React.FC = () => {
                 onClose={() => setSelectedPlayer(null)}
                 onRenew={selectedPlayer?.teamId === userTeam.id ? handleContractRenewal : undefined}
                 onToggleTransferList={selectedPlayer?.teamId === userTeam.id ? handleToggleTransferList : undefined}
+                onToggleNotForSale={selectedPlayer?.teamId === userTeam.id ? handleToggleNotForSale : undefined}
                 onTerminateContract={selectedPlayer?.teamId === userTeam.id ? handleTerminateContract : undefined}
                 t={t}
             />
@@ -1932,8 +2010,36 @@ const App: React.FC = () => {
                             <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2"><DollarSign className="text-emerald-400" /> {t.offerReceived}</h2>
                             <p className="text-slate-300 mb-6">{offerToProcess.body}</p>
                             <div className="flex gap-4">
-                                <button onClick={() => offerToProcess.data?.offerId && transferMarket.handleAcceptOffer(offerToProcess.data.offerId as string)} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg">{t.acceptOffer}</button>
-                                <button onClick={() => offerToProcess.data?.offerId && transferMarket.handleRejectOffer(offerToProcess.data.offerId as string)} className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg">{t.rejectOffer}</button>
+                                <button onClick={() => { offerToProcess.data?.offerId && transferMarket.handleAcceptOffer(offerToProcess.data.offerId as string); setOfferToProcess(null); }} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg">{t.acceptOffer}</button>
+                                <button onClick={() => { offerToProcess.data?.offerId && transferMarket.handleRejectOffer(offerToProcess.data.offerId as string); setOfferToProcess(null); }} className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg">{t.rejectOffer}</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+
+            {
+                renewalToProcess && renewalToProcess.data && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
+                        <div className="bg-slate-900 border border-yellow-500/50 rounded-xl max-w-md w-full p-6 shadow-2xl relative z-50">
+                            <h2 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+                                📋 {t.contractRenewalDemand || 'Sözleşme Yenileme Talebi'}
+                            </h2>
+                            <p className="text-slate-300 mb-2">{renewalToProcess.body}</p>
+                            <div className="bg-slate-800 rounded-lg p-3 mb-6">
+                                <div className="text-xs text-slate-400 mb-1">{t.demandedWeeklySalary || 'Talep Edilen Haftalık Maaş'}</div>
+                                <div className="text-2xl font-bold text-yellow-400">
+                                    €{Math.round((renewalToProcess.data as any).demandedSalary / 52).toLocaleString()}
+                                </div>
+                                <div className="text-xs text-slate-500 mt-1">{t.newContractLength || '3 yıllık sözleşme'}</div>
+                            </div>
+                            <div className="flex gap-4">
+                                <button onClick={handleAcceptContractRenewal} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg">
+                                    ✅ {t.acceptRenewal || 'Kabul Et'}
+                                </button>
+                                <button onClick={handleDeclineContractRenewal} className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg">
+                                    ❌ {t.declineRenewal || 'Reddet'}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2801,7 +2907,7 @@ const App: React.FC = () => {
                             }
                             {view === 'squad' && <TeamManagement team={userTeam} players={userPlayers} onUpdateTactic={simulation.handleUpdateTactic} onPlayerClick={setSelectedPlayer} onUpdateLineup={handleUpdateLineup} onSwapPlayers={handleSwapPlayers} onMovePlayer={handleMovePlayer} onAutoFix={handleAutoFix} onPlayerMoraleChange={handlePlayerMoraleChange} t={t} />}
                             {view === 'training' && <TrainingCenter team={userTeam} players={userPlayers} onSetFocus={handleSetTrainingFocus} onSetIntensity={handleSetTrainingIntensity} t={t} />}
-                            {view === 'transfers' && <TransferMarket marketPlayers={gameState.players} userTeam={userTeam} onBuyPlayer={transferMarket.handleBuyPlayer} onPlayerClick={setSelectedPlayer} t={t} />}
+                            {view === 'transfers' && <TransferMarket marketPlayers={gameState.players} userTeam={userTeam} allTeams={gameState.teams} onBuyPlayer={transferMarket.handleBuyPlayer} onPlayerClick={setSelectedPlayer} t={t} />}
                             {
                                 view === 'club' && (
                                     <ClubManagement
@@ -2920,7 +3026,8 @@ const App: React.FC = () => {
                     showAnimations: true,
                     detailedStats: true,
                     backgroundSimulation: true,
-                    autoSave: 'WEEKLY'
+                    autoSave: 'WEEKLY',
+                    aiTransferActivity: 'NORMAL'
                 }}
                 onSettingsChange={(settings) => {
                     if (gameState) {

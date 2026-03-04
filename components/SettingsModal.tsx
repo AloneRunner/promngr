@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Volume2, VolumeX, Zap, BarChart3, Globe, Save } from 'lucide-react';
+import { Settings, Volume2, VolumeX, Zap, BarChart3, Globe, Save, TrendingUp } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -9,6 +9,7 @@ interface SettingsModalProps {
     detailedStats: boolean;
     backgroundSimulation: boolean;
     autoSave: 'ALWAYS' | 'WEEKLY' | 'MONTHLY';
+    aiTransferActivity?: 'LOW' | 'NORMAL' | 'HIGH';
   };
   onSettingsChange: (settings: any) => void;
   currentLanguage: string;
@@ -28,7 +29,7 @@ export default function SettingsModal({
   t
   , engineChoice, onEngineChange
 }: SettingsModalProps) {
-  const [localSettings, setLocalSettings] = useState(performanceSettings);
+  const [localSettings, setLocalSettings] = useState({ aiTransferActivity: 'NORMAL' as 'LOW' | 'NORMAL' | 'HIGH', ...performanceSettings });
 
   if (!isOpen) return null;
 
@@ -230,6 +231,39 @@ export default function SettingsModal({
                   <div className="font-medium">{lang.name}</div>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* AI Transfer Activity */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-emerald-400" />
+              {t.aiTransferActivityLabel || 'AI Transfer Activity'}
+            </h3>
+            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+              <div className="text-sm text-gray-400 mb-3">
+                {t.aiTransferActivityDesc || 'Controls how aggressively AI teams buy and sell players. High activity makes late-game more competitive but may slow simulation.'}
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {(['LOW', 'NORMAL', 'HIGH'] as const).map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => setLocalSettings({ ...localSettings, aiTransferActivity: opt })}
+                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${localSettings.aiTransferActivity === opt
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
+                  >
+                    {opt === 'LOW'
+                      ? (t.aiActivityLow || 'Low (20%)')
+                      : opt === 'NORMAL'
+                        ? (t.aiActivityNormal || 'Normal (35%)')
+                        : (t.aiActivityHigh || 'High (65%)')}
+                  </button>
+                ))}
+              </div>
+              {localSettings.aiTransferActivity === 'HIGH' && (
+                <p className="mt-2 text-xs text-yellow-400">{t.aiActivityHighWarning || '⚠ High activity processes more teams per week — may be slower on low-end devices.'}</p>
+              )}
             </div>
           </div>
 

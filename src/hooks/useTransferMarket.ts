@@ -186,6 +186,14 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
 
             if (!player || !buyingTeam) return prev;
 
+            // Guard: player must still belong to user — prevents double-sell if multiple offers accepted
+            if (player.teamId !== prev.userTeamId) {
+                const cancelledOffers = (prev.pendingOffers || []).map(o =>
+                    o.id === offerId ? { ...o, status: 'REJECTED' as const } : o
+                );
+                return { ...prev, pendingOffers: cancelledOffers };
+            }
+
             const updatedPlayers = prev.players.map(p => {
                 if (p.id === offerInner.playerId) {
                     return { ...p, teamId: offerInner.toTeamId, isTransferListed: false, lineup: 'RESERVE' as LineupStatus, lineupIndex: 99, lastTransferWeek: prev.currentWeek };
@@ -262,14 +270,26 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
             const buyingTeam = prev.teams.find(t => t.id === offer.toTeamId);
             if (!player || !buyingTeam) return prev;
 
+            // Guard: player must still belong to user — prevent double-sell exploit
+            if (player.teamId !== prev.userTeamId) {
+                // Player already sold; cancel this offer silently
+                const updatedOffers2 = (prev.pendingOffers || []).map(o =>
+                    o.id === offerId ? { ...o, status: 'REJECTED' as const } : o
+                );
+                return { ...prev, pendingOffers: updatedOffers2 };
+            }
+
             const ratio = counterAmount / offer.offerAmount;
             let newMessages = [...prev.messages];
             let updatedOffers = [...(prev.pendingOffers || [])];
 
             if (ratio <= 1.4) {
-                // AI accepts — process as accepted at counter price
-                const updatedOfferObj = { ...offer, offerAmount: counterAmount, status: 'ACCEPTED' as const };
-                updatedOffers = updatedOffers.map(o => o.id === offerId ? updatedOfferObj : o);
+                // AI accepts — mark this offer ACCEPTED, cancel all other pending offers for same player
+                updatedOffers = updatedOffers.map(o => {
+                    if (o.id === offerId) return { ...o, offerAmount: counterAmount, status: 'ACCEPTED' as const };
+                    if (o.playerId === offer.playerId && o.status === 'PENDING') return { ...o, status: 'REJECTED' as const };
+                    return o;
+                });
 
                 const updatedPlayers = prev.players.map(p => {
                     if (p.id === player.id) return { ...p, teamId: buyingTeam.id, isTransferListed: false, lastTransferWeek: prev.currentWeek };

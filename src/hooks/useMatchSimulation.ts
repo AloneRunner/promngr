@@ -949,6 +949,8 @@ export const useMatchSimulation = ({
                 // Auto-pick lineups
                 engine.autoPickLineup(homePlayers, homeTeam.tactic.formation);
                 engine.autoPickLineup(awayPlayers, awayTeam.tactic.formation);
+                if (homeTeam.id !== userTeam.id) engine.assignAIPlayerInstructions(homeTeam.tactic, homePlayers);
+                if (awayTeam.id !== userTeam.id) engine.assignAIPlayerInstructions(awayTeam.tactic, awayPlayers);
 
                 // Simulate match
                 const simResult = engine.simulateFullMatch(scMatch as any, homeTeam, awayTeam, homePlayers, awayPlayers);
@@ -1099,6 +1101,7 @@ export const useMatchSimulation = ({
             const aiPlayers = gameState.players.filter(p => p.teamId === aiTeamId);
             if (aiTeam && aiPlayers.length > 0) {
                 engine.autoPickLineup(aiPlayers, aiTeam.tactic.formation, aiTeam.coachArchetype);
+                engine.assignAIPlayerInstructions(aiTeam.tactic, aiPlayers);
             }
 
             // 1. Simulate the User's Match
@@ -1120,6 +1123,8 @@ export const useMatchSimulation = ({
                 // Auto-pick lineups
                 engine.autoPickLineup(homePlayers, homeTeam.tactic.formation);
                 engine.autoPickLineup(awayPlayers, awayTeam.tactic.formation);
+                if (homeTeam.id !== gameState.userTeamId) engine.assignAIPlayerInstructions(homeTeam.tactic, homePlayers);
+                if (awayTeam.id !== gameState.userTeamId) engine.assignAIPlayerInstructions(awayTeam.tactic, awayPlayers);
 
                 // Simulate the Cup match - returns updated EuropeanCup object
                 let updatedState = { ...gameState };
@@ -1225,7 +1230,7 @@ export const useMatchSimulation = ({
                 }
 
                 // Process weekly events
-                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t);
+                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 // Destructuring and merging
                 let { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
 
@@ -1411,7 +1416,7 @@ export const useMatchSimulation = ({
                         });
                     }
 
-                    const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t);
+                    const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                     const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
 
                     // Note: Rep history for league is handled in simulateLeagueRound/executeMatchUpdate usually?
@@ -1527,7 +1532,7 @@ export const useMatchSimulation = ({
                     updatedState.europaLeague = engine.advanceGlobalCupStage(updatedState.europaLeague);
                 }
 
-                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t);
+                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
 
                 alert(t.cupWeekSkipped || '⚽ Kupa haftası atlandı - Avrupa maçınız yok bu hafta.');
@@ -1582,7 +1587,7 @@ export const useMatchSimulation = ({
                     updatedState.europaLeague = engine.advanceGlobalCupStage(updatedState.europaLeague);
                 }
 
-                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t);
+                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
 
                 setGameState({
@@ -2095,11 +2100,13 @@ export const useMatchSimulation = ({
             // Auto-pick lineup for AI teams to avoid low-condition starters in live matches
             if (homeTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(homePlayers, homeTeam.tactic.formation, homeTeam.coachArchetype);
+                engine.assignAIPlayerInstructions(homeTeam.tactic, homePlayers);
                 // AI Tactics Selection
                 engine.autoPickTactics(homeTeam, awayTeam);
             }
             if (awayTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(awayPlayers, awayTeam.tactic.formation, awayTeam.coachArchetype);
+                engine.assignAIPlayerInstructions(awayTeam.tactic, awayPlayers);
                 // AI Tactics Selection
                 engine.autoPickTactics(awayTeam, homeTeam);
             }

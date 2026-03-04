@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Player, Team, Position, TacticType, Translation, TeamTactic, LineupStatus, AssistantAdvice } from '../types';
 import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, ShieldAlert, MessageSquare, ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
-import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset } from '../services/MatchEngine';
+import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset, getRatingImpacts, RatingImpact } from '../services/MatchEngine';
 import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation } from '../services/engine';
 import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey, detectPreset } from '../services/tactics';
 // AssistantReport removed - replaced by inline opponent tactical panel
@@ -103,8 +103,18 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                                 🟥 {player.matchSuspension}m
                             </span>
                         )}
+                        {player.stats?.yellowCards >= 4 && player.matchSuspension === 0 && (
+                            <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-[9px] font-bold rounded shadow-md flex items-center gap-1" title="Sarı kart sınırında!">
+                                🟨 {player.stats.yellowCards}
+                            </span>
+                        )}
+                        {(player.contractYears ?? 99) <= 1 && (
+                            <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded shadow-md flex items-center gap-1 ${player.contractYears <= 0 ? 'bg-red-700 text-white animate-pulse' : 'bg-amber-500 text-black'}`} title="Sözleşme bitiyor!">
+                                📋 {player.contractYears <= 0 ? 'Bitti' : `${player.contractYears}y`}
+                            </span>
+                        )}
                         {player.form >= 8 && (
-                            <span className="text-[10px] animate-bounce" title="On Fire!">🔥</span>
+                            <span className="text-[10px] animate-bounce" title="Formda! Son maçlarda harika performans gösteriyor.">🔥</span>
                         )}
                         {/* Playstyles as small floating badges */}
                         {player.playStyles && player.playStyles.slice(0, 2).map((style, idx) => (
@@ -202,9 +212,40 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                             {effectiveRating}
                         </span>
                         {player.overall !== effectiveRating && (
-                            <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 ${effectiveRating < player.overall ? 'text-red-900/80 animate-pulse' : 'text-emerald-900'}`}>
-                                {effectiveRating < player.overall ? 'DROP' : 'BUFF'}
-                            </span>
+                            <div className="group/ovr relative flex flex-col items-center">
+                                <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 ${effectiveRating < player.overall ? 'text-red-900/80 animate-pulse' : 'text-emerald-900'}`}>
+                                    {effectiveRating < player.overall ? (t.drop || 'DROP') : (t.buff || 'BUFF')}
+                                </span>
+
+                                {/* Rating Impact Tooltip */}
+                                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-48 p-2 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl opacity-0 group-hover/ovr:opacity-100 transition-opacity pointer-events-none z-[60] text-[10px]">
+                                    <div className="font-bold text-white mb-1 border-b border-slate-700 pb-1">{t.ratingFactors || 'Reyting Faktörleri'}</div>
+                                    <div className="space-y-1">
+                                        <div className="flex justify-between items-center text-slate-400">
+                                            <span>{t.baseOverall || 'Base Overall'}</span>
+                                            <span className="font-mono">{player.overall}</span>
+                                        </div>
+                                        {getRatingImpacts(player, roleToUse, player.condition).map((impact, idx) => {
+                                            const labelMap = {
+                                                POSITION: t.ratingImpactPosition || 'Out of Position',
+                                                MORALE: t.ratingImpactMorale || 'Low Morale',
+                                                CONDITION: t.ratingImpactCondition || 'Low Condition',
+                                                FIT: t.ratingImpactStable || 'Optimal State'
+                                            };
+                                            return (
+                                                <div key={idx} className={`flex justify-between items-center ${impact.value > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                    <span>{labelMap[impact.reason]}</span>
+                                                    <span className="font-mono font-bold">{impact.value > 0 ? '+' : ''}{impact.value}</span>
+                                                </div>
+                                            );
+                                        })}
+                                        <div className="pt-1 mt-1 border-t border-slate-700 flex justify-between items-center font-bold text-white">
+                                            <span>{t.currentOverall || 'Current'}</span>
+                                            <span className="text-emerald-400">{effectiveRating}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         )}
                     </div>
 
@@ -253,6 +294,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const [advice, setAdvice] = useState<AssistantAdvice[]>([]);
     const [interactingPlayer, setInteractingPlayer] = useState<Player | null>(null);
     const [draggingId, setDraggingId] = useState<string | null>(null);
+    const [instructionTarget, setInstructionTarget] = useState<{ playerId: string, lineupIndex: number, role: string } | null>(null);
+    const dragStartPos = useRef<{ x: number, y: number, id: string } | null>(null);
     const pitchRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -340,34 +383,116 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const handleDragStart = (e: React.MouseEvent | React.TouchEvent, playerId: string) => {
         // TouchAction: none is set on the player dots via CSS class 'touch-none'
         // This allows the browser to know this element shouldn't trigger scroll
+        let clientX, clientY;
+        if ('touches' in e) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+        else { clientX = e.clientX; clientY = e.clientY; }
+        dragStartPos.current = { x: clientX, y: clientY, id: playerId };
         setDraggingId(playerId);
         if (selectedPlayerId) setSelectedPlayerId(null);
     };
 
     const handlePitchMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-        if (!draggingId || !pitchRef.current) return;
+        if (!dragStartPos.current || !pitchRef.current) return;
 
         let clientX, clientY;
         if ('touches' in e) {
             clientX = e.touches[0].clientX;
             clientY = e.touches[0].clientY;
-            // Prevent scroll if we are actively dragging
             if (e.cancelable) e.preventDefault();
         } else {
             clientX = e.clientX;
             clientY = e.clientY;
         }
 
+        // Only update position if moved more than 5px (prevents drift on clicks)
+        const dx = clientX - dragStartPos.current.x;
+        const dy = clientY - dragStartPos.current.y;
+        if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+
+        const currentId = dragStartPos.current.id;
         const rect = pitchRef.current.getBoundingClientRect();
         const x = ((clientX - rect.left) / rect.width) * 100;
         const y = ((clientY - rect.top) / rect.height) * 100;
         const clampedX = Math.max(2, Math.min(98, x));
         const clampedY = Math.max(2, Math.min(98, y));
-        const newPositions = { ...(team.tactic.customPositions || {}), [draggingId]: { x: clampedX, y: clampedY } };
+        const newPositions = { ...(team.tactic.customPositions || {}), [currentId]: { x: clampedX, y: clampedY } };
         handleTacticChange('customPositions', newPositions);
     };
 
-    const handlePitchMouseUp = () => { setDraggingId(null); };
+    const handlePitchMouseUp = (e?: React.MouseEvent | React.TouchEvent) => {
+        // Use ref (not state) so we always get the current playerId regardless of React render timing
+        const savedDrag = dragStartPos.current;
+        if (savedDrag && e) {
+            let clientX, clientY;
+            if ('changedTouches' in e) { clientX = e.changedTouches[0].clientX; clientY = e.changedTouches[0].clientY; }
+            else if ('clientX' in e) { clientX = e.clientX; clientY = e.clientY; }
+            else { clientX = savedDrag.x; clientY = savedDrag.y; }
+            const dx = clientX - savedDrag.x;
+            const dy = clientY - savedDrag.y;
+            if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+                // This was a click, not a drag — open instruction popup
+                const vis = visuals.find(v => v.p.id === savedDrag.id);
+                if (vis && vis.presetRole !== Position.GK) {
+                    // Use activeRole (custom position) if player was dragged to a different zone
+                    let role = vis.presetRole;
+                    if (team.tactic.customPositions && team.tactic.customPositions[savedDrag.id]) {
+                        const customX = team.tactic.customPositions[savedDrag.id].x;
+                        const derived = getRoleFromX(customX);
+                        if (derived !== Position.GK) role = derived;
+                    }
+                    setInstructionTarget({ playerId: savedDrag.id, lineupIndex: vis.p.lineupIndex ?? 0, role });
+                }
+            }
+        }
+        dragStartPos.current = null;
+        setDraggingId(null);
+    };
+
+    // Instruction definitions per position
+    const PLAYER_INSTRUCTIONS: Record<string, { id: string, label: string, desc: string, icon: string }[]> = {
+        [Position.DEF]: [
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrDefDefaultDesc || 'Dengeli savunma, gerektiğinde ileri çıkar', icon: '⚽' },
+            { id: 'StayBack', label: t.instrStayBack || 'Geride Kal', desc: t.instrStayBackDesc || 'Hücuma katılmaz, her zaman geride kalır', icon: '🛡️' },
+            { id: 'JoinAttack', label: t.instrJoinAttack || 'Hücuma Katıl', desc: t.instrJoinAttackDesc || 'Kanat bek gibi ileri çıkar, orta yapar', icon: '⚔️' },
+        ],
+        [Position.MID]: [
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrMidDefaultDesc || 'Dengeli oyna, defansa ve hücuma yardım eder', icon: '⚽' },
+            { id: 'DefendMore', label: t.instrDefendMore || 'Defansa Yardım', desc: t.instrDefendMoreDesc || 'Daha çok geri gelir, rakip hücumunu keser', icon: '🔒' },
+            { id: 'HoldPosition', label: t.instrHoldPosition || 'Kademe Tut', desc: t.instrHoldPositionDesc || 'Pozisyonundan fazla ayrılmaz, dengeyi korur', icon: '⚡' },
+            { id: 'AttackMore', label: t.instrAttackMore || 'Hücuma Destek', desc: t.instrAttackMoreDesc || 'İleri çıkar, şut ve pas önceliği artar', icon: '🎯' },
+            { id: 'ShootOnSight', label: t.instrShootOnSight || 'Gördüğün Yerde Vur!', desc: t.instrShootOnSightDesc || 'Şut mesafesine girince hemen vurur', icon: '💥' },
+        ],
+        [Position.FWD]: [
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrFwdDefaultDesc || 'Forvet oynar, gol arar, kontra koşar', icon: '⚽' },
+            { id: 'DropDeep', label: t.instrDropDeep || 'Geri Çekil', desc: t.instrDropDeepDesc || 'Orta sahaya inerek top ister, playmaker gibi', icon: '↩️' },
+            { id: 'PressHigher', label: t.instrPressHigher || 'Yüksek Pres', desc: t.instrPressHigherDesc || 'Rakip savunmasına baskı yapar, top kaybettirmez', icon: '📣' },
+        ],
+    };
+
+    const getSlotInstruction = (lineupIndex: number): string => {
+        return team.tactic.slotInstructions?.[lineupIndex] || 'Default';
+    };
+
+    const setSlotInstruction = (lineupIndex: number, instruction: string) => {
+        const current = { ...(team.tactic.slotInstructions || {}) };
+        if (instruction === 'Default') {
+            delete current[lineupIndex];
+        } else {
+            current[lineupIndex] = instruction;
+        }
+        handleTacticChange('slotInstructions', current);
+        setInstructionTarget(null);
+    };
+
+    const getInstructionIcon = (lineupIndex: number): string | null => {
+        const instr = getSlotInstruction(lineupIndex);
+        if (instr === 'Default') return null;
+        for (const role of Object.values(PLAYER_INSTRUCTIONS)) {
+            const found = role.find(r => r.id === instr);
+            if (found) return found.icon;
+        }
+        return null;
+    };
 
     const struct = getFormationStructure(team.tactic.formation);
     const visuals: { p: Player, presetRole: Position, idx: number, total: number }[] = [];
@@ -858,16 +983,25 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         const globalIndex = visuals.indexOf(item);
                         const jerseyNumber = p.jerseyNumber || (activeRole === Position.GK ? 1 : globalIndex + 1);
 
+                        const instrIcon = getInstructionIcon(p.lineupIndex || 0);
+
                         return (
                             <div
                                 key={p.id}
                                 onMouseDown={(e) => handleDragStart(e, p.id)}
+                                onMouseUp={(e) => handlePitchMouseUp(e)}
                                 onTouchStart={(e) => handleDragStart(e, p.id)}
+                                onTouchEnd={(e) => handlePitchMouseUp(e)}
                                 className={`absolute w-8 h-8 rounded-full border-2 ${borderClass} shadow-xl flex items-center justify-center text-[10px] font-bold text-white z-10 transition-transform touch-none ${isDragging ? 'scale-125 cursor-grabbing z-50' : 'hover:scale-110 cursor-grab'} ${bgClass}`}
                                 style={{ top: `${top}%`, left: `${left}%`, transform: 'translate(-50%, -50%)', transition: isDragging ? 'none' : 'all 0.2s ease-out' }}
                                 title={`${p.firstName} ${p.lastName} (${p.position}) - ${jerseyNumber} | OVR: ${effectiveRating}`}
                             >
                                 {jerseyNumber}
+                                {instrIcon && (
+                                    <span className="absolute -top-2 -right-2 text-[10px] bg-slate-900/90 rounded-full w-4 h-4 flex items-center justify-center border border-yellow-500/50 shadow-lg">
+                                        {instrIcon}
+                                    </span>
+                                )}
                             </div>
                         )
                     })}
@@ -877,8 +1011,51 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     </div>
                 </div>
 
+                {/* PLAYER INSTRUCTION POPUP */}
+                {instructionTarget && (() => {
+                    const options = PLAYER_INSTRUCTIONS[instructionTarget.role] || [];
+                    const currentInstr = getSlotInstruction(instructionTarget.lineupIndex);
+                    const targetPlayer = players.find(pl => pl.id === instructionTarget.playerId);
+                    return (
+                        <>
+                        <div className="fixed inset-0 z-10" onClick={() => setInstructionTarget(null)} />
+                        <div className="relative z-20 bg-slate-800/95 backdrop-blur border border-slate-600 rounded-xl p-3 shadow-2xl animate-fade-in">
+                            <div className="flex justify-between items-center mb-2">
+                                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                                    📋 {t.instrTitle || 'Talimat'}: {targetPlayer ? `${targetPlayer.firstName} ${targetPlayer.lastName}` : ''}
+                                    <span className={`text-[9px] px-1.5 py-0.5 rounded ${instructionTarget.role === 'DEF' ? 'bg-blue-600' : instructionTarget.role === 'MID' ? 'bg-emerald-600' : 'bg-red-600'} text-white`}>{instructionTarget.role}</span>
+                                </span>
+                                <button onClick={() => setInstructionTarget(null)} className="text-slate-400 hover:text-white text-lg leading-none">✕</button>
+                            </div>
+                            <div className="space-y-1">
+                                {options.map((opt, i) => (
+                                    <button
+                                        key={opt.id}
+                                        onClick={() => setSlotInstruction(instructionTarget.lineupIndex, opt.id)}
+                                        className={`w-full text-left p-2 rounded-lg border transition-all ${currentInstr === opt.id
+                                            ? 'bg-emerald-600/30 border-emerald-500/50 shadow-md'
+                                            : 'bg-slate-700/50 border-slate-600/30 hover:bg-slate-600/50 hover:border-slate-500/50'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm">{opt.icon}</span>
+                                            <div className="flex-1">
+                                                <div className={`text-[11px] font-bold ${currentInstr === opt.id ? 'text-emerald-300' : 'text-white'}`}>
+                                                    {currentInstr === opt.id && '✅ '}{opt.label}
+                                                </div>
+                                                <div className="text-[9px] text-slate-400 leading-tight">{opt.desc}</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        </>
+                    );
+                })()}
+
                 <div className="bg-slate-800 p-2 rounded text-[10px] text-slate-400 border border-slate-700 flex justify-between">
-                    <span className="flex items-center gap-1"><ArrowRightLeft size={10} /> {t.clickSwap}</span>
+                    <span className="flex items-center gap-1">📋 {t.instrTitle || 'Talimat'}</span>
                     <span className="flex items-center gap-1 text-emerald-400"><ArrowRight size={10} /> {t.dragAdjust}</span>
                 </div>
             </div>
