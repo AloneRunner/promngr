@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Player, Translation, Position } from '../types';
-import { X, Clock, FileText, BarChart2, Eye, History, DollarSign, Ban, Star, Hexagon, LayoutGrid } from 'lucide-react';
+import { X, Clock, FileText, BarChart2, Eye, History, DollarSign, Ban, Star, Hexagon, LayoutGrid, Lock } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { RadarChart } from './RadarChart';
 import { calculateEffectiveRating } from '../services/MatchEngine';
@@ -11,6 +11,7 @@ interface PlayerModalProps {
     onClose: () => void;
     onRenew?: (player: Player) => void;
     onToggleTransferList?: (player: Player) => void;
+    onToggleNotForSale?: (player: Player) => void;
     onTerminateContract?: (player: Player) => void; // New: Release player
     t: Translation;
 }
@@ -41,7 +42,7 @@ export const getLocalizedPlaystyle = (style: string, t: Translation): string => 
     }
 }
 
-export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onTerminateContract, t }) => {
+export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onToggleNotForSale, onTerminateContract, t }) => {
     const [viewMode, setViewMode] = React.useState<'GRID' | 'GRAPH'>('GRAPH');
     if (!player) return null;
 
@@ -157,6 +158,15 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                                 title={player.isTransferListed ? t.removeFromList : t.transferList}
                             >
                                 {player.isTransferListed ? <Ban size={14} /> : <DollarSign size={14} />}
+                            </button>
+                        )}
+                        {player.teamId !== 'FREE_AGENT' && onToggleNotForSale && (
+                            <button
+                                onClick={() => onToggleNotForSale(player)}
+                                className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${player.isNotForSale ? 'bg-purple-900/20 border-purple-500/50 text-purple-400' : 'bg-slate-800 border-slate-700 text-slate-400'}`}
+                                title={player.isNotForSale ? (t.allowOffers || 'Tekliflere Aç') : (t.rejectOffers || 'Teklifleri Reddet')}
+                            >
+                                <Lock size={14} />
                             </button>
                         )}
                         {player.teamId !== 'FREE_AGENT' && onTerminateContract && (

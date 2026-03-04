@@ -820,6 +820,14 @@ export class MatchEngine {
   // === ENGINE IDENTIFIER ===
   public engineVersion: string = "ME v2.0";
 
+  // === PLAYER INSTRUCTION HELPER ===
+  private getPlayerInstruction(p: Player): string {
+    const isHome = this.homePlayers.includes(p);
+    const team = isHome ? this.homeTeam : this.awayTeam;
+    if (!team.tactic.slotInstructions) return 'Default';
+    return team.tactic.slotInstructions[p.lineupIndex ?? 0] ?? 'Default';
+  }
+
   constructor(
     match: Match,
     homeTeam: Team,
@@ -4314,7 +4322,9 @@ export class MatchEngine {
       const instructions = tactic.instructions || [];
 
       // 1. Paslaşarak Gir (WorkBallIntoBox)
-      if (instructions.includes("WorkBallIntoBox")) {
+      // Player-level ShootOnSight overrides team WorkBallIntoBox for that specific player
+      const playerInstrForShoot = this.getPlayerInstruction(p);
+      if (instructions.includes("WorkBallIntoBox") && playerInstrForShoot !== 'ShootOnSight') {
         // Ceza sahası dışından şuta AĞIR CEZA (-50)
         if (distToGoal > 20) {
           shootScore -= 50;
@@ -4508,6 +4518,19 @@ export class MatchEngine {
       } else {
         // UZAK MESAFE (25m+): Kayıp motordan (550→320)
         shootThreshold = 320 * attackerBonus; // Forvet: 192
+      }
+
+      // === PLAYER INSTRUCTION: SHOOT/PASS MODIFIER ===
+      const playerInstruction = this.getPlayerInstruction(p);
+      if (playerInstruction === 'ShootOnSight' && distToGoal < 35) {
+        shootScore += 250;
+        shootThreshold = Math.max(50, shootThreshold - 200);
+      } else if (playerInstruction === 'AttackMore' && distToGoal < 28) {
+        shootScore += 80;
+        shootThreshold = Math.max(80, shootThreshold - 80);
+      } else if (playerInstruction === 'DefendMore') {
+        shootScore -= 100;
+        passScore += 80;
       }
 
       // 1v1 durumunda eşiği düşür
@@ -5889,6 +5912,15 @@ export class MatchEngine {
     let maxDriftX = hasCustomPos ? 4 : 6;
     let maxDriftY = hasCustomPos ? 3 : 5;
 
+    // === PLAYER INSTRUCTION: Read instruction early, enforce AFTER lineH ===
+    const offBallInstruction = this.getPlayerInstruction(p);
+
+    // Pre-lineH: Only apply HoldPosition drift limits
+    if (offBallInstruction === 'HoldPosition') {
+      maxDriftX = Math.min(maxDriftX, 3);
+      maxDriftY = Math.min(maxDriftY, 3);
+    }
+
     // PHASE 10: Run Flags (Top Level Scope)
     let isMakingRun = false;
     let bypassDriftLimit = false;
@@ -6638,8 +6670,9 @@ export class MatchEngine {
       const hasRoamInstruction =
         tactic.instructions && tactic.instructions.includes("RoamFromPosition");
 
-      if (hasRoamInstruction) {
+      if (hasRoamInstruction && offBallInstruction !== 'HoldPosition') {
         // Instruction: Significant boost, but not broken
+        // HoldPosition player instruction takes priority over team RoamFromPosition
         // Base 6m -> 15m
         maxDriftX = 15;
         maxDriftY = 12;
@@ -6702,7 +6735,40 @@ export class MatchEngine {
         }
       }
 
-      simP.state = "RUN";
+      // === PLAYER INSTRUCTION: ABSOLUTE ENFORCEMENT (POST-ALL ATTACKING PATTERNS) ===
+      if (offBallInstruction === 'StayBack') {
+        if (isHome) { targetX = Math.min(targetX, PITCH_CENTER_X - 5); }
+        else { targetX = Math.max(targetX, PITCH_CENTER_X + 5); }
+        maxDriftX = Math.min(maxDriftX, 4);
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'DefendMore') {
+        const maxForward = isHome ? Math.min(ballX - 10, PITCH_CENTER_X + 10) : Math.max(ballX + 10, PITCH_CENTER_X - 10);
+        if (isHome) { targetX = Math.min(targetX, maxForward); }
+        else { targetX = Math.max(targetX, maxForward); }
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'JoinAttack') {
+        const atkPush = isHome ? ballX - 15 : ballX + 15;
+        if (isHome) { targetX = Math.max(targetX, Math.min(atkPush, PITCH_LENGTH - 20)); }
+        else { targetX = Math.min(targetX, Math.max(atkPush, 20)); }
+        maxDriftX = Math.max(maxDriftX, 20);
+      } else if (offBallInstruction === 'AttackMore') {
+        const atkBoost = 12;
+        targetX = isHome ? targetX + atkBoost : targetX - atkBoost;
+        maxDriftX = Math.max(maxDriftX, 15);
+      } else if (offBallInstruction === 'DropDeep') {
+        const maxFwd = isHome ? Math.min(ballX - 5, PITCH_CENTER_X + 15) : Math.max(ballX + 5, PITCH_CENTER_X - 15);
+        if (isHome) { targetX = Math.min(targetX, maxFwd); }
+        else { targetX = Math.max(targetX, maxFwd); }
+        bypassDriftLimit = false;
+      } else if (offBallInstruction === 'HoldPosition') {
+        // MID: Enforce strict positional discipline — clamp directly after all bypass logic
+        const driftX = targetX - baseTargetX;
+        const driftY = targetY - baseTargetY;
+        if (Math.abs(driftX) > 6) targetX = baseTargetX + Math.sign(driftX) * 6;
+        if (Math.abs(driftY) > 5) targetY = baseTargetY + Math.sign(driftY) * 5;
+      }
+
+      if (simP.state !== "SPRINT") simP.state = "RUN";
     } else {
       if (role === Position.FWD) {
         // Defensive Shape - IMPROVED FORWARD DEFENSIVE SUPPORT
@@ -7707,6 +7773,21 @@ export class MatchEngine {
                 }
               }
             }
+          }
+
+          // === PLAYER INSTRUCTION: ABSOLUTE ENFORCEMENT (DEFENSIVE PHASE) ===
+          if (offBallInstruction === 'PressHigher') {
+            const minPush = isHome ? ballX + 5 : ballX - 5;
+            if (isHome) { targetX = Math.max(targetX, minPush); }
+            else { targetX = Math.min(targetX, minPush); }
+            this.playerStates[p.id].isPressing = true;
+          } else if (offBallInstruction === 'StayBack') {
+            if (isHome) { targetX = Math.min(targetX, PITCH_CENTER_X - 5); }
+            else { targetX = Math.max(targetX, PITCH_CENTER_X + 5); }
+          } else if (offBallInstruction === 'DefendMore') {
+            const maxForward = isHome ? Math.min(ballX - 10, PITCH_CENTER_X + 10) : Math.max(ballX + 10, PITCH_CENTER_X - 10);
+            if (isHome) { targetX = Math.min(targetX, maxForward); }
+            else { targetX = Math.max(targetX, maxForward); }
           }
 
           targetY = clamp(targetY, 2, PITCH_WIDTH - 2);

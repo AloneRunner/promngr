@@ -1,12 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Player, Team, Translation, Position } from '../types';
 import { ShoppingCart, Filter, DollarSign, Heart, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { LEAGUE_PRESETS } from '../src/data/teams';
 
 
 interface TransferMarketProps {
   marketPlayers: Player[];
   userTeam: Team;
+  allTeams: Team[];
   onBuyPlayer: (player: Player) => void;
   onPlayerClick: (player: Player) => void;
   t: Translation;
@@ -15,6 +17,7 @@ interface TransferMarketProps {
 export const TransferMarket: React.FC<TransferMarketProps> = ({
   marketPlayers,
   userTeam,
+  allTeams,
   onBuyPlayer,
   onPlayerClick,
   t
@@ -31,6 +34,16 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 50;
+
+  // Lookup maps built once for performance
+  const teamMap = useMemo(() =>
+    Object.fromEntries(allTeams.map(t => [t.id, t])),
+    [allTeams]
+  );
+  const leagueNameMap = useMemo(() =>
+    Object.fromEntries(LEAGUE_PRESETS.map(l => [l.id, l.name])),
+    []
+  );
 
   const filteredPlayers = React.useMemo(() => {
     return marketPlayers.filter(p => {
@@ -288,17 +301,28 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                 <tr key={player.id} className={`transition-colors hover:bg-white/5 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-transparent'}`}>
                   <td className="p-2 sticky left-0 z-10 bg-inherit cursor-pointer" onClick={() => onPlayerClick(player)}>
                     <div className="flex items-center gap-3">
-                      <span className={`w-8 h-8 flex items-center justify-center rounded text-[10px] font-bold shadow-md ${player.position === 'GK' ? 'bg-yellow-600/20 text-yellow-500 border border-yellow-600/30' :
+                      <span className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded text-[10px] font-bold shadow-md ${player.position === 'GK' ? 'bg-yellow-600/20 text-yellow-500 border border-yellow-600/30' :
                         player.position === 'DEF' ? 'bg-blue-600/20 text-blue-500 border border-blue-600/30' :
                           player.position === 'MID' ? 'bg-emerald-600/20 text-emerald-500 border border-emerald-600/30' :
                             'bg-red-600/20 text-red-500 border border-red-600/30'}`}>
                         {player.position}
                       </span>
-                      <div>
-                        <div className="font-bold text-white text-xs md:text-sm">{player.firstName} {player.lastName}</div>
-                        <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                      <div className="min-w-0">
+                        <div className="font-bold text-white text-xs md:text-sm truncate">{player.firstName} {player.lastName}</div>
+                        <div className="text-[10px] text-slate-400 flex items-center gap-1 flex-wrap leading-tight">
                           <span className={`fi fi-${player.nationality === 'Turkey' ? 'tr' : player.nationality.toLowerCase().slice(0, 2)}`}></span>
-                          {/* We don't have team info here directly easily, skipping for perf */}
+                          {player.teamId === 'FREE_AGENT' ? (
+                            <span className="text-blue-400 font-bold">Free Agent</span>
+                          ) : (() => {
+                            const club = teamMap[player.teamId];
+                            const leagueName = club ? (leagueNameMap[club.leagueId] || club.leagueId?.toUpperCase()) : null;
+                            return club ? (
+                              <>
+                                <span className="text-slate-300 truncate max-w-[80px]">{club.name}</span>
+                                {leagueName && <span className="text-slate-500 hidden sm:inline">· {leagueName}</span>}
+                              </>
+                            ) : null;
+                          })()}
                         </div>
                       </div>
                     </div>

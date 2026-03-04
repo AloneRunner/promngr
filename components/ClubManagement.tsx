@@ -90,6 +90,17 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
     // Maintenance Discount Logic (Matches Engine)
     const maintenanceDiscount = ['tr', 'fr'].includes(team.leagueId) ? 0.7 : 1.0;
 
+    // Facility upgrade cost league multiplier (matches App.tsx handleUpgradeFacility)
+    const FACILITY_LEAGUE_MULT: Record<string, number> = {
+        en: 1.8, es: 1.6, de: 1.5, it: 1.4, fr: 1.3,
+        pt: 1.1, nl: 1.1, ru: 0.9, tr: 0.8, be: 0.9,
+        br: 0.8, ar: 0.7, sa: 1.0, us: 1.1, jp: 0.9,
+        kr: 0.8, cn: 0.9, sco: 1.0, at: 0.9, gr: 0.8,
+        ch: 1.0, pl: 0.8, cz: 0.8, ro: 0.7, hr: 0.7,
+        default: 0.7,
+    };
+    const facilityLeagueMult = FACILITY_LEAGUE_MULT[team.leagueId] ?? FACILITY_LEAGUE_MULT.default;
+
     // Helper for projected maintenance (Matches Engine: Level^2.0 * Base * Discount * LeagueMult)
     const getProjectedMaintenance = (type: 'stadium' | 'training' | 'academy', level: number) => {
         const base = type === 'stadium' ? 2000 : type === 'training' ? 1500 : 1200;
@@ -621,7 +632,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const baseCost = 3000000;
                                 const multiplier = Math.pow(1.4, nextLevel - 1);
-                                const cost = Math.floor(baseCost * multiplier);
+                                const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                 return team.budget < cost;
                             })()}
                             className={`w-full py-2 font-bold text-sm rounded-lg flex items-center justify-center gap-1 transition-all
@@ -635,7 +646,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.stadiumLevel + 1;
                                 const baseCost = 3000000;
                                 const multiplier = Math.pow(1.4, nextLevel - 1);
-                                const cost = Math.floor(baseCost * multiplier);
+                                const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
@@ -719,7 +730,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const baseCost = 1200000;
                                 const multiplier = Math.pow(1.4, nextLevel - 1);
-                                const cost = Math.floor(baseCost * multiplier);
+                                const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                 return team.budget < cost;
                             })()}
                             className={`w-full py-2 font-bold text-sm rounded-lg flex items-center justify-center gap-1 transition-all
@@ -733,7 +744,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 const nextLevel = team.facilities.trainingLevel + 1;
                                 const baseCost = 1200000;
                                 const multiplier = Math.pow(1.4, nextLevel - 1);
-                                const cost = Math.floor(baseCost * multiplier);
+                                const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                 return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                             })()}
                         </button>
@@ -819,7 +830,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const baseCost = 1000000;
                                         const multiplier = Math.pow(1.4, nextLevel - 1);
-                                        const cost = Math.floor(baseCost * multiplier);
+                                        const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                         return team.budget < cost;
                                     })()}
                                     className={`w-full py-2 md:py-3 font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-sm
@@ -833,7 +844,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                         const nextLevel = team.facilities.academyLevel + 1;
                                         const baseCost = 1000000;
                                         const multiplier = Math.pow(1.4, nextLevel - 1);
-                                        const cost = Math.floor(baseCost * multiplier);
+                                        const cost = Math.floor(baseCost * multiplier * facilityLeagueMult);
                                         return `${t.upgradeBtn || 'Upgrade'} (€${(cost / 1000000).toFixed(2)}M)`;
                                     })()}
                                 </button>
