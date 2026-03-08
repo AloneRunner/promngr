@@ -8,6 +8,7 @@ import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, delet
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
 import { MatchCenter } from './components/MatchCenter';
+import DetailedMatchCenter from './components/DetailedMatchCenter';
 import { ClubManagement } from './components/ClubManagement';
 import { TransferMarket } from './components/TransferMarket';
 import { PlayerModal } from './components/PlayerModal';
@@ -32,6 +33,7 @@ import { Layout } from './src/components/Layout';
 import { SplashScreen } from './components/SplashScreen';
 import SimulationLoadingModal from './components/SimulationLoadingModal';
 import SettingsModal from './components/SettingsModal';
+import { appendMessages } from './src/utils/stateLimits';
 
 import { TRANSLATIONS } from './src/data/translations';
 import { LEAGUE_PRESETS } from './src/data/teams';
@@ -97,6 +99,14 @@ const App: React.FC = () => {
     // Performance & Settings State
     const [showSettings, setShowSettings] = useState(false);
     const [engineChoice, setEngineChoice] = useState<'classic' | 'ikinc' | 'ucuncu'>(() => serviceGetEngineChoice() as any);
+    const [matchViewMode, setMatchViewMode] = useState<'classic' | 'detailed'>(() => {
+        try {
+            const stored = localStorage.getItem('matchViewMode');
+            return stored === 'detailed' ? 'detailed' : 'classic';
+        } catch {
+            return 'classic';
+        }
+    });
     const [isWeekSimulating, setIsWeekSimulating] = useState(false);
     const [simulationProgress, setSimulationProgress] = useState(0);
 
@@ -501,36 +511,30 @@ const App: React.FC = () => {
 
         let newState = { ...gameState, userTeamId: teamId };
 
-        // Async Generate European Competitions (only for NEW games)
-        // Async Generate European Competitions (only for NEW games)
-        import('./services/engine').then(({ generateGlobalCup }) => {
-            // 1. Generate Global Cup (World Championship)
-            const globalCup = generateGlobalCup({ ...newState, userTeamId: teamId });
+        // Generate Global Cup for new games without mixing static and dynamic engine imports.
+        const globalCup = generateGlobalCup({ ...newState, userTeamId: teamId });
 
-            // Check if the user qualified
-            // Global Cup uses 'qualifiedTeamIds'
-            const inGlobalCup = globalCup.qualifiedTeamIds.includes(teamId);
+        // Global Cup uses 'qualifiedTeamIds'
+        const inGlobalCup = globalCup.qualifiedTeamIds.includes(teamId);
+        const newMessages = [...newState.messages];
 
-            const newMessages = [...newState.messages];
+        if (inGlobalCup) {
+            newMessages.push({
+                id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
+                subject: `🌍 ${t.internationalEliteCup || 'International Elite Cup'} Daveti!`,
+                body: `${selectedTeam?.name} olarak ${t.internationalEliteCup || 'International Elite Cup'} organizasyonuna katılmaya hak kazandınız!`,
+                isRead: false, date: new Date().toISOString()
+            });
+        }
 
-            if (inGlobalCup) {
-                newMessages.push({
-                    id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
-                    subject: `🌍 ${t.internationalEliteCup || 'International Elite Cup'} Daveti!`,
-                    body: `${selectedTeam?.name} olarak ${t.internationalEliteCup || 'International Elite Cup'} organizasyonuna katılmaya hak kazandınız!`,
-                    isRead: false, date: new Date().toISOString()
-                });
-            }
+        newState = {
+            ...newState,
+            europeanCup: globalCup, // GlobalCup is stored in europeanCup field for now
+            europaLeague: undefined, // Deprecated
+            messages: appendMessages([], newMessages)
+        };
 
-            newState = {
-                ...newState,
-                europeanCup: globalCup, // GlobalCup is stored in europeanCup field for now
-                europaLeague: undefined, // Deprecated
-                messages: newMessages
-            };
-
-            setGameState(newState);
-        });
+        setGameState(newState);
 
         setShowTeamSelect(false);
         setShowWelcome(true);
@@ -966,11 +970,6 @@ const App: React.FC = () => {
             return;
         }
 
-        const renewalCost = Math.floor(player.value * 0.1);
-        if (userTeam.budget < renewalCost) {
-            alert(t.notEnoughFunds);
-            return;
-        }
         // Calculate new market-rate salary (proactive renewal = 80% of demand leverage + loyalty discount)
         const leagueMult = getLeagueMultiplier(userTeam.leagueId || 'tr');
         const baseWage = Math.floor(Math.pow(1.13, player.overall - 50) * 100000 * 0.005);
@@ -978,16 +977,13 @@ const App: React.FC = () => {
         const loyaltyFactor = (player.morale || 70) >= 72 ? 0.88 : 1.0;
         const newWage = Math.max(player.wage || 250, Math.floor(scaledWage * 0.80 * loyaltyFactor));
         const newSalary = newWage * 52;
-        const newWageDisplay = (newWage * 52 / 1000000).toFixed(2);
+        const newWageDisplay = newWage.toLocaleString();
 
-        if (confirm(`${t.renewContract} for ${player.lastName}? Cost: €${(renewalCost / 1000).toFixed(0)}k\nNew salary: €${newWageDisplay}M/yr`)) {
+        if (confirm(`${t.renewContract} ${player.lastName}?\n${t.weeklyWageOffer || 'Weekly Wage Offer'}: €${newWageDisplay}/wk`)) {
             const updatedPlayers = gameState.players.map(p =>
                 p.id === player.id ? { ...p, contractYears: p.contractYears + 2, wage: newWage, salary: newSalary, morale: Math.min(100, p.morale + 10) } : p
             );
-            const updatedTeams = gameState.teams.map(t =>
-                t.id === userTeam.id ? { ...t, budget: t.budget - renewalCost } : t
-            );
-            setGameState(prev => prev ? { ...prev, players: updatedPlayers, teams: updatedTeams } : null);
+            setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
             alert(t.contractExtended);
             setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2, wage: newWage, salary: newSalary } : null);
         }
@@ -1121,13 +1117,15 @@ const App: React.FC = () => {
 
             if (activeMatch) {
                 activeMatch.events.forEach(ev => {
-                    if (ev.type === MatchEventType.CARD_RED && ev.playerId) {
+                    // Only count red cards from the USER's team — opponent red cards must NOT reduce maxStarters
+                    if (ev.type === MatchEventType.CARD_RED && ev.playerId && ev.teamId === gameState.userTeamId) {
                         redCardedIds.add(ev.playerId);
                     }
                 });
             }
 
             playersCopy.forEach((p: Player) => {
+                if (substitutedOutIds.has(p.id)) return;
                 const liveStamina = getLivePlayerStamina(p.id);
                 if (liveStamina !== undefined) {
                     p.condition = liveStamina;
@@ -1630,11 +1628,6 @@ const App: React.FC = () => {
         if (!gameState) return;
         const { newState } = processSeasonEnd(gameState);
 
-        // Generate European competitions for new season
-        // Generate European competitions for new season
-        // Generate European competitions for new season (Global Cup)
-        const { generateEuropeanCup } = await import('./services/engine');
-
         const cl = generateEuropeanCup(newState, 0); // Tier 0 = Champions League
         const el = generateEuropeanCup(newState, 1); // Tier 1 = Europa League
 
@@ -1656,7 +1649,7 @@ const App: React.FC = () => {
         }
 
         if (cupMessage) {
-            finalState.messages = [{
+            finalState.messages = appendMessages(finalState.messages, [{
                 id: Math.random().toString(36).substring(2, 15),
                 week: 1,
                 type: 'board' as any,
@@ -1664,7 +1657,7 @@ const App: React.FC = () => {
                 body: cupMessage,
                 isRead: false,
                 date: new Date().toISOString()
-            }, ...finalState.messages];
+            }]);
         }
 
         setGameState(finalState);
@@ -1709,7 +1702,7 @@ const App: React.FC = () => {
         setGameState({
             ...gameState,
             europeanCup: cup,
-            messages: [...gameState.messages, {
+            messages: appendMessages(gameState.messages, [{
                 id: Math.random().toString(36).substring(2, 15),
                 week: gameState.currentWeek,
                 type: MessageType.BOARD,
@@ -1719,7 +1712,7 @@ const App: React.FC = () => {
                     : t.clDrawNotQualifiedBody,
                 isRead: false,
                 date: new Date().toISOString()
-            }]
+            }])
         });
 
         setViewingCup({ cup, name: t.internationalEliteCup || 'International Elite Cup' });
@@ -2321,14 +2314,25 @@ const App: React.FC = () => {
             <div className={`relative z-10 h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-none p-4 2xl:p-8 pb-48 2xl:pb-8 2xl:pt-4 ${view !== 'match' ? '2xl:ml-64 landscape:ml-16 landscape:2xl:ml-64 landscape:pb-4' : 'w-full'}`}>
                 <div className="max-w-7xl mx-auto min-h-full">
                     {view === 'match' && activeMatch && activeHome && activeAway ? (
-                        <MatchCenter
-                            match={activeMatch} homeTeam={activeHome} awayTeam={activeAway}
-                            homePlayers={gameState.players.filter(p => p.teamId === activeHome.id)}
-                            awayPlayers={gameState.players.filter(p => p.teamId === activeAway.id)}
-                            onSync={simulation.handleMatchSync} onFinish={handleMatchFinish} onInstantFinish={simulation.handleInstantFinish}
-                            onSubstitute={handleSubstitution} onUpdateTactic={simulation.handleUpdateTactic} onAutoFix={handleAutoFix}
-                            userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
-                        />
+                        matchViewMode === 'detailed' ? (
+                            <DetailedMatchCenter
+                                match={activeMatch} homeTeam={activeHome} awayTeam={activeAway}
+                                homePlayers={gameState.players.filter(p => p.teamId === activeHome.id)}
+                                awayPlayers={gameState.players.filter(p => p.teamId === activeAway.id)}
+                                onSync={simulation.handleMatchSync} onFinish={handleMatchFinish} onInstantFinish={simulation.handleInstantFinish}
+                                onSubstitute={handleSubstitution} onUpdateTactic={simulation.handleUpdateTactic} onAutoFix={handleAutoFix}
+                                userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
+                            />
+                        ) : (
+                            <MatchCenter
+                                match={activeMatch} homeTeam={activeHome} awayTeam={activeAway}
+                                homePlayers={gameState.players.filter(p => p.teamId === activeHome.id)}
+                                awayPlayers={gameState.players.filter(p => p.teamId === activeAway.id)}
+                                onSync={simulation.handleMatchSync} onFinish={handleMatchFinish} onInstantFinish={simulation.handleInstantFinish}
+                                onSubstitute={handleSubstitution} onUpdateTactic={simulation.handleUpdateTactic} onAutoFix={handleAutoFix}
+                                userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
+                            />
+                        )
                     ) : view === 'match' ? (
                         <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
                             <div className="bg-slate-800 rounded-xl p-8 border border-slate-700 text-center max-w-sm">
@@ -2585,33 +2589,11 @@ const App: React.FC = () => {
                                             </button>
                                             {/* banner moved below grid for full-width layout */}
                                             {(() => {
-                                                // Calculate last season position from history
-                                                const lastHistory = gameState.history[gameState.history.length - 1];
+                                                // Always show current live league position
                                                 const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
                                                 let lastPosition = '-';
 
-                                                if (lastHistory && userTeam) {
-                                                    // Check if user was champion
-                                                    if (lastHistory.championId === userTeam.id) {
-                                                        lastPosition = '1st';
-                                                    } else {
-                                                        // Check runner-up
-                                                        if (lastHistory.runnerUpName === userTeam.name) {
-                                                            lastPosition = '2nd';
-                                                        } else {
-                                                            // We don't have exact position in history, show current standing
-                                                            const leagueTeams = gameState.teams.filter(t => t.leagueId === userTeam.leagueId);
-                                                            const sorted = [...leagueTeams].sort((a, b) => {
-                                                                if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
-                                                                return (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga);
-                                                            });
-                                                            const pos = sorted.findIndex(t => t.id === userTeam.id) + 1;
-                                                            const suffix = pos === 1 ? 'st' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th';
-                                                            lastPosition = `${pos}${suffix}`;
-                                                        }
-                                                    }
-                                                } else if (userTeam) {
-                                                    // No history yet, show current position
+                                                if (userTeam) {
                                                     const leagueTeams = gameState.teams.filter(t => t.leagueId === userTeam.leagueId);
                                                     const sorted = [...leagueTeams].sort((a, b) => {
                                                         if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points;
@@ -2643,18 +2625,44 @@ const App: React.FC = () => {
 
                                         {/* --- Match Engine Notice Banner (full-width below the top cards) --- */}
                                         <div className="w-full flex items-center justify-center mt-3">
-                                            <div className="max-w-5xl w-full mx-4 p-3 rounded-lg bg-gradient-to-r from-yellow-500/8 via-amber-600/8 to-red-600/8 border border-yellow-600/30 text-white flex items-center justify-between">
-                                                <div>
-                                                    <div className="font-bold text-sm md:text-base">{t.engineBannerTitle || 'Match Engine Notice'}</div>
+                                            <div className="max-w-5xl w-full mx-4 p-3 rounded-lg bg-gradient-to-r from-yellow-500/8 via-amber-600/8 to-red-600/8 border border-yellow-600/30 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                                                <div className="flex-1">
+                                                    <div className="font-bold text-sm md:text-base flex items-center gap-2">
+                                                        {t.engineCurrentlySelected || 'Seçili Motor'}:
+                                                        <span className={`px-2 py-1 rounded text-xs ${
+                                                            engineChoice === 'classic' ? 'bg-blue-600' :
+                                                            engineChoice === 'ikinc' ? 'bg-purple-600' :
+                                                            'bg-gradient-to-r from-yellow-600 to-orange-600'
+                                                        }`}>
+                                                            {engineChoice === 'classic' ? (t.engineClassic || 'Ana Motor') :
+                                                             engineChoice === 'ikinc' ? (t.engineIkinc || 'Arcade Motor') :
+                                                             (t.engineUcuncu || 'Beta Motor')}
+                                                        </span>
+                                                    </div>
                                                     <div className="text-xs md:text-sm text-gray-200 mt-1">
-                                                        {engineChoice === 'classic' ? (t.engineClassicBanner || "Main engine is an older version — it may contain bugs. Try alternatives.")
-                                                            : engineChoice === 'ikinc' ? (t.engineIkincBanner || "Ikincı motor: arcade-y, faster, more action-oriented — less realistic.")
-                                                                : (t.engineUcuncuBanner || "Ucuncu motor: latest rewrite — solid but some players find it less 'soulful'.")}
+                                                        {engineChoice === 'classic' ? (
+                                                            <>
+                                                                <div>{t.engineClassicBanner || "Ana motor — en gerçekçi versiyon."}</div>
+                                                                <div className="mt-1.5 px-2 py-1 bg-yellow-500/15 border border-yellow-500/30 rounded text-yellow-300 text-[11px] md:text-xs">
+                                                                    {t.engineClassicBetaUpdateNote || "💡 5 Mart 2026'da Beta motor üzerinde kapsamlı değişiklikler yapılmıştır. Test edebilirsiniz!"}
+                                                                </div>
+                                                            </>
+                                                        ) : engineChoice === 'ikinc' ? (t.engineIkincBanner || "Arcade motor — hafif versiyon.")
+                                                            : (t.engineUcuncuBanner || "🎯 Beta motor (5 Mart 2026) — Kapsamlı güncelleme! Motor seçim ekranından detayları görün.")}
+                                                        <div className="mt-1.5 text-[11px] md:text-xs text-sky-200/90">
+                                                            {(t.matchViewMode || 'Maç Görünüm Modu') + ': '}
+                                                            <span className="font-semibold text-white">
+                                                                {matchViewMode === 'detailed'
+                                                                    ? (t.detailedMatchView || 'Detaylı Maç Merkezi')
+                                                                    : (t.classicMatchView || 'Klasik Maç Merkezi')}
+                                                            </span>
+                                                            {' • '}
+                                                            {t.settings || 'Ayarlar'}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center gap-3">
-                                                    <button onClick={() => setShowSettings(true)} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-sm font-medium">{t.changeEngine || 'Change Engine'}</button>
-                                                    <button onClick={() => { alert(t.engineInfoAlert || 'You can switch engines from Settings. Feedback is stored locally.'); }} className="py-2 px-3 bg-gray-700 hover:bg-gray-600 rounded text-sm">{t.learnMore || 'Learn More'}</button>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => setShowSettings(true)} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium whitespace-nowrap">{t.changeEngine || 'Motoru Değiştir'}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -3045,6 +3053,15 @@ const App: React.FC = () => {
                 onEngineChange={(choice) => {
                     setEngineChoice(choice);
                     serviceSetEngineChoice(choice);
+                }}
+                matchViewMode={matchViewMode}
+                onMatchViewModeChange={(mode) => {
+                    setMatchViewMode(mode);
+                    try {
+                        localStorage.setItem('matchViewMode', mode);
+                    } catch {
+                        // Ignore storage failures and keep the in-memory preference.
+                    }
                 }}
             />
         </Layout >

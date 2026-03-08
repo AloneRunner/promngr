@@ -4,6 +4,7 @@ import * as engine from '../../services/engine';
 import { DERBY_RIVALS } from '../../constants';
 // @ts-ignore
 import { uuid } from '../utils/playerUtils';
+import { appendMessages, appendPendingOffers } from '../utils/stateLimits';
 
 interface UseMatchSimulationProps {
     gameState: GameState | null;
@@ -17,6 +18,19 @@ interface UseMatchSimulationProps {
     t: any;
     onForcePlaySuperCup?: () => void;
 }
+
+const buildWeeklyMessages = (week: number, trainingReportLabel: string, report: string[], offers: Message[]): Message[] => [
+    ...report.map(r => ({
+        id: uuid(),
+        week,
+        type: MessageType.TRAINING,
+        subject: trainingReportLabel,
+        body: r,
+        isRead: false,
+        date: new Date().toISOString()
+    })),
+    ...offers
+];
 
 export const useMatchSimulation = ({
     gameState,
@@ -1346,12 +1360,11 @@ export const useMatchSimulation = ({
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
                     currentWeek: updatedState.currentWeek + 1,
-                    pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
-                    messages: [
-                        ...updatedState.messages,
-                        ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
-                        ...offers
-                    ]
+                            pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
+                            messages: appendMessages(
+                                updatedState.messages,
+                                buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
+                            )
                 });
             } else {
                 // League match handling
@@ -1431,12 +1444,11 @@ export const useMatchSimulation = ({
                         players: updatedPlayers,
                         transferMarket: updatedMarket,
                         currentWeek: updatedState.currentWeek + 1,
-                        pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
-                        messages: [
-                            ...updatedState.messages,
-                            ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
-                            ...offers
-                        ]
+                        pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
+                        messages: appendMessages(
+                            updatedState.messages,
+                            buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
+                        )
                     });
                 }
             }
@@ -1543,12 +1555,11 @@ export const useMatchSimulation = ({
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
                     currentWeek: updatedState.currentWeek + 1,
-                    pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
-                    messages: [
-                        ...updatedState.messages,
-                        ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
-                        ...offers
-                    ]
+                    pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
+                    messages: appendMessages(
+                        updatedState.messages,
+                        buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
+                    )
                 });
 
             } else {
@@ -1596,18 +1607,18 @@ export const useMatchSimulation = ({
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
                     currentWeek: updatedState.currentWeek + 1,
-                    pendingOffers: [...(updatedState.pendingOffers || []), ...(newPendingOffers || [])],
-                    messages: [
-                        ...updatedState.messages,
-                        ...report.map(r => ({ id: uuid(), week: updatedState.currentWeek, type: MessageType.TRAINING, subject: t.trainingReport, body: r, isRead: false, date: new Date().toISOString() })),
-                        ...offers
-                    ]
+                    pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
+                    messages: appendMessages(
+                        updatedState.messages,
+                        buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
+                    )
                 });
             }
         }
     }, [gameState, setGameState, t, onForcePlaySuperCup, executeMatchUpdate]);
 
     const performSubstitution = useCallback((matchId: string, p1: Player, p2Id: string) => {
+        let engineAccepted = true;
         // Notify live engine of substitution BEFORE React state update.
         // Without this, the engine never knows about user-requested subs:
         // the subbed-out player would keep playing in the physics simulation,
@@ -1619,13 +1630,14 @@ export const useMatchSimulation = ({
                 if (isActualSub) {
                     const playerIn = p1.lineup !== 'STARTING' ? p1 : p2;
                     const playerOut = p1.lineup === 'STARTING' ? p1 : p2;
-                    engine.performSubstitution(matchId, playerIn, playerOut.id);
+                    engineAccepted = engine.performSubstitution(matchId, playerIn, playerOut.id);
                 }
             }
         }
 
         setGameState(prev => {
             if (!prev) return null;
+            if (!engineAccepted) return prev;
 
             // Find the second player
             const p2 = prev.players.find(p => p.id === p2Id);
@@ -2100,15 +2112,13 @@ export const useMatchSimulation = ({
             // Auto-pick lineup for AI teams to avoid low-condition starters in live matches
             if (homeTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(homePlayers, homeTeam.tactic.formation, homeTeam.coachArchetype);
-                engine.assignAIPlayerInstructions(homeTeam.tactic, homePlayers);
                 // AI Tactics Selection
-                engine.autoPickTactics(homeTeam, awayTeam);
+                engine.autoPickTactics(homeTeam, awayTeam, homePlayers);
             }
             if (awayTeam.id !== prev.userTeamId) {
                 engine.autoPickLineup(awayPlayers, awayTeam.tactic.formation, awayTeam.coachArchetype);
-                engine.assignAIPlayerInstructions(awayTeam.tactic, awayPlayers);
                 // AI Tactics Selection
-                engine.autoPickTactics(awayTeam, homeTeam);
+                engine.autoPickTactics(awayTeam, homeTeam, awayPlayers);
             }
 
             const initialSimulation = engine.initializeMatch(match as Match, homeTeam, awayTeam, homePlayers, awayPlayers, prev.userTeamId);
@@ -2397,8 +2407,13 @@ export const useMatchSimulation = ({
                     // We need to merge everything back into updatedPlayers array.
 
                     // First, sync live stamina for Starters/Bench if available
+                    const substitutedOutIds = engine.getSubstitutedOutPlayerIds();
                     updatedPlayers.forEach((p, idx) => {
-                        if ((p.teamId === currentMatch.homeTeamId || p.teamId === currentMatch.awayTeamId) && (p.lineup === 'STARTING' || p.lineup === 'BENCH')) {
+                        if (
+                            (p.teamId === currentMatch.homeTeamId || p.teamId === currentMatch.awayTeamId) &&
+                            (p.lineup === 'STARTING' || p.lineup === 'BENCH') &&
+                            !substitutedOutIds.has(p.id)
+                        ) {
                             const liveStamina = engine.getLivePlayerStamina(p.id);
                             if (liveStamina !== undefined) {
                                 updatedPlayers[idx] = { ...updatedPlayers[idx], condition: Math.round(liveStamina) };

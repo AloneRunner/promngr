@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Trophy, Search, X, Globe, Users, Map } from 'lucide-react';
+import { Trophy, Search, X, Globe, Users, Map as MapIcon } from 'lucide-react';
 import { Team, Player } from '../types';
 import { LEAGUE_PRESETS } from '../constants';
 import { getLeagueReputation, getLeagueCoefficients } from '../services/engine';
@@ -15,14 +15,29 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState<'clubs' | 'players' | 'leagues'>('clubs');
 
+    const squadValueByTeamId = useMemo(() => {
+        const totals = new Map<string, number>();
+
+        players.forEach((player) => {
+            if (!player.teamId || player.teamId === 'FREE_AGENT') return;
+            totals.set(player.teamId, (totals.get(player.teamId) || 0) + (player.value || 0));
+        });
+
+        return totals;
+    }, [players]);
+
     // Sort teams by reputation (descending)
     const rankedTeams = useMemo(() => {
         let sorted = [...teams].sort((a, b) => b.reputation - a.reputation);
         if (searchTerm && activeTab === 'clubs') {
             sorted = sorted.filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
-        return sorted.map((team, index) => ({ ...team, rank: index + 1 }));
-    }, [teams, searchTerm, activeTab]);
+        return sorted.map((team, index) => ({
+            ...team,
+            rank: index + 1,
+            squadValue: squadValueByTeamId.get(team.id) || 0,
+        }));
+    }, [teams, searchTerm, activeTab, squadValueByTeamId]);
 
     // Sort players by Overall (descending)
     const rankedPlayers = useMemo(() => {
@@ -40,11 +55,8 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
     const rankedLeagues = useMemo(() => {
         const leagues = LEAGUE_PRESETS.map(preset => {
             const leagueTeams = teams.filter(t => t.leagueId === preset.id);
-            // const totalRep = leagueTeams.reduce((sum, t) => sum + t.reputation, 0);
-            // const avgRep = leagueTeams.length > 0 ? totalRep / leagueTeams.length : 0;
-            // Cap display reputation at 100 (actually unlimited in engine, but 100 for UI stars)
             const reputation = getLeagueReputation(preset.id);
-            const totalValue = leagueTeams.reduce((sum, t) => sum + t.budget * 4, 0); // Approx value from budget
+            const totalSquadValue = leagueTeams.reduce((sum, team) => sum + (squadValueByTeamId.get(team.id) || 0), 0);
 
             // Generate star rating (1-5) based on reputation (approx 50-100 scale)
             // 50 = 1 star, 60 = 2 stars, 70 = 3 stars, 80 = 4 stars, 90+ = 5 stars
@@ -56,7 +68,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                 country: preset.country,
                 reputation,
                 coefficients: getLeagueCoefficients(preset.id),
-                totalValue,
+                totalSquadValue,
                 stars,
                 teamsCount: leagueTeams.length
             };
@@ -69,7 +81,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
         }
 
         return sorted.map((l, index) => ({ ...l, rank: index + 1 }));
-    }, [teams, searchTerm, activeTab]);
+    }, [teams, searchTerm, activeTab, squadValueByTeamId]);
 
     if (!isOpen) return null;
 
@@ -140,7 +152,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                             onClick={() => setActiveTab('leagues')}
                             className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${activeTab === 'leagues' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
                         >
-                            <Map size={14} /> Leagues
+                            <MapIcon size={14} /> Leagues
                         </button>
                     </div>
 
@@ -189,7 +201,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                             {team.reputation}
                                         </td>
                                         <td className="p-4 text-right font-mono text-slate-300 hidden sm:table-cell">
-                                            €{((team.budget || 0) * 4 / 1000000).toFixed(1)}M
+                                            €{(team.squadValue / 1000000).toFixed(1)}M
                                         </td>
                                     </tr>
                                 ))}
@@ -255,7 +267,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                     <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y4</th>
                                     <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y5</th>
                                     <th className="p-2 sm:p-3 text-right text-emerald-400">Total</th>
-                                    <th className="p-2 sm:p-3 text-right hidden lg:table-cell">Value</th>
+                                    <th className="p-2 sm:p-3 text-right hidden lg:table-cell">Squad Value</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
@@ -286,7 +298,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                             {league.reputation.toFixed(1)}
                                         </td>
                                         <td className="p-2 sm:p-3 text-right font-mono text-slate-300 text-xs hidden lg:table-cell">
-                                            €{(league.totalValue / 1000000).toFixed(0)}M
+                                            €{(league.totalSquadValue / 1000000).toFixed(0)}M
                                         </td>
                                     </tr>
                                 ))}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Volume2, VolumeX, Zap, BarChart3, Globe, Save, TrendingUp } from 'lucide-react';
+import { Settings, Volume2, VolumeX, Zap, BarChart3, Globe, Save, TrendingUp, Video } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -17,6 +17,8 @@ interface SettingsModalProps {
   t: any; // Translation object
   engineChoice?: 'classic' | 'ikinc' | 'ucuncu';
   onEngineChange?: (choice: 'classic' | 'ikinc' | 'ucuncu') => void;
+  matchViewMode?: 'classic' | 'detailed';
+  onMatchViewModeChange?: (mode: 'classic' | 'detailed') => void;
 }
 
 export default function SettingsModal({
@@ -26,8 +28,11 @@ export default function SettingsModal({
   onSettingsChange,
   currentLanguage,
   onLanguageChange,
-  t
-  , engineChoice, onEngineChange
+  t,
+  engineChoice,
+  onEngineChange,
+  matchViewMode,
+  onMatchViewModeChange
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState({ aiTransferActivity: 'NORMAL' as 'LOW' | 'NORMAL' | 'HIGH', ...performanceSettings });
 
@@ -77,27 +82,49 @@ export default function SettingsModal({
             </h3>
             <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
               <div className="mb-3 text-sm text-gray-400">{t.engineChoiceDesc || 'Select which match engine runs simulations.'}</div>
-              <div className="flex gap-2">
+              <div className="space-y-3">
                 <button
                   onClick={() => onEngineChange && onEngineChange('classic')}
-                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                  className={`w-full py-3 px-4 rounded-lg text-left font-medium transition-all ${engineChoice === 'classic' ? 'bg-blue-600 text-white border-2 border-blue-400' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-2 border-transparent'
                     }`}
                 >
-                  {t.engineClassic || 'Classic'}
+                  <div className="flex items-center justify-between">
+                    <span>{t.engineClassic || 'Ana Motor (Önerilen)'}</span>
+                    {engineChoice === 'classic' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
+                  </div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineClassicBanner || 'Ana motor — en gerçekçi versiyon.'}</div>
+                  <div className="text-xs mt-2 px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded text-yellow-400">
+                    {t.engineClassicNote || 'ℹ️ Not: 5 Mart 2026\'da Beta Motora yeni özellikler eklendi.'}
+                  </div>
                 </button>
+
                 <button
                   onClick={() => onEngineChange && onEngineChange('ikinc')}
-                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'ikinc' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                  className={`w-full py-3 px-4 rounded-lg text-left font-medium transition-all ${engineChoice === 'ikinc' ? 'bg-blue-600 text-white border-2 border-blue-400' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-2 border-transparent'
                     }`}
                 >
-                  {t.engineIkinc || 'Second Motor'}
+                  <div className="flex items-center justify-between">
+                    <span>{t.engineIkinc || 'Arcade Motor'}</span>
+                    {engineChoice === 'ikinc' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
+                  </div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineIkincBanner || 'Arcade motor — hafif versiyon.'}</div>
                 </button>
+
                 <button
                   onClick={() => onEngineChange && onEngineChange('ucuncu')}
-                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${engineChoice === 'ucuncu' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                  className={`w-full py-3 px-4 rounded-lg text-left font-medium transition-all relative ${engineChoice === 'ucuncu' ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-2 border-yellow-400' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-2 border-transparent'
                     }`}
                 >
-                  {t.engineUcuncu || 'Ucuncu Motor'}
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      {t.engineUcuncu || 'Beta Motor — Aktif geliştirme'}
+                      <span className="text-[10px] bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded font-bold">YENİ</span>
+                    </span>
+                    {engineChoice === 'ucuncu' && <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded font-bold">✓ Seçili</span>}
+                  </div>
+                  <div className="text-xs mt-2 opacity-95 whitespace-pre-line leading-relaxed">
+                    {t.engineUcuncuBannerDetailed || '🔥 5 Mart 2026 - Kapsamlı güncelleme!\n✓ Fizik bazlı top hareketi\n✓ Pozisyon eşleşmesi düzeltildi\n✓ Kaleci AI iyileştirildi'}
+                  </div>
                 </button>
               </div>
 
@@ -122,6 +149,45 @@ export default function SettingsModal({
               </div>
             </div>
           </div>
+
+          {/* Match View Mode Selector (NEW) */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Video className="w-5 h-5 text-purple-400" />
+              {t.matchViewMode || 'Match View Mode'}
+            </h3>
+            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+              <div className="mb-3 text-sm text-gray-400">{t.matchViewModeDesc || 'Choose how you want to view live matches.'}</div>
+              <div className="space-y-3">
+                <button
+                  onClick={() => onMatchViewModeChange && onMatchViewModeChange('classic')}
+                  className={`w-full py-3 px-4 rounded-lg text-left font-medium transition-all ${matchViewMode === 'classic' ? 'bg-blue-600 text-white border-2 border-blue-400' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-2 border-transparent'}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>⚙️ {t.classicMatchView || 'Classic Match Center'}</span>
+                    {matchViewMode === 'classic' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Active</span>}
+                  </div>
+                  <div className="text-xs mt-1 opacity-90">{t.classicMatchViewDesc || 'Technical 2.5D view with detailed ball physics'}</div>
+                </button>
+
+                <button
+                  onClick={() => onMatchViewModeChange && onMatchViewModeChange('detailed')}
+                  className={`w-full py-3 px-4 rounded-lg text-left font-medium transition-all relative ${matchViewMode === 'detailed' ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-2 border-purple-400' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-2 border-transparent'}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      ✨ {t.detailedMatchView || 'Detailed Match Center'}
+                      <span className="text-[10px] bg-amber-400 text-amber-950 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Beta</span>
+                    </span>
+                    {matchViewMode === 'detailed' && <span className="text-xs bg-purple-400 text-gray-900 px-2 py-1 rounded font-bold">✓ Active</span>}
+                  </div>
+                  <div className="text-xs mt-1 opacity-95">{t.detailedMatchViewDesc || 'Sprite-based player animations with volley/overhead kick actions'}</div>
+                  <div className="text-[10px] mt-1 text-red-400 font-semibold italic">{t.detailedMatchViewWarning || '⚠️ Very early development stage. No mobile support and may contain bugs, do not select for playing!'}</div>
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Performance Settings */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">

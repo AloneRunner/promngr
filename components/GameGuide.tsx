@@ -154,66 +154,51 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                     <p className="text-sm text-slate-300">{t.guideTacticsDesc}</p>
 
                     <div className="bg-slate-900/50 p-3 rounded border border-orange-500/20">
-                        <p className="text-orange-400 font-bold mb-2 flex items-center gap-2">{t.guideT_Defense}</p>
+                        <p className="text-orange-400 font-bold mb-2 flex items-center gap-2">{t.guideT_Defense || '🧭 TEMEL PLAN'}</p>
                         <div className="text-xs space-y-4 text-slate-300">
-                            <div className="whitespace-pre-line">{t.guideMgmt_safe}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideMgmt_normal}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideMgmt_aggressive}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2 text-red-300">{t.guideMgmt_reckless}</div>
+                            <div className="whitespace-pre-line">{`- Temel sekme artik ayar yigini degil; once dizilisi secip takim planinin ozetini gorursun.
+- Buradaki amac, takimin omurgasini tek bakista okumak: hangi hucum dili, hangi savunma plani, ne kadar risk?`}</div>
+                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{`- Dizilis yalnizca kagit uzerindeki sekil degildir. Slot talimatlari ve saha ustu surukleme ile birlikte oyuncularin baslangic ceplerini belirler.
+- Bu yuzden once formasyonu kur, sonra Hucum ve Savunma sekmelerinde davranisi ayarla.`}</div>
+                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideVisibleSettingsBridge || `- Artik ekranda Short Passing, Direct Passing, Possession Style gibi ham motor ayarlari ayri ayri secilmiyor.
+- Sen Sabirli, Dengeli, Dikine, Akiskan gibi gorunen planlari secersin; motor altta bunu otomatik olarak pas hizi, risk seviyesi ve kosu davranisina cevirir.`}</div>
                         </div>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded border border-emerald-500/20">
                         <p className="text-emerald-400 font-bold mb-2 flex items-center gap-2">{t.guideT_Attack}</p>
                         <div className="text-xs space-y-4 text-slate-300">
-                            <div className="whitespace-pre-line">{t.guideAtt_att}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideAtt_bal}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideAtt_count}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideAtt_def}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideAtt_poss}</div>
+                            <p className="text-emerald-500 font-bold">{t.guideAttackApproachTitle || '1. Hucum Yaklasimi'}</p>
+                            <div className="whitespace-pre-line">{t.guideAttackApproach || `- Sabirli: Kisa pas ve dusuk tempo ile net bosluk arar.\n- Dengeli: Oyuncunun niteligi ve pozisyonu daha belirleyici olur.\n- Dikine: Topu hizli ileri tasir, erken kosu ve ara pasa daha aciktir.\n- Akiskan: Yer degisimi ve destek kosulari artar; daha hareketli ama biraz daha daginik oynar.`}</div>
 
-                            <p className="text-emerald-500 font-bold mt-4 pt-2 border-t border-emerald-500/30">{t.guideT_Mentality}</p>
-                            <div className="whitespace-pre-line">{t.guideAtt_risk_high}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideAtt_risk_bal}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideAtt_risk_safe}</div>
+                            <p className="text-emerald-500 font-bold mt-4 pt-2 border-t border-emerald-500/30">{t.guideFinalThirdTitle || '2. Son Ucuncu Bolge'}</p>
+                            <div className="whitespace-pre-line">{t.guideFinalThird || `- Paslasarak Gir: Ceza sahasi disindan dusuk kalite sutlari bastirir, bos adami aratir.\n- Dengeli: Sut, pas ve top surme karari daha cok oyuncunun aci, bosluk ve yetenegine birakilir.\n- Gordugun Yerden Vur: Kaleyi daha cok yoklar; sadece dogrudan bitirmek istedigin duzende kullan.`}</div>
 
                             <p className="text-emerald-500 font-bold mt-4 pt-2 border-t border-emerald-500/30">{t.guideT_Width}</p>
                             <div className="whitespace-pre-line">{t.guideWidth_nar}</div>
                             <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideWidth_bal}</div>
                             <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideWidth_wide}</div>
-
-                            <p className="text-emerald-500 font-bold mt-4 pt-2 border-t border-emerald-500/30">{t.guideT_PassTempo}</p>
-                            <ul className="space-y-1 list-disc pl-4">
-                                <li className="whitespace-pre-line">{t.guidePass_short}</li>
-                                <li className="whitespace-pre-line">{t.guidePass_mix}</li>
-                                <li className="whitespace-pre-line">{t.guidePass_dir}</li>
-                                <li className="whitespace-pre-line">{t.guidePass_long}</li>
-                            </ul>
-                            <ul className="space-y-1 list-disc pl-4 mt-2 border-t border-slate-700/50 pt-2">
-                                <li className="whitespace-pre-line">{t.guideTempo_slow}</li>
-                                <li className="whitespace-pre-line">{t.guideTempo_norm}</li>
-                                <li className="whitespace-pre-line">{t.guideTempo_fast}</li>
-                            </ul>
-
-                            <p className="text-emerald-500 font-bold mt-4 pt-2 border-t border-emerald-500/30">{t.guideT_Instructions}</p>
-                            <div className="whitespace-pre-line">{t.guideInst_work}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideInst_shoot}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideInst_roam}</div>
                         </div>
                     </div>
 
                     <div className="bg-slate-900/50 p-3 rounded border border-blue-500/20">
-                        <p className="text-blue-400 font-bold mb-2 flex items-center gap-2">{t.guideT_DefLinePress}</p>
+                        <p className="text-blue-400 font-bold mb-2 flex items-center gap-2">{t.guideT_DefLinePress || '🧱 SAVUNMA PLANI'}</p>
                         <div className="text-xs space-y-4 text-slate-300">
-                            <p className="text-blue-500 font-bold">{t.guideT_PressIntensity}</p>
-                            <div className="whitespace-pre-line">{t.guideDef_pressStand}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideDef_pressBal}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideDef_pressGegen}</div>
+                            <p className="text-blue-500 font-bold">1. Savunma Plani</p>
+                            <div className="whitespace-pre-line">{`- Alcak Blok: Geri cekilir, ceza sahasini ve ikinci top alanini kapatir.
+- Orta Blok: Hatlar kompakt kalir; ne tamamen bekler ne de gereksiz onde yakalanir.
+- Onde Karsila: Top rakipteyken one cikar, pas kanallarini erken bozar.
+- Avci Pres: En agresif secenek; yuksek hat ve ani presle topu hemen geri ister.`}</div>
 
-                            <p className="text-blue-500 font-bold mt-4 pt-2 border-t border-blue-500/30">{t.guideT_DefLine}</p>
-                            <div className="whitespace-pre-line">{t.guideDef_lineDeep}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideDef_lineNorm}</div>
-                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guideDef_lineHigh}</div>
+                            <p className="text-blue-500 font-bold mt-4 pt-2 border-t border-blue-500/30">2. Mudahale Sertligi</p>
+                            <div className="whitespace-pre-line">{`- Temkinli: Faul ve kart riskini azaltir ama ikili mucadelede yumusak kalir.
+- Normal: Varsayilan denge.
+- Agresif: Top kapma istegini artirir; fizik gucu ve presle uyumludur.
+- Kontrolsuz: Son caredir; kart ve faul riski belirgin bicimde artar.`}</div>
+
+                            <p className="text-blue-500 font-bold mt-4 pt-2 border-t border-blue-500/30">3. Markaj</p>
+                            <div className="whitespace-pre-line">{`- Alan Savunmasi: Sekli korur, ozellikle pas oyunu oynarken duzeni bozmaz.
+- Adam Adama: Rakibi temasla rahatsiz eder; fiziksel stoperler ve sert planlarla iyi gider.`}</div>
                         </div>
                     </div>
 
@@ -229,6 +214,49 @@ export const GameGuide: React.FC<GameGuideProps> = ({ t }) => {
                             <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guidePreset_7}</div>
                             <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guidePreset_8}</div>
                             <div className="whitespace-pre-line border-t border-slate-700/50 pt-1">{t.guidePreset_9}</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded border border-cyan-500/20">
+                        <p className="text-cyan-400 font-bold mb-2">{t.guideWhatSeeTitle || 'Ayari acinca sahada ne gormelisin?'}</p>
+                        <div className="text-xs space-y-4 text-slate-300">
+                            <div className="whitespace-pre-line">{t.guideWhatSeeBody1 || `- Sabirli: takim topun etrafinda daha cok toplanir, pas istasyonu kurar, acele sut azalir.
+- Dengeli: davranis daha cok oyuncu kalitesi ve pozisyona gore sekillenir.
+- Dikine: kosu arkasi top, erken ara pas ve hizli gecis daha sik gorulur.
+- Akiskan: yer degisimi, surpriz destek ve daha ozgur hucum sekilleri artar.`}</div>
+                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideWhatSeeBody2 || `- Paslasarak Gir: ceza sahasi disindan zorlama sutlar azalir, bos adama son pas aranir.
+- Dengeli Son Bolge: sut, pas ve top surme karari daha cok oyuncunun hissine birakilir.
+- Gordugun Yerden Vur: iyi vuran oyuncular daha erken kaleyi dener.`}</div>
+                            <div className="whitespace-pre-line border-t border-slate-700/50 pt-2">{t.guideWhatSeeBody3 || `- Genis: bekler ve kanatlar cizgiye daha cok yayilir, orta ve byline kosusu artar.
+- Dar: merkez kombinasyonu ve ic koridor kullanimi artar.
+- Alan Savunmasi: takim sekli korunur.
+- Adam Adama: temas ve bire bir takip artar ama duzen daha kolay acilir.`}</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded border border-amber-500/20">
+                        <p className="text-amber-400 font-bold mb-2">{t.guideBadCombosTitle || 'Birbirini bozan kombinasyonlar'}</p>
+                        <div className="text-xs space-y-2 text-slate-300">
+                            <div className="whitespace-pre-line">{t.guideBadCombosBody || `- Sabirli + Gordugun Yerden Vur: biri beklemek isterken digeri ilk yarim firsatta sut ister.
+- Akiskan + Adam Adama + Kontrolsuz: sekil ve disiplin ayni anda bozulabilir, faul ve kart riski buyur.
+- Alcak Blok + Cok Genis: hatlar arasi yatay bosluk artar, ikinci top toplamak zorlasir.`}</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-3 rounded border border-fuchsia-500/20">
+                        <p className="text-fuchsia-400 font-bold mb-2">{t.guideReadyRecipesTitle || 'Hazir receteler'}</p>
+                        <div className="text-xs space-y-4 text-slate-300">
+                            <div className="whitespace-pre-line">{t.guideReadyRecipesBody || `4-3-3:
+- Hizli kanat takimi icin: Dikine + Dengeli Son Bolge + Genis + Onde Karsila.
+- Daha teknik takim icin: Sabirli + Paslasarak Gir + Genis + Orta Blok.
+
+4-2-3-1:
+- En guvenli baslangic: Dengeli + Dengeli Son Bolge + Dengeli Genislik + Orta Blok.
+- Iyi bir 10 numaran varsa merkez kombinasyonu burada cok rahat calisir.
+
+3-5-2:
+- Wing-back kullaniyorsan: Dikine + Dengeli Son Bolge + Genis + Onde Karsila.
+- Iki forvetin kosusunu ve merkez ustunlugunu ayni anda kullanmak icin idealdir.`}</div>
                         </div>
                     </div>
                 </div>

@@ -818,7 +818,7 @@ export class MatchEngine {
   private _awayDefLine: number = 55;
 
   // === ENGINE IDENTIFIER ===
-  public engineVersion: string = "ME v2.0";
+  public engineVersion: string = "Arcade Motor";
 
   // === PLAYER INSTRUCTION HELPER ===
   private getPlayerInstruction(p: Player): string {

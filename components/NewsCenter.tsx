@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Message, MessageType, Translation, TransferOffer } from '../types';
 import { Mail, AlertTriangle, TrendingUp, Briefcase, DollarSign, Check, X, Trash2, AlertCircle, Eye, Star, Filter, ArrowUpCircle } from 'lucide-react';
 
@@ -41,16 +41,19 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
       }
    };
 
-   const sortedMessages = filterMessages([...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+   const sortedMessages = useMemo(
+      () => filterMessages([...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
+      [messages, activeTab]
+   );
 
    // Count messages per tab
-   const tabCounts = {
+   const tabCounts = useMemo(() => ({
       ALL: messages.length,
       TRANSFERS: messages.filter(m => m.type === MessageType.TRANSFER_OFFER).length,
       INJURIES: messages.filter(m => m.type === MessageType.INJURY).length,
       YOUTH: messages.filter(m => m.subject?.includes('Youth') || m.subject?.includes('Genç') || m.subject?.includes('Prospect') || m.subject?.includes('Yetenek')).length,
       BOARD: messages.filter(m => m.type === MessageType.BOARD).length
-   };
+   }), [messages]);
 
    // Tab definitions
    const tabs: { id: MessageTab; label: string; icon: any; color: string }[] = [
@@ -62,14 +65,29 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
    ];
 
    // Count critical unread messages
-   const criticalUnread = messages.filter(m => !m.isRead && (
+   const criticalUnread = useMemo(() => messages.filter(m => !m.isRead && (
       m.type === MessageType.INJURY ||
       m.type === MessageType.TRANSFER_OFFER ||
       m.subject?.includes('Kırmızı') || m.subject?.includes('Red') ||
       m.subject?.includes('Sakatl') || m.subject?.includes('Injur')
-   )).length;
+   )).length, [messages]);
 
-   const readMessages = messages.filter(m => m.isRead).length;
+   const readMessages = useMemo(() => messages.filter(m => m.isRead).length, [messages]);
+
+   const pendingOfferMap = useMemo(() => {
+      const map = new Map<string, TransferOffer>();
+      (pendingOffers || []).forEach(offer => {
+         if (offer.status === 'PENDING') {
+            map.set(offer.id, offer);
+         }
+      });
+      return map;
+   }, [pendingOffers]);
+
+   const pendingOfferCount = useMemo(
+      () => (pendingOffers || []).filter(o => o.status === 'PENDING').length,
+      [pendingOffers]
+   );
 
    const getIcon = (type: MessageType) => {
       switch (type) {
@@ -93,7 +111,7 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
    // Find pending offer for a message
    const getOfferForMessage = (msg: Message): TransferOffer | undefined => {
       if (msg.type !== MessageType.TRANSFER_OFFER || !msg.data?.offerId) return undefined;
-      return pendingOffers?.find(o => o.id === msg.data.offerId && o.status === 'PENDING');
+      return pendingOfferMap.get(msg.data.offerId);
    };
 
    return (
@@ -131,13 +149,13 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                )}
             </div>
             {/* Reject All Offers button — only shown when pending offers exist */}
-            {(pendingOffers?.filter(o => o.status === 'PENDING').length || 0) > 0 && onRejectAllOffers && (
+            {pendingOfferCount > 0 && onRejectAllOffers && (
                <div className="mt-3 pt-3 border-t border-slate-700">
                   <button
                      onClick={onRejectAllOffers}
                      className="flex items-center gap-2 px-4 py-2 bg-red-900/40 hover:bg-red-800/60 text-red-400 hover:text-red-300 text-sm font-bold rounded-lg border border-red-500/30 transition-all"
                   >
-                     <X size={16} /> {t.rejectAllOffers || 'Tüm Teklifleri Reddet'} ({pendingOffers!.filter(o => o.status === 'PENDING').length})
+                     <X size={16} /> {t.rejectAllOffers || 'Tüm Teklifleri Reddet'} ({pendingOfferCount})
                   </button>
                </div>
             )}

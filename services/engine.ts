@@ -477,12 +477,6 @@ export const initializeEngine = (savedState: Partial<GameState>) => {
   if (savedState.baseLeagueReputations) {
     BASE_LEAGUE_REPUTATION = { ...savedState.baseLeagueReputations };
   }
-  if (savedState.leagueReputationBonuses) {
-    LEAGUE_REPUTATION_BONUS = { ...savedState.leagueReputationBonuses };
-  }
-  if (savedState.baseLeagueReputations) {
-    BASE_LEAGUE_REPUTATION = { ...savedState.baseLeagueReputations };
-  }
   if (savedState.leagueEuropeanBonuses) {
     LEAGUE_EUROPEAN_BONUS = { ...savedState.leagueEuropeanBonuses };
   }
@@ -810,6 +804,38 @@ const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomItem = <T>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
+
+const LEAGUE_TO_COUNTRY: Record<string, string> = {
+  en: "England", es: "Spain", it: "Italy", de: "Germany", fr: "France",
+  tr: "Turkey", pt: "Portugal", nl: "Netherlands", br: "Brazil", ar: "Argentina",
+  us: "USA", mx: "Mexico", jp: "Japan", sa: "Saudi Arabia", kr: "South Korea",
+  cn: "China", au: "Australia", eg: "Egypt", za: "South Africa", ma: "Morocco",
+  ng: "Nigeria", dz: "Algeria", tn: "Tunisia", co: "Colombia", cl: "Chile",
+  uy: "Uruguay", ec: "Ecuador", py: "Paraguay", cr: "Costa Rica", in: "India",
+  id: "Indonesia", my: "Malaysia", gh: "Ghana", sn: "Senegal", ci: "Ivory Coast",
+  ke: "Kenya", sco: "Scotland", be: "Belgium", ru: "Russia", ch: "Switzerland",
+  gr: "Greece", pl: "Poland", cz: "Czech Republic", ro: "Romania", hr: "Croatia",
+  rs: "Serbia", at: "Austria",
+};
+
+const getYouthNationalityPool = (leagueId: string): string[] => {
+  const mainNat = LEAGUE_TO_COUNTRY[leagueId] || "England";
+  const nationalityPools: Record<string, string[]> = {
+    tr: ["Turkey", "Turkey", "Turkey", "Turkey", "Turkey", "Germany", "France", "Brazil"],
+    en: ["England", "England", "England", "England", "France", "Brazil", "Spain", "Germany", "Nigeria"],
+    es: ["Spain", "Spain", "Spain", "Spain", "Argentina", "Brazil", "Portugal", "France", "Colombia"],
+    it: ["Italy", "Italy", "Italy", "Italy", "Argentina", "Brazil", "France", "Albania"],
+    de: ["Germany", "Germany", "Germany", "Germany", "Turkey", "France", "Netherlands", "Nigeria"],
+    fr: ["France", "France", "France", "France", "Algeria", "Morocco", "Senegal", "Ivory Coast"],
+    pt: ["Portugal", "Portugal", "Portugal", "Brazil", "Brazil", "Angola", "Spain", "France"],
+    nl: ["Netherlands", "Netherlands", "Netherlands", "Belgium", "Suriname", "Morocco", "Ghana"],
+    br: ["Brazil", "Brazil", "Brazil", "Brazil", "Argentina", "Uruguay", "Colombia"],
+    ar: ["Argentina", "Argentina", "Argentina", "Argentina", "Uruguay", "Chile", "Paraguay"],
+    default: [mainNat, mainNat, mainNat, mainNat, mainNat, "Brazil", "France", "Argentina", "Spain", "Nigeria"],
+  };
+
+  return nationalityPools[leagueId] || nationalityPools.default;
+};
 
 // Takım oyuncularına benzersiz forma numarası ata
 const assignTeamJerseyNumbers = (teamPlayers: Player[]) => {
@@ -1866,9 +1892,12 @@ export const generateWorld = (leagueId: string): GameState => {
           specificTactic.aggression = "Normal";
         }
       } else {
+        const suggestedFormation = AIService.suggestBestTacticForSquad(
+            teamPlayers,
+        );
         // Default generic tactic if no profile found
         specificTactic = {
-          formation: TacticType.T_442,
+          formation: suggestedFormation,
           style: "Balanced",
           aggression: "Normal",
           tempo: "Normal",
@@ -2227,7 +2256,8 @@ export const performSubstitution = (
   playerIn: Player,
   playerOutId: string,
 ) => {
-  if (activeEngine) activeEngine.substitutePlayer(playerIn, playerOutId);
+  if (activeEngine) return activeEngine.substitutePlayer(playerIn, playerOutId);
+  return false;
 };
 
 export const updateMatchTactic = (
@@ -2560,58 +2590,18 @@ export const simulateLeagueRound = (
       const homePlayers = playersByTeam.get(home.id) || [];
       const awayPlayers = playersByTeam.get(away.id) || [];
 
-      // ========== DYNAMIC AI TACTICS ==========
-      // AI analyzes opponent and adjusts tactics accordingly
-      const homeStrength =
-        homePlayers.reduce((sum, p) => sum + p.overall, 0) /
-        Math.max(1, homePlayers.length);
-      const awayStrength =
-        awayPlayers.reduce((sum, p) => sum + p.overall, 0) /
-        Math.max(1, awayPlayers.length);
-
-      // Adjust AI tactics based on opponent (skip if user team - they set their own)
-      if (home.id !== gameState.userTeamId) {
-        const strengthDiff = homeStrength - awayStrength;
-        const isOnGoodForm =
-          home.recentForm.filter((r) => r === "W").length >= 3;
-
-        // HOME TEAM AI TACTIC LOGIC
-        if (strengthDiff > 5) {
-          // Much stronger - attack aggressively
-          home.tactic.mentality = "ATTACKING";
-          if (Math.random() < 0.3) home.tactic.formation = TacticType.T_433;
-        } else if (strengthDiff < -5) {
-          // Much weaker - defend and counter
-          home.tactic.mentality = "DEFENSIVE";
-          if (Math.random() < 0.3) home.tactic.formation = TacticType.T_541;
-        } else {
-          // Evenly matched - home advantage, slight attack
-          home.tactic.mentality = isOnGoodForm ? "ATTACKING" : "BALANCED";
-        }
-      }
-
-      if (away.id !== gameState.userTeamId) {
-        const strengthDiff = awayStrength - homeStrength;
-        const isOnGoodForm =
-          away.recentForm.filter((r) => r === "W").length >= 3;
-
-        // AWAY TEAM AI TACTIC LOGIC (more cautious away from home)
-        if (strengthDiff > 8) {
-          // Much stronger even away - controlled attack
-          away.tactic.mentality = "BALANCED";
-        } else if (strengthDiff < -3) {
-          // Weaker away - park the bus
-          away.tactic.mentality = "DEFENSIVE";
-          if (Math.random() < 0.4) away.tactic.formation = TacticType.T_532;
-        } else {
-          // Evenly matched away - careful approach
-          away.tactic.mentality = isOnGoodForm ? "BALANCED" : "DEFENSIVE";
-        }
-      }
-
       // AI teams auto-pick their best available lineup before each match
       autoPickLineup(homePlayers, home.tactic.formation);
       autoPickLineup(awayPlayers, away.tactic.formation);
+
+      // ========== DYNAMIC AI TACTICS ==========
+      // Use the same squad-profile + opponent-aware tactic layer for batch sims too.
+      if (home.id !== gameState.userTeamId) {
+        autoPickTactics(home, away, homePlayers);
+      }
+      if (away.id !== gameState.userTeamId) {
+        autoPickTactics(away, home, awayPlayers);
+      }
 
       // ADIL SİMÜLASYON - Sadece takım gücüne göre (torpil yok!)
       // ⚡ KRİTİK NOKTA: SENİN ORİJİNAL MOTORUN ÇALIŞIYOR
@@ -3188,6 +3178,75 @@ export const handlePlayerInteraction = (
 };
 
 export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActivity: 'LOW' | 'NORMAL' | 'HIGH' = 'NORMAL') => {
+  const teamsById = new Map(gameState.teams.map((team) => [team.id, team]));
+  const playersByTeam = new Map<string, Player[]>();
+  gameState.players.forEach((player) => {
+    if (!playersByTeam.has(player.teamId)) playersByTeam.set(player.teamId, []);
+    playersByTeam.get(player.teamId)!.push(player);
+  });
+
+  const leagueTables = new Map<string, Team[]>();
+  gameState.teams.forEach((team) => {
+    const leagueId = team.leagueId || "tr";
+    if (!leagueTables.has(leagueId)) leagueTables.set(leagueId, []);
+    leagueTables.get(leagueId)!.push(team);
+  });
+  leagueTables.forEach((teams) => {
+    teams.sort((a, b) => b.stats.points - a.stats.points);
+  });
+
+  const leaguePositionByTeamId = new Map<string, number>();
+  leagueTables.forEach((teams) => {
+    teams.forEach((team, index) => {
+      leaguePositionByTeamId.set(team.id, index + 1);
+    });
+  });
+
+  const remainingMatchTeams = new Set<string>();
+  gameState.matches.forEach((match) => {
+    if (!match.isPlayed) {
+      remainingMatchTeams.add(match.homeTeamId);
+      remainingMatchTeams.add(match.awayTeamId);
+    }
+  });
+  const markCupTeamsWithMatches = (competition: any) => {
+    if (!competition) return;
+    competition.groups?.forEach((group: any) => {
+      group.matches?.forEach((match: any) => {
+        if (!match.isPlayed) {
+          remainingMatchTeams.add(match.homeTeamId);
+          remainingMatchTeams.add(match.awayTeamId);
+        }
+      });
+    });
+    competition.knockoutMatches?.forEach((match: any) => {
+      if (!match.isPlayed) {
+        remainingMatchTeams.add(match.homeTeamId);
+        remainingMatchTeams.add(match.awayTeamId);
+      }
+    });
+  };
+  markCupTeamsWithMatches(gameState.europeanCup as any);
+  markCupTeamsWithMatches(gameState.europaLeague as any);
+  markCupTeamsWithMatches((gameState as any).conferenceLeague);
+
+  const leagueMultiplierCache = new Map<string, number>();
+  const coefficientMultiplierCache = new Map<string, number>();
+  const getCachedLeagueMultiplier = (leagueId?: string) => {
+    const key = leagueId || "tr";
+    if (!leagueMultiplierCache.has(key)) {
+      leagueMultiplierCache.set(key, getLeagueMultiplier(key));
+    }
+    return leagueMultiplierCache.get(key)!;
+  };
+  const getCachedCoefficientMultiplier = (leagueId?: string) => {
+    const key = leagueId || "default";
+    if (!coefficientMultiplierCache.has(key)) {
+      coefficientMultiplierCache.set(key, getCoefficientMultiplier(key));
+    }
+    return coefficientMultiplierCache.get(key)!;
+  };
+
   // === STADIUM CAPACITY MIGRATION (v2: 120k max system) ===
   // Old formula: 5000 + (level-1)*6000 → level 10 = 59k
   // New formula: 7500 + (level-1)*12500 → level 10 = 120k
@@ -3252,7 +3311,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
   // UPDATE ALL PLAYERS GLOBALLY
   let updatedPlayers = gameState.players.map((p) => {
     const isUserPlayer = p.teamId === gameState.userTeamId;
-    const playerTeam = gameState.teams.find((t) => t.id === p.teamId);
+    const playerTeam = teamsById.get(p.teamId);
 
     let rec = recoveryBase;
     if (!isUserPlayer) {
@@ -3502,7 +3561,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
   // Finance logic from previous version incorporated for localization
   if (userTeam) {
-    const teamPlayers = updatedPlayers.filter((p) => p.teamId === userTeam.id);
+    const teamPlayers = playersByTeam.get(userTeam.id) || [];
     const totalSalaries = teamPlayers.reduce(
       (sum, p) => sum + (p.salary || 0),
       0,
@@ -3512,7 +3571,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     userTeam.wages = Math.round(weeklyWages); // Update team stat
 
     // League Multiplier (includes European success bonus!)
-    const leagueMult = getLeagueMultiplier(userTeam.leagueId || "tr");
+    const leagueMult = getCachedLeagueMultiplier(userTeam.leagueId || "tr");
 
     // BALANCED: Facility costs scale with level exponentially
     // Using 2.0 exponent since max level was reduced to 10 (costs reduced ~40% for sustainability)
@@ -3573,7 +3632,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     const baseTicketPrice =
       LEAGUE_TICKET_PRICES[userTeam.leagueId] ||
       LEAGUE_TICKET_PRICES["default"];
-    const coeffMultiplier = getCoefficientMultiplier(userTeam.leagueId);
+    const coeffMultiplier = getCachedCoefficientMultiplier(userTeam.leagueId);
     const leagueTicketPrice = Math.floor(baseTicketPrice * coeffMultiplier);
 
     // Get league-specific attendance rates
@@ -3674,11 +3733,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     // =====================================================
     // STADIUM CAPACITY FROM LEVEL - Same formula worldwide
-    // Level 1 = 5,000 | Level 25 = 150,000
-    // Each level = +6,000 seats
+    // Level 1 = 7,500 | Level 10 = 120,000
+    // Each level = +12,500 seats
     // =====================================================
-    const STADIUM_MIN = 5000;
-    const STADIUM_CAPACITY_PER_LEVEL = 6000; // ~6,042 rounded
+    const STADIUM_MIN = 7500;
+    const STADIUM_CAPACITY_PER_LEVEL = 12500;
     const effectiveCapacity =
       STADIUM_MIN +
       (userTeam.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
@@ -3700,11 +3759,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     // TV Rights - REALISTIC: Based on real data
     // Turkey: ~€200k/week for big clubs, England: ~€2M/week for big clubs
-    const leaguePosition =
-      gameState.teams
-        .filter((t) => t.leagueId === userTeam.leagueId)
-        .sort((a, b) => b.stats.points - a.stats.points)
-        .findIndex((t) => t.id === userTeam.id) + 1;
+    const leaguePosition = leaguePositionByTeamId.get(userTeam.id) || 1;
 
     // Base TV rights by league (weekly) - BALANCED for fair progression
     // DYNAMIC: TV rights also scale with league coefficient (global viewership follows success)
@@ -3796,7 +3851,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     // --- EMPTY WEEKS / SEASON END FINANCIAL PROTECTION ---
     // If a team has no more matches in the entire season, stop draining their budget
     // This prevents clubs in smaller leagues from going bankrupt during empty weeks
-    const hasMatchesLeft = teamHasRemainingMatches(gameState, userTeam.id);
+    const hasMatchesLeft = remainingMatchTeams.has(userTeam.id);
     let finalWeeklyWages = weeklyWages;
     let finalMaintenance = maintenance;
     let finalStaffCosts = staffCosts;
@@ -3858,8 +3913,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         total: weeklyIncome,
       },
       expenses: {
-        wages: weeklyWages,
-        maintenance,
+        wages: finalWeeklyWages,
+        maintenance: finalMaintenance,
         academy: academyMaint,
         transfers: 0,
         total: weeklyExpenses,
@@ -3920,10 +3975,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       existing.income.total = incomeTotal;
       existing.expenses.total = expenseTotal;
       existing.balance = incomeTotal - expenseTotal;
-      existing.budgetBefore = Math.min(
-        existing.budgetBefore ?? budgetBefore,
-        budgetBefore,
-      );
+      existing.budgetBefore = existing.budgetBefore ?? budgetBefore;
       existing.budgetAfter = userTeam.budget;
     } else {
       userTeam.financials.history.push(financialRecord);
@@ -3937,13 +3989,13 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       tickets: ticketIncome,
       sponsor: sponsorIncome,
       merchandise,
-      tvRights,
+      tvRights: tvRights + prestigeBonus,
       transfers: 0,
       winBonus: 0,
     };
     userTeam.financials.lastWeekExpenses = {
-      wages: weeklyWages,
-      maintenance,
+      wages: finalWeeklyWages,
+      maintenance: finalMaintenance,
       academy: academyMaint,
       transfers: 0,
     };
@@ -4092,31 +4144,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       // Ensure potential isn't lower than overall
       potential = Math.max(potential, baseOverall);
 
-      // === FIX: League-based nationality ===
-      // Convert league ID to main nationality
-      const leagueToCountry: Record<string, string> = {
-        en: "England", es: "Spain", it: "Italy", de: "Germany", fr: "France",
-        tr: "Turkey", pt: "Portugal", nl: "Netherlands", br: "Brazil", ar: "Argentina",
-        us: "USA", mx: "Mexico", jp: "Japan", sa: "Saudi Arabia", kr: "South Korea",
-        cn: "China", au: "Australia", eg: "Egypt", za: "South Africa", ma: "Morocco",
-        ng: "Nigeria", dz: "Algeria", tn: "Tunisia", co: "Colombia", cl: "Chile",
-        uy: "Uruguay", ec: "Ecuador", py: "Paraguay", cr: "Costa Rica", in: "India",
-        id: "Indonesia", my: "Malaysia", gh: "Ghana", sn: "Senegal", ci: "Ivory Coast",
-        ke: "Kenya", sco: "Scotland", be: "Belgium", ru: "Russia", ch: "Switzerland",
-        gr: "Greece", pl: "Poland", cz: "Czech Republic", ro: "Romania", hr: "Croatia",
-        rs: "Serbia", at: "Austria"
-      };
-
-      const mainNat = leagueToCountry[gameState.leagueId] || "England";
-
-      const nationalityPools: Record<string, string[]> = {
-        tr: ["Turkey", "Turkey", "Turkey", "Turkey", "Turkey", "Germany", "France", "Brazil"],
-        en: ["England", "England", "England", "England", "France", "Brazil", "Spain", "Germany", "Nigeria"],
-        es: ["Spain", "Spain", "Spain", "Spain", "Argentina", "Brazil", "Portugal", "France", "Colombia"],
-        default: [mainNat, mainNat, mainNat, mainNat, mainNat, "Brazil", "France", "Argentina", "Spain", "Nigeria"]
-      };
-
-      const pool = nationalityPools[gameState.leagueId] || nationalityPools["default"];
+      const pool = getYouthNationalityPool(userTeam.leagueId || gameState.leagueId || "en");
       const youthNationality = pool[Math.floor(Math.random() * pool.length)];
 
       const youthPlayer = generatePlayer(
@@ -4178,14 +4206,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     // === AI TEAM WEEKLY FINANCES ===
     // Calculate weekly expenses for AI teams (wages, maintenance, staff)
-    const teamPlayers = updatedPlayers.filter((p) => p.teamId === team.id);
+    const teamPlayers = playersByTeam.get(team.id) || [];
     const totalSalaries = teamPlayers.reduce(
       (sum, p) => sum + (p.salary || 0),
       0,
     );
     const weeklyWages = totalSalaries / 52;
 
-    const leagueMult = getLeagueMultiplier(team.leagueId || "tr");
+    const leagueMult = getCachedLeagueMultiplier(team.leagueId || "tr");
 
     // Facility maintenance costs
     const maintenanceDiscount = ["tr", "fr"].includes(team.leagueId)
@@ -4208,11 +4236,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       (0.8 + leagueMult * 0.2);
 
     // Estimate weekly income for AI (simplified - based on reputation and league)
-    const leaguePosition =
-      gameState.teams
-        .filter((t) => t.leagueId === team.leagueId)
-        .sort((a, b) => b.stats.points - a.stats.points)
-        .findIndex((t) => t.id === team.id) + 1;
+    const leaguePosition = leaguePositionByTeamId.get(team.id) || 1;
 
     const baseTvRightsValues: Record<string, number> = {
       en: 850000, es: 600000, de: 550000, it: 500000, fr: 400000,
@@ -4250,14 +4274,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       (team.reputation * 2 + starPlayerBonus) * (0.7 + leagueMult * 0.3) * incomeBoost,
     );
     // DYNAMIC: AI teams also benefit from league coefficient scaling for sponsors
-    const teamCoeffMult = getCoefficientMultiplier(team.leagueId || "default");
+    const teamCoeffMult = getCachedCoefficientMultiplier(team.leagueId || "default");
     const sponsorIncome = team.sponsor
       ? Math.floor(team.sponsor.weeklyIncome * teamCoeffMult * incomeBoost)
       : Math.floor(50000 * Math.sqrt(leagueMult) * teamCoeffMult * incomeBoost);
 
     // Ticket income (simplified - AI teams don't track home/away like user)
-    const STADIUM_MIN = 5000;
-    const STADIUM_CAPACITY_PER_LEVEL = 6000;
+    const STADIUM_MIN = 7500;
+    const STADIUM_CAPACITY_PER_LEVEL = 12500;
     const effectiveCapacity =
       STADIUM_MIN +
       (team.facilities.stadiumLevel - 1) * STADIUM_CAPACITY_PER_LEVEL;
@@ -4274,7 +4298,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       0.5,
     ); // Half of weeks are home
 
-    const hasMatchesLeft = teamHasRemainingMatches(gameState, team.id);
+    const hasMatchesLeft = remainingMatchTeams.has(team.id);
     let finalWeeklyWagesAI = weeklyWages;
     let finalMaintenanceAI = maintenance;
     let finalStaffCostsAI = staffCosts;
@@ -4353,8 +4377,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         total: weeklyIncome,
       },
       expenses: {
-        wages: weeklyWages,
-        maintenance,
+        wages: finalWeeklyWagesAI,
+        maintenance: finalMaintenanceAI,
         academy: academyMaint,
         transfers: 0,
         total: weeklyExpenses,
@@ -4501,10 +4525,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           baseOverall + potentialBuff,
         );
 
+        const youthPool = getYouthNationalityPool(team.leagueId || "en");
         const youthPlayer = generatePlayer(
           team.id,
           pos,
-          "Europe",
+          getRandomItem(youthPool),
           [17, 19],
           [potential, potential],
           undefined,
@@ -4702,6 +4727,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     (t) => t.id !== gameState.userTeamId,
   );
 
+  const playersByPosition = new Map<Position, Player[]>();
+  updatedPlayers.forEach((player) => {
+    if (!playersByPosition.has(player.position)) {
+      playersByPosition.set(player.position, []);
+    }
+    playersByPosition.get(player.position)!.push(player);
+  });
+
   let weeklyTransferCount = 0;
   let weeklyTransferSpent = 0;
 
@@ -4714,7 +4747,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
   // Crisis teams (low squad size) are always processed regardless of setting
   const aiThrottleRate = aiTransferActivity === 'HIGH' ? 0.65 : aiTransferActivity === 'LOW' ? 0.20 : 0.35;
   const activeAiTeams = allAiTeams.filter((t) => {
-    const squadSize = updatedPlayers.filter((p) => p.teamId === t.id).length;
+    const squadSize = (playersByTeam.get(t.id) || []).length;
     if (squadSize < 18) return true; // Crisis: always active
     return Math.random() < aiThrottleRate;
   });
@@ -4744,7 +4777,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     if (!isTransferWindow) return; // Stop all AI transfer activity outside windows
 
-    const teamPlayers = updatedPlayers.filter((p) => p.teamId === aiTeam.id);
+    const teamPlayers = playersByTeam.get(aiTeam.id) || [];
 
     // ========== 1. ADVANCED SQUAD ANALYSIS (AI BRAIN) ==========
     // Calculate average squad quality to set a baseline standard
@@ -4807,20 +4840,24 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
       // Look for players who fit this specific role
       // BUYER QUALITY GATE: Prevent weak teams from buying world-class players
-      const availablePlayers = updatedPlayers.filter(
-        (p) =>
-          p.position === topNeed.position &&
-          p.teamId !== aiTeam.id &&
-          p.teamId !== gameState.userTeamId && // Don't poach from user automatically
-          !transferredPlayerIds.has(p.id) && // FIX: Exclude recent transfers
-          !rejectedThisWeek.has(p.id) && // ANTI-SPAM: Already rejected this week
-          gameState.currentWeek - (p.lastTransferWeek || -99) >= 15 && // ANTI-LOOP: 15 week cooldown
-          // CONTRACT PROTECTION: AI can only buy listed players or those with expiring contracts (≤1 yr)
-          // This prevents top European clubs from systematically draining mid-tier league talent
-          (p.isTransferListed || (p.contractYears ?? 99) <= 1 || p.teamId === 'FREE_AGENT') &&
-          p.overall >= topNeed.targetRating - 2 && // AMBITION: Must be closer to target
-          (aiTeam.reputation > 8500 || aiTeam.budget > 300_000_000 || p.overall <= avgOverall + 15) && // QUALITY GATE: Big clubs and rich clubs buy the best
-          p.value < aiTeam.budget * 0.6, // Spend up to 60% of cash (leave room for multiple buys)
+      const richOrEliteBuyer = aiTeam.reputation >= 8200 || aiTeam.budget >= 180_000_000;
+      const desperateUpgrade = topNeed.urgency >= buyUrgencyThreshold + 15;
+      const availablePlayers = (playersByPosition.get(topNeed.position) || []).filter(
+        (p) => {
+          if (p.teamId === aiTeam.id || p.teamId === gameState.userTeamId) return false;
+          if (transferredPlayerIds.has(p.id) || rejectedThisWeek.has(p.id)) return false;
+          if (gameState.currentWeek - (p.lastTransferWeek || -99) < 15) return false;
+
+          const marketAccessible = p.isTransferListed || (p.contractYears ?? 99) <= 1 || p.teamId === 'FREE_AGENT';
+          const premiumAccessible = richOrEliteBuyer && desperateUpgrade && p.overall >= topNeed.targetRating && p.value < aiTeam.budget * 0.75;
+
+          if (!marketAccessible && !premiumAccessible) return false;
+          if (p.overall < topNeed.targetRating - 2) return false;
+          if (!(aiTeam.reputation > 8500 || aiTeam.budget > 300_000_000 || p.overall <= avgOverall + 15 || premiumAccessible)) return false;
+          if (p.value >= aiTeam.budget * (premiumAccessible ? 0.75 : 0.6)) return false;
+
+          return true;
+        },
       );
 
       if (availablePlayers.length > 0) {
@@ -4841,27 +4878,27 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
         // Top target is the best FIT, not necessarily highest OVR
         const targetPlayer = sortedTargets[0].player;
-        const sellingTeam = gameState.teams.find(
-          (t) => t.id === targetPlayer.teamId,
-        );
+        const sellingTeam = teamsById.get(targetPlayer.teamId);
 
         // Max offer shouldn't exceed transfer budget limit (80%)
         if (sellingTeam && targetPlayer.value < aiTeam.budget * 0.8) {
           // === REJECTION LOGIC FIX ===
           // Selling team may reject the offer based on player importance, but we make sure transfers CAN happen
-          const sellingTeamPlayers = updatedPlayers.filter(
-            (p) => p.teamId === sellingTeam.id,
-          );
+          const sellingTeamPlayers = playersByTeam.get(sellingTeam.id) || [];
           const isStarter = targetPlayer.lineup === "STARTING";
           const positionPlayersCount = sellingTeamPlayers.filter(
             (p) => p.position === targetPlayer.position,
           ).length;
           const wouldLeaveShort = positionPlayersCount <= 3;
 
+          const marketAccessible = targetPlayer.isTransferListed || (targetPlayer.contractYears ?? 99) <= 1 || targetPlayer.teamId === 'FREE_AGENT';
+          const premiumRaid = !marketAccessible && richOrEliteBuyer && desperateUpgrade;
+
           let rejectChance = 0.1; // Base 10%
           if (isStarter) rejectChance += 0.25; // Starter
           if (wouldLeaveShort) rejectChance += 0.3; // Depth issue
           if (!targetPlayer.isTransferListed) rejectChance += 0.2; // Not listed
+          if (premiumRaid) rejectChance += 0.15; // Protected player raid
 
           // Player willingness
           const repDiff = aiTeam.reputation - sellingTeam.reputation;
@@ -4907,7 +4944,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
             rejectedThisWeek.add(targetPlayer.id);
           } else {
             // Offer structure: AI now offers closer to / slightly over market value
-            const offerMultiplier = 0.95 + Math.random() * 0.45; // 95-140% of value
+            let offerMultiplier = premiumRaid
+              ? 1.20 + Math.random() * 0.55
+              : 0.95 + Math.random() * 0.45;
+            if (marketAccessible && !targetPlayer.isTransferListed && (targetPlayer.contractYears ?? 99) > 1) {
+              offerMultiplier += 0.08;
+            }
             const transferFee = Math.floor(
               targetPlayer.value * offerMultiplier,
             );
@@ -4961,7 +5003,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
             }
 
             // ★ BUY-THEN-SELL SWAP: After buying, sell worst player at same position ★
-            const currentTeamPlayers = updatedPlayers.filter(p => p.teamId === aiTeam.id);
+            const currentTeamPlayers = playersByTeam.get(aiTeam.id) || [];
             if (currentTeamPlayers.length > 22) {
               const samePosPlayers = currentTeamPlayers
                 .filter(p => p.position === targetPlayer.position && p.id !== targetPlayer.id && p.lineup !== "STARTING")
@@ -5091,10 +5133,17 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           aiTeam.tactic.formation = newFormation;
 
           // Simple style adjustment based on formation
-          // 5ATB -> Counter, 3ATB -> Attacking, etc.
+          // Keep formation identity aligned so teams don't collapse back into the same two styles.
           if (newFormation.includes("5-")) aiTeam.tactic.style = "Counter";
-          else if (newFormation.includes("4-3-3"))
+          else if (newFormation === TacticType.T_433 || newFormation === TacticType.T_343)
             aiTeam.tactic.style = "HighPress";
+          else if (newFormation === TacticType.T_4231 || newFormation === TacticType.T_4321)
+            aiTeam.tactic.style = "Possession";
+          else if (newFormation === TacticType.T_41212)
+            aiTeam.tactic.style = "Attacking";
+          else if (newFormation === TacticType.T_451 || newFormation === TacticType.T_4141)
+            aiTeam.tactic.style = "Defensive";
+          else aiTeam.tactic.style = "Balanced";
 
           // Add message for user if it's a major rival
           if (aiTeam.reputation > 7000) {
@@ -5196,14 +5245,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     teamPlayers.forEach((player) => {
       if (player.contractYears <= 1 && player.overall >= avgOverall - 5) {
         // Important player with expiring contract - renew! (also renew players slightly below avg to prevent squad holes)
-        const renewalCost = Math.floor(player.value * 0.05); // 5% of value as bonus
-        if (aiTeam.budget > renewalCost * 1.5) {
-          // Lowered threshold: budget just needs to cover the bonus comfortably (was 3x, too strict for mid-tier clubs)
+        if (aiTeam.budget > 0) {
           player.contractYears += 2 + Math.floor(Math.random() * 2); // 2-3 year extension
-          // Deduct small signing bonus
-          updatedTeams = updatedTeams.map((t) =>
-            t.id === aiTeam.id ? { ...t, budget: t.budget - renewalCost } : t,
-          );
         }
       }
     });
@@ -5350,30 +5393,49 @@ export const getLastLeagueWeek = (matches: Match[]): number => {
 export const SUPER_CUP_WEEK = 39;
 
 // === AI TACTICS SELECTION ===
-export const autoPickTactics = (team: Team, opponent?: Team) => {
+export const autoPickTactics = (team: Team, opponent?: Team, players: Player[] = []) => {
   // 1. Determine Mentality based on relative strength
   // Use reputation as proxy for overall strength (1000-10000 range)
   const myRating = team.reputation || 4000;
   const oppRating = opponent?.reputation || 4000;
   const strengthDiff = (myRating - oppRating) / 100; // Normalize to approx -50 to 50 range
+  const squad = players.filter((p) => p.teamId === team.id && p.lineup === 'STARTING');
+  const average = (selector: (p: Player) => number, fallback = 50) => {
+    if (squad.length === 0) return fallback;
+    return squad.reduce((sum, player) => sum + selector(player), 0) / squad.length;
+  };
+  const pace = average((p) => ((p.attributes.speed || 50) + (p.attributes.stamina || 50)) / 2);
+  const craft = average((p) => ((p.attributes.vision || 50) + (p.attributes.passing || 50) + (p.attributes.dribbling || 50)) / 3);
+  const solidity = average((p) => ((p.attributes.positioning || 50) + (p.attributes.tackling || 50) + (p.attributes.strength || 50)) / 3);
+  const finishing = average((p) => p.attributes.finishing || 50);
+  const wideThreat = average((p) => ((p.attributes.speed || 50) + (p.attributes.dribbling || 50)) / 2);
+  const formation = team.tactic.formation || TacticType.T_442;
+  const formationText = String(formation);
 
   let mentality: "Attacking" | "Balanced" | "Defensive" = "Balanced";
   if (strengthDiff > 10) mentality = "Attacking";
   else if (strengthDiff < -10) mentality = "Defensive";
 
-  // 2. Determine Style based on players or randomness
-  // If team has no specific style preference, pick one suitable for mentality
-  let style = team.tactic.style || "Balanced";
-  if (style === "Balanced" || Math.random() < 0.3) {
-    if (mentality === "Attacking") {
-      style = Math.random() < 0.6 ? "Attacking" : "Possession";
-    } else if (mentality === "Defensive") {
-      style = Math.random() < 0.7 ? "Defensive" : "Counter";
-    } else {
-      const styles = ["Attacking", "Possession", "Counter", "Balanced"];
-      style = styles[Math.floor(Math.random() * styles.length)] as any;
-    }
+  // 2. Determine Style using the same high-level ideas as the new tactic UI.
+  let style: "Attacking" | "Possession" | "Counter" | "Balanced" | "Defensive" = "Balanced";
+  if (formationText.includes('5-')) {
+    style = pace > 70 ? 'Counter' : 'Defensive';
+  } else if (formation === TacticType.T_433 || formation === TacticType.T_343) {
+    style = pace > 72 ? 'Attacking' : craft > 72 ? 'Possession' : 'Balanced';
+  } else if (formation === TacticType.T_4231 || formation === TacticType.T_4321) {
+    style = craft > 71 ? 'Possession' : 'Balanced';
+  } else if (formation === TacticType.T_541 || formation === TacticType.T_451 || formation === TacticType.T_4141) {
+    style = mentality === 'Attacking' ? 'Counter' : 'Defensive';
+  } else if (mentality === 'Attacking') {
+    style = pace > 70 ? 'Attacking' : 'Possession';
+  } else if (mentality === 'Defensive') {
+    style = solidity > 68 ? 'Defensive' : 'Counter';
+  } else {
+    style = craft > 72 ? 'Possession' : pace > 71 ? 'Counter' : 'Balanced';
   }
+
+  if (strengthDiff > 14 && style === 'Defensive') style = 'Counter';
+  if (strengthDiff < -14 && style === 'Attacking') style = 'Balanced';
 
   // 3. Set Aggression
   // Default to Normal, but vary based on match importance or team history?
@@ -5384,6 +5446,58 @@ export const autoPickTactics = (team: Team, opponent?: Team) => {
   if (strengthDiff < -15 && Math.random() < 0.3) aggression = "Reckless"; // Desperate
   if (strengthDiff > 15 && Math.random() < 0.3) aggression = "Safe"; // Comfortable
 
+  let passingStyle: TeamTactic['passingStyle'] = 'Mixed';
+  let tempo: TeamTactic['tempo'] = 'Normal';
+  let width: TeamTactic['width'] = 'Balanced';
+  let defensiveLine: TeamTactic['defensiveLine'] = 'Balanced';
+  let pressingIntensity: TeamTactic['pressingIntensity'] = 'Balanced';
+  const instructions: string[] = [];
+
+  if (style === 'Possession') {
+    passingStyle = 'Short';
+    tempo = pace > 72 ? 'Normal' : 'Slow';
+    width = wideThreat > 74 ? 'Balanced' : 'Narrow';
+    defensiveLine = mentality === 'Defensive' ? 'Balanced' : 'Balanced';
+    pressingIntensity = pace > 71 ? 'Balanced' : 'StandOff';
+    instructions.push('WorkBallIntoBox');
+    if (craft > 74 && (formation === TacticType.T_433 || formation === TacticType.T_4231 || formation === TacticType.T_4321)) {
+      instructions.push('RoamFromPosition');
+    }
+  } else if (style === 'Counter') {
+    passingStyle = 'Direct';
+    tempo = 'Fast';
+    width = wideThreat > 69 ? 'Wide' : 'Balanced';
+    defensiveLine = mentality === 'Attacking' ? 'Balanced' : 'Deep';
+    pressingIntensity = pace > 73 && mentality !== 'Defensive' ? 'HighPress' : 'StandOff';
+  } else if (style === 'Attacking') {
+    passingStyle = craft > 70 ? 'Mixed' : 'Direct';
+    tempo = 'Fast';
+    width = wideThreat > 70 ? 'Wide' : 'Balanced';
+    defensiveLine = pace > 70 ? 'High' : 'Balanced';
+    pressingIntensity = pace > 71 ? 'HighPress' : 'Balanced';
+    if (finishing > 76 && craft < 70) instructions.push('ShootOnSight');
+    if (craft > 73) instructions.push('RoamFromPosition');
+  } else if (style === 'Defensive') {
+    passingStyle = pace > 68 ? 'Direct' : 'Mixed';
+    tempo = 'Normal';
+    width = formationText.includes('5-') ? 'Narrow' : 'Balanced';
+    defensiveLine = 'Deep';
+    pressingIntensity = 'StandOff';
+  } else {
+    passingStyle = craft > 70 ? 'Mixed' : 'Direct';
+    tempo = pace > 71 ? 'Fast' : 'Normal';
+    width = wideThreat > 72 ? 'Wide' : 'Balanced';
+    defensiveLine = mentality === 'Defensive' ? 'Deep' : 'Balanced';
+    pressingIntensity = pace > 74 && solidity > 67 ? 'HighPress' : 'Balanced';
+    if (finishing > 78 && craft < 69) instructions.push('ShootOnSight');
+  }
+
+  if (mentality === 'Attacking' && pressingIntensity === 'HighPress' && pace > 76 && solidity > 70) {
+    pressingIntensity = 'Gegenpress';
+  }
+
+  const dedupedInstructions = Array.from(new Set(instructions));
+
   // 4. Apply to Team Tactic
   // We update the team object directly for this match context
   team.tactic = {
@@ -5391,21 +5505,18 @@ export const autoPickTactics = (team: Team, opponent?: Team) => {
     mentality,
     style: style as any,
     aggression,
-    // Width defaults based on style
-    width:
-      style === "Attacking"
-        ? "Wide"
-        : style === "Possession"
-          ? "Narrow"
-          : "Normal",
-    // Defensive Line
-    defensiveLine:
-      mentality === "Attacking"
-        ? "High"
-        : mentality === "Defensive"
-          ? "Deep"
-          : "Normal",
+    width,
+    defensiveLine,
+    passingStyle,
+    tempo,
+    pressingIntensity,
+    marking: 'Zonal',
+    instructions: dedupedInstructions,
   };
+
+  if (players.length > 0) {
+    assignAIPlayerInstructions(team.tactic, players);
+  }
 
   return team;
 };
@@ -6300,9 +6411,17 @@ export const processSeasonEnd = (gameState: GameState) => {
         }
       } else {
         // AI Logic: Renew key players, release others
-        if (overall > 72) {
-          contractYears = getRandomInt(1, 3); // Auto renew
+        const aiCurrentTeam = updatedTeams.find((t) => t.id === p.teamId) || gameState.teams.find((t) => t.id === p.teamId);
+        const aiSquad = gameState.players.filter((pl) => pl.teamId === p.teamId);
+        const squadAverage = aiSquad.reduce((sum, pl) => sum + pl.overall, 0) / Math.max(1, aiSquad.length);
+        const isStarter = p.lineup === 'STARTING';
+        const keepThreshold = Math.max(68, Math.floor(squadAverage - (aiCurrentTeam && aiCurrentTeam.reputation > 8000 ? 3 : 5)));
+
+        if (overall >= keepThreshold || isStarter) {
+          contractYears = getRandomInt(1, 3); // Auto renew real contributors
           newContractSigned = true; // NEW CONTRACT = NEW SALARY
+        } else if (overall >= Math.max(62, keepThreshold - 4)) {
+          contractYears = 1; // Fringe players become market-accessible next window
         } else {
           teamId = "FREE_AGENT";
         }
@@ -6370,6 +6489,10 @@ export const processSeasonEnd = (gameState: GameState) => {
       salary: finalSalary, // Contract-locked salary (only updates on new contract)
       contractYears,
       teamId,
+      isTransferListed:
+        teamId !== gameState.userTeamId && teamId !== 'FREE_AGENT' && contractYears <= 1
+          ? true
+          : p.isTransferListed,
       stats: {
         goals: 0,
         assists: 0,

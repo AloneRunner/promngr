@@ -17,6 +17,81 @@ export interface TacticalPreset {
   tactic: Partial<TeamTactic>;
 }
 
+type AttackApproach = "PATIENT" | "BALANCED" | "VERTICAL" | "FLUID";
+type DefenseApproach = "LOW_BLOCK" | "MID_BLOCK" | "FRONT_FOOT" | "HUNT";
+
+const inferAttackApproach = (tactic: TeamTactic): AttackApproach => {
+  const instructions = tactic.instructions || [];
+  if (instructions.includes("RoamFromPosition")) return "FLUID";
+  if (
+    tactic.style === "Counter" ||
+    tactic.passingStyle === "Direct" ||
+    tactic.passingStyle === "LongBall"
+  ) {
+    return "VERTICAL";
+  }
+  if (
+    tactic.style === "Possession" ||
+    tactic.passingStyle === "Short" ||
+    tactic.tempo === "Slow"
+  ) {
+    return "PATIENT";
+  }
+  return "BALANCED";
+};
+
+const inferDefenseApproach = (tactic: TeamTactic): DefenseApproach => {
+  const press = tactic.pressingIntensity || "Balanced";
+  const line = tactic.defensiveLine || "Balanced";
+
+  if (press === "Gegenpress" || (press === "HighPress" && line === "High")) {
+    return "HUNT";
+  }
+  if (press === "HighPress") return "FRONT_FOOT";
+  if (press === "StandOff" || line === "Deep") return "LOW_BLOCK";
+  return "MID_BLOCK";
+};
+
+const getInstructions = (tactic: Partial<TeamTactic> | TeamTactic): string[] =>
+  [...(tactic.instructions || [])].sort();
+
+const sameInstructions = (
+  tacticA: Partial<TeamTactic> | TeamTactic,
+  tacticB: Partial<TeamTactic> | TeamTactic,
+): boolean => {
+  const a = getInstructions(tacticA);
+  const b = getInstructions(tacticB);
+  return a.length === b.length && a.every((item, idx) => item === b[idx]);
+};
+
+const scorePresetMatch = (tactic: TeamTactic, presetTactic: Partial<TeamTactic>): number => {
+  let score = 0;
+
+  if (tactic.style === presetTactic.style) score += 3;
+  if (tactic.passingStyle === presetTactic.passingStyle) score += 3;
+  if (tactic.pressingIntensity === presetTactic.pressingIntensity) score += 3;
+  if (tactic.defensiveLine === presetTactic.defensiveLine) score += 3;
+  if (tactic.width === presetTactic.width) score += 2;
+  if (tactic.tempo === presetTactic.tempo) score += 2;
+  if (tactic.marking === presetTactic.marking) score += 1;
+  if (tactic.aggression === presetTactic.aggression) score += 1;
+  if (sameInstructions(tactic, presetTactic)) score += 2;
+
+  const presetAsTeamTactic = {
+    ...tactic,
+    ...presetTactic,
+  } as TeamTactic;
+
+  if (inferAttackApproach(tactic) === inferAttackApproach(presetAsTeamTactic)) {
+    score += 3;
+  }
+  if (inferDefenseApproach(tactic) === inferDefenseApproach(presetAsTeamTactic)) {
+    score += 4;
+  }
+
+  return score;
+};
+
 export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
   Gegenpress: {
     name: "Gegenpress",
@@ -30,7 +105,7 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
       passingStyle: "Direct",
       marking: "Zonal",
       pressingIntensity: "Gegenpress",
-      instructions: ["ShootOnSight"],
+      instructions: [],
     },
   },
   TikiTaka: {
@@ -91,7 +166,7 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
       passingStyle: "LongBall",
       marking: "Man",
       pressingIntensity: "StandOff",
-      instructions: ["ShootOnSight"],
+      instructions: [],
     },
   },
   CounterAttack: {
@@ -106,7 +181,7 @@ export const TACTICAL_PRESETS: Record<PresetKey, TacticalPreset> = {
       passingStyle: "Direct",
       marking: "Zonal",
       pressingIntensity: "StandOff",
-      instructions: ["ShootOnSight"],
+      instructions: [],
     },
   },
   ParkTheBus: {
@@ -172,6 +247,8 @@ export const applyPreset = (
 
 // Helper: Check if current tactic matches a preset
 export const detectPreset = (tactic: TeamTactic): PresetKey | "Custom" => {
+  let bestMatch: { key: PresetKey; score: number } | null = null;
+
   for (const [key, preset] of Object.entries(TACTICAL_PRESETS)) {
     const p = preset.tactic;
     if (
@@ -189,7 +266,17 @@ export const detectPreset = (tactic: TeamTactic): PresetKey | "Custom" => {
     ) {
       return key as PresetKey;
     }
+
+    const score = scorePresetMatch(tactic, p);
+    if (!bestMatch || score > bestMatch.score) {
+      bestMatch = { key: key as PresetKey, score };
+    }
   }
+
+  if (bestMatch && bestMatch.score >= 18) {
+    return bestMatch.key;
+  }
+
   return "Custom";
 };
 

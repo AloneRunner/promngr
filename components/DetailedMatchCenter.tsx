@@ -1,0 +1,2009 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Match, Team, Player, MatchEventType, TeamTactic, Translation } from '../types';
+import { Play, Pause, X, Volume2, VolumeX, Settings, Palette, Camera } from 'lucide-react';
+import { simulateTick, getLivePlayerStamina, getSubstitutedOutPlayerIds } from '../services/engine';
+import { calculateEffectiveRating } from '../services/MatchEngine';
+import { soundManager } from '../services/soundManager';
+import { TeamManagement } from './TeamManagement';
+import { TeamLogo } from './TeamLogo';
+
+interface DetailedMatchCenterProps {
+    match: Match;
+    homeTeam: Team;
+    awayTeam: Team;
+    homePlayers: Player[];
+    awayPlayers: Player[];
+    onSync: (matchId: string, result: any) => void;
+    onFinish: (matchId: string) => void;
+    onInstantFinish: (matchId: string) => void;
+    onSubstitute: (playerInId: string, playerOutId: string) => void;
+    onUpdateTactic: (tactic: TeamTactic, context?: { minute: number; score: { home: number; away: number } }, targetTeamId?: string) => void;
+    onAutoFix: () => void;
+    userTeamId: string;
+    t: Translation;
+    debugLogs: string[];
+    onPlayerClick: (player: Player) => void;
+}
+
+type WakeLockSentinelLike = {
+    released?: boolean;
+    release: () => Promise<void>;
+    addEventListener?: (type: 'release', listener: () => void) => void;
+};
+
+type NavigatorWithWakeLock = Navigator & {
+    wakeLock?: {
+        request: (type: 'screen') => Promise<WakeLockSentinelLike>;
+    };
+};
+
+// Canvas resolution for sprite rendering
+const CANVAS_W = 1280;
+const CANVAS_H = 640;
+const PITCH_MARGIN = 40;
+
+// 2.5D Perspective settings
+const PERSPECTIVE_RATIO = 0.6;
+const PERSPECTIVE_SCALE = 0.30;
+
+// Pitch colors
+const PITCH_COLOR_1 = '#1a472a';
+const PITCH_COLOR_2 = '#235c36';
+const LINE_COLOR = 'rgba(255, 255, 255, 0.85)';
+
+// Motor pitch dimensions
+const ENGINE_PITCH_LENGTH = 105;
+const ENGINE_PITCH_WIDTH = 68;
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+const shortestAngleDelta = (from: number, to: number) => {
+    let delta = (to - from + Math.PI) % (Math.PI * 2);
+    if (delta < 0) delta += Math.PI * 2;
+    return delta - Math.PI;
+};
+
+const normalizeCoords = (x: number, y: number): { x: number, y: number } => {
+    return {
+        x: (x / ENGINE_PITCH_LENGTH) * 100,
+        y: (y / ENGINE_PITCH_WIDTH) * 100
+    };
+};
+
+// Calculate 3D to 2D screen coordinates with perspective
+const toScreenDeep = (xPct: number, yPct: number, z: number = 0) => {
+    const fieldW = CANVAS_W - (PITCH_MARGIN * 2);
+    const fieldH = (CANVAS_H - (PITCH_MARGIN * 2)) * PERSPECTIVE_RATIO;
+
+    // 0 is top (far), 1 is bottom (near)
+    const yNorm = yPct / 100;
+
+    // Perspective narrows the top of the field
+    const perspFactor = 1 - (1 - yNorm) * PERSPECTIVE_SCALE;
+    const centerX = CANVAS_W / 2;
+    const rawX = PITCH_MARGIN + (xPct / 100) * fieldW;
+
+    // Apply perspective to X
+    const screenX = centerX + (rawX - centerX) * perspFactor;
+
+    // Apply perspective to Y
+    const screenYRaw = PITCH_MARGIN + yNorm * fieldH;
+    const verticalCenterOffset = (CANVAS_H - (fieldH + PITCH_MARGIN * 2)) / 2;
+    const finalScreenY = screenYRaw + verticalCenterOffset + (PITCH_MARGIN / 2);
+
+    // Z translation (upwards on screen is -Y)
+    const zPixelScale = 12; // pixels per 1 unit of z
+    const depthScale = 0.7 + yNorm * 0.3; // things in back are smaller
+
+    return {
+        x: screenX,
+        y: finalScreenY - (z * zPixelScale * depthScale),
+        groundY: finalScreenY,
+        scale: depthScale
+    };
+};
+
+// Draw full 3D pitch with lines and goals
+const drawPitch3D = (ctx: CanvasRenderingContext2D) => {
+    // Deep background
+    ctx.fillStyle = '#1e293b'; // slate-800
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+    const tl = toScreenDeep(0, 0);
+    const tr = toScreenDeep(100, 0);
+    const br = toScreenDeep(100, 100);
+    const bl = toScreenDeep(0, 100);
+
+    // ————— STADIUM STANDS —————
+    const standColors = [
+        '#c0392b','#e74c3c','#2980b9','#3498db',
+        '#f1c40f','#ecf0f1','#95a5a6','#27ae60','#8e44ad','#d35400'
+    ];
+    const drawCrowdFill = (corners: {x:number,y:number}[], seedBase: number) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(corners[0].x, corners[0].y);
+        ctx.lineTo(corners[1].x, corners[1].y);
+        ctx.lineTo(corners[2].x, corners[2].y);
+        ctx.lineTo(corners[3].x, corners[3].y);
+        ctx.clip();
+        const minX = Math.min(...corners.map(c=>c.x));
+        const maxX = Math.max(...corners.map(c=>c.x));
+        const minY = Math.min(...corners.map(c=>c.y));
+        const maxY = Math.max(...corners.map(c=>c.y));
+        for (let gy = minY + 4; gy < maxY - 2; gy += 9) {
+            for (let gx = minX + 4; gx < maxX - 2; gx += 9) {
+                const ci = Math.floor(Math.abs(Math.sin(seedBase + gy * 0.13 + gx * 0.09) * standColors.length)) % standColors.length;
+                ctx.fillStyle = standColors[ci] + 'bb';
+                ctx.fillRect(gx - 2.5, gy - 3.5, 5, 7);
+            }
+        }
+        ctx.restore();
+    };
+
+    // Far stand (above top edge of pitch)
+    const farOverhang = 28;
+    const farH = 62;
+    const fsL = { x: tl.x - farOverhang, y: tl.y };
+    const fsR = { x: tr.x + farOverhang, y: tr.y };
+    const fsLTop = { x: tl.x - farOverhang - 8, y: tl.y - farH };
+    const fsRTop = { x: tr.x + farOverhang + 8, y: tr.y - farH };
+    const farG = ctx.createLinearGradient(0, fsLTop.y, 0, fsL.y);
+    farG.addColorStop(0, '#07101c');
+    farG.addColorStop(1, '#142030');
+    ctx.fillStyle = farG;
+    ctx.beginPath();
+    ctx.moveTo(fsLTop.x, fsLTop.y); ctx.lineTo(fsRTop.x, fsRTop.y);
+    ctx.lineTo(fsR.x, fsR.y); ctx.lineTo(fsL.x, fsL.y);
+    ctx.fill();
+    drawCrowdFill([fsLTop, fsRTop, fsR, fsL], 1);
+    // Tier separator lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+    ctx.lineWidth = 0.8;
+    for (let r = 1; r <= 5; r++) {
+        const t = r / 6;
+        ctx.beginPath();
+        ctx.moveTo(lerp(fsL.x, fsLTop.x, t), lerp(fsL.y, fsLTop.y, t));
+        ctx.lineTo(lerp(fsR.x, fsRTop.x, t), lerp(fsR.y, fsRTop.y, t));
+        ctx.stroke();
+    }
+    // Roof edge
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(fsLTop.x, fsLTop.y); ctx.lineTo(fsRTop.x, fsRTop.y);
+    ctx.stroke();
+
+    // Left stand (left gutter area)
+    const leftG = ctx.createLinearGradient(0, 0, tl.x, 0);
+    leftG.addColorStop(0, '#07101c');
+    leftG.addColorStop(1, '#142030');
+    ctx.fillStyle = leftG;
+    ctx.beginPath();
+    ctx.moveTo(0, tl.y); ctx.lineTo(tl.x, tl.y);
+    ctx.lineTo(bl.x, bl.y); ctx.lineTo(0, bl.y);
+    ctx.fill();
+    drawCrowdFill([{x:0,y:tl.y},{x:tl.x,y:tl.y},{x:bl.x,y:bl.y},{x:0,y:bl.y}], 100);
+    // Column lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+    ctx.lineWidth = 0.8;
+    for (let c = 1; c <= 4; c++) {
+        const t = c / 5;
+        ctx.beginPath();
+        ctx.moveTo(lerp(0, tl.x, t), tl.y);
+        ctx.lineTo(lerp(0, bl.x, t), bl.y);
+        ctx.stroke();
+    }
+
+    // Right stand (right gutter area)
+    const rightG = ctx.createLinearGradient(tr.x, 0, CANVAS_W, 0);
+    rightG.addColorStop(0, '#142030');
+    rightG.addColorStop(1, '#07101c');
+    ctx.fillStyle = rightG;
+    ctx.beginPath();
+    ctx.moveTo(tr.x, tr.y); ctx.lineTo(CANVAS_W, tr.y);
+    ctx.lineTo(CANVAS_W, br.y); ctx.lineTo(br.x, br.y);
+    ctx.fill();
+    drawCrowdFill([{x:tr.x,y:tr.y},{x:CANVAS_W,y:tr.y},{x:CANVAS_W,y:br.y},{x:br.x,y:br.y}], 200);
+    // Column lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+    ctx.lineWidth = 0.8;
+    for (let c = 1; c <= 4; c++) {
+        const t = c / 5;
+        ctx.beginPath();
+        ctx.moveTo(lerp(tr.x, CANVAS_W, t), tr.y);
+        ctx.lineTo(lerp(br.x, CANVAS_W, t), br.y);
+        ctx.stroke();
+    }
+
+    // Near stand (below bottom edge, closest to viewer — appears largest)
+    const nearH = 48;
+    const nsLBot = { x: 0, y: Math.min(bl.y + nearH, CANVAS_H) };
+    const nsRBot = { x: CANVAS_W, y: Math.min(br.y + nearH, CANVAS_H) };
+    const nearG = ctx.createLinearGradient(0, bl.y, 0, nsLBot.y);
+    nearG.addColorStop(0, '#142030');
+    nearG.addColorStop(1, '#07101c');
+    ctx.fillStyle = nearG;
+    ctx.beginPath();
+    ctx.moveTo(bl.x, bl.y); ctx.lineTo(br.x, br.y);
+    ctx.lineTo(nsRBot.x, nsRBot.y); ctx.lineTo(nsLBot.x, nsLBot.y);
+    ctx.fill();
+    drawCrowdFill([{x:bl.x,y:bl.y},{x:br.x,y:br.y},{x:nsRBot.x,y:nsRBot.y},{x:nsLBot.x,y:nsLBot.y}], 300);
+    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+    ctx.lineWidth = 0.8;
+    for (let r = 1; r <= 3; r++) {
+        const t = r / 4;
+        ctx.beginPath();
+        ctx.moveTo(lerp(bl.x, nsLBot.x, t), lerp(bl.y, nsLBot.y, t));
+        ctx.lineTo(lerp(br.x, nsRBot.x, t), lerp(br.y, nsRBot.y, t));
+        ctx.stroke();
+    }
+    // ————— END STADIUM STANDS —————
+
+    ctx.save();
+
+    // Grass base (Pitch boundary)
+    ctx.beginPath();
+    ctx.moveTo(tl.x, tl.y);
+    ctx.lineTo(tr.x, tr.y);
+    ctx.lineTo(br.x, br.y);
+    ctx.lineTo(bl.x, bl.y);
+    ctx.clip(); // Clip everything else to stay inside grass or just fill 
+
+    // Draw striped grass
+    const stripeCount = 14;
+    for (let i = 0; i < stripeCount; i++) {
+        const pct1 = (i / stripeCount) * 100;
+        const pct2 = ((i + 1) / stripeCount) * 100;
+
+        const sTop1 = toScreenDeep(pct1, 0);
+        const sTop2 = toScreenDeep(pct2, 0);
+        const sBot1 = toScreenDeep(pct1, 100);
+        const sBot2 = toScreenDeep(pct2, 100);
+
+        ctx.fillStyle = i % 2 === 0 ? PITCH_COLOR_1 : PITCH_COLOR_2;
+        ctx.beginPath();
+        ctx.moveTo(sTop1.x, sTop1.y);
+        ctx.lineTo(sTop2.x, sTop2.y);
+        ctx.lineTo(sBot2.x, sBot2.y);
+        ctx.lineTo(sBot1.x, sBot1.y);
+        ctx.fill();
+    }
+
+    ctx.restore();
+
+    // Lines
+    ctx.strokeStyle = LINE_COLOR;
+    ctx.lineWidth = 2.5;
+
+    // Outer Bound
+    ctx.beginPath();
+    ctx.moveTo(tl.x, tl.y);
+    ctx.lineTo(tr.x, tr.y);
+    ctx.lineTo(br.x, br.y);
+    ctx.lineTo(bl.x, bl.y);
+    ctx.closePath();
+    ctx.stroke();
+
+    // Center line
+    const midTop = toScreenDeep(50, 0);
+    const midBot = toScreenDeep(50, 100);
+    ctx.beginPath();
+    ctx.moveTo(midTop.x, midTop.y);
+    ctx.lineTo(midBot.x, midBot.y);
+    ctx.stroke();
+
+    // Center circle (ellipse in perspective)
+    const centerSpot = toScreenDeep(50, 50);
+    ctx.beginPath();
+    ctx.ellipse(centerSpot.x, centerSpot.y, 60, 60 * PERSPECTIVE_RATIO * 0.35, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = LINE_COLOR;
+    ctx.beginPath();
+    ctx.arc(centerSpot.x, centerSpot.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Penalty areas
+    const drawBox = (isLeft: boolean) => {
+        const xEdge = isLeft ? 0 : 100;
+        const xBox = isLeft ? 16.5 : 83.5;
+        const topY = 21;
+        const botY = 79;
+
+        const bTL = toScreenDeep(xEdge, topY);
+        const bTR = toScreenDeep(xBox, topY);
+        const bBR = toScreenDeep(xBox, botY);
+        const bBL = toScreenDeep(xEdge, botY);
+
+        ctx.beginPath();
+        ctx.moveTo(bTL.x, bTL.y);
+        ctx.lineTo(bTR.x, bTR.y);
+        ctx.lineTo(bBR.x, bBR.y);
+        ctx.lineTo(bBL.x, bBL.y);
+        ctx.stroke();
+
+        // Penalty spot
+        const pSpotX = isLeft ? 11 : 89;
+        const pSpot = toScreenDeep(pSpotX, 50);
+        ctx.beginPath();
+        ctx.arc(pSpot.x, pSpot.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // D-Arc (Simplified as ellipse arc)
+        const dRadX = 50;
+        const dRadY = 50 * PERSPECTIVE_RATIO * 0.35;
+        const dAngle = 0.9;
+        ctx.beginPath();
+        ctx.ellipse(pSpot.x, pSpot.y, dRadX, dRadY, 0,
+            isLeft ? -dAngle : Math.PI - dAngle,
+            isLeft ? dAngle : Math.PI + dAngle
+        );
+        ctx.stroke();
+    };
+
+    drawBox(true);
+    drawBox(false);
+
+    // 3D GOALS
+    const drawGoal = (isLeft: boolean) => {
+        const xLine = isLeft ? 0 : 100;
+        const xBack = isLeft ? -4 : 104;
+        const yTop = 44;
+        const yBot = 56;
+        const zH = 2.44; // Standard goal height in meters
+
+        const postA = toScreenDeep(xLine, yTop, 0);
+        const postB = toScreenDeep(xLine, yBot, 0);
+        const postATop = toScreenDeep(xLine, yTop, zH);
+        const postBTop = toScreenDeep(xLine, yBot, zH);
+
+        const backA = toScreenDeep(xBack, yTop, 0);
+        const backB = toScreenDeep(xBack, yBot, 0);
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Post A
+        ctx.beginPath(); ctx.moveTo(postA.x, postA.y); ctx.lineTo(postATop.x, postATop.y); ctx.stroke();
+        // Post B
+        ctx.beginPath(); ctx.moveTo(postB.x, postB.y); ctx.lineTo(postBTop.x, postBTop.y); ctx.stroke();
+        // Crossbar
+        ctx.beginPath(); ctx.moveTo(postATop.x, postATop.y); ctx.lineTo(postBTop.x, postBTop.y); ctx.stroke();
+
+        // Nets
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 1;
+
+        // Side A net
+        ctx.beginPath(); ctx.moveTo(postATop.x, postATop.y); ctx.lineTo(backA.x, backA.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(postA.x, postA.y); ctx.lineTo(backA.x, backA.y); ctx.stroke();
+
+        // Side B net
+        ctx.beginPath(); ctx.moveTo(postBTop.x, postBTop.y); ctx.lineTo(backB.x, backB.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(postB.x, postB.y); ctx.lineTo(backB.x, backB.y); ctx.stroke();
+
+        // Back Net Ground
+        ctx.beginPath(); ctx.moveTo(backA.x, backA.y); ctx.lineTo(backB.x, backB.y); ctx.stroke();
+
+        // Back Net sloped roof
+        for (let i = 1; i < 6; i++) {
+            const stepY = yTop + ((yBot - yTop) * (i / 6));
+            const nTopX = toScreenDeep(xLine, stepY, zH);
+            const nBotX = toScreenDeep(xBack, stepY, 0);
+
+            ctx.beginPath();
+            ctx.moveTo(nTopX.x, nTopX.y);
+            ctx.lineTo(nBotX.x, nBotX.y);
+            ctx.stroke();
+        }
+
+        // Net Horizontal Weave
+        for (let i = 1; i < 4; i++) {
+            const prog = i / 4;
+            const hTop = toScreenDeep(
+                xLine + (xBack - xLine) * prog,
+                yTop,
+                zH * (1 - prog)
+            );
+            const hBot = toScreenDeep(
+                xLine + (xBack - xLine) * prog,
+                yBot,
+                zH * (1 - prog)
+            );
+            ctx.beginPath();
+            ctx.moveTo(hTop.x, hTop.y);
+            ctx.lineTo(hBot.x, hBot.y);
+            ctx.stroke();
+        }
+    };
+
+    drawGoal(true);
+    drawGoal(false);
+};
+
+// Fast Color Darken Math
+const shadeColor = (col: string, amt: number) => {
+    let usePound = false;
+    if (col[0] == "#") {
+        col = col.slice(1);
+        usePound = true;
+    }
+    const num = parseInt(col, 16);
+    let r = (num >> 16) + amt;
+    if (r > 255) r = 255; else if (r < 0) r = 0;
+    let b = ((num >> 8) & 0x00FF) + amt;
+    if (b > 255) b = 255; else if (b < 0) b = 0;
+    let g = (num & 0x0000FF) + amt;
+    if (g > 255) g = 255; else if (g < 0) g = 0;
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, "0");
+};
+
+const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z: number, trail: Array<{x:number, y:number, z:number}> = []) => {
+    const pos = toScreenDeep(xPct, yPct, z);
+    const ground = toScreenDeep(xPct, yPct, 0);
+    const scale = pos.scale;
+
+    // Top boyutunu biraz daha büyüttük (2.8, oyuncuyla daha iyi uyum sağlıyor ve net seçiliyor)
+    const radius = 2.8 * scale; 
+
+    ctx.save();
+
+    // Şut ve hızlı paslarda line yerine yumuşak parçacık kuyruğu (kare artefactı azaltır)
+    if (trail && trail.length > 1) {
+        for (let i = 0; i < trail.length; i++) {
+            const t = (i + 1) / trail.length;
+            const tp = toScreenDeep(trail[i].x, trail[i].y, Math.max(0, trail[i].z));
+            const alpha = 0.08 + t * 0.18;
+            const r = radius * (0.35 + t * 0.55);
+
+            ctx.fillStyle = `rgba(186,230,253,${alpha})`;
+            ctx.beginPath();
+            ctx.arc(tp.x, tp.y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // Shadow on ground
+    const shadowAlpha = Math.max(0.1, 0.5 - (z / 5));
+    const shadowScale = Math.max(0.5, 1 - (z / 8));
+    ctx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+    ctx.beginPath();
+    ctx.ellipse(ground.x, ground.y, radius * 1.2 * shadowScale, radius * 0.6 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3D Ball gradient
+    const grad = ctx.createRadialGradient(pos.x - radius * 0.3, pos.y - radius * 0.3, radius * 0.1, pos.x, pos.y, radius);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.6, '#cbd5e1');
+    grad.addColorStop(1, '#475569');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    ctx.restore();
+};
+
+const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
+    match, homeTeam, awayTeam, homePlayers, awayPlayers, onSync, onFinish, onInstantFinish,
+    onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, debugLogs, onPlayerClick
+}) => {
+    const [speed, setSpeed] = useState(1.0);
+    const [soundEnabled, setSoundEnabled] = useState(true);
+    const [showTacticsModal, setShowTacticsModal] = useState(false);
+    const [showExitModal, setShowExitModal] = useState(false);
+    const [managedSide, setManagedSide] = useState<'HOME' | 'AWAY'>('HOME');
+    const [useDefaultColors, setUseDefaultColors] = useState(false);
+    const [showNames, setShowNames] = useState(true);
+    const [cameraTracking, setCameraTracking] = useState(false); // Kamera takibi isteğe bağlı
+    const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null);
+    const [showHalfTime, setShowHalfTime] = useState(false);
+    const [setPieceCue, setSetPieceCue] = useState<{ label: string; accent: string } | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const matchRef = useRef(match);
+    const homeTeamRef = useRef(homeTeam);
+    const awayTeamRef = useRef(awayTeam);
+    const homePlayersRef = useRef(homePlayers);
+    const awayPlayersRef = useRef(awayPlayers);
+    const useDefaultColorsRef = useRef(false);
+    const showNamesRef = useRef(true);
+    const cameraTrackingRef = useRef(false);
+    const lastGoalCount = useRef({ home: 0, away: 0 });
+    const halfTimeShown = useRef(false);
+
+    const lastTickState = useRef<any>(null);
+    const nextTickState = useRef<any>(null);
+    const lastTickTime = useRef<number>(0);
+
+    const logicTimerRef = useRef<number | null>(null);
+    const renderReqRef = useRef<number | null>(null);
+    const autoResumeTimerRef = useRef<number | null>(null);
+    const speedRef = useRef(1.0);
+    const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
+
+    const playerNumbers = useRef<Record<string, number>>({});
+    
+    // --- Render Pools & Trails (Garbage Collection Kasmasını Engeller) ---
+    const entitiesPool = useRef<Array<{type: string, ySort: number, renderFn: () => void}>>([]);
+    const playerInfosPool = useRef<Array<any>>([]);
+    const jostleMapPool = useRef<Record<string, {x: number, y: number}>>({});
+    const ballTrailPool = useRef<Array<{x: number, y: number, z: number}>>([]);
+    const gkCatchPulseRef = useRef<Record<string, number>>({});
+    const playerMotionCache = useRef<Record<string, {
+        x: number;
+        y: number;
+        z: number;
+        facing: number;
+        velocity: number;
+        stride: number;
+        state: string;
+        actionBlend: number;
+    }>>({});
+    
+    // --- Camera Tracking State ---
+    const cameraPos = useRef<{xPct: number, yPct: number}>({ xPct: 50, yPct: 50 });
+
+    // Sync state to refs for render loop
+    useEffect(() => { useDefaultColorsRef.current = useDefaultColors; }, [useDefaultColors]);
+    useEffect(() => { showNamesRef.current = showNames; }, [showNames]);
+    useEffect(() => { cameraTrackingRef.current = cameraTracking; }, [cameraTracking]);
+    useEffect(() => { speedRef.current = speed; }, [speed]);
+
+
+    // Update refs
+    useEffect(() => {
+        matchRef.current = match;
+        homeTeamRef.current = homeTeam;
+        awayTeamRef.current = awayTeam;
+        homePlayersRef.current = homePlayers;
+        awayPlayersRef.current = awayPlayers;
+        setManagedSide(userTeamId === awayTeam.id ? 'AWAY' : 'HOME');
+    }, [match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId]);
+
+    // Reset per-match UI/animation state so previous matches do not leak into the next one.
+    useEffect(() => {
+        lastGoalCount.current = { home: match.homeScore, away: match.awayScore };
+        halfTimeShown.current = false;
+        setGoalFlash(null);
+        setShowHalfTime(false);
+        setSetPieceCue(null);
+        ballTrailPool.current.length = 0;
+        playerMotionCache.current = {};
+        gkCatchPulseRef.current = {};
+        cameraPos.current = { xPct: 50, yPct: 50 };
+        if (autoResumeTimerRef.current) {
+            window.clearTimeout(autoResumeTimerRef.current);
+            autoResumeTimerRef.current = null;
+        }
+
+        if (match.liveData?.simulation) {
+            lastTickState.current = match.liveData.simulation;
+            nextTickState.current = match.liveData.simulation;
+            lastTickTime.current = performance.now();
+        } else {
+            lastTickState.current = null;
+            nextTickState.current = null;
+        }
+    }, [match.id]);
+
+    // Initialize jersey numbers
+    useEffect(() => {
+        [...homePlayers, ...awayPlayers].forEach(p => {
+            if (p.jerseyNumber) {
+                playerNumbers.current[p.id] = p.jerseyNumber;
+            } else if (p.lineupIndex !== undefined && p.lineupIndex >= 0 && p.lineupIndex < 99) {
+                playerNumbers.current[p.id] = p.lineupIndex + 1;
+            } else if (p.position === 'GK') {
+                playerNumbers.current[p.id] = 1;
+            }
+        });
+    }, [homePlayers, awayPlayers]);
+
+    // Initialize state
+    useEffect(() => {
+        if (match.liveData?.simulation) {
+            lastTickState.current = match.liveData.simulation;
+            nextTickState.current = match.liveData.simulation;
+            lastTickTime.current = performance.now();
+        }
+        soundManager.startAmbience();
+        return () => {
+            if (logicTimerRef.current) clearInterval(logicTimerRef.current);
+            if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
+            if (autoResumeTimerRef.current) clearTimeout(autoResumeTimerRef.current);
+            if (wakeLockRef.current && !wakeLockRef.current.released) {
+                wakeLockRef.current.release().catch(() => undefined);
+                wakeLockRef.current = null;
+            }
+            soundManager.stopAll();
+        };
+    }, []);
+
+    const requestWakeLock = useCallback(async () => {
+        const nav = navigator as NavigatorWithWakeLock;
+        if (!nav.wakeLock || wakeLockRef.current) return;
+
+        try {
+            const sentinel = await nav.wakeLock.request('screen');
+            wakeLockRef.current = sentinel;
+            sentinel.addEventListener?.('release', () => {
+                if (wakeLockRef.current === sentinel) {
+                    wakeLockRef.current = null;
+                }
+            });
+        } catch {
+            wakeLockRef.current = null;
+        }
+    }, []);
+
+    useEffect(() => {
+        const releaseWakeLock = async () => {
+            if (wakeLockRef.current && !wakeLockRef.current.released) {
+                await wakeLockRef.current.release().catch(() => undefined);
+            }
+            wakeLockRef.current = null;
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && !matchRef.current.isPlayed) {
+                requestWakeLock();
+            }
+        };
+
+        if (!match.isPlayed) {
+            requestWakeLock();
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+        } else {
+            releaseWakeLock();
+        }
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            releaseWakeLock();
+        };
+    }, [match.isPlayed, requestWakeLock]);
+
+    const substitutedOutIds = getSubstitutedOutPlayerIds();
+
+    const triggerSetPiecePause = useCallback((eventType: MatchEventType) => {
+        if (matchRef.current.isPlayed || showHalfTime || showTacticsModal || showExitModal) return;
+
+        const config = eventType === MatchEventType.FREE_KICK
+            ? { label: t.freeKick || 'FREE KICK', accent: 'from-amber-500/90 to-orange-500/90', duration: 720 }
+            : eventType === MatchEventType.CORNER
+                ? { label: t.corner || 'CORNER', accent: 'from-sky-500/90 to-cyan-500/90', duration: 520 }
+                : { label: t.penalty || 'PENALTY', accent: 'from-rose-500/90 to-red-500/90', duration: 820 };
+
+        setSetPieceCue({ label: config.label, accent: config.accent });
+
+        if (autoResumeTimerRef.current) {
+            window.clearTimeout(autoResumeTimerRef.current);
+            autoResumeTimerRef.current = null;
+        }
+
+        const resumeSpeed = speedRef.current > 0 ? speedRef.current : 1;
+        setSpeed(0);
+
+        autoResumeTimerRef.current = window.setTimeout(() => {
+            setSetPieceCue(null);
+            if (!matchRef.current.isPlayed && !showHalfTime && !showTacticsModal && !showExitModal) {
+                setSpeed(resumeSpeed);
+            }
+            autoResumeTimerRef.current = null;
+        }, config.duration);
+    }, [showExitModal, showHalfTime, showTacticsModal, t]);
+
+    // Sync engine state
+    useEffect(() => {
+
+            const substitutedOutIds = getSubstitutedOutPlayerIds();
+        if (match.liveData?.simulation) {
+            lastTickState.current = nextTickState.current || match.liveData.simulation;
+            nextTickState.current = match.liveData.simulation;
+            lastTickTime.current = performance.now();
+        }
+
+        // Goal flash detection
+        if (match.homeScore > lastGoalCount.current.home) {
+            lastGoalCount.current.home = match.homeScore;
+            setGoalFlash('HOME');
+            setTimeout(() => setGoalFlash(null), 1500);
+        }
+        if (match.awayScore > lastGoalCount.current.away) {
+            lastGoalCount.current.away = match.awayScore;
+            setGoalFlash('AWAY');
+            setTimeout(() => setGoalFlash(null), 1500);
+        }
+
+        // Half-time modal
+        if (match.currentMinute >= 45 && match.currentMinute < 46 && !halfTimeShown.current && !match.isPlayed) {
+            halfTimeShown.current = true;
+            setShowHalfTime(true);
+            setSpeed(0);
+        }
+    }, [match.liveData?.simulation, match.homeScore, match.awayScore, match.currentMinute, match.isPlayed]);
+
+    // Logic loop
+    useEffect(() => {
+        if (match.isPlayed) {
+            setSpeed(0);
+            soundManager.stopAll();
+            soundManager.play('whistle_end');
+            return;
+        }
+
+        if (logicTimerRef.current) window.clearInterval(logicTimerRef.current);
+
+        if (soundEnabled) {
+            soundManager.resume();
+        } else {
+            soundManager.pause();
+        }
+
+        if (speed > 0) {
+            const ms = speed === 2 ? 25 : speed === 0.5 ? 100 : speed === 4 ? 12 : 50;
+            logicTimerRef.current = window.setInterval(() => {
+                const result = simulateTick(matchRef.current, homeTeamRef.current, awayTeamRef.current, homePlayersRef.current, awayPlayersRef.current, userTeamId);
+                if (result.simulation) {
+                    lastTickState.current = nextTickState.current || result.simulation;
+                    nextTickState.current = result.simulation;
+                    lastTickTime.current = performance.now();
+                }
+
+                // Play event sounds
+                if (result.event) {
+                    switch (result.event.type) {
+                        case MatchEventType.GOAL:
+                            soundManager.play('goal');
+                            soundManager.play('cheer');
+                            break;
+                        case MatchEventType.CARD_YELLOW:
+                            soundManager.play('yellow_card');
+                            break;
+                        case MatchEventType.CARD_RED:
+                            soundManager.play('red_card');
+                            break;
+                        case MatchEventType.SUB:
+                            soundManager.play('substitution');
+                            break;
+                        case MatchEventType.PENALTY:
+                            soundManager.play('penalty');
+                            triggerSetPiecePause(result.event.type);
+                            break;
+                        case MatchEventType.CORNER:
+                            soundManager.play('corner');
+                            triggerSetPiecePause(result.event.type);
+                            break;
+                        case MatchEventType.FREE_KICK:
+                            triggerSetPiecePause(result.event.type);
+                            break;
+                    }
+                }
+
+                const shouldSync = result.minuteIncrement || (result.event && [MatchEventType.GOAL, MatchEventType.CARD_YELLOW, MatchEventType.CARD_RED].includes(result.event.type));
+                if (shouldSync) onSync(matchRef.current.id, result);
+
+                // Safety stop if isPlayed set by engine mid-interval
+                if (matchRef.current.isPlayed) {
+                    if (logicTimerRef.current) window.clearInterval(logicTimerRef.current);
+                    logicTimerRef.current = null;
+                    setSpeed(0);
+                    soundManager.stopAll();
+                }
+            }, ms);
+        }
+    }, [speed, match.isPlayed, soundEnabled, userTeamId, onSync, triggerSetPiecePause]);
+
+    // Draw Sprite/Pixel Player (Dynamic Actions & Animations!)
+    const drawSpritePlayer = (
+        ctx: CanvasRenderingContext2D,
+        xPct: number, yPct: number, z: number, facing: number,
+        primary: string, secondary: string, num: number,
+        hasBall: boolean, name: string, state: string, stamina: number,
+        velocity: number,    // 0..~1 normalised movement speed this tick
+        stridePhase: number, // distance-driven gait phase (foot planting)
+        actionBlend: number, // short transition hold for kick/tackle/dive
+        phaseOffset: number, // per-player unique walk phase (0..2π)
+        jostleX: number,     // screen-space push from nearby players
+        jostleY: number,
+        now: number,         // performance.now() / 1000 (seconds)
+        position: string,    // player position e.g. 'GK', 'DEF', 'MID', 'FWD'
+        gkThreat: boolean,
+        ballDist: number,
+        catchPulse: number
+    ) => {
+        const basePos  = toScreenDeep(xPct, yPct, z);
+        const groundPos = toScreenDeep(xPct, yPct, 0);
+        // Telefonlarda daha akıcı görünmesi ve futbol sahasına olan gerçekçi oran (kaleler 2.44m, oyuncu 1.80m) için ölçekleme.
+        // Daha önce kaleden uzundular (0.65). 0.45 ile orantıları harika olacak.
+        const scale = basePos.scale * 0.43;
+
+        // Apply jostle as pixel offset
+        const pos = { x: basePos.x + jostleX, y: basePos.y + jostleY, scale };
+
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        const isFacingRight = Math.cos(facing) >= 0;
+        const facingDir     = isFacingRight ? 1 : -1;
+        const forwardX = Math.cos(facing);
+        const forwardY = Math.sin(facing);
+        const frontness = 1 - Math.abs(forwardX); // 1: camera-facing, 0: profile
+        const bodyWidthScale = 0.72 + frontness * 0.28;
+        const shoulderSpread = 6 * scale * bodyWidthScale;
+
+        // Walk cycle speed & Idle State - Footsteps scaling (Kaymayı önleme)
+        // Adım atma (walkFreq) modelini hız ile tam senkronize ettik. 
+        // 1 adımda çok yol alma sorunu, frekansı artırarak çözülür. Yüksek hızda bacaklar daha hızlı hareket etmeli.
+        const isRunState = state === 'RUN' || state === 'SPRINT';
+        const isKickLike = state === 'KICK' || state === 'SHOT';
+        const isThrowIn = state === 'THROW_IN';
+        const isIdle = velocity < 0.22 && !isRunState && !isKickLike;
+        const walkCycle = stridePhase;
+        const swing     = isIdle ? 0 : Math.sin(walkCycle);
+        
+        // Hızlı koşarken adımların daha geniş açılması hissiyatı
+        const swingAmt  = Math.min(1.45, velocity * 2.25);
+
+        const skinColor  = '#fcd34d';
+        // GK wears a distinct yellow/lime jersey; outfield uses team primary
+        const isGK = position === 'GK';
+        const shirtColor = isGK ? '#d4e600' : primary;
+        // Shorts: darkened version of primary (avoids white shorts problem)
+        const shortColor = isGK ? '#1e293b' : shadeColor(primary, -65);
+
+        // Ruh/Nefes Alma (Idle Breathing State): Oyuncular dururken nefes alsın.
+        const breathe = isIdle ? Math.sin(now * 3.5 + phaseOffset) * 0.7 * scale : 0;
+
+        // Base animation values
+        let bodyOffsetY   = isIdle ? breathe : Math.abs(swing) * -1.8 * scale * Math.min(1, velocity * 2); // bounce
+        let bodyLean      = isIdle ? 0 : Math.min(0.35, velocity * 0.28) * facingDir; // lean forward when running
+        let leftLegAngle  = swing * swingAmt;
+        let rightLegAngle = -swing * swingAmt;
+        const outfieldArmScale = isGK ? 1 : 0.68;
+        let leftArmAngle  = -swing * swingAmt * 1.25 * outfieldArmScale;
+        let rightArmAngle = swing * swingAmt * 1.25 * outfieldArmScale;
+        let headBob       = isIdle ? breathe * 0.4 : Math.abs(Math.sin(walkCycle * 2)) * -1.5 * scale * Math.min(1, velocity * 2);
+        let isSliding     = false;
+        let isDiving      = false;
+
+        // Arm drive: kosu hizina gore omuz rotasyonu ve kol pompasi artar.
+        const runIntent = isIdle ? 0 : Math.min(1.2, velocity * 1.35);
+        const torsoTwist = isIdle
+            ? Math.sin(now * 2.2 + phaseOffset) * 0.04
+            : swing * 0.14 * runIntent;
+
+        const jostleMag = Math.min(1, Math.sqrt(jostleX * jostleX + jostleY * jostleY) / 3.2);
+        const contactArmSpread = jostleMag * (isGK ? 0.12 : 0.06);
+
+        leftArmAngle += torsoTwist - facingDir * 0.12 * runIntent - contactArmSpread;
+        rightArmAngle -= torsoTwist + facingDir * 0.12 * runIntent + contactArmSpread;
+
+        if (state === 'SPRINT') {
+            const sprintArmMul = isGK ? 1.15 : 0.95;
+            leftArmAngle *= sprintArmMul;
+            rightArmAngle *= sprintArmMul;
+        } else if (state === 'RUN') {
+            const runArmMul = isGK ? 1.1 : 0.9;
+            leftArmAngle *= runArmMul;
+            rightArmAngle *= runArmMul;
+        }
+
+        const kickBlend = isKickLike ? Math.min(1, 0.35 + actionBlend * 1.15) : 0;
+
+        // --- KALECİ (GK) POSTÜRÜ ---
+        // Kaleci boşta dururken dizlerini büküp ellerini yana açıp tetikte bekler (kaleci hissiyatı).
+        if (isGK && isIdle && state !== 'DIVE_SAVE') {
+            bodyOffsetY += 2.5 * scale; // Çömelme
+            leftArmAngle = -0.55;       // Kollar dışarı açık (hazır kıta)
+            rightArmAngle = 0.55;
+            leftLegAngle = -0.2;        // Bacaklar hafif ayrık
+            rightLegAngle = 0.2;
+            bodyLean = facingDir * 0.05;
+        }
+
+        // Kalecinin yana kayarak aci kapatma davranisini daha dogal goster.
+        const isGkLateralShuffle =
+            isGK &&
+            !isIdle &&
+            !isDiving &&
+            !isSliding &&
+            !hasBall &&
+            (state === 'RUN' || state === 'SPRINT');
+
+        if (isGkLateralShuffle) {
+            const shuffleSwing = Math.sin(walkCycle * 0.8) * 0.12;
+            bodyOffsetY += 1.2 * scale;
+            bodyLean = facingDir * 0.03;
+            leftArmAngle = -0.35 + shuffleSwing;
+            rightArmAngle = 0.35 - shuffleSwing;
+            leftLegAngle = swing * 0.55;
+            rightLegAngle = -swing * 0.55;
+        }
+
+        const shouldGkAnticipate =
+            isGK &&
+            !hasBall &&
+            !isDiving &&
+            !isSliding &&
+            state !== 'DIVE_SAVE' &&
+            gkThreat &&
+            ballDist < 30;
+
+        if (shouldGkAnticipate) {
+            const prepPulse = Math.sin(now * 9 + phaseOffset) * 0.5;
+            bodyOffsetY += 3.2 * scale + prepPulse * scale;
+            bodyLean = facingDir * 0.04;
+            leftArmAngle = -0.7;
+            rightArmAngle = 0.7;
+            if (isIdle) {
+                leftLegAngle = -0.25;
+                rightLegAngle = 0.25;
+            }
+        }
+
+        const gkCatchPulse = isGK ? Math.max(0, catchPulse) : 0;
+
+        // --- Special state overrides ---
+        if (state === 'TACKLE') {
+            isSliding     = true;
+            bodyOffsetY   = 7 * scale;
+            bodyLean      = facingDir * 0.5;
+            leftLegAngle  = facingDir * 1.0;
+            rightLegAngle = facingDir * 0.5;
+            leftArmAngle  = -facingDir * 0.7;
+            rightArmAngle = -facingDir * 0.4;
+            headBob       = 0;
+            // sliding dust
+            ctx.fillStyle = 'rgba(200,180,130,0.28)';
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX - facingDir * 13 * scale, groundPos.y + jostleY, 20 * scale, 7 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (state === 'DIVE_SAVE') {
+            isDiving      = true;
+            bodyLean      = facingDir * 1.3;    // nearly horizontal
+            bodyOffsetY   = -18 * scale;        // high in the air
+            leftArmAngle  =  facingDir * 2.35;  // arms stretched harder for save reach
+            rightArmAngle =  facingDir * 1.95;
+            leftLegAngle  = -facingDir * 1.0;   // legs fully kicked back
+            rightLegAngle = -facingDir * 0.6;
+            headBob       = -4 * scale;
+            // bright dive trail
+            ctx.save();
+            ctx.globalAlpha = 0.35;
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX + facingDir * 22 * scale, pos.y - 10 * scale, 28 * scale, 10 * scale, facingDir * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX + facingDir * 10 * scale, pos.y - 6 * scale, 18 * scale, 7 * scale, facingDir * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        } else if (state === 'JUMP' && z > 0.5) {
+            bodyOffsetY   = -5 * scale;
+            headBob       = -3 * scale;
+            leftLegAngle  = -0.4;
+            rightLegAngle =  0.4;
+            leftArmAngle  = -0.9;
+            rightArmAngle =  0.9;
+        } else if (isThrowIn) {
+            bodyOffsetY += 0.8 * scale;
+            bodyLean = 0;
+            leftArmAngle = -1.85;
+            rightArmAngle = 1.85;
+            leftLegAngle = -0.12;
+            rightLegAngle = 0.18;
+            headBob = -0.6 * scale;
+        } else if (isKickLike || actionBlend > 0.12) {
+            // Vurus animasyonu: tek ayak acilir, digeri destekte kalir.
+            const kb = Math.min(1, Math.max(0.22, kickBlend));
+            bodyLean      = facingDir * lerp(0.14, 0.3, kb);
+            bodyOffsetY   = lerp(-0.5, -2.2, kb) * scale;
+            leftLegAngle  = lerp(leftLegAngle, 1.5 * facingDir, kb);
+            rightLegAngle = lerp(rightLegAngle, -0.75 * facingDir, kb);
+            leftArmAngle  = lerp(leftArmAngle, -1.0 * facingDir, kb);
+            rightArmAngle = lerp(rightArmAngle, 0.8 * facingDir, kb);
+            headBob       = lerp(headBob, -1.4 * scale, kb);
+        }
+
+        // Glove snap: Kaleci topu tuttugu anda kollari hizla kapanip topu kilitler.
+        if (isGK && hasBall && gkCatchPulse > 0.02 && !isDiving) {
+            const snap = Math.min(1, gkCatchPulse);
+            const squeeze = 0.35 + Math.sin(now * 34 + phaseOffset) * 0.08;
+            const lock = snap * squeeze;
+
+            bodyOffsetY += (1.8 + lock * 1.2) * scale;
+            bodyLean = lerp(bodyLean, facingDir * 0.02, lock);
+            leftArmAngle = lerp(leftArmAngle, -0.35 * facingDir, lock);
+            rightArmAngle = lerp(rightArmAngle, 0.35 * facingDir, lock);
+            headBob = lerp(headBob, -0.35 * scale, lock);
+            leftLegAngle = lerp(leftLegAngle, -0.2, lock * 0.6);
+            rightLegAngle = lerp(rightLegAngle, 0.2, lock * 0.6);
+        }
+
+        // Dribbling kick: when hasBall and moving, front foot snaps forward
+        let dribbleKick = 0;
+        if (hasBall && velocity > 0.15 && !isSliding && !isDiving && !isThrowIn) {
+            const kickPhase = (now * 7 + phaseOffset) % (Math.PI * 2);
+            if (kickPhase < 0.9) {
+                dribbleKick = Math.sin((kickPhase / 0.9) * Math.PI) * 0.55;
+                leftLegAngle = Math.max(leftLegAngle, dribbleKick);
+            }
+        }
+
+        // --- Shadow ---
+        const shadowAlpha = Math.max(0.12, 0.4 - z * 0.12);
+        const shadowScale = Math.max(0.5, 1 - z * 0.15);
+        ctx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+        ctx.beginPath();
+        ctx.ellipse(
+            groundPos.x + jostleX, groundPos.y + jostleY,
+            (isSliding ? 18 : 9) * scale * shadowScale,
+            (isSliding ? 6  : 4) * scale * shadowScale,
+            isSliding ? facingDir * 0.3 : 0, 0, Math.PI * 2
+        );
+        ctx.fill();
+
+        const bodyX  = pos.x;
+        const bodyY  = pos.y + bodyOffsetY;
+        const plantWeight = isIdle ? 0 : Math.max(0, 1 - Math.abs(Math.cos(walkCycle)));
+        const footPlantX =
+            isIdle
+                ? 0
+                : -facingDir * Math.sin(walkCycle) * plantWeight * Math.min(1.15, velocity) * 2.3 * scale;
+        const plantedBodyX = bodyX + footPlantX;
+        const hipY   = bodyY - 10 * scale;
+        const pivotY = bodyY - 18 * scale; // lean pivot (torso centre)
+
+        // Apply forward lean
+        if (bodyLean !== 0) {
+            ctx.translate(plantedBodyX, pivotY);
+            ctx.rotate(bodyLean);
+            ctx.translate(-plantedBodyX, -pivotY);
+        }
+
+        // ── 2-segment leg helper ──────────────────────────────────────
+        const drawLeg = (originX: number, angle: number, kick: boolean) => {
+            const thighLen = 9 * scale;
+            const shinLen  = 8 * scale;
+
+            // thigh
+            const kneeX = originX + Math.sin(angle) * thighLen * facingDir;
+            const kneeY = hipY + Math.cos(angle) * thighLen;
+
+            // shin bends naturally (less angled than thigh)
+            const shinBend = kick ? 0.48 : Math.abs(angle) * 0.3;
+            const shinAngle = angle * 0.5 + shinBend * (angle >= 0 ? 1 : -1);
+            const footX = kneeX + Math.sin(shinAngle) * shinLen * facingDir;
+            const footY = kneeY + Math.cos(shinAngle) * shinLen;
+
+            // thigh (shorts colour)
+            ctx.strokeStyle = shortColor;
+            ctx.lineWidth   = Math.max(2.5, 5 * scale);
+            ctx.beginPath();
+            ctx.moveTo(originX, hipY);
+            ctx.lineTo(kneeX, kneeY);
+            ctx.stroke();
+
+            // shin (skin)
+            ctx.strokeStyle = skinColor;
+            ctx.lineWidth   = Math.max(2, 4 * scale);
+            ctx.beginPath();
+            ctx.moveTo(kneeX, kneeY);
+            ctx.lineTo(footX, footY);
+            ctx.stroke();
+
+            // boot
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.ellipse(footX, footY, 4.8 * scale, 2.2 * scale, Math.atan2(footY - kneeY, footX - kneeX), 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        drawLeg(plantedBodyX - 2 * scale, leftLegAngle,  dribbleKick > 0.1);
+        drawLeg(plantedBodyX + 2 * scale, rightLegAngle, false);
+
+        // ── Shorts ────────────────────────────────────────────────────
+        ctx.fillStyle = shortColor;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(plantedBodyX - 5.5 * scale * bodyWidthScale, hipY - 5 * scale, 11 * scale * bodyWidthScale, 5 * scale, 1.5 * scale);
+        else ctx.rect(plantedBodyX - 5.5 * scale * bodyWidthScale, hipY - 5 * scale, 11 * scale * bodyWidthScale, 5 * scale);
+        ctx.fill();
+
+        // ── Shirt ─────────────────────────────────────────────────────
+        ctx.fillStyle = shirtColor;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(plantedBodyX - 6 * scale * bodyWidthScale, hipY - 20 * scale, 12 * scale * bodyWidthScale, 12 * scale, 2 * scale);
+        else ctx.rect(plantedBodyX - 6 * scale * bodyWidthScale, hipY - 20 * scale, 12 * scale * bodyWidthScale, 12 * scale);
+        ctx.fill();
+        // subtle centre stripe
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+        ctx.fillRect(plantedBodyX - 1.5 * scale * bodyWidthScale, hipY - 19 * scale, 3 * scale * bodyWidthScale, 10 * scale);
+
+        // ── 2-segment arm helper ──────────────────────────────────────
+        const drawArm = (fromX: number, angle: number) => {
+            const gkReachMul = isGK && isDiving ? 1.35 : isGK ? 1.08 : 1.0;
+            const upperLen = 9 * scale * gkReachMul;
+            const foreLen  = 8 * scale * gkReachMul;
+
+            const sidePhase = fromX < plantedBodyX ? 0 : Math.PI;
+            const shoulderLift = isIdle
+                ? breathe * 0.25
+                : Math.sin(walkCycle + sidePhase) * 0.9 * scale * runIntent;
+            const shoulderY = hipY - 15 * scale + shoulderLift;
+
+            const elbowX = fromX + Math.sin(angle) * upperLen * facingDir;
+            const elbowY = shoulderY + Math.cos(angle) * upperLen * 0.72;
+
+            const bendBase = isIdle
+                ? 0.32
+                : 0.45 + Math.min(0.28, Math.abs(swing) * 0.2 + velocity * 0.16);
+            const bendDir = angle >= 0 ? 1 : -1;
+            const handAngle = angle * 0.62 + bendBase * bendDir;
+            const handX = elbowX + Math.sin(handAngle) * foreLen * facingDir;
+            const handY = elbowY + Math.cos(handAngle) * foreLen * 0.78;
+
+            // upper arm = shirt colour
+            ctx.strokeStyle = shirtColor;
+            ctx.lineWidth   = Math.max(2, 4 * scale);
+            ctx.beginPath();
+            ctx.moveTo(fromX, shoulderY);
+            ctx.lineTo(elbowX, elbowY);
+            ctx.stroke();
+
+            // forearm = skin
+            ctx.strokeStyle = skinColor;
+            ctx.lineWidth   = Math.max(1.5, 3 * scale);
+            ctx.beginPath();
+            ctx.moveTo(elbowX, elbowY);
+            ctx.lineTo(handX, handY);
+            ctx.stroke();
+
+            // El noktasi: kolun segmentli oldugu daha net gorunsun.
+            const handColor = isGK ? '#f8fafc' : skinColor;
+            ctx.fillStyle = handColor;
+            ctx.beginPath();
+            if (isGK) {
+                const gloveSnapScale = 1 + (hasBall ? gkCatchPulse * 0.28 : 0);
+                ctx.ellipse(
+                    handX,
+                    handY,
+                    Math.max(1.4, 2.5 * scale) * gloveSnapScale,
+                    Math.max(1.1, 1.9 * scale) * (1 + gkCatchPulse * 0.12),
+                    Math.atan2(handY - elbowY, handX - elbowX),
+                    0,
+                    Math.PI * 2,
+                );
+            } else {
+                ctx.arc(handX, handY, Math.max(1.2, 1.8 * scale), 0, Math.PI * 2);
+            }
+            ctx.fill();
+        };
+
+        // Arms start from left/right shoulders (NOT the same point!)
+        drawArm(plantedBodyX - shoulderSpread, leftArmAngle);
+        drawArm(plantedBodyX + shoulderSpread, rightArmAngle);
+
+        // ── Head ─────────────────────────────────────────────────────
+        const headY = hipY - 27 * scale + headBob;
+        // neck
+        ctx.strokeStyle = skinColor;
+        ctx.lineWidth   = 3 * scale;
+        ctx.beginPath();
+        ctx.moveTo(plantedBodyX, hipY - 20 * scale);
+        ctx.lineTo(plantedBodyX, headY + 5 * scale);
+        ctx.stroke();
+        // head
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.ellipse(plantedBodyX, headY, 6 * scale * bodyWidthScale, 6 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // hair
+        ctx.fillStyle = '#2d1b00';
+        ctx.beginPath();
+        ctx.ellipse(plantedBodyX, headY - scale, 6 * scale * bodyWidthScale, 6 * scale, 0, Math.PI, Math.PI * 2);
+        ctx.fill();
+
+        // Direction-aware face hints: profilede tek goz, onde iki goz.
+        if (frontness > 0.35) {
+            ctx.fillStyle = '#0f172a';
+            const eyeDx = 2.2 * scale * bodyWidthScale;
+            ctx.beginPath();
+            ctx.arc(plantedBodyX - eyeDx, headY - 0.6 * scale, 0.9 * scale, 0, Math.PI * 2);
+            ctx.arc(plantedBodyX + eyeDx, headY - 0.6 * scale, 0.9 * scale, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(plantedBodyX + facingDir * 2.4 * scale, headY - 0.6 * scale, 0.95 * scale, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Undo lean
+        if (bodyLean !== 0) {
+            ctx.translate(plantedBodyX, pivotY);
+            ctx.rotate(-bodyLean);
+            ctx.translate(-plantedBodyX, -pivotY);
+        }
+
+        // ── UI: name tag ──────────────────────────────────────────────
+        if (showNamesRef.current) {
+            const nameText = `#${num} ${name.substring(0, 8)}`;
+            // Scale düştüğü için font boyutu oranlarını yükseltiyoruz (Görünür kalması için)
+            const fontSize = Math.round(Math.max(7, 12 * scale));
+            ctx.font = `bold ${fontSize}px Arial`;
+            const tw = ctx.measureText(nameText).width;
+            const nameTagY = pos.y - 55 * scale;
+            ctx.fillStyle = 'rgba(0,0,0,0.55)';
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(pos.x - tw / 2 - 3, nameTagY - fontSize, tw + 6, fontSize + 2, 3);
+            else ctx.rect(pos.x - tw / 2 - 3, nameTagY - fontSize, tw + 6, fontSize + 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText(nameText, pos.x, nameTagY);
+        }
+
+        // ── UI: stamina bar ───────────────────────────────────────────
+        if (stamina < 95) {
+            const bw = 22 * scale, bh = 3.5 * scale;
+            const by = groundPos.y + jostleY + 10 * scale;
+            ctx.fillStyle = 'rgba(0,0,0,0.65)';
+            ctx.fillRect(pos.x - bw / 2, by, bw, bh);
+            ctx.fillStyle = stamina > 60 ? '#22c55e' : stamina > 25 ? '#eab308' : '#ef4444';
+            ctx.fillRect(pos.x - bw / 2, by, bw * (stamina / 100), bh);
+        }
+
+        // ── UI: ball possession ring ──────────────────────────────────
+        if (hasBall) {
+            ctx.strokeStyle = 'rgba(251,191,36,0.85)';
+            ctx.lineWidth = (3.5 + gkCatchPulse * 1.8) * scale;
+            ctx.setLineDash([4 * scale, 4 * scale]);
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX, groundPos.y + jostleY, 18 * scale, 8 * scale, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // GK Catch Pulse: Kalecinin topu yeni tuttugu ani kisa bir parlama ile vurgula.
+        if (gkCatchPulse > 0.02) {
+            const glowA = 0.16 + gkCatchPulse * 0.34;
+            const glowR = (10 + gkCatchPulse * 11) * scale;
+
+            ctx.save();
+            ctx.globalAlpha = glowA;
+            ctx.fillStyle = '#e0f2fe';
+            ctx.beginPath();
+            ctx.ellipse(plantedBodyX + facingDir * 2.2 * scale, hipY - 13 * scale, glowR, glowR * 0.68, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalAlpha = 0.2 + gkCatchPulse * 0.45;
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = (1.5 + gkCatchPulse * 2.2) * scale;
+            ctx.beginPath();
+            ctx.arc(plantedBodyX + facingDir * 2.2 * scale, hipY - 13 * scale, (4.2 + gkCatchPulse * 5.5) * scale, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // ── UI: special labels ────────────────────────────────────────
+        const drawLabel = (text: string, color: string) => {
+            const lfs = Math.round(14 * scale);
+            ctx.font = `bold ${lfs}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+            ctx.lineWidth = 4 * scale;
+            ctx.strokeText(text, pos.x, pos.y - 65 * scale);
+            ctx.fillStyle = color;
+            ctx.fillText(text, pos.x, pos.y - 65 * scale);
+        };
+
+        if (state === 'TACKLE') {
+            drawLabel('TACKLE!', '#ef4444');
+        } else if (state === 'DIVE_SAVE') {
+            drawLabel('SAVE!', '#22c55e');
+        } else if (z > 1.2 && hasBall) {
+            drawLabel('BICYCLE!', '#a855f7');
+        }
+
+        ctx.restore();
+    };
+
+    // Render loop
+    const render = useCallback(() => {
+        if (!canvasRef.current || !lastTickState.current || !nextTickState.current) {
+            renderReqRef.current = requestAnimationFrame(render);
+            return;
+        }
+
+        const ctx = canvasRef.current.getContext('2d');
+        if (!ctx) {
+            renderReqRef.current = requestAnimationFrame(render);
+            return;
+        }
+
+        const prevState = lastTickState.current;
+        const nextState = nextTickState.current;
+        const motionCache = playerMotionCache.current;
+        const gkCatchPulse = gkCatchPulseRef.current;
+
+        Object.keys(gkCatchPulse).forEach((id) => {
+            gkCatchPulse[id] *= 0.84;
+            if (gkCatchPulse[id] < 0.02) delete gkCatchPulse[id];
+        });
+
+        const nowMs = performance.now();
+        const tickDuration = speed === 2 ? 60 : speed === 0.5 ? 240 : speed === 4 ? 30 : 120;
+        const elapsed = nowMs - lastTickTime.current;
+        const alpha = Math.min(1, Math.max(0, elapsed / tickDuration));
+        const now = nowMs / 1000; // seconds — used for animation
+
+        // --- CAMERA TRACKING (FM Style Dynamic Panning) ---
+        // Kamerayı topun olduğu yere doğru yumuşakça(Linterp) kaydırıyoruz.
+        const prevBallC = prevState.ball;
+        const nextBallC = nextState.ball;
+        let targetCamX = 50; 
+        let targetCamY = 50;
+
+        if (prevBallC && nextBallC) {
+            const pb = normalizeCoords(prevBallC.x, prevBallC.y);
+            const nb = normalizeCoords(nextBallC.x, nextBallC.y);
+            targetCamX = lerp(pb.x, nb.x, alpha);
+            targetCamY = lerp(pb.y, nb.y, alpha);
+        }
+
+        // Kamera hedefe anında gitmez, süzülerek (ease) takip eder
+        cameraPos.current.xPct = lerp(cameraPos.current.xPct, targetCamX, 0.065);
+        cameraPos.current.yPct = lerp(cameraPos.current.yPct, targetCamY, 0.065);
+
+        // Kameranın piksel ofsetlerini hesapla: (Kamera merkeze 50,50'ye göre ne kadar sapmış)
+        const centerScreen = toScreenDeep(50, 50, 0);
+        const camFocusScreen = toScreenDeep(cameraPos.current.xPct, cameraPos.current.yPct, 0);
+        
+        let camOffsetX = centerScreen.x - camFocusScreen.x;
+        let camOffsetY = centerScreen.y - camFocusScreen.y;
+
+        ctx.save();
+        // Zoom-in efekti verip, hesapladığımız ofseti uyguluyoruz.
+        // Daha sinematik bir his için sahanın geri kalanı ekran dışına taşabilir.
+        if (cameraTrackingRef.current) {
+            const ZOOM_LEVEL = 1.45; 
+            
+            // Kamera kaymasını sınırla (Clamp): Ekranın kenarlarında boşluk/siyahlık (render edilmemiş alan) görmemek için.
+            const maxOffsetX = (CANVAS_W * ZOOM_LEVEL - CANVAS_W) / 2;
+            const maxOffsetY = (CANVAS_H * ZOOM_LEVEL - CANVAS_H) / 2;
+            
+            camOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, camOffsetX));
+            camOffsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, camOffsetY));
+
+            // Float değerlerinden kaynaklı 'iz bırakma (Ghosting/Subpixel rendering)' sorununu önlemek için 
+            // kameranın pozisyonunu tam sayılara (Math.round) yuvarlıyoruz
+            ctx.translate(CANVAS_W / 2, CANVAS_H / 2);
+            ctx.scale(ZOOM_LEVEL, ZOOM_LEVEL);
+            ctx.translate(-CANVAS_W / 2, -CANVAS_H / 2);
+            
+            ctx.translate(Math.round(camOffsetX), Math.round(camOffsetY));
+        }
+
+        // 1. Draw Field Environment
+        drawPitch3D(ctx);
+
+        // 2. Map and Sort entities for Depth (Y-sorting)
+        const simPlayerIds = Object.keys(nextState.players || {});
+        const allPlayers = homePlayersRef.current.concat(awayPlayersRef.current).filter(p => simPlayerIds.includes(p.id));
+        const activePlayerIds = new Set(allPlayers.map(p => p.id));
+
+        const prevOwnerId = prevState.ball?.ownerId || null;
+        const nextOwnerId = nextState.ball?.ownerId || null;
+        if (nextOwnerId && nextOwnerId !== prevOwnerId) {
+            const newOwner = allPlayers.find((p) => p.id === nextOwnerId);
+            if (newOwner?.position === 'GK') {
+                gkCatchPulse[nextOwnerId] = 1;
+            }
+        }
+
+        Object.keys(motionCache).forEach((id) => {
+            if (!activePlayerIds.has(id)) delete motionCache[id];
+        });
+
+        // Bellek Havuzlarını (Pools) sıfırla - Yeni dizi/obje üretimi GC Spikes yaratmaz!
+        entitiesPool.current.length = 0;
+        playerInfosPool.current.length = 0;
+        const entities = entitiesPool.current;
+        const playerInfos = playerInfosPool.current;
+        const jostleMap = jostleMapPool.current;
+
+        // --- First pass: collect player render data ---
+        allPlayers.forEach(p => {
+            const prevP = prevState.players[p.id];
+            const nextP = nextState.players[p.id];
+            if (!prevP || !nextP) return;
+
+            const prevNorm = normalizeCoords(prevP.x, prevP.y);
+            const nextNorm = normalizeCoords(nextP.x, nextP.y);
+
+            const xVal = lerp(prevNorm.x, nextNorm.x, alpha);
+            const yVal = lerp(prevNorm.y, nextNorm.y, alpha);
+            const zVal = nextP.z || 0;
+
+            const dx = nextNorm.x - prevNorm.x;
+            const dy = nextNorm.y - prevNorm.y;
+            // velocity: scaled so walking ~0.3, sprinting ~0.8-1.0
+            const rawVelocity = Math.min(1.2, Math.sqrt(dx * dx + dy * dy) * 22);
+            const movementState = nextP.state || 'IDLE';
+            const stateVelocityFloor =
+                movementState === 'SPRINT'
+                    ? 0.92
+                    : movementState === 'RUN'
+                        ? 0.62
+                        : movementState === 'KICK' || movementState === 'SHOT'
+                            ? 0.48
+                            : 0;
+            const velocity = Math.max(rawVelocity, stateVelocityFloor);
+
+            const isHome = p.teamId === homeTeamRef.current.id;
+            let targetFacing = isHome ? 0 : Math.PI;
+            if (Math.abs(dx) > 0.3 || Math.abs(dy) > 0.3) {
+                targetFacing = Math.atan2(dy, dx);
+            } else if (nextState.ball) {
+                const bNorm = normalizeCoords(nextState.ball.x, nextState.ball.y);
+                targetFacing = Math.atan2(bNorm.y - nextNorm.y, bNorm.x - nextNorm.x);
+            }
+
+            // Stable per-player phase from id hash
+            let phaseOffset = 0;
+            for (let i = 0; i < p.id.length; i++) {
+                phaseOffset = (phaseOffset * 31 + p.id.charCodeAt(i)) & 0xffff;
+            }
+            phaseOffset = (phaseOffset / 0xffff) * Math.PI * 2;
+
+            const cached = motionCache[p.id] || {
+                x: xVal,
+                y: yVal,
+                z: zVal,
+                facing: targetFacing,
+                velocity,
+                stride: phaseOffset,
+                state: movementState,
+                actionBlend: 0,
+            };
+
+            const facingSmooth = cached.facing + shortestAngleDelta(cached.facing, targetFacing) * 0.28;
+            const velocitySmooth = lerp(cached.velocity, velocity, 0.4);
+            const moveBlend = nextP.state === 'SPRINT' ? 0.38 : nextP.state === 'RUN' ? 0.3 : 0.24;
+            const xSmooth = lerp(cached.x, xVal, moveBlend);
+            const ySmooth = lerp(cached.y, yVal, moveBlend);
+            const zSmooth = lerp(cached.z, zVal, 0.45);
+            const travelDist = Math.sqrt(Math.pow(xSmooth - cached.x, 2) + Math.pow(ySmooth - cached.y, 2));
+            const strideBoost = nextP.state === 'SPRINT' ? 1.15 : nextP.state === 'RUN' ? 0.95 : 0.72;
+            const rawAdvance = travelDist * strideBoost;
+            const phaseAdvance = Math.min(0.42, Math.max(0.015, rawAdvance));
+            const stridePhase = (cached.stride + phaseAdvance) % (Math.PI * 2);
+            const impactfulState =
+                movementState === 'KICK' ||
+                movementState === 'SHOT' ||
+                movementState === 'TACKLE' ||
+                movementState === 'DIVE_SAVE' ||
+                movementState === 'JUMP';
+            const transitioned = cached.state !== movementState;
+            let actionBlend = cached.actionBlend * 0.82;
+            if (transitioned && impactfulState) actionBlend = 1;
+            else if (movementState === 'KICK' || movementState === 'SHOT') actionBlend = Math.max(actionBlend, 0.7);
+
+            motionCache[p.id] = {
+                x: xSmooth,
+                y: ySmooth,
+                z: zSmooth,
+                facing: facingSmooth,
+                velocity: velocitySmooth,
+                stride: stridePhase,
+                state: movementState,
+                actionBlend,
+            };
+
+            const b = nextState.ball;
+            let ballDist = 999;
+            let gkThreat = false;
+            if (b) {
+                const bNorm = normalizeCoords(b.x, b.y);
+                ballDist = Math.sqrt(Math.pow(bNorm.x - xSmooth, 2) + Math.pow(bNorm.y - ySmooth, 2));
+                const isHomePlayer = p.teamId === homeTeamRef.current.id;
+                const ballMovingToGoal = isHomePlayer ? (b.vx || 0) < -0.08 : (b.vx || 0) > 0.08;
+                const centralLane = Math.abs(bNorm.y - ySmooth) < 24;
+                gkThreat = ballMovingToGoal && centralLane;
+            }
+
+            playerInfos.push({
+                id: p.id, xVal: xSmooth, yVal: ySmooth, zVal: zSmooth,
+                facing: facingSmooth, velocity: velocitySmooth, stridePhase, actionBlend, phaseOffset,
+                primary: isHome ? homeTeamRef.current.primaryColor : awayTeamRef.current.primaryColor,
+                secondary: isHome ? homeTeamRef.current.secondaryColor : awayTeamRef.current.secondaryColor,
+                num: playerNumbers.current[p.id] || 0,
+                hasBall: nextState.ball?.ownerId === p.id,
+                name: p.lastName, state: nextP.state || 'IDLE', stamina: nextP.stamina || 100,
+                position: p.position || 'MID',
+                gkThreat,
+                ballDist,
+                catchPulse: gkCatchPulse[p.id] || 0,
+            });
+        });
+
+        // --- Second pass: compute proximity jostle offsets ---
+        playerInfos.forEach(pi => { jostleMap[pi.id] = { x: 0, y: 0 }; });
+
+        for (let i = 0; i < playerInfos.length; i++) {
+            for (let j = i + 1; j < playerInfos.length; j++) {
+                const a = playerInfos[i], b = playerInfos[j];
+                const dx = a.xVal - b.xVal;
+                const dy = a.yVal - b.yVal;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const JOSTLE_DIST = 4.5; // pitch-% units
+                if (dist < JOSTLE_DIST && dist > 0.05) {
+                    const strength = (1 - dist / JOSTLE_DIST) * 2.5;
+                    const nx = dx / dist, ny = dy / dist;
+                    const wobble = Math.sin(now * 9 + a.phaseOffset) * 0.35;
+                    jostleMap[a.id].x += nx * (strength + wobble);
+                    jostleMap[a.id].y += ny * strength * 0.5;
+                    jostleMap[b.id].x -= nx * (strength + wobble);
+                    jostleMap[b.id].y -= ny * strength * 0.5;
+                }
+            }
+        }
+
+        // --- Build player entities ---
+        playerInfos.forEach(pi => {
+            const j = jostleMap[pi.id] || { x: 0, y: 0 };
+            // Default colors override: user team = blue, opponent = red
+            let primary = pi.primary;
+            if (useDefaultColorsRef.current) {
+                primary = pi.id && homePlayersRef.current.some(p => p.id === pi.id)
+                    ? (homeTeamRef.current.id === userTeamId ? '#3b82f6' : '#ef4444')
+                    : (awayTeamRef.current.id === userTeamId ? '#3b82f6' : '#ef4444');
+            }
+            entities.push({
+                type: 'PLAYER',
+                ySort: pi.yVal,
+                renderFn: () => drawSpritePlayer(
+                    ctx, pi.xVal, pi.yVal, pi.zVal, pi.facing,
+                    primary, pi.secondary, pi.num,
+                    pi.hasBall, pi.name, pi.state, pi.stamina,
+                    pi.velocity, pi.stridePhase, pi.actionBlend, pi.phaseOffset, j.x, j.y, now, pi.position,
+                    pi.gkThreat, pi.ballDist, pi.catchPulse
+                )
+            });
+        });
+
+        // Prepare Ball and Trail Dynamics
+        const prevBall = prevState.ball;
+        const nextBall = nextState.ball;
+        if (prevBall && nextBall) {
+            const prevBNrm = normalizeCoords(prevBall.x, prevBall.y);
+            const nxtBNrm = normalizeCoords(nextBall.x, nextBall.y);
+
+        const bX = lerp(prevBNrm.x, nxtBNrm.x, alpha);
+        const bY = lerp(prevBNrm.y, nxtBNrm.y, alpha);
+        let bZ = lerp(prevBall.z || 0, nextBall.z || 0, alpha);
+        
+        // Zıplayan topun fizik kurallarına(Yerden sekme hissi) uyması için z de ufak bir eğri eklemek iyi olabilir 
+        // Ancak ana sorun subpixel rendering, x ve y de ondalıklı kaldı.
+        const RenderBX = Math.round(bX * 100) / 100;
+        const RenderBY = Math.round(bY * 100) / 100;
+
+        // Kuyruk / İvme Hesaplaması (Motion Blur için)
+        const speedMagnitude = Math.sqrt(Math.pow(nxtBNrm.x - prevBNrm.x, 2) + Math.pow(nxtBNrm.y - prevBNrm.y, 2));
+        if (speed > 0 && speedMagnitude > 0.05) {
+            ballTrailPool.current.push({ x: RenderBX, y: RenderBY, z: bZ });
+            if (ballTrailPool.current.length > 7) ballTrailPool.current.shift();
+        } else if (ballTrailPool.current.length > 0) {
+            if (Math.random() > 0.5) ballTrailPool.current.shift();
+        }
+
+        entities.push({
+            type: 'BALL',
+            ySort: RenderBY,
+            renderFn: () => drawBall3D(ctx, RenderBX, RenderBY, bZ, ballTrailPool.current)
+        });
+        }
+
+        // Sort by depth (Y coordinate ascending = back to front)
+        entities.sort((a, b) => a.ySort - b.ySort);
+
+        // Draw entities back to front
+        entities.forEach(ent => ent.renderFn());
+
+        ctx.restore(); // Kamera Translate & Zoom efektini bitir.
+        
+        // Score Overlay top
+        // Rendered via HTML overlay now
+
+
+        renderReqRef.current = requestAnimationFrame(render);
+    }, [speed]);
+
+    useEffect(() => {
+        render();
+        return () => {
+            if (renderReqRef.current) cancelAnimationFrame(renderReqRef.current);
+        };
+    }, [render]);
+
+    // OVR breakdown helper
+    const renderOVR = (players: Player[], align: 'left' | 'right') => {
+        const starters = players.filter(p => p.lineup === 'STARTING');
+        const defs = starters.filter(p => p.position === 'DEF');
+        const mids = starters.filter(p => p.position === 'MID');
+        const fwds = starters.filter(p => p.position === 'FWD');
+        const avg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => s + p.overall, 0) / arr.length) : 0;
+        const liveAvg = (arr: typeof starters) => arr.length > 0 ? Math.round(arr.reduce((s, p) => {
+            const stam = getLivePlayerStamina(p.id) ?? 100;
+            return s + calculateEffectiveRating(p, p.position as any, stam);
+        }, 0) / arr.length) : 0;
+        return (
+            <div className={`flex items-center gap-1 text-[8px] font-mono flex-wrap ${align === 'right' ? 'justify-end' : ''}`}>
+                <span className="text-sky-400">D:{avg(defs)}<span className="text-sky-600/70">({liveAvg(defs)})</span></span>
+                <span className="text-emerald-400">M:{avg(mids)}<span className="text-emerald-600/70">({liveAvg(mids)})</span></span>
+                <span className="text-orange-400">F:{avg(fwds)}<span className="text-orange-600/70">({liveAvg(fwds)})</span></span>
+                <span className="text-white font-bold">⌀{avg(starters)}</span>
+            </div>
+        );
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col overflow-hidden">
+
+            {/* GOAL FLASH OVERLAY */}
+            {goalFlash && (
+                <div className="pointer-events-none fixed inset-0 z-[110] flex items-center justify-center">
+                    <div className="text-7xl md:text-9xl font-black italic text-white drop-shadow-[0_0_30px_rgba(52,211,153,0.8)] animate-bounce">
+                        GOAL!
+                    </div>
+                </div>
+            )}
+
+            {setPieceCue && (
+                <div className="pointer-events-none fixed inset-0 z-[108] flex items-start justify-center pt-16 md:pt-20">
+                    <div className={`px-5 py-2 rounded-full bg-gradient-to-r ${setPieceCue.accent} text-white text-sm md:text-lg font-black tracking-[0.25em] shadow-[0_0_24px_rgba(15,23,42,0.45)] border border-white/20 animate-pulse`}>
+                        {setPieceCue.label}
+                    </div>
+                </div>
+            )}
+
+            {/* TOP CONTROL BAR — slim, all controls here */}
+            <div className="h-11 bg-slate-900/95 backdrop-blur-xl border-b border-white/10 flex items-center px-2 gap-1 z-20 shrink-0 shadow-2xl">
+
+                {/* LEFT: Play/Pause + Speed */}
+                <button
+                    onClick={() => setSpeed(speed === 0 ? 1 : 0)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 shrink-0 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}
+                >
+                    {speed === 0 ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
+                </button>
+                <div className="flex gap-0.5">
+                    {([0.5, 1, 2, 4] as const).map(s => (
+                        <button
+                            key={s}
+                            onClick={() => setSpeed(s)}
+                            className={`w-7 h-8 rounded text-[9px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-500'}`}
+                        >
+                            {s === 0.5 ? '½' : `${s}x`}
+                        </button>
+                    ))}
+                </div>
+
+                {/* CENTER: Score */}
+                <div className="flex-1 flex items-center justify-center gap-2">
+                    <span className={`text-lg font-mono font-black transition-all ${goalFlash === 'HOME' ? 'text-emerald-300 scale-110' : 'text-white'}`}>
+                        {match.homeScore}
+                    </span>
+                    <div className="flex flex-col items-center leading-none">
+                        <span className="text-[8px] text-red-500 font-black animate-pulse">LIVE</span>
+                        <span className="text-slate-400 text-sm font-black">:</span>
+                    </div>
+                    <span className={`text-lg font-mono font-black transition-all ${goalFlash === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'}`}>
+                        {match.awayScore}
+                    </span>
+                    <div className="bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-600/40">
+                        {match.currentMinute}'
+                    </div>
+                </div>
+
+                {/* RIGHT: Utility buttons */}
+                <div className="flex items-center gap-0.5 shrink-0">
+                    <button
+                        onClick={() => setSoundEnabled(!soundEnabled)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                    >
+                        {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
+                    </button>
+                    <button
+                        onClick={() => setUseDefaultColors(!useDefaultColors)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                        title="Blue vs Red"
+                    >
+                        <Palette size={13} />
+                    </button>
+                    <button
+                        onClick={() => setShowNames(!showNames)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[9px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                        title="Toggle player names"
+                    >
+                        ID
+                    </button>
+                    <button
+                        onClick={() => setCameraTracking(!cameraTracking)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                        title="Toggle Zoom/Camera Tracking"
+                    >
+                        <Camera size={13} />
+                    </button>
+                    <button
+                        onClick={() => { setSpeed(0); setShowTacticsModal(true); }}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 active:bg-purple-500 text-white transition-all active:scale-95"
+                    >
+                        <Settings size={13} />
+                    </button>
+                    <button
+                        onClick={() => { setSpeed(0); setShowExitModal(true); }}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-700 active:bg-red-700 text-slate-400 active:text-white transition-all active:scale-95"
+                    >
+                        <X size={14} />
+                    </button>
+                </div>
+            </div>
+
+            {/* PITCH — fills all remaining space, overlays on top */}
+            <div className="flex-1 relative overflow-hidden bg-black">
+                <canvas
+                    ref={canvasRef}
+                    width={CANVAS_W}
+                    height={CANVAS_H}
+                    className="w-full h-full object-contain"
+                    style={{ touchAction: 'none' }}
+                />
+
+                {/* HOME TEAM OVERLAY — top left */}
+                <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-2 py-1.5 border border-white/10 shadow-lg max-w-[140px]">
+                    <TeamLogo team={homeTeam} className="w-7 h-7 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
+                    <div className="min-w-0">
+                        <div className="text-[10px] font-black text-white uppercase truncate leading-tight">{homeTeam.shortName || homeTeam.name.substring(0, 8)}</div>
+                        {renderOVR(homePlayersRef.current, 'left')}
+                    </div>
+                </div>
+
+                {/* AWAY TEAM OVERLAY — top right */}
+                <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-2 py-1.5 border border-white/10 shadow-lg max-w-[140px]">
+                    <div className="min-w-0 text-right">
+                        <div className="text-[10px] font-black text-white uppercase truncate leading-tight">{awayTeam.shortName || awayTeam.name.substring(0, 8)}</div>
+                        {renderOVR(awayPlayersRef.current, 'right')}
+                    </div>
+                    <TeamLogo team={awayTeam} className="w-7 h-7 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
+                </div>
+
+                {/* POSSESSION + SHOTS — bottom center overlay */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-white/10 shadow-lg">
+                    <div className="flex items-center gap-1.5 w-36">
+                        <span className="text-[9px] font-bold text-emerald-400 w-7 text-right shrink-0">{match.stats?.homePossession ?? 50}%</span>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-slate-700">
+                            <div className="h-full bg-emerald-500 transition-all" style={{ width: `${match.stats?.homePossession ?? 50}%` }} />
+                        </div>
+                        <span className="text-[9px] font-bold text-blue-400 w-7 shrink-0">{match.stats?.awayPossession ?? 50}%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[9px]">
+                        <span className="font-bold text-emerald-300">{match.stats?.homeShots ?? 0}</span>
+                        <span className="text-slate-500 uppercase tracking-wide">shots</span>
+                        <span className="font-bold text-blue-300">{match.stats?.awayShots ?? 0}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* MODALS */}
+
+            {showTacticsModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col p-4 md:p-8 overflow-hidden">
+                    <div className="flex justify-end mb-4">
+                        <button 
+                            onClick={() => { setShowTacticsModal(false); setSpeed(1); }} 
+                            className="p-2 bg-zinc-800 hover:bg-red-600 rounded-lg text-white transition-colors"
+                            title="Close"
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
+                    <div className="flex-1 bg-zinc-900 rounded-xl overflow-hidden shadow-2xl border border-zinc-800 flex flex-col items-center justify-center p-4">
+                        <div className="w-full h-full max-w-5xl overflow-y-auto">
+                            <TeamManagement
+                                team={managedSide === 'HOME' ? homeTeam : awayTeam}
+                                players={(managedSide === 'HOME' ? homePlayers : awayPlayers).map(p => {
+                                    if (substitutedOutIds.has(p.id)) {
+                                        return p;
+                                    }
+                                    const liveStamina = getLivePlayerStamina(p.id);
+                                    if (liveStamina !== undefined) {
+                                        return { ...p, condition: Math.floor(liveStamina) };
+                                    }
+                                    return p;
+                                })}
+                                opponent={managedSide === 'HOME' ? awayTeam : homeTeam}
+                                onUpdateTactic={(tactic) => onUpdateTactic(tactic, undefined, managedSide === 'HOME' ? homeTeam.id : awayTeam.id)}
+                                onPlayerClick={onPlayerClick}
+                                onUpdateLineup={(id, status) => { }}
+                                onSwapPlayers={onSubstitute}
+                                onAutoFix={onAutoFix}
+                                matchStatus={{
+                                    minute: match.currentMinute,
+                                    score: { home: match.homeScore, away: match.awayScore },
+                                    isHome: managedSide === 'HOME'
+                                }}
+                                t={t}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showHalfTime && (
+                <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4">
+                    <div className="bg-slate-900/90 border border-white/10 p-5 md:p-8 rounded-2xl flex flex-col items-center gap-4 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
+                        <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
+
+                        <div className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest shadow-lg">
+                            {t.halfTime || 'Devre Arası'}
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter">HALF TIME</h2>
+
+                        {/* Score */}
+                        <div className="flex items-center justify-center gap-6 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                            <div className="flex flex-col items-center gap-1 flex-1">
+                                <div className="text-4xl md:text-5xl font-black text-white leading-none">{match.homeScore}</div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{homeTeam.shortName || homeTeam.name}</div>
+                            </div>
+                            <div className="text-slate-600 text-3xl font-black">-</div>
+                            <div className="flex flex-col items-center gap-1 flex-1">
+                                <div className="text-4xl md:text-5xl font-black text-white leading-none">{match.awayScore}</div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{awayTeam.shortName || awayTeam.name}</div>
+                            </div>
+                        </div>
+
+                        {/* First half stats */}
+                        <div className="w-full space-y-2 bg-slate-800/50 rounded-xl p-4">
+                            <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">{t.firstHalfStats || 'İlk Yarı İstatistikleri'}</div>
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-white w-8 text-right">{match.stats?.homePossession ?? 50}%</span>
+                                <span className="text-slate-500 text-xs">{t.possession || 'Topa Sahiplik'}</span>
+                                <span className="font-bold text-white w-8">{match.stats?.awayPossession ?? 50}%</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-white w-8 text-right">{match.stats?.homeShots ?? 0}</span>
+                                <span className="text-slate-500 text-xs">{t.shots || 'Şutlar'}</span>
+                                <span className="font-bold text-white w-8">{match.stats?.awayShots ?? 0}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="font-bold text-emerald-400 w-8 text-right">{match.stats?.homeOnTarget ?? 0}</span>
+                                <span className="text-slate-500 text-xs">{t.onTarget || 'İsabetli'}</span>
+                                <span className="font-bold text-emerald-400 w-8">{match.stats?.awayOnTarget ?? 0}</span>
+                            </div>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={() => { setShowHalfTime(false); setShowTacticsModal(true); }}
+                                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors text-sm"
+                            >
+                                ⚙️ {t.changeTactic || 'Taktik'}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowHalfTime(false);
+                                    onSync(match.id, { minuteIncrement: true, event: null, additionalEvents: [], trace: [], liveData: match.liveData, stats: match.stats });
+                                    setSpeed(1);
+                                }}
+                                className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"
+                            >
+                                ▶️ {t.startSecondHalf || '2. Yarı'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showExitModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+                    <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-8 max-w-sm w-full shadow-2xl">
+                        <h3 className="text-2xl font-bold text-white mb-2">{t.quitMatch || 'Exit Match?'}</h3>
+                        <p className="text-zinc-400 text-sm mb-6">
+                            {t.matchContinues?.replace('{minute}', match.currentMinute.toString()) || `The match will be auto-simulated for the remaining time.`}
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => { setShowExitModal(false); setSpeed(1); }}
+                                className="flex-1 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-lg transition-colors"
+                            >
+                                {t.cancel || 'Cancel'}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowExitModal(false);
+                                    soundManager.stopAll();
+                                    onInstantFinish(match.id);
+                                    setTimeout(() => onFinish(match.id), 100);
+                                }}
+                                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-emerald-900/30"
+                            >
+                                {t.simulateAndQuit || 'Simulate & Exit'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* FULL TIME MODAL — shown when match.isPlayed becomes true */}
+            {match.isPlayed && (
+                <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4">
+                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden backdrop-blur-md">
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
+                        <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
+                            FULL TIME
+                        </h2>
+
+                        {/* Score */}
+                        <div className="flex items-center justify-center gap-8 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
+                            <div className="flex flex-col items-center gap-2 flex-1">
+                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${homeTeam.primaryColor}` }}>
+                                    {match.homeScore}
+                                </div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{homeTeam.name}</div>
+                            </div>
+                            <div className="text-slate-600 text-4xl font-black opacity-50">-</div>
+                            <div className="flex flex-col items-center gap-2 flex-1">
+                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${awayTeam.primaryColor}` }}>
+                                    {match.awayScore}
+                                </div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{awayTeam.name}</div>
+                            </div>
+                        </div>
+
+                        {/* Stats summary */}
+                        <div className="grid grid-cols-3 gap-4 w-full text-center py-2">
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Possession</div>
+                                <div className="text-white font-mono text-sm">{match.stats?.homePossession ?? 50}% - {match.stats?.awayPossession ?? 50}%</div>
+                            </div>
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Shots</div>
+                                <div className="text-white font-mono text-sm">{match.stats?.homeShots ?? 0} - {match.stats?.awayShots ?? 0}</div>
+                            </div>
+                            <div>
+                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">xG</div>
+                                <div className="text-white font-mono text-sm">{(match.stats?.homeXG ?? 0).toFixed(1)} - {(match.stats?.awayXG ?? 0).toFixed(1)}</div>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => onFinish(match.id)}
+                            className="w-full mt-2 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black rounded-xl text-lg shadow-lg shadow-emerald-900/40 transition-all uppercase tracking-widest"
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default DetailedMatchCenter;

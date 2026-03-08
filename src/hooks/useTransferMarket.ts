@@ -2,6 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { GameState, Player, Team, LineupStatus, MessageType } from '../../types';
 import { assignJerseyNumber, uuid } from '../utils/playerUtils';
+import { appendMessages, prunePendingOffers } from '../utils/stateLimits';
 
 interface UseTransferMarketProps {
     gameState: GameState | null;
@@ -238,8 +239,8 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                 ...prev,
                 players: updatedPlayers,
                 teams: updatedTeams,
-                pendingOffers: updatedOffers,
-                messages: [...prev.messages, newMessage]
+                pendingOffers: prunePendingOffers(updatedOffers),
+                messages: appendMessages(prev.messages, [newMessage])
             };
         });
     }, [setGameState, t]);
@@ -253,7 +254,7 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
 
             return {
                 ...prev,
-                pendingOffers: updatedOffers
+                pendingOffers: prunePendingOffers(updatedOffers)
             };
         });
     }, [setGameState]);
@@ -276,7 +277,7 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                 const updatedOffers2 = (prev.pendingOffers || []).map(o =>
                     o.id === offerId ? { ...o, status: 'REJECTED' as const } : o
                 );
-                return { ...prev, pendingOffers: updatedOffers2 };
+                return { ...prev, pendingOffers: prunePendingOffers(updatedOffers2) };
             }
 
             const ratio = counterAmount / offer.offerAmount;
@@ -305,20 +306,20 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                     return t;
                 });
                 newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.TRANSFER_OFFER, subject: `✅ ${buyingTeam.name} accepted your counter-offer`, body: `${buyingTeam.name} accepted €${(counterAmount / 1000000).toFixed(1)}M for ${player.firstName} ${player.lastName}.`, isRead: false, date: new Date().toISOString() });
-                return { ...prev, players: updatedPlayers, teams: updatedTeams, pendingOffers: updatedOffers, messages: newMessages };
+                return { ...prev, players: updatedPlayers, teams: updatedTeams, pendingOffers: prunePendingOffers(updatedOffers), messages: appendMessages(prev.messages, newMessages.slice(prev.messages.length)) };
 
             } else if (ratio <= 1.8) {
                 // AI counters back — split the difference
                 const aiCounter = Math.floor((offer.offerAmount + counterAmount) / 2);
                 updatedOffers = updatedOffers.map(o => o.id === offerId ? { ...o, offerAmount: aiCounter } : o);
                 newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.TRANSFER_OFFER, subject: `💬 ${buyingTeam.name} counters: €${(aiCounter / 1000000).toFixed(1)}M`, body: `${buyingTeam.name} won't go that high, but proposes €${(aiCounter / 1000000).toFixed(1)}M for ${player.lastName}. Accept or negotiate further.`, isRead: false, date: new Date().toISOString(), data: { offerId } });
-                return { ...prev, pendingOffers: updatedOffers, messages: newMessages };
+                return { ...prev, pendingOffers: prunePendingOffers(updatedOffers), messages: appendMessages(prev.messages, newMessages.slice(prev.messages.length)) };
 
             } else {
                 // Too high — AI walks out
                 updatedOffers = updatedOffers.map(o => o.id === offerId ? { ...o, status: 'REJECTED' as const } : o);
                 newMessages.push({ id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: `❌ ${buyingTeam.name} withdrew their offer`, body: `${buyingTeam.name} considered your counter of €${(counterAmount / 1000000).toFixed(1)}M too high and walked away from the deal.`, isRead: false, date: new Date().toISOString() });
-                return { ...prev, pendingOffers: updatedOffers, messages: newMessages };
+                return { ...prev, pendingOffers: prunePendingOffers(updatedOffers), messages: appendMessages(prev.messages, newMessages.slice(prev.messages.length)) };
             }
         });
     }, [setGameState]);
