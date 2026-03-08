@@ -494,16 +494,465 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         return null;
     };
 
+    type AttackApproach = 'PATIENT' | 'BALANCED' | 'VERTICAL' | 'FLUID';
+    type FinalThirdMode = 'PATIENT' | 'BALANCED' | 'EARLY_SHOT';
+    type DefenseApproach = 'LOW_BLOCK' | 'MID_BLOCK' | 'FRONT_FOOT' | 'HUNT';
+
+    const ATTACK_APPROACH_INSTRUCTION_IDS = ['RoamFromPosition'];
+    const FINAL_THIRD_INSTRUCTION_IDS = ['WorkBallIntoBox', 'ShootOnSight'];
+
+    const inferAttackApproach = (tactic: TeamTactic): AttackApproach => {
+        const instructions = tactic.instructions || [];
+        if (instructions.includes('RoamFromPosition')) return 'FLUID';
+        if (tactic.style === 'Counter' || tactic.passingStyle === 'Direct' || tactic.passingStyle === 'LongBall') return 'VERTICAL';
+        if (tactic.style === 'Possession' || tactic.passingStyle === 'Short' || tactic.tempo === 'Slow') return 'PATIENT';
+        return 'BALANCED';
+    };
+
+    const inferFinalThirdMode = (tactic: TeamTactic): FinalThirdMode => {
+        const instructions = tactic.instructions || [];
+        if (instructions.includes('ShootOnSight')) return 'EARLY_SHOT';
+        if (instructions.includes('WorkBallIntoBox')) return 'PATIENT';
+        return 'BALANCED';
+    };
+
+    const setAttackInstructions = (primary: FinalThirdMode) => {
+        const kept = (team.tactic.instructions || []).filter(i => !FINAL_THIRD_INSTRUCTION_IDS.includes(i));
+        if (primary === 'PATIENT') kept.push('WorkBallIntoBox');
+        if (primary === 'EARLY_SHOT') kept.push('ShootOnSight');
+        handleTacticChange('instructions', kept);
+    };
+
+    const applyAttackApproach = (mode: AttackApproach) => {
+        const nextTactic = { ...team.tactic };
+        const kept = (nextTactic.instructions || []).filter(i => !ATTACK_APPROACH_INSTRUCTION_IDS.includes(i));
+
+        if (mode === 'PATIENT') {
+            nextTactic.style = 'Possession';
+            nextTactic.mentality = 'Balanced';
+            nextTactic.passingStyle = 'Short';
+            nextTactic.tempo = 'Slow';
+        } else if (mode === 'BALANCED') {
+            nextTactic.style = 'Balanced';
+            nextTactic.mentality = 'Balanced';
+            nextTactic.passingStyle = 'Mixed';
+            nextTactic.tempo = 'Normal';
+        } else if (mode === 'VERTICAL') {
+            nextTactic.style = 'Counter';
+            nextTactic.mentality = 'Attacking';
+            nextTactic.passingStyle = 'Direct';
+            nextTactic.tempo = 'Fast';
+        } else {
+            nextTactic.style = 'Attacking';
+            nextTactic.mentality = 'Attacking';
+            nextTactic.passingStyle = 'Mixed';
+            nextTactic.tempo = 'Normal';
+            kept.push('RoamFromPosition');
+        }
+        nextTactic.instructions = kept;
+        onUpdateTactic(nextTactic);
+    };
+
+    const inferDefenseApproach = (tactic: TeamTactic): DefenseApproach => {
+        const press = tactic.pressingIntensity || 'Balanced';
+        const line = tactic.defensiveLine || 'Balanced';
+
+        if (press === 'Gegenpress' || (press === 'HighPress' && line === 'High')) return 'HUNT';
+        if (press === 'HighPress') return 'FRONT_FOOT';
+        if (press === 'StandOff' || line === 'Deep') return 'LOW_BLOCK';
+        return 'MID_BLOCK';
+    };
+
+    const applyDefenseApproach = (mode: DefenseApproach) => {
+        if (mode === 'LOW_BLOCK') {
+            onUpdateTactic({
+                ...team.tactic,
+                pressingIntensity: 'StandOff',
+                defensiveLine: 'Deep'
+            });
+            return;
+        }
+
+        if (mode === 'FRONT_FOOT') {
+            onUpdateTactic({
+                ...team.tactic,
+                pressingIntensity: 'HighPress',
+                defensiveLine: 'Balanced'
+            });
+            return;
+        }
+
+        if (mode === 'HUNT') {
+            onUpdateTactic({
+                ...team.tactic,
+                pressingIntensity: 'Gegenpress',
+                defensiveLine: 'High'
+            });
+            return;
+        }
+
+        onUpdateTactic({
+            ...team.tactic,
+            pressingIntensity: 'Balanced',
+            defensiveLine: 'Balanced'
+        });
+    };
+
+    const currentAttackApproach = inferAttackApproach(team.tactic);
+    const currentFinalThird = inferFinalThirdMode(team.tactic);
+    const currentDefenseApproach = inferDefenseApproach(team.tactic);
+
+    const getWidthLabel = (value?: TeamTactic['width']) => {
+        if (value === 'Narrow') return t.tacticNarrow;
+        if (value === 'Wide') return t.tacticWide;
+        return t.tacticBalanced || 'Dengeli';
+    };
+
+    const getAttackApproachLabel = (mode: AttackApproach) => {
+        if (mode === 'PATIENT') return t.attackApproachPatientLabel || 'Sabirli';
+        if (mode === 'VERTICAL') return t.attackApproachVerticalLabel || 'Dikine';
+        if (mode === 'FLUID') return t.attackApproachFluidLabel || 'Akiskan';
+        return t.styleBalanced || 'Dengeli';
+    };
+
+    const getFinalThirdLabel = (mode: FinalThirdMode) => {
+        if (mode === 'PATIENT') return t.instrWorkBall || 'Paslasarak Gir';
+        if (mode === 'EARLY_SHOT') return t.instrShootSight || 'Gordugun Yerden Vur';
+        return t.styleBalanced || 'Dengeli';
+    };
+
+    const getDefenseApproachLabel = (mode: DefenseApproach) => {
+        if (mode === 'LOW_BLOCK') return t.defenseApproachLowBlockLabel || 'Alcak Blok';
+        if (mode === 'FRONT_FOOT') return t.defenseApproachFrontFootLabel || 'Onde Karsila';
+        if (mode === 'HUNT') return t.defenseApproachHuntLabel || 'Avci Pres';
+        return t.defenseApproachMidBlockLabel || 'Orta Blok';
+    };
+
+    const getAggressionLabel = (value?: TeamTactic['aggression']) => {
+        if (value === 'Safe') return t.safe;
+        if (value === 'Aggressive') return t.aggressive;
+        if (value === 'Reckless') return t.reckless;
+        return t.normal || 'Normal';
+    };
+
+    const getMarkingLabel = (value?: TeamTactic['marking']) => value === 'Man' ? (t.markingMan || 'Adam Adama') : (t.markingZonal || 'Alan Savunmasi');
+
+    type RecommendedPlan = {
+        attack: AttackApproach;
+        finalThird: FinalThirdMode;
+        width: TeamTactic['width'];
+        defense: DefenseApproach;
+    };
+
+    const averageScore = (group: Player[], extractor: (player: Player) => number) => {
+        if (group.length === 0) return 50;
+        return group.reduce((sum, player) => sum + extractor(player), 0) / group.length;
+    };
+
+    const availablePlayers = players.filter(player => player.weeksInjured <= 0 && player.matchSuspension <= 0);
+    const availableDefs = availablePlayers.filter(player => normalizePos(player) === Position.DEF);
+    const availableMids = availablePlayers.filter(player => normalizePos(player) === Position.MID);
+    const availableFwds = availablePlayers.filter(player => normalizePos(player) === Position.FWD);
+    const availableOutfield = availablePlayers.filter(player => normalizePos(player) !== Position.GK);
+
+    const squadProfile = {
+        speed: averageScore([...availableMids, ...availableFwds], player => (player.attributes.speed + player.attributes.dribbling) / 2),
+        control: averageScore([...availableDefs, ...availableMids], player => (player.attributes.passing + player.attributes.vision + player.attributes.composure + player.attributes.decisions) / 4),
+        aerial: averageScore([...availableDefs, ...availableFwds], player => (player.attributes.strength + player.attributes.positioning + player.attributes.finishing) / 3),
+        press: averageScore(availableOutfield, player => (player.attributes.stamina + player.attributes.tackling + player.attributes.aggression) / 3),
+        solidity: averageScore([...availableDefs, ...availableMids], player => (player.attributes.tackling + player.attributes.positioning + player.attributes.strength) / 3),
+        creativity: averageScore([...availableMids, ...availableFwds], player => (player.attributes.passing + player.attributes.vision + player.attributes.dribbling) / 3),
+        width: averageScore([...availableDefs, ...availableMids, ...availableFwds], player => (player.attributes.speed + player.attributes.stamina + player.attributes.dribbling) / 3),
+        strikerDepth: availableFwds.length,
+        midfieldDepth: availableMids.length,
+        defenseDepth: availableDefs.length,
+    };
+
+    const getProfileLabel = (key: 'speed' | 'control' | 'aerial' | 'press' | 'solidity' | 'creativity') => {
+        const map = {
+            speed: t.dynamicStrengthSpeed || 'hizli gecis',
+            control: t.dynamicStrengthControl || 'pas ve kontrol',
+            aerial: t.dynamicStrengthAerial || 'hava ve fizik',
+            press: t.dynamicStrengthPress || 'pres enerjisi',
+            solidity: t.dynamicStrengthSolidity || 'savunma guvenligi',
+            creativity: t.dynamicStrengthCreativity || 'yaratici merkez',
+        };
+        return map[key];
+    };
+
+    const rankedStrengths = ([
+        ['speed', squadProfile.speed],
+        ['control', squadProfile.control],
+        ['aerial', squadProfile.aerial],
+        ['press', squadProfile.press],
+        ['solidity', squadProfile.solidity],
+        ['creativity', squadProfile.creativity],
+    ] as const)
+        .sort((left, right) => right[1] - left[1])
+        .slice(0, 3)
+        .map(([key]) => getProfileLabel(key));
+
+    const tacticalRisks: string[] = [];
+    if (['4-4-2', '3-5-2', '5-3-2', '4-1-2-1-2'].includes(team.tactic.formation) && squadProfile.strikerDepth < 2) {
+        tacticalRisks.push(t.dynamicRiskStrikerDepth || 'Bu dizilis icin yeterli ikinci forvet derinligi yok.');
+    }
+    if (['3-5-2', '3-4-3'].includes(team.tactic.formation) && squadProfile.solidity < 68) {
+        tacticalRisks.push(t.dynamicRiskBackThree || 'Uc stoperli yapi icin savunma guvenligi sinirda kalabilir.');
+    }
+    if ((currentDefenseApproach === 'HUNT' || currentDefenseApproach === 'FRONT_FOOT') && squadProfile.press < 68) {
+        tacticalRisks.push(t.dynamicRiskPress || 'Bu kadro cok agresif presi 90 dakikaya yaymakta zorlanabilir.');
+    }
+    if (['4-3-3', '3-4-3', '5-4-1', '5-3-2'].includes(team.tactic.formation) && squadProfile.width < 68) {
+        tacticalRisks.push(t.dynamicRiskWidth || 'Dogal genislik ve cizgi kosusu tehdidi sinirli olabilir.');
+    }
+
+    const buildPlan = (attack: AttackApproach, finalThird: FinalThirdMode, width: TeamTactic['width'], defense: DefenseApproach): RecommendedPlan => ({
+        attack,
+        finalThird,
+        width,
+        defense,
+    });
+
+    const getBaseFormationNote = (formation: TacticType) => {
+        const notes: Record<TacticType, string> = {
+            [TacticType.T_442]: t.dynamicFormationNote442 || 'Iki forvetli klasik yapi; gecis ve ceza sahasi varligi ile guclenir.',
+            [TacticType.T_433]: t.dynamicFormationNote433 || 'Kanat genisligi ve uc onlu hareketiyle rakibi yatay acmaya uygundur.',
+            [TacticType.T_352]: t.dynamicFormationNote352 || 'Merkez ustunlugu kurar; kanat yukunu orta saha kosulari ve bekler tasir.',
+            [TacticType.T_541]: t.dynamicFormationNote541 || 'Derin savunma ve tek cikis forvetiyle skor koruma ile kontra oyunu sever.',
+            [TacticType.T_451]: t.dynamicFormationNote451 || 'Orta sahayi kalabalik tutar, sabirli ve kompakt oyun icin guvenli bir iskelet sunar.',
+            [TacticType.T_4231]: t.dynamicFormationNote4231 || '10 numara ve cift pivot dengesini en rahat kuran sistemlerden biridir.',
+            [TacticType.T_343]: t.dynamicFormationNote343 || 'Uc forvetli baski ve genis kanat tehdidi icin agresif bir secenektir.',
+            [TacticType.T_4141]: t.dynamicFormationNote4141 || 'Tek cipa ile merkezi kilitler, ondeki dortluya ikinci dalga kosulari verir.',
+            [TacticType.T_532]: t.dynamicFormationNote532 || 'Uc stoper guvenligi ile iki forvet cikisini birlestirir; gecis oyunu dogal oturur.',
+            [TacticType.T_41212]: t.dynamicFormationNote41212 || 'Dar elmas merkezde kombinasyon kurar; beklerin verdigi genislik cok degerlidir.',
+            [TacticType.T_4321]: t.dynamicFormationNote4321 || 'Yarim alan oyunculari ve tek santrfor uzerinden ic koridor oyunu kurar.',
+        };
+        return notes[formation];
+    };
+
+    const getRecommendedSquadPlan = (formation: TacticType): RecommendedPlan => {
+        const hasTechnicalCore = squadProfile.control >= 74 && squadProfile.creativity >= 72;
+        const hasTransitionThreat = squadProfile.speed >= 72 && squadProfile.strikerDepth >= 2;
+        const hasAerialPresence = squadProfile.aerial >= 73 && squadProfile.strikerDepth >= 2;
+        const hasPressProfile = squadProfile.press >= 72 && squadProfile.solidity >= 70;
+
+        switch (formation) {
+            case TacticType.T_442:
+                if (hasTransitionThreat) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'FRONT_FOOT');
+                if (hasTechnicalCore) return buildPlan('BALANCED', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                if (hasAerialPresence) return buildPlan('VERTICAL', 'BALANCED', 'Balanced', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+            case TacticType.T_541:
+                if (squadProfile.speed >= 72) return buildPlan('VERTICAL', 'BALANCED', 'Balanced', 'LOW_BLOCK');
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Narrow', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'PATIENT', 'Narrow', 'LOW_BLOCK');
+            case TacticType.T_451:
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                if (hasPressProfile) return buildPlan('BALANCED', 'BALANCED', 'Narrow', 'FRONT_FOOT');
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+            case TacticType.T_343:
+                if (squadProfile.speed >= 72 && squadProfile.strikerDepth >= 3) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'FRONT_FOOT');
+                if (hasTechnicalCore) return buildPlan('FLUID', 'PATIENT', 'Wide', 'FRONT_FOOT');
+                return buildPlan('BALANCED', 'BALANCED', 'Wide', 'FRONT_FOOT');
+            case TacticType.T_4141:
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                if (hasPressProfile) return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'FRONT_FOOT');
+                return buildPlan('BALANCED', 'BALANCED', 'Narrow', 'MID_BLOCK');
+            case TacticType.T_532:
+                if (hasTransitionThreat) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'MID_BLOCK');
+                if (hasAerialPresence) return buildPlan('VERTICAL', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+            case TacticType.T_41212:
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Narrow', 'FRONT_FOOT');
+                if (hasTransitionThreat) return buildPlan('VERTICAL', 'BALANCED', 'Narrow', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'BALANCED', 'Narrow', 'MID_BLOCK');
+            case TacticType.T_4321:
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Narrow', 'MID_BLOCK');
+                if (squadProfile.speed >= 72) return buildPlan('VERTICAL', 'BALANCED', 'Balanced', 'FRONT_FOOT');
+                return buildPlan('BALANCED', 'BALANCED', 'Narrow', 'MID_BLOCK');
+            case TacticType.T_433:
+                if (squadProfile.speed >= 72 && squadProfile.width >= 70) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'FRONT_FOOT');
+                if (hasTechnicalCore) return buildPlan('PATIENT', 'PATIENT', 'Wide', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'BALANCED', 'Wide', 'MID_BLOCK');
+            case TacticType.T_4231:
+                if (hasTechnicalCore) return buildPlan('BALANCED', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                if (squadProfile.speed >= 72) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'FRONT_FOOT');
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+            case TacticType.T_352:
+                if (hasTransitionThreat) return buildPlan('VERTICAL', 'BALANCED', 'Wide', 'FRONT_FOOT');
+                if (hasTechnicalCore) return buildPlan('BALANCED', 'PATIENT', 'Balanced', 'MID_BLOCK');
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+            default:
+                return buildPlan('BALANCED', 'BALANCED', 'Balanced', 'MID_BLOCK');
+        }
+    };
+
+    const adjustPlanForOpponent = (basePlan: RecommendedPlan) => {
+        if (!opponent || !opponentSummary) {
+            return {
+                plan: basePlan,
+                note: t.dynamicOpponentNone || 'Rakip secili degil; bu oneriler yalnizca kendi kadro profilinden cikarildi.',
+            };
+        }
+
+        const adjusted = { ...basePlan };
+        let note = t.dynamicOpponentBalanced || 'Rakip net bir asirilik gostermiyor; kendi guc profiline yaslanabilirsin.';
+
+        if (opponentSummary.defenseApproach === 'LOW_BLOCK') {
+            adjusted.width = 'Wide';
+            adjusted.finalThird = 'PATIENT';
+            if (adjusted.attack === 'VERTICAL') adjusted.attack = 'BALANCED';
+            note = t.dynamicOpponentLowBlock || 'Derin blok rakibe karsi sabir ve genislik daha cok is yapar; zorlama sut yerine bos adami ara.';
+        } else if (opponentSummary.defenseApproach === 'HUNT' || opponent.tactic.pressingIntensity === 'HighPress' || opponent.tactic.pressingIntensity === 'Gegenpress') {
+            adjusted.attack = 'VERTICAL';
+            adjusted.finalThird = 'BALANCED';
+            if (adjusted.defense === 'LOW_BLOCK') adjusted.defense = 'MID_BLOCK';
+            note = t.dynamicOpponentHighPress || 'Yuksek prese karsi ilk baskiyi tek pasla veya daha dikine cikislarla kirman gerekir.';
+        } else if ([TacticType.T_343, TacticType.T_352, TacticType.T_532].includes(opponent.tactic.formation as TacticType)) {
+            adjusted.width = 'Wide';
+            note = t.dynamicOpponentBackThree || 'Uc stoperli rakibe karsi kanatlari ve bek arkasi alanlari zorlamak daha dogrudur.';
+        } else if (opponent.tactic.width === 'Wide' || opponentSummary.attackApproach === 'FLUID') {
+            adjusted.width = 'Narrow';
+            adjusted.defense = adjusted.defense === 'HUNT' ? 'FRONT_FOOT' : 'MID_BLOCK';
+            note = t.dynamicOpponentWide || 'Genis veya akiskan rakibe karsi merkezi koru; kendi blok boyunu gereksiz yere acma.';
+        } else if (opponentSummary.finalThird === 'EARLY_SHOT') {
+            adjusted.defense = adjusted.defense === 'HUNT' ? 'FRONT_FOOT' : 'MID_BLOCK';
+            note = t.dynamicOpponentEarlyShot || 'Erken vuran rakibe karsi ceza yayi onunu kapatip ikinci topu toplamak daha onemli hale gelir.';
+        }
+
+        return { plan: adjusted, note };
+    };
+
+    const formatPlan = (plan: RecommendedPlan) => [
+        getAttackApproachLabel(plan.attack),
+        getFinalThirdLabel(plan.finalThird),
+        getWidthLabel(plan.width),
+        getDefenseApproachLabel(plan.defense),
+    ].join(' + ');
+
+    const attackApproachOptions: { value: AttackApproach; label: string; desc: string }[] = [
+        { value: 'PATIENT', label: getAttackApproachLabel('PATIENT'), desc: t.attackApproachPatientDesc || 'Kisa pas, sakin kurulum' },
+        { value: 'BALANCED', label: getAttackApproachLabel('BALANCED'), desc: t.attackApproachBalancedDesc || 'Ne pasi ne sutu zorlar' },
+        { value: 'VERTICAL', label: getAttackApproachLabel('VERTICAL'), desc: t.attackApproachVerticalDesc || 'Hizli ve direkt cikar' },
+        { value: 'FLUID', label: getAttackApproachLabel('FLUID'), desc: t.attackApproachFluidDesc || 'Yer degistirir, hareketli hucum' }
+    ];
+
+    const finalThirdOptions: { value: FinalThirdMode; label: string; desc: string }[] = [
+        { value: 'PATIENT', label: getFinalThirdLabel('PATIENT'), desc: t.finalThirdPatientDesc || 'Dis sut azalt, net bosluk ara' },
+        { value: 'BALANCED', label: getFinalThirdLabel('BALANCED'), desc: t.finalThirdBalancedDesc || 'Oyuncu firsata gore karar versin' },
+        { value: 'EARLY_SHOT', label: getFinalThirdLabel('EARLY_SHOT'), desc: t.finalThirdEarlyShotDesc || 'Erken bitir, kaleyi daha cok yokla' }
+    ];
+
+    const defenseApproachOptions: { value: DefenseApproach; label: string; desc: string }[] = [
+        { value: 'LOW_BLOCK', label: getDefenseApproachLabel('LOW_BLOCK'), desc: t.defenseApproachLowBlockDesc || 'Geri cekil, ceza sahasini kapat' },
+        { value: 'MID_BLOCK', label: getDefenseApproachLabel('MID_BLOCK'), desc: t.defenseApproachMidBlockDesc || 'Hatlar kompakt kalsin' },
+        { value: 'FRONT_FOOT', label: getDefenseApproachLabel('FRONT_FOOT'), desc: t.defenseApproachFrontFootDesc || 'Topa cikar, rakibi bozar' },
+        { value: 'HUNT', label: getDefenseApproachLabel('HUNT'), desc: t.defenseApproachHuntDesc || 'Aninda baski ve yuksek hat' }
+    ];
+
+    const getAttackApproachInsight = (mode: AttackApproach) => {
+        if (mode === 'PATIENT') {
+            return {
+                motor: 'Altta motor bunu kisa pas + dusuk tempo + topa sahip olma mantigina cevirir.',
+                preview: 'Sahada daha yakin pas opsiyonlari, daha az zoraki sut ve daha sakin kurulum gorursun.'
+            };
+        }
+        if (mode === 'VERTICAL') {
+            return {
+                motor: 'Altta motor bunu direkt pas + hizli tempo + kontra niyetine cevirir.',
+                preview: 'Sahada daha erken dikine pas, kosu arkasi top ve hizli gecisler gorursun.'
+            };
+        }
+        if (mode === 'FLUID') {
+            return {
+                motor: 'Altta motor bunu daha serbest dolasim + daha hucumcu risk profiline cevirir.',
+                preview: 'Sahada yer degisimi, surpriz kosu ve daha ozgur kararlar gorursun.'
+            };
+        }
+        return {
+            motor: 'Altta motor bunu karisik pas + normal tempo + dengeli risk profiline cevirir.',
+            preview: 'Sahada oyuncu kalitesine gore pas, sut ve calim arasinda daha dengeli kararlar gorursun.'
+        };
+    };
+
+    const getFinalThirdInsight = (mode: FinalThirdMode) => {
+        if (mode === 'PATIENT') {
+            return 'Ceza sahasi disindan dusuk kalite sutlari azaltir; bos adami ve son pasi daha cok aratir.';
+        }
+        if (mode === 'EARLY_SHOT') {
+            return 'Kaleyi gorur gormez daha erken yoklar; iyi sutorlerde 24-32 metre bandinda deneme sayisi artar.';
+        }
+        return 'Son karari daha cok oyuncunun aci, bosluk ve yetenek kombinasyonuna birakir.';
+    };
+
+    const getWidthInsight = (value?: TeamTactic['width']) => {
+        if (value === 'Wide') {
+            return 'Kanat oyunculari daha cok cizgiye yayilir; byline kosusu, orta ve genis alan driblingi artar.';
+        }
+        if (value === 'Narrow') {
+            return 'Merkez baglanti, kisa pas ve ic koridor kullanimi artar; oyun daha sikisik ama daha kompakt olur.';
+        }
+        return 'Ne cizgiye fazla basar ne de gereksiz merkeze yigilir; en guvenli orta yol budur.';
+    };
+
+    const getDefenseApproachInsight = (mode: DefenseApproach) => {
+        if (mode === 'LOW_BLOCK') {
+            return 'Takim geri cekilir, daha az oyuncu prese cikar ve ceza sahasi onunu kapatmaya oynar.';
+        }
+        if (mode === 'FRONT_FOOT') {
+            return 'Rakibi daha erken karsilar, orta bloktan daha onerde savunur ama tamamen kumar oynamaz.';
+        }
+        if (mode === 'HUNT') {
+            return 'En agresif secenektir: daha cok presci, daha yuksek hat ve top kaybinda anlik baski gorursun.';
+        }
+        return 'Hatlar kompakt kalir; takim ne tamamen cekilir ne de gereksiz onde yakalanir.';
+    };
+
+    const getAggressionInsight = (value?: TeamTactic['aggression']) => {
+        if (value === 'Safe') return 'Ikili mucadelede daha yumusak kalir; faul ve kart azalir ama topu temiz kapma sayisi da duser.';
+        if (value === 'Aggressive') return 'Topa daha sert girer; fizik gucu iyi takimlarda top kazanimi artar ama faul de artabilir.';
+        if (value === 'Reckless') return 'Son caredir; mudahale sertligi en yuksektir ama kart ve faul riski belirgin bicimde buyur.';
+        return 'Ne fazla yumusak ne de gereksiz sert; en dengeli mudahale profilidir.';
+    };
+
+    const getMarkingInsight = (value?: TeamTactic['marking']) => {
+        if (value === 'Man') {
+            return 'Savunmaci yakindaki tehdide yapisir; bire bir temas artar ama sekil daha kolay dagilabilir.';
+        }
+        return 'Oyuncular adami degil bolgeyi korur; cizgi kompakt kalir ve pas koridoru kapatma hissi artar.';
+    };
+
+    const comboWarnings: string[] = [];
+    if (currentAttackApproach === 'PATIENT' && currentFinalThird === 'EARLY_SHOT') {
+        comboWarnings.push('Sabirli kurulum ile Gordugun Yerden Vur birbirini cekistirir: biri beklemek, digeri ilk goruste vurmak ister.');
+    }
+    if (currentAttackApproach === 'FLUID' && team.tactic.marking === 'Man' && team.tactic.aggression === 'Reckless') {
+        comboWarnings.push('Akiskan + Adam Adama + Kontrolsuz birlikteligi sekli dagitip gereksiz kart riskini buyutur.');
+    }
+    if (currentDefenseApproach === 'LOW_BLOCK' && team.tactic.width === 'Wide') {
+        comboWarnings.push('Alcak Blok + Genislik birlikte savunma yatayligini fazla acabilir; ikinci top toplamak zorlasabilir.');
+    }
+
+    const describeTactic = (tactic: TeamTactic) => {
+        const preset = detectPreset(tactic);
+        return {
+            preset: preset === 'Custom' ? null : preset,
+            attackApproach: inferAttackApproach(tactic),
+            finalThird: inferFinalThirdMode(tactic),
+            defenseApproach: inferDefenseApproach(tactic),
+        };
+    };
+
     const struct = getFormationStructure(team.tactic.formation);
     const visuals: { p: Player, presetRole: Position, idx: number, total: number }[] = [];
+    const opponentSummary = opponent ? describeTactic(opponent.tactic) : null;
+    const recommendedSquadPlan = getRecommendedSquadPlan(team.tactic.formation);
+    const opponentAdjustedPlan = adjustPlanForOpponent(recommendedSquadPlan);
+    const hasOpponentPlanShift = formatPlan(recommendedSquadPlan) !== formatPlan(opponentAdjustedPlan.plan);
 
-    const pitchOrderedStarters = [...starters].sort((a, b) => {
-        const posOrder = { [Position.GK]: 0, [Position.DEF]: 1, [Position.MID]: 2, [Position.FWD]: 3 };
-        const orderA = posOrder[normalizePos(a)];
-        const orderB = posOrder[normalizePos(b)];
-        if (orderA !== orderB) return orderA - orderB;
-        return b.overall - a.overall;
-    });
+    // Tactic board must follow exact lineup slots (lineupIndex 0..10)
+    // so what user sees here matches live match board one-to-one.
+    const pitchOrderedStarters = [...starters].sort((a, b) => (a.lineupIndex || 0) - (b.lineupIndex || 0));
 
     let playerCursor = 0;
     if (playerCursor < pitchOrderedStarters.length) visuals.push({ p: pitchOrderedStarters[playerCursor++], presetRole: Position.GK, idx: 0, total: 1 });
@@ -537,65 +986,40 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 <div className="text-blue-400 font-mono font-bold text-xs">{opponent.tactic?.formation || '4-4-2'}</div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.playStyle || 'Stil'}</div>
+                                <div className="text-[8px] text-slate-500 uppercase">Preset</div>
                                 <div className="text-purple-400 font-bold text-[10px]">
-                                    {opponent.tactic?.style === 'Attacking' ? t.styleAttacking :
-                                        opponent.tactic?.style === 'Counter' ? t.styleCounter :
-                                            opponent.tactic?.style === 'Defensive' ? t.styleDefensive :
-                                                opponent.tactic?.style === 'Possession' ? t.stylePossession :
-                                                    t.styleBalanced || 'Balanced'}
+                                    {opponentSummary?.preset || 'Ozel'}
+                                </div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">Hucum</div>
+                                <div className="text-cyan-400 font-bold text-[10px]">{getAttackApproachLabel(opponentSummary?.attackApproach || 'BALANCED')}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[68px]">
+                                <div className="text-[8px] text-slate-500 uppercase">Son Bolge</div>
+                                <div className="text-yellow-400 font-bold text-[10px]">{getFinalThirdLabel(opponentSummary?.finalThird || 'BALANCED')}</div>
+                            </div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
+                                <div className="text-[8px] text-slate-500 uppercase">{t.width || 'Genişlik'}</div>
+                                <div className="text-emerald-400 font-bold text-[10px]">
+                                    {getWidthLabel(opponent.tactic?.width)}
                                 </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
                                 <div className="text-[8px] text-slate-500 uppercase">{t.aggression || 'Agresif'}</div>
                                 <div className="text-orange-400 font-bold text-[10px]">
-                                    {opponent.tactic?.aggression === 'Safe' ? t.safe :
-                                        opponent.tactic?.aggression === 'Aggressive' ? t.aggressive :
-                                            opponent.tactic?.aggression === 'Reckless' ? t.reckless :
-                                                t.normal || 'Normal'}
+                                    {getAggressionLabel(opponent.tactic?.aggression)}
                                 </div>
                             </div>
-                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.tempo || 'Tempo'}</div>
-                                <div className="text-cyan-400 font-bold text-[10px]">
-                                    {opponent.tactic?.tempo === 'Slow' ? t.tempoSlow :
-                                        opponent.tactic?.tempo === 'Fast' ? t.tempoFast :
-                                            t.tacticBalanced || 'Normal'}
-                                </div>
-                            </div>
-                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.width || 'Genişlik'}</div>
-                                <div className="text-emerald-400 font-bold text-[10px]">
-                                    {opponent.tactic?.width === 'Narrow' ? t.tacticNarrow :
-                                        opponent.tactic?.width === 'Wide' ? t.tacticWide :
-                                            t.tacticBalanced || 'Balanced'}
-                                </div>
-                            </div>
-                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.passingStyle || 'Pas'}</div>
-                                <div className="text-yellow-400 font-bold text-[10px]">
-                                    {opponent.tactic?.passingStyle === 'Short' ? t.tacticShort :
-                                        opponent.tactic?.passingStyle === 'Direct' ? t.tacticDirect :
-                                            opponent.tactic?.passingStyle === 'LongBall' ? t.tacticLongBall :
-                                                t.tacticBalanced || 'Mixed'}
-                                </div>
-                            </div>
-                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.pressingIntensity || 'Press'}</div>
+                            <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[68px]">
+                                <div className="text-[8px] text-slate-500 uppercase">Savunma</div>
                                 <div className="text-red-400 font-bold text-[10px]">
-                                    {opponent.tactic?.pressingIntensity === 'StandOff' ? t.pressStandOff :
-                                        opponent.tactic?.pressingIntensity === 'HighPress' ? t.pressHigh :
-                                            opponent.tactic?.pressingIntensity === 'Gegenpress' ? t.pressGegen :
-                                                t.pressBalanced || 'Balanced'}
+                                    {getDefenseApproachLabel(opponentSummary?.defenseApproach || 'MID_BLOCK')}
                                 </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">{t.defensiveLine || 'Def'}</div>
-                                <div className="text-blue-300 font-bold text-[10px]">
-                                    {opponent.tactic?.defensiveLine === 'Deep' ? t.tacticDeep :
-                                        opponent.tactic?.defensiveLine === 'High' ? t.tacticHigh :
-                                            t.tacticBalanced || 'Balanced'}
-                                </div>
+                                <div className="text-[8px] text-slate-500 uppercase">Markaj</div>
+                                <div className="text-blue-300 font-bold text-[10px]">{getMarkingLabel(opponent.tactic?.marking)}</div>
                             </div>
                         </div>
                     </div>
@@ -604,24 +1028,29 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     {(() => {
                         const oppStyle = opponent.tactic?.style || 'Balanced';
                         const oppPressing = opponent.tactic?.pressingIntensity || 'Balanced';
+                        const oppApproach = opponentSummary?.attackApproach || 'BALANCED';
+                        const oppFinalThird = opponentSummary?.finalThird || 'BALANCED';
                         let suggestion = '';
                         let suggestionIcon = '💡';
 
                         if (oppPressing === 'Gegenpress' || oppPressing === 'HighPress') {
                             suggestion = t.counterHighPress || 'Tehlike: Şok pres altındayız. Topu ayakta çok tutma (Tempo = Hızlı). Defans arkasındaki boşluklara "Uzun/Direkt Pas" ile sız!';
                             suggestionIcon = '🚀';
-                        } else if (oppStyle === 'Possession' || oppStyle === 'Tiki-Taka') {
+                        } else if (oppApproach === 'PATIENT' || oppStyle === 'Possession') {
                             suggestion = t.counterPossession || 'Rakip topu vermiyor. Gegenpress ile boğ ya da tam tersi Derin Defans ("Geride Karşıla") ile sahanı kapat ve Kontraya çık.';
                             suggestionIcon = '⚡';
-                        } else if (oppStyle === 'Counter' || oppStyle === 'FluidCounter') {
+                        } else if (oppApproach === 'VERTICAL' || oppStyle === 'Counter' || oppStyle === 'FluidCounter') {
                             suggestion = t.counterCounter || 'Kontra arıyorlar. Savunma hattını çok öne ("High") çıkarma. "Temkinli" veya "Normal" agresiflikte kalarak kanatlara dikkat et.';
                             suggestionIcon = '🎯';
                         } else if (oppStyle === 'Defensive' || oppStyle === 'ParkTheBus' || oppStyle === 'Catenaccio') {
                             suggestion = t.counterDefensive || 'Otobüs çekiyorlar. Kesinlikle "Geniş" oyna, stoperleri iki yana aç. "Tempo" düşür, bıkmadan "Paslaşarak Gir" aramalıyız.';
                             suggestionIcon = '🔓';
-                        } else if (oppStyle === 'Attacking' || oppStyle === 'TotalFootball') {
+                        } else if (oppApproach === 'FLUID' || oppStyle === 'Attacking' || oppStyle === 'TotalFootball') {
                             suggestion = t.counterAttacking || 'Aşırı hücuma kalkıyorlar. Savunma arkasında dev boşluklar var. "Kontra" veya "Kanat Oyunu" ile arkaya uzun at, deparlı forvetler lazım! ';
                             suggestionIcon = '🔥';
+                        } else if (oppFinalThird === 'EARLY_SHOT') {
+                            suggestion = t.counterEarlyShot || 'Kaleyi gorur gormez yokluyorlar. Ceza yayini kapat, sut koridorunu daralt ve ikinci toplari topla.';
+                            suggestionIcon = '🧱';
                         } else {
                             suggestion = t.counterBalanced || 'Taktikleri dengeli. Orta sahadaki ikili mücadeleleri kazanan fişi çeker. Takımın yıldızlarına dayalı standart oyununu oyna.';
                             suggestionIcon = '⚖️';
@@ -716,7 +1145,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             </div>
                         )}
                         {tacticTab === 'FORMATION' && (
-                            <>
+                            <div className="space-y-3">
                                 <div>
                                     <label className="text-[9px] uppercase text-slate-500 font-bold">{t.formation}</label>
                                     <div className="grid grid-cols-3 gap-1 mt-1 max-h-32 overflow-y-auto custom-scrollbar pr-1">
@@ -734,196 +1163,239 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         ))}
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
-                                    <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
 
-                                        <button
-                                            key="Safe"
-                                            onClick={() => handleTacticChange('aggression', 'Safe')}
-                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Safe' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                        >
-                                            {t.safe}
-                                        </button>
-                                        <button
-                                            key="Normal"
-                                            onClick={() => handleTacticChange('aggression', 'Normal')}
-                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Normal' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                        >
-                                            {t.normal}
-                                        </button>
-                                        <button
-                                            key="Aggressive"
-                                            onClick={() => handleTacticChange('aggression', 'Aggressive')}
-                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Aggressive' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                                        >
-                                            {t.aggressive}
-                                        </button>
-                                        <button
-                                            key="Reckless"
-                                            onClick={() => handleTacticChange('aggression', 'Reckless')}
-                                            className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === 'Reckless' ? 'bg-red-700 text-white animate-pulse' : 'text-slate-400 hover:text-red-500'}`}
-                                            title="Risk: Yüksek Kart!"
-                                        >
-                                            {t.reckless}
-                                        </button>
-
+                                <div className="bg-slate-900/60 border border-slate-700 rounded-lg p-2.5 space-y-2">
+                                    <div>
+                                        <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold">{t.tacticCoreTitle || 'Takim Omurgasi'}</div>
+                                        <div className="text-[10px] text-slate-400 mt-0.5">{t.tacticCoreDesc || 'Dizilisi degistir, geri kalan planin nasil bir futbol cikardigini asagida tek bakista gor.'}</div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
+                                            <div className="text-[8px] uppercase text-slate-500">Preset</div>
+                                            <div className="text-[11px] font-bold text-indigo-300 mt-0.5">{describeTactic(team.tactic).preset || t.customPlan || 'Ozel Plan'}</div>
+                                        </div>
+                                        <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
+                                            <div className="text-[8px] uppercase text-slate-500">{t.attack || 'Hucum'}</div>
+                                            <div className="text-[11px] font-bold text-emerald-300 mt-0.5">{getAttackApproachLabel(currentAttackApproach)}</div>
+                                            <div className="text-[9px] text-slate-400">{getFinalThirdLabel(currentFinalThird)}</div>
+                                        </div>
+                                        <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
+                                            <div className="text-[8px] uppercase text-slate-500">{t.defense || 'Savunma'}</div>
+                                            <div className="text-[11px] font-bold text-red-300 mt-0.5">{getDefenseApproachLabel(currentDefenseApproach)}</div>
+                                            <div className="text-[9px] text-slate-400">{getMarkingLabel(team.tactic.marking)}</div>
+                                        </div>
+                                        <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
+                                            <div className="text-[8px] uppercase text-slate-500">{t.tackleRiskTitle || 'Mudahale'}</div>
+                                            <div className="text-[11px] font-bold text-orange-300 mt-0.5">{getAggressionLabel(team.tactic.aggression)}</div>
+                                            <div className="text-[9px] text-slate-400">{getWidthLabel(team.tactic.width)} {t.width || 'Genislik'}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </>
+
+                                <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg px-2.5 py-2 text-[10px] text-blue-100">
+                                    {t.tacticCoreHint || 'Bu sekme artik ayar yigini degil: once omurgayi kur, sonra Hucum ve Savunma sekmelerinde davranisi ince ayarla.'}
+                                </div>
+
+                                <div className="bg-indigo-900/25 border border-indigo-700/30 rounded-lg px-2.5 py-2 text-[10px] text-indigo-100 space-y-2">
+                                    <div className="text-[9px] uppercase tracking-wider text-indigo-300 font-bold">{t.dynamicFormationAdviceTitle || 'Dinamik dizilis onerisi'}</div>
+                                    <div>
+                                        <span className="text-indigo-300/80">{t.dynamicFormationShapeTitle || 'Sekil notu'}:</span> {getBaseFormationNote(team.tactic.formation)}
+                                    </div>
+                                    <div>
+                                        <span className="text-indigo-300/80">{t.dynamicFormationBestFitTitle || 'Kadroya en uygun plan'}:</span> {formatPlan(recommendedSquadPlan)}
+                                    </div>
+                                    <div>
+                                        <span className="text-indigo-300/80">{t.dynamicFormationStrengthsTitle || 'Takim gucleri'}:</span> {rankedStrengths.join(' • ') || (t.dynamicStrengthBalanced || 'dengeli kadro')}
+                                    </div>
+                                    <div>
+                                        <span className="text-indigo-300/80">{t.dynamicFormationRiskTitle || 'Dikkat'}:</span> {tacticalRisks[0] || t.dynamicRiskNone || 'Bu dizilis icin belirgin bir yapisal alarm gorunmuyor.'}
+                                    </div>
+                                    <div className="border-t border-indigo-700/30 pt-2 space-y-1">
+                                        <div>
+                                            <span className="text-indigo-300/80">{t.dynamicFormationOpponentTitle || 'Rakibe gore mac plani'}:</span> {hasOpponentPlanShift ? formatPlan(opponentAdjustedPlan.plan) : formatPlan(recommendedSquadPlan)}
+                                        </div>
+                                        <div className="text-indigo-200/85">{opponentAdjustedPlan.note}</div>
+                                    </div>
+                                </div>
+
+                                {comboWarnings.length > 0 && (
+                                    <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-100 space-y-1.5">
+                                        <div className="text-[9px] uppercase tracking-wider text-amber-300 font-bold">Uyum uyarisi</div>
+                                        {comboWarnings.map((warning, index) => (
+                                            <div key={`combo-warning-${index}`}>{warning}</div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {tacticTab === 'IN_POSSESSION' && (
                             <div className="space-y-2">
-                                {/* Style - Main playing style */}
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.styleLabel || 'Style'}</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideAttackApproachTitle || 'Hucum Yaklasimi'}</label>
                                     <div className="grid grid-cols-2 gap-1 mt-0.5">
-                                        {[
-                                            { value: 'Attacking', label: t.styleAttacking || 'Attacking' },
-                                            { value: 'Balanced', label: t.styleBalanced || 'Balanced' },
-                                            { value: 'Counter', label: t.styleCounter || 'Counter' },
-                                            { value: 'Defensive', label: t.styleDefensive || 'Defensive' },
-                                            { value: 'Possession', label: t.stylePossession || 'Possession' }
-                                        ].map(s => (
+                                        {attackApproachOptions.map(s => (
                                             <button
                                                 key={s.value}
-                                                onClick={() => handleTacticChange('style', s.value)}
-                                                className={`px-1 py-1 text-[9px] font-bold rounded border transition-all ${(team.tactic.style || 'Balanced') === s.value
+                                                onClick={() => applyAttackApproach(s.value as AttackApproach)}
+                                                className={`px-2 py-1.5 text-left text-[9px] font-bold rounded border transition-all ${currentAttackApproach === s.value
                                                     ? 'bg-emerald-600 text-white border-emerald-500'
                                                     : 'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600'
                                                     }`}
                                             >
-                                                {s.label}
+                                                <div>{s.label}</div>
+                                                <div className="text-[8px] text-slate-200/80">{s.desc}</div>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
-                                {/* Decision Risk / Mentality */}
+
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.mentalityLabel || 'Decision Risk'}</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideFinalThirdTitle || 'Son Ucuncu Bolge'}</label>
+                                    <div className="grid grid-cols-3 gap-1 mt-0.5">
+                                        {finalThirdOptions.map(option => (
+                                            <button
+                                                key={option.value}
+                                                onClick={() => setAttackInstructions(option.value as FinalThirdMode)}
+                                                className={`rounded border px-2 py-1.5 text-left transition-all ${currentFinalThird === option.value ? 'border-yellow-500 bg-yellow-700/70 text-white' : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:bg-slate-700'}`}
+                                            >
+                                                <div className="text-[10px] font-bold">{option.label}</div>
+                                                <div className="text-[9px] text-slate-300/80">{option.desc}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                        <button onClick={() => handleTacticChange('mentality', 'Defensive')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Defensive' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityDefensive || 'Cautious'}</button>
-                                        <button onClick={() => handleTacticChange('mentality', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Balanced' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityBalanced || 'Balanced'}</button>
-                                        <button onClick={() => handleTacticChange('mentality', 'Attacking')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.mentality || 'Balanced') === 'Attacking' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.mentalityAttacking || 'Risk-Taking'}</button>
+                                        <button onClick={() => handleTacticChange('width', 'Narrow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Narrow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticNarrow}</button>
+                                        <button onClick={() => handleTacticChange('width', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Balanced' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Bal'}</button>
+                                        <button onClick={() => handleTacticChange('width', 'Wide')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.width === 'Wide' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticWide}</button>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-[10px] text-slate-200 space-y-2">
+                                    <div className="text-[9px] uppercase tracking-wider text-emerald-300 font-bold">Bu secince sahada ne gorursun</div>
                                     <div>
-                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
-                                        <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                            <button onClick={() => handleTacticChange('width', 'Narrow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Narrow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticNarrow}</button>
-                                            <button onClick={() => handleTacticChange('width', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Balanced' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Bal'}</button>
-                                            <button onClick={() => handleTacticChange('width', 'Wide')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.width === 'Wide' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticWide}</button>
-                                        </div>
+                                        <span className="text-slate-400">{getAttackApproachLabel(currentAttackApproach)}:</span> {getAttackApproachInsight(currentAttackApproach).preview}
                                     </div>
                                     <div>
-                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.passingStyle}</label>
-                                        <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                            <button onClick={() => handleTacticChange('passingStyle', 'Short')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Short' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticShort}</button>
-                                            <button onClick={() => handleTacticChange('passingStyle', 'Mixed')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.passingStyle || 'Mixed') === 'Mixed' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Mix'}</button>
-                                            <button onClick={() => handleTacticChange('passingStyle', 'Direct')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'Direct' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticDirect}</button>
-                                            <button onClick={() => handleTacticChange('passingStyle', 'LongBall')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.passingStyle === 'LongBall' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticLongBall || 'Long'}</button>
-                                        </div>
+                                        <span className="text-slate-400">{getFinalThirdLabel(currentFinalThird)}:</span> {getFinalThirdInsight(currentFinalThird)}
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.tempo || 'Tempo'}</label>
-                                    <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                        <button onClick={() => handleTacticChange('tempo', 'Slow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Slow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoSlow || 'Slow'}</button>
-                                        <button onClick={() => handleTacticChange('tempo', 'Normal')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Normal' || !team.tactic.tempo ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Normal'}</button>
-                                        <button onClick={() => handleTacticChange('tempo', 'Fast')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.tempo === 'Fast' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tempoFast || 'Fast'}</button>
+                                    <div>
+                                        <span className="text-slate-400">{getWidthLabel(team.tactic.width)}:</span> {getWidthInsight(team.tactic.width)}
                                     </div>
                                 </div>
 
-                                {/* PLAYER INSTRUCTIONS - NEW TOGGLES */}
-                                <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.instructions || 'Instructions'}</label>
-                                    <div className="flex flex-wrap gap-1 mt-0.5">
-                                        {[
-                                            { id: 'WorkBallIntoBox', label: t.instrWorkBall, icon: '🛡️' },
-                                            { id: 'ShootOnSight', label: t.instrShootSight, icon: '🚀' },
-                                            { id: 'RoamFromPosition', label: t.instrRoam, icon: '🔄' }
-                                        ].map(instr => {
-                                            const isActive = (team.tactic.instructions || []).includes(instr.id);
-                                            return (
-                                                <button
-                                                    key={instr.id}
-                                                    onClick={() => {
-                                                        const current = team.tactic.instructions || [];
-                                                        const exists = current.includes(instr.id);
-                                                        // Toggle logic
-                                                        const newInstr = exists
-                                                            ? current.filter(i => i !== instr.id)
-                                                            : [...current, instr.id];
-
-                                                        // mutually exclusive check
-                                                        if (!exists) {
-                                                            if (instr.id === 'WorkBallIntoBox') {
-                                                                const idx = newInstr.indexOf('ShootOnSight');
-                                                                if (idx > -1) newInstr.splice(idx, 1);
-                                                            }
-                                                            if (instr.id === 'ShootOnSight') {
-                                                                const idx = newInstr.indexOf('WorkBallIntoBox');
-                                                                if (idx > -1) newInstr.splice(idx, 1);
-                                                            }
-                                                        }
-
-                                                        handleTacticChange('instructions', newInstr);
-                                                    }}
-                                                    className={`px-2 py-1.5 text-[9px] font-bold rounded border transition-all flex items-center gap-1 ${isActive
-                                                        ? 'bg-yellow-600 text-white border-yellow-500 shadow-sm'
-                                                        : 'bg-slate-700 text-slate-400 border-slate-600 hover:bg-slate-600'
-                                                        }`}
-                                                >
-                                                    <span>{instr.icon}</span>
-                                                    <span>{instr.label}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
+                                <div className="bg-cyan-950/35 border border-cyan-700/25 rounded-lg px-2.5 py-2 text-[10px] text-cyan-100 space-y-1.5">
+                                    <div className="text-[9px] uppercase tracking-wider text-cyan-300 font-bold">Motor eslemesi</div>
+                                    <div>{getAttackApproachInsight(currentAttackApproach).motor}</div>
+                                    <div className="text-cyan-200/85">Bunlar artik ekranda ayri ayri secilen ayarlar degil; sen yuksek seviye plan secersin, motor altta bunu uygun pas-tempo-risk profiline cevirir.</div>
                                 </div>
+
+                                {comboWarnings.length > 0 && (
+                                    <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-100 space-y-1.5">
+                                        <div className="text-[9px] uppercase tracking-wider text-amber-300 font-bold">Uyum uyarisi</div>
+                                        {comboWarnings.map((warning, index) => (
+                                            <div key={`attack-warning-${index}`}>{warning}</div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
 
                         {tacticTab === 'OUT_POSSESSION' && (
-                            <div className="space-y-2">
-                                {/* PRESSING INTENSITY - NEW */}
+                            <div className="space-y-3">
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.pressingIntensity}</label>
-                                    <div className="flex flex-col gap-1 mt-1 bg-slate-900/50 p-1.5 rounded">
-                                        {[
-                                            { value: 'StandOff', label: t.pressStandOff, color: 'bg-blue-600' },
-                                            { value: 'Balanced', label: t.pressBalanced, color: 'bg-slate-600' },
-                                            { value: 'HighPress', label: t.pressHigh, color: 'bg-orange-600' },
-                                            { value: 'Gegenpress', label: t.pressGegen, color: 'bg-red-600' }
-                                        ].map(p => (
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensePlanTitle || 'Savunma Plani'}</label>
+                                    <div className="grid grid-cols-2 gap-1 mt-1">
+                                        {defenseApproachOptions.map(option => (
                                             <button
-                                                key={p.value}
-                                                onClick={() => handleTacticChange('pressingIntensity', p.value)}
-                                                className={`text-[10px] py-1.5 px-2 rounded font-bold text-left transition-all border ${(team.tactic.pressingIntensity || 'Balanced') === p.value
-                                                    ? `${p.color} text-white border-white/30 shadow-lg`
-                                                    : 'bg-slate-700 text-slate-400 border-transparent hover:bg-slate-600'
+                                                key={option.value}
+                                                onClick={() => applyDefenseApproach(option.value as DefenseApproach)}
+                                                className={`px-2 py-1.5 text-left rounded border transition-all ${currentDefenseApproach === option.value
+                                                    ? 'border-red-500 bg-red-700/70 text-white'
+                                                    : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:bg-slate-700'
                                                     }`}
                                             >
-                                                <div className="flex justify-between items-center w-full">
-                                                    <span>{p.label}</span>
-                                                    {(team.tactic.pressingIntensity || 'Balanced') === p.value && <div className="w-2 h-2 rounded-full bg-white"></div>}
-                                                </div>
+                                                <div className="text-[10px] font-bold">{option.label}</div>
+                                                <div className="text-[9px] text-slate-300/80">{option.desc}</div>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensiveLine}</label>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
-                                        <button onClick={() => handleTacticChange('defensiveLine', 'Deep')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'Deep' ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticDeep}</button>
-                                        <button onClick={() => handleTacticChange('defensiveLine', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'Balanced' || !team.tactic.defensiveLine ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticBalanced || 'Normal'}</button>
-                                        <button onClick={() => handleTacticChange('defensiveLine', 'High')} className={`flex-1 text-[9px] py-1 rounded font-bold ${team.tactic.defensiveLine === 'High' ? 'bg-red-600 text-white' : 'text-slate-400'}`}>{t.tacticHigh}</button>
+                                        {[
+                                            { value: 'Safe', label: t.safe, activeClass: 'bg-blue-600 text-white' },
+                                            { value: 'Normal', label: t.normal, activeClass: 'bg-slate-500 text-white' },
+                                            { value: 'Aggressive', label: t.aggressive, activeClass: 'bg-orange-600 text-white' },
+                                            { value: 'Reckless', label: t.reckless, activeClass: 'bg-red-700 text-white animate-pulse' }
+                                        ].map(option => (
+                                            <button
+                                                key={option.value}
+                                                onClick={() => handleTacticChange('aggression', option.value)}
+                                                className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${team.tactic.aggression === option.value ? option.activeClass : 'text-slate-400 hover:text-white'}`}
+                                                title={option.value === 'Reckless' ? 'Risk: Yuksek kart!' : undefined}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
+
+                                <div>
+                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.marking || 'Markaj'}</label>
+                                    <div className="grid grid-cols-2 gap-1 mt-0.5">
+                                        <button
+                                            onClick={() => handleTacticChange('marking', 'Zonal')}
+                                            className={`rounded border px-2 py-1.5 text-left transition-all ${team.tactic.marking !== 'Man' ? 'border-blue-500 bg-blue-700/60 text-white' : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500'}`}
+                                        >
+                                            <div className="text-[10px] font-bold">{t.markingZonal || 'Alan Savunmasi'}</div>
+                                            <div className="text-[9px] text-slate-300/80">{t.markingZonalDesc || 'Sekli korur, yerlesimi dagitmaz'}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => handleTacticChange('marking', 'Man')}
+                                            className={`rounded border px-2 py-1.5 text-left transition-all ${team.tactic.marking === 'Man' ? 'border-blue-500 bg-blue-700/60 text-white' : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500'}`}
+                                        >
+                                            <div className="text-[10px] font-bold">{t.markingMan || 'Adam Adama'}</div>
+                                            <div className="text-[9px] text-slate-300/80">{t.markingManDesc || 'Temasli oynar, bire biri zorlar'}</div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-[10px] text-slate-300">
+                                    <span className="text-slate-500 uppercase text-[8px] tracking-wider">{t.engineMappingTitle || 'Motor karsiligi'}</span>
+                                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                                        <span>{t.pressingIntensity || 'Pres'}: <span className="text-red-300">{team.tactic.pressingIntensity === 'StandOff' ? t.pressStandOff : team.tactic.pressingIntensity === 'HighPress' ? t.pressHigh : team.tactic.pressingIntensity === 'Gegenpress' ? t.pressGegen : t.pressBalanced || 'Dengeli'}</span></span>
+                                        <span>{t.defensiveLine || 'Hat'}: <span className="text-blue-300">{team.tactic.defensiveLine === 'Deep' ? t.tacticDeep : team.tactic.defensiveLine === 'High' ? t.tacticHigh : t.tacticBalanced || 'Dengeli'}</span></span>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-[10px] text-slate-200 space-y-2">
+                                    <div className="text-[9px] uppercase tracking-wider text-red-300 font-bold">Bu secince savunmada ne gorursun</div>
+                                    <div>
+                                        <span className="text-slate-400">{getDefenseApproachLabel(currentDefenseApproach)}:</span> {getDefenseApproachInsight(currentDefenseApproach)}
+                                    </div>
+                                    <div>
+                                        <span className="text-slate-400">{getAggressionLabel(team.tactic.aggression)}:</span> {getAggressionInsight(team.tactic.aggression)}
+                                    </div>
+                                    <div>
+                                        <span className="text-slate-400">{getMarkingLabel(team.tactic.marking)}:</span> {getMarkingInsight(team.tactic.marking)}
+                                    </div>
+                                </div>
+
+                                {comboWarnings.length > 0 && (
+                                    <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg px-2.5 py-2 text-[10px] text-amber-100 space-y-1.5">
+                                        <div className="text-[9px] uppercase tracking-wider text-amber-300 font-bold">Uyum uyarisi</div>
+                                        {comboWarnings.map((warning, index) => (
+                                            <div key={`defense-warning-${index}`}>{warning}</div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
@@ -979,9 +1451,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         const borderClass = isSevereError ? 'border-red-500 border-2 animate-pulse bg-red-900 text-red-200' : 'border-slate-900';
                         const isDragging = draggingId === p.id;
 
-                        // Forma numarası - visuals dizisindeki global index'e göre ata
-                        const globalIndex = visuals.indexOf(item);
-                        const jerseyNumber = p.jerseyNumber || (activeRole === Position.GK ? 1 : globalIndex + 1);
+                        // Forma numarası fallback: lineup slot temelli olmalı
+                        const jerseyNumber = p.jerseyNumber || ((p.lineupIndex || 0) + 1);
 
                         const instrIcon = getInstructionIcon(p.lineupIndex || 0);
 

@@ -18,6 +18,41 @@ interface RoleDefinition {
   weights: AttributeWeights;
 }
 
+type AttackApproach = "PATIENT" | "BALANCED" | "VERTICAL" | "FLUID";
+type DefenseApproach = "LOW_BLOCK" | "MID_BLOCK" | "FRONT_FOOT" | "HUNT";
+
+const inferAttackApproach = (tactic: TeamTactic): AttackApproach => {
+  const instructions = tactic.instructions || [];
+  if (instructions.includes("RoamFromPosition")) return "FLUID";
+  if (
+    tactic.style === "Counter" ||
+    tactic.passingStyle === "Direct" ||
+    tactic.passingStyle === "LongBall"
+  ) {
+    return "VERTICAL";
+  }
+  if (
+    tactic.style === "Possession" ||
+    tactic.passingStyle === "Short" ||
+    tactic.tempo === "Slow"
+  ) {
+    return "PATIENT";
+  }
+  return "BALANCED";
+};
+
+const inferDefenseApproach = (tactic: TeamTactic): DefenseApproach => {
+  const press = tactic.pressingIntensity || "Balanced";
+  const line = tactic.defensiveLine || "Balanced";
+
+  if (press === "Gegenpress" || (press === "HighPress" && line === "High")) {
+    return "HUNT";
+  }
+  if (press === "HighPress") return "FRONT_FOOT";
+  if (press === "StandOff" || line === "Deep") return "LOW_BLOCK";
+  return "MID_BLOCK";
+};
+
 const ROLE_DEFINITIONS: Record<Position, Record<string, RoleDefinition>> = {
   [Position.GK]: {
     STANDARD: {
@@ -401,7 +436,7 @@ export class AIService {
 
     fitScore -= formationPenalty;
 
-    return { fitScore: Math.max(0, fitScore) };
+    return { fitScore };
   }
 
   // Suggests the best formation based on roster strengths
@@ -414,13 +449,102 @@ export class AIService {
       FWD: squad.filter((p) => p.position === Position.FWD).length,
     };
 
-    // Simple heuristic: Where is the depth?
-    if (counts.FWD >= 3 && counts.MID >= 3) return TacticType.T_433;
-    if (counts.FWD === 2 && counts.MID >= 5) return TacticType.T_352;
-    if (counts.MID >= 5 && counts.FWD === 1) return TacticType.T_4231;
-    if (counts.DEF >= 5) return TacticType.T_541;
+    const topPlayers = [...squad].sort((a, b) => b.overall - a.overall).slice(0, 18);
+    const avg = (players: Player[], selector: (p: Player) => number, fallback = 50) => {
+      if (players.length === 0) return fallback;
+      return players.reduce((sum, player) => sum + selector(player), 0) / players.length;
+    };
 
-    return TacticType.T_442; // Default
+    const mids = topPlayers.filter((p) => p.position === Position.MID);
+    const fwds = topPlayers.filter((p) => p.position === Position.FWD);
+    const defs = topPlayers.filter((p) => p.position === Position.DEF);
+
+    const midfieldCraft = avg(mids, (p) => ((p.attributes.passing || 50) + (p.attributes.vision || 50) + (p.attributes.decisions || 50)) / 3);
+    const forwardMobility = avg(fwds, (p) => ((p.attributes.speed || 50) + (p.attributes.dribbling || 50) + (p.attributes.finishing || 50)) / 3);
+    const defensiveMobility = avg(defs, (p) => ((p.attributes.positioning || 50) + (p.attributes.speed || 50) + (p.attributes.tackling || 50)) / 3);
+    const squadPace = avg(topPlayers, (p) => ((p.attributes.speed || 50) + (p.attributes.stamina || 50)) / 2);
+
+    const formationCandidates: TacticType[] = [
+      TacticType.T_442,
+      TacticType.T_433,
+      TacticType.T_352,
+      TacticType.T_541,
+      TacticType.T_451,
+      TacticType.T_4231,
+      TacticType.T_343,
+      TacticType.T_4141,
+      TacticType.T_532,
+      TacticType.T_41212,
+      TacticType.T_4321,
+    ];
+
+    const scored = formationCandidates.map((formation) => {
+      const slots = this.getFormationSlots(formation);
+      const deficitPenalty = Math.max(0, slots[Position.DEF] - counts.DEF) * 18
+        + Math.max(0, slots[Position.MID] - counts.MID) * 18
+        + Math.max(0, slots[Position.FWD] - counts.FWD) * 18;
+
+      const surplusBonus = Math.max(0, counts.DEF - slots[Position.DEF]) * 2
+        + Math.max(0, counts.MID - slots[Position.MID]) * 2
+        + Math.max(0, counts.FWD - slots[Position.FWD]) * 2;
+
+      let shapeBonus = 0;
+      if (formation === TacticType.T_433) {
+        shapeBonus += counts.FWD >= 3 ? 12 : -8;
+        shapeBonus += squadPace > 70 ? 8 : 0;
+        shapeBonus += forwardMobility > 72 ? 8 : 0;
+      }
+      if (formation === TacticType.T_4231) {
+        shapeBonus += counts.MID >= 5 ? 12 : -6;
+        shapeBonus += midfieldCraft > 70 ? 10 : 0;
+      }
+      if (formation === TacticType.T_4321) {
+        shapeBonus += counts.MID >= 5 ? 10 : -8;
+        shapeBonus += midfieldCraft > 73 ? 12 : 0;
+        shapeBonus += counts.FWD >= 3 ? 4 : 0;
+      }
+      if (formation === TacticType.T_41212) {
+        shapeBonus += counts.FWD >= 2 ? 10 : -10;
+        shapeBonus += counts.MID >= 4 ? 8 : -6;
+        shapeBonus += midfieldCraft > 69 ? 8 : 0;
+        shapeBonus += forwardMobility > 69 ? 5 : 0;
+      }
+      if (formation === TacticType.T_352) {
+        shapeBonus += counts.DEF >= 3 ? 4 : -14;
+        shapeBonus += counts.MID >= 5 ? 10 : -10;
+        shapeBonus += counts.FWD >= 2 ? 8 : -8;
+      }
+      if (formation === TacticType.T_532 || formation === TacticType.T_541) {
+        shapeBonus += counts.DEF >= 5 ? 14 : -12;
+        shapeBonus += defensiveMobility > 69 ? 8 : 0;
+        shapeBonus += counts.FWD <= 2 ? 4 : 0;
+      }
+      if (formation === TacticType.T_4141 || formation === TacticType.T_451) {
+        shapeBonus += counts.MID >= 5 ? 10 : -6;
+        shapeBonus += midfieldCraft > 68 ? 6 : 0;
+      }
+      if (formation === TacticType.T_343) {
+        shapeBonus += counts.DEF >= 3 ? 4 : -14;
+        shapeBonus += counts.FWD >= 3 ? 12 : -10;
+        shapeBonus += squadPace > 72 ? 8 : 0;
+      }
+      if (formation === TacticType.T_442) {
+        shapeBonus += counts.DEF >= 4 ? 4 : -8;
+        shapeBonus += counts.MID >= 4 ? 4 : -8;
+        shapeBonus += counts.FWD >= 2 ? 6 : -8;
+      }
+
+      return {
+        formation,
+        score: shapeBonus + surplusBonus - deficitPenalty,
+      };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    const bestScore = scored[0]?.score ?? 0;
+    const viable = scored.filter((entry) => entry.score >= bestScore - 6);
+
+    return viable[Math.floor(Math.random() * viable.length)]?.formation || TacticType.T_442;
   }
 
   // --- 4. OPPONENT ANALYSIS (COUNTER-TACTICS) ---
@@ -442,55 +566,53 @@ export class AIService {
 
     const newTactic = { ...myTeam.tactic };
     let adapted = false;
+    const opponentAttack = inferAttackApproach(opponentTactic);
+    const opponentDefense = inferDefenseApproach(opponentTactic);
 
     // 2. ROCK-PAPER-SCISSORS LOGIC
 
     // SCENARIO A: Opponent plays POSSESSION (Tiki-Taka)
     // Counter: HIGH PRESS (Force mistakes)
-    if (
-      opponentTactic.style === "Possession" ||
-      opponentTactic.passingStyle === "Short"
-    ) {
+    if (opponentAttack === "PATIENT") {
       // If we are not already pressing, strictly increase it
       if (newTactic.pressingIntensity !== "Gegenpress") {
         newTactic.pressingIntensity = "HighPress";
         newTactic.aggression = "Aggressive"; // Physicality disrupts rhythm
+        newTactic.defensiveLine = "Balanced";
         adapted = true;
       }
     }
 
     // SCENARIO B: Opponent plays HIGH PRESS (Gegenpress)
     // Counter: DIRECT / LONG BALL (Bypass midfield pressure)
-    else if (
-      opponentTactic.style === "HighPress" ||
-      opponentTactic.pressingIntensity === "Gegenpress"
-    ) {
+    else if (opponentDefense === "HUNT") {
       newTactic.style = "Counter";
       newTactic.passingStyle = "Direct"; // Don't play short into pressure
       newTactic.tempo = "Fast";
+      newTactic.defensiveLine = "Deep";
       adapted = true;
     }
 
     // SCENARIO C: Opponent plays PARK THE BUS (Defensive)
-    // Counter: WIDTH + SHOOT ON SIGHT (Stretch them and test GK)
-    else if (
-      opponentTactic.style === "Defensive" ||
-      opponentTactic.defensiveLine === "Deep"
-    ) {
+    // Counter: WIDTH + PATIENCE (Stretch them, then find the cut-back)
+    else if (opponentDefense === "LOW_BLOCK") {
       newTactic.style = "Attacking";
       newTactic.width = "Wide"; // Stretch the bus
 
-      // Add "Shoot On Sight" instruction if not present
-      const instructions = newTactic.instructions || [];
-      if (!instructions.includes("ShootOnSight")) {
-        newTactic.instructions = [...instructions, "ShootOnSight"];
+      // Deep blocks should be opened with width and movement, not forced low-quality shots.
+      const instructions = (newTactic.instructions || []).filter(
+        (i) => i !== "ShootOnSight",
+      );
+      if (!instructions.includes("WorkBallIntoBox")) {
+        instructions.push("WorkBallIntoBox");
       }
+      newTactic.instructions = instructions;
       adapted = true;
     }
 
     // SCENARIO D: Opponent plays WIDE (Wings)
     // Counter: NARROW (Pack the box)
-    else if (opponentTactic.width === "Wide") {
+    else if (opponentTactic.width === "Wide" || opponentAttack === "FLUID") {
       newTactic.width = "Narrow"; // Force them outside, protect the middle
       newTactic.defensiveLine = "Deep"; // Don't get beaten by pace on wings
       adapted = true;

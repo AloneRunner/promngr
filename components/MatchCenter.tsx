@@ -173,6 +173,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // NEW: Toast Notification System
     const [toasts, setToasts] = useState<Array<{ id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' | 'SET_PIECE', message: string, team: 'HOME' | 'AWAY', minute: number }>>([]);
     const lastEventCount = useRef(0);
+    const [liveDecisionTrace, setLiveDecisionTrace] = useState<string[]>([]);
 
     // NEW: Exit Confirmation Modal
     const [showExitModal, setShowExitModal] = useState(false);
@@ -208,6 +209,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     // Offscreen Canvas for Static Pitch (Mobile Optimization)
     const pitchCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
+    const pickInterestingTrace = useCallback((trace: string[] | undefined) => {
+        if (!trace || trace.length === 0) return [];
+        return trace
+            .filter(line => /🧠|ara pas|hava pas|havadan|kafayı|gelişine|RÖVEŞATA|al da at|geriye kesti|boş adam|tek vurdu/i.test(line))
+            .slice(-4);
+    }, []);
+
     // Ball trail history for visual effect
     const ballTrail = useRef<Array<{ x: number, y: number, z: number, age: number }>>([]);
 
@@ -235,17 +243,16 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
     // 0. Update Jersey Numbers on Player Change (Substitutions)
     useEffect(() => {
-        let hC = 2, aC = 2;
         [...homePlayers, ...awayPlayers].forEach(p => {
             if (p.jerseyNumber) {
                 playerNumbers.current[p.id] = p.jerseyNumber;
+            } else if (p.lineupIndex !== undefined && p.lineupIndex !== null && p.lineupIndex >= 0 && p.lineupIndex < 99) {
+                playerNumbers.current[p.id] = p.lineupIndex + 1;
             } else if (p.position === 'GK') {
                 playerNumbers.current[p.id] = 1;
-            } else {
-                playerNumbers.current[p.id] = p.teamId === homeTeam.id ? hC++ : aC++;
             }
         });
-    }, [homePlayers, awayPlayers, homeTeam.id]);
+    }, [homePlayers, awayPlayers]);
 
     // 1. Initialize & Cleanup
     useEffect(() => {
@@ -513,6 +520,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     lastTickTime.current = performance.now();
                 }
 
+                const freshTrace = pickInterestingTrace(result.trace);
+                if (freshTrace.length > 0) {
+                    setLiveDecisionTrace(freshTrace);
+                }
+
                 // 🔊 Play event sounds
                 if (result.event) {
                     switch (result.event.type) {
@@ -562,7 +574,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             }, ms);
         }
-    }, [speed, match.isPlayed, match.id]);
+    }, [speed, match.isPlayed, match.id, pickInterestingTrace]);
 
     // 4. Render Loop (Visuals)
     const render = useCallback(() => {
@@ -1646,6 +1658,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         <List size={14} className="text-emerald-500" /> Match Feed
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                        {liveDecisionTrace.length > 0 && (
+                            <div className="rounded-2xl border border-cyan-500/20 bg-cyan-950/20 p-3 shadow-lg">
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-300 mb-2">Decision Pulse</div>
+                                <div className="space-y-1.5">
+                                    {liveDecisionTrace.slice().reverse().map((line, idx) => (
+                                        <div key={`${line}-${idx}`} className="text-[11px] leading-snug text-cyan-50 bg-slate-900/50 rounded-xl px-2.5 py-2 border border-white/5">
+                                            {line}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {[...match.events].reverse().map((ev, idx) => (
                             <div key={idx} className={`text-sm p-3 rounded-xl border-l-4 shadow-sm backdrop-blur-sm transition-all hover:scale-[1.02] ${ev.type === 'GOAL' ? 'bg-gradient-to-r from-emerald-900/40 to-emerald-900/10 border-emerald-400 shadow-emerald-500/20' : 'bg-slate-800/40 border-slate-600 hover:bg-slate-800/60'}`}>
                                 <span className={`font-black mr-2 drop-shadow-md ${ev.type === 'GOAL' ? 'text-emerald-400' : 'text-slate-400'}`}>{ev.minute}'</span>

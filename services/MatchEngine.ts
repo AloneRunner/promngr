@@ -880,7 +880,7 @@ export class MatchEngine {
   private _awayDefLine: number = 55;
 
   // === ENGINE IDENTIFIER ===
-  public engineVersion: string = "ME v5.0";
+  public engineVersion: string = "Ana Motor";
 
   // === PLAYER INSTRUCTION HELPER ===
   // Returns the individual instruction for a player based on their lineup slot

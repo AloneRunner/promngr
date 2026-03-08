@@ -8,7 +8,6 @@ import {
   BannerAdOptions,
   BannerAdSize,
   BannerAdPosition,
-  AdMobBannerSize,
 } from "@capacitor-community/admob";
 import { Capacitor } from "@capacitor/core";
 
@@ -27,6 +26,7 @@ class AdMobService {
   private currentPosition: "top" | "bottom" | null = null;
   private useTestAds = false; // Production mode by default
   private webPlatformLogged = false; // Prevent log spam on web
+  private appStateListenerAdded = false;
 
   /**
    * Initialize AdMob
@@ -51,6 +51,20 @@ class AdMobService {
 
       this.isInitialized = true;
       console.log("AdMob initialized successfully");
+
+      // Register app lifecycle listener once — resets state on app resume
+      // to handle Activity recreation (orientation change, memory kill)
+      if (!this.appStateListenerAdded) {
+        this.appStateListenerAdded = true;
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            // Activity may have been recreated; native banner view is gone.
+            // Reset JS state so next showBanner/hideBanner calls work cleanly.
+            this.isBannerShowing = false;
+            // Keep currentPosition so the caller can re-show at same spot.
+          }
+        });
+      }
     } catch (error) {
       console.error("AdMob initialization failed:", error);
     }
@@ -79,8 +93,8 @@ class AdMobService {
     // If banner is showing at different position, remove first
     if (this.isBannerShowing && this.currentPosition !== position) {
       await this.removeBanner();
-      // Small delay to ensure banner is fully removed
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Give native layer time to fully destroy the view before creating a new one
+      await new Promise((resolve) => setTimeout(resolve, 300));
     }
 
     try {
@@ -104,12 +118,16 @@ class AdMobService {
       this.currentPosition = position;
       console.log(`AdMob: Banner shown at ${position}`);
     } catch (error) {
+      // Do not mark as showing if creation failed
+      this.isBannerShowing = false;
       console.error("AdMob: Failed to show banner:", error);
     }
   }
 
   /**
-   * Hide banner ad
+   * Hide banner ad.
+   * Uses removeBanner() under the hood — AdMob.hideBanner() can NullPointerException
+   * if the native view was destroyed by an Activity recreation.
    */
   async hideBanner() {
     if (!this.isBannerShowing) return;
@@ -118,13 +136,7 @@ class AdMobService {
       return;
     }
 
-    try {
-      await AdMob.hideBanner();
-      this.isBannerShowing = false;
-      console.log("AdMob: Banner hidden");
-    } catch (error) {
-      console.error("AdMob: Failed to hide banner:", error);
-    }
+    await this.removeBanner();
   }
 
   /**
@@ -137,11 +149,13 @@ class AdMobService {
 
     try {
       await AdMob.removeBanner();
-      this.isBannerShowing = false;
-      this.currentPosition = null;
       console.log("AdMob: Banner removed");
     } catch (error) {
       console.error("AdMob: Failed to remove banner:", error);
+    } finally {
+      // Always reset JS state regardless of native outcome
+      this.isBannerShowing = false;
+      this.currentPosition = null;
     }
   }
 
