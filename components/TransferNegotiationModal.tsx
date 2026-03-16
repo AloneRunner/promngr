@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Player, Team, Translation } from '../types';
+import { ManagerProfileData, Player, Team, Translation } from '../types';
 import { DollarSign, MessageCircle, AlertTriangle, Briefcase, X, Heart, HeartCrack } from 'lucide-react';
 import { calculateTransferWillingness, getLeagueReputation } from '../services/engine';
 
 interface TransferNegotiationModalProps {
     player: Player;
     userTeam: Team;
+    managerProfile?: ManagerProfileData;
     sellingTeam?: Team; // Optional - the team selling the player
     onClose: () => void;
     onComplete: (player: Player, finalPrice: number) => void;
@@ -15,7 +16,7 @@ interface TransferNegotiationModalProps {
 
 type NegotiationState = 'INITIAL' | 'NEGOTIATING' | 'AGREED' | 'REJECTED' | 'WALKOUT' | 'PLAYER_REFUSED';
 
-export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> = ({ player, userTeam, sellingTeam, onClose, onComplete, t }) => {
+export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> = ({ player, userTeam, managerProfile, sellingTeam, onClose, onComplete, t }) => {
     const [offer, setOffer] = useState<number>(player.value);
     // Wage offer: start at player's current wage (minimum sensible offer)
     const [offeredWage, setOfferedWage] = useState<number>(Math.ceil((player.wage || 1000) * 1.1));
@@ -38,10 +39,11 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
             userTeam.reputation,
             fromLeague,
             userTeam.leagueId || 'tr',
-            offeredWage > 0 ? offeredWage : undefined
+            offeredWage > 0 ? offeredWage : undefined,
+            managerProfile,
         );
         setPlayerWillingness(willingness);
-    }, [player, userTeam, sellingTeam, offeredWage]);
+    }, [player, userTeam, sellingTeam, offeredWage, managerProfile]);
 
     // Initial calculation of AI asking price
     useEffect(() => {

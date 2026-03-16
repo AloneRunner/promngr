@@ -1,5 +1,211 @@
 # MENAJER KARİYERİ VE LEVEL UP SİSTEMİ - DETAYLI TASARIM BELGESİ (GDD)
 
+## 2026-03-08 Uygulama Sirasi
+
+Bu dokuman artik sadece vizyon degil, mevcut kod tabanina gore fiili uygulama sirasi da iceriyor.
+
+### Neden bu sirayla?
+- Elde zaten `managerRating`, `managerCareerHistory`, `managerTrophies`, `jobOffers`, `boardConfidence` ve sezon sonu ozet mantigi var.
+- Yani sifirdan kariyer yazmiyoruz; var olan sistemi "rating + teklif" seviyesinden alip gercek rekabet dongusune tasiyoruz.
+- Kullanici kaybi tarafinda ilk etkisi olacak sey avatar degil, rekabet ve ilerleme hissi. Bu yuzden once retention etkisi yuksek katmanlar yapilacak.
+
+### Faz 1: Kariyer Omurgasi
+- `GameState` icinde tek tek daginik manager alanlari yerine tipli bir `managerProfile` yapisi kurulacak.
+- Bu yapida en az su alanlar olacak: `level`, `xp`, `xpToNextLevel`, `reputation`, `archetype`, `milestones`, `careerStats`, `unlockedAchievements`.
+- Mevcut `managerRating` sistemi tamamen silinmeyecek; gecis surecinde `managerProfile.reputation` icin geriye uyumlu kopru olarak kullanilacak.
+- `ManagerProfile` ekrani sadece kupa ve rating gosteren panel olmaktan cikacak; level, XP bar, itibar seviyesi ve sezon hedefi merkezi olacak.
+
+### Faz 2: Rekabet ve Baski Dongusu
+- Sezon sonu tek seferlik rating artis/azalis mantigi haftalik ve aylik kariyer ilerlemesine bolunecek.
+- `boardConfidence`, lig beklentisi, derbi sonucu, kupalar, ust siraya oynama ve alt siraya dusme tek bir kariyer puanlama akisina baglanacak.
+- Kovulma `game over` olmaktan cikacak; "issiz menajer" durumuna donecek. Boylece oyuncu kariyere devam edecek, sifirdan baslamayacak.
+- Yeni is teklifleri sadece sezon sonunda degil, uygun senaryolarda sezon icinde de gelebilecek.
+
+### Faz 3: Kulup Gecisi ve Menajer Pazari
+- Is teklifleri sadece kulup itibari uzerinden degil, beklenti uygunlugu uzerinden de uretilecek.
+- Tekliflere su bilgiler eklenecek: beklenen lig sirasi, maas seviyesi, baski seviyesi, hedef tipi.
+- Is kabul etme akisi sonrasinda sadece `userTeamId` degismeyecek; menajer gecmisi, hedefler ve kulup acilis mesaji da buna gore yenilenecek.
+- Orta vadede "bana teklif geldi" kadar "ben bu ise basvurabilir miyim" mantigi da eklenecek.
+
+### Faz 4: Acil Basarim Sistemi
+- Google Play/oyun ici basarim sistemi manager kariyere baglanacak.
+- Basarimlar sadece dekor olmayacak; XP, itibar veya sezonluk prestige bonusu uretecek.
+- Ilk hedef grubu: ilk galibiyet, beklenmeyen galibiyet, kupa, ust uste seri, temiz sayfa, dusuk butceyle hedef tutturma.
+
+### Faz 5: Asenkron Rekabet
+- Canli PvP once degil, en son gelecek.
+- Ilk surum aylik/asenkron olacak: oyuncunun takimi ve taktik snapshot'i kaydedilecek, baska oyuncularin snapshot'lariyla sezonluk veya aylik kapisma yapilacak.
+- Bu sistem kariyerin ustune binecek; kariyer ana omurga olmadan PvP eklersen retention yerine churn uretir.
+
+### Ilk Kod Sprinti
+- `src/types.ts`: tipli manager kariyer modelleri
+- `services/engine.ts`: manager XP/reputation gecis katmani
+- `components/ManagerProfile.tsx`: yeni kariyer paneli
+- `components/JobOffersModal.tsx`: teklif kalitesi ve baski bilgileri
+- `App.tsx`: kovulma = kariyer sonu degil, issiz menajer akisi
+
+### Net Urun Karari
+- Ilk ekranda karakter yaratma ile baslanmayacak.
+- Oyuncu once mac ve sezon dongusune girecek.
+- Menajer derinligi, oynadikca acilan bir "ilerleme katmani" gibi hissettirilecek.
+
+## 2026-03-08 Ust Duzey Urun Kararlari
+
+Bu bolum, manager sistemi icin artik degistirilmeyecek temel urun kararlarini netlestirir.
+
+### 1. Menajer Profili Olusturma
+- Oyuncu ilk saniyede uzun bir karakter yaratma ekranina zorlanmayacak.
+- Kariyer baslangicinda sadece 3 sey secilecek: ad, uyruk, menajer arketipi.
+- Yas, dogum tarihi, avatar, ofis dekoru gibi seyler ilk surumun parcasi olmayacak.
+- Hedef: 20-30 saniyede tamamlanan, retention dostu bir profil acilisi.
+
+### 2. Millet Bonusu Olacak mi?
+- Evet, olacak; ama kucuk ve kontrollu olacak.
+- Bu bonus oyunu kiracak kadar buyuk olmayacak, sadece rol yapma ve erken oyun aidiyeti verecek.
+- Ana mantik:
+    - Kendi uyrugunun liglerinde yonetim guveni ve taraftar toleransi biraz daha yuksek baslar.
+    - Kendi uyrugundan oyuncularla sozlesme ve ikna gorusmeleri biraz daha kolay olur.
+    - Kendi ulkesindeki alt yapi ve scout raporlarinda bilgi toplama hizi biraz daha yuksek olur.
+- Sayisal hedef:
+    - yonetim guveni baslangici +5
+    - oyuncu ikna katsayisi +%5
+    - scout gorunurluk hizi +%10
+- Bu bonus hicbir zaman "Turk secince otomatik avantajli meta" haline gelmeyecek.
+
+### 3. Baslangicta Hangi Takimlar Acik Olacak?
+- Mevcut oyunda teknik olarak tum ligler ve takimlar secilebilir durumda.
+- Yeni manager kariyerde bu tamamen kalkmayacak; ama kariyer modunda kulup secimi iki katmana ayrilacak:
+    - Serbest mod: bugunku gibi herkes her takimi secebilir.
+    - Gercek kariyer modu: menajer itibari belirli esiklerin ustundeki kulupleri kilitler.
+- Ilk surumde oyuncu kariyere sifir itibarla baslamayacak; "alt-orta seviye yeni hoca" seviyesinde baslayacak.
+- Baslangic kulup kilidi mantigi:
+    - kolay giris: 4500-6200 rep arasi kulupler her zaman acik
+    - iddiali giris: 6200-7200 rep arasi kulupler sadece baslangic arketipi ve ulke uyumu varsa acik olabilir
+    - dev kulup: 7200+ rep kariyer modunda baslangicta kilitli
+- Bu sayede oyuncu oyuna cok zayif takimla baslamaya zorlanmaz, ama dogrudan dunya devi alamaz.
+
+### 4. Gelisim Mantigi Ne Olacak?
+- Gelisim tek bir rating sayisi olmayacak.
+- Uc katmanli bir manager ilerlemesi olacak:
+    - Level: oyuncuya uzun vadeli ilerleme hissi verir.
+    - XP: mac, hedef, kupa, basarim ve riskli galibiyetlerden kazanilir.
+    - Reputation: hangi kulubun sana bakacagini ve ne kadar buyuk beklentiyle gelecegini belirler.
+- Yani seviye atlamak ile is piyasasinda buyumek ayni sey olmayacak.
+- Ana kural:
+    - XP = emek ve sureklilik odulu
+    - Reputation = sonuclar ve itibar odulu
+- Oyun hissi:
+    - kotu takimla bile yuksek level olabilirsin
+    - ama buyuk kulup almak icin itibar da biriktirmen gerekir
+
+### 5. Ofis mi Gelisecek, Menajer mi Gelisecek?
+- Ilk ana surumde ofis degil, menajerin kendisi gelisecek.
+- Cunku ilk retention ihtiyaci kozmetik degil, guc ve ilerleme hissi.
+- Buna ek olarak ikinci katmanda "kisisel ekip" sistemi gelecek:
+    - scout
+    - gelisim koçu
+    - fixer
+    - saglik direktoru
+- Bu ekip kulubun degil, menajerin olacak. Kulup degistirince beraber tasinacak.
+- Ofis/merkez ekranlari daha sonra sadece sunum ve prestij katmani olarak eklenebilir.
+- Karar: once RPG ilerleme, sonra ofis sunumu.
+
+### 6. Menajer Yetenekleri Neleri Etkileyecek?
+- Yetenekler dogrudan oyuncu OVR'sine kaba +10 vermeyecek.
+- Daha cok karar kalitesi, verim ve surec hizina etki edecek.
+- Ilk ana agaclar:
+    - Ikna ve pazarlik
+    - Gelisim ve antrenman
+    - Mac ici uzmanlik
+    - Scout ve bilgi toplama
+
+### 6.1 Ikna ve Pazarlik
+- transfere gelme istegi
+- maas pazarligi
+- yonetimden ekstra butce koparma
+- kovulmadan once yonetim toleransi
+
+### 6.2 Gelisim ve Antrenman
+- genc oyuncularin potansiyele ulasma hizi
+- kondisyon toparlanmasi
+- sakatlik risk azaltma
+- form dususunden geri donus hizi
+
+### 6.3 Mac Ici Uzmanlik
+- son bolge karar kalitesi
+- savunma yerlesimi disiplini
+- duran top verimi
+- mac sonu yorgunluk yonetimi
+- derbi ve baski maclarinda mental dusus azaltma
+
+### 6.4 Scout ve Bilgi Toplama
+- oyuncu gizli bilgi acma hizi
+- rakip analiz derinligi
+- potansiyel tahmin dogrulugu
+- ucuz firsat oyuncu bulma sansi
+
+### 6.5 Sonraki Faz Notlari
+- Manager ilerledikce mevcut kulup sinirlarinin ustune cikan kucuk altyapi bonuslari acilabilir.
+- Bunlardan biri gec oyun manager bonusu olarak youth academy ust limitini normal kulup sinirinin biraz ustune tasimak olabilir.
+- Ayni mantik scout ekibinde de kullanilabilir: manager uzmanligi sayesinde kulup staff limiti hafifce asilir, ama bu ilk surum parcasi olmayacak.
+- Antrenman sekmesinde oyuncuya ozel koç atama sistemi sonraki dalgada eklenecek.
+- Bu sistem toplu takim antrenmanindan ayri olacak; tekil oyuncu gelisimi, toparlanma ve rol uzmanlasmasi verecek.
+
+### 7. Bizden Baska Sanal Menajerler Olacak mi?
+- Evet, olmak zorunda.
+- Oyuncu tek gelisen akil olursa 3-4 sezon sonra sistem kirilir.
+- Bu yuzden oyunda diger onemli kuluplerin de sanal menajer profili olacak.
+- Her AI menajerde su ozellikler olacak:
+    - arketip
+    - reputation
+    - coaching quality
+    - transfer tarzı
+    - gelisim odagi
+- Tum kuluplere tek tek tam RPG katmani verilmeyecek; ama ust duzey AI kuluplere "temsil menajer" mantigi verilecek.
+- Boylece oyuncu sadece takimi degil, rakip hocalari da hissedecek.
+
+### 8. Oyuncu Cok Gelisirse AI'yi Ezer mi?
+- Bu en kritik denge sorusu ve cevap: hayir, ezer hale gelmemesi icin sistem kurulacak.
+- Anti snowball kurallari:
+    - yuksek reputation'li kuluplerin gorunmez coaching quality katsayisi olacak
+    - buyuk AI kuluplerin scout ve oyuncu gelisim verimi yuksek olacak
+    - ust seviye AI menajerler sezonlar boyunca kendi itibarini ve oyun tarzini koruyacak
+    - buyuk kulup yonetirken hedefler sertlesecek, hata toleransi dusecek
+    - oyuncu guclendikce karsisina daha zor beklentiler ve daha rekabetci transfer pazari cikacak
+- Yani oyuncu guclendikce oyun kolaylasmayacak; sadece daha buyuk masaya oturacak.
+
+### 9. Kovulma ve Kariyer Sonu Mantigi
+- Kovulma artik direkt oyun sonu olmamali.
+- Dogru model:
+    - once yonetim guveni duser
+    - sonra baski mesajlari gelir
+    - sonra kovulursun
+    - sonra issiz menajer olarak yeni teklif beklersin veya daha alt kulube inersin
+- Bu hem daha gercekci hem retention icin daha saglikli.
+
+### 10. Ilk Sürümün Net Kapsami
+- olacaklar:
+    - ad + uyruk + arketip ile hizli profil olusturma
+    - XP + level + reputation omurgasi
+    - kilitli kulup mantigi olan gercek kariyer modu
+    - kovulunca kariyerin bitmemesi
+    - gelismis job market mantigi
+    - temel yetenek agaci
+    - AI menajer temsil sistemi
+- olmayacaklar:
+    - detayli avatar editörü
+    - dekoratif ofis insa sistemi
+    - cok katmanli personel binasi simulasyonu
+    - tam canli PvP
+
+### 11. Uygulama Sirasinda Uygulanacak Nihai Tasarim Cevabi
+- Menajer once kendisi gelisecek.
+- Kisisel ekip ikinci dalga olarak eklenecek.
+- Milliyet bonusu olacak ama kucuk kalacak.
+- Baslangicta herkes her takimi alamayacak; gercek kariyer modunda rep kilidi olacak.
+- AI tarafinda da sanal menajerler ve coaching quality sistemi olacak.
+- Oyuncu ilerledikce oyunun kolaylasmasi degil, beklentinin ve rakip kalitesinin artmasi hedeflenecek.
+
 Bu belge, oyunun "Maç Simülatörü" olmaktan çıkıp tam teşekküllü bir **"RPG Menajerlik Oyunu"** ve Google Play "Level Up" programı standartlarına uygun bir yapıya geçişi için hazırlanmış Türkçe strateji planıdır.
 
 ---

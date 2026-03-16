@@ -170,10 +170,11 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 pb-20">
-            <div className="bg-slate-900 rounded-xl border border-slate-700 w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl mb-16">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm overflow-y-auto p-3 md:p-4 pb-24 animate-fade-in">
+            <div className="min-h-full flex items-start md:items-center justify-center">
+            <div className="bg-slate-900 rounded-xl border border-slate-700 w-full max-w-4xl max-h-[calc(100vh-1.5rem)] md:max-h-[calc(100vh-3rem)] overflow-hidden flex flex-col shadow-2xl my-3 md:my-6">
                 {/* Header */}
-                <div className="p-4 bg-gradient-to-r from-emerald-900 to-slate-900 border-b border-slate-700">
+                <div className="shrink-0 p-4 bg-gradient-to-r from-emerald-900 to-slate-900 border-b border-slate-700">
                     <h2 className="text-xl font-bold text-white flex items-center gap-3">
                         <Briefcase className="text-emerald-400" size={24} />
                         {t.sponsorTitle}
@@ -184,7 +185,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="flex gap-2 p-3 bg-slate-800/50 border-b border-slate-700">
+                <div className="shrink-0 flex flex-wrap gap-2 p-3 bg-slate-800/50 border-b border-slate-700">
                     {(['ALL', 'GUARANTEED', 'BALANCED', 'RISKY'] as const).map((tier) => (
                         <button
                             key={tier}
@@ -211,12 +212,12 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                             <div
                                 key={sponsor.id}
                                 onClick={() => setSelectedSponsor(sponsor)}
-                                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedSponsor?.id === sponsor.id
+                                className={`p-3 md:p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedSponsor?.id === sponsor.id
                                     ? 'bg-emerald-900/40 border-emerald-500 shadow-lg shadow-emerald-900/30 scale-[1.01]'
                                     : 'bg-slate-800/50 border-slate-700 hover:border-slate-500'
                                     }`}
                             >
-                                <div className="flex justify-between items-start mb-3">
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-3">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                                             {getTierIcon(sponsor.tier)}
@@ -232,7 +233,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                     </div>
 
                                     {/* Risk Indicator */}
-                                    <div className="flex gap-0.5">
+                                    <div className="flex gap-0.5 shrink-0">
                                         {[1, 2, 3, 4, 5].map(i => (
                                             <div
                                                 key={i}
@@ -246,7 +247,7 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                                 </div>
 
                                 {/* Gelir Bilgileri */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+                                <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-3">
                                     <div className="bg-slate-900/50 px-3 py-2 rounded">
                                         <div className="text-[10px] text-slate-500 uppercase flex items-center gap-1">
                                             <TrendingUp size={10} /> {t.weeklyIncome}
@@ -320,12 +321,12 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 bg-slate-800 border-t border-slate-700 flex justify-between items-center">
-                    <div className="text-sm">
+                <div className="shrink-0 p-4 bg-slate-800 border-t border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+                    <div className="text-sm w-full md:w-auto">
                         {selectedSponsor ? (
-                            <span className="text-white">
+                            <span className="text-white block leading-relaxed">
                                 <span className="text-slate-400">{t.selectedLabel}</span> {selectedSponsor.name}
-                                <span className="text-emerald-400 ml-2">
+                                <span className="text-emerald-400 block md:inline md:ml-2">
                                     (€{(calculateYearlyPotential(selectedSponsor, 12, 4) / 1000000).toFixed(1)}M {t.midTableLabel} /
                                     <span className="text-amber-400"> €{(calculateYearlyPotential(selectedSponsor, 17, 1) / 1000000).toFixed(1)}M {t.championLabel}</span>)
                                 </span>
@@ -337,12 +338,13 @@ export const SponsorModal: React.FC<SponsorModalProps> = ({ onSelect, t }) => {
                     <button
                         onClick={handleConfirm}
                         disabled={!selectedSponsor}
-                        className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2"
+                        className="w-full md:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
                     >
                         <Check size={18} />
                         {t.confirmDeal}
                     </button>
                 </div>
+            </div>
             </div>
         </div>
     );

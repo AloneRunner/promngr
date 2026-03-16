@@ -1,10 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Player, Team, Position, TacticType, Translation, TeamTactic, LineupStatus, AssistantAdvice } from '../types';
+import { Player, PlayerAttributes, Team, Position, TacticType, Translation, TeamTactic, LineupStatus, AssistantAdvice } from '../types';
 import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, ShieldAlert, MessageSquare, ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset, getRatingImpacts, RatingImpact } from '../services/MatchEngine';
-import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation } from '../services/engine';
+import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation, getEngineChoice } from '../services/engine';
 import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey, detectPreset } from '../services/tactics';
 // AssistantReport removed - replaced by inline opponent tactical panel
 import { PlayerInteractionModal } from './PlayerInteractionModal';
@@ -23,6 +23,87 @@ const normalizePos = (p: Player): Position => {
     if (['STP', 'SĞB', 'SLB', 'DEF', 'CB', 'LB', 'RB', 'SW', 'LWB', 'RWB'].includes(raw)) return Position.DEF;
     if (['MDO', 'MO', 'MOO', 'MID', 'CDM', 'CM', 'CAM', 'LM', 'RM'].includes(raw)) return Position.MID;
     return Position.FWD;
+};
+
+type EngineChoice = 'classic' | 'ikinc' | 'ucuncu';
+type EngineSupportLevel = 'native' | 'adapted' | 'translated' | 'basic';
+type EngineSupportField = 'formation' | 'customPositions' | 'playerInstructions' | 'attackApproach' | 'finalThird' | 'attackPlan' | 'width' | 'defenseApproach' | 'aggression' | 'marking';
+
+type EngineSupportInfo = {
+    label: string;
+    summary: string;
+    badgeClass: string;
+};
+
+const getEnginePresentation = (engine: EngineChoice, t: Translation) => {
+    if (engine === 'ucuncu') {
+        return {
+            label: t.engineUcuncu || 'Pro Motor',
+            shortLabel: 'PRO',
+            summary: t.engineProTacticSummary || 'Attack plan, press and defense behaviors are processed with a deeper and more direct layer in this engine.',
+            panelClass: 'border-cyan-700/40 bg-cyan-950/25',
+            chipClass: 'border-cyan-500/40 bg-cyan-500/15 text-cyan-200',
+        };
+    }
+    if (engine === 'ikinc') {
+        return {
+            label: t.engineIkinc || 'Arcade Motor',
+            shortLabel: 'ARCADE',
+            summary: t.engineArcadeTacticSummary || 'Core tactic fields work; some high-level selections are adapted to the arcade behavior profile.',
+            panelClass: 'border-amber-700/40 bg-amber-950/20',
+            chipClass: 'border-amber-500/40 bg-amber-500/15 text-amber-200',
+        };
+    }
+    return {
+        label: t.engineClassic || 'Klasik Motor',
+        shortLabel: 'STD',
+        summary: t.engineClassicTacticSummary || 'Core tactic fields work directly; advanced attack plan selections are translated into supported behaviors.',
+        panelClass: 'border-blue-700/40 bg-blue-950/20',
+        chipClass: 'border-blue-500/40 bg-blue-500/15 text-blue-200',
+    };
+};
+
+const getSupportInfo = (engine: EngineChoice, field: EngineSupportField, t: Translation): EngineSupportInfo => {
+    const level: EngineSupportLevel = (() => {
+        if (field === 'attackPlan') return engine === 'ucuncu' ? 'native' : 'adapted';
+        if (field === 'attackApproach' || field === 'defenseApproach') return 'translated';
+        if (field === 'marking') return engine === 'ucuncu' ? 'native' : 'basic';
+        return 'native';
+    })();
+
+    if (level === 'native') {
+        return {
+            label: t.engineNativeLabel || 'Native',
+            summary: field === 'attackPlan'
+                ? (t.engineNativeSummaryAttack || 'Selection feeds directly into the live plan logic in this engine.')
+                : field === 'playerInstructions'
+                    ? (t.engineNativeSummaryPlayer || 'Selections in this field are read directly by the engine and affect player behavior.')
+                    : (t.engineNativeSummaryDefault || 'This field works natively in the selected engine.'),
+            badgeClass: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-200',
+        };
+    }
+
+    if (level === 'adapted') {
+        return {
+            label: t.engineAdaptedLabel || 'Adapted',
+            summary: t.engineAdaptedSummary || "This selection doesn't produce a direct plan object; the engine translates it into supported instructions and behaviors.",
+            badgeClass: 'border-amber-500/40 bg-amber-500/15 text-amber-200',
+        };
+    }
+
+    if (level === 'translated') {
+        return {
+            label: t.engineTranslatedLabel || 'Translated',
+            summary: t.engineTranslatedSummary || 'This screen selection is applied by being translated into style, pass, tempo, press, or line settings.',
+            badgeClass: 'border-sky-500/40 bg-sky-500/15 text-sky-200',
+        };
+    }
+
+    return {
+        label: t.engineBasicLabel || 'Basic',
+        summary: t.engineBasicSummary || 'Works, but not as deep as in the Pro engine; produces a more basic behavior difference.',
+        badgeClass: 'border-violet-500/40 bg-violet-500/15 text-violet-200',
+    };
 };
 
 interface PlayerRowProps {
@@ -104,17 +185,17 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                             </span>
                         )}
                         {player.stats?.yellowCards >= 4 && player.matchSuspension === 0 && (
-                            <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-[9px] font-bold rounded shadow-md flex items-center gap-1" title="Sarı kart sınırında!">
+                            <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-[9px] font-bold rounded shadow-md flex items-center gap-1" title={t.yellowCardWarning || 'Yellow card warning!'}>
                                 🟨 {player.stats.yellowCards}
                             </span>
                         )}
                         {(player.contractYears ?? 99) <= 1 && (
-                            <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded shadow-md flex items-center gap-1 ${player.contractYears <= 0 ? 'bg-red-700 text-white animate-pulse' : 'bg-amber-500 text-black'}`} title="Sözleşme bitiyor!">
-                                📋 {player.contractYears <= 0 ? 'Bitti' : `${player.contractYears}y`}
+                            <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded shadow-md flex items-center gap-1 ${player.contractYears <= 0 ? 'bg-red-700 text-white animate-pulse' : 'bg-amber-500 text-black'}`} title={t.contractExpiring || 'Contract expiring!'}>
+                                📋 {player.contractYears <= 0 ? (t.contractExpired || 'Exp') : `${player.contractYears}y`}
                             </span>
                         )}
                         {player.form >= 8 && (
-                            <span className="text-[10px] animate-bounce" title="Formda! Son maçlarda harika performans gösteriyor.">🔥</span>
+                            <span className="text-[10px] animate-bounce" title={t.inForm || 'In form! Great recent performances.'}>🔥</span>
                         )}
                         {/* Playstyles as small floating badges */}
                         {player.playStyles && player.playStyles.slice(0, 2).map((style, idx) => (
@@ -288,6 +369,8 @@ interface TeamManagementProps {
 export const TeamManagement: React.FC<TeamManagementProps> = ({
     team, players, opponent, onUpdateTactic, onPlayerClick, onUpdateLineup, onSwapPlayers, onMovePlayer, onAutoFix, onPlayerMoraleChange, matchStatus, t
 }) => {
+    const selectedEngine = getEngineChoice() as EngineChoice;
+    const enginePresentation = getEnginePresentation(selectedEngine, t);
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
     const [tacticTab, setTacticTab] = useState<'PRESETS' | 'FORMATION' | 'IN_POSSESSION' | 'OUT_POSSESSION'>('FORMATION');
     // showAssistant removed - using inline panel instead
@@ -358,9 +441,9 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         // === BUG FIX: Actually apply the morale change! ===
         if (onPlayerMoraleChange && result.moraleChange !== 0) {
             const reasonMap = {
-                PRAISE: intensity === 'HIGH' ? 'Yoğun övgü' : 'Övgü',
-                CRITICIZE: intensity === 'HIGH' ? 'Sert eleştiri' : 'Eleştiri',
-                MOTIVATE: 'Motivasyon konuşması'
+                PRAISE: intensity === 'HIGH' ? (t.praiseIntense || 'Intense Praise') : (t.praise || 'Praise'),
+                CRITICIZE: intensity === 'HIGH' ? (t.criticizeHard || 'Harsh Criticism') : (t.criticize || 'Criticism'),
+                MOTIVATE: t.motivateSpeech || 'Motivational Talk'
             };
             onPlayerMoraleChange(interactingPlayer.id, result.moraleChange, reasonMap[type]);
         }
@@ -411,8 +494,10 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
 
         const currentId = dragStartPos.current.id;
         const rect = pitchRef.current.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
         const x = ((clientX - rect.left) / rect.width) * 100;
         const y = ((clientY - rect.top) / rect.height) * 100;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return;
         const clampedX = Math.max(2, Math.min(98, x));
         const clampedY = Math.max(2, Math.min(98, y));
         const newPositions = { ...(team.tactic.customPositions || {}), [currentId]: { x: clampedX, y: clampedY } };
@@ -448,25 +533,165 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         setDraggingId(null);
     };
 
+    type PlayerInstructionOption = {
+        id: string;
+        label: string;
+        desc: string;
+        icon: string;
+        duty: string;
+        phase: string;
+        shortLabel?: string;
+    };
+
+    type RoleFitWeights = Partial<Record<keyof PlayerAttributes, number>>;
+    type RolePresentation = {
+        roleName: string;
+        roleFamily: string;
+        summary: string;
+        fitWeights: RoleFitWeights;
+    };
+
+    const ATTRIBUTE_LABELS: Partial<Record<keyof PlayerAttributes, string>> = {
+        finishing: t.attrFinishing || 'Finishing',
+        passing: t.attrPassing || 'Passing',
+        tackling: t.attrTackling || 'Tackling',
+        dribbling: t.attrDribbling || 'Dribbling',
+        speed: t.attrSpeed || 'Speed',
+        stamina: t.attrStamina || 'Stamina',
+        positioning: t.attrPositioning || 'Positioning',
+        aggression: t.attrAggression || 'Aggression',
+        composure: t.attrComposure || 'Composure',
+        vision: t.attrVision || 'Vision',
+        decisions: t.attrDecisions || 'Decisions',
+    };
+
     // Instruction definitions per position
-    const PLAYER_INSTRUCTIONS: Record<string, { id: string, label: string, desc: string, icon: string }[]> = {
+    const PLAYER_INSTRUCTIONS: Record<string, PlayerInstructionOption[]> = {
         [Position.DEF]: [
-            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrDefDefaultDesc || 'Dengeli savunma, gerektiğinde ileri çıkar', icon: '⚽' },
-            { id: 'StayBack', label: t.instrStayBack || 'Geride Kal', desc: t.instrStayBackDesc || 'Hücuma katılmaz, her zaman geride kalır', icon: '🛡️' },
-            { id: 'JoinAttack', label: t.instrJoinAttack || 'Hücuma Katıl', desc: t.instrJoinAttackDesc || 'Kanat bek gibi ileri çıkar, orta yapar', icon: '⚔️' },
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrDefDefaultDesc || 'Dengeli savunma, gerektiğinde ileri çıkar', icon: '⚽', duty: 'Support', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'SUP' },
+            { id: 'StayBack', label: t.instrStayBack || 'Geride Kal', desc: t.instrStayBackDesc || 'Hücuma katılmaz, her zaman geride kalır', icon: '🛡️', duty: 'Defend', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'DEF' },
+            { id: 'HoldPosition', label: t.instrHoldPosition || 'Pozisyonu Koru', desc: t.instrHoldPositionDesc || 'Sahadaki atanan pozisyonu kesin olarak koru.', icon: '📍', duty: 'Anchor', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'ANC' },
+            { id: 'JoinAttack', label: t.instrJoinAttack || 'Hücuma Katıl', desc: t.instrJoinAttackDesc || 'Kanat bek gibi ileri çıkar, orta yapar', icon: '⚔️', duty: 'Attack', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'ATK' },
         ],
         [Position.MID]: [
-            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrMidDefaultDesc || 'Dengeli oyna, defansa ve hücuma yardım eder', icon: '⚽' },
-            { id: 'DefendMore', label: t.instrDefendMore || 'Defansa Yardım', desc: t.instrDefendMoreDesc || 'Daha çok geri gelir, rakip hücumunu keser', icon: '🔒' },
-            { id: 'HoldPosition', label: t.instrHoldPosition || 'Kademe Tut', desc: t.instrHoldPositionDesc || 'Pozisyonundan fazla ayrılmaz, dengeyi korur', icon: '⚡' },
-            { id: 'AttackMore', label: t.instrAttackMore || 'Hücuma Destek', desc: t.instrAttackMoreDesc || 'İleri çıkar, şut ve pas önceliği artar', icon: '🎯' },
-            { id: 'ShootOnSight', label: t.instrShootOnSight || 'Gördüğün Yerde Vur!', desc: t.instrShootOnSightDesc || 'Şut mesafesine girince hemen vurur', icon: '💥' },
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrMidDefaultDesc || 'Dengeli oyna, defansa ve hücuma yardım eder', icon: '⚽', duty: 'Support', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'SUP' },
+            { id: 'DefendMore', label: t.instrDefendMore || 'Defansa Yardım', desc: t.instrDefendMoreDesc || 'Daha çok geri gelir, rakip hücumunu keser', icon: '🔒', duty: 'Defend', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'DEF' },
+            { id: 'HoldPosition', label: t.instrHoldPosition || 'Kademe Tut', desc: t.instrHoldPositionDesc || 'Pozisyonundan fazla ayrılmaz, dengeyi korur', icon: '⚡', duty: 'Hold', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'HLD' },
+            { id: 'AttackMore', label: t.instrAttackMore || 'Hücuma Destek', desc: t.instrAttackMoreDesc || 'İleri çıkar, şut ve pas önceliği artar', icon: '🎯', duty: 'Runner', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'RUN' },
+            { id: 'RoamFromPosition', label: t.instrRoam || 'Serbest Dolaş', desc: t.instrRoamDesc || 'Oyuna etki etmek ve boş alan bulmak için pozisyonundan ayrıl.', icon: '🧭', duty: 'Free', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'FREE' },
+            { id: 'PressHigher', label: t.instrPressHigher || 'Yüksek Pres', desc: t.instrPressHigherDesc || 'Topu geri kazanmak için rakibe sahada daha önde pres yap.', icon: '📣', duty: 'Press', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'PRESS' },
+            { id: 'ShootOnSight', label: t.instrShootSight || t.instrShootOnSight || 'Gördüğün Yerde Vur!', desc: t.instrShootSightDesc || t.instrShootOnSightDesc || 'Şut mesafesine girince hemen vurur', icon: '💥', duty: 'Shooter', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'SHOT' },
         ],
         [Position.FWD]: [
-            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrFwdDefaultDesc || 'Forvet oynar, gol arar, kontra koşar', icon: '⚽' },
-            { id: 'DropDeep', label: t.instrDropDeep || 'Geri Çekil', desc: t.instrDropDeepDesc || 'Orta sahaya inerek top ister, playmaker gibi', icon: '↩️' },
-            { id: 'PressHigher', label: t.instrPressHigher || 'Yüksek Pres', desc: t.instrPressHigherDesc || 'Rakip savunmasına baskı yapar, top kaybettirmez', icon: '📣' },
+            { id: 'Default', label: t.instrDefault || 'Varsayılan', desc: t.instrFwdDefaultDesc || 'Forvet oynar, gol arar, kontra koşar', icon: '⚽', duty: 'Support', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'SUP' },
+            { id: 'DropDeep', label: t.instrDropDeep || 'Geri Çekil', desc: t.instrDropDeepDesc || 'Orta sahaya inerek top ister, playmaker gibi', icon: '↩️', duty: 'Link', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'LINK' },
+            { id: 'DefendMore', label: t.instrDefendMore || 'Daha Fazla Defans', desc: t.instrDefendMoreDesc || 'Savunma görevlerine öncelik ver ve sık sık geri dön.', icon: '🔒', duty: 'Press', phase: t.instrMainDuty || 'Main Duty', shortLabel: 'PRESS' },
+            { id: 'ShootOnSight', label: t.instrShootSight || t.instrShootOnSight || 'Gördüğün Yerde Vur!', desc: t.instrShootSightDesc || t.instrShootOnSightDesc || 'Şut mesafesine girince hemen vurur', icon: '💥', duty: 'Poach', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'POACH' },
+            { id: 'PressHigher', label: t.instrPressHigher || 'Yüksek Pres', desc: t.instrPressHigherDesc || 'Rakip savunmasına baskı yapar, top kaybettirmez', icon: '📣', duty: 'Press', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'PRESS' },
+            { id: 'RoamFromPosition', label: t.instrRoam || 'Serbest Dolaş', desc: t.instrRoamDesc || 'Oyuna etki etmek ve boş alan bulmak için pozisyonundan ayrıl.', icon: '🧭', duty: 'Free', phase: t.instrExtraChoice || 'Extra Role', shortLabel: 'FREE' },
         ],
+    };
+
+    const getInstructionOption = (role: string, instructionId: string) => {
+        const roleOptions = PLAYER_INSTRUCTIONS[role] || [];
+        return roleOptions.find(option => option.id === instructionId)
+            || Object.values(PLAYER_INSTRUCTIONS).flat().find(option => option.id === instructionId)
+            || null;
+    };
+
+    const getInstructionSections = (role: string) => {
+        const options = PLAYER_INSTRUCTIONS[role] || [];
+        const grouped = new Map<string, PlayerInstructionOption[]>();
+        options.forEach(option => {
+            const bucket = grouped.get(option.phase) || [];
+            bucket.push(option);
+            grouped.set(option.phase, bucket);
+        });
+        return Array.from(grouped.entries()).map(([title, items]) => ({ title, items }));
+    };
+
+    const getRolePresentation = (player: Player | undefined, option: PlayerInstructionOption): RolePresentation => {
+        const lineRole = player ? normalizePos(player) : Position.MID;
+
+        const generic: RolePresentation = {
+            roleName: option.label,
+            roleFamily: option.duty,
+            summary: option.desc,
+            fitWeights: {},
+        };
+
+        switch (lineRole) {
+            case Position.DEF:
+                switch (option.id) {
+                    case 'Default': return { roleName: t.roleDefBalanced || 'Balanced Defender', roleFamily: t.roleFamilyBalanced || 'Balanced', summary: t.roleDefBalancedSummary || 'Holds position, supports when needed.', fitWeights: { tackling: 3, positioning: 3, speed: 2, stamina: 1 } };
+                    case 'StayBack': return { roleName: t.roleDefStayBack || 'Stay Back', roleFamily: t.roleFamilySecurity || 'Security', summary: t.roleDefStayBackSummary || 'Rarely pushes up, keeps the backline solid.', fitWeights: { positioning: 3, tackling: 3, strength: 2, decisions: 1 } };
+                    case 'HoldPosition': return { roleName: t.roleDefHold || 'Hold Position', roleFamily: t.roleFamilyDiscipline || 'Discipline', summary: t.roleDefHoldSummary || 'Offers a passing angle without breaking the defensive line.', fitWeights: { positioning: 3, passing: 2, composure: 2, decisions: 2 } };
+                    case 'JoinAttack': return { roleName: t.roleDefJoinAttack || 'Join Attack', roleFamily: t.roleFamilyAttack || 'Attack', summary: t.roleDefJoinAttackSummary || 'Carries the ball forward and adds an overlap when space opens.', fitWeights: { speed: 3, stamina: 3, passing: 2, dribbling: 1 } };
+                    default: return generic;
+                }
+            case Position.MID:
+                switch (option.id) {
+                    case 'Default': return { roleName: t.roleMidBalanced || 'Balanced Midfielder', roleFamily: t.roleFamilyBalanced || 'Balanced', summary: t.roleMidBalancedSummary || 'Helps in both directions, doesn\'t overforce the game.', fitWeights: { passing: 2, stamina: 2, decisions: 2, positioning: 2 } };
+                    case 'DefendMore': return { roleName: t.roleMidDefend || 'Ball Winner', roleFamily: t.roleFamilyDefense || 'Defense', summary: t.roleMidDefendSummary || 'Chases duels in midfield, increases recovery work.', fitWeights: { tackling: 3, aggression: 2, stamina: 3, positioning: 1 } };
+                    case 'HoldPosition': return { roleName: t.roleMidHold || 'Hold Position', roleFamily: t.roleFamilyDiscipline || 'Discipline', summary: t.roleMidHoldSummary || 'Protects the team\'s shape, rarely strays.', fitWeights: { positioning: 3, passing: 2, decisions: 2, composure: 1 } };
+                    case 'AttackMore': return { roleName: t.roleMidAttack || 'Get Forward', roleFamily: t.roleFamilyAttack || 'Attack', summary: t.roleMidAttackSummary || 'Makes forward runs when space appears and links up in the box.', fitWeights: { stamina: 3, speed: 2, passing: 2, finishing: 1 } };
+                    case 'RoamFromPosition': return { roleName: t.roleMidRoam || 'Roam Free', roleFamily: t.roleFamilyFree || 'Free', summary: t.roleMidRoamSummary || 'Moves more freely to find the ball and affect the game.', fitWeights: { vision: 3, passing: 3, dribbling: 2, decisions: 2 } };
+                    case 'PressHigher': return { roleName: t.roleMidPress || 'Press High', roleFamily: t.roleFamilyPress || 'Press', summary: t.roleMidPressSummary || 'Starts the press higher up on ball loss.', fitWeights: { stamina: 3, aggression: 2, speed: 2, tackling: 2 } };
+                    case 'ShootOnSight': return { roleName: t.roleMidShoot || 'Shoot on Sight', roleFamily: t.roleFamilyFinisher || 'Finisher', summary: t.roleMidShootSummary || 'Tries long-shot opportunities more quickly.', fitWeights: { finishing: 3, decisions: 2, composure: 2, positioning: 1 } };
+                    default: return generic;
+                }
+            case Position.FWD:
+                switch (option.id) {
+                    case 'Default': return { roleName: t.roleFwdBalanced || 'Balanced Forward', roleFamily: t.roleFamilyBalanced || 'Balanced', summary: t.roleFwdBalancedSummary || 'Looks for goals but stays connected to the game.', fitWeights: { finishing: 3, speed: 2, positioning: 2, composure: 2 } };
+                    case 'DropDeep': return { roleName: t.roleFwdDropDeep || 'Drop Deep', roleFamily: t.roleFamilyLink || 'Link', summary: t.roleFwdDropDeepSummary || 'Drops to collect the ball and creates space for runs behind.', fitWeights: { passing: 3, vision: 2, composure: 2, finishing: 2 } };
+                    case 'DefendMore': return { roleName: t.roleFwdDefend || 'Pressing Forward', roleFamily: t.roleFamilyDefense || 'Defense', summary: t.roleFwdDefendSummary || 'Starts the press high and increases defensive work.', fitWeights: { stamina: 3, aggression: 2, speed: 2, decisions: 1 } };
+                    case 'ShootOnSight': return { roleName: t.roleFwdShoot || 'Poacher', roleFamily: t.roleFamilyGoal || 'Goal', summary: t.roleFwdShootSummary || 'Looks to shoot without waiting for a pass when the chance comes.', fitWeights: { finishing: 3, positioning: 3, composure: 2, speed: 1 } };
+                    case 'PressHigher': return { roleName: t.roleFwdPress || 'Press High', roleFamily: t.roleFamilyPress || 'Press', summary: t.roleFwdPressSummary || 'Makes it uncomfortable for the opponent\'s defence to play out.', fitWeights: { stamina: 3, aggression: 2, speed: 2, decisions: 1 } };
+                    case 'RoamFromPosition': return { roleName: t.roleFwdRoam || 'Free Forward', roleFamily: t.roleFamilyFree || 'Free', summary: t.roleFwdRoamSummary || 'Rotates to find space and touches the ball more.', fitWeights: { finishing: 2, passing: 2, dribbling: 2, composure: 2, vision: 1 } };
+                    default: return generic;
+                }
+            default:
+                return generic;
+        }
+    };
+
+    const scoreRoleFit = (player: Player, weights: RoleFitWeights) => {
+        const entries = Object.entries(weights) as [keyof PlayerAttributes, number][];
+        if (entries.length === 0) return Math.round(player.overall || 0);
+        const totalWeight = entries.reduce((sum, [, weight]) => sum + weight, 0);
+        const weightedScore = entries.reduce((sum, [key, weight]) => sum + player.attributes[key] * weight, 0) / Math.max(1, totalWeight);
+        return Math.round(weightedScore);
+    };
+
+    const describeRoleFit = (player: Player, weights: RoleFitWeights) => {
+        const entries = Object.entries(weights) as [keyof PlayerAttributes, number][];
+        if (entries.length === 0) return `${t.overall || 'OVR'} ${player.overall}`;
+        return entries
+            .sort((a, b) => (player.attributes[b[0]] * b[1]) - (player.attributes[a[0]] * a[1]))
+            .slice(0, 3)
+            .map(([key]) => `${ATTRIBUTE_LABELS[key] || key} ${player.attributes[key]}`)
+            .join(' • ');
+    };
+
+    const getRoleRecommendations = (player: Player) => {
+        const options = PLAYER_INSTRUCTIONS[normalizePos(player)] || [];
+        return options
+            .map(option => {
+                const presentation = getRolePresentation(player, option);
+                return {
+                    option,
+                    presentation,
+                    fit: scoreRoleFit(player, presentation.fitWeights),
+                    reason: describeRoleFit(player, presentation.fitWeights),
+                };
+            })
+            .sort((a, b) => {
+                if (b.fit !== a.fit) return b.fit - a.fit;
+                if (a.option.id === 'Default') return 1;
+                if (b.option.id === 'Default') return -1;
+                return a.presentation.roleName.localeCompare(b.presentation.roleName);
+            })
+            .slice(0, 3);
     };
 
     const getSlotInstruction = (lineupIndex: number): string => {
@@ -497,6 +722,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     type AttackApproach = 'PATIENT' | 'BALANCED' | 'VERTICAL' | 'FLUID';
     type FinalThirdMode = 'PATIENT' | 'BALANCED' | 'EARLY_SHOT';
     type DefenseApproach = 'LOW_BLOCK' | 'MID_BLOCK' | 'FRONT_FOOT' | 'HUNT';
+    type AttackPlanMode = NonNullable<TeamTactic['attackPlan']>;
 
     const ATTACK_APPROACH_INSTRUCTION_IDS = ['RoamFromPosition'];
     const FINAL_THIRD_INSTRUCTION_IDS = ['WorkBallIntoBox', 'ShootOnSight'];
@@ -516,16 +742,24 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         return 'BALANCED';
     };
 
-    const setAttackInstructions = (primary: FinalThirdMode) => {
-        const kept = (team.tactic.instructions || []).filter(i => !FINAL_THIRD_INSTRUCTION_IDS.includes(i));
-        if (primary === 'PATIENT') kept.push('WorkBallIntoBox');
-        if (primary === 'EARLY_SHOT') kept.push('ShootOnSight');
-        handleTacticChange('instructions', kept);
+    const composeInstructions = (
+        baseInstructions: string[] | undefined,
+        attackMode: AttackApproach,
+        finalThirdMode: FinalThirdMode,
+    ) => {
+        const kept = (baseInstructions || []).filter(i => !ATTACK_APPROACH_INSTRUCTION_IDS.includes(i) && !FINAL_THIRD_INSTRUCTION_IDS.includes(i));
+        if (attackMode === 'FLUID') kept.push('RoamFromPosition');
+        if (finalThirdMode === 'PATIENT') kept.push('WorkBallIntoBox');
+        if (finalThirdMode === 'EARLY_SHOT') kept.push('ShootOnSight');
+        return kept;
     };
 
-    const applyAttackApproach = (mode: AttackApproach) => {
-        const nextTactic = { ...team.tactic };
-        const kept = (nextTactic.instructions || []).filter(i => !ATTACK_APPROACH_INSTRUCTION_IDS.includes(i));
+    const applyAttackApproachToTactic = (
+        tactic: TeamTactic,
+        mode: AttackApproach,
+        finalThirdMode: FinalThirdMode = inferFinalThirdMode(tactic),
+    ) => {
+        const nextTactic = { ...tactic };
 
         if (mode === 'PATIENT') {
             nextTactic.style = 'Possession';
@@ -547,10 +781,50 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
             nextTactic.mentality = 'Attacking';
             nextTactic.passingStyle = 'Mixed';
             nextTactic.tempo = 'Normal';
-            kept.push('RoamFromPosition');
         }
-        nextTactic.instructions = kept;
-        onUpdateTactic(nextTactic);
+
+        nextTactic.instructions = composeInstructions(nextTactic.instructions, mode, finalThirdMode);
+        return nextTactic;
+    };
+
+    const applyDefenseApproachToTactic = (tactic: TeamTactic, mode: DefenseApproach) => {
+        if (mode === 'LOW_BLOCK') {
+            return {
+                ...tactic,
+                pressingIntensity: 'StandOff' as const,
+                defensiveLine: 'Deep',
+            };
+        }
+
+        if (mode === 'FRONT_FOOT') {
+            return {
+                ...tactic,
+                pressingIntensity: 'HighPress' as const,
+                defensiveLine: 'Balanced',
+            };
+        }
+
+        if (mode === 'HUNT') {
+            return {
+                ...tactic,
+                pressingIntensity: 'Gegenpress' as const,
+                defensiveLine: 'High',
+            };
+        }
+
+        return {
+            ...tactic,
+            pressingIntensity: 'Balanced' as const,
+            defensiveLine: 'Balanced',
+        };
+    };
+
+    const setAttackInstructions = (primary: FinalThirdMode) => {
+        handleTacticChange('instructions', composeInstructions(team.tactic.instructions, currentAttackApproach, primary));
+    };
+
+    const applyAttackApproach = (mode: AttackApproach) => {
+        onUpdateTactic(applyAttackApproachToTactic(team.tactic, mode, currentFinalThird));
     };
 
     const inferDefenseApproach = (tactic: TeamTactic): DefenseApproach => {
@@ -564,43 +838,23 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     };
 
     const applyDefenseApproach = (mode: DefenseApproach) => {
-        if (mode === 'LOW_BLOCK') {
-            onUpdateTactic({
-                ...team.tactic,
-                pressingIntensity: 'StandOff',
-                defensiveLine: 'Deep'
-            });
-            return;
-        }
-
-        if (mode === 'FRONT_FOOT') {
-            onUpdateTactic({
-                ...team.tactic,
-                pressingIntensity: 'HighPress',
-                defensiveLine: 'Balanced'
-            });
-            return;
-        }
-
-        if (mode === 'HUNT') {
-            onUpdateTactic({
-                ...team.tactic,
-                pressingIntensity: 'Gegenpress',
-                defensiveLine: 'High'
-            });
-            return;
-        }
-
-        onUpdateTactic({
-            ...team.tactic,
-            pressingIntensity: 'Balanced',
-            defensiveLine: 'Balanced'
-        });
+        onUpdateTactic(applyDefenseApproachToTactic(team.tactic, mode));
     };
 
     const currentAttackApproach = inferAttackApproach(team.tactic);
     const currentFinalThird = inferFinalThirdMode(team.tactic);
     const currentDefenseApproach = inferDefenseApproach(team.tactic);
+    const currentAttackPlan: AttackPlanMode = team.tactic.attackPlan || 'AUTO';
+    const formationSupport = getSupportInfo(selectedEngine, 'formation', t);
+    const customPositionsSupport = getSupportInfo(selectedEngine, 'customPositions', t);
+    const playerInstructionsSupport = getSupportInfo(selectedEngine, 'playerInstructions', t);
+    const attackApproachSupport = getSupportInfo(selectedEngine, 'attackApproach', t);
+    const finalThirdSupport = getSupportInfo(selectedEngine, 'finalThird', t);
+    const attackPlanSupport = getSupportInfo(selectedEngine, 'attackPlan', t);
+    const widthSupport = getSupportInfo(selectedEngine, 'width', t);
+    const defenseApproachSupport = getSupportInfo(selectedEngine, 'defenseApproach', t);
+    const aggressionSupport = getSupportInfo(selectedEngine, 'aggression', t);
+    const markingSupport = getSupportInfo(selectedEngine, 'marking', t);
 
     const getWidthLabel = (value?: TeamTactic['width']) => {
         if (value === 'Narrow') return t.tacticNarrow;
@@ -627,6 +881,53 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         if (mode === 'HUNT') return t.defenseApproachHuntLabel || 'Avci Pres';
         return t.defenseApproachMidBlockLabel || 'Orta Blok';
     };
+
+    const getAttackPlanLabel = (mode: AttackPlanMode) => {
+        if (mode === 'WIDE_CROSS') return t.attackPlanWideCross || 'Kanat Ortasi';
+        if (mode === 'CUTBACK') return t.attackPlanCutback || 'Geri Cikar';
+        if (mode === 'THIRD_MAN') return t.attackPlanThirdMan || 'Ucuncu Adam';
+        if (mode === 'DIRECT_CHANNEL') return t.attackPlanDirectChannel || 'Kanal Kosusu';
+        return t.attackPlanAuto || 'Otomatik';
+    };
+
+    const getAttackPlanInsight = (mode: AttackPlanMode) => {
+        const base = mode === 'WIDE_CROSS'
+            ? (t.attackPlanWideCrossDesc || 'Kanatta sabitlenir, ceza sahasina kosu ve orta arar.')
+            : mode === 'CUTBACK'
+                ? (t.attackPlanCutbackDesc || 'Cizgiye inip yerden merkeze cevirir, ikinci kosuyu arar.')
+                : mode === 'THIRD_MAN'
+                    ? (t.attackPlanThirdManDesc || 'Iki pasla ucuncu oyuncuyu bos cebe sokmaya calisir.')
+                    : mode === 'DIRECT_CHANNEL'
+                        ? (t.attackPlanDirectChannelDesc || 'Savunma arkasi kanal kosusunu erken arar.')
+                        : (t.attackPlanAutoDesc || 'Topun yeri ve oyuncu dizilimine gore plan secer.');
+
+        if (selectedEngine !== 'ucuncu') {
+            const adapterNote = mode === 'WIDE_CROSS'
+                ? (t.attackPlanAdapterWideCross || 'In this engine, converted mainly to early cross behaviour.')
+                : mode === 'CUTBACK'
+                    ? (t.attackPlanAdapterCutback || 'In this engine, converted to patient entry into the box.')
+                    : mode === 'THIRD_MAN'
+                        ? (t.attackPlanAdapterThirdMan || 'In this engine, approximated via WorkBallIntoBox and RoamFromPosition.')
+                        : mode === 'DIRECT_CHANNEL'
+                            ? (t.attackPlanAdapterDirect || 'In this engine, converted to direct passing and forward run tendencies.')
+                            : (t.attackPlanAdapterAuto || 'In this engine, the closest available base behaviour is applied based on the situation.');
+            return `${base} ${adapterNote}`;
+        }
+
+        return base;
+    };
+
+    const setAttackPlanMode = (mode: AttackPlanMode) => {
+        handleTacticChange('attackPlan', mode);
+    };
+
+    const attackPlanOptions: Array<{ value: AttackPlanMode; label: string; desc: string }> = [
+        { value: 'AUTO', label: getAttackPlanLabel('AUTO'), desc: getAttackPlanInsight('AUTO') },
+        { value: 'WIDE_CROSS', label: getAttackPlanLabel('WIDE_CROSS'), desc: getAttackPlanInsight('WIDE_CROSS') },
+        { value: 'CUTBACK', label: getAttackPlanLabel('CUTBACK'), desc: getAttackPlanInsight('CUTBACK') },
+        { value: 'THIRD_MAN', label: getAttackPlanLabel('THIRD_MAN'), desc: getAttackPlanInsight('THIRD_MAN') },
+        { value: 'DIRECT_CHANNEL', label: getAttackPlanLabel('DIRECT_CHANNEL'), desc: getAttackPlanInsight('DIRECT_CHANNEL') },
+    ];
 
     const getAggressionLabel = (value?: TeamTactic['aggression']) => {
         if (value === 'Safe') return t.safe;
@@ -853,84 +1154,82 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
     const getAttackApproachInsight = (mode: AttackApproach) => {
         if (mode === 'PATIENT') {
             return {
-                motor: 'Altta motor bunu kisa pas + dusuk tempo + topa sahip olma mantigina cevirir.',
-                preview: 'Sahada daha yakin pas opsiyonlari, daha az zoraki sut ve daha sakin kurulum gorursun.'
+                motor: selectedEngine === 'ucuncu'
+                    ? (t.insightAttackPatientPro || 'The Pro engine integrates this with the plan layer: short pass + low tempo + possession logic.')
+                    : (t.insightAttackPatientOther || 'This engine translates this into short pass + low tempo + possession settings.'),
+                preview: t.insightAttackPatientPreview || 'Expect closer passing options, fewer forced shots, and a calmer buildup on the pitch.'
             };
         }
         if (mode === 'VERTICAL') {
             return {
-                motor: 'Altta motor bunu direkt pas + hizli tempo + kontra niyetine cevirir.',
-                preview: 'Sahada daha erken dikine pas, kosu arkasi top ve hizli gecisler gorursun.'
+                motor: selectedEngine === 'ucuncu'
+                    ? (t.insightAttackVerticalPro || 'The Pro engine combines this with direct pass + high tempo + channel runs and transition threat.')
+                    : (t.insightAttackVerticalOther || 'This engine translates this into direct pass + high tempo + counter intent.'),
+                preview: t.insightAttackVerticalPreview || 'Expect earlier vertical passes, runs in behind, and fast transitions on the pitch.'
             };
         }
         if (mode === 'FLUID') {
             return {
-                motor: 'Altta motor bunu daha serbest dolasim + daha hucumcu risk profiline cevirir.',
-                preview: 'Sahada yer degisimi, surpriz kosu ve daha ozgur kararlar gorursun.'
+                motor: selectedEngine === 'ucuncu'
+                    ? (t.insightAttackFluidPro || 'The Pro engine processes this with freer movement + more attacking risk + plan support runs.')
+                    : (t.insightAttackFluidOther || 'This engine translates this into freer movement + higher attacking risk profile.'),
+                preview: t.insightAttackFluidPreview || 'Expect positional rotations, surprise runs, and freer decisions on the pitch.'
             };
         }
         return {
-            motor: 'Altta motor bunu karisik pas + normal tempo + dengeli risk profiline cevirir.',
-            preview: 'Sahada oyuncu kalitesine gore pas, sut ve calim arasinda daha dengeli kararlar gorursun.'
+            motor: selectedEngine === 'ucuncu'
+                ? (t.insightAttackBalancedPro || 'The Pro engine applies this with balanced pass + normal tempo + plan selection as needed.')
+                : (t.insightAttackBalancedOther || 'This engine translates this into mixed pass + normal tempo + balanced risk profile.'),
+            preview: t.insightAttackBalancedPreview || 'Expect more balanced decisions between pass, shot and dribble based on player quality.'
         };
     };
 
     const getFinalThirdInsight = (mode: FinalThirdMode) => {
-        if (mode === 'PATIENT') {
-            return 'Ceza sahasi disindan dusuk kalite sutlari azaltir; bos adami ve son pasi daha cok aratir.';
-        }
-        if (mode === 'EARLY_SHOT') {
-            return 'Kaleyi gorur gormez daha erken yoklar; iyi sutorlerde 24-32 metre bandinda deneme sayisi artar.';
-        }
-        return 'Son karari daha cok oyuncunun aci, bosluk ve yetenek kombinasyonuna birakir.';
+        if (mode === 'PATIENT') return t.insightFinalThirdPatient || 'Reduces low-quality shots from outside the box; looks for the free man and the killer pass more.';
+        if (mode === 'EARLY_SHOT') return t.insightFinalThirdEarlyShot || 'Tests the keeper sooner; with good shooters, attempts from 24-32m increase.';
+        return t.insightFinalThirdBalanced || "Leaves the final decision more to the player's angle, space and ability combination.";
     };
 
     const getWidthInsight = (value?: TeamTactic['width']) => {
-        if (value === 'Wide') {
-            return 'Kanat oyunculari daha cok cizgiye yayilir; byline kosusu, orta ve genis alan driblingi artar.';
-        }
-        if (value === 'Narrow') {
-            return 'Merkez baglanti, kisa pas ve ic koridor kullanimi artar; oyun daha sikisik ama daha kompakt olur.';
-        }
-        return 'Ne cizgiye fazla basar ne de gereksiz merkeze yigilir; en guvenli orta yol budur.';
+        if (value === 'Wide') return t.insightWidthWide || 'Wide players stretch further to the touchline; byline runs, crosses, and wide dribbles increase.';
+        if (value === 'Narrow') return t.insightWidthNarrow || 'Central connections, short passes and inner corridor use increase; play becomes tighter but more compact.';
+        return t.insightWidthAuto || 'Neither too wide nor needlessly crowded centrally; this is the safest middle ground.';
     };
 
     const getDefenseApproachInsight = (mode: DefenseApproach) => {
-        if (mode === 'LOW_BLOCK') {
-            return 'Takim geri cekilir, daha az oyuncu prese cikar ve ceza sahasi onunu kapatmaya oynar.';
-        }
-        if (mode === 'FRONT_FOOT') {
-            return 'Rakibi daha erken karsilar, orta bloktan daha onerde savunur ama tamamen kumar oynamaz.';
-        }
-        if (mode === 'HUNT') {
-            return 'En agresif secenektir: daha cok presci, daha yuksek hat ve top kaybinda anlik baski gorursun.';
-        }
-        return 'Hatlar kompakt kalir; takim ne tamamen cekilir ne de gereksiz onde yakalanir.';
+        if (mode === 'LOW_BLOCK') return t.insightDefenseLowBlock || 'The team sits deep, fewer players press, and they focus on blocking the area in front of the box.';
+        if (mode === 'FRONT_FOOT') return t.insightDefenseFrontFoot || "Meets the opponent higher, defends further up than mid-block, but doesn't gamble fully.";
+        if (mode === 'HUNT') return t.insightDefenseHunt || 'The most aggressive option: more pressers, higher line, and immediate pressure on ball loss.';
+        return t.insightDefenseMidBlock || "Lines stay compact; the team neither fully retreats nor gets caught needlessly high.";
     };
 
     const getAggressionInsight = (value?: TeamTactic['aggression']) => {
-        if (value === 'Safe') return 'Ikili mucadelede daha yumusak kalir; faul ve kart azalir ama topu temiz kapma sayisi da duser.';
-        if (value === 'Aggressive') return 'Topa daha sert girer; fizik gucu iyi takimlarda top kazanimi artar ama faul de artabilir.';
-        if (value === 'Reckless') return 'Son caredir; mudahale sertligi en yuksektir ama kart ve faul riski belirgin bicimde buyur.';
-        return 'Ne fazla yumusak ne de gereksiz sert; en dengeli mudahale profilidir.';
+        if (value === 'Safe') return t.insightAggressionSafe || 'Softer in duels; fouls and cards decrease but clean ball recoveries also drop.';
+        if (value === 'Aggressive') return t.insightAggressionAggressive || 'Goes in harder for the ball; ball recoveries increase in physical teams but so can fouls.';
+        if (value === 'Reckless') return t.insightAggressionReckless || 'Last resort; tackle hardness is at its highest but card and foul risk grows significantly.';
+        return t.insightAggressionAuto || 'Neither too soft nor needlessly hard; the most balanced tackle profile.';
     };
 
     const getMarkingInsight = (value?: TeamTactic['marking']) => {
         if (value === 'Man') {
-            return 'Savunmaci yakindaki tehdide yapisir; bire bir temas artar ama sekil daha kolay dagilabilir.';
+            return selectedEngine === 'ucuncu'
+                ? (t.insightMarkingManPro || 'Defender sticks to the nearby threat; one-on-one contact increases but shape can break more easily.')
+                : (t.insightMarkingManOther || 'Defender shadows the nearby threat more closely; works but not as deep or contextual as in the Pro engine.');
         }
-        return 'Oyuncular adami degil bolgeyi korur; cizgi kompakt kalir ve pas koridoru kapatma hissi artar.';
+        return selectedEngine === 'ucuncu'
+            ? (t.insightMarkingZonalPro || 'Players guard the zone, not the man; line stays compact and the sense of blocking pass corridors increases.')
+            : (t.insightMarkingZonalOther || 'Players guard the zone more; this selection produces a more basic shape-protection effect in Classic and Arcade engines.');
     };
 
     const comboWarnings: string[] = [];
     if (currentAttackApproach === 'PATIENT' && currentFinalThird === 'EARLY_SHOT') {
-        comboWarnings.push('Sabirli kurulum ile Gordugun Yerden Vur birbirini cekistirir: biri beklemek, digeri ilk goruste vurmak ister.');
+        comboWarnings.push(t.comboWarnPatientEarlyShot || 'Patient buildup clashes with Early Shot: one wants to wait, the other wants to shoot on sight.');
     }
     if (currentAttackApproach === 'FLUID' && team.tactic.marking === 'Man' && team.tactic.aggression === 'Reckless') {
-        comboWarnings.push('Akiskan + Adam Adama + Kontrolsuz birlikteligi sekli dagitip gereksiz kart riskini buyutur.');
+        comboWarnings.push(t.comboWarnFluidManReckless || 'Fluid + Man Marking + Reckless breaks shape and significantly raises card risk.');
     }
     if (currentDefenseApproach === 'LOW_BLOCK' && team.tactic.width === 'Wide') {
-        comboWarnings.push('Alcak Blok + Genislik birlikte savunma yatayligini fazla acabilir; ikinci top toplamak zorlasabilir.');
+        comboWarnings.push(t.comboWarnLowBlockWide || 'Low Block + Wide width can open defensive shape horizontally too much; collecting second balls becomes harder.');
     }
 
     const describeTactic = (tactic: TeamTactic) => {
@@ -962,6 +1261,68 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
 
     const assignedRoleMap: Record<string, Position> = {};
     const hasIssues = advice.some(a => a.type === 'CRITICAL' || a.type === 'WARNING');
+    const currentPressingLabel = team.tactic.pressingIntensity === 'StandOff'
+        ? t.pressStandOff
+        : team.tactic.pressingIntensity === 'HighPress'
+            ? t.pressHigh
+            : team.tactic.pressingIntensity === 'Gegenpress'
+                ? t.pressGegen
+                : t.pressBalanced || 'Dengeli';
+    const currentDefensiveLineLabel = team.tactic.defensiveLine === 'Deep'
+        ? t.tacticDeep
+        : team.tactic.defensiveLine === 'High'
+            ? t.tacticHigh
+            : t.tacticBalanced || 'Dengeli';
+    const currentMentalityLabel = team.tactic.mentality || t.styleBalanced || 'Dengeli';
+    const activeDutySummary = pitchOrderedStarters
+        .map(player => {
+            const instructionId = getSlotInstruction(player.lineupIndex || 0);
+            if (instructionId === 'Default') return null;
+            const instructionMeta = getInstructionOption(normalizePos(player), instructionId);
+            if (!instructionMeta) return null;
+            const rolePresentation = getRolePresentation(player, instructionMeta);
+            return {
+                player,
+                instructionId,
+                label: rolePresentation.roleName,
+                icon: instructionMeta.icon,
+                duty: instructionMeta.duty,
+                shortLabel: instructionMeta.shortLabel || instructionMeta.duty,
+                engineLabel: instructionMeta.label,
+            };
+        })
+        .filter((entry): entry is { player: Player; instructionId: string; label: string; icon: string; duty: string; shortLabel: string; engineLabel: string } => !!entry);
+    const tacticalNotebookCards = [
+        {
+            key: 'with-ball',
+            eyebrow: t.attack || 'Hucum',
+            title: `${getAttackApproachLabel(currentAttackApproach)} / ${getFinalThirdLabel(currentFinalThird)}`,
+            accent: 'text-emerald-300',
+            border: 'border-emerald-700/40',
+            body: `${getAttackPlanLabel(currentAttackPlan)} • ${getWidthLabel(team.tactic.width)} ${t.width || 'genislik'}`,
+            foot: getAttackApproachInsight(currentAttackApproach).preview,
+        },
+        {
+            key: 'without-ball',
+            eyebrow: t.defense || 'Savunma',
+            title: `${getDefenseApproachLabel(currentDefenseApproach)} / ${currentPressingLabel}`,
+            accent: 'text-red-300',
+            border: 'border-red-700/40',
+            body: `${getMarkingLabel(team.tactic.marking)} • ${currentDefensiveLineLabel} ${t.defensiveLine || 'hat'}`,
+            foot: getDefenseApproachInsight(currentDefenseApproach),
+        },
+        {
+            key: 'transition',
+            eyebrow: t.engineMappingTitle || 'Oyun modeli',
+            title: `${currentMentalityLabel} / ${team.tactic.tempo || 'Normal'} ${t.tempo || 'tempo'}`,
+            accent: 'text-cyan-300',
+            border: 'border-cyan-700/40',
+            body: `${getAggressionLabel(team.tactic.aggression)} mudahale • ${team.tactic.formation}`,
+            foot: activeDutySummary.length > 0
+                ? (t.instrActiveCountMsg || '{count} players with individual duties.').replace('{count}', String(activeDutySummary.length))
+                : (t.instrAllDefault || 'All players are on default duties.'),
+        },
+    ];
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in pb-10" onMouseUp={handlePitchMouseUp} onTouchEnd={handlePitchMouseUp}>
@@ -986,17 +1347,17 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 <div className="text-blue-400 font-mono font-bold text-xs">{opponent.tactic?.formation || '4-4-2'}</div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">Preset</div>
+                                <div className="text-[8px] text-slate-500 uppercase">{t.preset || 'Preset'}</div>
                                 <div className="text-purple-400 font-bold text-[10px]">
-                                    {opponentSummary?.preset || 'Ozel'}
+                                    {opponentSummary?.preset || t.custom || 'Custom'}
                                 </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">Hucum</div>
+                                <div className="text-[8px] text-slate-500 uppercase">{t.attack || 'Attack'}</div>
                                 <div className="text-cyan-400 font-bold text-[10px]">{getAttackApproachLabel(opponentSummary?.attackApproach || 'BALANCED')}</div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[68px]">
-                                <div className="text-[8px] text-slate-500 uppercase">Son Bolge</div>
+                                <div className="text-[8px] text-slate-500 uppercase">{t.finalThirdLabel || 'Final Third'}</div>
                                 <div className="text-yellow-400 font-bold text-[10px]">{getFinalThirdLabel(opponentSummary?.finalThird || 'BALANCED')}</div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
@@ -1012,13 +1373,13 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[68px]">
-                                <div className="text-[8px] text-slate-500 uppercase">Savunma</div>
+                                <div className="text-[8px] text-slate-500 uppercase">{t.defense || 'Defense'}</div>
                                 <div className="text-red-400 font-bold text-[10px]">
                                     {getDefenseApproachLabel(opponentSummary?.defenseApproach || 'MID_BLOCK')}
                                 </div>
                             </div>
                             <div className="bg-slate-900/60 px-2 py-1.5 rounded text-center min-w-[60px]">
-                                <div className="text-[8px] text-slate-500 uppercase">Markaj</div>
+                                <div className="text-[8px] text-slate-500 uppercase">{t.marking || 'Marking'}</div>
                                 <div className="text-blue-300 font-bold text-[10px]">{getMarkingLabel(opponent.tactic?.marking)}</div>
                             </div>
                         </div>
@@ -1109,6 +1470,90 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.defense}</button>
                     </div>
 
+                    <div className="mb-3 rounded-xl border border-slate-700 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.16),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.14),_transparent_32%),rgba(15,23,42,0.92)] p-3 shadow-inner">
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.tacticCoreTitle || 'Taktik not defteri'}</div>
+                                <div className="text-[13px] font-semibold text-white mt-1">{describeTactic(team.tactic).preset || t.customPlan || 'Ozel Plan'}</div>
+                                <div className="text-[10px] text-slate-400 mt-1">{t.tacticCoreHint || 'Once oyun kimligini kur, sonra sekmelerde detay davranisi ince ayarla.'}</div>
+                            </div>
+                            <div className="text-right shrink-0">
+                                <div className="text-[9px] uppercase tracking-[0.2em] text-slate-500">{t.formation || 'Dizilis'}</div>
+                                <div className="text-[13px] font-mono text-emerald-300">{team.tactic.formation}</div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                            {tacticalNotebookCards.map(card => (
+                                <div key={card.key} className={`rounded-xl border ${card.border} bg-slate-950/45 p-2.5`}>
+                                    <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{card.eyebrow}</div>
+                                    <div className={`text-[11px] font-bold mt-1 ${card.accent}`}>{card.title}</div>
+                                    <div className="text-[10px] text-slate-300 mt-1">{card.body}</div>
+                                    <div className="text-[9px] text-slate-400 mt-2 leading-relaxed">{card.foot}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-3 rounded-lg border border-slate-700/80 bg-slate-950/45 p-2.5">
+                            <div className="flex items-center justify-between gap-2">
+                                <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{t.instrTitle || 'Oyuncu gorevleri'}</div>
+                                <div className="text-[9px] text-slate-400">{activeDutySummary.length}/11 {t.active || 'active'}</div>
+                            </div>
+                            {activeDutySummary.length > 0 ? (
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                    {activeDutySummary.map(entry => (
+                                        <div key={`${entry.player.id}-${entry.instructionId}`} className="rounded-full border border-slate-700 bg-slate-800/80 px-2 py-1 text-[10px] text-slate-200">
+                                            <span className="mr-1">{entry.icon}</span>
+                                            <span className="font-semibold text-white">{entry.player.lastName}</span>
+                                            <span className="mx-1 text-slate-500">•</span>
+                                            <span>{entry.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="mt-2 text-[10px] text-slate-400">Tum oyuncular su an varsayilan gorevlerle oynuyor. Fark yaratmak istedigin rolde bireysel talimat ver.</div>
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div className={`mb-3 rounded-xl border p-3 ${enginePresentation.panelClass}`}>
+                        <div className="flex items-start justify-between gap-3">
+                            <div>
+                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.engineAwarenessLabel || 'Engine Awareness'}</div>
+                                <div className="text-[13px] font-semibold text-white mt-1">{enginePresentation.label}</div>
+                                <div className="text-[10px] text-slate-300 mt-1">{enginePresentation.summary}</div>
+                            </div>
+                            <div className={`rounded-full border px-2 py-1 text-[9px] font-bold ${enginePresentation.chipClass}`}>
+                                {enginePresentation.shortLabel}
+                            </div>
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-3">
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.attackPlanTitle || 'Attack Plan'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${attackPlanSupport.badgeClass}`}>{attackPlanSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{attackPlanSupport.summary}</div>
+                            </div>
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.marking || 'Marking'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${markingSupport.badgeClass}`}>{markingSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{markingSupport.summary}</div>
+                            </div>
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.playerInstructionsTitle || 'Player Instructions'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${playerInstructionsSupport.badgeClass}`}>{playerInstructionsSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{playerInstructionsSupport.summary}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="space-y-2 min-h-[80px]">
                         {tacticTab === 'PRESETS' && (
                             <div className="space-y-2 h-[250px] overflow-y-auto custom-scrollbar pr-1">
@@ -1121,6 +1566,10 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                     const descKey = `desc${key}` as keyof Translation;
                                     const displayName = (t[nameKey] as string) || preset.name;
                                     const displayDesc = (t[descKey] as string) || preset.description;
+                                    const previewTactic = { ...team.tactic, ...preset.tactic } as TeamTactic;
+                                    const previewSummary = describeTactic(previewTactic);
+                                    const previewAttackPlan = previewTactic.attackPlan || 'AUTO';
+                                    const isActivePreset = detectPreset(team.tactic) === key;
 
                                     return (
                                         <button
@@ -1130,15 +1579,23 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                                 // Update the entire tactic object in one go
                                                 onUpdateTactic(newTactic);
                                             }}
-                                            className="w-full bg-slate-800 p-2 rounded border border-slate-700 hover:border-indigo-500 hover:bg-slate-750 transition-all text-left group relative overflow-hidden"
+                                            className={`w-full p-2 rounded border transition-all text-left group relative overflow-hidden ${isActivePreset
+                                                ? 'bg-indigo-950/50 border-indigo-500 shadow-lg shadow-indigo-900/40'
+                                                : 'bg-slate-800 border-slate-700 hover:border-indigo-500 hover:bg-slate-750'
+                                                }`}
                                         >
                                             <div className="flex justify-between items-start">
                                                 <span className="text-[11px] font-bold text-indigo-300 group-hover:text-indigo-200">{displayName}</span>
-                                                <span className="text-[9px] bg-slate-900 text-slate-400 px-1 rounded">{t.applyPreset}</span>
+                                                <span className={`text-[9px] px-1 rounded ${isActivePreset ? 'bg-indigo-500/20 text-indigo-200' : 'bg-slate-900 text-slate-400'}`}>{isActivePreset ? 'AKTIF' : t.applyPreset}</span>
                                             </div>
                                             <p className="text-[9px] text-slate-400 mt-1 leading-tight group-hover:text-slate-300">
                                                 {displayDesc}
                                             </p>
+                                            <div className="mt-2 flex flex-wrap gap-1">
+                                                <span className="rounded-full border border-slate-700 px-1.5 py-0.5 text-[8px] text-slate-300">{getAttackApproachLabel(previewSummary.attackApproach)}</span>
+                                                <span className="rounded-full border border-slate-700 px-1.5 py-0.5 text-[8px] text-slate-300">{getDefenseApproachLabel(previewSummary.defenseApproach)}</span>
+                                                <span className="rounded-full border border-slate-700 px-1.5 py-0.5 text-[8px] text-slate-300">{getAttackPlanLabel(previewAttackPlan)}</span>
+                                            </div>
                                         </button>
                                     );
                                 })}
@@ -1147,7 +1604,10 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         {tacticTab === 'FORMATION' && (
                             <div className="space-y-3">
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.formation}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.formation}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${formationSupport.badgeClass}`}>{formationSupport.label}</span>
+                                    </div>
                                     <div className="grid grid-cols-3 gap-1 mt-1 max-h-32 overflow-y-auto custom-scrollbar pr-1">
                                         {Object.values(TacticType).map(f => (
                                             <button
@@ -1177,7 +1637,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
                                             <div className="text-[8px] uppercase text-slate-500">{t.attack || 'Hucum'}</div>
                                             <div className="text-[11px] font-bold text-emerald-300 mt-0.5">{getAttackApproachLabel(currentAttackApproach)}</div>
-                                            <div className="text-[9px] text-slate-400">{getFinalThirdLabel(currentFinalThird)}</div>
+                                            <div className="text-[9px] text-slate-400">{getAttackPlanLabel(currentAttackPlan)}</div>
                                         </div>
                                         <div className="rounded-lg border border-slate-700 bg-slate-800/80 p-2">
                                             <div className="text-[8px] uppercase text-slate-500">{t.defense || 'Savunma'}</div>
@@ -1194,6 +1654,14 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
 
                                 <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg px-2.5 py-2 text-[10px] text-blue-100">
                                     {t.tacticCoreHint || 'Bu sekme artik ayar yigini degil: once omurgayi kur, sonra Hucum ve Savunma sekmelerinde davranisi ince ayarla.'}
+                                </div>
+
+                                <div className="bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-[10px] text-slate-200 space-y-1">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <span className="text-slate-400">{t.dragDropPositions || 'Drag & Drop Positions'}</span>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${customPositionsSupport.badgeClass}`}>{customPositionsSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-400">{customPositionsSupport.summary}</div>
                                 </div>
 
                                 <div className="bg-indigo-900/25 border border-indigo-700/30 rounded-lg px-2.5 py-2 text-[10px] text-indigo-100 space-y-2">
@@ -1232,7 +1700,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         {tacticTab === 'IN_POSSESSION' && (
                             <div className="space-y-2">
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideAttackApproachTitle || 'Hucum Yaklasimi'}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideAttackApproachTitle || 'Hucum Yaklasimi'}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${attackApproachSupport.badgeClass}`}>{attackApproachSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{attackApproachSupport.summary}</div>
                                     <div className="grid grid-cols-2 gap-1 mt-0.5">
                                         {attackApproachOptions.map(s => (
                                             <button
@@ -1251,7 +1723,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </div>
 
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideFinalThirdTitle || 'Son Ucuncu Bolge'}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.guideFinalThirdTitle || 'Son Ucuncu Bolge'}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${finalThirdSupport.badgeClass}`}>{finalThirdSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{finalThirdSupport.summary}</div>
                                     <div className="grid grid-cols-3 gap-1 mt-0.5">
                                         {finalThirdOptions.map(option => (
                                             <button
@@ -1267,7 +1743,31 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </div>
 
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.attackPlanTitle || 'Hucum Plani'}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${attackPlanSupport.badgeClass}`}>{attackPlanSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{attackPlanSupport.summary}</div>
+                                    <div className="grid grid-cols-2 gap-1 mt-0.5">
+                                        {attackPlanOptions.map(option => (
+                                            <button
+                                                key={option.value}
+                                                onClick={() => setAttackPlanMode(option.value)}
+                                                className={`rounded border px-2 py-1.5 text-left transition-all ${currentAttackPlan === option.value ? 'border-cyan-500 bg-cyan-700/70 text-white' : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:bg-slate-700'}`}
+                                            >
+                                                <div className="text-[10px] font-bold">{option.label}</div>
+                                                <div className="text-[9px] text-slate-300/80">{option.desc}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.width}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${widthSupport.badgeClass}`}>{widthSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{widthSupport.summary}</div>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
                                         <button onClick={() => handleTacticChange('width', 'Narrow')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Narrow' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticNarrow}</button>
                                         <button onClick={() => handleTacticChange('width', 'Balanced')} className={`flex-1 text-[9px] py-1 rounded font-bold transition-colors ${(team.tactic.width || 'Balanced') === 'Balanced' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.tacticBalanced || 'Bal'}</button>
@@ -1284,6 +1784,9 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                         <span className="text-slate-400">{getFinalThirdLabel(currentFinalThird)}:</span> {getFinalThirdInsight(currentFinalThird)}
                                     </div>
                                     <div>
+                                        <span className="text-slate-400">{getAttackPlanLabel(currentAttackPlan)}:</span> {getAttackPlanInsight(currentAttackPlan)}
+                                    </div>
+                                    <div>
                                         <span className="text-slate-400">{getWidthLabel(team.tactic.width)}:</span> {getWidthInsight(team.tactic.width)}
                                     </div>
                                 </div>
@@ -1291,6 +1794,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 <div className="bg-cyan-950/35 border border-cyan-700/25 rounded-lg px-2.5 py-2 text-[10px] text-cyan-100 space-y-1.5">
                                     <div className="text-[9px] uppercase tracking-wider text-cyan-300 font-bold">Motor eslemesi</div>
                                     <div>{getAttackApproachInsight(currentAttackApproach).motor}</div>
+                                    <div>{getAttackPlanLabel(currentAttackPlan)}: {getAttackPlanInsight(currentAttackPlan)}</div>
                                     <div className="text-cyan-200/85">Bunlar artik ekranda ayri ayri secilen ayarlar degil; sen yuksek seviye plan secersin, motor altta bunu uygun pas-tempo-risk profiline cevirir.</div>
                                 </div>
 
@@ -1308,7 +1812,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         {tacticTab === 'OUT_POSSESSION' && (
                             <div className="space-y-3">
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensePlanTitle || 'Savunma Plani'}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.defensePlanTitle || 'Savunma Plani'}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${defenseApproachSupport.badgeClass}`}>{defenseApproachSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{defenseApproachSupport.summary}</div>
                                     <div className="grid grid-cols-2 gap-1 mt-1">
                                         {defenseApproachOptions.map(option => (
                                             <button
@@ -1327,7 +1835,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </div>
 
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.aggression}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${aggressionSupport.badgeClass}`}>{aggressionSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{aggressionSupport.summary}</div>
                                     <div className="flex bg-slate-700 rounded p-0.5 mt-0.5">
                                         {[
                                             { value: 'Safe', label: t.safe, activeClass: 'bg-blue-600 text-white' },
@@ -1348,7 +1860,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </div>
 
                                 <div>
-                                    <label className="text-[9px] uppercase text-slate-500 font-bold">{t.marking || 'Markaj'}</label>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <label className="text-[9px] uppercase text-slate-500 font-bold">{t.marking || 'Markaj'}</label>
+                                        <span className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${markingSupport.badgeClass}`}>{markingSupport.label}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 mt-0.5">{markingSupport.summary}</div>
                                     <div className="grid grid-cols-2 gap-1 mt-0.5">
                                         <button
                                             onClick={() => handleTacticChange('marking', 'Zonal')}
@@ -1484,9 +2000,11 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
 
                 {/* PLAYER INSTRUCTION POPUP */}
                 {instructionTarget && (() => {
-                    const options = PLAYER_INSTRUCTIONS[instructionTarget.role] || [];
+                    const sections = getInstructionSections(instructionTarget.role);
                     const currentInstr = getSlotInstruction(instructionTarget.lineupIndex);
                     const targetPlayer = players.find(pl => pl.id === instructionTarget.playerId);
+                    const recommendations = targetPlayer ? getRoleRecommendations(targetPlayer) : [];
+                    const recommendationText = recommendations.map(rec => rec.presentation.roleName).join(' • ');
                     return (
                         <>
                         <div className="fixed inset-0 z-10" onClick={() => setInstructionTarget(null)} />
@@ -1498,26 +2016,51 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 </span>
                                 <button onClick={() => setInstructionTarget(null)} className="text-slate-400 hover:text-white text-lg leading-none">✕</button>
                             </div>
-                            <div className="space-y-1">
-                                {options.map((opt, i) => (
-                                    <button
-                                        key={opt.id}
-                                        onClick={() => setSlotInstruction(instructionTarget.lineupIndex, opt.id)}
-                                        className={`w-full text-left p-2 rounded-lg border transition-all ${currentInstr === opt.id
-                                            ? 'bg-emerald-600/30 border-emerald-500/50 shadow-md'
-                                            : 'bg-slate-700/50 border-slate-600/30 hover:bg-slate-600/50 hover:border-slate-500/50'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-sm">{opt.icon}</span>
-                                            <div className="flex-1">
-                                                <div className={`text-[11px] font-bold ${currentInstr === opt.id ? 'text-emerald-300' : 'text-white'}`}>
-                                                    {currentInstr === opt.id && '✅ '}{opt.label}
-                                                </div>
-                                                <div className="text-[9px] text-slate-400 leading-tight">{opt.desc}</div>
-                                            </div>
-                                        </div>
-                                    </button>
+                            <div className="mb-2 rounded-lg border border-slate-700 bg-slate-900/70 px-2 py-1.5 text-[10px] text-slate-300">
+                                {t.instrRoleNamesNote || 'Role names are kept simple for readability. The engine still uses the same individual instruction underneath.'}
+                            </div>
+                            {recommendations.length > 0 && (
+                                <div className="mb-3 rounded-lg border border-emerald-700/25 bg-emerald-950/15 px-2 py-1.5 text-[10px] text-emerald-100">
+                                    <span className="text-[9px] uppercase tracking-[0.18em] text-emerald-300 font-bold">{t.instrRecommendedTitle || 'Recommended Roles'}</span>
+                                    <div className="mt-1">{recommendationText}</div>
+                                    <div className="mt-1 text-[8px] text-emerald-100/70">{t.instrSelectNote || 'Make your selection from the full list below. The top row is just for guidance.'}</div>
+                                </div>
+                            )}
+                            <div className="space-y-2">
+                                {sections.map(section => (
+                                    <div key={section.title} className="space-y-1">
+                                        <div className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold px-1">{section.title}</div>
+                                        {section.items.map(opt => {
+                                            const presentation = getRolePresentation(targetPlayer, opt);
+                                            return (
+                                                <button
+                                                    key={opt.id}
+                                                    onClick={() => setSlotInstruction(instructionTarget.lineupIndex, opt.id)}
+                                                    className={`w-full text-left p-2 rounded-lg border transition-all ${currentInstr === opt.id
+                                                        ? 'bg-emerald-600/30 border-emerald-500/50 shadow-md'
+                                                        : 'bg-slate-700/50 border-slate-600/30 hover:bg-slate-600/50 hover:border-slate-500/50'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm">{opt.icon}</span>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex items-center gap-2 flex-wrap">
+                                                                <div className={`text-[11px] font-bold ${currentInstr === opt.id ? 'text-emerald-300' : 'text-white'}`}>
+                                                                    {currentInstr === opt.id && '✅ '}{presentation.roleName}
+                                                                </div>
+                                                                <span className="rounded-full border border-slate-600 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.16em] text-slate-300">{presentation.roleFamily}</span>
+                                                                <span className="rounded-full border border-slate-700 px-1.5 py-0.5 text-[8px] text-slate-400">{opt.label}</span>
+                                                            </div>
+                                                            <div className="text-[9px] text-slate-300 leading-tight mt-0.5">{presentation.summary}</div>
+                                                            {targetPlayer && (
+                                                                <div className="text-[8px] text-slate-500 leading-tight mt-1">{opt.desc} • {describeRoleFit(targetPlayer, presentation.fitWeights)}</div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -1560,7 +2103,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             <div className="w-16 md:w-24">Status</div>
                             <div className="pl-2 w-16 text-center">OVR</div>
                         </div>
-                        {starters.map((p, idx) => (
+                        {starters.map((p, index) => (
                             <PlayerRow
                                 key={p.id}
                                 player={p}
@@ -1568,31 +2111,38 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 onSelect={handlePlayerSelect}
                                 onInteractStart={setInteractingPlayer}
                                 onMove={onMovePlayer}
-                                isFirst={idx === 0}
-                                isLast={idx === starters.length - 1}
+                                isFirst={index === 0}
+                                isLast={index === starters.length - 1}
                                 assignedRole={assignedRoleMap[p.id]}
                                 t={t}
                             />
                         ))}
-                        {starters.length === 0 && <div className="text-slate-600 text-center py-4 text-sm">Select players to start</div>}
                     </div>
                 </div>
 
                 <div>
-                    <h3 className="text-blue-500 font-bold mb-2 uppercase text-sm tracking-widest flex justify-between">
-                        {t.bench} <span className="text-white">{bench.length}/9</span>
+                    <h3 className="text-sky-500 font-bold mb-2 uppercase text-sm tracking-widest">
+                        {t.bench || 'Bench'}
                     </h3>
-                    <div className="bg-slate-900/50 p-2 rounded border border-blue-900/30">
-                        {bench.map((p, idx) => (
+                    <div className="fm-panel rounded-lg overflow-hidden">
+                        <div className="grid grid-cols-[auto_1fr_auto_auto] md:grid-cols-[auto_2fr_repeat(5,1fr)_auto] gap-2 p-2 bg-slate-900 border-b border-white/10 text-[9px] uppercase font-bold text-slate-500">
+                            <div className="w-6">Pos</div>
+                            <div>Name</div>
+                            <div className="hidden md:flex justify-center">Spd</div>
+                            <div className="hidden md:flex justify-center">Sht</div>
+                            <div className="hidden md:flex justify-center">Pas</div>
+                            <div className="hidden md:flex justify-center">Dri</div>
+                            <div className="hidden md:flex justify-center">Def</div>
+                            <div className="w-16 md:w-24">Status</div>
+                            <div className="pl-2 w-16 text-center">OVR</div>
+                        </div>
+                        {bench.map(p => (
                             <PlayerRow
                                 key={p.id}
                                 player={p}
                                 selectedPlayerId={selectedPlayerId}
                                 onSelect={handlePlayerSelect}
                                 onInteractStart={setInteractingPlayer}
-                                onMove={onMovePlayer}
-                                isFirst={idx === 0}
-                                isLast={idx === bench.length - 1}
                                 t={t}
                             />
                         ))}

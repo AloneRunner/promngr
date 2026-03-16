@@ -89,13 +89,10 @@ export default function SettingsModal({
                     }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span>{t.engineClassic || 'Ana Motor (Önerilen)'}</span>
+                    <span>🟢 {t.engineClassic || 'Klasik Motor'}</span>
                     {engineChoice === 'classic' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
                   </div>
-                  <div className="text-xs mt-1 opacity-90">{t.engineClassicBanner || 'Ana motor — en gerçekçi versiyon.'}</div>
-                  <div className="text-xs mt-2 px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded text-yellow-400">
-                    {t.engineClassicNote || 'ℹ️ Not: 5 Mart 2026\'da Beta Motora yeni özellikler eklendi.'}
-                  </div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineClassicBanner || 'Kurduğun taktiğin maçta gerçekten işe yaradığını görmek istiyorsan bu motor senin için. Dengeli, tutarlı ve güvenilir — sürpriz yok, sadece futbol.'}</div>
                 </button>
 
                 <button
@@ -104,10 +101,10 @@ export default function SettingsModal({
                     }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span>{t.engineIkinc || 'Arcade Motor'}</span>
+                    <span>🔴 {t.engineIkinc || 'Arcade Motor'}</span>
                     {engineChoice === 'ikinc' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
                   </div>
-                  <div className="text-xs mt-1 opacity-90">{t.engineIkincBanner || 'Arcade motor — hafif versiyon.'}</div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineIkincBanner || 'Taktik bord dolusu çizim değil, saf aksiyon istiyorsan bu motor tam sana göre. Toplar daha direkt gider, goller daha bol gelir, yıldız oyuncular fark yaratır. Eğlence önce, gerçekçilik sonra.'}</div>
                 </button>
 
                 <button
@@ -117,13 +114,12 @@ export default function SettingsModal({
                 >
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2">
-                      {t.engineUcuncu || 'Beta Motor — Aktif geliştirme'}
-                      <span className="text-[10px] bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded font-bold">YENİ</span>
+                      🔵 {t.engineUcuncu || 'Pro Motor'}
                     </span>
                     {engineChoice === 'ucuncu' && <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded font-bold">✓ Seçili</span>}
                   </div>
-                  <div className="text-xs mt-2 opacity-95 whitespace-pre-line leading-relaxed">
-                    {t.engineUcuncuBannerDetailed || '🔥 5 Mart 2026 - Kapsamlı güncelleme!\n✓ Fizik bazlı top hareketi\n✓ Pozisyon eşleşmesi düzeltildi\n✓ Kaleci AI iyileştirildi'}
+                  <div className="text-xs mt-2 opacity-95 leading-relaxed">
+                    {t.engineUcuncuBannerDetailed || 'Maçı gerçekten anlamak isteyenler için. Oyuncular topun nereye gideceğini okur, takımın morali maçın seyrini değiştirir, her taktik hamlenin bir karşılığı olur. Yavaş ama derin — her dakika bir şey oluyor ve sen onu hissediyorsun.'}
                   </div>
                 </button>
               </div>
@@ -177,12 +173,10 @@ export default function SettingsModal({
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2">
                       ✨ {t.detailedMatchView || 'Detailed Match Center'}
-                      <span className="text-[10px] bg-amber-400 text-amber-950 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Beta</span>
                     </span>
                     {matchViewMode === 'detailed' && <span className="text-xs bg-purple-400 text-gray-900 px-2 py-1 rounded font-bold">✓ Active</span>}
                   </div>
                   <div className="text-xs mt-1 opacity-95">{t.detailedMatchViewDesc || 'Sprite-based player animations with volley/overhead kick actions'}</div>
-                  <div className="text-[10px] mt-1 text-red-400 font-semibold italic">{t.detailedMatchViewWarning || '⚠️ Very early development stage. No mobile support and may contain bugs, do not select for playing!'}</div>
                 </button>
               </div>
             </div>

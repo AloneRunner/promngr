@@ -203,6 +203,39 @@ export const useMatchSimulation = ({
         const homePlayers = prevState.players.filter(p => p.teamId === homeTeam.id);
         const awayPlayers = prevState.players.filter(p => p.teamId === awayTeam.id);
 
+        const applyManagerProgression = (
+            resolvedState: GameState,
+            userScore: number,
+            opponentScore: number,
+            fallbackOpponent?: Team,
+        ) => {
+            if (currentMatch.isFriendly) return resolvedState;
+
+            const userTeamId = resolvedState.userTeamId;
+            const userIsHome = currentMatch.homeTeamId === userTeamId;
+            const userIsAway = currentMatch.awayTeamId === userTeamId;
+
+            if (!userIsHome && !userIsAway) return resolvedState;
+
+            const managedTeam = resolvedState.teams.find(t => t.id === userTeamId);
+            const opponentId = userIsHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
+            const opponentTeam = resolvedState.teams.find(t => t.id === opponentId) || fallbackOpponent;
+
+            if (!managedTeam || !opponentTeam) return resolvedState;
+
+            const rivals = DERBY_RIVALS[managedTeam.name] || [];
+
+            return engine.applyManagerProfileMatchProgression(resolvedState, {
+                teamId: userTeamId,
+                opponent: opponentTeam,
+                goalsFor: userScore,
+                goalsAgainst: opponentScore,
+                isDerby: rivals.includes(opponentTeam.name),
+                isCupMatch,
+                isEuropeanMatch: cupType === 'europeanCup' || cupType === 'europaLeague'
+            });
+        };
+
         let currentMatch = { ...match };
         let finalEvents = [...currentMatch.events];
 
@@ -388,6 +421,7 @@ export const useMatchSimulation = ({
                     } as any;
                 }
 
+                let shouldBecomeUnemployed = false;
                 if (userTeam && opponent) {
                     const userScore = isUserHome ? hScore : aScore;
                     const oppScore = isUserHome ? aScore : hScore;
@@ -422,7 +456,8 @@ export const useMatchSimulation = ({
                     if (recentLosses >= 3) confidenceChange -= 3;
 
                     const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
-                    const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
+                    const newConfidence = Math.max(1, Math.min(100, currentConfidence + confidenceChange));
+                    shouldBecomeUnemployed = newConfidence <= 1;
 
                     const resultText = won ? 'G' : drew ? 'B' : 'M';
                     const score = `${userScore}-${oppScore}`;
@@ -512,6 +547,18 @@ export const useMatchSimulation = ({
                     }
                 }
 
+                const resolvedUserScore = isUserHome ? hScore : aScore;
+                const resolvedOpponentScore = isUserHome ? aScore : hScore;
+                const progressedBaseState = applyManagerProgression(
+                    { ...prevState, players: updatedPlayers, teams: teamsWithBonus },
+                    resolvedUserScore,
+                    resolvedOpponentScore,
+                    opponent,
+                );
+                const postMatchState = shouldBecomeUnemployed
+                    ? engine.transitionManagerToUnemployed(progressedBaseState, userTeamId)
+                    : progressedBaseState;
+
                 // Save Super Cup match separately
                 if (cupType === 'superCup' && prevState.superCup) {
                     const resolvedWinnerId = (simulated as any).winnerId || (simulated.homeScore > simulated.awayScore
@@ -520,7 +567,7 @@ export const useMatchSimulation = ({
                             ? simulated.awayTeamId
                             : (Math.random() > 0.5 ? simulated.homeTeamId : simulated.awayTeamId));
                     const resolvedMatch = { ...(simulated as any), isPlayed: true, winnerId: resolvedWinnerId };
-                    return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                    return { ...postMatchState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true } };
                 }
 
                 // Save European Cup match separately
@@ -563,10 +610,8 @@ export const useMatchSimulation = ({
                     }
 
                     return {
-                        ...prevState,
+                        ...postMatchState,
                         europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts },
-                        teams: teamsWithBonus,
-                        players: updatedPlayers
                     };
                 }
 
@@ -610,17 +655,15 @@ export const useMatchSimulation = ({
                     }
 
                     return {
-                        ...prevState,
+                        ...postMatchState,
                         europaLeague: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts },
-                        teams: teamsWithBonus,
-                        players: updatedPlayers
                     };
                 }
 
                 if (!isCupMatch && matchIndex !== -1) {
                     let newMatches = [...prevState.matches];
                     newMatches[matchIndex] = simulated;
-                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                    return { ...postMatchState, matches: newMatches };
                 }
 
                 return prevState;
@@ -795,7 +838,8 @@ export const useMatchSimulation = ({
                         if (recentLosses >= 3) confidenceChange -= 3;
 
                         const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
-                        const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
+                        const newConfidence = Math.max(1, Math.min(100, currentConfidence + confidenceChange));
+                        const shouldBecomeUnemployed = newConfidence <= 1;
 
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
                         const score = `${userScore}-${oppScore}`;
@@ -886,6 +930,48 @@ export const useMatchSimulation = ({
                         }
                     }
 
+                    const homeTeamAfterMatch = teamsWithBonus.find(t => t.id === currentMatch.homeTeamId);
+                    const awayTeamAfterMatch = teamsWithBonus.find(t => t.id === currentMatch.awayTeamId);
+
+                    if (homeTeamAfterMatch && awayTeamAfterMatch) {
+                        teamsWithBonus = teamsWithBonus.map(team => {
+                            if (team.id === prevState.userTeamId) return team;
+                            if (team.id === currentMatch.homeTeamId) {
+                                return engine.recordAITacticMatchOutcome(
+                                    team,
+                                    awayTeamAfterMatch,
+                                    currentMatch,
+                                    true,
+                                    prevState.currentWeek,
+                                    prevState.currentSeason,
+                                );
+                            }
+                            if (team.id === currentMatch.awayTeamId) {
+                                return engine.recordAITacticMatchOutcome(
+                                    team,
+                                    homeTeamAfterMatch,
+                                    currentMatch,
+                                    false,
+                                    prevState.currentWeek,
+                                    prevState.currentSeason,
+                                );
+                            }
+                            return team;
+                        });
+                    }
+
+                    const resolvedUserScore = isUserHome ? hScore : aScore;
+                    const resolvedOpponentScore = isUserHome ? aScore : hScore;
+                    const progressedBaseState = applyManagerProgression(
+                        { ...prevState, players: updatedPlayers, teams: teamsWithBonus },
+                        resolvedUserScore,
+                        resolvedOpponentScore,
+                        opponent,
+                    );
+                    const postMatchState = shouldBecomeUnemployed
+                        ? engine.transitionManagerToUnemployed(progressedBaseState, userTeamId)
+                        : progressedBaseState;
+
                     if (cupType === 'superCup' && prevState.superCup) {
                         const resolvedWinnerId = (currentMatch as any).winnerId || (currentMatch.homeScore > currentMatch.awayScore
                             ? currentMatch.homeTeamId
@@ -893,7 +979,7 @@ export const useMatchSimulation = ({
                                 ? currentMatch.awayTeamId
                                 : (Math.random() > 0.5 ? currentMatch.homeTeamId : currentMatch.awayTeamId));
                         const resolvedMatch = { ...(currentMatch as any), isPlayed: true, winnerId: resolvedWinnerId };
-                        return { ...prevState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true }, players: updatedPlayers, teams: teamsWithBonus };
+                        return { ...postMatchState, superCup: { ...prevState.superCup, match: resolvedMatch, winnerId: resolvedWinnerId, isComplete: true } };
                     }
 
                     if (cupType === 'europeanCup' && prevState.europeanCup) {
@@ -901,13 +987,13 @@ export const useMatchSimulation = ({
                         const cup = prevState.europeanCup;
                         let updatedGroups = cup.groups ? cup.groups.map(g => ({ ...g, matches: g.matches.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m) })) : undefined;
                         let updatedKnockouts = cup.knockoutMatches ? cup.knockoutMatches.map(m => m.id === matchId ? currentMatch as unknown as GlobalCupMatch : m) : undefined;
-                        return { ...prevState, europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts }, teams: teamsWithBonus, players: updatedPlayers };
+                        return { ...postMatchState, europeanCup: { ...cup, groups: updatedGroups, knockoutMatches: updatedKnockouts } };
                     }
 
                     if (!isCupMatch && matchIndex !== -1) {
                         let newMatches = [...prevState.matches];
                         newMatches[matchIndex] = currentMatch;
-                        return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                        return { ...postMatchState, matches: newMatches };
                     }
 
                     return prevState;
@@ -1246,7 +1332,7 @@ export const useMatchSimulation = ({
                 // Process weekly events
                 const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 // Destructuring and merging
-                let { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+                let { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
 
                 // HISTORY RECORDING FOR CUP MATCH (QUICK SIM) - Skipping purely for brevity but essential for feature parity. 
                 // I will include a simplified version or rely on executeMatchUpdate for history if possible? 
@@ -1276,6 +1362,7 @@ export const useMatchSimulation = ({
                         playedCupMatch = allElMatches.find(m => m.id === cupMatch.id);
                     }
 
+                    let shouldBecomeUnemployed = false;
                     if (userTeam && opponent && playedCupMatch && playedCupMatch.isPlayed) {
                         const isUserHome = playedCupMatch.homeTeamId === userTeam.id;
                         const userScore = isUserHome ? playedCupMatch.homeScore : playedCupMatch.awayScore;
@@ -1317,7 +1404,8 @@ export const useMatchSimulation = ({
                         if (recentLosses >= 3) confidenceChange -= 3;
 
                         const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
-                        const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
+                        const newConfidence = Math.max(1, Math.min(100, currentConfidence + confidenceChange));
+                        shouldBecomeUnemployed = newConfidence <= 1;
 
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
                         const score = `${userScore}-${oppScore}`;
@@ -1354,18 +1442,24 @@ export const useMatchSimulation = ({
                     }
                 }
 
-                setGameState({
+                const nextWeekStateBase = {
                     ...updatedState,
                     teams: updatedTeams,
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
+                    managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                     currentWeek: updatedState.currentWeek + 1,
-                            pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
-                            messages: appendMessages(
-                                updatedState.messages,
-                                buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
-                            )
-                });
+                    pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
+                    messages: appendMessages(
+                        updatedState.messages,
+                        buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
+                    )
+                };
+                const nextWeekState = shouldBecomeUnemployed && userTeam
+                    ? engine.transitionManagerToUnemployed(nextWeekStateBase, userTeam.id)
+                    : nextWeekStateBase;
+
+                setGameState(nextWeekState);
             } else {
                 // League match handling
                 let newState = executeMatchUpdate(gameState, nextMatch.id, true);
@@ -1430,7 +1524,7 @@ export const useMatchSimulation = ({
                     }
 
                     const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                    const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+                    const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
 
                     // Note: Rep history for league is handled in simulateLeagueRound/executeMatchUpdate usually?
                     // actually logic was in handleQuickSim in App.tsx. I am omitting it here for brevity but it might be important.
@@ -1443,6 +1537,7 @@ export const useMatchSimulation = ({
                         teams: updatedTeams,
                         players: updatedPlayers,
                         transferMarket: updatedMarket,
+                        managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                         currentWeek: updatedState.currentWeek + 1,
                         pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
                         messages: appendMessages(
@@ -1545,7 +1640,7 @@ export const useMatchSimulation = ({
                 }
 
                 const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+                const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
 
                 alert(t.cupWeekSkipped || '⚽ Kupa haftası atlandı - Avrupa maçınız yok bu hafta.');
 
@@ -1554,6 +1649,7 @@ export const useMatchSimulation = ({
                     teams: updatedTeams,
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
+                    managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                     currentWeek: updatedState.currentWeek + 1,
                     pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
                     messages: appendMessages(
@@ -1599,13 +1695,14 @@ export const useMatchSimulation = ({
                 }
 
                 const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                const { updatedTeams, updatedPlayers, updatedMarket, report, offers, newPendingOffers } = weeklyEventsResults;
+                const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
 
                 setGameState({
                     ...updatedState,
                     teams: updatedTeams,
                     players: updatedPlayers,
                     transferMarket: updatedMarket,
+                    managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                     currentWeek: updatedState.currentWeek + 1,
                     pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
                     messages: appendMessages(
@@ -2495,6 +2592,7 @@ export const useMatchSimulation = ({
                     const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
                     const opponent = teamsWithBonus.find(t => t.id === opponentId);
 
+                    let shouldBecomeUnemployed = false;
                     if (userTeam && opponent) {
                         const userScore = isUserHome ? hScore : aScore;
                         const oppScore = isUserHome ? aScore : hScore;
@@ -2531,7 +2629,8 @@ export const useMatchSimulation = ({
                         if (recentLosses >= 3) confidenceChange -= 3;
 
                         const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
-                        const newConfidence = Math.max(0, Math.min(100, currentConfidence + confidenceChange));
+                        const newConfidence = Math.max(1, Math.min(100, currentConfidence + confidenceChange));
+                        shouldBecomeUnemployed = newConfidence <= 1;
 
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
                         const score = `${userScore}-${oppScore}`;
@@ -2570,7 +2669,10 @@ export const useMatchSimulation = ({
                         });
                     }
 
-                    return { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                    const postMatchState = shouldBecomeUnemployed
+                        ? engine.transitionManagerToUnemployed({ ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus }, userTeamId)
+                        : { ...prevState, matches: newMatches, players: updatedPlayers, teams: teamsWithBonus };
+                    return postMatchState;
                 }
 
                 return { ...prevState, matches: newMatches, players: updatedPlayers };

@@ -12,6 +12,7 @@
   PlayerPersonality,
   LineupStatus,
 } from "../types";
+import { adaptTacticForEngine } from "./tacticAdapter";
 
 // === MISSING INTERFACE DEFINITION ===
 interface PlayerState {
@@ -151,8 +152,8 @@ const getFieldPlayerFatigueModifiers = (stamina: number): FatigueModifiers => {
   } else {
     // 0-20: Bitik - değişiklik şart!
     return {
-      speed: 0.45,
-      strength: 0.7,
+      speed: 0.75,
+      strength: 0.85,
       stamina: 0.5,
       aggression: 0.6,
       finishing: 0.45,
@@ -859,8 +860,14 @@ export class MatchEngine {
       Aggressive: 1.25,
       Reckless: 1.45,
     };
-    this.homeTeam = homeTeam;
-    this.awayTeam = awayTeam;
+    this.homeTeam = {
+      ...homeTeam,
+      tactic: adaptTacticForEngine(homeTeam.tactic, "arcade"),
+    };
+    this.awayTeam = {
+      ...awayTeam,
+      tactic: adaptTacticForEngine(awayTeam.tactic, "arcade"),
+    };
     // Keep all players (STARTING + BENCH) so substitutions can work
     this.homePlayers = homePlayers.filter(
       (p) => p.lineup === "STARTING" || p.lineup === "BENCH",
@@ -1148,6 +1155,7 @@ export class MatchEngine {
   }
 
   private initializeTactics(players: Player[], tactic: TeamTactic) {
+    const adaptedTactic = adaptTacticForEngine(tactic, "arcade");
     const grouped: Record<string, Player[]> = {
       GK: [],
       DEF: [],
@@ -1156,9 +1164,9 @@ export class MatchEngine {
     };
     players.forEach((p) => {
       let role = normalizePos(p);
-      if (tactic.customPositions && tactic.customPositions[p.id]) {
+      if (adaptedTactic.customPositions && adaptedTactic.customPositions[p.id]) {
         // customPositions UI koordinatlarında (0-100), role hesaplaması için kullan
-        role = getRoleFromX(tactic.customPositions[p.id].x);
+        role = getRoleFromX(adaptedTactic.customPositions[p.id].x);
       }
       this.playerRoles[p.id] = role;
       grouped[role].push(p);
@@ -1199,10 +1207,10 @@ export class MatchEngine {
       }
 
       plList.forEach((p, idx) => {
-        if (tactic.customPositions && tactic.customPositions[p.id]) {
+        if (adaptedTactic.customPositions && adaptedTactic.customPositions[p.id]) {
           // customPositions UI koordinatlarında (0-100) kaydediliyor
           // Motor koordinatlarına (105x68) çevir
-          const customUI = tactic.customPositions[p.id];
+          const customUI = adaptedTactic.customPositions[p.id];
           this.baseOffsets[p.id] = {
             x: (customUI.x / 100) * PITCH_LENGTH,
             y: (customUI.y / 100) * PITCH_WIDTH,
@@ -1210,7 +1218,7 @@ export class MatchEngine {
         } else {
           // getBaseFormationOffset zaten motor koordinatları (105x68) döndürüyor
           this.baseOffsets[p.id] = getBaseFormationOffset(
-            tactic.formation,
+            adaptedTactic.formation,
             role as Position,
             idx,
             plList.length,
@@ -1339,12 +1347,13 @@ export class MatchEngine {
     const isHome = this.homeTeam.id === teamId;
     const list = isHome ? this.homePlayers : this.awayPlayers;
     const team = isHome ? this.homeTeam : this.awayTeam;
+    const adaptedTactic = adaptTacticForEngine(newTactic, "arcade");
 
-    if (isHome) this.homeTeam.tactic = newTactic;
-    else this.awayTeam.tactic = newTactic;
+    if (isHome) this.homeTeam.tactic = adaptedTactic;
+    else this.awayTeam.tactic = adaptedTactic;
     this.initializeTactics(
       list.filter((p) => p.lineup === "STARTING"),
-      newTactic,
+      adaptedTactic,
     );
 
     // === PERFORMANCE: Invalidate starter cache after tactic change ===
@@ -1356,13 +1365,13 @@ export class MatchEngine {
         `\n🔄 TACTIC CHANGE (Minute ${this.internalMinute}): ${team.name}`,
       );
       console.log(
-        `New Formation: ${newTactic.formation} | Style: ${newTactic.style}`,
+        `New Formation: ${adaptedTactic.formation} | Style: ${adaptedTactic.style}`,
       );
       console.log(
-        `Aggression: ${newTactic.aggression} | Tempo: ${newTactic.tempo}`,
+        `Aggression: ${adaptedTactic.aggression} | Tempo: ${adaptedTactic.tempo}`,
       );
       console.log(
-        `Defensive Line: ${newTactic.defensiveLine} | Passing: ${newTactic.passingStyle}`,
+        `Defensive Line: ${adaptedTactic.defensiveLine} | Passing: ${adaptedTactic.passingStyle}`,
       );
       console.log(`Mentality: ${newTactic.mentality || "BALANCED"}`);
       console.log("----------------------------------------\n");
@@ -1977,7 +1986,8 @@ export class MatchEngine {
       const team = (isHome ? this.homePlayers : this.awayPlayers).filter(
         (p) => p.lineup === "STARTING",
       );
-      const taker = team.sort(
+      const takerPool = team.filter((p) => this.playerRoles[p.id] !== Position.GK);
+      const taker = (takerPool.length > 0 ? takerPool : team).sort(
         (a, b) =>
           b.attributes.passing +
           b.attributes.vision -
@@ -4408,36 +4418,36 @@ export class MatchEngine {
       // passingStyle, tactic.style, tempo, width ve talimatlar eşiği dinamik ayarlar
       const decisionCarrierTicks =
         p.id === this.lastBallCarrierId ? this.ballCarrierTicks : 0;
-      let dribbleFatigueThreshold = 60;
-      let dribbleFatigueMultiplier = 3;
+      let dribbleFatigueThreshold = 120;
+      let dribbleFatigueMultiplier = 1.5;
       switch (tactic.passingStyle) {
         case "Short":
-          dribbleFatigueThreshold = 30;
-          dribbleFatigueMultiplier = 4;
+          dribbleFatigueThreshold = 90;
+          dribbleFatigueMultiplier = 1.9;
           break;
         case "Mixed":
-          dribbleFatigueThreshold = 50;
-          dribbleFatigueMultiplier = 3;
+          dribbleFatigueThreshold = 120;
+          dribbleFatigueMultiplier = 1.5;
           break;
         case "Direct":
-          dribbleFatigueThreshold = 70;
-          dribbleFatigueMultiplier = 2.5;
+          dribbleFatigueThreshold = 135;
+          dribbleFatigueMultiplier = 1.3;
           break;
         case "LongBall":
-          dribbleFatigueThreshold = 40;
-          dribbleFatigueMultiplier = 3.5;
+          dribbleFatigueThreshold = 95;
+          dribbleFatigueMultiplier = 1.8;
           break;
       }
       switch (tactic.style) {
         case "Attacking":
-          dribbleFatigueThreshold += 10;
-          break;
-        case "Counter":
           dribbleFatigueThreshold += 15;
           break;
+        case "Counter":
+          dribbleFatigueThreshold += 20;
+          break;
         case "Possession":
-          dribbleFatigueThreshold -= 15;
-          dribbleFatigueMultiplier += 0.5;
+          dribbleFatigueThreshold -= 10;
+          dribbleFatigueMultiplier += 0.2;
           break;
         case "Defensive":
           dribbleFatigueThreshold -= 10;
@@ -5367,7 +5377,7 @@ export class MatchEngine {
           throughTy < PITCH_WIDTH - 2;
         const offsideCheck = isHome
           ? throughTx < offsideLineX
-          : throughTx < offsideLineX;
+          : throughTx > offsideLineX;
 
         if (boundsCheck && offsideCheck) {
           let throughRisk = 0;
@@ -8023,7 +8033,7 @@ export class MatchEngine {
 
     // STRICT HARD CAP - No player can EVER exceed MAX_PLAYER_SPEED
     // This is the absolute final safety check
-    const ABSOLUTE_MAX = MAX_PLAYER_SPEED;
+    const ABSOLUTE_MAX = Math.max(MAX_PLAYER_SPEED, physicalLimit);
     const newSpeed = Math.sqrt(simP.vx * simP.vx + simP.vy * simP.vy);
     if (newSpeed > ABSOLUTE_MAX) {
       simP.vx = (simP.vx / newSpeed) * ABSOLUTE_MAX;
