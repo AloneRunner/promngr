@@ -13,10 +13,11 @@ export const UpdatesModal: React.FC<UpdatesModalProps> = ({ onClose, t }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 rounded-xl border border-slate-700 w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm overflow-y-auto p-3 md:p-4 animate-fade-in">
+            <div className="min-h-full flex items-start md:items-center justify-center">
+            <div className="bg-slate-900 rounded-xl border border-slate-700 w-full max-w-lg max-h-[calc(100vh-1.5rem)] md:max-h-[calc(100vh-3rem)] overflow-hidden flex flex-col shadow-2xl my-3 md:my-6">
                 {/* Header */}
-                <div className="p-4 bg-gradient-to-r from-purple-900 to-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <div className="shrink-0 p-4 bg-gradient-to-r from-purple-900 to-slate-900 border-b border-slate-700 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white flex items-center gap-3">
                         <Mail className="text-purple-400" size={24} />
                         {getTranslation('devLetterTitle')}
@@ -70,7 +71,7 @@ export const UpdatesModal: React.FC<UpdatesModalProps> = ({ onClose, t }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 bg-slate-800 border-t border-slate-700 text-center">
+                <div className="shrink-0 p-4 bg-slate-800 border-t border-slate-700 text-center pb-[calc(env(safe-area-inset-bottom)+1rem)]">
                     <button
                         onClick={onClose}
                         className="px-8 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition-all"
@@ -78,6 +79,7 @@ export const UpdatesModal: React.FC<UpdatesModalProps> = ({ onClose, t }) => {
                         {getTranslation('devLetterContinue')}
                     </button>
                 </div>
+            </div>
             </div>
         </div>
     );

@@ -41,10 +41,11 @@ export const CreateProfileModal: React.FC<CreateProfileModalProps> = ({ onClose,
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full animate-scale-in">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto p-3 md:p-4 animate-fade-in">
+            <div className="min-h-full flex items-start md:items-center justify-center">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full animate-scale-in max-h-[calc(100vh-1.5rem)] md:max-h-[calc(100vh-3rem)] flex flex-col my-3 md:my-6">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-700">
+                <div className="shrink-0 flex items-center justify-between p-5 md:p-6 border-b border-slate-700">
                     <h2 className="text-2xl font-bold text-white">{t.createProfile}</h2>
                     <button
                         onClick={onClose}
@@ -55,7 +56,8 @@ export const CreateProfileModal: React.FC<CreateProfileModalProps> = ({ onClose,
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col">
+                    <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-slate-300 mb-2">
                             {t.profileName}
@@ -73,9 +75,10 @@ export const CreateProfileModal: React.FC<CreateProfileModalProps> = ({ onClose,
                             {profileName.length}/50
                         </div>
                     </div>
+                    </div>
 
                     {/* Buttons */}
-                    <div className="flex gap-3">
+                    <div className="shrink-0 flex gap-3 p-5 md:p-6 pt-3 border-t border-slate-700 bg-slate-900/95 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
                         <button
                             type="button"
                             onClick={onClose}
@@ -91,6 +94,7 @@ export const CreateProfileModal: React.FC<CreateProfileModalProps> = ({ onClose,
                         </button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     );

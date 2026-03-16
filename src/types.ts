@@ -4,15 +4,96 @@ export enum MatchEventType {
     GOAL = 'GOAL', CARD_YELLOW = 'CARD_YELLOW', CARD_RED = 'CARD_RED',
     SUB = 'SUB', INJURY = 'INJURY', FULL_TIME = 'FULL_TIME',
     HALF_TIME = 'HALF_TIME', PENALTY = 'PENALTY', CORNER = 'CORNER',
-    KICKOFF = 'KICKOFF', FOUL = 'FOUL', FREE_KICK = 'FREE_KICK', THROW_IN = 'THROW_IN', INFO = 'INFO',
+    KICKOFF = 'KICKOFF', GOAL_KICK = 'GOAL_KICK', FOUL = 'FOUL', FREE_KICK = 'FREE_KICK', THROW_IN = 'THROW_IN', INFO = 'INFO',
     OFFSIDE = 'OFFSIDE'
 }
 
 export enum MessageType { INFO = 'INFO', INJURY = 'INJURY', TRANSFER_OFFER = 'TRANSFER_OFFER', BOARD = 'BOARD', TRAINING = 'TRAINING', CONTRACT_RENEWAL = 'CONTRACT_RENEWAL' }
 export type LineupStatus = 'STARTING' | 'BENCH' | 'RESERVE';
 export enum CoachArchetype { TACTICIAN = 'TACTICIAN', MOTIVATOR = 'MOTIVATOR', DEVELOPER = 'DEVELOPER' }
+export enum ManagerArchetype { TACTICIAN = 'TACTICIAN', MOTIVATOR = 'MOTIVATOR', NEGOTIATOR = 'NEGOTIATOR', SCOUT = 'SCOUT' }
 export type TrainingFocus = 'BALANCED' | 'ATTACK' | 'DEFENSE' | 'PHYSICAL' | 'TECHNICAL' | 'POSITION_BASED';
 export type TrainingIntensity = 'LIGHT' | 'NORMAL' | 'HEAVY';
+
+export interface ManagerBonusProfile {
+    homeNationConfidenceBonus: number;
+    transferNegotiationBonus: number;
+    scoutingKnowledgeBonus: number;
+}
+
+export interface ManagerCareerStats {
+    matchesManaged: number;
+    wins: number;
+    draws: number;
+    losses: number;
+    trophiesWon: number;
+}
+
+export interface ManagerTalentTree {
+    leadership: number;
+    negotiation: number;
+    development: number;
+    scouting: number;
+}
+
+export interface ManagerPersonalStaff {
+    scoutAdvisor: number;
+    developmentCoach: number;
+    contractLawyer: number;
+}
+
+export type ManagerObjectiveType = 'LEAGUE_POSITION' | 'BOARD_CONFIDENCE' | 'CLUB_BUDGET';
+export type ManagerObjectiveStatus = 'PENDING' | 'COMPLETED' | 'FAILED';
+
+export interface ManagerObjective {
+    id: string;
+    season: number;
+    type: ManagerObjectiveType;
+    title: string;
+    description: string;
+    targetValue: number;
+    currentValue: number;
+    rewardBalance: number;
+    rewardXp: number;
+    rewardReputation: number;
+    status: ManagerObjectiveStatus;
+}
+
+export type ManagerTalentKey = keyof ManagerTalentTree;
+export type ManagerCourseKey = 'PRO_LICENSE' | 'LEADERSHIP_SEMINAR' | 'NEGOTIATION_SUMMIT' | 'SCOUTING_TOUR' | 'DEVELOPMENT_WORKSHOP';
+export type ManagerStaffRoleKey = keyof ManagerPersonalStaff;
+
+export interface ManagerProfileData {
+    firstName: string;
+    lastName: string;
+    displayName: string;
+    nationality: string;
+    archetype: ManagerArchetype;
+    level: number;
+    xp: number;
+    xpToNextLevel: number;
+    reputation: number;
+    skillPoints: number;
+    createdAt: string;
+    currentTeamId?: string;
+    bonuses: ManagerBonusProfile;
+    careerStats: ManagerCareerStats;
+    talents: ManagerTalentTree;
+    personalStaff: ManagerPersonalStaff;
+    objectives: ManagerObjective[];
+    personalBalance: number;
+    lifetimeEarnings: number;
+    lifetimeSpent: number;
+    unlockedAchievements: string[];
+    playGamesSyncedAchievements: string[];
+}
+
+export interface ManagerCreationData {
+    firstName: string;
+    lastName: string;
+    nationality: string;
+    archetype: ManagerArchetype;
+}
 
 export enum TeamMentality {
     PARK_THE_BUS = 'ParkTheBus',
@@ -56,7 +137,41 @@ export interface TeamTactic {
     instructions?: string[]; // YENİ: Takım Talimatları (WorkBallIntoBox, ShootOnSight, vb)
     customPositions?: Record<string, { x: number, y: number }>;
     mentality?: string;
+    attackPlan?: 'AUTO' | 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
     slotInstructions?: Record<number, string>; // YENİ: Oyuncu bazlı talimat (lineupIndex → instruction)
+}
+
+export interface AITacticMemorySnapshot {
+    mentality?: string;
+    style: string;
+    tempo: string;
+    width: string;
+    defensiveLine: string;
+    passingStyle: string;
+    pressingIntensity?: PressingIntensity;
+    attackPlan?: 'AUTO' | 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
+}
+
+export interface AITacticMemoryEntry {
+    key: string;
+    tactic: AITacticMemorySnapshot;
+    played: number;
+    wins: number;
+    draws: number;
+    losses: number;
+    goalsFor: number;
+    goalsAgainst: number;
+    offsides: number;
+    cumulativeScore: number;
+    lastUsedWeek?: number;
+    lastUsedSeason?: number;
+}
+
+export interface AITacticMemory {
+    entries: Record<string, AITacticMemoryEntry>;
+    preferredKey?: string;
+    lastUpdatedWeek?: number;
+    lastUpdatedSeason?: number;
 }
 
 
@@ -105,6 +220,7 @@ export interface Team {
     youthCandidates: Player[]; recentForm: string[]; stats: any; sponsor?: any; financials?: Financials;
     reputationHistory?: any[]; confidenceHistory?: any[];
     lastSeasonPosition?: number; // Önceki sezon lig pozisyonu (0-indexed: 0=şampiyon, 1=ikinci, vb.)
+    aiTacticMemory?: AITacticMemory;
 }
 
 export interface Match {
@@ -143,9 +259,10 @@ export interface PerformanceSettings {
 export interface GameState {
     currentWeek: number; currentSeason: number; userTeamId: string; leagueId: string;
     teams: Team[]; players: Player[]; matches: Match[]; isSimulating: boolean;
-    messages: any[]; isGameOver?: boolean; gameOverReason?: string;
+    messages: any[]; isGameOver?: boolean; gameOverReason?: string; isUnemployed?: boolean;
     transferMarket: Player[]; history: any[]; pendingOffers: any[];
     europeanCup?: GlobalCup; europaLeague?: GlobalCup; superCup?: any;
+    managerProfile?: ManagerProfileData;
     managerRating?: number; managerSalary?: number; managerCareerHistory?: any[]; managerTrophies?: any;
     jobOffers?: any[]; tacticalHistory?: any[];
     leagueReputationBonuses?: any; baseLeagueReputations?: any; leagueEuropeanBonuses?: any; leagueCoefficients?: any; leagueCoefficientHistory?: any;
@@ -194,9 +311,12 @@ export interface TransferOffer {
     id: string; playerId: string; playerName: string; fromTeamId: string; fromTeamName: string; toTeamId: string;
     offerAmount: number; status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED'; weekCreated: number;
 }
+export type JobOfferPressure = 'LOW' | 'MEDIUM' | 'HIGH' | 'EXTREME';
+export type JobOfferSalaryLevel = 'MODEST' | 'FAIR' | 'STRONG' | 'ELITE';
 export interface JobOffer {
     id: string; teamId: string; teamName: string; leagueId: string; leagueName: string; reputation: number;
     salary: number; requiredRating: number; expiresWeek: number; isAccepted?: boolean;
+    objective: string; pressure: JobOfferPressure; salaryLevel: JobOfferSalaryLevel; offerScore: number;
 }
 export interface LeagueHistoryEntry {
     season: number; leagueId: string; leagueName: string; championId: string; championName: string; championColor: string;

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation } from '../types';
-import { Play, Pause, X, Volume2, VolumeX, Settings, Palette, Camera } from 'lucide-react';
+import { Play, Pause, X, Volume2, VolumeX, Settings, Palette, Camera, List, BarChart2, MonitorPlay } from 'lucide-react';
 import { simulateTick, getLivePlayerStamina, getSubstitutedOutPlayerIds } from '../services/engine';
 import { calculateEffectiveRating } from '../services/MatchEngine';
 import { soundManager } from '../services/soundManager';
@@ -24,6 +24,100 @@ interface DetailedMatchCenterProps {
     debugLogs: string[];
     onPlayerClick: (player: Player) => void;
 }
+
+type LiveAttackPlan = {
+    pattern: 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
+    lane: 'LEFT' | 'RIGHT' | 'CENTER';
+} | null;
+
+type LiveDefensePlan = {
+    pattern: 'COUNTER_PRESS' | 'FORCE_WIDE' | 'PROTECT_CENTER' | 'LOW_BLOCK';
+    lane: 'LEFT' | 'RIGHT' | 'CENTER';
+} | null;
+
+const getAttackPlanBadgeLabel = (plan: LiveAttackPlan) => {
+    if (!plan) return 'Plan yok';
+    const patternLabel =
+        plan.pattern === 'WIDE_CROSS'
+            ? 'Kanat Ortasi'
+            : plan.pattern === 'CUTBACK'
+                ? 'Geri Cikar'
+                : plan.pattern === 'THIRD_MAN'
+                    ? 'Ucuncu Adam'
+                    : 'Kanal Kosusu';
+    const laneLabel = plan.lane === 'LEFT' ? 'Sol' : plan.lane === 'RIGHT' ? 'Sag' : 'Merkez';
+    return `${patternLabel} • ${laneLabel}`;
+};
+
+const getDefensePlanBadgeLabel = (plan: LiveDefensePlan) => {
+    if (!plan) return 'Plan yok';
+    const patternLabel =
+        plan.pattern === 'COUNTER_PRESS'
+            ? 'Gecis Presi'
+            : plan.pattern === 'FORCE_WIDE'
+                ? 'Kanada Yonlendir'
+                : plan.pattern === 'PROTECT_CENTER'
+                    ? 'Merkezi Kapat'
+                    : 'Alcak Blok';
+    const laneLabel = plan.lane === 'LEFT' ? 'Sol' : plan.lane === 'RIGHT' ? 'Sag' : 'Merkez';
+    return `${patternLabel} • ${laneLabel}`;
+};
+
+const getAttackPlanFallbackLabel = (team: Team) => {
+    const attackPlan = team.tactic.attackPlan;
+    const instructions = team.tactic.instructions || [];
+
+    if (attackPlan === 'WIDE_CROSS' || instructions.includes('HitEarlyCrosses')) return 'Kanat Ortasi • Taktik';
+    if (attackPlan === 'CUTBACK') return 'Geri Cikar • Taktik';
+    if (attackPlan === 'THIRD_MAN') return 'Ucuncu Adam • Taktik';
+    if (attackPlan === 'DIRECT_CHANNEL' || team.tactic.passingStyle === 'Direct') return 'Kanal Kosusu • Taktik';
+    return 'Plan yok';
+};
+
+const getDefensePlanFallbackLabel = (team: Team) => {
+    const pressing = team.tactic.pressingIntensity;
+    const style = team.tactic.style;
+    const line = (team.tactic.defensiveLine || '').toLowerCase();
+    const width = (team.tactic.width || '').toLowerCase();
+
+    if (pressing === 'Gegenpress' || pressing === 'HighPress') return 'Gecis Presi • Taktik';
+    if (style === 'ParkTheBus' || style === 'Defensive' || pressing === 'StandOff' || line.includes('deep') || line.includes('low')) return 'Alcak Blok • Taktik';
+    if (width.includes('narrow')) return 'Merkezi Kapat • Taktik';
+    if (width.includes('wide')) return 'Kanada Yonlendir • Taktik';
+    return 'Dengeli Savunma';
+};
+
+const getDefaultKitColors = (isControlledTeam: boolean) => ({
+    primary: isControlledTeam ? '#3b82f6' : '#ef4444',
+    secondary: '#ffffff'
+});
+
+const getCompactTeamName = (team: Team) => team.shortName || team.name.split(' ').slice(0, 2).join(' ');
+
+const getEventAccentClass = (eventType: MatchEventType) => {
+    switch (eventType) {
+        case MatchEventType.GOAL:
+            return 'text-emerald-300 border-emerald-400/35 bg-emerald-500/12';
+        case MatchEventType.CARD_RED:
+            return 'text-red-300 border-red-400/35 bg-red-500/12';
+        case MatchEventType.CARD_YELLOW:
+            return 'text-amber-200 border-amber-300/35 bg-amber-500/12';
+        case MatchEventType.SUB:
+            return 'text-sky-200 border-sky-300/35 bg-sky-500/12';
+        case MatchEventType.CORNER:
+        case MatchEventType.FREE_KICK:
+        case MatchEventType.GOAL_KICK:
+        case MatchEventType.OFFSIDE:
+            return 'text-fuchsia-200 border-fuchsia-300/35 bg-fuchsia-500/12';
+        default:
+            return 'text-slate-200 border-white/10 bg-white/5';
+    }
+};
+
+const getCompactEventLabel = (event: Match | null | undefined, latestEvent?: Match['events'][number] | null) => {
+    if (!latestEvent) return null;
+    return `${latestEvent.minute}' ${latestEvent.description}`;
+};
 
 type WakeLockSentinelLike = {
     released?: boolean;
@@ -57,6 +151,8 @@ const ENGINE_PITCH_WIDTH = 68;
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+
 const shortestAngleDelta = (from: number, to: number) => {
     let delta = (to - from + Math.PI) % (Math.PI * 2);
     if (delta < 0) delta += Math.PI * 2;
@@ -64,6 +160,9 @@ const shortestAngleDelta = (from: number, to: number) => {
 };
 
 const normalizeCoords = (x: number, y: number): { x: number, y: number } => {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        return { x: 50, y: 50 };
+    }
     return {
         x: (x / ENGINE_PITCH_LENGTH) * 100,
         y: (y / ENGINE_PITCH_WIDTH) * 100
@@ -442,8 +541,11 @@ const shadeColor = (col: string, amt: number) => {
 };
 
 const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z: number, trail: Array<{x:number, y:number, z:number}> = []) => {
+    if (!Number.isFinite(xPct) || !Number.isFinite(yPct) || !Number.isFinite(z)) return;
+
     const pos = toScreenDeep(xPct, yPct, z);
     const ground = toScreenDeep(xPct, yPct, 0);
+    if (![pos.x, pos.y, ground.x, ground.y, pos.scale].every(Number.isFinite)) return;
     const scale = pos.scale;
 
     // Top boyutunu biraz daha büyüttük (2.8, oyuncuyla daha iyi uyum sağlıyor ve net seçiliyor)
@@ -455,7 +557,9 @@ const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z
     if (trail && trail.length > 1) {
         for (let i = 0; i < trail.length; i++) {
             const t = (i + 1) / trail.length;
+            if (!Number.isFinite(trail[i].x) || !Number.isFinite(trail[i].y) || !Number.isFinite(trail[i].z)) continue;
             const tp = toScreenDeep(trail[i].x, trail[i].y, Math.max(0, trail[i].z));
+            if (![tp.x, tp.y, tp.scale].every(Number.isFinite)) continue;
             const alpha = 0.08 + t * 0.18;
             const r = radius * (0.35 + t * 0.55);
 
@@ -504,10 +608,26 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const [useDefaultColors, setUseDefaultColors] = useState(false);
     const [showNames, setShowNames] = useState(true);
     const [cameraTracking, setCameraTracking] = useState(false); // Kamera takibi isteğe bağlı
+    const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
+    const [isLandscape, setIsLandscape] = useState(false);
+    const [isSmallLandscape, setIsSmallLandscape] = useState(false);
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null);
     const [showHalfTime, setShowHalfTime] = useState(false);
     const [setPieceCue, setSetPieceCue] = useState<{ label: string; accent: string } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const liveAttackPlans = (match.liveData?.simulation as any)?.attackPlans;
+    const liveDefensePlans = (match.liveData?.simulation as any)?.defensePlans;
+    const homeAttackPlan = (liveAttackPlans?.home || null) as LiveAttackPlan;
+    const awayAttackPlan = (liveAttackPlans?.away || null) as LiveAttackPlan;
+    const homeDefensePlan = (liveDefensePlans?.home || null) as LiveDefensePlan;
+    const awayDefensePlan = (liveDefensePlans?.away || null) as LiveDefensePlan;
+    const homeAttackPlanLabel = homeAttackPlan ? getAttackPlanBadgeLabel(homeAttackPlan) : getAttackPlanFallbackLabel(homeTeam);
+    const awayAttackPlanLabel = awayAttackPlan ? getAttackPlanBadgeLabel(awayAttackPlan) : getAttackPlanFallbackLabel(awayTeam);
+    const homeDefensePlanLabel = homeDefensePlan ? getDefensePlanBadgeLabel(homeDefensePlan) : getDefensePlanFallbackLabel(homeTeam);
+    const awayDefensePlanLabel = awayDefensePlan ? getDefensePlanBadgeLabel(awayDefensePlan) : getDefensePlanFallbackLabel(awayTeam);
+    const statusText = match.liveData?.lastActionText || 'Waiting...';
+    const livePassDebug = (match.liveData?.simulation as any)?.passDebug || null;
+    const debugBannerShown = useRef(false);
 
     const matchRef = useRef(match);
     const homeTeamRef = useRef(homeTeam);
@@ -531,6 +651,68 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
 
     const playerNumbers = useRef<Record<string, number>>({});
+
+    useEffect(() => {
+        const debugHelper = {
+            getSnapshot: () => ({
+                minute: match.currentMinute,
+                score: { home: match.homeScore, away: match.awayScore },
+                statusText,
+                attackPlans: {
+                    home: homeAttackPlan,
+                    away: awayAttackPlan,
+                },
+                passDebug: livePassDebug,
+            }),
+            printPassReport: () => {
+                if (!livePassDebug) {
+                    console.info('PFM: No active pass debug snapshot yet.');
+                    return null;
+                }
+                console.groupCollapsed(`PFM Pass Report ${livePassDebug.minute}' ${livePassDebug.passerName} -> ${livePassDebug.receiverName}`);
+                console.table({
+                    outcome: livePassDebug.outcome,
+                    reason: livePassDebug.outcomeReason,
+                    type: livePassDebug.type,
+                    plan: livePassDebug.planPattern,
+                    passer: livePassDebug.passerName,
+                    intendedReceiver: livePassDebug.receiverName,
+                    actualReceiver: livePassDebug.actualReceiverName || '-',
+                    targetX: Number(livePassDebug.targetX).toFixed(2),
+                    targetY: Number(livePassDebug.targetY).toFixed(2),
+                    receiveX: livePassDebug.receiveX !== undefined ? Number(livePassDebug.receiveX).toFixed(2) : '-',
+                    receiveY: livePassDebug.receiveY !== undefined ? Number(livePassDebug.receiveY).toFixed(2) : '-',
+                    distanceFromTarget: livePassDebug.distanceFromTarget !== undefined ? Number(livePassDebug.distanceFromTarget).toFixed(2) : '-',
+                    travelTicks: livePassDebug.travelTicks,
+                });
+                console.groupEnd();
+                return livePassDebug;
+            },
+            printMatchState: () => {
+                const snapshot = {
+                    minute: match.currentMinute,
+                    score: `${match.homeScore}-${match.awayScore}`,
+                    statusText,
+                    homeAttackPlan: homeAttackPlanLabel,
+                    awayAttackPlan: awayAttackPlanLabel,
+                };
+                console.table(snapshot);
+                return snapshot;
+            }
+        };
+
+        (window as any).__PFM_DEBUG = debugHelper;
+        if (!debugBannerShown.current) {
+            debugBannerShown.current = true;
+            console.info('PFM DEBUG READY: __PFM_DEBUG.getSnapshot() | __PFM_DEBUG.printPassReport() | __PFM_DEBUG.printMatchState()');
+        }
+
+        return () => {
+            if ((window as any).__PFM_DEBUG === debugHelper) {
+                delete (window as any).__PFM_DEBUG;
+            }
+        };
+    }, [match.currentMinute, match.homeScore, match.awayScore, statusText, homeAttackPlan, awayAttackPlan, livePassDebug]);
     
     // --- Render Pools & Trails (Garbage Collection Kasmasını Engeller) ---
     const entitiesPool = useRef<Array<{type: string, ySort: number, renderFn: () => void}>>([]);
@@ -568,6 +750,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         awayPlayersRef.current = awayPlayers;
         setManagedSide(userTeamId === awayTeam.id ? 'AWAY' : 'HOME');
     }, [match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId]);
+
+    useEffect(() => {
+        const checkLandscape = () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const landscape = width > height;
+            setIsLandscape(landscape);
+            setIsSmallLandscape(landscape && height < 500);
+        };
+
+        checkLandscape();
+        window.addEventListener('resize', checkLandscape);
+        return () => window.removeEventListener('resize', checkLandscape);
+    }, []);
 
     // Reset per-match UI/animation state so previous matches do not leak into the next one.
     useEffect(() => {
@@ -679,8 +875,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
         const config = eventType === MatchEventType.FREE_KICK
             ? { label: t.freeKick || 'FREE KICK', accent: 'from-amber-500/90 to-orange-500/90', duration: 720 }
+            : eventType === MatchEventType.GOAL_KICK
+                ? { label: t.goalKick || 'GOAL KICK', accent: 'from-emerald-500/90 to-teal-500/90', duration: 520 }
             : eventType === MatchEventType.CORNER
                 ? { label: t.corner || 'CORNER', accent: 'from-sky-500/90 to-cyan-500/90', duration: 520 }
+                : eventType === MatchEventType.OFFSIDE
+                    ? { label: t.offside || 'OFFSIDE', accent: 'from-fuchsia-500/90 to-rose-500/90', duration: 520 }
                 : { label: t.penalty || 'PENALTY', accent: 'from-rose-500/90 to-red-500/90', duration: 820 };
 
         setSetPieceCue({ label: config.label, accent: config.accent });
@@ -784,12 +984,26 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                             triggerSetPiecePause(result.event.type);
                             break;
                         case MatchEventType.FREE_KICK:
+                        case MatchEventType.GOAL_KICK:
+                        case MatchEventType.OFFSIDE:
                             triggerSetPiecePause(result.event.type);
                             break;
                     }
                 }
 
-                const shouldSync = result.minuteIncrement || (result.event && [MatchEventType.GOAL, MatchEventType.CARD_YELLOW, MatchEventType.CARD_RED].includes(result.event.type));
+                const shouldSync = result.minuteIncrement || (result.event && [
+                    MatchEventType.GOAL,
+                    MatchEventType.CARD_YELLOW,
+                    MatchEventType.CARD_RED,
+                    MatchEventType.PENALTY,
+                    MatchEventType.CORNER,
+                    MatchEventType.FREE_KICK,
+                    MatchEventType.GOAL_KICK,
+                    MatchEventType.THROW_IN,
+                    MatchEventType.OFFSIDE,
+                    MatchEventType.FOUL,
+                    MatchEventType.KICKOFF,
+                ].includes(result.event.type));
                 if (shouldSync) onSync(matchRef.current.id, result);
 
                 // Safety stop if isPlayed set by engine mid-interval
@@ -1365,9 +1579,14 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             targetCamY = lerp(pb.y, nb.y, alpha);
         }
 
+        // Kamerayi topun etrafinda tutarken cizgilere fazla yaslanmasini engelle.
+        // Boylece saha disi daha az gorunur ve takip daha dengeli hissedilir.
+        targetCamX = clamp(targetCamX, 22, 78);
+        targetCamY = clamp(targetCamY, 18, 82);
+
         // Kamera hedefe anında gitmez, süzülerek (ease) takip eder
-        cameraPos.current.xPct = lerp(cameraPos.current.xPct, targetCamX, 0.065);
-        cameraPos.current.yPct = lerp(cameraPos.current.yPct, targetCamY, 0.065);
+        cameraPos.current.xPct = lerp(cameraPos.current.xPct, targetCamX, 0.08);
+        cameraPos.current.yPct = lerp(cameraPos.current.yPct, targetCamY, 0.08);
 
         // Kameranın piksel ofsetlerini hesapla: (Kamera merkeze 50,50'ye göre ne kadar sapmış)
         const centerScreen = toScreenDeep(50, 50, 0);
@@ -1380,14 +1599,16 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         // Zoom-in efekti verip, hesapladığımız ofseti uyguluyoruz.
         // Daha sinematik bir his için sahanın geri kalanı ekran dışına taşabilir.
         if (cameraTrackingRef.current) {
-            const ZOOM_LEVEL = 1.45; 
+            const ZOOM_LEVEL = 1.58;
             
             // Kamera kaymasını sınırla (Clamp): Ekranın kenarlarında boşluk/siyahlık (render edilmemiş alan) görmemek için.
             const maxOffsetX = (CANVAS_W * ZOOM_LEVEL - CANVAS_W) / 2;
             const maxOffsetY = (CANVAS_H * ZOOM_LEVEL - CANVAS_H) / 2;
+            const safeOffsetX = Math.max(0, maxOffsetX - 92);
+            const safeOffsetY = Math.max(0, maxOffsetY - 56);
             
-            camOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, camOffsetX));
-            camOffsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, camOffsetY));
+            camOffsetX = Math.max(-safeOffsetX, Math.min(safeOffsetX, camOffsetX));
+            camOffsetY = Math.max(-safeOffsetY, Math.min(safeOffsetY, camOffsetY));
 
             // Float değerlerinden kaynaklı 'iz bırakma (Ghosting/Subpixel rendering)' sorununu önlemek için 
             // kameranın pozisyonunu tam sayılara (Math.round) yuvarlıyoruz
@@ -1569,9 +1790,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             // Default colors override: user team = blue, opponent = red
             let primary = pi.primary;
             if (useDefaultColorsRef.current) {
-                primary = pi.id && homePlayersRef.current.some(p => p.id === pi.id)
-                    ? (homeTeamRef.current.id === userTeamId ? '#3b82f6' : '#ef4444')
-                    : (awayTeamRef.current.id === userTeamId ? '#3b82f6' : '#ef4444');
+                const controlledTeamId = managedSide === 'HOME' ? homeTeamRef.current.id : awayTeamRef.current.id;
+                const kit = getDefaultKitColors(pi.id && homePlayersRef.current.some(p => p.id === pi.id)
+                    ? homeTeamRef.current.id === controlledTeamId
+                    : awayTeamRef.current.id === controlledTeamId);
+                primary = kit.primary;
+                pi.secondary = kit.secondary;
             }
             entities.push({
                 type: 'PLAYER',
@@ -1596,6 +1820,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         const bX = lerp(prevBNrm.x, nxtBNrm.x, alpha);
         const bY = lerp(prevBNrm.y, nxtBNrm.y, alpha);
         let bZ = lerp(prevBall.z || 0, nextBall.z || 0, alpha);
+        if (![bX, bY, bZ].every(Number.isFinite)) {
+            bZ = 0;
+        }
         
         // Zıplayan topun fizik kurallarına(Yerden sekme hissi) uyması için z de ufak bir eğri eklemek iyi olabilir 
         // Ancak ana sorun subpixel rendering, x ve y de ondalıklı kaldı.
@@ -1604,18 +1831,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
         // Kuyruk / İvme Hesaplaması (Motion Blur için)
         const speedMagnitude = Math.sqrt(Math.pow(nxtBNrm.x - prevBNrm.x, 2) + Math.pow(nxtBNrm.y - prevBNrm.y, 2));
-        if (speed > 0 && speedMagnitude > 0.05) {
+        if (speed > 0 && speedMagnitude > 0.05 && [RenderBX, RenderBY, bZ].every(Number.isFinite)) {
             ballTrailPool.current.push({ x: RenderBX, y: RenderBY, z: bZ });
             if (ballTrailPool.current.length > 7) ballTrailPool.current.shift();
         } else if (ballTrailPool.current.length > 0) {
             if (Math.random() > 0.5) ballTrailPool.current.shift();
         }
 
-        entities.push({
-            type: 'BALL',
-            ySort: RenderBY,
-            renderFn: () => drawBall3D(ctx, RenderBX, RenderBY, bZ, ballTrailPool.current)
-        });
+        if ([RenderBX, RenderBY, bZ].every(Number.isFinite)) {
+            entities.push({
+                type: 'BALL',
+                ySort: RenderBY,
+                renderFn: () => drawBall3D(ctx, RenderBX, RenderBY, bZ, ballTrailPool.current)
+            });
+        }
         }
 
         // Sort by depth (Y coordinate ascending = back to front)
@@ -1661,14 +1890,85 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         );
     };
 
+    const getSquadAverages = (players: Player[]) => {
+        const starters = players.filter(p => p.lineup === 'STARTING');
+        const avg = starters.length > 0 ? Math.round(starters.reduce((sum, player) => sum + player.overall, 0) / starters.length) : 0;
+        const liveAvg = starters.length > 0 ? Math.round(starters.reduce((sum, player) => {
+            const stamina = getLivePlayerStamina(player.id) ?? 100;
+            return sum + calculateEffectiveRating(player, player.position as any, stamina);
+        }, 0) / starters.length) : 0;
+        return { avg, liveAvg };
+    };
+
+    const getDetailedUnitAverages = (players: Player[]) => {
+        const starters = players.filter(p => p.lineup === 'STARTING');
+        const defs = starters.filter(p => p.position === 'DEF');
+        const mids = starters.filter(p => p.position === 'MID');
+        const fwds = starters.filter(p => p.position === 'FWD');
+        const calc = (group: Player[]) => {
+            const avg = group.length > 0 ? Math.round(group.reduce((sum, player) => sum + player.overall, 0) / group.length) : 0;
+            const liveAvg = group.length > 0 ? Math.round(group.reduce((sum, player) => {
+                const stamina = getLivePlayerStamina(player.id) ?? 100;
+                return sum + calculateEffectiveRating(player, player.position as any, stamina);
+            }, 0) / group.length) : 0;
+            return { avg, liveAvg };
+        };
+
+        return {
+            defs: calc(defs),
+            mids: calc(mids),
+            fwds: calc(fwds),
+            all: calc(starters),
+        };
+    };
+
+    const keyEvents = useMemo(
+        () => match.events.filter(event => event.type !== MatchEventType.INFO).slice(-4).reverse(),
+        [match.events]
+    );
+
+    const quickStats = useMemo(() => ([
+        {
+            label: t.possession || 'Topa sahip',
+            value: `${match.stats?.homePossession ?? 50}% - ${match.stats?.awayPossession ?? 50}%`
+        },
+        {
+            label: t.shots || 'Şut',
+            value: `${match.stats?.homeShots ?? 0} - ${match.stats?.awayShots ?? 0}`
+        },
+        {
+            label: t.onTarget || 'İsabetli',
+            value: `${match.stats?.homeOnTarget ?? 0} - ${match.stats?.awayOnTarget ?? 0}`
+        },
+        {
+            label: 'xG',
+            value: `${(match.stats?.homeXG ?? 0).toFixed(1)} - ${(match.stats?.awayXG ?? 0).toFixed(1)}`
+        }
+    ]), [match.stats, t.onTarget, t.possession, t.shots]);
+
+    const latestEvent = keyEvents[0] || null;
+    const compactLatestEvent = getCompactEventLabel(match, latestEvent);
+    const goalFlashText = latestEvent?.type === MatchEventType.GOAL ? latestEvent.description : null;
+    const homeSquadAverages = getSquadAverages(homePlayersRef.current);
+    const awaySquadAverages = getSquadAverages(awayPlayersRef.current);
+    const homeDetailedOvr = getDetailedUnitAverages(homePlayersRef.current);
+    const awayDetailedOvr = getDetailedUnitAverages(awayPlayersRef.current);
+
     return (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-slate-950 via-black to-slate-950 flex flex-col overflow-hidden">
 
             {/* GOAL FLASH OVERLAY */}
             {goalFlash && (
                 <div className="pointer-events-none fixed inset-0 z-[110] flex items-center justify-center">
-                    <div className="text-7xl md:text-9xl font-black italic text-white drop-shadow-[0_0_30px_rgba(52,211,153,0.8)] animate-bounce">
-                        GOAL!
+                    <div className="flex flex-col items-center gap-2 px-4 text-center">
+                        <div className="text-7xl md:text-9xl font-black italic text-white drop-shadow-[0_0_30px_rgba(52,211,153,0.8)] animate-bounce">
+                            GOAL!
+                        </div>
+                        {goalFlashText && (
+                            <div className="max-w-[85vw] rounded-full border border-emerald-300/30 bg-black/55 px-4 py-2 text-sm font-black text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.35)] md:text-lg">
+                                {goalFlashText}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -1681,130 +1981,259 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 </div>
             )}
 
-            {/* TOP CONTROL BAR — slim, all controls here */}
-            <div className="h-11 bg-slate-900/95 backdrop-blur-xl border-b border-white/10 flex items-center px-2 gap-1 z-20 shrink-0 shadow-2xl">
-
-                {/* LEFT: Play/Pause + Speed */}
-                <button
-                    onClick={() => setSpeed(speed === 0 ? 1 : 0)}
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 shrink-0 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}
-                >
-                    {speed === 0 ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
-                </button>
-                <div className="flex gap-0.5">
-                    {([0.5, 1, 2, 4] as const).map(s => (
-                        <button
-                            key={s}
-                            onClick={() => setSpeed(s)}
-                            className={`w-7 h-8 rounded text-[9px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-500'}`}
-                        >
-                            {s === 0.5 ? '½' : `${s}x`}
-                        </button>
-                    ))}
-                </div>
-
-                {/* CENTER: Score */}
-                <div className="flex-1 flex items-center justify-center gap-2">
-                    <span className={`text-lg font-mono font-black transition-all ${goalFlash === 'HOME' ? 'text-emerald-300 scale-110' : 'text-white'}`}>
-                        {match.homeScore}
-                    </span>
-                    <div className="flex flex-col items-center leading-none">
-                        <span className="text-[8px] text-red-500 font-black animate-pulse">LIVE</span>
-                        <span className="text-slate-400 text-sm font-black">:</span>
-                    </div>
-                    <span className={`text-lg font-mono font-black transition-all ${goalFlash === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'}`}>
-                        {match.awayScore}
-                    </span>
-                    <div className="bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-600/40">
-                        {match.currentMinute}'
+            <div className={`h-[72px] md:h-[88px] bg-slate-900/70 backdrop-blur-xl border-b border-white/10 items-center justify-between px-3 md:px-6 gap-3 shrink-0 z-20 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
+                <div className="flex items-center gap-2 md:gap-3 min-w-0 w-[32%]">
+                    <TeamLogo team={homeTeam} className="w-9 h-9 md:w-12 md:h-12 rounded-xl border border-slate-600/50 bg-slate-800/50 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                        <div className="text-sm md:text-lg font-black text-white uppercase truncate">{getCompactTeamName(homeTeam)}</div>
+                        <div className="mt-1">{renderOVR(homePlayersRef.current, 'left')}</div>
+                        <div className="hidden lg:block text-[9px] text-emerald-300/90 truncate mt-1">Hucum: {homeAttackPlanLabel}</div>
                     </div>
                 </div>
 
-                {/* RIGHT: Utility buttons */}
-                <div className="flex items-center gap-0.5 shrink-0">
-                    <button
-                        onClick={() => setSoundEnabled(!soundEnabled)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}
-                    >
-                        {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
-                    </button>
-                    <button
-                        onClick={() => setUseDefaultColors(!useDefaultColors)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}
-                        title="Blue vs Red"
-                    >
-                        <Palette size={13} />
-                    </button>
-                    <button
-                        onClick={() => setShowNames(!showNames)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[9px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}
-                        title="Toggle player names"
-                    >
-                        ID
-                    </button>
-                    <button
-                        onClick={() => setCameraTracking(!cameraTracking)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}
-                        title="Toggle Zoom/Camera Tracking"
-                    >
-                        <Camera size={13} />
-                    </button>
-                    <button
-                        onClick={() => { setSpeed(0); setShowTacticsModal(true); }}
-                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 active:bg-purple-500 text-white transition-all active:scale-95"
-                    >
-                        <Settings size={13} />
-                    </button>
-                    <button
-                        onClick={() => { setSpeed(0); setShowExitModal(true); }}
-                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-700 active:bg-red-700 text-slate-400 active:text-white transition-all active:scale-95"
-                    >
-                        <X size={14} />
-                    </button>
+                <div className="flex flex-col items-center justify-center min-w-0 flex-1">
+                    <div className="flex items-center gap-3 md:gap-6 rounded-2xl border border-white/10 bg-black/30 px-4 md:px-6 py-1.5 md:py-2 shadow-xl">
+                        <span className={`text-3xl md:text-5xl font-mono font-black ${goalFlash === 'HOME' ? 'text-emerald-300 scale-110' : 'text-white'}`}>{match.homeScore}</span>
+                        <div className="flex flex-col items-center leading-none">
+                            <span className="text-[9px] md:text-[10px] text-red-500 font-black tracking-[0.18em]">LIVE</span>
+                            <span className="text-slate-500 text-lg md:text-xl font-black">:</span>
+                        </div>
+                        <span className={`text-3xl md:text-5xl font-mono font-black ${goalFlash === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'}`}>{match.awayScore}</span>
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-[10px] md:text-xs font-semibold text-slate-300">
+                        <span className="rounded-full border border-emerald-400/30 bg-emerald-500/12 px-2 py-0.5 text-emerald-300 font-black">{match.currentMinute}'</span>
+                        <span>{match.stats?.homePossession ?? 50}%</span>
+                        <span className="text-slate-500">pos</span>
+                        <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
+                        <span className="text-slate-500">shots</span>
+                        <span>{match.stats?.awayPossession ?? 50}%</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 md:gap-3 min-w-0 w-[32%]">
+                    <div className="min-w-0 flex-1 text-right">
+                        <div className="text-sm md:text-lg font-black text-white uppercase truncate">{getCompactTeamName(awayTeam)}</div>
+                        <div className="mt-1">{renderOVR(awayPlayersRef.current, 'right')}</div>
+                        <div className="hidden lg:block text-[9px] text-blue-300/90 truncate mt-1">Hucum: {awayAttackPlanLabel}</div>
+                    </div>
+                    <TeamLogo team={awayTeam} className="w-9 h-9 md:w-12 md:h-12 rounded-xl border border-slate-600/50 bg-slate-800/50 shrink-0" />
                 </div>
             </div>
 
-            {/* PITCH — fills all remaining space, overlays on top */}
-            <div className="flex-1 relative overflow-hidden bg-black">
-                <canvas
-                    ref={canvasRef}
-                    width={CANVAS_W}
-                    height={CANVAS_H}
-                    className="w-full h-full object-contain"
-                    style={{ touchAction: 'none' }}
-                />
+            {isSmallLandscape && (
+                <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-8 pointer-events-none">
+                    <div className="flex items-center gap-1 text-[8px] font-mono bg-slate-900/70 backdrop-blur px-1.5 py-0.5 rounded-full border border-emerald-500/30">
+                        <span className="text-sky-400">D:{homeDetailedOvr.defs.avg}<span className="text-sky-600">({homeDetailedOvr.defs.liveAvg})</span></span>
+                        <span className="text-emerald-400">M:{homeDetailedOvr.mids.avg}<span className="text-emerald-600">({homeDetailedOvr.mids.liveAvg})</span></span>
+                        <span className="text-orange-400">F:{homeDetailedOvr.fwds.avg}<span className="text-orange-600">({homeDetailedOvr.fwds.liveAvg})</span></span>
+                        <span className="text-white font-bold">⌀{homeDetailedOvr.all.avg}<span className="text-slate-400">({homeDetailedOvr.all.liveAvg})</span></span>
+                    </div>
+                    <span className="text-[8px] text-slate-600 font-mono">vs</span>
+                    <div className="flex items-center gap-1 text-[8px] font-mono bg-slate-900/70 backdrop-blur px-1.5 py-0.5 rounded-full border border-blue-500/30">
+                        <span className="text-sky-400">D:{awayDetailedOvr.defs.avg}<span className="text-sky-600">({awayDetailedOvr.defs.liveAvg})</span></span>
+                        <span className="text-emerald-400">M:{awayDetailedOvr.mids.avg}<span className="text-emerald-600">({awayDetailedOvr.mids.liveAvg})</span></span>
+                        <span className="text-orange-400">F:{awayDetailedOvr.fwds.avg}<span className="text-orange-600">({awayDetailedOvr.fwds.liveAvg})</span></span>
+                        <span className="text-white font-bold">⌀{awayDetailedOvr.all.avg}<span className="text-slate-400">({awayDetailedOvr.all.liveAvg})</span></span>
+                    </div>
+                </div>
+            )}
 
-                {/* HOME TEAM OVERLAY — top left */}
-                <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-2 py-1.5 border border-white/10 shadow-lg max-w-[140px]">
-                    <TeamLogo team={homeTeam} className="w-7 h-7 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
-                    <div className="min-w-0">
-                        <div className="text-[10px] font-black text-white uppercase truncate leading-tight">{homeTeam.shortName || homeTeam.name.substring(0, 8)}</div>
-                        {renderOVR(homePlayersRef.current, 'left')}
+            <div className={`lg:hidden bg-slate-900 border-b border-slate-800 h-10 shrink-0 ${isSmallLandscape ? 'hidden' : 'flex'}`}>
+                <button onClick={() => setActiveTab('PITCH')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'PITCH' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><MonitorPlay size={14} /> Pitch</button>
+                <button onClick={() => setActiveTab('FEED')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'FEED' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><List size={14} /> Feed</button>
+                <button onClick={() => setActiveTab('STATS')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'STATS' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><BarChart2 size={14} /> Stats</button>
+            </div>
+
+            <div className="flex-1 flex overflow-hidden bg-black relative">
+                <div className={`w-full lg:w-72 bg-slate-900/80 backdrop-blur-xl border-r border-white/5 flex-col z-10 shrink-0 shadow-2xl ${isSmallLandscape ? 'hidden' : (activeTab === 'FEED' ? 'flex' : 'hidden lg:flex')}`}>
+                    <div className="p-4 border-b border-white/10 font-black text-slate-300 uppercase text-xs tracking-widest hidden lg:flex items-center gap-2">
+                        <List size={14} className="text-emerald-500" /> Match Feed
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                        {[...match.events].reverse().map((event, index) => (
+                            <div key={`${event.minute}-${event.type}-${index}`} className={`rounded-xl border-l-4 p-3 text-sm shadow-sm ${event.type === MatchEventType.GOAL ? 'bg-emerald-900/25 border-emerald-400' : 'bg-slate-800/40 border-slate-600'}`}>
+                                <span className={`mr-2 font-black ${event.type === MatchEventType.GOAL ? 'text-emerald-400' : 'text-slate-400'}`}>{event.minute}'</span>
+                                <span className={event.type === MatchEventType.GOAL ? 'text-white font-bold' : 'text-slate-300'}>{event.description}</span>
+                            </div>
+                        ))}
+                        {match.events.length === 0 && <div className="text-slate-600 text-center text-xs italic mt-10">Match Starting...</div>}
                     </div>
                 </div>
 
-                {/* AWAY TEAM OVERLAY — top right */}
-                <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-xl px-2 py-1.5 border border-white/10 shadow-lg max-w-[140px]">
-                    <div className="min-w-0 text-right">
-                        <div className="text-[10px] font-black text-white uppercase truncate leading-tight">{awayTeam.shortName || awayTeam.name.substring(0, 8)}</div>
-                        {renderOVR(awayPlayersRef.current, 'right')}
-                    </div>
-                    <TeamLogo team={awayTeam} className="w-7 h-7 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
-                </div>
-
-                {/* POSSESSION + SHOTS — bottom center overlay */}
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-white/10 shadow-lg">
-                    <div className="flex items-center gap-1.5 w-36">
-                        <span className="text-[9px] font-bold text-emerald-400 w-7 text-right shrink-0">{match.stats?.homePossession ?? 50}%</span>
-                        <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-slate-700">
-                            <div className="h-full bg-emerald-500 transition-all" style={{ width: `${match.stats?.homePossession ?? 50}%` }} />
+                <div className={`flex-1 relative flex items-center justify-center bg-transparent p-2 md:p-4 ${isSmallLandscape ? 'flex p-0' : (activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex')}`}>
+                    <div className={`absolute top-3 md:top-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${isSmallLandscape ? 'hidden' : 'block'}`}>
+                        <div className="bg-black/70 backdrop-blur-md text-white px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-slate-600 shadow-2xl flex items-center gap-2 md:gap-3">
+                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                            <span className="font-bold uppercase tracking-wide text-[10px] md:text-sm whitespace-nowrap">{statusText}</span>
                         </div>
-                        <span className="text-[9px] font-bold text-blue-400 w-7 shrink-0">{match.stats?.awayPossession ?? 50}%</span>
+                        {compactLatestEvent && (
+                            <div className="mt-2 flex justify-center lg:hidden">
+                                <div className={`max-w-[82vw] rounded-full border px-3 py-1.5 text-[10px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
+                                    <span className="block truncate">{compactLatestEvent}</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-[9px]">
-                        <span className="font-bold text-emerald-300">{match.stats?.homeShots ?? 0}</span>
-                        <span className="text-slate-500 uppercase tracking-wide">shots</span>
-                        <span className="font-bold text-blue-300">{match.stats?.awayShots ?? 0}</span>
+
+                    <div className={`absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 md:gap-2 bg-slate-950/82 backdrop-blur-xl border border-white/10 rounded-2xl px-2 py-2 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
+                        <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+                            {speed === 0 ? <Play size={15} fill="currentColor" /> : <Pause size={15} fill="currentColor" />}
+                        </button>
+                        {([0.5, 1, 2, 4] as const).map(s => (
+                            <button
+                                key={s}
+                                onClick={() => setSpeed(s)}
+                                className={`w-9 h-9 rounded-lg text-[10px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-400'}`}
+                            >
+                                {s === 0.5 ? '0.5' : `${s}x`}
+                            </button>
+                        ))}
+                        <button onClick={() => setSoundEnabled(!soundEnabled)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                            {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                        </button>
+                        <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                            <Palette size={14} />
+                        </button>
+                        <button onClick={() => setShowNames(!showNames)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[10px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                            ID
+                        </button>
+                        <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                            <Camera size={14} />
+                        </button>
+                        <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-9 h-9 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
+                            <Settings size={14} />
+                        </button>
+                        <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-9 h-9 rounded-lg flex items-center justify-center bg-slate-700 text-slate-300 transition-all active:scale-95">
+                            <X size={14} />
+                        </button>
+                    </div>
+
+                    {isSmallLandscape && (
+                        <div className="absolute inset-0 z-40 pointer-events-none">
+                            <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                                <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
+                                    <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
+                                    <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
+                                    <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
+                                </div>
+                                <div className="mt-1 bg-black/45 backdrop-blur px-2 py-1 rounded-full border border-slate-700/80 flex items-center gap-2 text-[8px] text-slate-200">
+                                    <span>{match.stats?.homePossession ?? 50}%</span>
+                                    <span className="text-slate-500">pos</span>
+                                    <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
+                                    <span className="text-slate-500">shots</span>
+                                    <span>{match.stats?.awayPossession ?? 50}%</span>
+                                </div>
+                                {compactLatestEvent && (
+                                    <div className={`mt-1 max-w-[52vw] rounded-full border px-2 py-1 text-[8px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
+                                        <span className="block truncate">{compactLatestEvent}</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
+                                <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className="w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center text-white">
+                                    {speed === 0 ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
+                                </button>
+                                <button onClick={() => setSpeed(speed === 4 ? 1 : speed * 2)} className={`w-8 h-8 rounded-full bg-black/60 border border-slate-700 flex items-center justify-center font-bold text-[10px] ${speed > 1 ? 'text-emerald-400' : 'text-white'}`}>
+                                    {speed}x
+                                </button>
+                            </div>
+
+                            <div className="absolute top-2 right-2 flex gap-2 pointer-events-auto scale-90 origin-top-right">
+                                <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${useDefaultColors ? 'bg-emerald-600/80 border-emerald-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
+                                    <Palette size={14} />
+                                </button>
+                                <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${cameraTracking ? 'bg-indigo-600/80 border-indigo-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
+                                    <Camera size={14} />
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
+                                    <Settings size={14} />
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 rounded-full bg-red-900/50 border border-red-500/30 flex items-center justify-center text-white">
+                                    <X size={14} />
+                                </button>
+                            </div>
+
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-r from-slate-900/90 to-transparent z-20 py-2">
+                                <TeamLogo team={homeTeam} className="w-9 h-9 rounded-lg border border-slate-600 bg-slate-800/80" />
+                                <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
+                                <div className="text-[6px] text-emerald-200 text-center px-1 leading-tight">{homeAttackPlanLabel}</div>
+                                <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession ?? 50}%</div>
+                                <div className="text-[7px] text-slate-500">xG {(match.stats?.homeXG ?? 0).toFixed(1)}</div>
+                                <div className="text-[6px] text-amber-200 text-center px-1 leading-tight">{homeDefensePlanLabel}</div>
+                            </div>
+
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 flex flex-col items-center justify-center gap-0.5 bg-gradient-to-l from-slate-900/90 to-transparent z-20 py-2">
+                                <TeamLogo team={awayTeam} className="w-9 h-9 rounded-lg border border-slate-600 bg-slate-800/80" />
+                                <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
+                                <div className="text-[6px] text-blue-200 text-center px-1 leading-tight">{awayAttackPlanLabel}</div>
+                                <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession ?? 50}%</div>
+                                <div className="text-[7px] text-slate-500">xG {(match.stats?.awayXG ?? 0).toFixed(1)}</div>
+                                <div className="text-[6px] text-amber-200 text-center px-1 leading-tight">{awayDefensePlanLabel}</div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                        <canvas
+                            ref={canvasRef}
+                            width={CANVAS_W}
+                            height={CANVAS_H}
+                            className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
+                            style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
+                        />
+                    </div>
+                </div>
+
+                <div className={`w-full lg:w-72 bg-slate-900 border-l border-slate-800 flex-col z-10 shrink-0 ${isSmallLandscape ? 'hidden' : (activeTab === 'STATS' ? 'flex' : 'hidden lg:flex')}`}>
+                    <div className="p-3 bg-slate-950 border-b border-slate-800 font-bold text-slate-400 uppercase text-xs tracking-wider hidden lg:flex items-center gap-2">
+                        <BarChart2 size={14} /> {t.liveStats || 'Live Stats'}
+                    </div>
+                    <div className="p-4 md:p-6 space-y-6">
+                        <div>
+                            <div className="flex justify-between text-[10px] text-slate-500 mb-1 uppercase font-bold">{t.possession || 'Possession'}</div>
+                            <div className="flex h-2 rounded-full overflow-hidden bg-slate-800">
+                                <div className="bg-emerald-600" style={{ width: `${match.stats?.homePossession ?? 50}%` }}></div>
+                                <div className="bg-blue-600" style={{ width: `${match.stats?.awayPossession ?? 50}%` }}></div>
+                            </div>
+                            <div className="flex justify-between text-lg font-bold text-white mt-1">
+                                <span>{match.stats?.homePossession ?? 50}%</span>
+                                <span>{match.stats?.awayPossession ?? 50}%</span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-3 text-center">
+                            <div className="text-xl font-bold text-white">{match.stats?.homeShots ?? 0}</div>
+                            <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">{t.shots || 'Shots'}</div>
+                            <div className="text-xl font-bold text-white">{match.stats?.awayShots ?? 0}</div>
+
+                            <div className="text-lg font-bold text-emerald-400">{match.stats?.homeOnTarget ?? 0}</div>
+                            <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">{t.onTarget || 'Target'}</div>
+                            <div className="text-lg font-bold text-blue-400">{match.stats?.awayOnTarget ?? 0}</div>
+
+                            <div className="text-base font-bold text-slate-300">{(match.stats?.homeXG ?? 0).toFixed(2)}</div>
+                            <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">xG</div>
+                            <div className="text-base font-bold text-slate-300">{(match.stats?.awayXG ?? 0).toFixed(2)}</div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
+                                <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500 font-black">Home Plan</div>
+                                <div className="text-sm font-bold text-white mt-1">{homeAttackPlanLabel}</div>
+                                <div className="text-xs text-amber-200 mt-1">{homeDefensePlanLabel}</div>
+                            </div>
+                            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
+                                <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500 font-black">Away Plan</div>
+                                <div className="text-sm font-bold text-white mt-1">{awayAttackPlanLabel}</div>
+                                <div className="text-xs text-amber-200 mt-1">{awayDefensePlanLabel}</div>
+                            </div>
+                            {latestEvent && (
+                                <div className={`rounded-xl border px-3 py-2 ${getEventAccentClass(latestEvent.type)}`}>
+                                    <div className="text-[10px] font-black">{latestEvent.minute}'</div>
+                                    <div className="text-sm leading-tight mt-1">{latestEvent.description}</div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

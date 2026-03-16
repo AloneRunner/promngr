@@ -27,6 +27,80 @@ interface MatchCenterProps {
     onPlayerClick: (player: Player) => void;
 }
 
+type LiveAttackPlan = {
+    pattern: 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
+    lane: 'LEFT' | 'RIGHT' | 'CENTER';
+} | null;
+type LiveDefensePlan = {
+    pattern: 'COUNTER_PRESS' | 'FORCE_WIDE' | 'PROTECT_CENTER' | 'LOW_BLOCK';
+    lane: 'LEFT' | 'RIGHT' | 'CENTER';
+} | null;
+
+const getAttackPlanBadgeLabel = (plan: LiveAttackPlan) => {
+    if (!plan) return 'Plan yok';
+    const patternLabel =
+        plan.pattern === 'WIDE_CROSS'
+            ? 'Kanat Ortasi'
+            : plan.pattern === 'CUTBACK'
+                ? 'Geri Cikar'
+                : plan.pattern === 'THIRD_MAN'
+                    ? 'Ucuncu Adam'
+                    : 'Kanal Kosusu';
+    const laneLabel = plan.lane === 'LEFT' ? 'Sol' : plan.lane === 'RIGHT' ? 'Sag' : 'Merkez';
+    return `${patternLabel} • ${laneLabel}`;
+};
+
+const getAttackPlanToastMessage = (plan: LiveAttackPlan) => {
+    if (!plan) return 'Hucum plani sifirlandi';
+    const laneLabel = plan.lane === 'LEFT' ? 'sol' : plan.lane === 'RIGHT' ? 'sag' : 'merkez';
+    if (plan.pattern === 'WIDE_CROSS') return `Kanat ortasi plani ${laneLabel} kanatta hazir`;
+    if (plan.pattern === 'CUTBACK') return `Geri cikar plani ${laneLabel} koridorunda tetiklendi`;
+    if (plan.pattern === 'THIRD_MAN') return `Ucuncu adam kosusu ${laneLabel} kanalinda hazir`;
+    return `Kanal kosusu plani ${laneLabel} hucumunda devrede`;
+};
+const getDefensePlanBadgeLabel = (plan: LiveDefensePlan) => {
+    if (!plan) return 'Plan yok';
+    const patternLabel =
+        plan.pattern === 'COUNTER_PRESS'
+            ? 'Gecis Presi'
+            : plan.pattern === 'FORCE_WIDE'
+                ? 'Kanada Yonlendir'
+                : plan.pattern === 'PROTECT_CENTER'
+                    ? 'Merkezi Kapat'
+                    : 'Alcak Blok';
+    const laneLabel = plan.lane === 'LEFT' ? 'Sol' : plan.lane === 'RIGHT' ? 'Sag' : 'Merkez';
+    return `${patternLabel} • ${laneLabel}`;
+};
+
+const getAttackPlanFallbackLabel = (team: Team) => {
+    const attackPlan = team.tactic.attackPlan;
+    const instructions = team.tactic.instructions || [];
+
+    if (attackPlan === 'WIDE_CROSS' || instructions.includes('HitEarlyCrosses')) return 'Kanat Ortasi • Taktik';
+    if (attackPlan === 'CUTBACK') return 'Geri Cikar • Taktik';
+    if (attackPlan === 'THIRD_MAN') return 'Ucuncu Adam • Taktik';
+    if (attackPlan === 'DIRECT_CHANNEL' || team.tactic.passingStyle === 'Direct') return 'Kanal Kosusu • Taktik';
+    return 'Plan yok';
+};
+
+const getDefensePlanFallbackLabel = (team: Team) => {
+    const pressing = team.tactic.pressingIntensity;
+    const style = team.tactic.style;
+    const line = (team.tactic.defensiveLine || '').toLowerCase();
+    const width = (team.tactic.width || '').toLowerCase();
+
+    if (pressing === 'Gegenpress' || pressing === 'HighPress') return 'Gecis Presi • Taktik';
+    if (style === 'ParkTheBus' || style === 'Defensive' || pressing === 'StandOff' || line.includes('deep') || line.includes('low')) return 'Alcak Blok • Taktik';
+    if (width.includes('narrow')) return 'Merkezi Kapat • Taktik';
+    if (width.includes('wide')) return 'Kanada Yonlendir • Taktik';
+    return 'Dengeli Savunma';
+};
+
+const getDefaultKitColors = (isControlledTeam: boolean) => ({
+    primary: isControlledTeam ? '#3b82f6' : '#ef4444',
+    secondary: '#ffffff'
+});
+
 // Fixed Internal Resolution
 const CANVAS_W = 1280;
 const CANVAS_H = 640; // 800 -> 640 for wider ratio
@@ -174,6 +248,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const [toasts, setToasts] = useState<Array<{ id: string, type: 'SUB' | 'GOAL' | 'TACTIC' | 'CARD' | 'SET_PIECE', message: string, team: 'HOME' | 'AWAY', minute: number }>>([]);
     const lastEventCount = useRef(0);
     const [liveDecisionTrace, setLiveDecisionTrace] = useState<string[]>([]);
+    const lastAttackPlanToast = useRef<{ home: string | null; away: string | null }>({ home: null, away: null });
 
     // NEW: Exit Confirmation Modal
     const [showExitModal, setShowExitModal] = useState(false);
@@ -407,11 +482,25 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     showIndicator = true;
                     indicatorType = 'FREE_KICK';
                     indicatorMessage = 'FREE KICK';
+                } else if (ev.type === MatchEventType.GOAL_KICK) {
+                    showIndicator = true;
+                    indicatorType = 'GOAL_KICK';
+                    indicatorMessage = 'GOAL KICK';
+                    setSetPieceIndicator({ type: indicatorType, message: indicatorMessage });
+                    setTimeout(() => setSetPieceIndicator(null), 1800);
+                    return;
                 } else if (ev.type === MatchEventType.CORNER) {
                     toastType = 'SET_PIECE';
                     showIndicator = true;
                     indicatorType = 'CORNER';
                     indicatorMessage = 'CORNER';
+                } else if (ev.type === MatchEventType.OFFSIDE) {
+                    showIndicator = true;
+                    indicatorType = 'OFFSIDE';
+                    indicatorMessage = 'OFFSIDE';
+                    setSetPieceIndicator({ type: indicatorType, message: indicatorMessage });
+                    setTimeout(() => setSetPieceIndicator(null), 1800);
+                    return;
                 } else if (ev.type === MatchEventType.THROW_IN) {
                     // Don't show toast for throw-ins, just indicator briefly
                     showIndicator = true;
@@ -560,8 +649,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                         MatchEventType.GOAL,
                         MatchEventType.FOUL,
                         MatchEventType.FREE_KICK,
+                        MatchEventType.GOAL_KICK,
                         MatchEventType.CORNER,
                         MatchEventType.THROW_IN,
+                        MatchEventType.OFFSIDE,
                         MatchEventType.CARD_YELLOW,
                         MatchEventType.CARD_RED,
                         MatchEventType.KICKOFF
@@ -687,9 +778,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             // === DEFAULT COLORS OVERRIDE ===
             if (useDefaultColors) {
-                const isMyTeam = item.player.teamId === userTeamId;
-                primary = isMyTeam ? '#3b82f6' : '#ef4444'; // Blue (Me) vs Red (Opponent)
-                secondary = '#ffffff';
+                const controlledTeamId = managedSide === 'HOME' ? homeTeam.id : awayTeam.id;
+                const kit = getDefaultKitColors(item.player.teamId === controlledTeamId);
+                primary = kit.primary;
+                secondary = kit.secondary;
             }
 
             const num = playerNumbers.current[item.player.id] || 0;
@@ -1259,6 +1351,12 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 ctx.arc(dustX, dustY, radius * 0.4, 0, Math.PI * 2);
                 ctx.fill();
             }
+        } else if (state === 'DIVE_SAVE') {
+            scaleX = 1.55;
+            scaleY = 0.52;
+        } else if (state === 'JUMP') {
+            scaleX = 0.94;
+            scaleY = 1.08;
         }
 
         // Sprint Effect (glow around player)
@@ -1309,6 +1407,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (state === 'TACKLE') {
             headY = bodyY; // Head lower
             headX = cx + (Math.cos(facing) * radius * 0.5); // Head forward
+        } else if (state === 'DIVE_SAVE') {
+            headY = bodyY - radius * 0.05;
+            headX = cx + (Math.cos(facing) * radius * 0.95);
+        } else if (state === 'JUMP') {
+            headY = bodyY - radius * 1.0;
         }
 
         const headRadius = radius * 0.4;
@@ -1355,7 +1458,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         ctx.stroke();
 
         // Name Label (only if has ball or active)
-        if (hasBall || state === 'SPRINT') {
+        if (hasBall || state === 'SPRINT' || state === 'DIVE_SAVE') {
             ctx.font = `bold ${Math.round(9 * scale)}px sans-serif`;
             ctx.fillStyle = '#fff';
             // Removed heavy shadowBlur for performance
@@ -1373,7 +1476,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         if (hasBall) {
             ctx.fillStyle = '#fbbf24';
             ctx.beginPath();
-            ctx.arc(cx + radius + 4, bodyY, 4 * scale, 0, Math.PI * 2);
+            const ballMarkerY = state === 'DIVE_SAVE' ? bodyY - 6 * scale : state === 'JUMP' ? bodyY - 8 * scale : bodyY;
+            ctx.arc(cx + radius + 4, ballMarkerY, 4 * scale, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -1447,6 +1551,141 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     const myTeam = managedSide === 'HOME' ? homeTeam : awayTeam;
     const myPlayers = managedSide === 'HOME' ? homePlayers : awayPlayers;
     const statusText = match.liveData?.lastActionText || 'Waiting...';
+    const liveAttackPlans = (match.liveData?.simulation as any)?.attackPlans;
+    const liveDefensePlans = (match.liveData?.simulation as any)?.defensePlans;
+    const homeAttackPlan = (liveAttackPlans?.home || null) as LiveAttackPlan;
+    const awayAttackPlan = (liveAttackPlans?.away || null) as LiveAttackPlan;
+    const homeDefensePlan = (liveDefensePlans?.home || null) as LiveDefensePlan;
+    const awayDefensePlan = (liveDefensePlans?.away || null) as LiveDefensePlan;
+    const homeAttackPlanLabel = homeAttackPlan ? getAttackPlanBadgeLabel(homeAttackPlan) : getAttackPlanFallbackLabel(homeTeam);
+    const awayAttackPlanLabel = awayAttackPlan ? getAttackPlanBadgeLabel(awayAttackPlan) : getAttackPlanFallbackLabel(awayTeam);
+    const homeDefensePlanLabel = homeDefensePlan ? getDefensePlanBadgeLabel(homeDefensePlan) : getDefensePlanFallbackLabel(homeTeam);
+    const awayDefensePlanLabel = awayDefensePlan ? getDefensePlanBadgeLabel(awayDefensePlan) : getDefensePlanFallbackLabel(awayTeam);
+    const livePassDebug = (match.liveData?.simulation as any)?.passDebug || null;
+    const debugBannerShown = useRef(false);
+
+    useEffect(() => {
+        const debugHelper = {
+            getSnapshot: () => ({
+                minute: match.currentMinute,
+                score: { home: match.homeScore, away: match.awayScore },
+                statusText,
+                attackPlans: {
+                    home: homeAttackPlan,
+                    away: awayAttackPlan,
+                },
+                defensePlans: {
+                    home: homeDefensePlan,
+                    away: awayDefensePlan,
+                },
+                passDebug: livePassDebug,
+                recentDecisionTrace: liveDecisionTrace,
+            }),
+            printPassReport: () => {
+                if (!livePassDebug) {
+                    console.info('PFM: No active pass debug snapshot yet.');
+                    return null;
+                }
+
+                console.groupCollapsed(`PFM Pass Report ${livePassDebug.minute}' ${livePassDebug.passerName} -> ${livePassDebug.receiverName}`);
+                console.table({
+                    outcome: livePassDebug.outcome,
+                    reason: livePassDebug.outcomeReason,
+                    type: livePassDebug.type,
+                    plan: livePassDebug.planPattern,
+                    passer: livePassDebug.passerName,
+                    intendedReceiver: livePassDebug.receiverName,
+                    actualReceiver: livePassDebug.actualReceiverName || '-',
+                    targetX: Number(livePassDebug.targetX).toFixed(2),
+                    targetY: Number(livePassDebug.targetY).toFixed(2),
+                    receiveX: livePassDebug.receiveX !== undefined ? Number(livePassDebug.receiveX).toFixed(2) : '-',
+                    receiveY: livePassDebug.receiveY !== undefined ? Number(livePassDebug.receiveY).toFixed(2) : '-',
+                    distanceFromTarget: livePassDebug.distanceFromTarget !== undefined ? Number(livePassDebug.distanceFromTarget).toFixed(2) : '-',
+                    travelTicks: livePassDebug.travelTicks,
+                });
+                if (liveDecisionTrace.length > 0) {
+                    console.log('Recent decision trace:', liveDecisionTrace);
+                }
+                console.groupEnd();
+                return livePassDebug;
+            },
+            printMatchState: () => {
+                const snapshot = {
+                    minute: match.currentMinute,
+                    score: `${match.homeScore}-${match.awayScore}`,
+                    statusText,
+                    homeAttackPlan: homeAttackPlanLabel,
+                    awayAttackPlan: awayAttackPlanLabel,
+                    homeDefensePlan: homeDefensePlanLabel,
+                    awayDefensePlan: awayDefensePlanLabel,
+                };
+                console.table(snapshot);
+                return snapshot;
+            }
+        };
+
+        (window as any).__PFM_DEBUG = debugHelper;
+        if (!debugBannerShown.current) {
+            debugBannerShown.current = true;
+            console.info('PFM DEBUG READY: __PFM_DEBUG.getSnapshot() | __PFM_DEBUG.printPassReport() | __PFM_DEBUG.printMatchState()');
+        }
+        return () => {
+            if ((window as any).__PFM_DEBUG === debugHelper) {
+                delete (window as any).__PFM_DEBUG;
+            }
+        };
+    }, [
+        match.currentMinute,
+        match.homeScore,
+        match.awayScore,
+        statusText,
+        homeAttackPlan,
+        awayAttackPlan,
+        homeDefensePlan,
+        awayDefensePlan,
+        livePassDebug,
+        liveDecisionTrace,
+    ]);
+
+    useEffect(() => {
+        const planEntries: Array<{ side: 'HOME' | 'AWAY'; plan: LiveAttackPlan; teamName: string }> = [
+            { side: 'HOME', plan: homeAttackPlan, teamName: homeTeam.name },
+            { side: 'AWAY', plan: awayAttackPlan, teamName: awayTeam.name },
+        ];
+
+        planEntries.forEach(({ side, plan, teamName }) => {
+            const signature = plan ? `${plan.pattern}:${plan.lane}` : 'NONE';
+            const refKey = side === 'HOME' ? 'home' : 'away';
+
+            if (lastAttackPlanToast.current[refKey] === null) {
+                lastAttackPlanToast.current[refKey] = signature;
+                return;
+            }
+
+            if (lastAttackPlanToast.current[refKey] === signature) {
+                return;
+            }
+
+            lastAttackPlanToast.current[refKey] = signature;
+
+            const newToast = {
+                id: `plan-${side}-${signature}-${match.currentMinute}-${Date.now()}`,
+                type: 'TACTIC' as const,
+                message: `${teamName}: ${getAttackPlanToastMessage(plan)}`,
+                team: side,
+                minute: match.currentMinute,
+            };
+
+            setToasts(prev => {
+                const deduped = prev.filter(toast => !(toast.type === 'TACTIC' && toast.team === side));
+                return [newToast, ...deduped].slice(0, 4);
+            });
+
+            setTimeout(() => {
+                setToasts(prev => prev.filter(toast => toast.id !== newToast.id));
+            }, 2400);
+        });
+    }, [homeAttackPlan, awayAttackPlan, homeTeam.name, awayTeam.name, match.currentMinute]);
 
     // Merge live stamina data into players for the management view
     const livePlayers = myPlayers.map(p => {
@@ -1693,6 +1932,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                 key={toast.id}
                                 className={`${isSmallLandscape ? 'px-2 py-1.5 rounded-xl text-[10px]' : 'px-4 py-3 rounded-2xl text-xs md:text-sm'} border backdrop-blur-xl flex items-center gap-2 shadow-2xl transition-all duration-300 transform ${toast.type === 'GOAL'
                                     ? 'bg-emerald-900/90 border-emerald-400/50 text-white shadow-emerald-500/30'
+                                    : toast.type === 'TACTIC'
+                                        ? 'bg-cyan-950/90 border-cyan-400/50 text-cyan-100 shadow-cyan-500/20'
                                     : toast.type === 'SUB' && toast.message.includes('📋')
                                         ? 'bg-purple-900/90 border-purple-400/50 text-purple-100 shadow-purple-500/20'
                                         : toast.type === 'SUB'
@@ -1723,6 +1964,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                 </div>
                                 <div className={`flex items-center justify-center ${isSmallLandscape ? 'text-sm' : 'text-xl md:text-2xl'} drop-shadow-lg`}>
                                     {toast.type === 'GOAL' && <span>⚽</span>}
+                                    {toast.type === 'TACTIC' && <span>🧠</span>}
                                     {toast.type === 'SUB' && !toast.message.includes('📋') && <span>🔄</span>}
                                     {toast.type === 'CARD' && <span>🟨</span>}
                                 </div>
@@ -1739,6 +1981,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                     <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
                                     <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
                                     <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
+                                </div>
+                                <div className="mt-1 bg-black/45 backdrop-blur px-2 py-1 rounded-full border border-slate-700/80 flex items-center gap-2 text-[8px] text-slate-200">
+                                    <span>{match.stats.homePossession}%</span>
+                                    <span className="text-slate-500">pos</span>
+                                    <span>{match.stats.homeShots}-{match.stats.awayShots}</span>
+                                    <span className="text-slate-500">shots</span>
+                                    <span>{match.stats.awayPossession}%</span>
                                 </div>
                             </div>
 
@@ -1795,8 +2044,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                     />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.homeScore}</div>
+                                <div className="text-[6px] text-emerald-200 text-center px-1 leading-tight">{homeAttackPlanLabel}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.homePossession || 50}%</div>
                                 <div className="text-[7px] text-slate-500">xG {match.stats?.homeXG?.toFixed(1) || '0.0'}</div>
+                                <div className="text-[6px] text-amber-200 text-center px-1 leading-tight">{homeDefensePlanLabel}</div>
                             </div>
 
                             {/* Right Side - Away Team */}
@@ -1813,8 +2064,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                                     />
                                 </div>
                                 <div className="text-white font-black text-lg leading-tight">{match.awayScore}</div>
+                                <div className="text-[6px] text-blue-200 text-center px-1 leading-tight">{awayAttackPlanLabel}</div>
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession || 50}%</div>
                                 <div className="text-[7px] text-slate-500">xG {match.stats?.awayXG?.toFixed(1) || '0.0'}</div>
+                                <div className="text-[6px] text-amber-200 text-center px-1 leading-tight">{awayDefensePlanLabel}</div>
                             </div>
                         </>
                     )}

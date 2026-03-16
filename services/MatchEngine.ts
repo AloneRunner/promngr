@@ -12,6 +12,7 @@
   PlayerPersonality,
   LineupStatus,
 } from "../types";
+import { adaptTacticForEngine } from "./tacticAdapter";
 
 // === MISSING INTERFACE DEFINITION ===
 interface PlayerState {
@@ -922,8 +923,14 @@ export class MatchEngine {
       Aggressive: 1.25,
       Reckless: 1.45,
     };
-    this.homeTeam = homeTeam;
-    this.awayTeam = awayTeam;
+    this.homeTeam = {
+      ...homeTeam,
+      tactic: adaptTacticForEngine(homeTeam.tactic, "standard"),
+    };
+    this.awayTeam = {
+      ...awayTeam,
+      tactic: adaptTacticForEngine(awayTeam.tactic, "standard"),
+    };
     // Keep all players (STARTING + BENCH) so substitutions can work
     this.homePlayers = homePlayers.filter(
       (p) => p.lineup === "STARTING" || p.lineup === "BENCH",
@@ -1211,6 +1218,7 @@ export class MatchEngine {
   }
 
   private initializeTactics(players: Player[], tactic: TeamTactic) {
+    const adaptedTactic = adaptTacticForEngine(tactic, "standard");
     const grouped: Record<string, Player[]> = {
       GK: [],
       DEF: [],
@@ -1219,9 +1227,9 @@ export class MatchEngine {
     };
     players.forEach((p) => {
       let role = normalizePos(p);
-      if (tactic.customPositions && tactic.customPositions[p.id]) {
+      if (adaptedTactic.customPositions && adaptedTactic.customPositions[p.id]) {
         // customPositions UI koordinatlarında (0-100), role hesaplaması için kullan
-        role = getRoleFromX(tactic.customPositions[p.id].x);
+        role = getRoleFromX(adaptedTactic.customPositions[p.id].x);
       }
       this.playerRoles[p.id] = role;
       grouped[role].push(p);
@@ -1262,10 +1270,10 @@ export class MatchEngine {
       }
 
       plList.forEach((p, idx) => {
-        if (tactic.customPositions && tactic.customPositions[p.id]) {
+        if (adaptedTactic.customPositions && adaptedTactic.customPositions[p.id]) {
           // customPositions UI koordinatlarında (0-100) kaydediliyor
           // Motor koordinatlarına (105x68) çevir
-          const customUI = tactic.customPositions[p.id];
+          const customUI = adaptedTactic.customPositions[p.id];
           this.baseOffsets[p.id] = {
             x: (customUI.x / 100) * PITCH_LENGTH,
             y: (customUI.y / 100) * PITCH_WIDTH,
@@ -1273,7 +1281,7 @@ export class MatchEngine {
         } else {
           // getBaseFormationOffset zaten motor koordinatları (105x68) döndürüyor
           this.baseOffsets[p.id] = getBaseFormationOffset(
-            tactic.formation,
+            adaptedTactic.formation,
             role as Position,
             idx,
             plList.length,
@@ -1398,12 +1406,13 @@ export class MatchEngine {
     const isHome = this.homeTeam.id === teamId;
     const list = isHome ? this.homePlayers : this.awayPlayers;
     const team = isHome ? this.homeTeam : this.awayTeam;
+    const adaptedTactic = adaptTacticForEngine(newTactic, "standard");
 
-    if (isHome) this.homeTeam.tactic = newTactic;
-    else this.awayTeam.tactic = newTactic;
+    if (isHome) this.homeTeam.tactic = adaptedTactic;
+    else this.awayTeam.tactic = adaptedTactic;
     this.initializeTactics(
       list.filter((p) => p.lineup === "STARTING"),
-      newTactic,
+      adaptedTactic,
     );
 
     // === PERFORMANCE: Invalidate starter cache after tactic change ===
@@ -1415,13 +1424,13 @@ export class MatchEngine {
         `\n🔄 TACTIC CHANGE (Minute ${this.internalMinute}): ${team.name}`,
       );
       console.log(
-        `New Formation: ${newTactic.formation} | Style: ${newTactic.style}`,
+        `New Formation: ${adaptedTactic.formation} | Style: ${adaptedTactic.style}`,
       );
       console.log(
-        `Aggression: ${newTactic.aggression} | Tempo: ${newTactic.tempo}`,
+        `Aggression: ${adaptedTactic.aggression} | Tempo: ${adaptedTactic.tempo}`,
       );
       console.log(
-        `Defensive Line: ${newTactic.defensiveLine} | Passing: ${newTactic.passingStyle}`,
+        `Defensive Line: ${adaptedTactic.defensiveLine} | Passing: ${adaptedTactic.passingStyle}`,
       );
       console.log(`Mentality: ${newTactic.mentality || "BALANCED"}`);
       console.log("----------------------------------------\n");
@@ -1532,6 +1541,42 @@ export class MatchEngine {
       list[inIdx] = playerOutObj; // Outgoing player to bench spot
 
       this.allPlayers = [...this.homePlayers, ...this.awayPlayers];
+
+      // --- AI: Recalculate slot instruction for incoming player ---
+      // The incoming player may have very different stats to the outgoing one,
+      // so inheriting the old slot instruction blindly would be wrong.
+      if (isAI) {
+        const team = isHome ? this.homeTeam : this.awayTeam;
+        if (!team.tactic.slotInstructions) team.tactic.slotInstructions = {};
+        const slotIdx = playerInObj.lineupIndex;
+        const pos = playerInObj.position;
+        const a = playerInObj.attributes;
+        let newInstruction = 'Default';
+
+        if (pos === Position.DEF) {
+          if (team.tactic.mentality === 'Defensive' || a.speed < 60) newInstruction = 'StayBack';
+          else if (a.positioning > 75 && a.tackling > 70) newInstruction = 'HoldPosition';
+          else if (a.speed > 75 && a.dribbling > 65) newInstruction = 'JoinAttack';
+        } else if (pos === Position.MID) {
+          if (a.tackling > 75 && a.finishing < 60) newInstruction = 'DefendMore';
+          else if (a.finishing > 80) newInstruction = 'ShootOnSight';
+          else if (a.vision > 80 && team.tactic.mentality === 'Attacking') newInstruction = 'AttackMore';
+          else if (a.stamina > 80 && a.aggression > 75) newInstruction = 'PressHigher';
+          else if (a.vision > 80 && a.dribbling > 75) newInstruction = 'RoamFromPosition';
+          else if (a.tackling > 70 && a.passing > 70) newInstruction = 'HoldPosition';
+        } else if (pos === Position.FWD) {
+          if (a.passing > 75 && a.vision > 75) newInstruction = 'DropDeep';
+          else if (a.stamina > 80 && a.aggression > 75) newInstruction = 'PressHigher';
+          else if (a.finishing < 65 && a.stamina > 75) newInstruction = 'DefendMore';
+          else if (a.finishing > 85) newInstruction = 'ShootOnSight';
+        }
+
+        if (newInstruction !== 'Default') {
+          team.tactic.slotInstructions[slotIdx] = newInstruction;
+        } else {
+          delete team.tactic.slotInstructions[slotIdx];
+        }
+      }
 
       // --- 3. REINITIALIZE TACTICS ---
       this.initializeTactics(
@@ -2070,7 +2115,8 @@ export class MatchEngine {
       const team = (isHome ? this.homePlayers : this.awayPlayers).filter(
         (p) => p.lineup === "STARTING",
       );
-      const taker = team.sort(
+      const takerPool = team.filter((p) => this.playerRoles[p.id] !== Position.GK);
+      const taker = (takerPool.length > 0 ? takerPool : team).sort(
         (a, b) =>
           b.attributes.passing +
           b.attributes.vision -

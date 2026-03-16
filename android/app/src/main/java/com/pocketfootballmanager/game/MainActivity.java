@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import com.google.android.gms.games.PlayGamesSdk;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
@@ -12,8 +13,10 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         // Enforce No Title Bar programmatically before super.onCreate
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        registerPlugin(PlayGamesPlugin.class);
 
         super.onCreate(savedInstanceState);
+        PlayGamesSdk.initialize(this);
 
         // Force hide Action Bar (redundant safety)
         if (getSupportActionBar() != null) {

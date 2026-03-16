@@ -172,6 +172,10 @@ export class AIService {
 
     // Filter active players (exclude loaned out or reserve trash)
     const squad = roster.filter((p) => !p.isTransferListed);
+    const ambitionBaseline = Math.max(
+      leagueAverageRating,
+      Math.round(team.reputation / 120),
+    );
 
     // Define required slots per formation (simplified)
     const formationSlots = this.getFormationSlots(team.tactic.formation);
@@ -194,21 +198,31 @@ export class AIService {
 
     // Check Goalkeeper
     const bestGK = depthChart[Position.GK][0];
-    if (!bestGK || bestGK.overall < leagueAverageRating - 5) {
+    if (!bestGK || bestGK.overall < ambitionBaseline - 5) {
       needs.push({
         position: Position.GK,
         role: "STANDARD",
-        urgency: bestGK ? (leagueAverageRating - bestGK.overall) * 10 : 100,
-        targetRating: leagueAverageRating + 2,
+        urgency: bestGK ? (ambitionBaseline - bestGK.overall) * 10 : 100,
+        targetRating: ambitionBaseline + 2,
         reason: "No reliable goalkeeper",
       });
     }
+
+    // Squad-wide average for positional gap analysis
+    const squadAvgOvr = squad.length > 0
+      ? squad.reduce((s, p) => s + p.overall, 0) / squad.length
+      : ambitionBaseline;
 
     // Check Outfield Positions
     // Example: Tactic needs 4 DEFs. Do we have 4 *good* DEFs?
     (["DEF", "MID", "FWD"] as Position[]).forEach((pos) => {
       const requiredCount = formationSlots[pos] || 0;
       const availablePlayers = depthChart[pos];
+
+      // Per-position average — used to detect lagging positions
+      const posAvg = availablePlayers.length > 0
+        ? availablePlayers.reduce((s, p) => s + p.overall, 0) / availablePlayers.length
+        : 0;
 
       // Check Starters Quality
       for (let i = 0; i < requiredCount; i++) {
@@ -219,16 +233,16 @@ export class AIService {
             position: pos,
             role: this.recommendRole(pos, team.tactic),
             urgency: 95,
-            targetRating: leagueAverageRating,
+            targetRating: ambitionBaseline,
             reason: `Missing starter for ${pos}`,
           });
-        } else if (player.overall < leagueAverageRating - 4) {
-          // Weak Spot
+        } else if (player.overall < ambitionBaseline - 4) {
+          // Weak Spot vs ambition
           needs.push({
             position: pos,
             role: this.recommendRole(pos, team.tactic),
-            urgency: (leagueAverageRating - player.overall) * 8 + 30, // 30-70 range usually
-            targetRating: leagueAverageRating + 3,
+            urgency: (ambitionBaseline - player.overall) * 8 + 30,
+            targetRating: ambitionBaseline + 3,
             reason: `Weak starter at ${pos} (${player.overall})`,
           });
         }
@@ -240,9 +254,24 @@ export class AIService {
           position: pos,
           role: this.recommendRole(pos, team.tactic),
           urgency: 40,
-          targetRating: leagueAverageRating - 5,
+          targetRating: ambitionBaseline - 5,
           reason: `Lack of depth at ${pos}`,
         });
+      }
+
+      // Positional gap: this position's average is notably below the squad average
+      // — flag it as an upgrade priority even if starters are nominally "OK"
+      if (posAvg > 0) {
+        const gap = squadAvgOvr - posAvg;
+        if (gap >= 4) {
+          needs.push({
+            position: pos,
+            role: this.recommendRole(pos, team.tactic),
+            urgency: Math.min(88, Math.round(gap * 7 + 15)),
+            targetRating: Math.round(posAvg + gap * 0.7),
+            reason: `Position gap: ${pos} avg ${Math.round(posAvg)} vs squad ${Math.round(squadAvgOvr)}`,
+          });
+        }
       }
     });
 
@@ -301,6 +330,12 @@ export class AIService {
   }
 
   // --- HELPERS ---
+
+  public static getFormationSlotCounts(
+    formation: TacticType,
+  ): Record<Position, number> {
+    return this.getFormationSlots(formation);
+  }
 
   private static getFormationSlots(
     formation: TacticType,

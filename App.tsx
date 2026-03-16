@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
-import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier } from './services/engine';
+import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, ManagerCourseKey, ManagerCreationData, ManagerStaffRoleKey, ManagerTalentKey } from './types';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier, createManagerProfile, ensureGameStateManagerProfile, purchaseManagerCourse, spendManagerSkillPoint, resetManagerTalents, upgradeManagerPersonalStaff, assignManagerObjectivesForCurrentTeam, canSelectStartingTeam, getInitialManagerSalaryForTeamReputation, getInitialUserManagerRating, getRequiredManagerRatingForJobOffer } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -25,6 +25,7 @@ import { ProfileSelector } from './components/ProfileSelector';
 import { TransferNegotiationModal } from './components/TransferNegotiationModal';
 import { JobOffersModal } from './components/JobOffersModal';
 import { UpdatesModal } from './components/UpdatesModal';
+import { ManagerCreationModal } from './components/ManagerCreationModal';
 import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
@@ -39,6 +40,8 @@ import { TRANSLATIONS } from './src/data/translations';
 import { LEAGUE_PRESETS } from './src/data/teams';
 import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock } from 'lucide-react';
 import { adMobService } from './src/services/adMobService';
+import { playGamesService } from './src/services/playGamesService';
+import { PLAY_GAMES_ACHIEVEMENT_IDS, ManagerAchievementId } from './src/data/managerAchievements';
 import { assignJerseyNumber, migrateJerseyNumbers, uuid } from './src/utils/playerUtils';
 import { AIService } from './services/AI';
 import { runTacticalAnalysis } from './src/utils/tacticalUtils';
@@ -70,6 +73,8 @@ const App: React.FC = () => {
     const [showWelcome, setShowWelcome] = useState(false);
     const [showLeagueSelect, setShowLeagueSelect] = useState(false);
     const [showTeamSelect, setShowTeamSelect] = useState(false);
+    const [showManagerCreation, setShowManagerCreation] = useState(false);
+    const [pendingManagerData, setPendingManagerData] = useState<ManagerCreationData | null>(null);
     const [isResignMode, setIsResignMode] = useState(false); // Resign mode: don't reset world, just switch team
     const [showSeasonSummary, setShowSeasonSummary] = useState(false);
     const [seasonSummaryData, setSeasonSummaryData] = useState<{ winner: Team, retired: string[], promoted: string[] } | null>(null);
@@ -129,6 +134,70 @@ const App: React.FC = () => {
             }
         }
     }, [showSplash]);
+
+    useEffect(() => {
+        playGamesService.isAuthenticated().catch(console.error);
+    }, []);
+
+    useEffect(() => {
+        const managerProfile = gameState?.managerProfile;
+        if (!managerProfile) return;
+
+        const unlockedAchievements = managerProfile.unlockedAchievements || [];
+        const syncedAchievements = new Set(managerProfile.playGamesSyncedAchievements || []);
+        const pendingAchievements = unlockedAchievements.filter((achievementId) => {
+            const remoteId = PLAY_GAMES_ACHIEVEMENT_IDS[achievementId as ManagerAchievementId];
+            return !syncedAchievements.has(achievementId) && !!remoteId;
+        });
+
+        if (pendingAchievements.length === 0) return;
+
+        let cancelled = false;
+
+        const syncAchievements = async () => {
+            const authenticated = await playGamesService.signIn();
+            if (!authenticated) return;
+
+            const syncedNow: string[] = [];
+            for (const achievementId of pendingAchievements) {
+                const remoteId = PLAY_GAMES_ACHIEVEMENT_IDS[achievementId as ManagerAchievementId];
+                if (!remoteId) continue;
+
+                const unlocked = await playGamesService.unlockAchievement(remoteId);
+                if (unlocked) {
+                    syncedNow.push(achievementId);
+                }
+            }
+
+            if (cancelled || syncedNow.length === 0) return;
+
+            setGameState(prev => {
+                if (!prev?.managerProfile) return prev;
+
+                return {
+                    ...prev,
+                    managerProfile: {
+                        ...prev.managerProfile,
+                        playGamesSyncedAchievements: [
+                            ...new Set([
+                                ...(prev.managerProfile.playGamesSyncedAchievements || []),
+                                ...syncedNow,
+                            ]),
+                        ],
+                    },
+                };
+            });
+        };
+
+        syncAchievements().catch(console.error);
+
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        gameState?.managerProfile?.unlockedAchievements?.join('|'),
+        gameState?.managerProfile?.playGamesSyncedAchievements?.join('|'),
+    ]);
 
     const t = TRANSLATIONS[lang];
 
@@ -480,13 +549,18 @@ const App: React.FC = () => {
             const world = generateWorld(leagueId);
             setGameState(world);
             setViewLeagueId(leagueId);
-            setShowTeamSelect(true);
+            setShowManagerCreation(true);
         }, 500);
     };
 
     const handleSelectTeam = (teamId: string) => {
         if (!gameState) return;
         const selectedTeam = gameState.teams.find(t => t.id === teamId);
+        if (!selectedTeam) return;
+        const currentManagerReputation = isResignMode
+            ? (gameState.managerProfile?.reputation || gameState.managerRating || 0)
+            : getInitialUserManagerRating();
+        if (!canSelectStartingTeam(selectedTeam.reputation, currentManagerReputation)) return;
 
         // RESIGN MODE: Just switch userTeamId, don't regenerate European competitions
         if (isResignMode) {
@@ -509,35 +583,64 @@ const App: React.FC = () => {
             return;
         }
 
-        let newState = { ...gameState, userTeamId: teamId };
+        if (!pendingManagerData) return;
 
-        // Generate Global Cup for new games without mixing static and dynamic engine imports.
-        const globalCup = generateGlobalCup({ ...newState, userTeamId: teamId });
+        const startingManagerRating = getInitialUserManagerRating();
+        if (!canSelectStartingTeam(selectedTeam.reputation, startingManagerRating)) return;
 
-        // Global Cup uses 'qualifiedTeamIds'
-        const inGlobalCup = globalCup.qualifiedTeamIds.includes(teamId);
+        const managerProfile = createManagerProfile(
+            pendingManagerData,
+            selectedTeam,
+            startingManagerRating,
+            getInitialManagerSalaryForTeamReputation(selectedTeam.reputation),
+        );
+
+        let newState: GameState = {
+            ...gameState,
+            userTeamId: teamId,
+            managerRating: managerProfile.reputation,
+            managerSalary: getInitialManagerSalaryForTeamReputation(selectedTeam.reputation),
+            managerProfile,
+            teams: gameState.teams.map(team => team.id === teamId
+                ? {
+                    ...team,
+                    boardConfidence: Math.min(100, (team.boardConfidence ?? 70) + managerProfile.bonuses.homeNationConfidenceBonus)
+                }
+                : team
+            ),
+        };
+
+        const globalCup = generateGlobalCup(newState);
+    const inGlobalCup = globalCup.qualifiedTeamIds.includes(teamId);
         const newMessages = [...newState.messages];
 
         if (inGlobalCup) {
             newMessages.push({
                 id: uuid(), week: newState.currentWeek, type: MessageType.BOARD,
                 subject: `🌍 ${t.internationalEliteCup || 'International Elite Cup'} Daveti!`,
-                body: `${selectedTeam?.name} olarak ${t.internationalEliteCup || 'International Elite Cup'} organizasyonuna katılmaya hak kazandınız!`,
+                body: `${selectedTeam.name} olarak ${t.internationalEliteCup || 'International Elite Cup'} organizasyonuna katılmaya hak kazandınız!`,
                 isRead: false, date: new Date().toISOString()
             });
         }
 
         newState = {
             ...newState,
-            europeanCup: globalCup, // GlobalCup is stored in europeanCup field for now
-            europaLeague: undefined, // Deprecated
+            europeanCup: globalCup,
+            europaLeague: undefined,
             messages: appendMessages([], newMessages)
         };
 
         setGameState(newState);
-
         setShowTeamSelect(false);
+        setPendingManagerData(null);
         setShowWelcome(true);
+    };
+
+    const handleCreateManager = (data: ManagerCreationData) => {
+        if (!gameState) return;
+        setPendingManagerData(data);
+        setShowManagerCreation(false);
+        setShowTeamSelect(true);
     };
 
     // Profile Management Handlers
@@ -557,7 +660,7 @@ const App: React.FC = () => {
         const profileData = await loadProfileData(profileId);
         if (profileData) {
             // Forma numaralarını migrate et
-            setGameState(migrateJerseyNumbers(profileData));
+            setGameState(ensureGameStateManagerProfile(migrateJerseyNumbers(profileData)));
             setShowProfileSelector(false);
         } else {
             // Profile has no game data, start new game
@@ -596,6 +699,8 @@ const App: React.FC = () => {
             setShowProfileSelector(true);
             setShowLeagueSelect(false);
             setShowTeamSelect(false);
+            setShowManagerCreation(false);
+            setPendingManagerData(null);
             setShowWelcome(false);
             setView('dashboard');
         }
@@ -605,24 +710,54 @@ const App: React.FC = () => {
         if (!gameState) return;
 
         // Switch to the new team, clear messages and pending offers
-        setGameState(prev => prev ? {
+        setGameState(prev => {
+            if (!prev) return null;
+            const newTeam = prev.teams.find(t => t.id === offer.teamId);
+            return assignManagerObjectivesForCurrentTeam({
             ...prev,
             userTeamId: offer.teamId,
+            leagueId: newTeam?.leagueId || prev.leagueId,
+            managerSalary: offer.salary,
+            isUnemployed: false,
+            isGameOver: false,
+            gameOverReason: undefined,
+            managerProfile: prev.managerProfile ? {
+                ...prev.managerProfile,
+                currentTeamId: offer.teamId
+            } : prev.managerProfile,
             messages: [{
                 id: uuid(),
                 week: prev.currentWeek,
                 type: MessageType.BOARD,
                 subject: t.jobWelcomeSubject.replace('{team}', offer.teamName),
-                body: t.jobWelcomeBody.replace('{team}', offer.teamName).replace('{salary}', offer.salary.toLocaleString()),
+                body: `${t.jobWelcomeBody.replace('{team}', offer.teamName).replace('{salary}', offer.salary.toLocaleString())}\nHedef: ${offer.objective}\nBaski: ${offer.pressure}`,
                 isRead: false,
                 date: new Date().toISOString()
             }],
             pendingOffers: [],
             jobOffers: [] // Clear job offers after accepting
-        } : null);
+        }, offer.teamId);
+        });
 
         setShowJobOffers(false);
         setShowWelcome(true);
+    };
+
+    const handleUpgradeManagerTalent = (talentKey: ManagerTalentKey) => {
+        setGameState(prev => prev ? spendManagerSkillPoint(prev, talentKey) : prev);
+    };
+
+    const handleResetManagerTalents = () => {
+        if (!confirm('Talentleri sifirlamak icin €250,000 harcanacak. Devam edilsin mi?')) return;
+        setGameState(prev => prev ? resetManagerTalents(prev) : prev);
+    };
+
+    const handlePurchaseManagerCourse = (courseKey: ManagerCourseKey) => {
+        setGameState(prev => prev ? purchaseManagerCourse(prev, courseKey) : prev);
+    };
+
+    const handleUpgradeManagerStaff = (roleKey: ManagerStaffRoleKey) => {
+        setGameState(prev => prev ? upgradeManagerPersonalStaff(prev, roleKey) : prev);
     };
 
     const handleResign = () => {
@@ -1612,8 +1747,11 @@ const App: React.FC = () => {
 
         // Use tempState for summary
         // Calculate winner for the User's League
+        // Use user's team's leagueId directly — gameState.leagueId can be stale after mid-season job changes
+        const currentUserTeam = tempState.teams.find(t => t.id === tempState.userTeamId);
+        const activeLeagueId = currentUserTeam?.leagueId || tempState.leagueId;
         const sortedTeams = [...tempState.teams].sort((a, b) => b.stats.points - a.stats.points);
-        const userLeagueTeams = sortedTeams.filter(t => t.leagueId === tempState.leagueId);
+        const userLeagueTeams = sortedTeams.filter(t => t.leagueId === activeLeagueId);
         const winner = userLeagueTeams.length > 0 ? userLeagueTeams[0] : sortedTeams[0];
 
         setSeasonSummaryData({
@@ -1626,7 +1764,7 @@ const App: React.FC = () => {
 
     const handleStartNewSeason = async () => {
         if (!gameState) return;
-        const { newState } = processSeasonEnd(gameState);
+        const { newState } = processSeasonEnd(gameState, t);
 
         const cl = generateEuropeanCup(newState, 0); // Tier 0 = Champions League
         const el = generateEuropeanCup(newState, 1); // Tier 1 = Europa League
@@ -1735,6 +1873,63 @@ const App: React.FC = () => {
 
 
     // Show Profile Selector if requested
+
+    if (gameState?.isUnemployed) {
+        return (
+            <>
+                <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+                    <div className="bg-slate-800 p-8 rounded-3xl shadow-2xl max-w-xl w-full text-center border border-amber-500/20">
+                        <div className="w-24 h-24 bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-amber-500/30">
+                            <Briefcase size={48} className="text-amber-400" />
+                        </div>
+
+                        <h1 className="text-3xl font-bold text-white mb-2">{t.managerCareer || 'Manager Career'}</h1>
+                        <p className="text-amber-400 font-bold text-lg mb-6 uppercase tracking-widest">{t.unemployedManager || 'UNEMPLOYED'}</p>
+
+                        <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5 mb-6 text-slate-300 text-sm leading-relaxed">
+                            {t.unemployedManagerDesc || 'Kariyer bitmedi. Yeni bir kulup bulup yola devam edebilirsin.'}
+                        </div>
+
+                        <div className="mb-6 rounded-xl border border-slate-700 bg-slate-900/40 p-4 text-left">
+                            <div className="text-xs uppercase tracking-wider text-slate-500 mb-2 font-bold">{t.availableOffers || 'Available Offers'}</div>
+                            <div className="text-2xl font-bold text-white">{gameState.jobOffers?.length || 0}</div>
+                        </div>
+
+                        <div className="space-y-3">
+                            <button
+                                onClick={() => setShowJobOffers(true)}
+                                disabled={(gameState.jobOffers?.length || 0) === 0}
+                                className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-400 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                            >
+                                <Briefcase size={20} />
+                                {t.reviewJobOffers || 'Review Job Offers'}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setGameState(null);
+                                    setShowProfileSelector(true);
+                                }}
+                                className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+                            >
+                                <LogOut size={20} />
+                                {t.returnToMenu || 'Return to Menu'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {showJobOffers && (
+                    <JobOffersModal
+                        offers={gameState.jobOffers || []}
+                        currentTeamId={gameState.userTeamId}
+                        currentSalary={gameState.managerSalary}
+                        onAccept={handleAcceptJobOffer}
+                        onClose={() => setShowJobOffers(false)}
+                        t={t}
+                    />
+                )}
+            </>
+        );
+    }
 
     // Game Over Check
     if (gameState && gameState.isGameOver) {
@@ -1871,6 +2066,9 @@ const App: React.FC = () => {
         // In RESIGN mode, viewLeagueId is set to the newly selected league
         const leagueTeams = gameState.teams.filter(t => t.leagueId === viewLeagueId);
         const sortedTeams = [...leagueTeams].sort((a, b) => b.reputation - a.reputation);
+        const currentManagerReputation = isResignMode
+            ? (gameState.managerProfile?.reputation || gameState.managerRating || 0)
+            : getInitialUserManagerRating();
         return (
 
             <Layout>
@@ -1878,10 +2076,18 @@ const App: React.FC = () => {
                 <div className="w-full h-full flex flex-col items-center p-3 md:p-6 text-white animate-fade-in overflow-y-auto">
                     <div className="text-center mb-4 md:mb-8 mt-4 md:mt-10">
                         <h1 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">{t.selectTeam}</h1>
+                        {!isResignMode && (
+                            <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+                                Yeni kariyerler sabit menajer itibari ile baslar. Su anki baslangic itibarin: <span className="text-emerald-400 font-bold">{currentManagerReputation}/100</span>.
+                            </p>
+                        )}
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 max-w-7xl w-full pb-8">
-                        {sortedTeams.map(team => (
-                            <button key={team.id} onClick={() => handleSelectTeam(team.id)} className="bg-slate-900/70 backdrop-blur-xl border hover:border-emerald-500/50 border-white/10 rounded-2xl overflow-hidden group transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-emerald-500/10 relative flex flex-col">
+                        {sortedTeams.map(team => {
+                            const isEligible = canSelectStartingTeam(team.reputation, currentManagerReputation);
+                            const requiredRating = getRequiredManagerRatingForJobOffer(team.reputation);
+                            return (
+                            <button key={team.id} disabled={!isEligible} onClick={() => handleSelectTeam(team.id)} className={`bg-slate-900/70 backdrop-blur-xl border rounded-2xl overflow-hidden group transition-all shadow-xl relative flex flex-col ${isEligible ? 'hover:border-emerald-500/50 border-white/10 hover:scale-105 active:scale-95 hover:shadow-emerald-500/10' : 'border-red-500/20 opacity-60 cursor-not-allowed'}`}>
                                 <div className="h-28 md:h-36 relative flex items-center justify-center overflow-hidden" style={{ backgroundColor: team.primaryColor }}>
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-white/10"></div>
                                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden bg-slate-900/90 backdrop-blur flex items-center justify-center z-10 shadow-2xl border border-white/10">
@@ -1914,10 +2120,16 @@ const App: React.FC = () => {
                                             <span className="text-slate-400">{t.clubBudget}</span>
                                             <span className="font-bold text-emerald-400">€{(team.budget / 1000000).toFixed(1)}M</span>
                                         </div>
+                                        {!isResignMode && (
+                                            <div className="flex justify-between text-[10px] md:text-xs border-t border-white/10 pt-1 md:pt-2">
+                                                <span className="text-slate-400">Req. Manager Rep</span>
+                                                <span className={`font-bold ${isEligible ? 'text-cyan-300' : 'text-red-300'}`}>{requiredRating}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </button>
-                        ))}
+                        )})}
                     </div>
                 </div>
             </Layout>
@@ -1983,7 +2195,7 @@ const App: React.FC = () => {
                 )
             }
 
-            {transferMarket.negotiatingPlayer && <TransferNegotiationModal player={transferMarket.negotiatingPlayer} userTeam={userTeam} onClose={() => transferMarket.setNegotiatingPlayer(null)} onComplete={transferMarket.handleTransferComplete} t={t} />}
+            {transferMarket.negotiatingPlayer && <TransferNegotiationModal player={transferMarket.negotiatingPlayer} userTeam={userTeam} managerProfile={gameState.managerProfile} onClose={() => transferMarket.setNegotiatingPlayer(null)} onComplete={transferMarket.handleTransferComplete} t={t} />}
             <PlayerModal
                 player={selectedPlayer}
                 onClose={() => setSelectedPlayer(null)}
@@ -2068,6 +2280,27 @@ const App: React.FC = () => {
             }
 
             {
+                showManagerCreation && (() => {
+                    const pendingLeague = LEAGUE_PRESETS.find(league => league.id === viewLeagueId);
+
+                    return (
+                        <ManagerCreationModal
+                            defaultNationality={pendingLeague?.country || 'Turkey'}
+                            leagueName={pendingLeague?.name || viewLeagueId.toUpperCase()}
+                            startingReputation={getInitialUserManagerRating()}
+                            onBack={() => {
+                                setShowManagerCreation(false);
+                                setPendingManagerData(null);
+                                setGameState(null);
+                                setShowLeagueSelect(true);
+                            }}
+                            onCreate={handleCreateManager}
+                        />
+                    );
+                })()
+            }
+
+            {
                 showWelcome && userTeam && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in p-4">
                         <div className="bg-gradient-to-b from-slate-800 to-slate-900 border border-white/10 rounded-3xl max-w-lg w-full p-8 shadow-2xl text-center relative z-50">
@@ -2086,6 +2319,18 @@ const App: React.FC = () => {
                             </div>
                             <h2 className="text-2xl font-bold text-white mb-2">{t.welcomeTitle}</h2>
                             <h3 className="text-xl font-bold text-emerald-400 mb-6">{userTeam.name || 'Team'}</h3>
+                            {gameState.managerProfile && (
+                                <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left">
+                                    <div className="text-xs uppercase tracking-[0.2em] text-slate-500 font-bold mb-2">Manager</div>
+                                    <div className="text-lg font-bold text-white">{gameState.managerProfile.displayName}</div>
+                                    <div className="text-sm text-slate-300 mt-1">
+                                        {gameState.managerProfile.nationality} • {gameState.managerProfile.archetype}
+                                    </div>
+                                    <div className="text-sm text-emerald-400 mt-2">
+                                        Level {gameState.managerProfile.level} • Rep {gameState.managerProfile.reputation}
+                                    </div>
+                                </div>
+                            )}
                             <button onClick={() => setShowWelcome(false)} className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
                                 <Briefcase size={20} /> {t.signContract}
                             </button>
@@ -2140,6 +2385,7 @@ const App: React.FC = () => {
                     <JobOffersModal
                         offers={gameState.jobOffers || []}
                         currentTeamId={gameState.userTeamId}
+                        currentSalary={gameState.managerSalary}
                         onAccept={handleAcceptJobOffer}
                         onClose={() => setShowJobOffers(false)}
                         t={t}
@@ -2634,35 +2880,47 @@ const App: React.FC = () => {
                                                             engineChoice === 'ikinc' ? 'bg-purple-600' :
                                                             'bg-gradient-to-r from-yellow-600 to-orange-600'
                                                         }`}>
-                                                            {engineChoice === 'classic' ? (t.engineClassic || 'Ana Motor') :
+                                                            {engineChoice === 'classic' ? (t.engineClassic || 'Klasik Motor') :
                                                              engineChoice === 'ikinc' ? (t.engineIkinc || 'Arcade Motor') :
-                                                             (t.engineUcuncu || 'Beta Motor')}
+                                                             (t.engineUcuncu || 'Pro Motor')}
                                                         </span>
                                                     </div>
                                                     <div className="text-xs md:text-sm text-gray-200 mt-1">
-                                                        {engineChoice === 'classic' ? (
-                                                            <>
-                                                                <div>{t.engineClassicBanner || "Ana motor — en gerçekçi versiyon."}</div>
-                                                                <div className="mt-1.5 px-2 py-1 bg-yellow-500/15 border border-yellow-500/30 rounded text-yellow-300 text-[11px] md:text-xs">
-                                                                    {t.engineClassicBetaUpdateNote || "💡 5 Mart 2026'da Beta motor üzerinde kapsamlı değişiklikler yapılmıştır. Test edebilirsiniz!"}
-                                                                </div>
-                                                            </>
-                                                        ) : engineChoice === 'ikinc' ? (t.engineIkincBanner || "Arcade motor — hafif versiyon.")
-                                                            : (t.engineUcuncuBanner || "🎯 Beta motor (5 Mart 2026) — Kapsamlı güncelleme! Motor seçim ekranından detayları görün.")}
-                                                        <div className="mt-1.5 text-[11px] md:text-xs text-sky-200/90">
-                                                            {(t.matchViewMode || 'Maç Görünüm Modu') + ': '}
-                                                            <span className="font-semibold text-white">
-                                                                {matchViewMode === 'detailed'
-                                                                    ? (t.detailedMatchView || 'Detaylı Maç Merkezi')
-                                                                    : (t.classicMatchView || 'Klasik Maç Merkezi')}
-                                                            </span>
-                                                            {' • '}
-                                                            {t.settings || 'Ayarlar'}
-                                                        </div>
+                                                        {engineChoice === 'classic'
+                                                            ? (t.engineClassicBanner || "Kurduğun taktiğin maçta gerçekten işe yaradığını görmek istiyorsan bu motor senin için.")
+                                                            : engineChoice === 'ikinc'
+                                                            ? (t.engineIkincBanner || "Taktik değil saf aksiyon — toplar direkt gider, goller bol gelir, yıldızlar fark yaratır.")
+                                                            : (t.engineUcuncuBanner || "Maçı gerçekten anlamak isteyenler için. Her taktik hamlenin bir karşılığı var.")}
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <button onClick={() => setShowSettings(true)} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium whitespace-nowrap">{t.changeEngine || 'Motoru Değiştir'}</button>
+                                                {/* Inline engine + view mode selectors */}
+                                                <div className="flex flex-col gap-2 w-full md:w-auto">
+                                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                                        <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mr-1">{t.engineChoiceLabel || 'Motor'}:</span>
+                                                        <button
+                                                            onClick={() => { setEngineChoice('classic'); serviceSetEngineChoice('classic'); }}
+                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                        >{t.engineClassic || 'Klasik'}</button>
+                                                        <button
+                                                            onClick={() => { setEngineChoice('ikinc'); serviceSetEngineChoice('ikinc'); }}
+                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'ikinc' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                        >{t.engineIkinc || 'Arcade'}</button>
+                                                        <button
+                                                            onClick={() => { setEngineChoice('ucuncu'); serviceSetEngineChoice('ucuncu'); }}
+                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'ucuncu' ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                        >{t.engineUcuncu || 'Pro'}</button>
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                                        <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mr-1">{t.matchViewMode || 'Görünüm'}:</span>
+                                                        <button
+                                                            onClick={() => { setMatchViewMode('classic'); try { localStorage.setItem('matchViewMode', 'classic'); } catch {} }}
+                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${matchViewMode === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                        >{t.classicMatchView || 'Klasik'}</button>
+                                                        <button
+                                                            onClick={() => { setMatchViewMode('detailed'); try { localStorage.setItem('matchViewMode', 'detailed'); } catch {} }}
+                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${matchViewMode === 'detailed' ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                        >{t.detailedMatchView || 'Detaylı'}</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -2947,7 +3205,7 @@ const App: React.FC = () => {
                             }
                             {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} onPlaySuperCup={handlePlaySuperCup} onOpenCupDetails={() => gameState.europeanCup && setViewingCup({ cup: gameState.europeanCup, name: t.internationalEliteCup || 'International Elite Cup' })} onOpenEuropaDetails={() => gameState.europaLeague && setViewingCup({ cup: gameState.europaLeague, name: t.internationalChallengeCup || 'International Challenge Cup' })} />}
                             {view === 'guide' && <GameGuide t={t} />}
-                            {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} t={t} onBack={() => setView('dashboard')} />}
+                            {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} lang={lang} t={t} onBack={() => setView('dashboard')} onUpgradeTalent={handleUpgradeManagerTalent} onResetTalents={handleResetManagerTalents} onPurchaseCourse={handlePurchaseManagerCourse} onUpgradeStaff={handleUpgradeManagerStaff} />}
                         </div >
 
                     )
@@ -2989,7 +3247,7 @@ const App: React.FC = () => {
 
             {/* Game Over Modal */}
             {
-                gameState?.isGameOver && (
+                gameState?.isGameOver && !gameState?.isUnemployed && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
                         <div className="bg-slate-900 border border-red-500/30 rounded-3xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(239,68,68,0.3)] text-center relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-600 to-orange-600"></div>

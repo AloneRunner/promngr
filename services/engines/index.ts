@@ -5,9 +5,9 @@ import { MatchEngine as UcuncuEngine } from '../ucuncumotor';
 export type EngineKey = 'classic' | 'ikinc' | 'ucuncu';
 
 export const AVAILABLE_ENGINES: Record<EngineKey, { id: EngineKey; name: string }> = {
-    classic: { id: 'classic', name: 'Ana Motor' },
-    ikinc: { id: 'ikinc', name: 'Arcade' },
-    ucuncu: { id: 'ucuncu', name: 'Beta' }
+    classic: { id: 'classic', name: 'Klasik Motor' },
+    ikinc: { id: 'ikinc', name: 'Arcade Motor' },
+    ucuncu: { id: 'ucuncu', name: 'Pro Motor' }
 };
 
 // Guard localStorage access for Node test runs

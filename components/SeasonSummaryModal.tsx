@@ -14,12 +14,14 @@ export const SeasonSummaryModal: React.FC<SeasonSummaryModalProps> = ({ isOpen, 
     if (!isOpen || !gameState) return null;
 
     // Calculate Season Stats
+    // Use userTeam's actual leagueId instead of gameState.leagueId (which can be stale after mid-season job changes)
+    const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+    const activeLeagueId = userTeam?.leagueId || gameState.leagueId;
     const sortedTeams = [...gameState.teams]
-        .filter(t => t.leagueId === gameState.leagueId)
+        .filter(t => t.leagueId === activeLeagueId)
         .sort((a, b) => b.stats.points - a.stats.points || (b.stats.gf - b.stats.ga) - (a.stats.gf - a.stats.ga));
 
     const champion = sortedTeams[0];
-    const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
     if (!userTeam) return null;
 
     const userRank = sortedTeams.findIndex(t => t.id === userTeam.id) + 1;
