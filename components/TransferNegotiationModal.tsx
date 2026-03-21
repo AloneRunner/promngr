@@ -151,6 +151,8 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
     };
 
     const formatMoney = (val: number) => `€${(val / 1000000).toFixed(1)}M`;
+    const transferTax = Math.floor(offer * 0.10);
+    const totalCost = offer + transferTax;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
@@ -202,19 +204,47 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                         <div>
                             <label className="block text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between">
                                 <span>{t.value || 'Transfer Fee'}</span>
-                                <span className={userTeam.budget < offer ? 'text-red-500' : 'text-emerald-500'}>{t.clubBudget}: {formatMoney(userTeam.budget)}</span>
+                                <span className={userTeam.budget < totalCost ? 'text-red-500' : 'text-emerald-500'}>{t.clubBudget}: {formatMoney(userTeam.budget)}</span>
                             </label>
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setOffer(Math.max(0, offer - 500000))} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">-</button>
+                                <button onClick={() => setOffer(Math.max(0, offer - 500000))} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold text-lg leading-none">−</button>
                                 <div className="flex-1 relative">
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" size={16} />
                                     <div className="w-full bg-slate-950 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white font-mono font-bold text-center">
                                         €{Math.round(offer).toLocaleString('tr-TR')}
                                     </div>
                                 </div>
-                                <button onClick={() => setOffer(offer + 500000)} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold">+</button>
+                                <button onClick={() => setOffer(offer + 500000)} className="p-3 bg-slate-800 rounded-lg text-white hover:bg-slate-700 font-bold text-lg leading-none">+</button>
                             </div>
-                            {userTeam.budget < offer && <div className="text-[10px] text-red-500 mt-1 font-bold">⚠️ {t.insufficientFunds}</div>}
+                            {/* Quick increment buttons */}
+                            <div className="flex gap-1.5 mt-2">
+                                <span className="text-[10px] text-slate-500 self-center mr-1">Hızlı:</span>
+                                {[-10, -5, -1, 1, 5, 10].map(m => (
+                                    <button
+                                        key={m}
+                                        onClick={() => setOffer(o => Math.max(0, o + m * 1_000_000))}
+                                        className={`flex-1 py-1 rounded text-[11px] font-bold transition-colors ${m > 0 ? 'bg-slate-700 hover:bg-emerald-700 text-emerald-300' : 'bg-slate-700 hover:bg-red-900 text-red-300'}`}
+                                    >
+                                        {m > 0 ? `+${m}M` : `${m}M`}
+                                    </button>
+                                ))}
+                            </div>
+                            {/* Tax breakdown */}
+                            <div className="mt-2 text-[11px] text-slate-400 space-y-0.5">
+                                <div className="flex justify-between">
+                                    <span>Transfer ücreti</span>
+                                    <span className="font-mono">{formatMoney(offer)}</span>
+                                </div>
+                                <div className="flex justify-between text-amber-400">
+                                    <span>+ Vergi (%10)</span>
+                                    <span className="font-mono">+{formatMoney(transferTax)}</span>
+                                </div>
+                                <div className={`flex justify-between font-bold border-t border-slate-700 pt-0.5 ${userTeam.budget < totalCost ? 'text-red-400' : 'text-white'}`}>
+                                    <span>= Toplam ödeme</span>
+                                    <span className="font-mono">{formatMoney(totalCost)}</span>
+                                </div>
+                            </div>
+                            {userTeam.budget < totalCost && <div className="text-[10px] text-red-500 mt-1 font-bold">⚠️ {t.insufficientFunds}</div>}
                         </div>
 
                         {/* Weekly Wage Offer */}
@@ -242,7 +272,7 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                         <div className="flex gap-3">
                             <button
                                 onClick={() => handleOffer(offer)}
-                                disabled={userTeam.budget < offer}
+                                disabled={userTeam.budget < totalCost}
                                 className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2"
                             >
                                 <Briefcase size={18} /> {t.makeOffer}
@@ -275,7 +305,9 @@ export const TransferNegotiationModal: React.FC<TransferNegotiationModalProps> =
                     <div className="animate-fade-in space-y-4">
                         <div className="bg-emerald-900/20 border border-emerald-500/30 p-4 rounded-xl text-center">
                             <h3 className="text-emerald-400 font-bold text-lg mb-1">{t.dealAgreed}</h3>
-                            <p className="text-slate-300 text-sm">Transfer fee: {formatMoney(offer)}</p>
+                            <p className="text-slate-300 text-sm">Transfer ücreti: {formatMoney(offer)}</p>
+                            <p className="text-amber-400 text-xs mt-0.5">+ Vergi (%10): {formatMoney(transferTax)}</p>
+                            <p className="text-white font-bold text-sm mt-1">Toplam ödeme: {formatMoney(totalCost)}</p>
                         </div>
                         <button
                             onClick={handleConfirmBuy}

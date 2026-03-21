@@ -232,7 +232,8 @@ export const useMatchSimulation = ({
                 goalsAgainst: opponentScore,
                 isDerby: rivals.includes(opponentTeam.name),
                 isCupMatch,
-                isEuropeanMatch: cupType === 'europeanCup' || cupType === 'europaLeague'
+                isEuropeanMatch: cupType === 'europeanCup' || cupType === 'europaLeague',
+                engineUsed: engine.getEngineChoice(),
             });
         };
 
@@ -793,6 +794,7 @@ export const useMatchSimulation = ({
                     const opponentId = isUserHome ? currentMatch.awayTeamId : currentMatch.homeTeamId;
                     let opponent = teamsWithBonus.find(t => t.id === opponentId);
 
+                    let shouldBecomeUnemployed = false;
                     // Yabancı kupa rakipleri için fallback desteği:
                     if (!opponent && isCupMatch) {
                         const fallbackRep = cupType === 'europeanCup' ? 8500 : cupType === 'superCup' ? 9000 : 7000;
@@ -839,7 +841,7 @@ export const useMatchSimulation = ({
 
                         const currentConfidence = userTeam.boardConfidence !== undefined ? userTeam.boardConfidence : 70;
                         const newConfidence = Math.max(1, Math.min(100, currentConfidence + confidenceChange));
-                        const shouldBecomeUnemployed = newConfidence <= 1;
+                        shouldBecomeUnemployed = newConfidence <= 1;
 
                         const resultText = won ? 'G' : drew ? 'B' : 'M';
                         const score = `${userScore}-${oppScore}`;
@@ -1054,6 +1056,16 @@ export const useMatchSimulation = ({
 
                 // Simulate match
                 const simResult = engine.simulateFullMatch(scMatch as any, homeTeam, awayTeam, homePlayers, awayPlayers);
+                const userIsHome = scMatch.homeTeamId === gameState.userTeamId;
+                const progressedState = engine.applyManagerProfileMatchProgression(gameState, {
+                    teamId: gameState.userTeamId,
+                    opponent: userIsHome ? awayTeam : homeTeam,
+                    goalsFor: userIsHome ? simResult.homeScore : simResult.awayScore,
+                    goalsAgainst: userIsHome ? simResult.awayScore : simResult.homeScore,
+                    isCupMatch: true,
+                    isEuropeanMatch: true,
+                    engineUsed: engine.getEngineChoice(),
+                });
 
                 // Determine winner (with penalties if draw)
                 let winnerId: string;
@@ -1079,6 +1091,8 @@ export const useMatchSimulation = ({
 
                 setGameState(prev => {
                     if (!prev) return null;
+                    const profileSeed = progressedState.managerProfile || prev.managerProfile;
+                    const messageSeed = progressedState.messages || prev.messages;
 
                     // Calculate Rewards
                     const winnerPrize = 4000000;
@@ -1133,6 +1147,7 @@ export const useMatchSimulation = ({
 
                     return {
                         ...prev,
+                        managerProfile: profileSeed,
                         superCup: {
                             ...prev.superCup!,
                             match: { ...scMatch, homeScore: simResult.homeScore, awayScore: simResult.awayScore, isPlayed: true },
@@ -1140,7 +1155,8 @@ export const useMatchSimulation = ({
                             isComplete: true
                         },
                         teams: updatedTeams,
-                        messages: [...prev.messages, {
+                        players: nextPlayers,
+                        messages: [...messageSeed, {
                             id: uuid(),
                             week: prev.currentWeek,
                             type: MessageType.BOARD,
@@ -1330,9 +1346,41 @@ export const useMatchSimulation = ({
                 }
 
                 // Process weekly events
+                if (cupMatch) {
+                    const userIsHome = cupMatch.homeTeamId === updatedState.userTeamId;
+                    const cupOpponent = updatedState.teams.find(tm => tm.id === (userIsHome ? cupMatch.awayTeamId : cupMatch.homeTeamId));
+
+                    let playedCupMatch: EuropeanCupMatch | undefined;
+                    if (clMatch && updatedState.europeanCup) {
+                        const allCupMatches = [
+                            ...(updatedState.europeanCup.groups?.flatMap(g => g.matches) || []),
+                            ...(updatedState.europeanCup.knockoutMatches || [])
+                        ];
+                        playedCupMatch = allCupMatches.find(m => m.id === cupMatch.id);
+                    } else if (elMatch && updatedState.europaLeague) {
+                        const allElMatches = [
+                            ...(updatedState.europaLeague.groups?.flatMap(g => g.matches) || []),
+                            ...(updatedState.europaLeague.knockoutMatches || [])
+                        ];
+                        playedCupMatch = allElMatches.find(m => m.id === cupMatch.id);
+                    }
+
+                    if (cupOpponent && playedCupMatch?.isPlayed) {
+                        updatedState = engine.applyManagerProfileMatchProgression(updatedState, {
+                            teamId: updatedState.userTeamId,
+                            opponent: cupOpponent,
+                            goalsFor: userIsHome ? playedCupMatch.homeScore : playedCupMatch.awayScore,
+                            goalsAgainst: userIsHome ? playedCupMatch.awayScore : playedCupMatch.homeScore,
+                            isCupMatch: true,
+                            isEuropeanMatch: true,
+                            engineUsed: engine.getEngineChoice(),
+                        });
+                    }
+                }
+
                 const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 // Destructuring and merging
-                let { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
+                let { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers, marketInflationMultiplier } = weeklyEventsResults;
 
                 // HISTORY RECORDING FOR CUP MATCH (QUICK SIM) - Skipping purely for brevity but essential for feature parity. 
                 // I will include a simplified version or rely on executeMatchUpdate for history if possible? 
@@ -1340,6 +1388,7 @@ export const useMatchSimulation = ({
                 // I'll assume the recording logic is necessary. 
                 // To fit in token limit, I'm pasting the logic but optimizing slightly.
 
+                let shouldBecomeUnemployed = false;
                 if (cupMatch) {
                     const userTeam = updatedTeams.find(tm => tm.id === updatedState.userTeamId);
                     const opponentId = cupMatch.homeTeamId === updatedState.userTeamId ? cupMatch.awayTeamId : cupMatch.homeTeamId;
@@ -1362,7 +1411,6 @@ export const useMatchSimulation = ({
                         playedCupMatch = allElMatches.find(m => m.id === cupMatch.id);
                     }
 
-                    let shouldBecomeUnemployed = false;
                     if (userTeam && opponent && playedCupMatch && playedCupMatch.isPlayed) {
                         const isUserHome = playedCupMatch.homeTeamId === userTeam.id;
                         const userScore = isUserHome ? playedCupMatch.homeScore : playedCupMatch.awayScore;
@@ -1449,6 +1497,7 @@ export const useMatchSimulation = ({
                     transferMarket: updatedMarket,
                     managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                     currentWeek: updatedState.currentWeek + 1,
+                    marketInflationMultiplier: marketInflationMultiplier ?? updatedState.marketInflationMultiplier,
                     pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
                     messages: appendMessages(
                         updatedState.messages,
@@ -1524,7 +1573,7 @@ export const useMatchSimulation = ({
                     }
 
                     const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                    const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
+                    const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers, marketInflationMultiplier: mim } = weeklyEventsResults;
 
                     // Note: Rep history for league is handled in simulateLeagueRound/executeMatchUpdate usually?
                     // actually logic was in handleQuickSim in App.tsx. I am omitting it here for brevity but it might be important.
@@ -1539,6 +1588,7 @@ export const useMatchSimulation = ({
                         transferMarket: updatedMarket,
                         managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
                         currentWeek: updatedState.currentWeek + 1,
+                        marketInflationMultiplier: mim ?? updatedState.marketInflationMultiplier,
                         pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
                         messages: appendMessages(
                             updatedState.messages,
@@ -1796,7 +1846,11 @@ export const useMatchSimulation = ({
 
                 updatedPlayers = updatedPlayers.map(p => {
                     if (p.id === playerIn.id) return { ...p, lineup: 'STARTING' as LineupStatus, lineupIndex: playerOut.lineupIndex || 0 };
-                    if (p.id === playerOut.id) return { ...p, lineup: 'BENCH' as LineupStatus, lineupIndex: playerIn.lineupIndex || 0 };
+                    if (p.id === playerOut.id) {
+                        // Capture live stamina so the bench display shows actual fatigue (not pre-match condition)
+                        const liveStamina = engine.getLivePlayerStamina(playerOut.id);
+                        return { ...p, lineup: 'BENCH' as LineupStatus, lineupIndex: playerIn.lineupIndex || 0, condition: liveStamina !== undefined ? Math.round(liveStamina) : p.condition };
+                    }
                     return p;
                 });
 
@@ -2308,6 +2362,12 @@ export const useMatchSimulation = ({
         setGameState(prevState => {
             if (!prevState) return null;
 
+            const hasCriticalEvent = Boolean(result.event) || Boolean(result.additionalEvents?.length);
+            const shouldPersistFullLiveSimulation =
+                hasCriticalEvent ||
+                !result.minuteIncrement ||
+                (result.stats && (result.stats.homeShots || 0) + (result.stats.awayShots || 0) === 0);
+
             // CRITICAL FIX: Check CUPS FIRST before league!
             let matchType: 'LEAGUE' | 'CL_GROUP' | 'CL_KNOCKOUT' | 'EL_GROUP' | 'EL_KNOCKOUT' | 'SUPER_CUP' = 'LEAGUE';
             let matchIndex = -1;
@@ -2393,9 +2453,16 @@ export const useMatchSimulation = ({
             // Sync Logic (Common)
             if (result.minuteIncrement) currentMatch.currentMinute = (currentMatch.currentMinute || 0) + 1;
             if (result.stats) currentMatch.stats = result.stats;
-            if (result.simulation) {
+            if (result.simulation && shouldPersistFullLiveSimulation) {
                 currentMatch.liveData = {
                     ballHolderId: result.ballHolderId, pitchZone: result.pitchZone, lastActionText: result.actionText, simulation: result.simulation
+                };
+            } else if (currentMatch.liveData) {
+                currentMatch.liveData = {
+                    ...currentMatch.liveData,
+                    ballHolderId: result.ballHolderId ?? currentMatch.liveData.ballHolderId,
+                    pitchZone: result.pitchZone ?? currentMatch.liveData.pitchZone,
+                    lastActionText: result.actionText ?? currentMatch.liveData.lastActionText,
                 };
             }
             if (result.event) {
@@ -2473,14 +2540,20 @@ export const useMatchSimulation = ({
             }
 
             // --- Update Player Stats (Goals) Locally ---
-            const updatedPlayers = [...prevState.players];
-            if (result.event && result.event.type === MatchEventType.GOAL && result.event.playerId) {
-                const pIndex = updatedPlayers.findIndex(p => p.id === result.event.playerId);
-                if (pIndex !== -1) {
-                    updatedPlayers[pIndex] = {
-                        ...updatedPlayers[pIndex],
-                        stats: { ...updatedPlayers[pIndex].stats, goals: (updatedPlayers[pIndex].stats?.goals || 0) + 1 }
-                    };
+            // Only copy players array when we actually need to modify it (goal or match end)
+            // This avoids a 200+ element array allocation every game minute
+            const hasGoalEvent = !!(result.event && result.event.type === MatchEventType.GOAL && result.event.playerId);
+            let updatedPlayers = prevState.players; // keep same reference by default
+            if (hasGoalEvent || matchJustFinished) {
+                updatedPlayers = [...prevState.players];
+                if (hasGoalEvent) {
+                    const pIndex = updatedPlayers.findIndex((p: any) => p.id === result.event.playerId);
+                    if (pIndex !== -1) {
+                        updatedPlayers[pIndex] = {
+                            ...updatedPlayers[pIndex],
+                            stats: { ...updatedPlayers[pIndex].stats, goals: (updatedPlayers[pIndex].stats?.goals || 0) + 1 }
+                        };
+                    }
                 }
             }
 

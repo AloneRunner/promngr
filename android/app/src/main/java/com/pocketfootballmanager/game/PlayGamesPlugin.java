@@ -81,10 +81,14 @@ public class PlayGamesPlugin extends Plugin {
         }
 
         try {
-            PlayGames.getAchievementsClient(getActivity()).unlock(achievementId);
-            JSObject result = new JSObject();
-            result.put("unlocked", true);
-            call.resolve(result);
+            PlayGames.getAchievementsClient(getActivity())
+                    .unlockImmediate(achievementId)
+                    .addOnSuccessListener(unused -> {
+                        JSObject result = new JSObject();
+                        result.put("unlocked", true);
+                        call.resolve(result);
+                    })
+                    .addOnFailureListener(error -> call.reject("Failed to unlock achievement", error));
         } catch (Exception exception) {
             call.reject("Failed to unlock achievement", exception);
         }

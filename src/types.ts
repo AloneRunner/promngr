@@ -86,6 +86,11 @@ export interface ManagerProfileData {
     lifetimeSpent: number;
     unlockedAchievements: string[];
     playGamesSyncedAchievements: string[];
+    engineMatchesPlayed?: Record<string, number>;
+    purchasedCourses?: ManagerCourseKey[];
+    cleanSheetStreak?: number;
+    awayWinStreak?: number;
+    consecutiveLeagueTitles?: number;
 }
 
 export interface ManagerCreationData {
@@ -269,6 +274,8 @@ export interface GameState {
     performanceSettings?: PerformanceSettings; // YENI: Performans ayarları
     isWeekSimulating?: boolean;        // YENI: Background simulation durumu
     simulationProgress?: number;       // YENI: Simülasyon ilerlemesi (0-100)
+    marketInflationMultiplier?: number; // Smooth market inflation (kademeli, haftalık güncellenir)
+    transferTaxPot?: number; // Global transfer tax pool — distributed at season end
 }
 
 export type Translation = any;

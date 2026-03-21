@@ -82,10 +82,10 @@ export const ManagerCreationModal: React.FC<ManagerCreationModalProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm overflow-y-auto p-3 md:p-4 animate-fade-in">
-            <div className="min-h-full flex items-start md:items-center justify-center">
-                <div className="w-full max-w-2xl my-3 md:my-6 bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden animate-scale-in max-h-[calc(100vh-1.5rem)] md:max-h-[calc(100vh-3rem)] flex flex-col">
-                <div className="shrink-0 flex items-center justify-between p-4 md:p-6 border-b border-slate-700 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="fixed inset-0 z-[60] bg-black/85 backdrop-blur-sm overflow-y-auto animate-fade-in">
+            <div className="flex min-h-full items-center justify-center p-3 md:p-4">
+            <div className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden animate-scale-in">
+                <div className="flex items-center justify-between p-4 md:p-6 border-b border-slate-700 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
                     <div>
                         <div className="text-xs uppercase tracking-[0.25em] text-emerald-400 font-bold mb-2">Manager Career</div>
                         <h2 className="text-xl md:text-2xl font-black text-white">Menajer Profili Olustur</h2>
@@ -96,8 +96,8 @@ export const ManagerCreationModal: React.FC<ManagerCreationModalProps> = ({
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col">
-                    <div className="flex-1 overflow-y-auto overscroll-contain p-4 md:p-6 space-y-5 md:space-y-6">
+                <form onSubmit={handleSubmit}>
+                    <div className="p-4 md:p-6 space-y-5 md:space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                         <label className="block">
                             <div className="text-sm text-slate-300 mb-2 font-medium flex items-center gap-2">
@@ -187,22 +187,22 @@ export const ManagerCreationModal: React.FC<ManagerCreationModalProps> = ({
                     </div>
                     </div>
 
-                    <div className="shrink-0 border-t border-slate-700 bg-slate-900/95 backdrop-blur px-4 md:px-6 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.875rem)]">
-                    <div className="flex gap-3">
-                        <button
-                            type="button"
-                            onClick={onBack}
-                            className="flex-1 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
-                        >
-                            Lige Don
-                        </button>
-                        <button
-                            type="submit"
-                            className="flex-1 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black transition-colors shadow-lg shadow-emerald-900/30"
-                        >
-                            Kariyeri Baslat
-                        </button>
-                    </div>
+                    <div className="sticky bottom-0 border-t border-slate-700 bg-slate-900/95 backdrop-blur px-4 md:px-6 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.875rem)]">
+                        <div className="flex gap-3">
+                            <button
+                                type="button"
+                                onClick={onBack}
+                                className="flex-1 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
+                            >
+                                Lige Don
+                            </button>
+                            <button
+                                type="submit"
+                                className="flex-1 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black transition-colors shadow-lg shadow-emerald-900/30"
+                            >
+                                Kariyeri Baslat
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

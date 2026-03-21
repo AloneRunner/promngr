@@ -605,6 +605,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const [showTacticsModal, setShowTacticsModal] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
     const [managedSide, setManagedSide] = useState<'HOME' | 'AWAY'>('HOME');
+    const managedSideRef = useRef<'HOME' | 'AWAY'>('HOME');
     const [useDefaultColors, setUseDefaultColors] = useState(false);
     const [showNames, setShowNames] = useState(true);
     const [cameraTracking, setCameraTracking] = useState(false); // Kamera takibi isteğe bağlı
@@ -748,7 +749,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         awayTeamRef.current = awayTeam;
         homePlayersRef.current = homePlayers;
         awayPlayersRef.current = awayPlayers;
-        setManagedSide(userTeamId === awayTeam.id ? 'AWAY' : 'HOME');
+        const side = userTeamId === awayTeam.id ? 'AWAY' : 'HOME';
+        setManagedSide(side);
+        managedSideRef.current = side;
     }, [match, homeTeam, awayTeam, homePlayers, awayPlayers, userTeamId]);
 
     useEffect(() => {
@@ -1033,7 +1036,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         position: string,    // player position e.g. 'GK', 'DEF', 'MID', 'FWD'
         gkThreat: boolean,
         ballDist: number,
-        catchPulse: number
+        catchPulse: number,
+        skillMove?: string,
+        beatenEffect?: string
     ) => {
         const basePos  = toScreenDeep(xPct, yPct, z);
         const groundPos = toScreenDeep(xPct, yPct, 0);
@@ -1114,6 +1119,174 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         }
 
         const kickBlend = isKickLike ? Math.min(1, 0.35 + actionBlend * 1.15) : 0;
+        const canHoldKickPose = isKickLike || (actionBlend > 0.12 && (hasBall || ballDist < 4.5));
+
+        // --- ARCADE SPECIAL MOVES (Görsel Animasyonlar) ---
+        // Röveşata (Bicycle Kick): Top çok yüksekteyse (z > 1.0) ve şut çekiyorsa.
+        const isBicycleKick = isKickLike && z > 1.0;
+        // Vole (Volley): Top yarı havadaysa (0.4 < z <= 1.0) ve şut çekiyorsa.
+        const isVolley = isKickLike && z > 0.4 && z <= 1.0;
+
+        // Özel animasyon uygulanıyorsa vücut genel lean/offset'ini ez.
+        let arcadeRotation = 0;
+        let arcadeOffsetY = 0;
+        const activeSkillMove = hasBall ? skillMove : undefined;
+        const activeBeatenEffect = !hasBall ? beatenEffect : undefined;
+
+        if (isBicycleKick) {
+            // Röveşata: Havalan, vücut geriye (veya öne) dönsün, bacaklar havalansın
+            arcadeOffsetY = -25 * scale; // Havaya zıpla
+            arcadeRotation = facingDir * -1.8; // Geriye tam takla / yatma
+            bodyLean = 0; // Normal lean'i iptal et
+            leftLegAngle = facingDir * -0.5; // Sol bacak destek (havada)
+            rightLegAngle = facingDir * 1.5;  // Sağ bacak vuruş bacağı (yukarı kalkık)
+            headBob = -8 * scale;
+            leftArmAngle = facingDir * 2.5; // Kollar denge için arkaya
+            rightArmAngle = facingDir * 2.5;
+            
+            // Röveşata tozu/efekti
+            ctx.save();
+            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = '#e879f9'; // Morumsu özel efekt
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX, pos.y - 15 * scale, 25 * scale, 8 * scale, facingDir * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        } else if (isVolley) {
+            // Vole: Hafif zıpla, yana yat (Matrix gibi yatay vole hissiyatı)
+            arcadeOffsetY = -15 * scale; // Hafif zıplama
+            arcadeRotation = facingDir * 1.2; // Yana / Geriye yatış
+            bodyLean = 0;
+            leftLegAngle = facingDir * 0.2;
+            rightLegAngle = facingDir * -1.4; // Vole ayağı sertçe arkaya/yana açılır
+            leftArmAngle = facingDir * -1.2;
+            rightArmAngle = facingDir * 1.5;
+            headBob = -4 * scale;
+        }
+
+        if (activeSkillMove === 'STEP_OVER') {
+            const feint = Math.sin(now * 16 + phaseOffset);
+            bodyOffsetY -= 1.2 * scale;
+            bodyLean = facingDir * 0.1 * feint;
+            leftLegAngle = 1.25 * feint;
+            rightLegAngle = -0.9 * feint;
+            leftArmAngle += facingDir * 0.45;
+            rightArmAngle -= facingDir * 0.45;
+            ctx.save();
+            ctx.globalAlpha = 0.22;
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(groundPos.x + jostleX, groundPos.y - 1.5 * scale, 8 * scale, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        } else if (activeSkillMove === 'BODY_FEINT') {
+            const feint = Math.sin(now * 18 + phaseOffset);
+            arcadeOffsetY -= 1 * scale;
+            bodyLean = facingDir * 0.22 * feint;
+            leftArmAngle += facingDir * 0.35;
+            rightArmAngle -= facingDir * 0.35;
+            headBob -= 1.2 * scale;
+        } else if (activeSkillMove === 'BURST') {
+            bodyLean = facingDir * 0.28;
+            bodyOffsetY -= 1.6 * scale;
+            leftArmAngle *= 1.15;
+            rightArmAngle *= 1.15;
+            ctx.save();
+            ctx.globalAlpha = 0.18;
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.ellipse(groundPos.x + jostleX - facingDir * 9 * scale, groundPos.y + jostleY, 16 * scale, 5 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        } else if (activeSkillMove === 'ROULETTE') {
+            const spin = now * 14 + phaseOffset;
+            arcadeRotation = Math.sin(spin) * 0.45;
+            bodyOffsetY -= 1.4 * scale;
+            leftLegAngle = Math.sin(spin) * 1.1;
+            rightLegAngle = Math.cos(spin) * 1.1;
+            leftArmAngle += Math.cos(spin) * 0.35;
+            rightArmAngle -= Math.cos(spin) * 0.35;
+            ctx.save();
+            ctx.globalAlpha = 0.18;
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(groundPos.x + jostleX, groundPos.y + jostleY, 10 * scale, spin, spin + Math.PI * 1.5);
+            ctx.stroke();
+            ctx.restore();
+        } else if (activeSkillMove === 'CUT_INSIDE') {
+            const cut = Math.sin(now * 12 + phaseOffset);
+            bodyLean = facingDir * (0.32 + cut * 0.08);
+            bodyOffsetY -= 1.1 * scale;
+            leftLegAngle = facingDir > 0 ? 0.45 + cut * 0.35 : -0.8 + cut * 0.25;
+            rightLegAngle = facingDir > 0 ? -1.05 - cut * 0.2 : 0.35 - cut * 0.35;
+            leftArmAngle += facingDir * 0.25;
+            rightArmAngle -= facingDir * 0.45;
+        } else if (activeSkillMove === 'ELASTICO') {
+            const lash = Math.sin(now * 19 + phaseOffset);
+            bodyLean = facingDir * (0.18 + lash * 0.12);
+            bodyOffsetY -= 1.35 * scale;
+            leftLegAngle = 1.4 * lash;
+            rightLegAngle = -1.1 * lash;
+            leftArmAngle += facingDir * 0.55;
+            rightArmAngle -= facingDir * 0.35;
+            ctx.save();
+            ctx.globalAlpha = 0.2;
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.moveTo(groundPos.x + jostleX - facingDir * 8 * scale, groundPos.y + jostleY + 2 * scale);
+            ctx.quadraticCurveTo(groundPos.x + jostleX, groundPos.y + jostleY - 8 * scale, groundPos.x + jostleX + facingDir * 8 * scale, groundPos.y + jostleY + 2 * scale);
+            ctx.stroke();
+            ctx.restore();
+        } else if (activeSkillMove === 'RAINBOW') {
+            const flick = Math.sin(now * 17 + phaseOffset);
+            arcadeOffsetY -= 2.2 * scale;
+            bodyLean = facingDir * 0.08;
+            leftLegAngle = facingDir * (0.35 + flick * 0.55);
+            rightLegAngle = facingDir * (-1.35 - flick * 0.2);
+            leftArmAngle += facingDir * 0.22;
+            rightArmAngle -= facingDir * 0.55;
+            headBob -= 1.8 * scale;
+            ctx.save();
+            ctx.globalAlpha = 0.18;
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(groundPos.x + jostleX, groundPos.y + jostleY - 8 * scale, 9 * scale, Math.PI * 0.15, Math.PI * 0.9);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        if (activeBeatenEffect === 'STUMBLE') {
+            const wobble = Math.sin(now * 14 + phaseOffset);
+            bodyOffsetY += 1.8 * scale;
+            bodyLean = -facingDir * 0.24 + wobble * 0.04;
+            leftLegAngle = 0.9 + wobble * 0.3;
+            rightLegAngle = -0.45;
+            leftArmAngle = -facingDir * 0.9;
+            rightArmAngle = facingDir * 0.35;
+        } else if (activeBeatenEffect === 'SPIN_OUT') {
+            const spinOut = now * 16 + phaseOffset;
+            arcadeRotation = Math.sin(spinOut) * 0.38;
+            bodyOffsetY += 1.2 * scale;
+            leftLegAngle = Math.sin(spinOut) * 0.8;
+            rightLegAngle = Math.cos(spinOut) * 0.8;
+        } else if (activeBeatenEffect === 'WRONG_FOOTED') {
+            bodyLean = -facingDir * 0.35;
+            bodyOffsetY += 1 * scale;
+            leftLegAngle = -0.8;
+            rightLegAngle = 0.35;
+            leftArmAngle = -facingDir * 0.4;
+            rightArmAngle = -facingDir * 0.9;
+        } else if (activeBeatenEffect === 'HEAD_TURN') {
+            bodyOffsetY += 0.6 * scale;
+            bodyLean = -facingDir * 0.18;
+            headBob += 1.8 * scale;
+            leftArmAngle = -facingDir * 0.25;
+            rightArmAngle = facingDir * 0.8;
+        }
 
         // --- KALECİ (GK) POSTÜRÜ ---
         // Kaleci boşta dururken dizlerini büküp ellerini yana açıp tetikte bekler (kaleci hissiyatı).
@@ -1221,16 +1394,18 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             leftLegAngle = -0.12;
             rightLegAngle = 0.18;
             headBob = -0.6 * scale;
-        } else if (isKickLike || actionBlend > 0.12) {
-            // Vurus animasyonu: tek ayak acilir, digeri destekte kalir.
-            const kb = Math.min(1, Math.max(0.22, kickBlend));
-            bodyLean      = facingDir * lerp(0.14, 0.3, kb);
-            bodyOffsetY   = lerp(-0.5, -2.2, kb) * scale;
-            leftLegAngle  = lerp(leftLegAngle, 1.5 * facingDir, kb);
-            rightLegAngle = lerp(rightLegAngle, -0.75 * facingDir, kb);
-            leftArmAngle  = lerp(leftArmAngle, -1.0 * facingDir, kb);
-            rightArmAngle = lerp(rightArmAngle, 0.8 * facingDir, kb);
-            headBob       = lerp(headBob, -1.4 * scale, kb);
+        } else if (canHoldKickPose) {
+            if (!isBicycleKick && !isVolley) {
+                // Normal Vurus animasyonu: tek ayak acilir, digeri destekte kalir.
+                const kb = Math.min(1, Math.max(0.22, kickBlend));
+                bodyLean      = facingDir * lerp(0.14, 0.3, kb);
+                bodyOffsetY   = lerp(-0.5, -2.2, kb) * scale;
+                leftLegAngle  = lerp(leftLegAngle, 1.5 * facingDir, kb);
+                rightLegAngle = lerp(rightLegAngle, -0.75 * facingDir, kb);
+                leftArmAngle  = lerp(leftArmAngle, -1.0 * facingDir, kb);
+                rightArmAngle = lerp(rightArmAngle, 0.8 * facingDir, kb);
+                headBob       = lerp(headBob, -1.4 * scale, kb);
+            }
         }
 
         // Glove snap: Kaleci topu tuttugu anda kollari hizla kapanip topu kilitler.
@@ -1272,7 +1447,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         ctx.fill();
 
         const bodyX  = pos.x;
-        const bodyY  = pos.y + bodyOffsetY;
+        const bodyY  = pos.y + bodyOffsetY + arcadeOffsetY;
         const plantWeight = isIdle ? 0 : Math.max(0, 1 - Math.abs(Math.cos(walkCycle)));
         const footPlantX =
             isIdle
@@ -1282,8 +1457,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         const hipY   = bodyY - 10 * scale;
         const pivotY = bodyY - 18 * scale; // lean pivot (torso centre)
 
-        // Apply forward lean
-        if (bodyLean !== 0) {
+        // Apply Arcade Rotation / lean
+        if (arcadeRotation !== 0) {
+            ctx.translate(plantedBodyX, pivotY);
+            ctx.rotate(arcadeRotation);
+            ctx.translate(-plantedBodyX, -pivotY);
+        } else if (bodyLean !== 0) {
             ctx.translate(plantedBodyX, pivotY);
             ctx.rotate(bodyLean);
             ctx.translate(-plantedBodyX, -pivotY);
@@ -1446,8 +1625,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             ctx.fill();
         }
 
-        // Undo lean
-        if (bodyLean !== 0) {
+        // Undo lean / Arcade Rotation
+        if (arcadeRotation !== 0) {
+            ctx.translate(plantedBodyX, pivotY);
+            ctx.rotate(-arcadeRotation);
+            ctx.translate(-plantedBodyX, -pivotY);
+        } else if (bodyLean !== 0) {
             ctx.translate(plantedBodyX, pivotY);
             ctx.rotate(-bodyLean);
             ctx.translate(-plantedBodyX, -pivotY);
@@ -1531,6 +1714,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             drawLabel('SAVE!', '#22c55e');
         } else if (z > 1.2 && hasBall) {
             drawLabel('BICYCLE!', '#a855f7');
+        } else if (activeSkillMove === 'STEP_OVER') {
+            drawLabel('SKILL!', '#facc15');
+        } else if (activeSkillMove === 'BODY_FEINT') {
+            drawLabel('FEINT!', '#38bdf8');
+        } else if (activeSkillMove === 'BURST') {
+            drawLabel('BURST!', '#fb7185');
+        } else if (activeSkillMove === 'ROULETTE') {
+            drawLabel('ROULETTE!', '#c084fc');
+        } else if (activeSkillMove === 'CUT_INSIDE') {
+            drawLabel('CUT!', '#f97316');
+        } else if (activeSkillMove === 'ELASTICO') {
+            drawLabel('ELASTICO!', '#34d399');
+        } else if (activeSkillMove === 'RAINBOW') {
+            drawLabel('RAINBOW!', '#f59e0b');
         }
 
         ctx.restore();
@@ -1723,6 +1920,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             let actionBlend = cached.actionBlend * 0.82;
             if (transitioned && impactfulState) actionBlend = 1;
             else if (movementState === 'KICK' || movementState === 'SHOT') actionBlend = Math.max(actionBlend, 0.7);
+            if (!impactfulState && nextState.ball?.ownerId !== p.id) {
+                actionBlend *= 0.45;
+            }
 
             motionCache[p.id] = {
                 x: xSmooth,
@@ -1750,6 +1950,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             playerInfos.push({
                 id: p.id, xVal: xSmooth, yVal: ySmooth, zVal: zSmooth,
                 facing: facingSmooth, velocity: velocitySmooth, stridePhase, actionBlend, phaseOffset,
+                teamId: p.teamId,
                 primary: isHome ? homeTeamRef.current.primaryColor : awayTeamRef.current.primaryColor,
                 secondary: isHome ? homeTeamRef.current.secondaryColor : awayTeamRef.current.secondaryColor,
                 num: playerNumbers.current[p.id] || 0,
@@ -1759,6 +1960,8 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 gkThreat,
                 ballDist,
                 catchPulse: gkCatchPulse[p.id] || 0,
+                skillMove: nextP.skillMove,
+                beatenEffect: nextP.beatenEffect,
             });
         });
 
@@ -1789,23 +1992,22 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             const j = jostleMap[pi.id] || { x: 0, y: 0 };
             // Default colors override: user team = blue, opponent = red
             let primary = pi.primary;
+            let secondary = pi.secondary;
             if (useDefaultColorsRef.current) {
-                const controlledTeamId = managedSide === 'HOME' ? homeTeamRef.current.id : awayTeamRef.current.id;
-                const kit = getDefaultKitColors(pi.id && homePlayersRef.current.some(p => p.id === pi.id)
-                    ? homeTeamRef.current.id === controlledTeamId
-                    : awayTeamRef.current.id === controlledTeamId);
+                const controlledTeamId = managedSideRef.current === 'HOME' ? homeTeamRef.current.id : awayTeamRef.current.id;
+                const kit = getDefaultKitColors(pi.teamId === controlledTeamId);
                 primary = kit.primary;
-                pi.secondary = kit.secondary;
+                secondary = kit.secondary;
             }
             entities.push({
                 type: 'PLAYER',
                 ySort: pi.yVal,
                 renderFn: () => drawSpritePlayer(
                     ctx, pi.xVal, pi.yVal, pi.zVal, pi.facing,
-                    primary, pi.secondary, pi.num,
+                    primary, secondary, pi.num,
                     pi.hasBall, pi.name, pi.state, pi.stamina,
                     pi.velocity, pi.stridePhase, pi.actionBlend, pi.phaseOffset, j.x, j.y, now, pi.position,
-                    pi.gkThreat, pi.ballDist, pi.catchPulse
+                    pi.gkThreat, pi.ballDist, pi.catchPulse, pi.skillMove, pi.beatenEffect
                 )
             });
         });

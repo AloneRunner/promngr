@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, Volume2, VolumeX, Zap, BarChart3, Globe, Save, TrendingUp, Video } from 'lucide-react';
+import { playGamesService } from '../src/services/playGamesService';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -131,9 +132,7 @@ export default function SettingsModal({
                   <button
                     onClick={() => {
                       try {
-                        // eslint-disable-next-line @typescript-eslint/no-var-requires
-                        const eng = require('../services/engines');
-                        const url = eng.EXTERNAL_FEEDBACK_URLS?.ikinc || 'https://play.google.com/store/apps/details?id=com.pocketfootballmanager.game&hl=tr';
+                        const url = 'https://play.google.com/store/apps/details?id=com.pocketfootballmanager.game&hl=tr';
                         window.open(url, '_blank');
                       } catch (e) {
                         alert(t.engineFeedbackOpenError || 'Geri bildirim bağlantısı açılamadı.');
@@ -291,6 +290,52 @@ export default function SettingsModal({
                   <div className="font-medium">{lang.name}</div>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Google Play Games */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.516 3.018a1.69 1.69 0 0 0-1.687 1.68v2.964c0 1.94-2.112 3.123-3.834 2.146L3.435 8.35a1.68 1.68 0 0 0-2.313.626l-1.026 1.78a1.692 1.692 0 0 0 .616 2.316l2.583 1.493a2.492 2.492 0 0 1 0 4.318l-2.583 1.492a1.68 1.68 0 0 0-.616 2.313l1.026 1.777a1.69 1.69 0 0 0 2.313.616l2.56-1.46c1.722-.977 3.834.207 3.834 2.147v2.953a1.68 1.68 0 0 0 1.687 1.68h2.053a1.68 1.68 0 0 0 1.688-1.68v-2.953c0-1.94 2.112-3.124 3.834-2.147l2.56 1.46a1.68 1.68 0 0 0 2.314-.616l1.026-1.777a1.69 1.69 0 0 0-.617-2.313L21.79 16.54a2.492 2.492 0 0 1 0-4.318l2.585-1.492a1.68 1.68 0 0 0 .615-2.316l-1.026-1.78a1.69 1.69 0 0 0-2.314-.626L19.09 7.47c-1.722-.976-3.834.207-3.834 2.147V6.65a1.69 1.69 0 0 0-1.688-1.68z" />
+              </svg>
+              Google Play Games
+            </h3>
+            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+              <div className="text-sm text-gray-400 mb-3">
+                {t.googlePlayGamesDesc || 'Google Play Games oturumu açarak başarımlarınızı bağlayabilirsiniz.'}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                     try {
+                       const success = await playGamesService.signIn();
+                       if (success) {
+                         alert(t.googlePlayGamesConnected || 'Play Games hesabi baglandi!');
+                       } else {
+                         alert(t.googlePlayGamesFailed || 'Baglanti basarisiz.');
+                       }
+                     } catch (e) {
+                       console.error(e);
+                     }
+                  }}
+                  className="py-2 px-4 rounded-lg text-sm font-medium bg-green-600 hover:bg-green-500 text-white transition-colors flex-1"
+                >
+                  {t.connectGooglePlayGames || 'Oturum Aç'}
+                </button>
+                <button
+                  onClick={async () => {
+                     try {
+                        await playGamesService.showAchievements();
+                     } catch (e) {
+                         console.error(e);
+                     }
+                  }}
+                  className="py-2 px-4 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors flex-1"
+                >
+                  {t.showAchievements || 'Başarımları Göster'}
+                </button>
+              </div>
             </div>
           </div>
 
