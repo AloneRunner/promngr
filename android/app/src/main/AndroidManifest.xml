@@ -44,6 +44,10 @@
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/game_services_project_id" />
+            
+        <meta-data 
+            android:name="com.google.android.gms.games.PLAY_GAMES_SERVICES" 
+            android:value="true" />
     </application>
 
     <!-- Permissions -->

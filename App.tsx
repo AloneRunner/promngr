@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
@@ -143,6 +143,38 @@ const App: React.FC = () => {
         const managerProfile = gameState?.managerProfile;
         if (!managerProfile) return;
 
+        const migrationKey = 'playGamesResyncV2Complete';
+        if (localStorage.getItem(migrationKey)) return;
+
+        const unlockedAchievements = managerProfile.unlockedAchievements || [];
+        const syncedAchievements = managerProfile.playGamesSyncedAchievements || [];
+
+        localStorage.setItem(migrationKey, 'true');
+
+        if (unlockedAchievements.length === 0 || syncedAchievements.length === 0) {
+            return;
+        }
+
+        setGameState(prev => {
+            if (!prev?.managerProfile) return prev;
+
+            return {
+                ...prev,
+                managerProfile: {
+                    ...prev.managerProfile,
+                    playGamesSyncedAchievements: [],
+                },
+            };
+        });
+    }, [
+        gameState?.managerProfile?.unlockedAchievements?.join('|'),
+        gameState?.managerProfile?.playGamesSyncedAchievements?.join('|'),
+    ]);
+
+    useEffect(() => {
+        const managerProfile = gameState?.managerProfile;
+        if (!managerProfile) return;
+
         const unlockedAchievements = managerProfile.unlockedAchievements || [];
         const syncedAchievements = new Set(managerProfile.playGamesSyncedAchievements || []);
         const pendingAchievements = unlockedAchievements.filter((achievementId) => {
@@ -155,7 +187,7 @@ const App: React.FC = () => {
         let cancelled = false;
 
         const syncAchievements = async () => {
-            const authenticated = await playGamesService.signIn();
+            const authenticated = await playGamesService.isAuthenticated();
             if (!authenticated) return;
 
             const syncedNow: string[] = [];
@@ -323,27 +355,44 @@ const App: React.FC = () => {
             setIsWeekSimulating(true);
             setSimulationProgress(0);
 
-            // Simulate progress animation
-            const progressInterval = setInterval(() => {
-                setSimulationProgress(prev => {
-                    if (prev >= 95) return prev;
-                    return prev + Math.random() * 15;
-                });
-            }, 200);
+            let isCleanedUp = false;
 
-            // Run simulation in next tick to allow UI update
-            setTimeout(() => {
-                simulation.handleQuickSim();
-
-                // Complete progress
+            const cleanupSimulationUi = (finalProgress: number = 100) => {
+                if (isCleanedUp) return;
+                isCleanedUp = true;
                 clearInterval(progressInterval);
-                setSimulationProgress(100);
-
-                // Close loading after brief delay
+                clearTimeout(safetyTimeout);
+                setSimulationProgress(finalProgress);
                 setTimeout(() => {
                     setIsWeekSimulating(false);
                     setSimulationProgress(0);
                 }, 500);
+            };
+
+            // Simulate progress animation
+            const progressInterval = setInterval(() => {
+                setSimulationProgress(prev => {
+                    if (prev >= 95) return prev;
+                    return Math.min(95, prev + Math.random() * 15);
+                });
+            }, 200);
+
+            const safetyTimeout = setTimeout(() => {
+                cleanupSimulationUi(100);
+            }, 12000);
+
+            // Run simulation in next tick to allow UI update
+            setTimeout(() => {
+                try {
+                    simulation.handleQuickSim();
+                    cleanupSimulationUi(100);
+                } catch (error: any) {
+                    console.error("Simulation error:", error);
+                    alert("Simulasyon hatasi: " + error.message);
+                    cleanupSimulationUi(0);
+                } finally {
+                    cleanupSimulationUi(100);
+                }
             }, 100);
         } else {
             // Direct simulation (no loading screen)
@@ -762,6 +811,36 @@ const App: React.FC = () => {
 
     const handleResign = () => {
         if (confirm(t.resignConfirm)) {
+            // FIX: Normalizing finances to prevent a club going bankrupt due to user leaving huge contracts behind
+            if (gameState && gameState.userTeamId) {
+                const userTeam = gameState.teams.find(t => t.id === gameState.userTeamId);
+                if (userTeam) {
+                    const avgLeagueOverallValue = 65; // Baseline
+                    
+                    const updatedPlayers = gameState.players.map(p => {
+                        if (p.teamId === userTeam.id) {
+                            // Calculate what the market dictates this player should earn
+                            const marketWage = Math.floor(Math.pow(1.13, p.overall - 50) * 100000 * 0.005);
+                            const marketSalary = Math.max(1, marketWage * 52);
+                            
+                            // If the user inflated the wage to > 2x the market salary AND it's a massive amount, hard normalize it
+                            if (p.salary > marketSalary * 2.0 && p.salary > 5_000_000) {
+                                return {
+                                    ...p,
+                                    salary: Math.floor(marketSalary * 1.25) // Smooth landing to 25% premium wage
+                                }
+                            }
+                        }
+                        return p;
+                    });
+                    
+                    setGameState(prev => prev ? {
+                        ...prev,
+                        players: updatedPlayers
+                    } : null);
+                }
+            }
+
             // RESIGN MODE: Enable resign mode, show league selection without resetting world
             setIsResignMode(true);
             setShowLeagueSelect(true);
@@ -1111,16 +1190,21 @@ const App: React.FC = () => {
         const scaledWage = Math.floor(baseWage * (0.8 + leagueMult * 0.2));
         const loyaltyFactor = (player.morale || 70) >= 72 ? 0.88 : 1.0;
         const newWage = Math.max(player.wage || 250, Math.floor(scaledWage * 0.80 * loyaltyFactor));
-        const newSalary = newWage * 52;
-        const newWageDisplay = newWage.toLocaleString();
+        // Ensure wage doesn't drop on renewal
+        const finalWage = Math.max(player.salary ? Math.floor(player.salary / 52) : 250, newWage);
+        const newSalary = finalWage * 52;
+        const newWageDisplay = finalWage.toLocaleString();
 
         if (confirm(`${t.renewContract} ${player.lastName}?\n${t.weeklyWageOffer || 'Weekly Wage Offer'}: €${newWageDisplay}/wk`)) {
+            // Value is tied to OVR and age in Pocket FM, so we don't manually bump value on contract renewals 
+            // unless we want to artificially inflate it. The issue was JUST that users renewing kept inflating salary
+            // past the player's true value! Now the formula is capped at `scaledWage * loyalty`.
             const updatedPlayers = gameState.players.map(p =>
-                p.id === player.id ? { ...p, contractYears: p.contractYears + 2, wage: newWage, salary: newSalary, morale: Math.min(100, p.morale + 10) } : p
+                p.id === player.id ? { ...p, contractYears: p.contractYears + 2, wage: finalWage, salary: newSalary, morale: Math.min(100, p.morale + 10) } : p
             );
             setGameState(prev => prev ? { ...prev, players: updatedPlayers } : null);
             alert(t.contractExtended);
-            setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2, wage: newWage, salary: newSalary } : null);
+            setSelectedPlayer(prev => prev ? { ...prev, contractYears: prev.contractYears + 2, wage: finalWage, salary: newSalary } : null);
         }
     };
 
@@ -1357,12 +1441,13 @@ const App: React.FC = () => {
                 return { ...p, lineup: 'BENCH' as const, lineupIndex: 99 };
             }
 
-            // ONLY copy lineup properties. NEVER copy weeksInjured from the temporary copy.
+            // Copy lineup + live condition (playersCopy already has live stamina injected above).
+            // NEVER copy weeksInjured from the temporary copy (it may have been set to 100 for exclusion logic).
             return {
                 ...p,
                 lineup: fixedP.lineup,
                 lineupIndex: fixedP.lineupIndex,
-                // Explicitly preserve original injury status to be safe
+                condition: fixedP.condition !== undefined ? fixedP.condition : p.condition,
                 weeksInjured: p.weeksInjured
             };
         });
@@ -2596,15 +2681,6 @@ const App: React.FC = () => {
                     ) : (
 
                         <div key={view} className="animate-fade-in w-full">
-                            {/* Navigation Safety: Ensure active match is cleared if user navigates away */}
-                            {(() => {
-                                if ((view as string) !== 'match' && activeMatchId) {
-                                    // Use setTimeout to avoid state updates during render
-                                    setTimeout(() => handleMatchFinish(), 0);
-                                }
-                                return null;
-                            })()}
-
                             {/* Mobile Menu View */}
                             {view === 'menu' && (
                                 <div className="flex flex-col gap-4 animate-fade-in pb-20">

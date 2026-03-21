@@ -51,8 +51,69 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         const userTeam = currentGameState.teams.find(t => t.id === currentGameState.userTeamId);
         if (!userTeam) return;
 
+        // ========== PLAYER AMBITION / WILLINGNESS SYSTEM ==========
+        // Elite players may REFUSE to join clubs far below their current club's reputation.
+        // A 90 OVR player at Man City won't join a Turkish mid-table team just because you paid the price.
+        // Factors: player OVR, player age, reputation gap, overpay ratio
+        if (player.teamId !== 'FREE_AGENT') {
+            const sellerTeam = currentGameState.teams.find(t => t.id === player.teamId);
+            const sellerRep = sellerTeam?.reputation || 5000;
+            const buyerRep = userTeam.reputation || 5000;
+            const repGap = sellerRep - buyerRep; // Positive = player coming from a BETTER club
+
+            // Only check ambition if player is coming from a significantly better club
+            if (repGap > 1000 && player.overall >= 80 && player.age <= 30) {
+                // Calculate willingness (0.0 = never, 1.0 = always accepts)
+                // Base: reputation gap reduces willingness
+                let willingness = 1.0;
+
+                // Reputation penalty: larger gap = less willing
+                if (repGap > 4000) willingness -= 0.7;       // Massive gap (e.g. Man City → Kenya league)
+                else if (repGap > 3000) willingness -= 0.5;  // Huge gap (e.g. Barcelona → Turkey mid-table)
+                else if (repGap > 2000) willingness -= 0.35; // Big gap (e.g. Juventus → Turkey top)
+                else if (repGap > 1000) willingness -= 0.15; // Moderate gap
+
+                // OVR penalty: higher rated players are pickier
+                if (player.overall >= 90) willingness -= 0.3;      // World class — very picky
+                else if (player.overall >= 87) willingness -= 0.2; // Elite — picky
+                else if (player.overall >= 84) willingness -= 0.1; // Quality — slightly picky
+
+                // Age bonus: older players are more willing to move for money
+                if (player.age >= 29) willingness += 0.25;   // Career winding down, open to adventure
+                else if (player.age >= 27) willingness += 0.1;
+
+                // Overpay bonus: paying significantly above market value shows commitment
+                const overpayRatio = finalPrice / Math.max(1, player.value);
+                if (overpayRatio >= 2.0) willingness += 0.4;       // Paying 2x+ value = strong motivation
+                else if (overpayRatio >= 1.5) willingness += 0.25; // 1.5x = decent incentive
+                else if (overpayRatio >= 1.2) willingness += 0.1;  // Slight premium
+
+                // Morale penalty: unhappy players are MORE willing to leave
+                if ((player.morale || 75) < 40) willingness += 0.3; // Unhappy = wants out
+
+                // Clamp willingness
+                willingness = Math.max(0.05, Math.min(1.0, willingness));
+
+                // Roll the dice
+                if (Math.random() > willingness) {
+                    // Player REFUSES the transfer
+                    const refusalReasons = [
+                        t.playerRefusedAmbition || `${player.firstName} ${player.lastName} kariyer hedefleri nedeniyle takımınıza transfer olmayı reddetti. Daha prestijli bir kulüpte oynamak istiyor.`,
+                        t.playerRefusedReputation || `${player.firstName} ${player.lastName} takımınızın itibarını yeterli görmedi ve teklifi reddetti.`,
+                        t.playerRefusedChampionsLeague || `${player.firstName} ${player.lastName} Şampiyonlar Ligi'nde oynamak istiyor ve teklifinizi geri çevirdi.`
+                    ];
+                    alert(refusalReasons[Math.floor(Math.random() * refusalReasons.length)]);
+                    return; // Transfer cancelled — player says no
+                }
+            }
+        }
+
+        // 10% transfer tax on buyer
+        const transferTax = Math.floor(finalPrice * 0.10);
+        const totalCost = finalPrice + transferTax;
+
         // Validation Check (Outside setGameState)
-        if (userTeam.budget < finalPrice) {
+        if (userTeam.budget < totalCost) {
             alert(t.notEnoughFunds);
             return;
         }
@@ -60,12 +121,9 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         setGameState(prev => {
             if (!prev) return null;
 
-            // Re-find team in prev state to ensure atomic consistency, but we already validated on latest ref.
-            // There's a tiny race condition possibility if budget changed in ms, but negligible for single user turn-based flow.
             const uTeam = prev.teams.find(t => t.id === prev.userTeamId);
             if (!uTeam) return prev;
 
-            // ... Logic ...
             const sellerTeamId = player.teamId;
             const currentTeamPlayers = prev.players.filter(p => p.teamId === uTeam.id);
             const newJerseyNumber = assignJerseyNumber(player, currentTeamPlayers);
@@ -89,13 +147,13 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
 
             const updatedTeams = prev.teams.map(t => {
                 if (t.id === uTeam.id) {
-                    // Update season transfer totals
+                    // Buyer pays fee + tax
                     const fin = t.financials || { lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 }, lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 } };
                     const seasonTotals = fin.seasonTotals || { transferIncomeThisSeason: 0, transferExpensesThisSeason: 0 };
-                    return { ...t, budget: t.budget - finalPrice, financials: { ...fin, seasonTotals: { ...seasonTotals, transferExpensesThisSeason: seasonTotals.transferExpensesThisSeason + finalPrice } } };
+                    return { ...t, budget: t.budget - totalCost, financials: { ...fin, seasonTotals: { ...seasonTotals, transferExpensesThisSeason: seasonTotals.transferExpensesThisSeason + totalCost } } };
                 }
                 if (t.id === sellerTeamId && sellerTeamId !== 'FREE_AGENT') {
-                    // Update seller's income
+                    // Seller receives only the base fee (tax stays in pot)
                     const fin = t.financials || { lastWeekIncome: { tickets: 0, sponsor: 0, merchandise: 0, tvRights: 0, transfers: 0, winBonus: 0 }, lastWeekExpenses: { wages: 0, maintenance: 0, academy: 0, transfers: 0 } };
                     const seasonTotals = fin.seasonTotals || { transferIncomeThisSeason: 0, transferExpensesThisSeason: 0 };
                     return { ...t, budget: t.budget + finalPrice, financials: { ...fin, seasonTotals: { ...seasonTotals, transferIncomeThisSeason: seasonTotals.transferIncomeThisSeason + finalPrice } } };
@@ -103,11 +161,17 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                 return t;
             });
 
-            return { ...prev, players: updatedPlayers, transferMarket: updatedMarket, teams: updatedTeams };
+            return {
+                ...prev,
+                players: updatedPlayers,
+                transferMarket: updatedMarket,
+                teams: updatedTeams,
+                transferTaxPot: (prev.transferTaxPot || 0) + transferTax,
+            };
         });
 
         setNegotiatingPlayer(null);
-        alert(`${t.successfullySigned} ${player.lastName} for €${(finalPrice / 1000000).toFixed(2)}M!`);
+        alert(`${t.successfullySigned} ${player.lastName} for €${(finalPrice / 1000000).toFixed(2)}M! (+€${(transferTax / 1000000).toFixed(2)}M transfer vergisi)`);
     }, [setGameState, t]);
 
 

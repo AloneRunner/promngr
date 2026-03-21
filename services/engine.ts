@@ -442,8 +442,9 @@ export const getLeagueMultiplier = (leagueId: string): number => {
   const base =
     BASE_LEAGUE_ECON_MULTIPLIERS[leagueId] ||
     BASE_LEAGUE_ECON_MULTIPLIERS["default"];
-  const bonus = LEAGUE_EUROPEAN_BONUS[leagueId] || 0;
-  return base + bonus;
+  // Use ?? (not ||) so negative bonuses work when a league's rank drops
+  const bonus = LEAGUE_EUROPEAN_BONUS[leagueId] ?? 0;
+  return Math.max(0.3, base + bonus); // floor at 0.3x (survival minimum)
 };
 
 // Award European success bonus to league
@@ -1410,10 +1411,10 @@ export const getManagerGameplayEffects = (managerProfile?: ManagerProfileData) =
 };
 
 export const getManagerTalentLevelCap = (level: number): number =>
-  Math.max(1, Math.min(5, Math.ceil(level / 2)));
+  Math.max(1, Math.min(6, Math.ceil(level / 2)));
 
 export const getManagerStaffLevelCap = (level: number): number =>
-  Math.max(1, Math.min(3, 1 + Math.floor(Math.max(0, level - 1) / 3)));
+  Math.max(1, Math.min(4, 1 + Math.floor(Math.max(0, level - 1) / 3)));
 
 export const spendManagerSkillPoint = (
   gameState: GameState,
@@ -1476,6 +1477,7 @@ export const purchaseManagerCourse = (
       title: 'Pro License Completed',
       body: 'Uluslararasi lisans programi tamamlandi. +1 skill point ve bonus XP kazandin.',
       apply: (currentProfile) => {
+        if ((currentProfile.purchasedCourses || []).includes('PRO_LICENSE')) return null;
         const leveled = levelUpManagerProfile({
           ...currentProfile,
           xp: currentProfile.xp + 280,
@@ -1556,6 +1558,7 @@ export const purchaseManagerCourse = (
       ...appliedProfile,
       personalBalance: profile.personalBalance - course.cost,
       lifetimeSpent: (profile.lifetimeSpent || 0) + course.cost,
+      purchasedCourses: [...(profile.purchasedCourses || []), courseKey],
     },
     messages: [
       {
@@ -1586,7 +1589,7 @@ export const upgradeManagerPersonalStaff = (
   };
   const currentLevel = currentStaff[roleKey] || 0;
   const cap = getManagerStaffLevelCap(profile.level);
-  if (currentLevel >= 3 || currentLevel >= cap) return hydratedState;
+  if (currentLevel >= 4 || currentLevel >= cap) return hydratedState;
 
   const baseCostMap: Record<ManagerStaffRoleKey, number> = {
     scoutAdvisor: 120000,
@@ -1770,6 +1773,9 @@ export const applyManagerProfileMatchProgression = (
     isDerby?: boolean;
     isCupMatch?: boolean;
     isEuropeanMatch?: boolean;
+    isHome?: boolean;
+    engineUsed?: "classic" | "ikinc" | "ucuncu";
+    comebackWin?: boolean;
   },
 ): GameState => {
   if (input.teamId !== gameState.userTeamId) return gameState;
@@ -1808,6 +1814,10 @@ export const applyManagerProfileMatchProgression = (
   if (won) reputationDelta += managerEffects.matchReputationBonus;
   reputationDelta = Math.max(-4, Math.min(5, reputationDelta));
 
+  const engineUsed = input.engineUsed || getEngineChoice();
+  const currentEngineMatches = hydratedState.managerProfile!.engineMatchesPlayed || {};
+  const newEngineMatchCount = (currentEngineMatches[engineUsed] || 0) + 1;
+
   const updatedProfileBase: ManagerProfileData = {
     ...hydratedState.managerProfile!,
     xp: hydratedState.managerProfile!.xp + xpGain,
@@ -1819,6 +1829,10 @@ export const applyManagerProfileMatchProgression = (
       wins: hydratedState.managerProfile!.careerStats.wins + (won ? 1 : 0),
       draws: hydratedState.managerProfile!.careerStats.draws + (drew ? 1 : 0),
       losses: hydratedState.managerProfile!.careerStats.losses + (!won && !drew ? 1 : 0),
+    },
+    engineMatchesPlayed: {
+      ...currentEngineMatches,
+      [engineUsed]: newEngineMatchCount,
     },
   };
 
@@ -1843,9 +1857,150 @@ export const applyManagerProfileMatchProgression = (
 
   if (won && !(finalProfile.unlockedAchievements || []).includes('FIRST_OFFICIAL_WIN')) {
     const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: newMessages },
+      { ...hydratedState, messages: finalMessages },
       finalProfile,
       'FIRST_OFFICIAL_WIN',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // Check Engine Preference Achievements
+  if (engineUsed === 'classic' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_CLASSIC')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'ENGINE_PREF_CLASSIC',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+  if (engineUsed === 'ikinc' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_ARCADE')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'ENGINE_PREF_ARCADE',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+  if (engineUsed === 'ucuncu' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_PRO')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'ENGINE_PREF_PRO',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // ========== NEW ACHIEVEMENT CHECKS ==========
+
+  // GOAL_MACHINE: Score 7+ goals in a single match
+  if (input.goalsFor >= 7 && !(finalProfile.unlockedAchievements || []).includes('GOAL_MACHINE')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'GOAL_MACHINE',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // DAVID_GOLIATH: Beat a team with 30%+ higher reputation
+  if (won && userTeam) {
+    const opponentRep = input.opponent.reputation || 5000;
+    const userRep = userTeam.reputation || 5000;
+    if (opponentRep >= userRep * 1.3 && !(finalProfile.unlockedAchievements || []).includes('DAVID_GOLIATH')) {
+      const achievementUnlock = unlockManagerAchievement(
+        { ...hydratedState, messages: finalMessages },
+        finalProfile,
+        'DAVID_GOLIATH',
+      );
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+  }
+
+  // COMEBACK_KING: Win after trailing past the 70th minute (uses comebackWin flag from match)
+  if (won && input.comebackWin && !(finalProfile.unlockedAchievements || []).includes('COMEBACK_KING')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'COMEBACK_KING',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // MONEY_TALKS: Have 100M+ in the budget
+  if (userTeam && userTeam.budget >= 100_000_000 && !(finalProfile.unlockedAchievements || []).includes('MONEY_TALKS')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'MONEY_TALKS',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // CLEAN_SHEET_STREAK: 5 consecutive clean sheets
+  const prevCleanSheetStreak = finalProfile.cleanSheetStreak || 0;
+  const newCleanSheetStreak = input.goalsAgainst === 0 ? prevCleanSheetStreak + 1 : 0;
+  finalProfile = { ...finalProfile, cleanSheetStreak: newCleanSheetStreak };
+  if (newCleanSheetStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('CLEAN_SHEET_STREAK')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'CLEAN_SHEET_STREAK',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // FIRST_MATCH: Play any match
+  if (!(finalProfile.unlockedAchievements || []).includes('FIRST_MATCH')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'FIRST_MATCH',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // CONTINENTAL_DEBUT: Play first European match
+  if (input.isEuropeanMatch && !(finalProfile.unlockedAchievements || []).includes('CONTINENTAL_DEBUT')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'CONTINENTAL_DEBUT',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // AWAY_MACHINE: 5 consecutive away wins
+  const isAway = input.isHome === false;
+  const prevAwayWinStreak = finalProfile.awayWinStreak || 0;
+  const newAwayWinStreak = isAway ? (won ? prevAwayWinStreak + 1 : 0) : prevAwayWinStreak;
+  finalProfile = { ...finalProfile, awayWinStreak: newAwayWinStreak };
+  if (newAwayWinStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('AWAY_MACHINE')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'AWAY_MACHINE',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // LEVEL_10: Reach manager level 10 (check after XP/level updates)
+  if (finalProfile.level >= 10 && !(finalProfile.unlockedAchievements || []).includes('LEVEL_10')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'LEVEL_10',
     );
     finalProfile = achievementUnlock.profile;
     finalMessages = achievementUnlock.messages;
@@ -1907,6 +2062,7 @@ export const applyManagerProfileSeasonProgression = (
   };
 
   const { nextProfile, levelsGained } = levelUpManagerProfile(updatedProfileBase);
+  let finalProfile = nextProfile;
   const newMessages = levelsGained > 0
     ? [
         {
@@ -1921,12 +2077,130 @@ export const applyManagerProfileSeasonProgression = (
         ...hydratedState.messages,
       ]
     : hydratedState.messages;
+  let finalMessages = newMessages;
+
+  // ========== SEASON-END ACHIEVEMENT CHECKS ==========
+
+  // LEAGUE_CHAMPION: Win the league
+  if (input.wonLeague && !(finalProfile.unlockedAchievements || []).includes('LEAGUE_CHAMPION')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'LEAGUE_CHAMPION',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // CUP_WINNER: Win any continental cup
+  if ((input.wonChampionsLeague || input.wonEuropaLeague || input.wonSuperCup) && !(finalProfile.unlockedAchievements || []).includes('CUP_WINNER')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'CUP_WINNER',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // GLOBE_TROTTER: Managed in 3+ different countries
+  if (!(finalProfile.unlockedAchievements || []).includes('GLOBE_TROTTER')) {
+    const careerHistory = hydratedState.managerCareerHistory || [];
+    const uniqueCountries = new Set<string>();
+    careerHistory.forEach((entry: any) => {
+      if (entry.leagueId) {
+        // Extract country from leagueId (e.g., 'turkey_super_lig' → 'turkey')
+        const country = entry.leagueId.split('_')[0];
+        uniqueCountries.add(country);
+      }
+    });
+    // Also add the current team's league
+    const currentTeam = hydratedState.teams.find(t => t.id === hydratedState.userTeamId);
+    if (currentTeam?.leagueId) {
+      uniqueCountries.add(currentTeam.leagueId.split('_')[0]);
+    }
+    if (uniqueCountries.size >= 3) {
+      const achievementUnlock = unlockManagerAchievement(
+        { ...hydratedState, messages: finalMessages },
+        finalProfile,
+        'GLOBE_TROTTER',
+      );
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+  }
+
+  // YOUTH_DIAMOND: Any player on user's team that came from youth academy has 80+ OVR
+  if (!(finalProfile.unlockedAchievements || []).includes('YOUTH_DIAMOND')) {
+    const userPlayers = hydratedState.players.filter(p => p.teamId === hydratedState.userTeamId);
+    const youthStar = userPlayers.find(p => (p as any).isYouthProduct && p.overall >= 80);
+    if (youthStar) {
+      const achievementUnlock = unlockManagerAchievement(
+        { ...hydratedState, messages: finalMessages },
+        finalProfile,
+        'YOUTH_DIAMOND',
+      );
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+  }
+
+  // DOUBLE_WINNER: Win league + any continental cup in same season
+  if (
+    input.wonLeague &&
+    (input.wonChampionsLeague || input.wonEuropaLeague) &&
+    !(finalProfile.unlockedAchievements || []).includes('DOUBLE_WINNER')
+  ) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'DOUBLE_WINNER',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // BACK_TO_BACK_CHAMPION + DYNASTY: Consecutive league titles
+  const prevConsecutiveTitles = finalProfile.consecutiveLeagueTitles || 0;
+  const newConsecutiveTitles = input.wonLeague ? prevConsecutiveTitles + 1 : 0;
+  finalProfile = { ...finalProfile, consecutiveLeagueTitles: newConsecutiveTitles };
+
+  if (newConsecutiveTitles >= 2 && !(finalProfile.unlockedAchievements || []).includes('BACK_TO_BACK_CHAMPION')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'BACK_TO_BACK_CHAMPION',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  if (newConsecutiveTitles >= 3 && !(finalProfile.unlockedAchievements || []).includes('DYNASTY')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'DYNASTY',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
+
+  // LEVEL_10 recheck at season end (in case level jumped past 10)
+  if (finalProfile.level >= 10 && !(finalProfile.unlockedAchievements || []).includes('LEVEL_10')) {
+    const achievementUnlock = unlockManagerAchievement(
+      { ...hydratedState, messages: finalMessages },
+      finalProfile,
+      'LEVEL_10',
+    );
+    finalProfile = achievementUnlock.profile;
+    finalMessages = achievementUnlock.messages;
+  }
 
   return {
     ...hydratedState,
-    managerProfile: nextProfile,
-    managerRating: nextProfile.reputation,
-    messages: newMessages,
+    managerProfile: finalProfile,
+    managerRating: finalProfile.reputation,
+    messages: finalMessages,
   };
 };
 
@@ -3503,6 +3777,10 @@ export const initializeMatch = (
   return activeEngine.step().liveData.simulation;
 };
 
+// Cache last seen tactic references to avoid expensive JSON.stringify on every tick
+let _lastHomeTacticRef: TeamTactic | null = null;
+let _lastAwayTacticRef: TeamTactic | null = null;
+
 export const simulateTick = (
   match: Match,
   homeTeam: Team,
@@ -3522,13 +3800,22 @@ export const simulateTick = (
       awayPlayers,
       userTeamId,
     );
+    _lastHomeTacticRef = homeTeam.tactic;
+    _lastAwayTacticRef = awayTeam.tactic;
   } else {
     // FIX: Ensure tactics are synced if UI updated them *after* engine initialization
-    if (!areTacticsEquivalent(activeEngine.homeTeam.tactic, homeTeam.tactic)) {
-      activeEngine.updateTactic(homeTeam.id, homeTeam.tactic);
+    // Only do the expensive areTacticsEquivalent check when tactic reference changes
+    if (homeTeam.tactic !== _lastHomeTacticRef) {
+      _lastHomeTacticRef = homeTeam.tactic;
+      if (!areTacticsEquivalent(activeEngine.homeTeam.tactic, homeTeam.tactic)) {
+        activeEngine.updateTactic(homeTeam.id, homeTeam.tactic);
+      }
     }
-    if (!areTacticsEquivalent(activeEngine.awayTeam.tactic, awayTeam.tactic)) {
-      activeEngine.updateTactic(awayTeam.id, awayTeam.tactic);
+    if (awayTeam.tactic !== _lastAwayTacticRef) {
+      _lastAwayTacticRef = awayTeam.tactic;
+      if (!areTacticsEquivalent(activeEngine.awayTeam.tactic, awayTeam.tactic)) {
+        activeEngine.updateTactic(awayTeam.id, awayTeam.tactic);
+      }
     }
   }
   const result = activeEngine.step();
@@ -4489,6 +4776,8 @@ export const simulateLeagueRound = (
           isDerby: rivals.includes(opponentTeam.name),
           isCupMatch: false,
           isEuropeanMatch,
+          isHome: userIsHome,
+          engineUsed: getEngineChoice(),
         });
       }
     }
@@ -4731,6 +5020,17 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     );
   }
 
+  // ========== SMOOTH MARKET INFLATION (WEEKLY) ==========
+  // Target multiplier = totalBudgets / 2B baseline.
+  // Current multiplier moves at most 5% toward target each week → gradual drift,
+  // no instant price crash when AI teams spend big in transfer windows.
+  const INITIAL_TOTAL_BUDGETS = 28_000_000_000; // ~800 teams × €35M avg starting budget
+  const totalLeagueBudgets = gameState.teams.reduce((sum, t) => sum + Math.max(0, t.budget), 0);
+  const targetInflation = Math.min(8.0, Math.max(0.5, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS));
+  const prevInflation = gameState.marketInflationMultiplier ?? targetInflation;
+  // Move at most 5% of the gap per week (smooth drift)
+  const weeklyInflationMultiplier = prevInflation + (targetInflation - prevInflation) * 0.05;
+
   // UPDATE ALL PLAYERS GLOBALLY
   let updatedPlayers = gameState.players.map((p) => {
     const isUserPlayer = p.teamId === gameState.userTeamId;
@@ -4857,11 +5157,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         developmentChance = 0.02; // 2% (was 3%)
       else if (p.age < 28) developmentChance = 0.005; // 0.5% (was 1%)
 
-      // LATE-GAME BALANCE: Exponential difficulty for high overall
-      if (p.overall >= 92) developmentChance *= 0.05; // 95% reduction (miracle)
-      else if (p.overall >= 88) developmentChance *= 0.2;  // 80% reduction
-      else if (p.overall >= 84) developmentChance *= 0.4;  // 60% reduction
-      else if (p.overall >= 80) developmentChance *= 0.7;  // 30% reduction
+      // LATE-GAME BALANCE: Exponential difficulty for high overall (Hard cap for 90+)
+      if (p.overall >= 90) developmentChance *= 0.01; // 99% reduction (almost impossible to cross naturally)
+      else if (p.overall >= 87) developmentChance *= 0.1;  // 90% reduction
+      else if (p.overall >= 84) developmentChance *= 0.3;  // 70% reduction
+      else if (p.overall >= 80) developmentChance *= 0.6;  // 40% reduction
 
       let trainingBoost: (keyof typeof newAttributes)[] = [];
 
@@ -4965,15 +5265,20 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       attributes: newAttributes,
       overall: newOverall,
       potential: cappedPotential,
-      // VALUE: Must match generatePlayer & processEndOfSeason formula!
-      // 1.22^(OVR-60) with youth premium and age decline
-      value: Math.floor(
-        Math.pow(1.22, newOverall - 60) *
-        100000 *
-        (1 + (cappedPotential - newOverall) / 25) *
-        (1 + Math.max(0, 25 - p.age) * 0.03) *
-        (1 - Math.max(0, p.age - 26) * 0.025)
-      ),
+      // VALUE: Two-path update to prevent first-week jump.
+      // OVR changed → full recalculation with current multiplier.
+      // OVR same    → only apply the inflation delta (ratio adjustment),
+      //               preserving whatever value was set at game-init or season-end.
+      value: newOverall !== p.overall
+        ? Math.floor(
+            Math.pow(1.22, newOverall - 60) *
+            100000 *
+            (1 + (cappedPotential - newOverall) / 25) *
+            (1 + Math.max(0, 25 - p.age) * 0.03) *
+            (1 - Math.max(0, p.age - 26) * 0.025) *
+            weeklyInflationMultiplier
+          )
+        : Math.floor(p.value * (weeklyInflationMultiplier / prevInflation)),
       condition: Math.min(100, p.condition + rec),
       weeksInjured: newWeeksInjured,
       matchSuspension: Math.max(
@@ -6073,15 +6378,17 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
   // ========== FFP LUXURY TAX SYSTEM (Progressive Brackets) ==========
   // Progressive wealth tax: richer clubs pay proportionally more.
-  // Tax is distributed equally to all teams in the same league (solidarity fund).
+  // 50% of collected tax is DESTROYED (economic sink), 50% redistributed to league.
   // Brackets (annual rate, applied weekly):
-  //   €100M – €300M : 10%  → drains slow accumulation
-  //   €300M – €600M : 35%  → strong drain on mid-rich clubs
-  //   €600M+         : 60%  → hard cap effect on mega-rich clubs
+  //   €100M – €300M : 10%
+  //   €300M – €600M : 35%
+  //   €600M – €1B   : 60%
+  //   €1B+           : 120%  → hard cap on billionaire clubs
   const LUXURY_TAX_BRACKETS = [
-    { low: 100_000_000, high: 300_000_000, rate: 0.10 / 52 },
-    { low: 300_000_000, high: 600_000_000, rate: 0.35 / 52 },
-    { low: 600_000_000, high: Infinity,    rate: 0.60 / 52 },
+    { low: 100_000_000,   high: 300_000_000,  rate: 0.10 / 52 },
+    { low: 300_000_000,   high: 600_000_000,  rate: 0.35 / 52 },
+    { low: 600_000_000,   high: 1_000_000_000, rate: 0.60 / 52 },
+    { low: 1_000_000_000, high: Infinity,      rate: 1.20 / 52 },
   ];
 
   // Track FFP amounts per team for financial reporting
@@ -6117,13 +6424,15 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       }
     });
 
-    // Distribute fund equally to all teams in the league
+    // 50% destroyed (economic sink), 50% redistributed to all teams in league
     if (solidarityFund > 0) {
-      const perTeamShare = Math.floor(solidarityFund / leagueTeams.length);
+      const toRedistribute = Math.floor(solidarityFund * 0.50);
+      const perTeamShare = Math.floor(toRedistribute / leagueTeams.length);
       leagueTeams.forEach((team) => {
         team.budget += perTeamShare;
-        ffpSolidarityReceived[team.id] = perTeamShare; // Track for finance UI
+        ffpSolidarityReceived[team.id] = perTeamShare;
       });
+      // Other 50% is simply not returned → economic drain
     }
   });
 
@@ -6266,10 +6575,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     // TRANSFER WINDOW CHECK
     // Summer Window: Weeks 1-8
-    // Winter Window: Weeks 20-24
+    // Winter Window: Weeks 20-28
     const isTransferWindow =
       gameState.currentWeek <= 8 ||
-      (gameState.currentWeek >= 20 && gameState.currentWeek <= 24);
+      (gameState.currentWeek >= 20 && gameState.currentWeek <= 28);
 
     if (!isTransferWindow) return; // Stop all AI transfer activity outside windows
 
@@ -6298,10 +6607,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     else if (currentSquadSize < 22) { buyUrgencyThreshold = 30; buyChance = 0.80; }
     // Wealthier teams buy more aggressively — prevents budget accumulation over seasons
     let maxBuysThisWeek = 1;
-    if (aiTeam.budget > 500_000_000) { maxBuysThisWeek = 4; buyChance = 0.95; buyUrgencyThreshold = 15; }
-    else if (aiTeam.budget > 200_000_000) { maxBuysThisWeek = 3; buyChance = 0.90; buyUrgencyThreshold = 20; }
-    else if (aiTeam.budget > 50_000_000) { maxBuysThisWeek = 2; buyChance = 0.80; }
-    else if (aiTeam.budget > 30_000_000 && avgOverall < (aiTeam.reputation / 120)) { maxBuysThisWeek = 2; }
+    if (aiTeam.budget > 500_000_000) { maxBuysThisWeek = 5; buyChance = 0.97; buyUrgencyThreshold = 12; }
+    else if (aiTeam.budget > 200_000_000) { maxBuysThisWeek = 4; buyChance = 0.92; buyUrgencyThreshold = 18; }
+    else if (aiTeam.budget > 50_000_000) { maxBuysThisWeek = 2; buyChance = 0.82; }
+    else if (aiTeam.budget > 20_000_000 && avgOverall < (aiTeam.reputation / 120)) { maxBuysThisWeek = 2; }
     let buysThisWeek = 0;
 
     // For very rich teams with no acute needs: inject upgrade opportunities so budget drains
@@ -6336,8 +6645,22 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
       // Look for players who fit this specific role
       // BUYER QUALITY GATE: Prevent weak teams from buying world-class players
-      const richOrEliteBuyer = aiTeam.reputation >= 8200 || aiTeam.budget >= 180_000_000;
+      const isEliteBuyer = aiTeam.reputation >= 8200 || aiTeam.budget >= 150_000_000;
+      const isMegaRichBuyer = aiTeam.reputation >= 9000 || aiTeam.budget >= 250_000_000;
+      // NOTE: effectiveBudget is calculated below after potentialSaleValue is known
       const desperateUpgrade = topNeed.urgency >= buyUrgencyThreshold + 15;
+
+      // ASSET-AWARE BUDGET: Include potential sale value of weakest same-position player.
+      // AI knows it can sell someone to fund the purchase — mirrors real transfer market logic.
+      const currentTeamPlayersForBudget = getIndexedTeamPlayers(aiTeam.id);
+      const sellableSamePos = currentTeamPlayersForBudget
+        .filter(p => p.position === topNeed.position && p.lineup !== "STARTING" && !transferredPlayerIds.has(p.id))
+        .sort((a, b) => a.overall - b.overall);
+      const potentialSaleValue = sellableSamePos.length > 0
+        ? Math.floor(sellableSamePos[0].value * 0.8) // 80% of value — conservative estimate
+        : 0;
+      const effectiveBudget = aiTeam.budget + potentialSaleValue;
+
       const availablePlayers = (playersByPosition.get(topNeed.position) || []).filter(
         (p) => {
           if (p.teamId === aiTeam.id || p.teamId === gameState.userTeamId) return false;
@@ -6345,39 +6668,43 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           if (gameState.currentWeek - (p.lastTransferWeek || -99) < 15) return false;
 
           const marketAccessible = p.isTransferListed || (p.contractYears ?? 99) <= 1 || p.teamId === 'FREE_AGENT';
-          const premiumAccessible = richOrEliteBuyer && desperateUpgrade && p.overall >= topNeed.targetRating && p.value < aiTeam.budget * 0.75;
+          const premiumAccessible = isEliteBuyer && desperateUpgrade && p.overall >= topNeed.targetRating && p.value < effectiveBudget * 0.75;
 
           if (!marketAccessible && !premiumAccessible) return false;
-          if (p.overall < topNeed.targetRating - 2) return false;
-          if (!(aiTeam.reputation > 8500 || aiTeam.budget > 300_000_000 || p.overall <= avgOverall + 15 || premiumAccessible)) return false;
-          if (p.value >= aiTeam.budget * (premiumAccessible ? 0.75 : 0.6)) return false;
+          // MEGA RICH RULE: Always bid for young 80+ elit talents unconditionally or 85+ players if budget holds
+          const isMegaRichTarget = isMegaRichBuyer && ((p.age <= 23 && p.overall >= 80) || p.overall >= 85);
+          if (p.overall < topNeed.targetRating - 2 && !isMegaRichTarget) return false; // Allowed to buy if elite prospect
+
+          if (!(aiTeam.reputation > 8500 || effectiveBudget > 150_000_000 || p.overall <= avgOverall + 15 || premiumAccessible)) return false;
+          // Protect clubs from bankrupting themselves — use effectiveBudget (includes sale proceeds)
+          const safeBudgetLimit = isMegaRichTarget ? 0.90 : (premiumAccessible ? 0.75 : 0.60);
+          if (p.value >= effectiveBudget * safeBudgetLimit) return false;
 
           return true;
         },
       );
 
       if (availablePlayers.length > 0) {
-        // SCORE PLAYERS BASED ON ROLE FIT (Not just Overall!)
-        const scoredTargets = availablePlayers.map((p) => ({
-          player: p,
-          utilityScore: AIService.calculatePlayerUtility(
-            p,
-            topNeed.role,
-            aiTeam.tactic,
-          ),
-        }));
+        // SCORE PLAYERS BASED ON ROLE FIT AND OVERALL
+        const scoredTargets = availablePlayers.map((p) => {
+          let utilityScore = AIService.calculatePlayerUtility(p, topNeed.role, aiTeam.tactic);
+          // Mega rich clubs explicitly bias highly towards purely high-overall/high-potential players over strict "utility"
+          if (isMegaRichBuyer && p.overall >= 80) {
+              utilityScore += p.overall * 2;
+              if (p.age <= 23) utilityScore += p.potential * 1.5; 
+          }
+          return { player: p, utilityScore };
+        });
 
         // Sort by Utility Score (Best fit for the role)
-        const sortedTargets = scoredTargets.sort(
-          (a, b) => b.utilityScore - a.utilityScore,
-        );
+        const sortedTargets = scoredTargets.sort((a, b) => b.utilityScore - a.utilityScore);
 
         // Top target is the best FIT, not necessarily highest OVR
         const targetPlayer = sortedTargets[0].player;
         const sellingTeam = teamsById.get(targetPlayer.teamId);
 
-        // Max offer shouldn't exceed transfer budget limit (80%)
-        if (sellingTeam && targetPlayer.value < aiTeam.budget * 0.8) {
+        // Max offer shouldn't exceed transfer budget limit (include 7% transfer tax)
+        if (sellingTeam && targetPlayer.value * 1.07 < aiTeam.budget * 0.9) {
           // === REJECTION LOGIC FIX ===
           // Selling team may reject the offer based on player importance, but we make sure transfers CAN happen
           const sellingTeamPlayers = playersByTeam.get(sellingTeam.id) || [];
@@ -6388,7 +6715,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           const wouldLeaveShort = positionPlayersCount <= 3;
 
           const marketAccessible = targetPlayer.isTransferListed || (targetPlayer.contractYears ?? 99) <= 1 || targetPlayer.teamId === 'FREE_AGENT';
-          const premiumRaid = !marketAccessible && richOrEliteBuyer && desperateUpgrade;
+          const premiumRaid = !marketAccessible && isEliteBuyer && desperateUpgrade;
 
           let rejectChance = 0.1; // Base 10%
           if (isStarter) rejectChance += 0.25; // Starter
@@ -6404,9 +6731,9 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           // Financial power discount: rich clubs offering huge fees are harder to refuse
           // Prevents budget accumulation — a 3B club should be able to buy an 80 OVR player
           const offerRatio = aiTeam.budget / Math.max(1, targetPlayer.value);
-          if (offerRatio > 50) rejectChance -= 0.40; // Insane wealth — selling team pockets life-changing fee
-          else if (offerRatio > 20) rejectChance -= 0.25;
-          else if (offerRatio > 10) rejectChance -= 0.15;
+          if (offerRatio > 50) rejectChance -= 0.50; // Insane wealth — selling team pockets life-changing fee
+          else if (offerRatio > 20) rejectChance -= 0.35;
+          else if (offerRatio > 10) rejectChance -= 0.20;
 
           // ★ STAR PLAYER PROTECTION — scaled by financial power ★
           // Rich clubs offering a king's ransom can eventually unlock any player
@@ -6457,9 +6784,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
             targetPlayer.lastTransferWeek = gameState.currentWeek; // FIX: Set transfer week
             transferredPlayerIds.add(targetPlayer.id); // FIX: Mark as transferred
 
-            // Update budgets
+            // Update budgets (buyer pays 10% transfer tax)
+            const transferTax = Math.floor(transferFee * 0.10);
             adjustTeamBudget(sellingTeam.id, transferFee);
-            adjustTeamBudget(aiTeam.id, -transferFee);
+            adjustTeamBudget(aiTeam.id, -(transferFee + transferTax));
+            gameState.transferTaxPot = (gameState.transferTaxPot || 0) + transferTax;
 
             weeklyTransferCount++;
             weeklyTransferSpent += transferFee;
@@ -6504,10 +6833,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
               aiTeam.budget >= 250_000_000 ||
               avgOverall >= 80;
             const reserveBuffer = isEliteClub ? 2 : 1;
-            const swapListingFloor = Math.max(
-              isEliteClub ? 74 : 70,
-              Math.round(avgOverall - (isEliteClub ? 9 : 7)),
-            );
+            // Fully relative: floor tracks squad average so high-OVR squads still list surplus
+            const swapListingFloor = Math.round(avgOverall - (isEliteClub ? 5 : 4));
 
             // Only consider selling if we now have genuine depth surplus at this position
             const formationPosCount = formationSlots[targetPlayer.position] ?? 1;
@@ -6714,8 +7041,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           playerToSell.lineupIndex = 99;
           playerToSell.lastTransferWeek = gameState.currentWeek;
 
+          // Buyer pays 10% transfer tax
+          const sellTax = Math.floor(transferFee * 0.10);
           adjustTeamBudget(aiTeam.id, transferFee);
-          adjustTeamBudget(buyer.id, -transferFee);
+          adjustTeamBudget(buyer.id, -(transferFee + sellTax));
+          gameState.transferTaxPot = (gameState.transferTaxPot || 0) + sellTax;
 
           // Show message if: (a) user's league involved (all transfers), OR (b) player is 80+ OVR worldwide
           const userLeagueIdSell = userTeam?.leagueId;
@@ -6776,15 +7106,13 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     const financialPressure =
       aiTeam.budget < 0 ||
       budgetRunwayWeeks < (eliteClub ? 18 : 12);
-    const reserveDepthBuffer = eliteClub ? 2 : strongClub ? 2 : 1;
+    const reserveDepthBuffer = eliteClub ? 2 : 1;
     const coreProtectionCount = Math.min(
       squadSize,
-      eliteClub ? 24 : strongClub ? 22 : 20,
+      eliteClub ? 18 : strongClub ? 16 : 14,
     );
-    const minimumListableOverall = Math.max(
-      eliteClub ? 74 : strongClub ? 72 : 68,
-      Math.round(avgOverall - (eliteClub ? 9 : strongClub ? 8 : 7)),
-    );
+    // Fully relative: no hard floor so high-OVR squads still list their weakest players
+    const minimumListableOverall = Math.round(avgOverall - (eliteClub ? 5 : strongClub ? 4 : 4));
     const positionCounts = {
       [Position.GK]: teamPlayers.filter((p) => p.position === Position.GK).length,
       [Position.DEF]: teamPlayers.filter((p) => p.position === Position.DEF).length,
@@ -6801,85 +7129,114 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       positionCounts[player.position] > (formationSlots[player.position] || 1) + reserveDepthBuffer;
     const canListDepthPlayer = (player: Player) =>
       player.lineup !== "STARTING" &&
-      !player.isTransferListed &&
       !protectedFromListing.has(player.id) &&
       player.overall <= minimumListableOverall &&
       hasPositionalSurplus(player);
 
+    // === STEP 0: WEEKLY DELIST - Remove transfer listing from players who no longer qualify ===
+    // Only delist if promoted to protected core or became a starter — keep market moving
+    teamPlayers.forEach((p) => {
+      if (p.isTransferListed) {
+        const shouldDelist =
+          protectedFromListing.has(p.id) ||
+          p.lineup === "STARTING";
+        if (shouldDelist) {
+          p.isTransferListed = false;
+        }
+      }
+    });
+
     // A) Squad bloat - list surplus players or terminate contracts
-    const shouldForceSquadTrim = squadSize >= (eliteClub ? 32 : 30);
-    if ((squadSize > 22 && Math.random() < (squadSize >= 27 ? 0.55 : 0.25)) || shouldForceSquadTrim) {
+    const shouldForceSquadTrim = squadSize >= (eliteClub ? 28 : 26);
+    if (shouldForceSquadTrim) {
       const listCandidates = teamPlayers
-        .filter((p) => canListDepthPlayer(p))
+        .filter((p) => canListDepthPlayer(p) && !p.isTransferListed)
         .sort((a, b) => a.overall - b.overall);
 
       if (listCandidates.length > 0) {
-        // FORCE TERMINATION FOR BLOATED SQUADS (30+ players)
-        if (shouldForceSquadTrim) {
-          const terminationCount = financialPressure
-            ? Math.min(listCandidates.length, squadSize >= 34 ? 2 : 1)
-            : 0;
-          listCandidates.slice(0, terminationCount).forEach((toTerminate) => {
-            trackPlayerTeamChange(toTerminate, "FREE_AGENT");
-            toTerminate.lineup = "RESERVE";
-            toTerminate.isTransferListed = false;
-            adjustTeamBudget(aiTeam.id, -(toTerminate.value * 0.1));
-          });
+        const terminationCount = financialPressure
+          ? Math.min(listCandidates.length, squadSize >= 34 ? 2 : 1)
+          : 0;
+        listCandidates.slice(0, terminationCount).forEach((toTerminate) => {
+          trackPlayerTeamChange(toTerminate, "FREE_AGENT");
+          toTerminate.lineup = "RESERVE";
+          toTerminate.isTransferListed = false;
+          adjustTeamBudget(aiTeam.id, -(toTerminate.value * 0.1));
+        });
 
-          listCandidates
-            .slice(terminationCount, terminationCount + 2)
-            .forEach((candidate) => {
-              candidate.isTransferListed = true;
-            });
-        } else {
-          // Just list the weakest surplus players
-          const surplus = squadSize - 20;
-          listCandidates.slice(0, Math.min(surplus, squadSize >= 27 ? 3 : 2)).forEach((p) => {
-            p.isTransferListed = true;
+        // List only 1-2 extra surplus after terminations
+        listCandidates
+          .slice(terminationCount, terminationCount + 2)
+          .forEach((candidate) => {
+            candidate.isTransferListed = true;
           });
-        }
+      }
+    } else if (squadSize > 23 && Math.random() < 0.35) {
+      // Mild surplus (23-27 players) — list 1 weakest player
+      const listCandidates = teamPlayers
+        .filter((p) => canListDepthPlayer(p) && !p.isTransferListed)
+        .sort((a, b) => a.overall - b.overall);
+      if (listCandidates.length > 0) {
+        listCandidates[0].isTransferListed = true;
       }
     }
 
-    // B) High wage / low value players (only non-protected depth players)
-    teamPlayers.forEach((p) => {
-      if (canListDepthPlayer(p) && financialPressure) {
-        const wageValueRatio = (p.salary || 0) / (p.value || 1);
-        // High wage relative to value = list for sale
-        if (wageValueRatio > 0.25 && Math.random() < 0.15) {
-          p.isTransferListed = true;
+    // B) Crippling contracts - Force terminate only truly bankrupting players
+    if (financialPressure) {
+      teamPlayers.forEach((p) => {
+        const cripplingWage = p.salary > aiTeam.budget * 0.4 && p.salary > 10_000_000;
+        if (cripplingWage) {
+          if (p.overall < 90 || aiTeam.budget < 0) {
+            trackPlayerTeamChange(p, "FREE_AGENT");
+            p.lineup = "RESERVE";
+            p.isTransferListed = false;
+            adjustTeamBudget(aiTeam.id, -(p.value * 0.05));
+          }
         }
-      }
-    });
+      });
+    }
 
-    // C) Aging and declining players
-    teamPlayers.forEach((p) => {
-      if (
+    // C) Aging players — list if old and not a starter, no surplus required
+    if (Math.random() < 0.2) {
+      const agingCandidate = teamPlayers.find((p) =>
         !p.isTransferListed &&
         !protectedFromListing.has(p.id) &&
-        p.age > 31 &&
+        p.age > 32 &&
         p.overall <= minimumListableOverall &&
-        (financialPressure || hasPositionalSurplus(p))
-      ) {
-        if (Math.random() < 0.2) {
-          p.isTransferListed = true;
-        }
+        p.lineup !== "STARTING"
+      );
+      if (agingCandidate) {
+        agingCandidate.isTransferListed = true;
       }
-    });
+    }
 
-    // D) Unhappy players
-    teamPlayers.forEach((p) => {
-      if (
+    // D) Unhappy players — list if morale is extremely low
+    if (Math.random() < 0.2) {
+      const unhappyCandidate = teamPlayers.find((p) =>
         !p.isTransferListed &&
         !protectedFromListing.has(p.id) &&
-        (p.lineup !== "STARTING" || financialPressure) &&
-        (p.morale || 75) < 35
-      ) {
-        if (Math.random() < 0.3) {
-          p.isTransferListed = true;
-        }
+        p.lineup !== "STARTING" &&
+        (p.morale || 75) < 25
+      );
+      if (unhappyCandidate) {
+        unhappyCandidate.isTransferListed = true;
       }
-    });
+    }
+
+    // E) Value cycling — list a non-core reserve with meaningful market value
+    if (Math.random() < 0.2) {
+      const valueCycleCandidate = teamPlayers
+        .filter((p) =>
+          !p.isTransferListed &&
+          !protectedFromListing.has(p.id) &&
+          p.lineup !== "STARTING" &&
+          p.value >= 4_000_000
+        )
+        .sort((a, b) => b.value - a.value)[0]; // list most valuable unprotected reserve
+      if (valueCycleCandidate) {
+        valueCycleCandidate.isTransferListed = true;
+      }
+    }
   });
 
   // ========== WEEKLY TRANSFER SUMMARY ==========
@@ -6967,6 +7324,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     transferNews: [],
     offers: newMessages,
     newPendingOffers: newOffers,
+    marketInflationMultiplier: weeklyInflationMultiplier,
   };
 };
 
@@ -7287,20 +7645,18 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     Object.assign(LEAGUE_EUROPEAN_BONUS, gameState.leagueEuropeanBonuses);
   }
 
-  // ========== MARKET INFLATION SYSTEM ==========
-  // Track total economy growth and apply inflation to player values
-  // This prevents late-game "everyone is rich but players are cheap" scenario
-  const INITIAL_TOTAL_BUDGETS = 2_000_000_000; // €2B baseline (approx sum of all teams' starting budgets)
+  // ========== MARKET INFLATION SYSTEM (REAL ECONOMY) ==========
+  // Pure supply-demand: inflation tracks total money across ALL leagues
+  // More money in the economy → higher player values (inflation)
+  // Less money in the economy → lower player values (deflation)
+  // This creates a living, breathing transfer market that mirrors real-world economics
+  const INITIAL_TOTAL_BUDGETS = 28_000_000_000; // ~800 teams × €35M avg starting budget // €2B baseline at season 1
   const totalLeagueBudgets = gameState.teams.reduce(
     (sum, t) => sum + Math.max(0, t.budget),
     0,
   );
-  // Budget-driven inflation: scales with total money in the economy (no hard cap)
-  const budgetInflation = Math.max(1.0, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS);
-  // Season-based compound inflation: ~8% per year regardless of budget (realistic market growth)
-  const seasonInflation = Math.pow(1.08, Math.max(0, gameState.currentSeason - 1));
-  // Combined: whichever is higher drives the market (capped at 6x to prevent absurdity)
-  const inflationMultiplier = Math.min(6.0, Math.max(budgetInflation, seasonInflation));
+  // Pure ratio: floor 0.5x (prevents total collapse), cap 8x (prevents absurdity)
+  const inflationMultiplier = Math.min(8.0, Math.max(0.5, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS));
 
   console.log(
     `[Season End] Market Inflation: Total Budgets €${(totalLeagueBudgets / 1000000).toFixed(0)}M, Multiplier: ${inflationMultiplier.toFixed(2)}x`,
@@ -7527,15 +7883,46 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     BASE_LEAGUE_REPUTATION[lid] = totalScore;
     LEAGUE_REPUTATION_BONUS[lid] = 0; // Reset bonuses, pure 5-year coefficient now.
 
-    // Update Economic Multiplier
-    // EN/PL is usually ~100-110 points. TR is ~35-40.
-    // Map 40pts -> 1.0x, 100pts -> 3.5x
-    const baseEcon = (BASE_LEAGUE_ECON_MULTIPLIERS as any)[lid] || 1.0;
-    const calculatedMult = 1.0 + Math.max(0, (totalScore - 40) * 0.04); // +0.04 per point over 40
-    const newBonus = Math.max(0, calculatedMult - baseEcon);
-
-    LEAGUE_EUROPEAN_BONUS[lid] = Number(newBonus.toFixed(2));
   });
+
+  // ========== DYNAMIC LEAGUE INCOME RANKING ==========
+  // All leagues ranked by their 5-year European coefficient sum.
+  // Rank 1 always earns the highest multiplier (3.5x), regardless of which league it is.
+  // If Turkey reaches rank 1, they earn what England used to earn. England at rank 11 earns what Turkey used to.
+  // Smooth transition: move 25% toward target per season to avoid income shocks.
+  {
+    const allLeagueIds = [...new Set(gameState.teams.map(t => t.leagueId).filter(Boolean))] as string[];
+
+    // Score each league by its 5-year coefficient sum
+    const leagueScores = allLeagueIds.map(lid => {
+      const history = LEAGUE_COEFFICIENTS[lid] || [];
+      const score = history.slice(-5).reduce((s, v) => s + v, 0);
+      return { lid, score };
+    });
+
+    // Sort best → worst
+    leagueScores.sort((a, b) => b.score - a.score);
+
+    // Rank-based target multiplier: rank 1 = 3.5x, -0.25 per rank, floor 0.5x
+    const MAX_MULT = 3.5;
+    const STEP = 0.25;
+    const MIN_MULT = 0.5;
+
+    leagueScores.forEach(({ lid }, idx) => {
+      const rank = idx + 1;
+      const targetMult = Math.max(MIN_MULT, MAX_MULT - (rank - 1) * STEP);
+      const baseEcon = (BASE_LEAGUE_ECON_MULTIPLIERS as any)[lid] || 1.0;
+      const targetBonus = targetMult - baseEcon; // can be negative (league declined)
+
+      const currentBonus = LEAGUE_EUROPEAN_BONUS[lid] ?? 0;
+      // Smooth 25% transition per season
+      const newBonus = currentBonus + (targetBonus - currentBonus) * 0.25;
+      LEAGUE_EUROPEAN_BONUS[lid] = Number(newBonus.toFixed(3));
+    });
+
+    const top3 = leagueScores.slice(0, 3).map(l => `${l.lid}(${l.score.toFixed(0)}pts)`).join(', ');
+    console.log(`[LeagueRanking] Top 3: ${top3} | Total leagues: ${allLeagueIds.length}`);
+  }
 
   console.log("[Coef Update] Season Coefficients:", leagueSeasonalPoints);
   console.log("[Coef Update] New Reputations:", BASE_LEAGUE_REPUTATION);
@@ -8031,12 +8418,11 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       }
     }
 
-    // Value update based on new overall/age - use same formula as initial generation
-    // 1.22^(OVR-60) with youth premium and age decline
-    // MARKET INFLATION: Scale value by inflation multiplier (1.0-2.0x based on total economy)
+    // Value update based on new overall/age - consistent with weekly formula
     const baseValue = Math.floor(
       Math.pow(1.22, overall - 60) *
       100000 *
+      (1 + (p.potential - overall) / 25) *   // potential factor — same as weekly update
       (1 + Math.max(0, 25 - age) * 0.03) *
       (1 - Math.max(0, age - 26) * 0.025),
     );
@@ -8092,10 +8478,9 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       salary: finalSalary, // Contract-locked salary (only updates on new contract)
       contractYears,
       teamId,
-      isTransferListed:
-        teamId !== gameState.userTeamId && teamId !== 'FREE_AGENT' && contractYears <= 1
-          ? true
-          : p.isTransferListed,
+      // FIXED: Don't mass-list all 1-year contract players! That was causing 75% of squads to be listed.
+      // Only keep existing listing status. Weekly AI logic handles listing decisions properly.
+      isTransferListed: teamId === 'FREE_AGENT' ? false : p.isTransferListed,
       stats: {
         goals: 0,
         assists: 0,
@@ -8212,7 +8597,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       [basePotential, Math.min(90, basePotential + 4)],
     );
     youth.overall = getRandomInt(50, 65);
-    youth.value = Math.floor(Math.pow(1.22, youth.overall - 60) * 100000 * (1 + Math.max(0, 25 - youth.age) * 0.03));
+    youth.value = Math.floor(Math.pow(1.22, youth.overall - 60) * 100000 * (1 + Math.max(0, 25 - youth.age) * 0.03) * inflationMultiplier);
     youth.salary = Math.floor(Math.pow(1.13, youth.overall - 50) * 100000 * 0.005) * 52; // Consistent wage formula
     youth.lineup = "RESERVE";
     youth.lineupIndex = 99;
@@ -8476,10 +8861,43 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   // The winners of Season X play at end of Season X.
   let superCupMatch: any = undefined; // Use 'any' to satisfy type if needed, or update GameState type if strictly typed
 
-  // 5. Update Game State
+  // 5. Transfer Tax Pot Distribution (30% to all teams equally, 70% destroyed)
+  const taxPot = gameState.transferTaxPot || 0;
+  const taxDistributionMessage = (() => {
+    if (taxPot <= 0) {
+      console.log(`[TransferTax] Pot empty this season — no transfers taxed yet.`);
+      return null;
+    }
+    const toDistribute = Math.floor(taxPot * 0.10); // 10% back to teams, 90% destroyed
+    const toDestroy = taxPot - toDistribute;
+    const perTeam = updatedTeams.length > 0 ? Math.floor(toDistribute / updatedTeams.length) : 0;
+    if (perTeam > 0) {
+      updatedTeams = updatedTeams.map(t => ({ ...t, budget: t.budget + perTeam }));
+    }
+    console.log(`[TransferTax] Pot: €${(taxPot/1e6).toFixed(1)}M | Distributed: €${(toDistribute/1e6).toFixed(1)}M (€${(perTeam/1e6).toFixed(2)}M/takım) | Destroyed: €${(toDestroy/1e6).toFixed(1)}M`);
+    return {
+      id: uuid(),
+      week: 1,
+      type: MessageType.BOARD,
+      subject: t.transferTaxSubject || '💰 Transfer Vergi Fonu — Sezon Sonu Raporu',
+      body: [
+        t.transferTaxBody1?.replace('{total}', `€${(taxPot/1e6).toFixed(1)}M`) ||
+          `Bu sezon transfer vergisinden toplam €${(taxPot/1e6).toFixed(1)}M birikim sağlandı.`,
+        t.transferTaxBody2?.replace('{dist}', `€${(toDistribute/1e6).toFixed(1)}M`).replace('{perTeam}', `€${(perTeam/1e6).toFixed(2)}M`) ||
+          `%30'u (€${(toDistribute/1e6).toFixed(1)}M) tüm kulüplere eşit dağıtıldı: kulüp başına €${(perTeam/1e6).toFixed(2)}M.`,
+        t.transferTaxBody3?.replace('{destroyed}', `€${(toDestroy/1e6).toFixed(1)}M`) ||
+          `Kalan €${(toDestroy/1e6).toFixed(1)}M ekonomiden çekildi (enflasyon önlemi).`,
+      ].join('\n'),
+      isRead: false,
+      date: new Date().toISOString(),
+    };
+  })();
+
+  // 6. Update Game State
   const newState = {
     ...gameState,
     currentSeason: gameState.currentSeason + 1,
+    transferTaxPot: 0, // Reset pot for new season
     currentWeek: 1,
     history: [...gameState.history, ...historyEntries],
     teams: updatedTeams,
@@ -8507,6 +8925,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     managerCareerHistory: updatedCareerHistory,
     managerTrophies: updatedTrophies,
     jobOffers: limitedOffers,
+    marketInflationMultiplier: inflationMultiplier, // Sync so week 1 of new season starts from here
 
     messages: [
       {
@@ -8544,6 +8963,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
           demandedSalary: demand.demandedSalary,
         },
       })),
+      ...(taxDistributionMessage ? [taxDistributionMessage] : []),
       ...gameState.messages,
     ],
 

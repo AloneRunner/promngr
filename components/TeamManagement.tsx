@@ -67,7 +67,7 @@ const getSupportInfo = (engine: EngineChoice, field: EngineSupportField, t: Tran
     const level: EngineSupportLevel = (() => {
         if (field === 'attackPlan') return engine === 'ucuncu' ? 'native' : 'adapted';
         if (field === 'attackApproach' || field === 'defenseApproach') return 'translated';
-        if (field === 'marking') return engine === 'ucuncu' ? 'native' : 'basic';
+        if (field === 'marking') return 'native';
         return 'native';
     })();
 
@@ -981,14 +981,16 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
         return map[key];
     };
 
-    const rankedStrengths = ([
+    const strengths: Array<['speed' | 'control' | 'aerial' | 'press' | 'solidity' | 'creativity', number]> = [
         ['speed', squadProfile.speed],
         ['control', squadProfile.control],
         ['aerial', squadProfile.aerial],
         ['press', squadProfile.press],
         ['solidity', squadProfile.solidity],
         ['creativity', squadProfile.creativity],
-    ] as const)
+    ];
+
+    const rankedStrengths = strengths
         .sort((left, right) => right[1] - left[1])
         .slice(0, 3)
         .map(([key]) => getProfileLabel(key));
