@@ -174,14 +174,14 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                     {/* Projections */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="bg-gradient-to-br from-red-900/30 to-slate-900/80 backdrop-blur p-4 rounded-2xl flex flex-col justify-between border border-red-500/20 shadow-lg">
-                            <div className="text-[10px] uppercase text-red-400/70 font-bold mb-1 tracking-wider">{t.weeklyWage}</div>
+                            <div className="text-[10px] uppercase text-red-400/80 font-bold mb-1 tracking-wider">{t.weeklyWage}</div>
                             <div className="flex items-end justify-between">
                                 <span className="text-lg font-mono text-red-400 font-bold drop-shadow-[0_0_6px_rgba(248,113,113,0.4)]">-€{totalWages.toLocaleString()}</span>
                                 <TrendingDown size={18} className="text-red-400 mb-1 drop-shadow-[0_0_6px_rgba(248,113,113,0.5)]" />
                             </div>
                         </div>
                         <div className="bg-gradient-to-br from-emerald-900/30 to-slate-900/80 backdrop-blur p-4 rounded-2xl flex flex-col justify-between border border-emerald-500/20 shadow-lg">
-                            <div className="text-[10px] uppercase text-emerald-400/70 font-bold mb-1 tracking-wider">{t.estMatchIncome}</div>
+                            <div className="text-[10px] uppercase text-emerald-400/80 font-bold mb-1 tracking-wider">{t.estMatchIncome}</div>
                             <div className="flex items-end justify-between">
                                 <span className="text-lg font-mono text-emerald-400 font-bold drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]">+€{estimatedTicketIncome.toLocaleString()}</span>
                                 <TrendingUp size={18} className="text-emerald-400 mb-1 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
@@ -299,8 +299,8 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             {fin.lastWeekIncome.tickets > 0 && (
                                 <div className="bg-emerald-900/20 p-3 rounded-lg border border-emerald-500/20">
                                     <div className="flex justify-between items-center mb-1">
-                                        <div className="text-[10px] uppercase text-emerald-400/70">{t.lastMatchAttendance}</div>
-                                        <div className="text-[10px] uppercase text-emerald-400/70">{t.income}</div>
+                                        <div className="text-[10px] uppercase text-emerald-400/80">{t.lastMatchAttendance}</div>
+                                        <div className="text-[10px] uppercase text-emerald-400/80">{t.income}</div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <div className="text-sm font-bold text-white">
@@ -524,6 +524,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                                         {record.income.sponsor > 0 && <div>💼 €{(record.income.sponsor / 1000).toFixed(0)}K</div>}
                                                         {(record.income.seasonEnd || 0) > 0 && <div className="text-yellow-400">🏆 €{(record.income.seasonEnd / 1000000).toFixed(1)}M</div>}
                                                         {(record.income.cupPrize || 0) > 0 && <div className="text-purple-400">🏅 €{(record.income.cupPrize / 1000000).toFixed(1)}M</div>}
+                                                        {(record.income.ffpSolidarity || 0) > 0 && <div className="text-cyan-400">🤝 €{(record.income.ffpSolidarity / 1000).toFixed(0)}K</div>}
                                                     </div>
                                                 </td>
                                                 <td className="p-2 text-right">
@@ -532,6 +533,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                                         {record.expenses.wages > 0 && <div>👥 €{(record.expenses.wages / 1000).toFixed(0)}K</div>}
                                                         {record.expenses.maintenance > 0 && <div>🔧 €{(record.expenses.maintenance / 1000).toFixed(0)}K</div>}
                                                         {(record.expenses.facilityUpgrade || 0) > 0 && <div className="text-orange-400">🏗️ €{(record.expenses.facilityUpgrade / 1000000).toFixed(1)}M</div>}
+                                                        {(record.expenses.ffpTax || 0) > 0 && <div className="text-red-400">🏦 €{(record.expenses.ffpTax / 1000000).toFixed(2)}M FFP</div>}
                                                     </div>
                                                 </td>
                                                 <td className="p-2 text-right">
@@ -670,7 +672,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[9px] uppercase text-slate-500 font-bold">LEVEL</span>
-                                <span className="text-lg font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-sm">/7</span></span>
+                                <span className="text-lg font-black text-white">{team.facilities.trainingLevel}<span className="text-slate-600 text-sm">/8</span></span>
                             </div>
                         </div>
 
@@ -768,7 +770,7 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                             </h2>
                             <div className="text-right">
                                 <span className="block text-[10px] uppercase text-slate-500 font-bold">{t.levelLabel || 'Level'}</span>
-                                <span className="text-xl md:text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/7</span></span>
+                                <span className="text-xl md:text-2xl font-black text-white">{team.facilities.academyLevel}<span className="text-slate-600 text-lg">/8</span></span>
                             </div>
                         </div>
 
@@ -955,9 +957,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
-                                        <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}<span className="text-slate-600 text-sm">/7</span></span>
+                                        <span className="text-blue-400 font-bold text-xl">{staff.headCoachLevel}<span className="text-slate-600 text-sm">/8</span></span>
                                     </div>
-                                    {staff.headCoachLevel < 7 && (
+                                    {staff.headCoachLevel < 8 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
                                                 <span>{t.currentLabel || 'Current'}:</span>
@@ -973,10 +975,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('headCoachLevel')}
-                                    disabled={staff.headCoachLevel >= 7}
+                                    disabled={staff.headCoachLevel >= 8}
                                     className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.headCoachLevel >= 7 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.headCoachLevel >= 8 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.headCoachLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -994,9 +996,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
-                                        <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}<span className="text-slate-600 text-sm">/7</span></span>
+                                        <span className="text-purple-400 font-bold text-xl">{staff.scoutLevel}<span className="text-slate-600 text-sm">/8</span></span>
                                     </div>
-                                    {staff.scoutLevel < 7 && (
+                                    {staff.scoutLevel < 8 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
                                                 <span>{t.currentLabel || 'Current'}:</span>
@@ -1012,10 +1014,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('scoutLevel')}
-                                    disabled={staff.scoutLevel >= 7}
+                                    disabled={staff.scoutLevel >= 8}
                                     className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.scoutLevel >= 7 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.scoutLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.scoutLevel >= 8 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.scoutLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>
@@ -1033,9 +1035,9 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
                                 <div className="bg-slate-900/50 p-3 rounded mb-3">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-slate-400 text-xs uppercase font-bold">{t.levelLabel || 'Level'}</span>
-                                        <span className="text-red-400 font-bold text-xl">{staff.physioLevel}<span className="text-slate-600 text-sm">/7</span></span>
+                                        <span className="text-red-400 font-bold text-xl">{staff.physioLevel}<span className="text-slate-600 text-sm">/8</span></span>
                                     </div>
-                                    {staff.physioLevel < 7 && (
+                                    {staff.physioLevel < 8 && (
                                         <div className="text-[10px] space-y-1 border-t border-slate-700/50 pt-2">
                                             <div className="flex justify-between text-slate-400">
                                                 <span>{t.currentLabel || 'Current'}:</span>
@@ -1051,10 +1053,10 @@ export const ClubManagement: React.FC<ClubManagementProps> = ({ team, players, t
 
                                 <button
                                     onClick={() => onUpgradeStaff && onUpgradeStaff('physioLevel')}
-                                    disabled={staff.physioLevel >= 7}
+                                    disabled={staff.physioLevel >= 8}
                                     className="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold py-2 rounded transition-colors text-sm"
                                 >
-                                    {staff.physioLevel >= 7 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.physioLevel)) / 1000).toLocaleString()}K)`}
+                                    {staff.physioLevel >= 8 ? 'MAX' : `${t.upgradeBtn || 'Upgrade'} (€${(Math.floor(100000 * Math.pow(1.5, staff.physioLevel)) / 1000).toLocaleString()}K)`}
                                 </button>
                             </div>
                         </div>

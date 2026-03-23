@@ -2148,6 +2148,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         }
     ]), [match.stats, t.onTarget, t.possession, t.shots]);
 
+    const eventStats = useMemo(() => {
+        const events = match.events || [];
+        return {
+            homeFouls: events.filter(e => e.type === MatchEventType.FOUL && e.teamId === homeTeam.id).length,
+            awayFouls: events.filter(e => e.type === MatchEventType.FOUL && e.teamId === awayTeam.id).length,
+            homeYellow: events.filter(e => e.type === MatchEventType.CARD_YELLOW && e.teamId === homeTeam.id).length,
+            awayYellow: events.filter(e => e.type === MatchEventType.CARD_YELLOW && e.teamId === awayTeam.id).length,
+            homeRed: events.filter(e => e.type === MatchEventType.CARD_RED && e.teamId === homeTeam.id).length,
+            awayRed: events.filter(e => e.type === MatchEventType.CARD_RED && e.teamId === awayTeam.id).length,
+            homeCorners: events.filter(e => e.type === MatchEventType.CORNER && e.teamId === homeTeam.id).length,
+            awayCorners: events.filter(e => e.type === MatchEventType.CORNER && e.teamId === awayTeam.id).length,
+        };
+    }, [match.events, homeTeam.id, awayTeam.id]);
+
     const latestEvent = keyEvents[0] || null;
     const compactLatestEvent = getCompactEventLabel(match, latestEvent);
     const goalFlashText = latestEvent?.type === MatchEventType.GOAL ? latestEvent.description : null;
@@ -2202,6 +2216,27 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                         </div>
                         <span className={`text-3xl md:text-5xl font-mono font-black ${goalFlash === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'}`}>{match.awayScore}</span>
                     </div>
+                    {/* Goal Scorers */}
+                    {(() => {
+                      const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                      const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                      if (homeGoals.length === 0 && awayGoals.length === 0) return null;
+                      return (
+                        <div className="mt-1 flex items-center justify-center gap-4 text-[9px] text-slate-400 max-w-xs">
+                          <div className="text-right flex-1 truncate">
+                            {homeGoals.map((g, i) => (
+                              <span key={i} className="text-emerald-300 mr-1">⚽ {g.minute}'</span>
+                            ))}
+                          </div>
+                          <div className="w-px h-3 bg-slate-600" />
+                          <div className="text-left flex-1 truncate">
+                            {awayGoals.map((g, i) => (
+                              <span key={i} className="text-blue-300 mr-1">⚽ {g.minute}'</span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
                     <div className="mt-1 flex items-center gap-2 text-[10px] md:text-xs font-semibold text-slate-300">
                         <span className="rounded-full border border-emerald-400/30 bg-emerald-500/12 px-2 py-0.5 text-emerald-300 font-black">{match.currentMinute}'</span>
                         <span>{match.stats?.homePossession ?? 50}%</span>
@@ -2209,6 +2244,18 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                         <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
                         <span className="text-slate-500">shots</span>
                         <span>{match.stats?.awayPossession ?? 50}%</span>
+                        {homeTeam.facilities?.stadiumCapacity && (
+                          <>
+                            <span className="text-slate-600">•</span>
+                            <span className="text-slate-500">🏟️ {homeTeam.name} Stad.</span>
+                          </>
+                        )}
+                        {match.attendance > 0 && (
+                          <>
+                            <span className="text-slate-600">•</span>
+                            <span className="text-slate-400">👥 {match.attendance.toLocaleString()}</span>
+                          </>
+                        )}
                     </div>
                 </div>
 
@@ -2253,8 +2300,14 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
                         {[...match.events].reverse().map((event, index) => (
-                            <div key={`${event.minute}-${event.type}-${index}`} className={`rounded-xl border-l-4 p-3 text-sm shadow-sm ${event.type === MatchEventType.GOAL ? 'bg-emerald-900/25 border-emerald-400' : 'bg-slate-800/40 border-slate-600'}`}>
-                                <span className={`mr-2 font-black ${event.type === MatchEventType.GOAL ? 'text-emerald-400' : 'text-slate-400'}`}>{event.minute}'</span>
+                            <div key={`${event.minute}-${event.type}-${index}`} className={`rounded-xl border-l-4 p-3 text-sm shadow-sm ${
+                                event.type === MatchEventType.GOAL ? 'bg-emerald-900/25 border-emerald-400' :
+                                event.type === MatchEventType.CARD_RED ? 'bg-red-900/25 border-red-500' :
+                                event.type === MatchEventType.CARD_YELLOW ? 'bg-yellow-900/20 border-yellow-500' :
+                                event.type === MatchEventType.PENALTY ? 'bg-purple-900/25 border-purple-500' :
+                                'bg-slate-800/40 border-slate-600'
+                            }`}>
+                                <span className={`mr-2 font-black ${event.type === MatchEventType.GOAL ? 'text-emerald-400' : 'text-slate-400'}`}>{event.type === MatchEventType.GOAL && <span className="mr-1">⚽</span>}{event.minute}'</span>
                                 <span className={event.type === MatchEventType.GOAL ? 'text-white font-bold' : 'text-slate-300'}>{event.description}</span>
                             </div>
                         ))}
@@ -2330,6 +2383,18 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                         <span className="block truncate">{compactLatestEvent}</span>
                                     </div>
                                 )}
+                                {(() => {
+                                    const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                                    const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                                    if (homeGoals.length === 0 && awayGoals.length === 0) return null;
+                                    return (
+                                        <div className="mt-1 flex items-center gap-2 bg-black/40 backdrop-blur px-2 py-0.5 rounded-full border border-slate-700/60 text-[7px] max-w-[60vw]">
+                                            <span className="text-emerald-300 truncate">{homeGoals.map(g => `⚽${g.minute}'`).join(' ')}</span>
+                                            {homeGoals.length > 0 && awayGoals.length > 0 && <span className="text-slate-600">|</span>}
+                                            <span className="text-blue-300 truncate">{awayGoals.map(g => `⚽${g.minute}'`).join(' ')}</span>
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
@@ -2372,6 +2437,36 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 <div className="text-[7px] text-emerald-400 font-bold">{match.stats?.awayPossession ?? 50}%</div>
                                 <div className="text-[7px] text-slate-500">xG {(match.stats?.awayXG ?? 0).toFixed(1)}</div>
                                 <div className="text-[6px] text-amber-200 text-center px-1 leading-tight">{awayDefensePlanLabel}</div>
+                            </div>
+
+                            {/* Bottom compact stats strip */}
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/55 backdrop-blur px-3 py-1 rounded-full border border-slate-700/60 text-[7px] text-slate-300 whitespace-nowrap">
+                                <span className="text-orange-300">{eventStats.homeFouls}</span>
+                                <span className="text-slate-600">faul</span>
+                                <span className="text-orange-300">{eventStats.awayFouls}</span>
+                                {(eventStats.homeCorners > 0 || eventStats.awayCorners > 0) && (
+                                    <>
+                                        <span className="text-slate-600 mx-0.5">·</span>
+                                        <span className="text-slate-300">{eventStats.homeCorners}</span>
+                                        <span className="text-slate-600">köşe</span>
+                                        <span className="text-slate-300">{eventStats.awayCorners}</span>
+                                    </>
+                                )}
+                                {(eventStats.homeYellow > 0 || eventStats.awayYellow > 0 || eventStats.homeRed > 0 || eventStats.awayRed > 0) && (
+                                    <>
+                                        <span className="text-slate-600 mx-0.5">·</span>
+                                        {eventStats.homeYellow > 0 && <span className="text-yellow-300">🟨{eventStats.homeYellow}</span>}
+                                        {eventStats.homeRed > 0 && <span className="text-red-400">🟥{eventStats.homeRed}</span>}
+                                        {eventStats.awayYellow > 0 && <span className="text-yellow-300">🟨{eventStats.awayYellow}</span>}
+                                        {eventStats.awayRed > 0 && <span className="text-red-400">🟥{eventStats.awayRed}</span>}
+                                    </>
+                                )}
+                                {match.attendance > 0 && (
+                                    <>
+                                        <span className="text-slate-600 mx-0.5">·</span>
+                                        <span className="text-slate-400">👥{match.attendance.toLocaleString()}</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
@@ -2416,6 +2511,32 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                             <div className="text-base font-bold text-slate-300">{(match.stats?.homeXG ?? 0).toFixed(2)}</div>
                             <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">xG</div>
                             <div className="text-base font-bold text-slate-300">{(match.stats?.awayXG ?? 0).toFixed(2)}</div>
+
+                            {eventStats.homeCorners > 0 || eventStats.awayCorners > 0 ? (
+                                <>
+                                    <div className="text-base font-bold text-slate-300">{eventStats.homeCorners}</div>
+                                    <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">Korneler</div>
+                                    <div className="text-base font-bold text-slate-300">{eventStats.awayCorners}</div>
+                                </>
+                            ) : null}
+
+                            <div className="text-base font-bold text-orange-300">{eventStats.homeFouls}</div>
+                            <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">Fauller</div>
+                            <div className="text-base font-bold text-orange-300">{eventStats.awayFouls}</div>
+
+                            {(eventStats.homeYellow > 0 || eventStats.awayYellow > 0 || eventStats.homeRed > 0 || eventStats.awayRed > 0) && (
+                                <>
+                                    <div className="text-base font-bold text-yellow-300 flex items-center justify-end gap-0.5">
+                                        {eventStats.homeYellow > 0 && <span>🟨{eventStats.homeYellow}</span>}
+                                        {eventStats.homeRed > 0 && <span>🟥{eventStats.homeRed}</span>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-500 uppercase flex items-center justify-center">Kartlar</div>
+                                    <div className="text-base font-bold text-yellow-300 flex items-center justify-start gap-0.5">
+                                        {eventStats.awayYellow > 0 && <span>🟨{eventStats.awayYellow}</span>}
+                                        {eventStats.awayRed > 0 && <span>🟥{eventStats.awayRed}</span>}
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         <div className="space-y-2">
@@ -2508,6 +2629,24 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{awayTeam.shortName || awayTeam.name}</div>
                             </div>
                         </div>
+
+                        {/* Goal Scorers */}
+                        {(() => {
+                            const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                            const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                            if (homeGoals.length === 0 && awayGoals.length === 0) return null;
+                            return (
+                                <div className="w-full flex gap-4 text-xs">
+                                    <div className="flex-1 text-right space-y-1">
+                                        {homeGoals.map((g, i) => <div key={i} className="text-emerald-300">⚽ {g.minute}'</div>)}
+                                    </div>
+                                    <div className="w-px bg-slate-700" />
+                                    <div className="flex-1 text-left space-y-1">
+                                        {awayGoals.map((g, i) => <div key={i} className="text-blue-300">⚽ {g.minute}'</div>)}
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* First half stats */}
                         <div className="w-full space-y-2 bg-slate-800/50 rounded-xl p-4">

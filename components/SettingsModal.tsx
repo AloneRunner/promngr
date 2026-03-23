@@ -93,7 +93,7 @@ export default function SettingsModal({
                     <span>🟢 {t.engineClassic || 'Klasik Motor'}</span>
                     {engineChoice === 'classic' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
                   </div>
-                  <div className="text-xs mt-1 opacity-90">{t.engineClassicBanner || 'Kurduğun taktiğin maçta gerçekten işe yaradığını görmek istiyorsan bu motor senin için. Dengeli, tutarlı ve güvenilir — sürpriz yok, sadece futbol.'}</div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineClassicBanner || 'Dengeli, tutarlı ve güvenilir. Adam adama marking, offsaid tuzağı ve pressing koordinasyonu aktif. Penaltılar gerçekçi, faul oranları dengeli. Taktik kurduğunda görmek istiyorsan bu motor senin için.'}</div>
                 </button>
 
                 <button
@@ -105,7 +105,7 @@ export default function SettingsModal({
                     <span>🔴 {t.engineIkinc || 'Arcade Motor'}</span>
                     {engineChoice === 'ikinc' && <span className="text-xs bg-blue-400 px-2 py-1 rounded">✓ Seçili</span>}
                   </div>
-                  <div className="text-xs mt-1 opacity-90">{t.engineIkincBanner || 'Taktik bord dolusu çizim değil, saf aksiyon istiyorsan bu motor tam sana göre. Toplar daha direkt gider, goller daha bol gelir, yıldız oyuncular fark yaratır. Eğlence önce, gerçekçilik sonra.'}</div>
+                  <div className="text-xs mt-1 opacity-90">{t.engineIkincBanner || 'Saf aksiyon ve eğlence önce. Roberto Carlos tarzı imzalı frikik, 30 metreden top yakan screamers, rövaşatalar. Yıldız oyuncular fark yaratır, goller bol gelir. Mentalite takımın oyununu gerçekten değiştirir.'}</div>
                 </button>
 
                 <button
@@ -116,11 +116,12 @@ export default function SettingsModal({
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2">
                       🔵 {t.engineUcuncu || 'Pro Motor'}
+                      <span className="text-xs bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded font-bold">⭐ Önerilen</span>
                     </span>
                     {engineChoice === 'ucuncu' && <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded font-bold">✓ Seçili</span>}
                   </div>
                   <div className="text-xs mt-2 opacity-95 leading-relaxed">
-                    {t.engineUcuncuBannerDetailed || 'Maçı gerçekten anlamak isteyenler için. Oyuncular topun nereye gideceğini okur, takımın morali maçın seyrini değiştirir, her taktik hamlenin bir karşılığı olur. Yavaş ama derin — her dakika bir şey oluyor ve sen onu hissediyorsun.'}
+                    {t.engineUcuncuBannerDetailed || 'Taktik oynayanlar için tam özellikli motor. Hücum planı (WIDE_CROSS, DIRECT_CHANNEL, THIRD_MAN, CUTBACK), savunma yaklaşımı (LOW_BLOCK→HUNT), finalThird ve attackApproach hepsi yerel çalışır. Adam adama marking, offsaid tuzağı, press tuzağı ve off-ball koşular aktif. Her taktik hamlenin sahada karşılığı olur.'}
                   </div>
                 </button>
               </div>

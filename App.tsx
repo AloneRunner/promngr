@@ -1496,12 +1496,12 @@ const App: React.FC = () => {
         if (!userTeam) return;
 
         const currentLevel = userTeam.staff ? userTeam.staff[role] : 1;
-        if (currentLevel >= 7) {
+        if (currentLevel >= 8) {
             alert('Maximum level reached!');
             return;
         }
         // EXPENSIVE UPGRADES: Exponential scaling - 2x more expensive
-        const cost = Math.floor(100000 * Math.pow(1.5, currentLevel)); // Lv1→2: €150K, Lv7: ~€1.1M
+        const cost = Math.floor(100000 * Math.pow(1.5, currentLevel)); // Lv1→2: €150K, Lv8: ~€1.7M
 
         if (userTeam.budget < cost) {
             alert(t.notEnoughFunds);
@@ -1532,7 +1532,7 @@ const App: React.FC = () => {
             type === 'training' ? userTeam.facilities.trainingLevel :
                 userTeam.facilities.academyLevel;
 
-        const maxLevel = type === 'stadium' ? 10 : 7;
+        const maxLevel = type === 'stadium' ? 10 : 8;
         if (currentLevel >= maxLevel) {
             alert('Maximum level reached!');
             return;
@@ -1603,11 +1603,12 @@ const App: React.FC = () => {
             else if (nextLevel <= 8) constructionWeeks = 20;  // 5 months
             else constructionWeeks = 26;                      // 6.5 months (elite project)
         } else {
-            // Training/Academy max level 7 — scaled shorter
+            // Training/Academy max level 8 — scaled shorter
             if (nextLevel <= 2) constructionWeeks = 4;        // 1 month
             else if (nextLevel <= 4) constructionWeeks = 8;   // 2 months
             else if (nextLevel <= 6) constructionWeeks = 12;  // 3 months
-            else constructionWeeks = 16;                      // 4 months (top tier)
+            else if (nextLevel <= 7) constructionWeeks = 16;  // 4 months (top tier)
+            else constructionWeeks = 20;                      // 5 months (elite)
         }
 
         constructionMessage = `\n\n🚧 CONSTRUCTION REQUIRED 🚧\nDuration: ${constructionWeeks} Weeks\nFacility level will increase after construction is complete.`;
@@ -3307,6 +3308,7 @@ const App: React.FC = () => {
                 onClose={() => setShowWorldRankings(false)}
                 teams={gameState?.teams || []}
                 players={gameState?.players || []}
+                onInspectTeam={setInspectedTeamId}
             />
 
             {/* Season Summary Modal */}

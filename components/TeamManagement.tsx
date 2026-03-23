@@ -1437,25 +1437,6 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-sm font-bold text-white flex items-center gap-2"><Shield size={16} className="text-emerald-500" /> {t.tactics}</h2>
                         <div className="flex gap-1 items-center">
-                            {/* Preset Selector */}
-                            {/* Preset Selector */}
-                            <select
-                                value={detectPreset(team.tactic)}
-                                onChange={(e) => {
-                                    if (e.target.value && e.target.value !== 'Custom') {
-                                        const newTactic = applyPreset(team.tactic, e.target.value as PresetKey);
-                                        onUpdateTactic(newTactic);
-                                    }
-                                }}
-                                className={`text-white text-[10px] font-bold px-1 py-1 rounded border border-slate-600 outline-none cursor-pointer hover:bg-slate-600 transition-colors w-24 truncate ${detectPreset(team.tactic) === 'Custom' ? 'bg-slate-700 opacity-75' : 'bg-indigo-700'}`}
-                            >
-                                <option value="Custom">{t.customPreset || 'Custom'}</option>
-                                <option disabled>──────────</option>
-                                {Object.keys(TACTICAL_PRESETS).map(k => (
-                                    <option key={k} value={k}>{TACTICAL_PRESETS[k as PresetKey].name}</option>
-                                ))}
-                            </select>
-                            {/* Old assistant button removed - using inline panel now */}
                             <button
                                 onClick={handleAutoPick}
                                 className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 transition-all"
@@ -1470,90 +1451,6 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                         <button onClick={() => setTacticTab('FORMATION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'FORMATION' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.base}</button>
                         <button onClick={() => setTacticTab('IN_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'IN_POSSESSION' ? 'bg-emerald-700 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.attack}</button>
                         <button onClick={() => setTacticTab('OUT_POSSESSION')} className={`flex-1 text-[10px] py-1.5 rounded font-bold transition-all ${tacticTab === 'OUT_POSSESSION' ? 'bg-red-900 text-white shadow-md' : 'text-slate-500 hover:text-white'}`}>{t.defense}</button>
-                    </div>
-
-                    <div className="mb-3 rounded-xl border border-slate-700 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.16),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.14),_transparent_32%),rgba(15,23,42,0.92)] p-3 shadow-inner">
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                            <div>
-                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.tacticCoreTitle || 'Taktik not defteri'}</div>
-                                <div className="text-[13px] font-semibold text-white mt-1">{describeTactic(team.tactic).preset || t.customPlan || 'Ozel Plan'}</div>
-                                <div className="text-[10px] text-slate-400 mt-1">{t.tacticCoreHint || 'Once oyun kimligini kur, sonra sekmelerde detay davranisi ince ayarla.'}</div>
-                            </div>
-                            <div className="text-right shrink-0">
-                                <div className="text-[9px] uppercase tracking-[0.2em] text-slate-500">{t.formation || 'Dizilis'}</div>
-                                <div className="text-[13px] font-mono text-emerald-300">{team.tactic.formation}</div>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-                            {tacticalNotebookCards.map(card => (
-                                <div key={card.key} className={`rounded-xl border ${card.border} bg-slate-950/45 p-2.5`}>
-                                    <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{card.eyebrow}</div>
-                                    <div className={`text-[11px] font-bold mt-1 ${card.accent}`}>{card.title}</div>
-                                    <div className="text-[10px] text-slate-300 mt-1">{card.body}</div>
-                                    <div className="text-[9px] text-slate-400 mt-2 leading-relaxed">{card.foot}</div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-3 rounded-lg border border-slate-700/80 bg-slate-950/45 p-2.5">
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{t.instrTitle || 'Oyuncu gorevleri'}</div>
-                                <div className="text-[9px] text-slate-400">{activeDutySummary.length}/11 {t.active || 'active'}</div>
-                            </div>
-                            {activeDutySummary.length > 0 ? (
-                                <div className="mt-2 flex flex-wrap gap-1.5">
-                                    {activeDutySummary.map(entry => (
-                                        <div key={`${entry.player.id}-${entry.instructionId}`} className="rounded-full border border-slate-700 bg-slate-800/80 px-2 py-1 text-[10px] text-slate-200">
-                                            <span className="mr-1">{entry.icon}</span>
-                                            <span className="font-semibold text-white">{entry.player.lastName}</span>
-                                            <span className="mx-1 text-slate-500">•</span>
-                                            <span>{entry.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="mt-2 text-[10px] text-slate-400">Tum oyuncular su an varsayilan gorevlerle oynuyor. Fark yaratmak istedigin rolde bireysel talimat ver.</div>
-                            )}
-                        </div>
-
-                    </div>
-
-                    <div className={`mb-3 rounded-xl border p-3 ${enginePresentation.panelClass}`}>
-                        <div className="flex items-start justify-between gap-3">
-                            <div>
-                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.engineAwarenessLabel || 'Engine Awareness'}</div>
-                                <div className="text-[13px] font-semibold text-white mt-1">{enginePresentation.label}</div>
-                                <div className="text-[10px] text-slate-300 mt-1">{enginePresentation.summary}</div>
-                            </div>
-                            <div className={`rounded-full border px-2 py-1 text-[9px] font-bold ${enginePresentation.chipClass}`}>
-                                {enginePresentation.shortLabel}
-                            </div>
-                        </div>
-
-                        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-3">
-                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
-                                <div className="flex items-center justify-between gap-2">
-                                    <div className="text-[10px] font-semibold text-white">{t.attackPlanTitle || 'Attack Plan'}</div>
-                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${attackPlanSupport.badgeClass}`}>{attackPlanSupport.label}</div>
-                                </div>
-                                <div className="mt-1 text-[9px] text-slate-400">{attackPlanSupport.summary}</div>
-                            </div>
-                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
-                                <div className="flex items-center justify-between gap-2">
-                                    <div className="text-[10px] font-semibold text-white">{t.marking || 'Marking'}</div>
-                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${markingSupport.badgeClass}`}>{markingSupport.label}</div>
-                                </div>
-                                <div className="mt-1 text-[9px] text-slate-400">{markingSupport.summary}</div>
-                            </div>
-                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
-                                <div className="flex items-center justify-between gap-2">
-                                    <div className="text-[10px] font-semibold text-white">{t.playerInstructionsTitle || 'Player Instructions'}</div>
-                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${playerInstructionsSupport.badgeClass}`}>{playerInstructionsSupport.label}</div>
-                                </div>
-                                <div className="mt-1 text-[9px] text-slate-400">{playerInstructionsSupport.summary}</div>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="space-y-2 min-h-[80px]">
@@ -1917,6 +1814,91 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                             </div>
                         )}
                     </div>
+
+                    <div className="mb-3 mt-3 rounded-xl border border-slate-700 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.16),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.14),_transparent_32%),rgba(15,23,42,0.92)] p-3 shadow-inner">
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.tacticCoreTitle || 'Taktik not defteri'}</div>
+                                <div className="text-[13px] font-semibold text-white mt-1">{describeTactic(team.tactic).preset || t.customPlan || 'Ozel Plan'}</div>
+                                <div className="text-[10px] text-slate-400 mt-1">{t.tacticCoreHint || 'Once oyun kimligini kur, sonra sekmelerde detay davranisi ince ayarla.'}</div>
+                            </div>
+                            <div className="text-right shrink-0">
+                                <div className="text-[9px] uppercase tracking-[0.2em] text-slate-500">{t.formation || 'Dizilis'}</div>
+                                <div className="text-[13px] font-mono text-emerald-300">{team.tactic.formation}</div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                            {tacticalNotebookCards.map(card => (
+                                <div key={card.key} className={`rounded-xl border ${card.border} bg-slate-950/45 p-2.5`}>
+                                    <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{card.eyebrow}</div>
+                                    <div className={`text-[11px] font-bold mt-1 ${card.accent}`}>{card.title}</div>
+                                    <div className="text-[10px] text-slate-300 mt-1">{card.body}</div>
+                                    <div className="text-[9px] text-slate-400 mt-2 leading-relaxed">{card.foot}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-3 rounded-lg border border-slate-700/80 bg-slate-950/45 p-2.5">
+                            <div className="flex items-center justify-between gap-2">
+                                <div className="text-[8px] uppercase tracking-[0.22em] text-slate-500 font-bold">{t.instrTitle || 'Oyuncu gorevleri'}</div>
+                                <div className="text-[9px] text-slate-400">{activeDutySummary.length}/11 {t.active || 'active'}</div>
+                            </div>
+                            {activeDutySummary.length > 0 ? (
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                    {activeDutySummary.map(entry => (
+                                        <div key={`${entry.player.id}-${entry.instructionId}`} className="rounded-full border border-slate-700 bg-slate-800/80 px-2 py-1 text-[10px] text-slate-200">
+                                            <span className="mr-1">{entry.icon}</span>
+                                            <span className="font-semibold text-white">{entry.player.lastName}</span>
+                                            <span className="mx-1 text-slate-500">•</span>
+                                            <span>{entry.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="mt-2 text-[10px] text-slate-400">Tum oyuncular su an varsayilan gorevlerle oynuyor. Fark yaratmak istedigin rolde bireysel talimat ver.</div>
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div className={`mb-3 rounded-xl border p-3 ${enginePresentation.panelClass}`}>
+                        <div className="flex items-start justify-between gap-3">
+                            <div>
+                                <div className="text-[9px] uppercase tracking-[0.24em] text-slate-500 font-bold">{t.engineAwarenessLabel || 'Engine Awareness'}</div>
+                                <div className="text-[13px] font-semibold text-white mt-1">{enginePresentation.label}</div>
+                                <div className="text-[10px] text-slate-300 mt-1">{enginePresentation.summary}</div>
+                            </div>
+                            <div className={`rounded-full border px-2 py-1 text-[9px] font-bold ${enginePresentation.chipClass}`}>
+                                {enginePresentation.shortLabel}
+                            </div>
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-3">
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.attackPlanTitle || 'Attack Plan'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${attackPlanSupport.badgeClass}`}>{attackPlanSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{attackPlanSupport.summary}</div>
+                            </div>
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.marking || 'Marking'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${markingSupport.badgeClass}`}>{markingSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{markingSupport.summary}</div>
+                            </div>
+                            <div className="rounded-lg border border-slate-700/70 bg-slate-950/45 p-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-[10px] font-semibold text-white">{t.playerInstructionsTitle || 'Player Instructions'}</div>
+                                    <div className={`rounded-full border px-2 py-0.5 text-[8px] font-bold ${playerInstructionsSupport.badgeClass}`}>{playerInstructionsSupport.label}</div>
+                                </div>
+                                <div className="mt-1 text-[9px] text-slate-400">{playerInstructionsSupport.summary}</div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div
