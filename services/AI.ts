@@ -196,14 +196,21 @@ export class AIService {
         .sort((a, b) => b.overall - a.overall),
     };
 
-    // Check Goalkeeper
+    // Check Goalkeeper — cap at 3 GKs total (trim releases above 3)
     const bestGK = depthChart[Position.GK][0];
-    if (!bestGK || bestGK.overall < ambitionBaseline - 5) {
+    // Surplus only if we have 3+ GKs AND the best one is actually decent
+    const gkSurplus = depthChart[Position.GK].length >= 3 && bestGK && bestGK.overall >= ambitionBaseline - 5;
+    if (!gkSurplus && (!bestGK || bestGK.overall < ambitionBaseline - 5)) {
+      // Target: realistic step-up from current GK, capped at ambitionBaseline+2
+      // Prevents chasing only 85+ OVR GKs when squad is ORT 70
+      const realisticGKTarget = bestGK
+        ? Math.min(ambitionBaseline + 2, Math.max(bestGK.overall + 8, ambitionBaseline - 5))
+        : ambitionBaseline;
       needs.push({
         position: Position.GK,
         role: "STANDARD",
         urgency: bestGK ? (ambitionBaseline - bestGK.overall) * 10 : 100,
-        targetRating: ambitionBaseline + 2,
+        targetRating: realisticGKTarget,
         reason: "No reliable goalkeeper",
       });
     }
@@ -215,41 +222,64 @@ export class AIService {
 
     // Check Outfield Positions
     // Example: Tactic needs 4 DEFs. Do we have 4 *good* DEFs?
+    // POSITION QUOTA: cap needs per position to prevent MID hoarding
+    const MAX_NEEDS_PER_POS = 2;
+    const needsPerPos: Record<string, number> = { DEF: 0, MID: 0, FWD: 0 };
+
     (["DEF", "MID", "FWD"] as Position[]).forEach((pos) => {
       const requiredCount = formationSlots[pos] || 0;
       const availablePlayers = depthChart[pos];
+
+      // SURPLUS GUARD: if team has 3+ more than required, skip all checks for this position
+      const surplus = availablePlayers.length - requiredCount;
+      if (surplus >= 3) return;
 
       // Per-position average — used to detect lagging positions
       const posAvg = availablePlayers.length > 0
         ? availablePlayers.reduce((s, p) => s + p.overall, 0) / availablePlayers.length
         : 0;
 
-      // Check Starters Quality
+      // Check Starters Quality (only worst starter, not all — cap noise)
+      let worstStarterIdx = -1;
+      let worstStarterOvr = 999;
       for (let i = 0; i < requiredCount; i++) {
         const player = availablePlayers[i];
         if (!player) {
           // Critical: Missing a starter!
-          needs.push({
-            position: pos,
-            role: this.recommendRole(pos, team.tactic),
-            urgency: 95,
-            targetRating: ambitionBaseline,
-            reason: `Missing starter for ${pos}`,
-          });
-        } else if (player.overall < ambitionBaseline - 4) {
-          // Weak Spot vs ambition
-          needs.push({
-            position: pos,
-            role: this.recommendRole(pos, team.tactic),
-            urgency: (ambitionBaseline - player.overall) * 8 + 30,
-            targetRating: ambitionBaseline + 3,
-            reason: `Weak starter at ${pos} (${player.overall})`,
-          });
+          if (needsPerPos[pos] < MAX_NEEDS_PER_POS) {
+            needs.push({
+              position: pos,
+              role: this.recommendRole(pos, team.tactic),
+              urgency: 95,
+              targetRating: ambitionBaseline,
+              reason: `Missing starter for ${pos}`,
+            });
+            needsPerPos[pos]++;
+          }
+        } else if (player.overall < worstStarterOvr) {
+          worstStarterOvr = player.overall;
+          worstStarterIdx = i;
         }
       }
 
+      // Only flag the single worst starter (not all weak starters — that caused MID spam)
+      if (worstStarterIdx >= 0 && worstStarterOvr < ambitionBaseline - 4 && needsPerPos[pos] < MAX_NEEDS_PER_POS) {
+        // Realistic target: step-up from worst starter, not always ambitionBaseline+3
+        // Prevents ORT-70 teams chasing only 86+ OVR players (unreachable market)
+        const realisticTarget = Math.min(ambitionBaseline + 3, Math.max(worstStarterOvr + 8, ambitionBaseline - 5));
+        needs.push({
+          position: pos,
+          role: this.recommendRole(pos, team.tactic),
+          urgency: (ambitionBaseline - worstStarterOvr) * 8 + 30,
+          targetRating: realisticTarget,
+          reason: `Weak starter at ${pos} (${worstStarterOvr})`,
+        });
+        needsPerPos[pos]++;
+      }
+
       // Check Depth (We need at least 1 decent sub per line)
-      if (availablePlayers.length < requiredCount + 1) {
+      // Skip if already have plenty of depth
+      if (availablePlayers.length < requiredCount + 1 && needsPerPos[pos] < MAX_NEEDS_PER_POS) {
         needs.push({
           position: pos,
           role: this.recommendRole(pos, team.tactic),
@@ -257,11 +287,11 @@ export class AIService {
           targetRating: ambitionBaseline - 5,
           reason: `Lack of depth at ${pos}`,
         });
+        needsPerPos[pos]++;
       }
 
       // Positional gap: this position's average is notably below the squad average
-      // — flag it as an upgrade priority even if starters are nominally "OK"
-      if (posAvg > 0) {
+      if (posAvg > 0 && needsPerPos[pos] < MAX_NEEDS_PER_POS) {
         const gap = squadAvgOvr - posAvg;
         if (gap >= 4) {
           needs.push({
@@ -271,9 +301,33 @@ export class AIService {
             targetRating: Math.round(posAvg + gap * 0.7),
             reason: `Position gap: ${pos} avg ${Math.round(posAvg)} vs squad ${Math.round(squadAvgOvr)}`,
           });
+          needsPerPos[pos]++;
         }
       }
     });
+
+    // WONDERKID NEED: Proactive youth investment (low urgency, runs when no acute gaps)
+    // Ensures AI teams also build for the future like a human manager would
+    const hasAcuteGap = needs.some(n => n.urgency >= 60);
+    if (!hasAcuteGap) {
+      // Find the positional slot that benefits most from a young rotation player
+      const positions: Position[] = [Position.DEF, Position.MID, Position.FWD];
+      const leastCoveredPos = positions.reduce((worst, pos) => {
+        const count = depthChart[pos].length;
+        const needed = formationSlots[pos] || 0;
+        const coverage = count / Math.max(1, needed);
+        const worstCoverage = depthChart[worst].length / Math.max(1, formationSlots[worst] || 1);
+        return coverage < worstCoverage ? pos : worst;
+      }, Position.MID);
+
+      needs.push({
+        position: leastCoveredPos,
+        role: this.recommendRole(leastCoveredPos, team.tactic),
+        urgency: 35,
+        targetRating: Math.max(60, ambitionBaseline - 12),
+        reason: `Wonderkid investment: future depth at ${leastCoveredPos}`,
+      });
+    }
 
     return needs.sort((a, b) => b.urgency - a.urgency);
   }

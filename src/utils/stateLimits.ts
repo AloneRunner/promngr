@@ -1,6 +1,6 @@
 import { Message, TransferOffer } from '../../types';
 
-export const MAX_STORED_MESSAGES = 240;
+export const MAX_STORED_MESSAGES = 150;
 export const MAX_STORED_OFFERS = 80;
 
 export const pruneMessages = (messages: Message[], maxMessages: number = MAX_STORED_MESSAGES): Message[] => {

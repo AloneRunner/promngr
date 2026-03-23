@@ -131,8 +131,8 @@ export interface Player {
     isTransferListed: boolean; isNotForSale?: boolean; weeksInjured: number; matchSuspension: number; lineup: LineupStatus;
     lineupIndex: number; jerseyNumber?: number; playStyles: string[]; details?: any;
     moraleHistory?: { week: number; change: number; reason: string }[];
-    playedThisWeek?: boolean; lastTransferWeek?: number; personality?: any;
-    careerHistory?: any[];
+    playedThisWeek?: boolean; lastTransferWeek?: number; lastTransferSeason?: number; personality?: any;
+    careerHistory?: any[]; freeAgentSince?: number;
 }
 
 export interface TeamTactic {
@@ -144,6 +144,8 @@ export interface TeamTactic {
     mentality?: string;
     attackPlan?: 'AUTO' | 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
     slotInstructions?: Record<number, string>; // YENİ: Oyuncu bazlı talimat (lineupIndex → instruction)
+    finalThird?: 'EARLY_SHOT' | 'PATIENT' | 'BALANCED'; // Son üçte şut felsefesi
+    attackApproach?: 'VERTICAL' | 'FLUID' | 'PATIENT' | 'BALANCED'; // Hücum geçiş stili
 }
 
 export interface AITacticMemorySnapshot {
@@ -155,6 +157,10 @@ export interface AITacticMemorySnapshot {
     passingStyle: string;
     pressingIntensity?: PressingIntensity;
     attackPlan?: 'AUTO' | 'WIDE_CROSS' | 'CUTBACK' | 'THIRD_MAN' | 'DIRECT_CHANNEL';
+    formation?: string;
+    defenseApproach?: string;
+    attackApproach?: string;
+    finalThird?: string;
 }
 
 export interface AITacticMemoryEntry {
@@ -168,6 +174,7 @@ export interface AITacticMemoryEntry {
     goalsAgainst: number;
     offsides: number;
     cumulativeScore: number;
+    weightedScore: number;
     lastUsedWeek?: number;
     lastUsedSeason?: number;
 }

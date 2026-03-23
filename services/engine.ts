@@ -91,34 +91,48 @@ const createAITacticMemorySnapshot = (tactic: TeamTactic): AITacticMemorySnapsho
   passingStyle: tactic.passingStyle,
   pressingIntensity: tactic.pressingIntensity,
   attackPlan: tactic.attackPlan || "AUTO",
+  formation: tactic.formation,
+  defenseApproach: (tactic as any).defenseApproach,
+  attackApproach: (tactic as any).attackApproach,
+  finalThird: (tactic as any).finalThird,
 });
 
 const createAITacticMemoryKey = (tactic: TeamTactic): string =>
   JSON.stringify(createAITacticMemorySnapshot(tactic));
 
-const scoreAITacticMemoryEntry = (entry: AITacticMemoryEntry): number => {
+const scoreAITacticMemoryEntry = (entry: AITacticMemoryEntry, currentWeek?: number, currentSeason?: number): number => {
   if (entry.played <= 0) return -999;
   const points = entry.wins * 3 + entry.draws;
   const avgPoints = points / entry.played;
   const goalDiff = (entry.goalsFor - entry.goalsAgainst) / entry.played;
   const offsideRate = entry.offsides / entry.played;
-  return avgPoints * 1.9 + goalDiff * 0.45 - offsideRate * 0.85 + entry.cumulativeScore / entry.played;
+  const baseScore = avgPoints * 1.9 + goalDiff * 0.45 - offsideRate * 0.85 + entry.cumulativeScore / entry.played;
+  // Zaman ağırlığı: son 5 hafta içindeyse +0.5 bonus, 15 haftadan eskiyse -0.4 ceza
+  let recencyBonus = 0;
+  if (currentWeek !== undefined && entry.lastUsedWeek !== undefined) {
+    const weeksSince = currentWeek - entry.lastUsedWeek;
+    if (weeksSince <= 5) recencyBonus = 0.5;
+    else if (weeksSince <= 10) recencyBonus = 0.2;
+    else if (weeksSince >= 15) recencyBonus = -0.4;
+  }
+  return baseScore + recencyBonus;
 };
 
 const applyAITacticMemoryPreference = (team: Team, tactic: TeamTactic): TeamTactic => {
   const memory = team.aiTacticMemory;
   if (!memory?.entries) return tactic;
 
+  const currentWeek = memory.lastUpdatedWeek;
   const currentKey = createAITacticMemoryKey(tactic);
   const currentEntry = memory.entries[currentKey];
   const reliableEntries = Object.values(memory.entries).filter((entry) => entry.played >= 2);
-  const bestEntry = reliableEntries.sort((left, right) => scoreAITacticMemoryEntry(right) - scoreAITacticMemoryEntry(left))[0];
+  const bestEntry = reliableEntries.sort((left, right) => scoreAITacticMemoryEntry(right, currentWeek) - scoreAITacticMemoryEntry(left, currentWeek))[0];
 
   let nextTactic: TeamTactic = { ...tactic };
-  const currentScore = currentEntry ? scoreAITacticMemoryEntry(currentEntry) : -999;
+  const currentScore = currentEntry ? scoreAITacticMemoryEntry(currentEntry, currentWeek) : -999;
   const currentOffsideRate = currentEntry ? currentEntry.offsides / Math.max(1, currentEntry.played) : 0;
 
-  if (bestEntry && bestEntry.key !== currentKey && scoreAITacticMemoryEntry(bestEntry) > currentScore + 0.6) {
+  if (bestEntry && bestEntry.key !== currentKey && scoreAITacticMemoryEntry(bestEntry, currentWeek) > currentScore + 0.6) {
     nextTactic = {
       ...nextTactic,
       mentality: bestEntry.tactic.mentality || nextTactic.mentality,
@@ -129,6 +143,10 @@ const applyAITacticMemoryPreference = (team: Team, tactic: TeamTactic): TeamTact
       passingStyle: bestEntry.tactic.passingStyle,
       pressingIntensity: bestEntry.tactic.pressingIntensity || nextTactic.pressingIntensity,
       attackPlan: bestEntry.tactic.attackPlan || nextTactic.attackPlan,
+      ...(bestEntry.tactic.formation ? { formation: bestEntry.tactic.formation as any } : {}),
+      ...(bestEntry.tactic.defenseApproach ? { defenseApproach: bestEntry.tactic.defenseApproach as any } : {}),
+      ...(bestEntry.tactic.attackApproach ? { attackApproach: bestEntry.tactic.attackApproach as any } : {}),
+      ...(bestEntry.tactic.finalThird ? { finalThird: bestEntry.tactic.finalThird as any } : {}),
     };
   }
 
@@ -197,6 +215,8 @@ export const recordAITacticMatchOutcome = (
     goalsAgainst: (existingEntry?.goalsAgainst || 0) + goalsAgainst,
     offsides: (existingEntry?.offsides || 0) + offsides,
     cumulativeScore: (existingEntry?.cumulativeScore || 0) + performanceScore,
+    // weightedScore: son maçlara daha fazla ağırlık verir (decay 0.85x per match)
+    weightedScore: (existingEntry?.weightedScore || 0) * 0.85 + performanceScore,
     lastUsedWeek: currentWeek,
     lastUsedSeason: currentSeason,
   };
@@ -1345,9 +1365,9 @@ export const getManagerGameplayEffects = (managerProfile?: ManagerProfileData) =
   const passiveBoardGainBonus = Math.min(0.18, levelProgress * 0.012);
   const passiveBoardLossReduction = Math.min(0.16, levelProgress * 0.01);
   const passiveTransferBonus = Math.min(9, levelProgress * 0.75);
-  const passiveYouthDiscoveryBonus = Math.min(0.025, levelProgress * 0.0016);
-  const passiveYouthPotentialBonus = Math.min(6, levelProgress * 0.38);
-  const passiveDevelopmentBonus = Math.min(0.035, levelProgress * 0.0022);
+  const passiveYouthDiscoveryBonus = Math.min(0.015, levelProgress * 0.001);
+  const passiveYouthPotentialBonus = Math.min(4, levelProgress * 0.25);
+  const passiveDevelopmentBonus = Math.min(0.020, levelProgress * 0.0013);
   const passiveXpMultiplier = Math.min(0.2, levelProgress * 0.01);
   const passiveReputationBonus = Math.min(2, Math.floor(level / 4));
   const passiveSalaryNegotiationBonus = Math.min(0.16, levelProgress * 0.012);
@@ -1390,16 +1410,16 @@ export const getManagerGameplayEffects = (managerProfile?: ManagerProfileData) =
       talentYouthDiscoveryBonus +
       staffScoutingDiscoveryBonus,
     youthPotentialBonus:
-      (bonuses?.scoutingKnowledgeBonus || 0) * 12 +
-      (archetype === ManagerArchetype.SCOUT ? 3 : 0) +
+      (bonuses?.scoutingKnowledgeBonus || 0) * 8 +
+      (archetype === ManagerArchetype.SCOUT ? 2 : 0) +
       passiveYouthPotentialBonus +
       talentYouthPotentialBonus +
       staffScoutingPotentialBonus,
     playerDevelopmentBonus:
       (archetype === ManagerArchetype.TACTICIAN
-        ? 0.04
+        ? 0.02
         : archetype === ManagerArchetype.MOTIVATOR
-          ? 0.03
+          ? 0.015
           : 0) + passiveDevelopmentBonus + talentDevelopmentBonus + staffDevelopmentBonus,
     matchXpMultiplier:
       (archetype === ManagerArchetype.TACTICIAN ? 1.12 : 1.0) + passiveXpMultiplier + talentXpMultiplier + staffXpBonus,
@@ -2775,8 +2795,13 @@ const generatePlayer = (
   // Calculate Wage Scaling based on League Economic Power
   // This prevents small leagues from paying Premier League wages
   const leagueMult = leagueId ? getLeagueMultiplier(leagueId) : 1.0;
+  // SUPERSTAR PREMIUM: 88+ OVR players demand exponentially higher wages
+  // This limits squad depth at elite levels (you can't have 8x 90+ OVR on one team affordably)
+  const superstarWageMult = calculatedOverall >= 88
+    ? Math.pow(1.22, calculatedOverall - 87)  // 88→1.22x, 90→1.48x, 92→1.81x, 94→2.21x
+    : 1.0;
   const baseWage = Math.floor(
-    Math.pow(1.13, calculatedOverall - 50) * 100000 * 0.005,
+    Math.pow(1.13, calculatedOverall - 50) * 100000 * 0.005 * superstarWageMult,
   );
   const scaledWage = Math.floor(baseWage * (0.8 + leagueMult * 0.2));
 
@@ -2821,11 +2846,11 @@ const generatePlayer = (
     overall: calculatedOverall,
     potential,
     // VALUE: Realistic exponential formula with youth premium
-    // 1.22^(OVR-60): 60 OVR ~€100K, 70 OVR ~€730K, 80 OVR ~€5.3M, 85 OVR ~€14M, 91 OVR ~€48M
+    // 1.18^(OVR-60): 60 OVR ~€100K, 70 OVR ~€520K, 80 OVR ~€2.7M, 85 OVR ~€6.5M, 91 OVR ~€18M
     // Youth premium: +3% per year under 25 (max +30% at age 15)
     // Age decline: -2.5% per year over 26
     value: Math.floor(
-      Math.pow(1.22, calculatedOverall - 60) *
+      Math.pow(1.18, calculatedOverall - 60) *
       100000 *
       (1 + (potential - calculatedOverall) / 25) *
       (1 + Math.max(0, 25 - age) * 0.03) *
@@ -3638,8 +3663,8 @@ export const generateWorld = (leagueId: string): GameState => {
       team.facilities = {
         stadiumCapacity: team.facilities.stadiumCapacity,
         stadiumLevel: stadiumStartLevel,
-        trainingLevel: Math.min(7, trainingBaseLevel + getRandomInt(0, 1)),
-        academyLevel: Math.min(7, trainingBaseLevel + getRandomInt(0, 1)),
+        trainingLevel: Math.min(8, trainingBaseLevel + getRandomInt(0, 1)),
+        academyLevel: Math.min(8, trainingBaseLevel + getRandomInt(0, 1)),
       };
 
       // Auto pick lineup adhering to the specific formation
@@ -4703,10 +4728,6 @@ export const simulateLeagueRound = (
 
         // FIRING LOGIC
         // STRICT CHECK: IF CONFIDENCE DROPS BELOW 1, YOU ARE FIRED immediately
-        console.log(
-          `[Board Confidence] ${team.name}: ${currentConfidence} → ${newConfidence} (change: ${change})`,
-        );
-
         if (newConfidence <= 1) {
           Object.assign(gameState, transitionManagerToUnemployed(gameState, team.id));
           return;
@@ -4971,11 +4992,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       team.facilities.stadiumCapacity = expectedMinCapacity;
     }
     // Also cap facility/staff levels that exceed new maximums
-    if (team.facilities?.trainingLevel > 7) team.facilities.trainingLevel = 7;
-    if (team.facilities?.academyLevel > 7) team.facilities.academyLevel = 7;
-    if (team.staff?.headCoachLevel > 7) team.staff.headCoachLevel = 7;
-    if (team.staff?.scoutLevel > 7) team.staff.scoutLevel = 7;
-    if (team.staff?.physioLevel > 7) team.staff.physioLevel = 7;
+    if (team.facilities?.trainingLevel > 8) team.facilities.trainingLevel = 8;
+    if (team.facilities?.academyLevel > 8) team.facilities.academyLevel = 8;
+    if (team.staff?.headCoachLevel > 8) team.staff.headCoachLevel = 8;
+    if (team.staff?.scoutLevel > 8) team.staff.scoutLevel = 8;
+    if (team.staff?.physioLevel > 8) team.staff.physioLevel = 8;
   });
 
   const userTeam = gameState.teams.find((t) => t.id === gameState.userTeamId);
@@ -5021,12 +5042,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
   }
 
   // ========== SMOOTH MARKET INFLATION (WEEKLY) ==========
-  // Target multiplier = totalBudgets / 2B baseline.
-  // Current multiplier moves at most 5% toward target each week → gradual drift,
-  // no instant price crash when AI teams spend big in transfer windows.
+  // Target multiplier = sqrt(totalBudgets / baseline) — square root dampens runaway inflation.
+  // Linear ratio caused 2.92x after 4 seasons; sqrt gives ~1.71x at same point.
+  // Current multiplier moves at most 5% toward target each week → gradual drift.
   const INITIAL_TOTAL_BUDGETS = 28_000_000_000; // ~800 teams × €35M avg starting budget
   const totalLeagueBudgets = gameState.teams.reduce((sum, t) => sum + Math.max(0, t.budget), 0);
-  const targetInflation = Math.min(8.0, Math.max(0.5, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS));
+  const targetInflation = Math.min(4.0, Math.max(0.5, Math.sqrt(totalLeagueBudgets / INITIAL_TOTAL_BUDGETS)));
   const prevInflation = gameState.marketInflationMultiplier ?? targetInflation;
   // Move at most 5% of the gap per week (smooth drift)
   const weeklyInflationMultiplier = prevInflation + (targetInflation - prevInflation) * 0.05;
@@ -5271,7 +5292,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       //               preserving whatever value was set at game-init or season-end.
       value: newOverall !== p.overall
         ? Math.floor(
-            Math.pow(1.22, newOverall - 60) *
+            Math.pow(1.18, newOverall - 60) *
             100000 *
             (1 + (cappedPotential - newOverall) / 25) *
             (1 + Math.max(0, 25 - p.age) * 0.03) *
@@ -5812,7 +5833,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
       if (userTeam.facilities.trainingConstructionWeeks <= 0) {
         userTeam.facilities.trainingConstructionWeeks = 0;
-        if (userTeam.facilities.trainingLevel < 7) {
+        if (userTeam.facilities.trainingLevel < 8) {
           userTeam.facilities.trainingLevel += 1;
         }
 
@@ -5837,7 +5858,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
       if (userTeam.facilities.academyConstructionWeeks <= 0) {
         userTeam.facilities.academyConstructionWeeks = 0;
-        if (userTeam.facilities.academyLevel < 7) {
+        if (userTeam.facilities.academyLevel < 8) {
           userTeam.facilities.academyLevel += 1;
         }
 
@@ -5889,10 +5910,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         40 + Math.floor(Math.random() * 15) + Math.floor(academyLevel * 1.5);
 
       // WONDERKID SYSTEM: Rare chance of exceptional talent from elite academies.
-      // Academy 7: 3% chance — true wonderkid (62-70 OVR, potential cap 89)
-      // Academy 5+: 7% chance — elevated prospect (58-67 OVR, potential cap 86)
-      let wonderkidTier = 0; // 0=normal, 1=elevated, 2=wonderkid
-      if (academyLevel >= 7 && Math.random() < 0.03) {
+      // Academy 8: 6% chance — elite wonderkid (65-74 OVR, potential cap 93)
+      // Academy 7: 4% chance — true wonderkid (62-70 OVR, potential cap 91)
+      // Academy 5+: 7% chance — elevated prospect (58-66 OVR, potential cap 86)
+      let wonderkidTier = 0; // 0=normal, 1=elevated, 2=wonderkid, 3=elite wonderkid
+      if (academyLevel >= 8 && Math.random() < 0.06) {
+        baseOverall = 65 + Math.floor(Math.random() * 10); // 65-74
+        wonderkidTier = 3;
+      } else if (academyLevel >= 7 && Math.random() < 0.04) {
         baseOverall = 62 + Math.floor(Math.random() * 9); // 62-70
         wonderkidTier = 2;
       } else if (academyLevel >= 5 && Math.random() < 0.07) {
@@ -5900,14 +5925,14 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         wonderkidTier = 1;
       }
 
-      // Potential depends on Scout+Academy — max scout 7 + academy 7 = +9.8 bonus
+      // Potential depends on Scout+Academy — max scout 8 + academy 8 = +11.2 bonus
       const potentialBonus =
         scoutLevel * 0.8 + academyLevel * 0.3 + managerEffects.youthPotentialBonus;
       const rawPotential =
         baseOverall + 8 + Math.floor(Math.random() * 12) + potentialBonus;
 
-      // Potential cap per tier (reduced to limit 90+ explosion)
-      const potentialCap = wonderkidTier === 2 ? 87 : wonderkidTier === 1 ? 84 : 81;
+      // Potential cap per tier
+      const potentialCap = wonderkidTier === 3 ? 93 : wonderkidTier === 2 ? 91 : wonderkidTier === 1 ? 86 : 82;
       let potential = Math.min(potentialCap, rawPotential);
 
       // Ensure potential isn't lower than overall
@@ -6142,6 +6167,29 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       }
     }
 
+    // ========== GK SURPLUS TRIM ==========
+    // Release excess players per position to prevent bench bloat
+    // AI gets 40% of value back. Limits: GK≤3, DEF≤7, MID≤7, FWD≤5
+    const posLimits: { pos: Position; max: number }[] = [
+      { pos: Position.GK, max: 3 },
+      { pos: Position.DEF, max: 7 },
+      { pos: Position.MID, max: 7 },
+      { pos: Position.FWD, max: 5 },
+    ];
+    for (const { pos, max } of posLimits) {
+      const posPlayers = updatedPlayers
+        .filter((p) => p.teamId === team.id && p.position === pos)
+        .sort((a, b) => b.overall - a.overall);
+      if (posPlayers.length > max) {
+        for (let pi = max; pi < posPlayers.length; pi++) {
+          const excess = posPlayers[pi];
+          team.budget += Math.floor(excess.value * 0.4);
+          excess.teamId = "FREE_AGENT";
+          excess.lineup = "RESERVE";
+        }
+      }
+    }
+
     // AI takımları için de finansal kayıt tut
     if (!team.financials) {
       team.financials = {
@@ -6251,9 +6299,9 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         }
       } else if (
         targetFacility === "training" &&
-        newFacilities.trainingLevel < 7
+        newFacilities.trainingLevel < 8
       ) {
-        // Max 7 for AI
+        // Max 8 for AI
         cost = 2000000;
         const futureMaint = projectedMaint("training");
         const maxFacilityBudget = team.budget * 0.4;
@@ -6265,9 +6313,9 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         }
       } else if (
         targetFacility === "academy" &&
-        newFacilities.academyLevel < 7
+        newFacilities.academyLevel < 8
       ) {
-        // AI academy max 7
+        // AI academy max 8
         cost = 1500000;
         const futureMaint = projectedMaint("academy");
         const maxFacilityBudget = team.budget * 0.4;
@@ -6441,10 +6489,25 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     (t) => t.id === gameState.userTeamId,
   );
   if (userTeamFromUpdated && userTeamFromUpdated.financials) {
-    userTeamFromUpdated.financials.lastWeekIncome.ffpSolidarity =
-      ffpSolidarityReceived[userTeamFromUpdated.id] || 0;
-    userTeamFromUpdated.financials.lastWeekExpenses.ffpTax =
-      ffpTaxPaid[userTeamFromUpdated.id] || 0;
+    const userFFPTax = ffpTaxPaid[userTeamFromUpdated.id] || 0;
+    const userFFPSolidarity = ffpSolidarityReceived[userTeamFromUpdated.id] || 0;
+    userTeamFromUpdated.financials.lastWeekIncome.ffpSolidarity = userFFPSolidarity;
+    userTeamFromUpdated.financials.lastWeekExpenses.ffpTax = userFFPTax;
+
+    // Also update the history ledger record for this week so the ledger reflects FFP
+    if (userTeamFromUpdated.financials.history) {
+      const rec = userTeamFromUpdated.financials.history.find(
+        (r: any) => r.week === gameState.currentWeek && r.season === gameState.currentSeason
+      ) as any;
+      if (rec) {
+        rec.income.ffpSolidarity = (rec.income.ffpSolidarity || 0) + userFFPSolidarity;
+        rec.expenses.ffpTax = (rec.expenses.ffpTax || 0) + userFFPTax;
+        rec.income.total = (rec.income.total || 0) + userFFPSolidarity;
+        rec.expenses.total = (rec.expenses.total || 0) + userFFPTax;
+        rec.balance = rec.income.total - rec.expenses.total;
+        rec.budgetAfter = userTeamFromUpdated.budget;
+      }
+    }
   }
 
   // AI Transfer Offers for User's Listed Players
@@ -6542,6 +6605,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
   let weeklyTransferCount = 0;
   let weeklyTransferSpent = 0;
+  let weeklyUserLeagueTransferCount = 0;
+  const GLOBAL_WEEKLY_TRANSFER_CAP = 150; // Mobile performance cap
 
   // PER-PLAYER WEEKLY REJECTION TRACKING
   // Prevents multi-offer exploit: if 20 teams bid on same star,
@@ -6556,6 +6621,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     if (squadSize < 18) return true; // Crisis: always active
     return Math.random() < aiThrottleRate;
   });
+
+  // Track how many offers each user player has received this week — cap to prevent spam
+  const playerOffersThisWeek = new Map<string, number>();
+  const MAX_OFFERS_PER_PLAYER = 2;
 
   // Pre-build targetable user players list ONCE (outside AI team loop) for performance.
   // isNotForSale players are completely invisible to all AI teams — not scanned, not offered.
@@ -6599,6 +6668,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     );
 
     // ========== 2. SMART AI BUYING (Utility-Based) ==========
+    // WAGE SUSTAINABILITY: pre-compute current weekly wage bill for gate check
+    const currentWeeklyWageBill = teamPlayers.reduce((sum, p) => sum + (p.salary || 0), 0) / 52;
+    // Conservative income estimate: reputation * 90 (scales with club size)
+    const estimatedWeeklyIncome = Math.max(50000, aiTeam.reputation * 90);
+
     // Dynamic buying aggressiveness based on squad size
     const currentSquadSize = teamPlayers.length;
     let buyUrgencyThreshold = 40;
@@ -6606,36 +6680,48 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     if (currentSquadSize < 20) { buyUrgencyThreshold = 20; buyChance = 0.90; } // URGENT: thin squad
     else if (currentSquadSize < 22) { buyUrgencyThreshold = 30; buyChance = 0.80; }
     // Wealthier teams buy more aggressively — prevents budget accumulation over seasons
+    // FFP awareness: teams with >750M are in the brutal tax bracket (120%/week) — must spend fast
+    const isFfpDangerZone = aiTeam.budget > 750_000_000;
     let maxBuysThisWeek = 1;
-    if (aiTeam.budget > 500_000_000) { maxBuysThisWeek = 5; buyChance = 0.97; buyUrgencyThreshold = 12; }
-    else if (aiTeam.budget > 200_000_000) { maxBuysThisWeek = 4; buyChance = 0.92; buyUrgencyThreshold = 18; }
-    else if (aiTeam.budget > 50_000_000) { maxBuysThisWeek = 2; buyChance = 0.82; }
+    if (isFfpDangerZone)                    { maxBuysThisWeek = 3; buyChance = 0.99; buyUrgencyThreshold = 5; }
+    else if (aiTeam.budget > 500_000_000)  { maxBuysThisWeek = 3; buyChance = 0.97; buyUrgencyThreshold = 12; }
+    else if (aiTeam.budget > 200_000_000)  { maxBuysThisWeek = 2; buyChance = 0.92; buyUrgencyThreshold = 18; }
+    else if (aiTeam.budget > 50_000_000)   { maxBuysThisWeek = 2; buyChance = 0.82; }
     else if (aiTeam.budget > 20_000_000 && avgOverall < (aiTeam.reputation / 120)) { maxBuysThisWeek = 2; }
     let buysThisWeek = 0;
 
-    // For very rich teams with no acute needs: inject upgrade opportunities so budget drains
-    // A 3B budget club should still be buying the best available even without "urgent" needs
-    if (aiTeam.budget > 200_000_000 && squadNeeds.filter(n => n.urgency > buyUrgencyThreshold).length === 0) {
-      const positions: Position[] = [Position.GK, Position.DEF, Position.MID, Position.FWD];
+    // Inject upgrade opportunities for rich teams — scales aggressiveness with budget
+    // FFP danger zone teams always inject (even if some needs already exist)
+    const injectThreshold = isFfpDangerZone ? 200_000_000 : 200_000_000;
+    const hasEnoughNeeds = squadNeeds.filter(n => n.urgency > buyUrgencyThreshold).length >= 3;
+    if (aiTeam.budget > injectThreshold && (!hasEnoughNeeds || isFfpDangerZone)) {
+      const positions: Position[] = [Position.DEF, Position.MID, Position.FWD];
       positions.forEach(pos => {
-        const worstStarter = teamPlayers
+        const starters = teamPlayers
           .filter(p => p.position === pos && p.lineup === "STARTING")
-          .sort((a, b) => a.overall - b.overall)[0];
-        if (worstStarter && worstStarter.overall < avgOverall + 3) {
-          // Push synthetic upgrade need for this position
-          squadNeeds.push({
-            position: pos,
-            role: "STANDARD",
-            urgency: 25,
-            targetRating: worstStarter.overall + 4,
-            reason: `Proactive upgrade: replace ${pos} ${worstStarter.overall} OVR`,
-          });
-        }
+          .sort((a, b) => a.overall - b.overall);
+        // FFP danger zone: upgrade ALL starters below a high bar, not just the worst
+        const upgradeTarget = isFfpDangerZone ? avgOverall + 8 : avgOverall + 3;
+        starters.forEach((worstStarter, idx) => {
+          if (worstStarter.overall < upgradeTarget && idx < (isFfpDangerZone ? 3 : 1)) {
+            squadNeeds.push({
+              position: pos,
+              role: "STANDARD",
+              urgency: isFfpDangerZone ? 60 : 25,
+              targetRating: isFfpDangerZone ? Math.max(worstStarter.overall + 6, avgOverall + 5) : worstStarter.overall + 4,
+              reason: isFfpDangerZone
+                ? `FFP spending: upgrade ${pos} ${worstStarter.overall}→ elite`
+                : `Proactive upgrade: replace ${pos} ${worstStarter.overall} OVR`,
+            });
+          }
+        });
       });
     }
 
     while (
       buysThisWeek < maxBuysThisWeek &&
+      weeklyTransferCount < GLOBAL_WEEKLY_TRANSFER_CAP && // Global cap
+
       squadNeeds.length > buysThisWeek &&
       squadNeeds[buysThisWeek].urgency > buyUrgencyThreshold &&
       Math.random() < buyChance &&
@@ -6661,23 +6747,28 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         : 0;
       const effectiveBudget = aiTeam.budget + potentialSaleValue;
 
+      const isWonderkidSearch = topNeed.reason.includes('Wonderkid');
       const availablePlayers = (playersByPosition.get(topNeed.position) || []).filter(
         (p) => {
           if (p.teamId === aiTeam.id || p.teamId === gameState.userTeamId) return false;
           if (transferredPlayerIds.has(p.id) || rejectedThisWeek.has(p.id)) return false;
-          if (gameState.currentWeek - (p.lastTransferWeek || -99) < 15) return false;
+          // Only block re-transfers within the SAME season (cross-season lastTransferWeek causes permanent blocks)
+          if (p.lastTransferSeason === gameState.currentSeason && gameState.currentWeek - (p.lastTransferWeek || -99) < 15) return false;
 
           const marketAccessible = p.isTransferListed || (p.contractYears ?? 99) <= 1 || p.teamId === 'FREE_AGENT';
           const premiumAccessible = isEliteBuyer && desperateUpgrade && p.overall >= topNeed.targetRating && p.value < effectiveBudget * 0.75;
-
-          if (!marketAccessible && !premiumAccessible) return false;
-          // MEGA RICH RULE: Always bid for young 80+ elit talents unconditionally or 85+ players if budget holds
+          // MEGA RICH RULE: Must be calculated BEFORE the marketAccessible gate so it can bypass it
           const isMegaRichTarget = isMegaRichBuyer && ((p.age <= 23 && p.overall >= 80) || p.overall >= 85);
-          if (p.overall < topNeed.targetRating - 2 && !isMegaRichTarget) return false; // Allowed to buy if elite prospect
+          // WONDERKID RULE: young players (age<=22, high potential) are always valid targets
+          const isWonderkidTarget = isWonderkidSearch && p.age <= 23 && (p.potential - p.overall) >= 4;
 
-          if (!(aiTeam.reputation > 8500 || effectiveBudget > 150_000_000 || p.overall <= avgOverall + 15 || premiumAccessible)) return false;
+          // Mega rich / wonderkid targets bypass marketAccessible restriction (real football: any player can be bid on)
+          if (!marketAccessible && !premiumAccessible && !isMegaRichTarget && !isWonderkidTarget) return false;
+          if (p.overall < topNeed.targetRating - 2 && !isMegaRichTarget && !isWonderkidTarget) return false;
+
+          if (!(aiTeam.reputation > 8500 || effectiveBudget > 150_000_000 || p.overall <= avgOverall + 15 || premiumAccessible || isWonderkidTarget)) return false;
           // Protect clubs from bankrupting themselves — use effectiveBudget (includes sale proceeds)
-          const safeBudgetLimit = isMegaRichTarget ? 0.90 : (premiumAccessible ? 0.75 : 0.60);
+          const safeBudgetLimit = isMegaRichTarget ? 0.90 : (premiumAccessible ? 0.75 : (isWonderkidTarget ? 0.25 : 0.60));
           if (p.value >= effectiveBudget * safeBudgetLimit) return false;
 
           return true;
@@ -6686,12 +6777,27 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
       if (availablePlayers.length > 0) {
         // SCORE PLAYERS BASED ON ROLE FIT AND OVERALL
+        const isWonderkidNeed = topNeed.reason.includes('Wonderkid');
         const scoredTargets = availablePlayers.map((p) => {
           let utilityScore = AIService.calculatePlayerUtility(p, topNeed.role, aiTeam.tactic);
           // Mega rich clubs explicitly bias highly towards purely high-overall/high-potential players over strict "utility"
           if (isMegaRichBuyer && p.overall >= 80) {
               utilityScore += p.overall * 2;
-              if (p.age <= 23) utilityScore += p.potential * 1.5; 
+              if (p.age <= 23) utilityScore += p.potential * 1.5;
+          }
+          // Wonderkid need: strongly prefer young players with high potential gap
+          // SCOUT NOISE: AI doesn't see exact potential — scout level determines accuracy
+          if (isWonderkidNeed) {
+            const scoutLevel = aiTeam.staff?.scoutLevel || 1;
+            // Scout 1 = up to ±14 OVR error, Scout 7 = up to ±2 OVR error
+            const noiseRange = Math.max(1, (8 - scoutLevel) * 2);
+            // Deterministic per (player, team) pair — no random flicker each frame
+            const hash = (p.id.charCodeAt(0) * 31 + (aiTeam.id.charCodeAt(0) || 0) * 7) % (noiseRange * 2 + 1);
+            const perceivedPotential = Math.max(p.overall, Math.min(99, p.potential + hash - noiseRange));
+            const potentialGap = Math.max(0, perceivedPotential - p.overall);
+            const youthBonus = Math.max(0, 23 - p.age) * 4;
+            utilityScore += potentialGap * 3 + youthBonus;
+            if (p.age > 24) utilityScore -= 30; // Heavily penalize non-youth
           }
           return { player: p, utilityScore };
         });
@@ -6702,6 +6808,19 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
         // Top target is the best FIT, not necessarily highest OVR
         const targetPlayer = sortedTargets[0].player;
         const sellingTeam = teamsById.get(targetPlayer.teamId);
+
+        // WAGE SUSTAINABILITY GATE: don't buy if combined wages would exceed 85% of estimated income
+        // Exception: urgent needs (urgency >= 70) bypass this gate
+        const newPlayerWeeklyWage = (targetPlayer.salary || 0) / 52;
+        const projectedWagePct = (currentWeeklyWageBill + newPlayerWeeklyWage) / Math.max(1, estimatedWeeklyIncome);
+        const isUrgentNeed = topNeed.urgency >= 70;
+        // Rich teams (€80M+ budget) bypass wage gate — their real income is much higher
+        // than our estimate (reputation * 90), so the gate was wrongly blocking them.
+        const isRich = aiTeam.budget > 80_000_000;
+        if (!isUrgentNeed && !isRich && projectedWagePct > 0.85) {
+          buysThisWeek++; // count as attempted so loop moves on, don't actually buy
+          continue;
+        }
 
         // Max offer shouldn't exceed transfer budget limit (include 7% transfer tax)
         if (sellingTeam && targetPlayer.value * 1.07 < aiTeam.budget * 0.9) {
@@ -6728,33 +6847,36 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           if (repDiff < -1000) rejectChance += 0.4; // Huge step down
           else if (repDiff > 1000) rejectChance -= 0.3; // Huge step up, player forces move
 
-          // Financial power discount: rich clubs offering huge fees are harder to refuse
-          // Prevents budget accumulation — a 3B club should be able to buy an 80 OVR player
+          // ★ STAR PLAYER PROTECTION — properly scaled by financial power ★
+          // offerRatio = buyer budget / player value (higher = richer relative to the price)
           const offerRatio = aiTeam.budget / Math.max(1, targetPlayer.value);
-          if (offerRatio > 50) rejectChance -= 0.50; // Insane wealth — selling team pockets life-changing fee
-          else if (offerRatio > 20) rejectChance -= 0.35;
-          else if (offerRatio > 10) rejectChance -= 0.20;
-
-          // ★ STAR PLAYER PROTECTION — scaled by financial power ★
-          // Rich clubs offering a king's ransom can eventually unlock any player
           const sortedByOvr = [...sellingTeamPlayers].sort((a, b) => b.overall - a.overall);
           const isTop3 = sortedByOvr.slice(0, 3).some(p => p.id === targetPlayer.id);
           const isTop5 = sortedByOvr.slice(0, 5).some(p => p.id === targetPlayer.id);
 
           if (targetPlayer.overall >= 90) {
-            // 90+ OVR: hard to buy, but unhappy/listed players open the door
-            let base90 = offerRatio > 30 ? 0.75 : offerRatio > 15 ? 0.90 : 1.0;
-            if (targetPlayer.isTransferListed) base90 -= 0.20; // Player wants out
-            if ((targetPlayer.morale || 70) < 35) base90 -= 0.15; // Deeply unhappy
-            rejectChance = Math.max(0.35, base90);
+            // 90+ OVR: very hard, but rich clubs throwing massive money can break through
+            let base90 = offerRatio > 50 ? 0.50 : offerRatio > 30 ? 0.62 : offerRatio > 15 ? 0.78 : 0.92;
+            if (targetPlayer.isTransferListed) base90 -= 0.25;
+            if ((targetPlayer.morale || 70) < 35) base90 -= 0.15;
+            rejectChance = Math.max(0.22, base90);
           } else if (targetPlayer.overall >= 85 && isTop3) {
-            if (offerRatio > 20) rejectChance = Math.max(0.55, 0.95 - (offerRatio - 20) * 0.01);
-            else rejectChance = 0.95;
+            // Top-3 star at their club — reluctant to sell but money talks
+            const richDiscount = offerRatio > 50 ? 0.45 : offerRatio > 20 ? 0.30 : offerRatio > 10 ? 0.15 : 0;
+            rejectChance = Math.max(0.35, 0.95 - richDiscount);
           } else if (targetPlayer.overall >= 85 && isTop5) {
-            rejectChance = Math.max(0.50, 0.90 - (offerRatio > 10 ? 0.20 : 0));
+            // Good player but not the main star — more willing to move for a big fee
+            const richDiscount = offerRatio > 50 ? 0.50 : offerRatio > 20 ? 0.35 : offerRatio > 10 ? 0.18 : 0;
+            rejectChance = Math.max(0.20, 0.85 - richDiscount);
           } else if (targetPlayer.overall >= 80 && isTop5) {
-            rejectChance = Math.max(0.35, 0.85 - (offerRatio > 10 ? 0.25 : 0));
+            // Solid player, selling club can replace — money talks louder here
+            const richDiscount = offerRatio > 50 ? 0.55 : offerRatio > 20 ? 0.38 : offerRatio > 10 ? 0.22 : 0;
+            rejectChance = Math.max(0.08, 0.78 - richDiscount);
           } else {
+            // Non-star: offerRatio adjustments apply normally
+            if (offerRatio > 50) rejectChance -= 0.50;
+            else if (offerRatio > 20) rejectChance -= 0.35;
+            else if (offerRatio > 10) rejectChance -= 0.20;
             // Wonderkid protection
             if (targetPlayer.age <= 22 && targetPlayer.overall >= 75) rejectChance += 0.25;
             if (targetPlayer.overall >= 80) rejectChance += 0.20;
@@ -6782,24 +6904,28 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
             targetPlayer.lineup = "RESERVE";
             targetPlayer.lineupIndex = 99;
             targetPlayer.lastTransferWeek = gameState.currentWeek; // FIX: Set transfer week
+            targetPlayer.lastTransferSeason = gameState.currentSeason; // FIX: Track season to prevent cross-season block
+            targetPlayer.freeAgentSince = undefined; // Clear free agent timer on re-hire
             transferredPlayerIds.add(targetPlayer.id); // FIX: Mark as transferred
 
-            // Update budgets (buyer pays 10% transfer tax)
-            const transferTax = Math.floor(transferFee * 0.10);
-            adjustTeamBudget(sellingTeam.id, transferFee);
-            adjustTeamBudget(aiTeam.id, -(transferFee + transferTax));
-            gameState.transferTaxPot = (gameState.transferTaxPot || 0) + transferTax;
+            // Buyer pays 10% tax, seller pays 6% tax (realistic market friction)
+            const buyerTax = Math.floor(transferFee * 0.10);
+            const sellerTax = Math.floor(transferFee * 0.06);
+            adjustTeamBudget(sellingTeam.id, transferFee - sellerTax);
+            adjustTeamBudget(aiTeam.id, -(transferFee + buyerTax));
+            gameState.transferTaxPot = (gameState.transferTaxPot || 0) + buyerTax + sellerTax;
 
             weeklyTransferCount++;
             weeklyTransferSpent += transferFee;
             buysThisWeek++;
 
-            // Show news if: (a) user's league involved (all transfers), OR (b) player is 80+ OVR worldwide
+
+            // Show news ONLY for user's league transfers
             const userLeagueId = userTeam?.leagueId;
             const isRelevantLeague = aiTeam.leagueId === userLeagueId || sellingTeam.leagueId === userLeagueId;
-            const isWorldwideNotable = targetPlayer.overall >= 80;
 
-            if (isRelevantLeague || isWorldwideNotable) {
+            if (isRelevantLeague) {
+              weeklyUserLeagueTransferCount++;
               newMessages.push({
                 id: uuid(),
                 week: gameState.currentWeek,
@@ -6874,6 +7000,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
                     adjustTeamBudget(swapBuyer.id, -swapFee);
                     weeklyTransferCount++;
                     weeklyTransferSpent += swapFee;
+
                   } else {
                     // No immediate buyer — just list the player so the market can handle it
                     worstAtPos.isTransferListed = true;
@@ -6888,11 +7015,11 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     // ========== 3. AI REQUESTING PLAYERS FROM USER (Position-Based) ==========
     // AI teams can make offers for user's non-listed players IF they need that position
-    // MORE AGGRESSIVE: 30% chance (was 15%), lower rep threshold
+    // Reduced to 8% chance per team to prevent spam (was 30%)
     if (
       aiTeam.reputation > 6000 &&
       aiTeam.budget > 10000000 &&
-      Math.random() < 0.30
+      Math.random() < 0.08
     ) {
       // First check what positions AI team needs using our new AI Brain
       // Filter for needs with reasonable urgency (Top priority or secondary needs)
@@ -6906,7 +7033,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           (p) =>
             gameState.currentWeek - (p.lastTransferWeek || -99) >= 15 && // ANTI-LOOP
             aiNeededPositions.includes(p.position) && // MUST match needed position
-            p.value < aiTeam.budget * 0.6,
+            p.value < aiTeam.budget * 0.6 &&
+            (playerOffersThisWeek.get(p.id) || 0) < MAX_OFFERS_PER_PLAYER, // Cap offers per player
         );
 
         if (userPlayers.length > 0) {
@@ -6936,6 +7064,8 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           };
 
           newOffers.push(offer);
+          // Track offers per player this week to prevent spam
+          playerOffersThisWeek.set(targetPlayer.id, (playerOffersThisWeek.get(targetPlayer.id) || 0) + 1);
 
           newMessages.push({
             id: uuid(),
@@ -6984,18 +7114,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
             aiTeam.tactic.style = "Defensive";
           else aiTeam.tactic.style = "Balanced";
 
-          // Add message for user if it's a major rival
-          if (aiTeam.reputation > 7000) {
-            newMessages.push({
-              id: uuid(),
-              week: gameState.currentWeek,
-              type: MessageType.INFO,
-              subject: "Tactical Shift",
-              body: `${aiTeam.name} manager has switched to a ${newFormation} formation to better suit the squad.`,
-              isRead: false,
-              date: new Date().toISOString(),
-            });
-          }
+          // Tactical shifts are internal AI decisions — not shown to user (noise)
         }
       }
     }
@@ -7041,11 +7160,12 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
           playerToSell.lineupIndex = 99;
           playerToSell.lastTransferWeek = gameState.currentWeek;
 
-          // Buyer pays 10% transfer tax
-          const sellTax = Math.floor(transferFee * 0.10);
-          adjustTeamBudget(aiTeam.id, transferFee);
-          adjustTeamBudget(buyer.id, -(transferFee + sellTax));
-          gameState.transferTaxPot = (gameState.transferTaxPot || 0) + sellTax;
+          // Buyer pays 10% tax, seller (AI) pays 6% tax
+          const sellBuyerTax = Math.floor(transferFee * 0.10);
+          const sellSellerTax = Math.floor(transferFee * 0.06);
+          adjustTeamBudget(aiTeam.id, transferFee - sellSellerTax);
+          adjustTeamBudget(buyer.id, -(transferFee + sellBuyerTax));
+          gameState.transferTaxPot = (gameState.transferTaxPot || 0) + sellBuyerTax + sellSellerTax;
 
           // Show message if: (a) user's league involved (all transfers), OR (b) player is 80+ OVR worldwide
           const userLeagueIdSell = userTeam?.leagueId;
@@ -7181,6 +7301,28 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
       }
     }
 
+    // C) Proactive quality listing — list weak surplus players even without squad bloat
+    // This enables "upgrade ladder": sell weak rotation player to fund a better one
+    // Runs every 3 weeks to avoid market flooding
+    if (gameState.currentWeek % 3 === 0) {
+      (["DEF", "MID", "FWD", "GK"] as Position[]).forEach((pos) => {
+        const posPlayers = teamPlayers.filter(p => p.position === pos).sort((a, b) => b.overall - a.overall);
+        const posRequired = (formationSlots[pos] || 1) + 1; // starters + 1 backup
+        const posSurplus = posPlayers.length > posRequired;
+        if (!posSurplus) return;
+
+        const posAvg = posPlayers.reduce((s, p) => s + p.overall, 0) / posPlayers.length;
+        // Find weakest non-starter who is notably below position average
+        const upgradeCandidate = posPlayers
+          .filter(p => p.lineup !== "STARTING" && !p.isTransferListed && canListDepthPlayer(p))
+          .find(p => p.overall < posAvg - 5);
+
+        if (upgradeCandidate) {
+          upgradeCandidate.isTransferListed = true;
+        }
+      });
+    }
+
     // B) Crippling contracts - Force terminate only truly bankrupting players
     if (financialPressure) {
       teamPlayers.forEach((p) => {
@@ -7248,18 +7390,25 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
   // Run this check periodically (e.g., every 4 weeks)
   if (gameState.currentWeek % 4 === 0) {
     const initialCount = updatedPlayers.length;
+    const currentSeason = gameState.currentSeason;
+
+    // Mark newly unemployed players with their free agent season
+    updatedPlayers = updatedPlayers.map((p) => {
+      if (p.teamId === "FREE_AGENT" && p.freeAgentSince === undefined) {
+        return { ...p, freeAgentSince: currentSeason };
+      }
+      return p;
+    });
 
     // Criteria for deletion:
-    // 1. Unemployed (FREE_AGENT)
-    // 2. Age > 24 (Not young talent)
-    // 3. Overall < 70 (Not useful for any league)
-    // OR
-    // 1. Unemployed
-    // 2. Age > 32 (Retired de-facto)
+    // 1. Age > 24 + OVR < 70 (not useful)
+    // 2. Age > 32 (retired de-facto)
+    // 3. Free agent for 2+ seasons (time-based cleanup)
     updatedPlayers = updatedPlayers.filter((p) => {
       if (p.teamId !== "FREE_AGENT") return true; // Keep employed players
 
-      const isDeadWeight = (p.age > 24 && p.overall < 70) || p.age > 32;
+      const seasonsAsFreeAgent = p.freeAgentSince !== undefined ? currentSeason - p.freeAgentSince : 0;
+      const isDeadWeight = (p.age > 24 && p.overall < 70) || p.age > 32 || seasonsAsFreeAgent >= 2;
       return !isDeadWeight;
     });
 
@@ -7284,21 +7433,22 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
 
     const deletedCount = initialCount - updatedPlayers.length;
     if (deletedCount > 0) {
-      console.log(
-        `[Garbage Collector] Removed ${deletedCount} useless free agents to save memory.`,
-      );
     }
   }
 
   // ========== WEEKLY TRANSFER SUMMARY MESSAGE ==========
   if (weeklyTransferCount > 0) {
+    const otherLeagueCount = weeklyTransferCount - weeklyUserLeagueTransferCount;
+    const summaryBody = otherLeagueCount > 0
+      ? `Bu hafta dünya genelinde ${weeklyTransferCount} transfer gerçekleşti (toplam €${(weeklyTransferSpent / 1000000).toFixed(0)}M). Diğer ligler: ${otherLeagueCount} transfer.`
+      : `Bu hafta ${weeklyTransferCount} transfer gerçekleşti (toplam €${(weeklyTransferSpent / 1000000).toFixed(0)}M).`;
     newMessages.push({
       id: uuid(),
       week: gameState.currentWeek,
       type: MessageType.INFO,
-      subject: "Weekly Transfer Roundup",
-      body: `${weeklyTransferCount} transfers were completed globally this week, with a total spending of €${(weeklyTransferSpent / 1000000).toFixed(1)}M.`,
-      isRead: false,
+      subject: "Haftalık Transfer Özeti",
+      body: summaryBody,
+      isRead: true, // auto-read — not actionable
       date: new Date().toISOString(),
     });
   }
@@ -7485,10 +7635,6 @@ export const generateSuperCup = (
   const clWinner = gameState.europeanCup?.winnerId;
   const elWinner = gameState.europaLeague?.winnerId;
 
-  console.log(
-    `[Super Cup] Generating: CL Winner: ${clWinner}, EL Winner: ${elWinner}, Sezon: ${gameState.currentSeason}, Hafta: ${gameState.currentWeek}`,
-  );
-
   if (!clWinner || !elWinner) {
     console.warn(
       `[Super Cup] Cannot generate - missing winners. CL: ${clWinner}, EL: ${elWinner}`,
@@ -7516,9 +7662,6 @@ export const generateSuperCup = (
     isComplete: false,
   };
 
-  console.log(
-    `[Super Cup] Generated: ${gameState.teams.find((t) => t.id === clWinner)?.name} vs ${gameState.teams.find((t) => t.id === elWinner)?.name}`,
-  );
   return superCup;
 };
 
@@ -7529,7 +7672,6 @@ export const checkAndScheduleSuperCup = (gameState: GameState): GameState => {
     const clWinner = gameState.europeanCup?.winnerId;
     const elWinner = gameState.europaLeague?.winnerId;
     if (!clWinner || !elWinner) {
-      console.log("[Super Cup] Clearing invalid Super Cup (No winners yet)");
       return { ...gameState, superCup: undefined };
     }
   }
@@ -7543,18 +7685,12 @@ export const checkAndScheduleSuperCup = (gameState: GameState): GameState => {
   const superCup = generateSuperCup(gameState);
   if (!superCup) return gameState;
 
-  // Log for debugging
-  console.log(
-    `[Super Cup] Scheduled for Week ${superCup.match?.week} (Dynamic)`,
-  );
-
   return { ...gameState, superCup };
 };
 
 export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   // === MEMORY OPTIMIZATION ===
   // Clear old history to prevent save file bloat
-  console.log("[Maintenance] Running memory cleanup...");
 
   // 1. Limit Team History (Last 5 seasons)
   gameState.teams.forEach((team) => {
@@ -7588,8 +7724,8 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     const isRich = team.budget > 200_000_000;
     const upgradeChanceBoost = isRich ? 0.2 : 0;
 
-    // Check Academy (Priority 1) — max level 7
-    if (team.facilities.academyLevel < 7 && Math.random() < 0.7 + upgradeChanceBoost) {
+    // Check Academy (Priority 1) — max level 8
+    if (team.facilities.academyLevel < 8 && Math.random() < 0.7 + upgradeChanceBoost) {
       const cost = Math.floor(
         600000 *
         (team.facilities.academyLevel + 1) *
@@ -7599,22 +7735,16 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       if (team.budget > cost * budgetMultiplier) {
         team.budget -= cost;
         team.facilities.academyLevel += 1;
-        console.log(
-          `[AI Upgrade] ${team.name} upgraded Academy to Level ${team.facilities.academyLevel}`,
-        );
       }
     }
 
-    // Check Training (Priority 2) — max level 7
-    if (team.facilities.trainingLevel < 7 && Math.random() < 0.6 + upgradeChanceBoost) {
+    // Check Training (Priority 2) — max level 8
+    if (team.facilities.trainingLevel < 8 && Math.random() < 0.6 + upgradeChanceBoost) {
       const cost = getCost(team.facilities.trainingLevel);
       const budgetMultiplier = isRich ? 1.5 : 2.5;
       if (team.budget > cost * budgetMultiplier) {
         team.budget -= cost;
         team.facilities.trainingLevel += 1;
-        console.log(
-          `[AI Upgrade] ${team.name} upgraded Training to Level ${team.facilities.trainingLevel}`,
-        );
       }
     }
 
@@ -7626,9 +7756,35 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
         team.budget -= cost;
         team.facilities.stadiumLevel += 1;
         team.facilities.stadiumCapacity += 12500;
-        console.log(
-          `[AI Upgrade] ${team.name} upgraded Stadium to Level ${team.facilities.stadiumLevel}`,
-        );
+      }
+    }
+
+    // Check Staff (Priority 4) — max level 8, cheaper than facilities
+    // Run 2 attempts per season so staff levels up at similar pace to facilities
+    if (!team.staff) team.staff = { headCoachLevel: 1, scoutLevel: 1, physioLevel: 1 };
+    const staffCost = (level: number) => Math.floor(100000 * Math.pow(1.5, level));
+    const staffBudgetMult = isRich ? 1.5 : 2.5;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (team.staff.headCoachLevel < 8 && Math.random() < 0.6 + upgradeChanceBoost) {
+        const cost = staffCost(team.staff.headCoachLevel);
+        if (team.budget > cost * staffBudgetMult) {
+          team.budget -= cost;
+          team.staff.headCoachLevel += 1;
+        }
+      }
+      if (team.staff.scoutLevel < 8 && Math.random() < 0.7 + upgradeChanceBoost) {
+        const cost = staffCost(team.staff.scoutLevel);
+        if (team.budget > cost * staffBudgetMult) {
+          team.budget -= cost;
+          team.staff.scoutLevel += 1;
+        }
+      }
+      if (team.staff.physioLevel < 8 && Math.random() < 0.5 + upgradeChanceBoost) {
+        const cost = staffCost(team.staff.physioLevel);
+        if (team.budget > cost * staffBudgetMult) {
+          team.budget -= cost;
+          team.staff.physioLevel += 1;
+        }
       }
     }
   });
@@ -7655,8 +7811,8 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     (sum, t) => sum + Math.max(0, t.budget),
     0,
   );
-  // Pure ratio: floor 0.5x (prevents total collapse), cap 8x (prevents absurdity)
-  const inflationMultiplier = Math.min(8.0, Math.max(0.5, totalLeagueBudgets / INITIAL_TOTAL_BUDGETS));
+  // sqrt ratio: floor 0.5x, cap 4x — mirrors weekly formula to stay in sync
+  const inflationMultiplier = Math.min(4.0, Math.max(0.5, Math.sqrt(totalLeagueBudgets / INITIAL_TOTAL_BUDGETS)));
 
   console.log(
     `[Season End] Market Inflation: Total Budgets €${(totalLeagueBudgets / 1000000).toFixed(0)}M, Multiplier: ${inflationMultiplier.toFixed(2)}x`,
@@ -7681,9 +7837,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     const away = gameState.teams.find((t) => t.id === m.awayTeamId);
     if (!home || !away) return;
 
-    console.log(
-      `[COEFF DEBUG] Match: ${home.name} vs ${away.name} | Stage: ${(m as any).stage} | isPlayed: ${m.isPlayed}`,
-    );
+    // [COEFF DEBUG] log removed
 
     let homePts = 0;
     let awayPts = 0;
@@ -7747,12 +7901,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     leagueSeasonalPoints[away.leagueId] =
       (leagueSeasonalPoints[away.leagueId] || 0) + awayPts;
 
-    console.log(
-      `[COEFF DEBUG] ${home.name} earned ${homePts} pts → ${home.leagueId} total: ${leagueSeasonalPoints[home.leagueId]}`,
-    );
-    console.log(
-      `[COEFF DEBUG] ${away.name} earned ${awayPts} pts → ${away.leagueId} total: ${leagueSeasonalPoints[away.leagueId]}`,
-    );
+    // [COEFF DEBUG] point logs removed
 
     // Track unique teams per league
     if (!leagueTeamCounts[home.leagueId])
@@ -7842,27 +7991,19 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       if (currentCoeffTotal > baseCoeff * 3) {
         const newBaseRep = Math.min(98, currentBaseRep + 2);
         BASE_LEAGUE_REPUTATION[lid] = newBaseRep;
-        console.log(
-          `[BASE REP ↑] ${lid}: ${currentBaseRep} → ${newBaseRep} (Dominant league!)`,
-        );
       }
       // WEAK LEAGUE (<0.5x coefficient): -2 base reputation (Min 35)
       // İngiltere 20 sezon kötüyse düşer!
       else if (currentCoeffTotal < baseCoeff * 0.5 && currentBaseRep > 35) {
         const newBaseRep = Math.max(35, currentBaseRep - 2);
         BASE_LEAGUE_REPUTATION[lid] = newBaseRep;
-        console.log(
-          `[BASE REP ↓] ${lid}: ${currentBaseRep} → ${newBaseRep} (Weak league - declining!)`,
-        );
       }
     }
 
     // DIRECT SUM: Each league's total points from all participating teams
     const seasonCoeff = Number(totalPoints.toFixed(1));
 
-    console.log(
-      `[COEFF DEBUG] ${lid} → Season Points: ${totalPoints} | History Before: ${LEAGUE_COEFFICIENTS[lid]}`,
-    );
+    // [COEFF DEBUG] season points log removed
 
     // Push NEW season points
     LEAGUE_COEFFICIENTS[lid].push(seasonCoeff);
@@ -7921,11 +8062,34 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     });
 
     const top3 = leagueScores.slice(0, 3).map(l => `${l.lid}(${l.score.toFixed(0)}pts)`).join(', ');
-    console.log(`[LeagueRanking] Top 3: ${top3} | Total leagues: ${allLeagueIds.length}`);
+    // [LeagueRanking] log removed
   }
 
-  console.log("[Coef Update] Season Coefficients:", leagueSeasonalPoints);
-  console.log("[Coef Update] New Reputations:", BASE_LEAGUE_REPUTATION);
+  // [SquadWatch] — top teams' squad quality for balance monitoring
+  {
+    const getSquadAvgOvr = (teamId: string) => {
+      const sq = gameState.players.filter((p) => p.teamId === teamId);
+      return sq.length === 0 ? 0 : sq.reduce((s, p) => s + p.overall, 0) / sq.length;
+    };
+    const topTeams = [...gameState.teams]
+      .sort((a, b) => getSquadAvgOvr(b.id) - getSquadAvgOvr(a.id))
+      .slice(0, 12);
+    topTeams.forEach((team) => {
+      const squad = gameState.players.filter((p) => p.teamId === team.id);
+      if (squad.length === 0) return;
+      const byPos: Record<string, number[]> = { GK: [], DEF: [], MID: [], FWD: [] };
+      squad.forEach((p) => {
+        const key = p.position === "GK" ? "GK" : p.position === "DEF" ? "DEF" : p.position === "MID" ? "MID" : "FWD";
+        byPos[key].push(p.overall);
+      });
+      const fmt = (arr: number[]) =>
+        arr.length === 0 ? "-" : `${arr.length}(${Math.round(arr.reduce((s, v) => s + v, 0) / arr.length)})`;
+      const avgOvr = Math.round(squad.reduce((s, p) => s + p.overall, 0) / squad.length);
+      const budgetM = Math.round((team.budget || 0) / 1_000_000);
+    });
+  }
+
+  // [Coef Update] logs removed (too verbose)
 
   // PERSIST TO GAME STATE
   gameState.baseLeagueReputations = { ...BASE_LEAGUE_REPUTATION };
@@ -7933,14 +8097,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   gameState.leagueEuropeanBonuses = { ...LEAGUE_EUROPEAN_BONUS };
   gameState.leagueCoefficients = { ...LEAGUE_COEFFICIENTS };
 
-  console.log(
-    "[Reputation] New Base Reps (Persisted):",
-    gameState.baseLeagueReputations,
-  );
-  console.log(
-    "[Reputation] New Econ Bonuses (Persisted):",
-    gameState.leagueEuropeanBonuses,
-  );
 
   // 1. Calculate Standings & Awards
   const sensitiveSortedTeams = [...gameState.teams].sort((a, b) => {
@@ -8270,7 +8426,13 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     const headCoachLevel = playerTeam?.staff?.headCoachLevel || 1;
     const managerEffects = p.teamId === gameState.userTeamId
       ? getManagerGameplayEffects(gameState.managerProfile)
-      : getManagerGameplayEffects(undefined);
+      : (() => {
+          const base = getManagerGameplayEffects(undefined);
+          // AI teams get a small fixed development bonus (balances user manager advantage)
+          const aiTeamObj = gameState.teams.find(t => t.id === p.teamId);
+          const aiRepBonus = aiTeamObj ? Math.min(0.010, aiTeamObj.reputation / 50000) : 0.005;
+          return { ...base, playerDevelopmentBonus: 0.010 + aiRepBonus };
+        })();
 
     // Progressive Difficulty for High OVR (Anti-Inflation — sertleştirildi)
     let inflationPenalty = 0;
@@ -8420,7 +8582,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
 
     // Value update based on new overall/age - consistent with weekly formula
     const baseValue = Math.floor(
-      Math.pow(1.22, overall - 60) *
+      Math.pow(1.18, overall - 60) *
       100000 *
       (1 + (p.potential - overall) / 25) *   // potential factor — same as weekly update
       (1 + Math.max(0, 25 - age) * 0.03) *
@@ -8440,9 +8602,10 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
 
       // Re-calculate effective overall for accurate wage base (just in case)
       // Use existing value formula base, but for wage
-      // WAGE FORMULA: Base Wage * (0.8 + (LeagueMult * 0.2))
+      // WAGE FORMULA: Base Wage * (0.8 + (LeagueMult * 0.2)) + superstar premium for 88+ OVR
+      const renewSuperstarMult = overall >= 88 ? Math.pow(1.22, overall - 87) : 1.0;
       const baseWage = Math.floor(
-        Math.pow(1.13, overall - 50) * 100000 * 0.005,
+        Math.pow(1.13, overall - 50) * 100000 * 0.005 * renewSuperstarMult,
       );
       const scaledWage = Math.floor(baseWage * (0.8 + leagueMult * 0.2));
       // Ensure realistic minimum wages
@@ -8597,7 +8760,7 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
       [basePotential, Math.min(90, basePotential + 4)],
     );
     youth.overall = getRandomInt(50, 65);
-    youth.value = Math.floor(Math.pow(1.22, youth.overall - 60) * 100000 * (1 + Math.max(0, 25 - youth.age) * 0.03) * inflationMultiplier);
+    youth.value = Math.floor(Math.pow(1.18, youth.overall - 60) * 100000 * (1 + Math.max(0, 25 - youth.age) * 0.03) * inflationMultiplier);
     youth.salary = Math.floor(Math.pow(1.13, youth.overall - 50) * 100000 * 0.005) * 52; // Consistent wage formula
     youth.lineup = "RESERVE";
     youth.lineupIndex = 99;
@@ -8608,7 +8771,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   // Add the Elite Regens to the global pool!
   if (eliteRegens.length > 0) {
     globalYouthPool.push(...eliteRegens);
-    console.log(`[Regen System] Added ${eliteRegens.length} elite regens to the global youth pool.`);
   }
 
   // Sort pool by potential (best talents first)
@@ -8654,10 +8816,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     }
   });
 
-  console.log(
-    `[Season End] Global Youth Pool: ${YOUTH_POOL_SIZE} generated, ${youthIndex} distributed to teams`,
-  );
-
   // 4. FIX: Generate fixtures PER LEAGUE, not all teams mixed!
   const fixtureLeagueIds = [...new Set(updatedTeams.map((t) => t.leagueId))];
   const allNewMatches: Match[] = [];
@@ -8668,10 +8826,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     // 'matchFormat' is available on 'ar' and 'br' leagues in constants.ts
     // Explicitly cast to any because standard type might not show it yet if types.ts isn't updated
     const isSingleRound = (leaguePreset as any)?.matchFormat === "single-round";
-
-    console.log(
-      `[Season End] Generating schedule for league ${leagueId}. Teams: ${leagueTeams.length}, SingleRound: ${isSingleRound}`,
-    );
 
     const leagueMatches = generateSeasonSchedule(leagueTeams, isSingleRound);
     allNewMatches.push(...leagueMatches);
@@ -8773,6 +8927,29 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   const wonUEFA = gameState.europaLeague?.winnerId === gameState.userTeamId;
   const wonSuperCup = gameState.superCup?.winnerId === gameState.userTeamId;
 
+  // === SEASON-END BOARD CONFIDENCE TROPHY BONUS ===
+  // Winning trophies should massively boost board confidence (prevent %50 drop despite domination)
+  if (userTeam) {
+    let trophyConfBonus = 0;
+    if (wonLeague) trophyConfBonus += 22;
+    if (wonCL) trophyConfBonus += 18;
+    if (wonUEFA) trophyConfBonus += 12;
+    if (wonSuperCup) trophyConfBonus += 8;
+    if (!wonLeague && userPosition === 2) trophyConfBonus += 8;
+    else if (!wonLeague && userPosition === 3) trophyConfBonus += 4;
+    // No trophies and poor finish = penalty
+    if (!wonLeague && !wonCL && !wonUEFA && !wonSuperCup && userPosition > Math.ceil(totalTeams / 2)) {
+      trophyConfBonus -= 8;
+    }
+    if (trophyConfBonus !== 0) {
+      updatedTeams = updatedTeams.map(t =>
+        t.id === gameState.userTeamId
+          ? { ...t, boardConfidence: Math.max(1, Math.min(100, (t.boardConfidence ?? 70) + trophyConfBonus)) }
+          : t
+      );
+    }
+  }
+
   // Update career history with trophy info
   const careerHistoryEntry = {
     season: gameState.currentSeason,
@@ -8865,7 +9042,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
   const taxPot = gameState.transferTaxPot || 0;
   const taxDistributionMessage = (() => {
     if (taxPot <= 0) {
-      console.log(`[TransferTax] Pot empty this season — no transfers taxed yet.`);
       return null;
     }
     const toDistribute = Math.floor(taxPot * 0.10); // 10% back to teams, 90% destroyed
@@ -8874,7 +9050,6 @@ export const processSeasonEnd = (gameState: GameState, t: any = {}) => {
     if (perTeam > 0) {
       updatedTeams = updatedTeams.map(t => ({ ...t, budget: t.budget + perTeam }));
     }
-    console.log(`[TransferTax] Pot: €${(taxPot/1e6).toFixed(1)}M | Distributed: €${(toDistribute/1e6).toFixed(1)}M (€${(perTeam/1e6).toFixed(2)}M/takım) | Destroyed: €${(toDestroy/1e6).toFixed(1)}M`);
     return {
       id: uuid(),
       week: 1,
@@ -9148,10 +9323,6 @@ export const generateGlobalCup = (
     // Find all 6 leagues assigned to this Region/Group
     const regionLeagues = LEAGUE_PRESETS.filter((l) => l.region === regionId);
 
-    console.log(
-      `[Global Cup] Forming Group ${groupName} (Region: ${regionId}) - Leagues found: ${regionLeagues.length}`,
-    );
-
     regionLeagues.forEach((league) => {
       // Get teams from this league
       const leagueTeams = gameState.teams.filter(
@@ -9181,9 +9352,6 @@ export const generateGlobalCup = (
         ) {
           groupTeams.push(selectedTeam.id);
           qualifiedTeams.push(selectedTeam);
-          console.log(
-            `[Cup Tier ${tier}] Added ${selectedTeam.name} (${league.id}) to Group ${groupName} (LastSeasonPos: ${selectedTeam.lastSeasonPosition ?? "N/A"})`,
-          );
         }
       }
     });
@@ -9390,19 +9558,8 @@ export const simulateGlobalCupMatch = (
       ),
     );
   }
-  console.log(
-    "[DEBUG ENGINE] Match Simulated. Score:",
-    match.homeScore,
-    "-",
-    match.awayScore,
-  );
-
   // Handle Group Stage Point Updates
   if (match.stage === "GROUP" && group) {
-    console.log(
-      "[DEBUG ENGINE] Updating Group Standings for Group:",
-      group.name,
-    );
 
     // Update Standings helper
     const updateTeamStats = (
@@ -9412,12 +9569,6 @@ export const simulateGlobalCupMatch = (
     ) => {
       const stats = group!.standings.find((s) => s.teamId === teamId);
       if (stats) {
-        console.log(
-          "[DEBUG ENGINE] Updating stats for team:",
-          teamId,
-          "Old Played:",
-          stats.played,
-        );
         stats.played++;
         stats.gf += scored;
         stats.ga += conceded;
@@ -9434,17 +9585,6 @@ export const simulateGlobalCupMatch = (
         } else {
           stats.lost++;
         }
-        console.log(
-          "[DEBUG ENGINE] New Played:",
-          stats.played,
-          "Points:",
-          stats.points,
-        );
-      } else {
-        console.warn(
-          "[DEBUG ENGINE] Team stats NOT found in group standings for:",
-          teamId,
-        );
       }
     };
 

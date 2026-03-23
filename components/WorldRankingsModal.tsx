@@ -9,9 +9,10 @@ interface WorldRankingsModalProps {
     onClose: () => void;
     teams: Team[];
     players: Player[];
+    onInspectTeam?: (teamId: string) => void;
 }
 
-export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, onClose, teams, players }) => {
+export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, onClose, teams, players, onInspectTeam }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState<'clubs' | 'players' | 'leagues'>('clubs');
 
@@ -182,7 +183,11 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
                                 {rankedTeams.map((team) => (
-                                    <tr key={team.id} className="hover:bg-slate-800/30 transition-colors group">
+                                    <tr
+                                        key={team.id}
+                                        className={`hover:bg-slate-800/30 transition-colors group ${onInspectTeam ? 'cursor-pointer' : ''}`}
+                                        onClick={() => { if (onInspectTeam) { onInspectTeam(team.id); onClose(); } }}
+                                    >
                                         <td className={`p-4 text-center font-bold text-lg ${getRankColor(team.rank)}`}>
                                             #{team.rank}
                                         </td>
@@ -203,6 +208,11 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                         <td className="p-4 text-right font-mono text-slate-300 hidden sm:table-cell">
                                             €{(team.squadValue / 1000000).toFixed(1)}M
                                         </td>
+                                        {onInspectTeam && (
+                                            <td className="p-4 text-right">
+                                                <span className="text-xs text-slate-600 group-hover:text-emerald-400 transition-colors">Kadro →</span>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>

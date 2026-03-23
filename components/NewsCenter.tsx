@@ -42,7 +42,14 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
    };
 
    const sortedMessages = useMemo(
-      () => filterMessages([...messages].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
+      () => {
+         // Sort by week (desc) then by date string (desc) — avoids expensive Date parsing on every render
+         const sorted = [...messages].sort((a, b) => {
+            if (b.week !== a.week) return b.week - a.week;
+            return b.date > a.date ? 1 : -1;
+         });
+         return filterMessages(sorted);
+      },
       [messages, activeTab]
    );
 
