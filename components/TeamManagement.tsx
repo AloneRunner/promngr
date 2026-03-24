@@ -110,6 +110,7 @@ interface PlayerRowProps {
     player: Player;
     selectedPlayerId: string | null;
     onSelect: (player: Player) => void;
+    onDetail: (player: Player) => void;
     onInteractStart: (player: Player) => void;
     onMove?: (playerId: string, direction: 'UP' | 'DOWN') => void;
     isFirst?: boolean;
@@ -127,7 +128,7 @@ const getAttributeClass = (val: number) => {
     return 'attr-box attr-low';                  // < 70
 };
 
-const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove, isFirst, isLast, assignedRole, t }: PlayerRowProps) => {
+const PlayerRow = ({ player, selectedPlayerId, onSelect, onDetail, onInteractStart, onMove, isFirst, isLast, assignedRole, t }: PlayerRowProps) => {
     // Safety check for player data
     if (!player || !player.attributes) return null;
 
@@ -141,12 +142,15 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
     return (
         <div
             onClick={() => onSelect(player)}
-            className={`fm-card relative mb-2 p-0.5 transition-all duration-300 ${isSelected ? 'scale-[1.01] z-10 border-emerald-400/60 shadow-[0_0_20px_rgba(52,211,153,0.4)]' : ''
+            style={{ touchAction: 'manipulation' }}
+            className={`fm-card relative mb-2 p-0.5 transition-all duration-300 cursor-pointer select-none ${isSelected ? 'scale-[1.01] z-10 border-emerald-400/60 shadow-[0_0_20px_rgba(52,211,153,0.4)]' : 'active:scale-[0.99]'
                 }`}
         >
             {/* OVR based Glow Effect (Subtle background gradient) */}
             {effectiveRating >= 85 && <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-emerald-500/20 to-transparent pointer-events-none"></div>}
             {effectiveRating >= 75 && effectiveRating < 85 && <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-blue-500/20 to-transparent pointer-events-none"></div>}
+            {isSelected && <div className="absolute inset-0 bg-emerald-500/10 rounded-xl pointer-events-none"></div>}
+            {isSelected && <div className="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide z-10 pointer-events-none">Seçildi</div>}
 
             <div className={`relative flex items-center p-2.5 gap-3 rounded-xl`}>
 
@@ -283,13 +287,13 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onInteractStart, onMove
                         <MessageSquare size={14} />
                     </button>
 
-                    {/* Premium OVR Box */}
-                    <div className={`w-12 h-12 flex flex-col items-center justify-center rounded-xl shadow-lg border-2 ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
+                    {/* Premium OVR Box — click to view player details (bypasses substitution mode) */}
+                    <div onClick={(e) => { e.stopPropagation(); onDetail(player); }} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg shadow-lg border-2 cursor-pointer active:scale-95 transition-transform ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
                         effectiveRating >= 80 ? 'bg-gradient-to-b from-slate-200 to-slate-400 border-slate-200 shadow-white/20' :
                             effectiveRating >= 70 ? 'bg-gradient-to-b from-amber-600 to-amber-800 border-amber-700 shadow-orange-900/40' :
                                 'bg-slate-800 border-slate-700'
-                        }`} title={`Base: ${player.overall} | Live: ${effectiveRating}`}>
-                        <span className={`font-black text-xl leading-none ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
+                        }`} title={`Detay için tıkla | Base: ${player.overall} | Live: ${effectiveRating}`}>
+                        <span className={`font-black text-base leading-none ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
                             {effectiveRating}
                         </span>
                         {player.overall !== effectiveRating && (
@@ -414,8 +418,8 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
             setSelectedPlayerId(player.id);
         } else {
             if (selectedPlayerId === player.id) {
+                // Same player tapped again → just deselect
                 setSelectedPlayerId(null);
-                onPlayerClick(player);
             } else {
                 onSwapPlayers(selectedPlayerId, player.id);
                 setSelectedPlayerId(null);
@@ -2093,6 +2097,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 player={p}
                                 selectedPlayerId={selectedPlayerId}
                                 onSelect={handlePlayerSelect}
+                                onDetail={onPlayerClick}
                                 onInteractStart={setInteractingPlayer}
                                 onMove={onMovePlayer}
                                 isFirst={index === 0}
@@ -2126,6 +2131,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 player={p}
                                 selectedPlayerId={selectedPlayerId}
                                 onSelect={handlePlayerSelect}
+                                onDetail={onPlayerClick}
                                 onInteractStart={setInteractingPlayer}
                                 t={t}
                             />
@@ -2155,6 +2161,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                                 player={p}
                                 selectedPlayerId={selectedPlayerId}
                                 onSelect={handlePlayerSelect}
+                                onDetail={onPlayerClick}
                                 onInteractStart={setInteractingPlayer}
                                 t={t}
                             />

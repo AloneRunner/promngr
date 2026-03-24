@@ -1087,8 +1087,6 @@ export const useMatchSimulation = ({
 
                 const winnerTeam = gameState.teams.find(tm => tm.id === winnerId);
 
-                alert(`${t.quickSimResult}: ${homeTeam.name} ${simResult.homeScore} - ${simResult.awayScore} ${awayTeam.name}`);
-
                 setGameState(prev => {
                     if (!prev) return null;
                     const profileSeed = progressedState.managerProfile || prev.managerProfile;
@@ -1205,11 +1203,18 @@ export const useMatchSimulation = ({
             const userTeamId = isUserHome ? nextMatch.homeTeamId : nextMatch.awayTeamId;
             const aiTeamId = isUserHome ? nextMatch.awayTeamId : nextMatch.homeTeamId;
 
-            // 1. Validate USER Squad
+            // 1. Validate USER Squad — auto-pick if incomplete
             const userStarters = gameState.players.filter(p => p.teamId === userTeamId && p.lineup === 'STARTING');
             if (userStarters.length < 11) {
-                alert(t.completeSquad || 'Please complete your starting XI.');
-                return;
+                console.warn('Incomplete squad - auto-picking lineup before simulation');
+                const userTeamObj = gameState.teams.find(t => t.id === userTeamId);
+                const userAllPlayers = gameState.players.filter(p => p.teamId === userTeamId);
+                if (userTeamObj && userAllPlayers.length >= 11) {
+                    engine.autoPickLineup(userAllPlayers, userTeamObj.tactic.formation, userTeamObj.coachArchetype);
+                } else {
+                    console.warn('Not enough players to field a team - skipping match');
+                    return;
+                }
             }
 
             // 2. Ensure AI Squad is ready (Auto-Pick)
@@ -1269,9 +1274,6 @@ export const useMatchSimulation = ({
                     }
 
 
-                    if (playedCupMatch) {
-                        alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
-                    }
                 } else if (elMatch && gameState.europaLeague) {
                     const { updatedCup, updatedHomeTeam, updatedAwayTeam } = engine.simulateGlobalCupMatch(gameState.europaLeague, cupMatch.id, homeTeam, awayTeam, homePlayers, awayPlayers, 0.5);
                     updatedState.europaLeague = updatedCup;
@@ -1293,9 +1295,6 @@ export const useMatchSimulation = ({
                         playedCupMatch = updatedCup.knockoutMatches.find(x => x.id === cupMatch.id) as unknown as Match;
                     }
 
-                    if (playedCupMatch) {
-                        alert(`${t.quickSimResult}: ${homeTeam.name} ${playedCupMatch.homeScore} - ${playedCupMatch.awayScore} ${awayTeam.name}`);
-                    }
                 }
 
                 // Simulate AI European Cup Matches (other Cup games this week)
@@ -1517,8 +1516,6 @@ export const useMatchSimulation = ({
                 if (playedMatch && playedMatch.isPlayed) {
                     const homeTeam = newState.teams.find(t => t.id === playedMatch.homeTeamId);
                     const awayTeam = newState.teams.find(t => t.id === playedMatch.awayTeamId);
-                    alert(`${t.quickSimResult}: ${homeTeam?.name} ${playedMatch.homeScore} - ${playedMatch.awayScore} ${awayTeam?.name}`);
-
                     let updatedState = engine.simulateLeagueRound(newState, newState.currentWeek);
 
                     // Global Cup AI Sim
@@ -1560,7 +1557,6 @@ export const useMatchSimulation = ({
                             ? `🏆 ${t.seasonComplete || 'Season Complete'}! ${t.internationalEliteCup || 'International Elite Cup'} ${t.champion || 'Champion'}!`
                             : `🏆 ${t.internationalEliteCup || 'International Elite Cup'}: ${initialCupStage} completed. ${t.fixtures || 'Fixtures'}: ${t.noMatchInfo || 'Check fixtures for details.'}`;
 
-                        alert(msg);
                         updatedState.messages.push({
                             id: uuid(),
                             week: updatedState.currentWeek,
@@ -1624,7 +1620,6 @@ export const useMatchSimulation = ({
                 checkState.superCup?.match?.awayTeamId === checkState.userTeamId;
 
             if (checkState.superCup && !checkState.superCup.isComplete && userInSuperCup && checkState.currentWeek >= scheduledSuperCupWeek) {
-                alert(t.superCupMustPlay || '🏆 You must play the Super Cup before the season ends!');
                 if (onForcePlaySuperCup) onForcePlaySuperCup();
                 return;
             }
@@ -1654,7 +1649,7 @@ export const useMatchSimulation = ({
             // Season end becomes available only after seasonEndWeek
             if (checkState.currentWeek >= seasonEndWeek) {
                 // Check if Super Cup needs to be played first
-                alert("Season Finished. Please use End Season button in dashboard.");
+                console.log('Season finished - use End Season button in dashboard');
 
             } else if (isOnCupWeek) {
                 // AUTO-SKIP CUP WEEK
@@ -1691,8 +1686,6 @@ export const useMatchSimulation = ({
 
                 const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
                 const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
-
-                alert(t.cupWeekSkipped || '⚽ Kupa haftası atlandı - Avrupa maçınız yok bu hafta.');
 
                 setGameState({
                     ...updatedState,

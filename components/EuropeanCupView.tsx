@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { EuropeanCup, EuropeanCupMatch, Team, Translation, GlobalCupGroup } from '../types';
-import { Trophy, Star, Crown, ChevronRight, Grid, LayoutTemplate } from 'lucide-react';
+import { Trophy, Star, Crown, ChevronLeft, ChevronRight, Grid, LayoutTemplate } from 'lucide-react';
 import { getLeagueFlag } from '../src/data/leagueFlags';
 
 interface EuropeanCupViewProps {
@@ -23,8 +23,28 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
     onClose,
     cupName
 }) => {
-    const [activeTab, setActiveTab] = useState<'groups' | 'bracket'>('groups'); // Default to groups to show content immediately
+    const [activeTab, setActiveTab] = useState<'fixtures' | 'groups' | 'bracket'>('fixtures');
     const getTeam = (id: string) => teams.find(t => t.id === id);
+
+    // Compute fixture weeks at component level for pagination
+    const allFixtureMatches = useMemo(() => [
+        ...(cup.groups || []).flatMap(g => g.matches),
+        ...(cup.knockoutMatches || [])
+    ], [cup.groups, cup.knockoutMatches]);
+
+    const fixtureWeekMap = useMemo(() => {
+        const map = new Map<number, any[]>();
+        allFixtureMatches.forEach(m => {
+            if (m.week == null) return;
+            if (!map.has(m.week)) map.set(m.week, []);
+            map.get(m.week)!.push(m);
+        });
+        return map;
+    }, [allFixtureMatches]);
+
+    const fixtureWeeks = useMemo(() => Array.from(fixtureWeekMap.keys()).sort((a, b) => a - b), [fixtureWeekMap]);
+
+    const [fixtureWeekIdx, setFixtureWeekIdx] = useState<number>(() => Math.max(0, fixtureWeeks.length - 1));
 
     // Safety check for knockout matches
     const knockoutMatches = cup.knockoutMatches || [];
@@ -171,39 +191,36 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
     const activeText = isEliteCup ? 'text-purple-400' : 'text-orange-400';
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-            <div className={`bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border ${borderColor} shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col`}>
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
+            <div className={`bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border ${borderColor} shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto flex flex-col`}>
 
                 {/* Header */}
-                <div className={`p-6 text-center border-b ${borderColor} bg-gradient-to-r ${bgGradient} shrink-0`}>
-                    <div className="flex items-center justify-center gap-3 mb-2">
-                        <Trophy className={iconColor} size={24} />
-                        <h1 className={`text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${textGradient}`}>
+                <div className={`px-4 py-3 landscape:py-2 text-center border-b ${borderColor} bg-gradient-to-r ${bgGradient} shrink-0`}>
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                        <Trophy className={iconColor} size={18} />
+                        <h1 className={`text-lg landscape:text-base md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r ${textGradient}`}>
                             {title}
                         </h1>
-                        <Trophy className={iconColor} size={24} />
+                        <Trophy className={iconColor} size={18} />
                     </div>
-                    <p className="text-purple-500/70 text-sm">{t.season || 'Season'} {cup.season} • {t.internationalTournament || 'International Tournament'}</p>
+                    <p className="text-purple-500/70 text-xs">{t.season || 'Season'} {cup.season} • {t.internationalTournament || 'International Tournament'}</p>
 
                     {/* Tabs */}
-                    <div className="flex justify-center gap-4 mt-6">
-                        <button
-                            onClick={() => setActiveTab('groups')}
-                            className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'groups' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                        >
-                            Grup Aşaması
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('bracket')}
-                            className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'bracket' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                        >
-                            Eleme Aşaması
-                        </button>
+                    <div className="flex justify-center gap-2 mt-3 landscape:mt-2 flex-wrap">
+                        {(['fixtures', 'groups', 'bracket'] as const).map(tab => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all ${activeTab === tab ? (isEliteCup ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'bg-orange-600 text-white shadow-lg shadow-orange-900/50') : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                            >
+                                {tab === 'fixtures' ? 'Fiksür' : tab === 'groups' ? 'Gruplar' : 'Eleme'}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-4 md:p-6 space-y-6 overflow-y-auto grow">
+                <div className="p-3 md:p-5 space-y-4 overflow-y-auto flex-1 min-h-0">
                     {/* Winner Banner */}
                     {winner && cup.currentStage === 'COMPLETE' && (
                         <div className="p-4 bg-gradient-to-r from-emerald-600/20 via-emerald-500/30 to-emerald-600/20 border-b border-emerald-500/30 mb-6 rounded-xl">
@@ -218,7 +235,49 @@ export const EuropeanCupView: React.FC<EuropeanCupViewProps> = ({
                         </div>
                     )}
 
-                    {activeTab === 'groups' ? (
+                    {activeTab === 'fixtures' ? (() => {
+                        if (fixtureWeeks.length === 0) return (
+                            <div className="text-center py-10 text-slate-500 italic">Henüz maç planlanmadı.</div>
+                        );
+                        const roundLabel: Record<string, string> = {
+                            ROUND_16: 'Son 16', QUARTER: 'Çeyrek Final', SEMI: 'Yarı Final', FINAL: 'Final'
+                        };
+                        const idx = Math.min(fixtureWeekIdx, fixtureWeeks.length - 1);
+                        const week = fixtureWeeks[idx];
+                        const weekMatches = fixtureWeekMap.get(week)!;
+                        const firstWithRound = weekMatches.find((m: any) => m.round);
+                        const label = firstWithRound ? (roundLabel[firstWithRound.round] || firstWithRound.round) : `Grup Hafta ${idx + 1}`;
+                        return (
+                            <div>
+                                {/* Week navigator */}
+                                <div className="flex items-center justify-between mb-4 bg-slate-800/40 rounded-xl px-3 py-2">
+                                    <button
+                                        onClick={() => setFixtureWeekIdx(i => Math.max(0, i - 1))}
+                                        disabled={idx === 0}
+                                        className="p-2 rounded-lg disabled:opacity-30 hover:bg-slate-700 transition-colors"
+                                    >
+                                        <ChevronLeft size={18} className={iconColor} />
+                                    </button>
+                                    <div className="text-center">
+                                        <div className={`text-sm font-black uppercase ${iconColor}`}>{week}. Hafta</div>
+                                        <div className="text-xs text-slate-500">{label}</div>
+                                        <div className="text-xs text-slate-600 mt-0.5">{idx + 1} / {fixtureWeeks.length}</div>
+                                    </div>
+                                    <button
+                                        onClick={() => setFixtureWeekIdx(i => Math.min(fixtureWeeks.length - 1, i + 1))}
+                                        disabled={idx === fixtureWeeks.length - 1}
+                                        className="p-2 rounded-lg disabled:opacity-30 hover:bg-slate-700 transition-colors"
+                                    >
+                                        <ChevronRight size={18} className={iconColor} />
+                                    </button>
+                                </div>
+                                {/* Matches for selected week */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    {weekMatches.map((m: any) => renderMatch(m, !m.isPlayed && (m.homeTeamId === userTeamId || m.awayTeamId === userTeamId)))}
+                                </div>
+                            </div>
+                        );
+                    })() : activeTab === 'groups' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {groups.length > 0 ? groups.map(g => renderGroup(g)) : (
                                 <div className="col-span-full text-center py-10 text-slate-500 italic">Gruplar henüz oluşturulmadı.</div>

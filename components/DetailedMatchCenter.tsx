@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Match, Team, Player, MatchEventType, TeamTactic, Translation } from '../types';
 import { Play, Pause, X, Volume2, VolumeX, Settings, Palette, Camera, List, BarChart2, MonitorPlay } from 'lucide-react';
-import { simulateTick, getLivePlayerStamina, getSubstitutedOutPlayerIds } from '../services/engine';
+import { simulateTick, getLivePlayerStamina, getSubstitutedOutPlayerIds, getSubsMade, getMaxSubs } from '../services/engine';
 import { calculateEffectiveRating } from '../services/MatchEngine';
 import { soundManager } from '../services/soundManager';
 import { TeamManagement } from './TeamManagement';
@@ -613,6 +613,8 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const [isLandscape, setIsLandscape] = useState(false);
     const [isSmallLandscape, setIsSmallLandscape] = useState(false);
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null);
+    const [goalBanner, setGoalBanner] = useState<{ text: string; side: 'HOME' | 'AWAY' } | null>(null);
+    const goalBannerTimerRef = useRef<number | null>(null);
     const [showHalfTime, setShowHalfTime] = useState(false);
     const [setPieceCue, setSetPieceCue] = useState<{ label: string; accent: string } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -965,10 +967,16 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 // Play event sounds
                 if (result.event) {
                     switch (result.event.type) {
-                        case MatchEventType.GOAL:
+                        case MatchEventType.GOAL: {
                             soundManager.play('goal');
                             soundManager.play('cheer');
+                            const goalSide = result.event.teamId === homeTeam.id ? 'HOME' : 'AWAY';
+                            const bannerText = result.event.description || '';
+                            if (goalBannerTimerRef.current) window.clearTimeout(goalBannerTimerRef.current);
+                            setGoalBanner({ text: bannerText, side: goalSide });
+                            goalBannerTimerRef.current = window.setTimeout(() => setGoalBanner(null), 3500);
                             break;
+                        }
                         case MatchEventType.CARD_YELLOW:
                             soundManager.play('yellow_card');
                             break;
@@ -1038,7 +1046,8 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         ballDist: number,
         catchPulse: number,
         skillMove?: string,
-        beatenEffect?: string
+        beatenEffect?: string,
+        shotType?: string
     ) => {
         const basePos  = toScreenDeep(xPct, yPct, z);
         const groundPos = toScreenDeep(xPct, yPct, 0);
@@ -1712,8 +1721,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             drawLabel('TACKLE!', '#ef4444');
         } else if (state === 'DIVE_SAVE') {
             drawLabel('SAVE!', '#22c55e');
-        } else if (z > 1.2 && hasBall) {
-            drawLabel('BICYCLE!', '#a855f7');
+        } else if (shotType === 'BICYCLE' || (z > 1.2 && isKickLike)) {
+            drawLabel('RÖVEŞATA!', '#a855f7');
+        } else if (shotType === 'VOLLEY' && isKickLike) {
+            drawLabel('VOLE!', '#f97316');
+        } else if (shotType === 'SCREAMER' && isKickLike) {
+            drawLabel('SCREAMER!', '#ef4444');
         } else if (activeSkillMove === 'STEP_OVER') {
             drawLabel('SKILL!', '#facc15');
         } else if (activeSkillMove === 'BODY_FEINT') {
@@ -1962,6 +1975,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 catchPulse: gkCatchPulse[p.id] || 0,
                 skillMove: nextP.skillMove,
                 beatenEffect: nextP.beatenEffect,
+                shotType: (nextP as any).shotType as string | undefined,
             });
         });
 
@@ -2007,7 +2021,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     primary, secondary, pi.num,
                     pi.hasBall, pi.name, pi.state, pi.stamina,
                     pi.velocity, pi.stridePhase, pi.actionBlend, pi.phaseOffset, j.x, j.y, now, pi.position,
-                    pi.gkThreat, pi.ballDist, pi.catchPulse, pi.skillMove, pi.beatenEffect
+                    pi.gkThreat, pi.ballDist, pi.catchPulse, pi.skillMove, pi.beatenEffect, pi.shotType
                 )
             });
         });
@@ -2125,7 +2139,12 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     };
 
     const keyEvents = useMemo(
-        () => match.events.filter(event => event.type !== MatchEventType.INFO).slice(-4).reverse(),
+        () => match.events.filter(event =>
+            event.type !== MatchEventType.INFO &&
+            event.type !== MatchEventType.KICKOFF &&
+            event.type !== MatchEventType.GOAL &&
+            (event.type as string) !== 'THROW_IN'
+        ).slice(-4).reverse(),
         [match.events]
     );
 
@@ -2164,7 +2183,6 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
     const latestEvent = keyEvents[0] || null;
     const compactLatestEvent = getCompactEventLabel(match, latestEvent);
-    const goalFlashText = latestEvent?.type === MatchEventType.GOAL ? latestEvent.description : null;
     const homeSquadAverages = getSquadAverages(homePlayersRef.current);
     const awaySquadAverages = getSquadAverages(awayPlayersRef.current);
     const homeDetailedOvr = getDetailedUnitAverages(homePlayersRef.current);
@@ -2173,21 +2191,6 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     return (
         <div className="fixed inset-0 z-50 bg-gradient-to-b from-slate-950 via-black to-slate-950 flex flex-col overflow-hidden">
 
-            {/* GOAL FLASH OVERLAY */}
-            {goalFlash && (
-                <div className="pointer-events-none fixed inset-0 z-[110] flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-2 px-4 text-center">
-                        <div className="text-7xl md:text-9xl font-black italic text-white drop-shadow-[0_0_30px_rgba(52,211,153,0.8)] animate-bounce">
-                            GOAL!
-                        </div>
-                        {goalFlashText && (
-                            <div className="max-w-[85vw] rounded-full border border-emerald-300/30 bg-black/55 px-4 py-2 text-sm font-black text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.35)] md:text-lg">
-                                {goalFlashText}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
 
             {setPieceCue && (
                 <div className="pointer-events-none fixed inset-0 z-[108] flex items-start justify-center pt-16 md:pt-20">
@@ -2197,76 +2200,65 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 </div>
             )}
 
-            <div className={`h-[72px] md:h-[88px] bg-slate-900/70 backdrop-blur-xl border-b border-white/10 items-center justify-between px-3 md:px-6 gap-3 shrink-0 z-20 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
-                <div className="flex items-center gap-2 md:gap-3 min-w-0 w-[32%]">
-                    <TeamLogo team={homeTeam} className="w-9 h-9 md:w-12 md:h-12 rounded-xl border border-slate-600/50 bg-slate-800/50 shrink-0" />
-                    <div className="min-w-0 flex-1">
-                        <div className="text-sm md:text-lg font-black text-white uppercase truncate">{getCompactTeamName(homeTeam)}</div>
-                        <div className="mt-1">{renderOVR(homePlayersRef.current, 'left')}</div>
-                        <div className="hidden lg:block text-[9px] text-emerald-300/90 truncate mt-1">Hucum: {homeAttackPlanLabel}</div>
-                    </div>
-                </div>
+            <div className={`bg-slate-900/70 backdrop-blur-xl border-b border-white/10 items-center justify-between px-2 md:px-6 py-1.5 md:py-2 gap-2 shrink-0 z-20 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
+                {(() => {
+                    const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                    const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                    return (
+                        <>
+                            <div className="flex items-center gap-2 md:gap-3 min-w-0 w-[32%]">
+                                <TeamLogo team={homeTeam} className="w-7 h-7 md:w-10 md:h-10 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                    <div className="text-xs md:text-base font-black text-white uppercase truncate">{getCompactTeamName(homeTeam)}</div>
+                                    {isLandscape && <div className="mt-0.5">{renderOVR(homePlayersRef.current, 'left')}</div>}
+                                    {homeGoals.length > 0 && (
+                                        <div className="text-[8px] text-emerald-300 truncate mt-0.5">
+                                            {homeGoals.map((g, i) => {
+                                                const name = g.description?.match(/\(([^)]+)\)/)?.[1] ?? '';
+                                                return <span key={i} className="mr-1">⚽ {name} {g.minute}'</span>;
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
 
-                <div className="flex flex-col items-center justify-center min-w-0 flex-1">
-                    <div className="flex items-center gap-3 md:gap-6 rounded-2xl border border-white/10 bg-black/30 px-4 md:px-6 py-1.5 md:py-2 shadow-xl">
-                        <span className={`text-3xl md:text-5xl font-mono font-black ${goalFlash === 'HOME' ? 'text-emerald-300 scale-110' : 'text-white'}`}>{match.homeScore}</span>
-                        <div className="flex flex-col items-center leading-none">
-                            <span className="text-[9px] md:text-[10px] text-red-500 font-black tracking-[0.18em]">LIVE</span>
-                            <span className="text-slate-500 text-lg md:text-xl font-black">:</span>
-                        </div>
-                        <span className={`text-3xl md:text-5xl font-mono font-black ${goalFlash === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'}`}>{match.awayScore}</span>
-                    </div>
-                    {/* Goal Scorers */}
-                    {(() => {
-                      const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
-                      const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
-                      if (homeGoals.length === 0 && awayGoals.length === 0) return null;
-                      return (
-                        <div className="mt-1 flex items-center justify-center gap-4 text-[9px] text-slate-400 max-w-xs">
-                          <div className="text-right flex-1 truncate">
-                            {homeGoals.map((g, i) => (
-                              <span key={i} className="text-emerald-300 mr-1">⚽ {g.minute}'</span>
-                            ))}
-                          </div>
-                          <div className="w-px h-3 bg-slate-600" />
-                          <div className="text-left flex-1 truncate">
-                            {awayGoals.map((g, i) => (
-                              <span key={i} className="text-blue-300 mr-1">⚽ {g.minute}'</span>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    <div className="mt-1 flex items-center gap-2 text-[10px] md:text-xs font-semibold text-slate-300">
-                        <span className="rounded-full border border-emerald-400/30 bg-emerald-500/12 px-2 py-0.5 text-emerald-300 font-black">{match.currentMinute}'</span>
-                        <span>{match.stats?.homePossession ?? 50}%</span>
-                        <span className="text-slate-500">pos</span>
-                        <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
-                        <span className="text-slate-500">shots</span>
-                        <span>{match.stats?.awayPossession ?? 50}%</span>
-                        {homeTeam.facilities?.stadiumCapacity && (
-                          <>
-                            <span className="text-slate-600">•</span>
-                            <span className="text-slate-500">🏟️ {homeTeam.name} Stad.</span>
-                          </>
-                        )}
-                        {match.attendance > 0 && (
-                          <>
-                            <span className="text-slate-600">•</span>
-                            <span className="text-slate-400">👥 {match.attendance.toLocaleString()}</span>
-                          </>
-                        )}
-                    </div>
-                </div>
+                            <div className="flex flex-col items-center justify-center min-w-0 flex-1">
+                                <div className="flex items-center gap-2 md:gap-6 rounded-xl border border-white/10 bg-black/30 px-3 md:px-6 py-1 md:py-2 shadow-xl">
+                                    <span className={`text-2xl md:text-5xl font-mono font-black ${goalBanner?.side === 'HOME' ? 'text-emerald-300 scale-110' : 'text-white'} transition-all`}>{match.homeScore}</span>
+                                    <div className="flex flex-col items-center leading-none">
+                                        <span className="text-[8px] text-red-500 font-black tracking-wide">LIVE</span>
+                                        <span className="text-slate-500 text-base font-black">:</span>
+                                    </div>
+                                    <span className={`text-2xl md:text-5xl font-mono font-black ${goalBanner?.side === 'AWAY' ? 'text-blue-300 scale-110' : 'text-white'} transition-all`}>{match.awayScore}</span>
+                                </div>
+                                <div className="mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-slate-300">
+                                    <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-emerald-300 font-black">{match.currentMinute}'</span>
+                                    <span>{match.stats?.homePossession ?? 50}%</span>
+                                    <span className="text-slate-600">pos</span>
+                                    <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
+                                    <span className="text-slate-600">şut</span>
+                                    <span>{match.stats?.awayPossession ?? 50}%</span>
+                                </div>
+                            </div>
 
-                <div className="flex items-center justify-end gap-2 md:gap-3 min-w-0 w-[32%]">
-                    <div className="min-w-0 flex-1 text-right">
-                        <div className="text-sm md:text-lg font-black text-white uppercase truncate">{getCompactTeamName(awayTeam)}</div>
-                        <div className="mt-1">{renderOVR(awayPlayersRef.current, 'right')}</div>
-                        <div className="hidden lg:block text-[9px] text-blue-300/90 truncate mt-1">Hucum: {awayAttackPlanLabel}</div>
-                    </div>
-                    <TeamLogo team={awayTeam} className="w-9 h-9 md:w-12 md:h-12 rounded-xl border border-slate-600/50 bg-slate-800/50 shrink-0" />
-                </div>
+                            <div className="flex items-center justify-end gap-2 md:gap-3 min-w-0 w-[32%]">
+                                <div className="min-w-0 flex-1 text-right">
+                                    <div className="text-xs md:text-base font-black text-white uppercase truncate">{getCompactTeamName(awayTeam)}</div>
+                                    {isLandscape && <div className="mt-0.5">{renderOVR(awayPlayersRef.current, 'right')}</div>}
+                                    {awayGoals.length > 0 && (
+                                        <div className="text-[8px] text-blue-300 truncate mt-0.5 text-right">
+                                            {awayGoals.map((g, i) => {
+                                                const name = g.description?.match(/\(([^)]+)\)/)?.[1] ?? '';
+                                                return <span key={i} className="ml-1">⚽ {name} {g.minute}'</span>;
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                                <TeamLogo team={awayTeam} className="w-7 h-7 md:w-10 md:h-10 rounded-lg border border-slate-600/50 bg-slate-800/50 shrink-0" />
+                            </div>
+                        </>
+                    );
+                })()}
             </div>
 
             {isSmallLandscape && (
@@ -2286,6 +2278,18 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     </div>
                 </div>
             )}
+
+            {/* GOAL BANNER — under header, above tabs */}
+            {goalBanner && !isSmallLandscape && (() => {
+                const name = goalBanner.text?.match(/\(([^)]+)\)/)?.[1] ?? goalBanner.text;
+                return (
+                    <div className={`shrink-0 z-20 flex items-center justify-center gap-2 px-4 py-1.5 text-sm font-black tracking-widest uppercase ${goalBanner.side === 'HOME' ? 'bg-emerald-900/90 text-emerald-200 border-b border-emerald-500/40' : 'bg-blue-900/90 text-blue-200 border-b border-blue-500/40'}`}>
+                        <span>⚽</span>
+                        <span>{name}</span>
+                        <span className="text-[10px] opacity-60 font-normal lowercase">golü attı</span>
+                    </div>
+                );
+            })()}
 
             <div className={`lg:hidden bg-slate-900 border-b border-slate-800 h-10 shrink-0 ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 <button onClick={() => setActiveTab('PITCH')} className={`flex-1 flex items-center justify-center gap-1 text-[10px] font-bold uppercase ${activeTab === 'PITCH' ? 'text-emerald-400 bg-slate-800' : 'text-slate-500'}`}><MonitorPlay size={14} /> Pitch</button>
@@ -2315,86 +2319,92 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     </div>
                 </div>
 
-                <div className={`flex-1 relative flex items-center justify-center bg-transparent p-2 md:p-4 ${isSmallLandscape ? 'flex p-0' : (activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex')}`}>
-                    <div className={`absolute top-3 md:top-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${isSmallLandscape ? 'hidden' : 'block'}`}>
-                        <div className="bg-black/70 backdrop-blur-md text-white px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-slate-600 shadow-2xl flex items-center gap-2 md:gap-3">
-                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full animate-ping"></div>
-                            <span className="font-bold uppercase tracking-wide text-[10px] md:text-sm whitespace-nowrap">{statusText}</span>
-                        </div>
-                        {compactLatestEvent && (
-                            <div className="mt-2 flex justify-center lg:hidden">
-                                <div className={`max-w-[82vw] rounded-full border px-3 py-1.5 text-[10px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
-                                    <span className="block truncate">{compactLatestEvent}</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div className={`flex-1 bg-black ${isSmallLandscape ? 'relative flex items-center justify-center p-0' : (!isLandscape ? 'flex flex-col items-stretch' : 'relative flex items-center justify-center p-2 md:p-4')} ${isSmallLandscape ? 'flex' : (activeTab === 'PITCH' ? 'flex' : 'hidden lg:flex')}`}>
 
-                    <div className={`absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 md:gap-2 bg-slate-950/82 backdrop-blur-xl border border-white/10 rounded-2xl px-2 py-2 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
-                        <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
-                            {speed === 0 ? <Play size={15} fill="currentColor" /> : <Pause size={15} fill="currentColor" />}
-                        </button>
-                        {([0.5, 1, 2, 4] as const).map(s => (
-                            <button
-                                key={s}
-                                onClick={() => setSpeed(s)}
-                                className={`w-9 h-9 rounded-lg text-[10px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-400'}`}
-                            >
-                                {s === 0.5 ? '0.5' : `${s}x`}
-                            </button>
-                        ))}
-                        <button onClick={() => setSoundEnabled(!soundEnabled)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
-                            {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-                        </button>
-                        <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
-                            <Palette size={14} />
-                        </button>
-                        <button onClick={() => setShowNames(!showNames)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[10px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
-                            ID
-                        </button>
-                        <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
-                            <Camera size={14} />
-                        </button>
-                        <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-9 h-9 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
-                            <Settings size={14} />
-                        </button>
-                        <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-9 h-9 rounded-lg flex items-center justify-center bg-slate-700 text-slate-300 transition-all active:scale-95">
-                            <X size={14} />
-                        </button>
-                    </div>
+                    {/* LANDSCAPE: absolute status badge */}
+                    {isLandscape && !isSmallLandscape && (
+                        <div className="absolute top-3 md:top-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+                            <div className="bg-black/70 backdrop-blur-md text-white px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-slate-600 shadow-2xl flex items-center gap-2 md:gap-3">
+                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                                <span className="font-bold uppercase tracking-wide text-[10px] md:text-sm whitespace-nowrap">{statusText}</span>
+                            </div>
+                            {compactLatestEvent && (
+                                <div className="mt-2 flex justify-center lg:hidden">
+                                    <div className={`max-w-[82vw] rounded-full border px-3 py-1.5 text-[10px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
+                                        <span className="block truncate">{compactLatestEvent}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* LANDSCAPE: absolute controls */}
+                    {isLandscape && !isSmallLandscape && (
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-slate-950/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col items-center gap-1 px-2 py-1.5">
+                            <div className="flex items-center gap-1">
+                                <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+                                    {speed === 0 ? <Play size={13} fill="currentColor" /> : <Pause size={13} fill="currentColor" />}
+                                </button>
+                                {([0.5, 1, 2, 4] as const).map(s => (
+                                    <button key={s} onClick={() => setSpeed(s)}
+                                        className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-400'}`}>
+                                        {s === 0.5 ? '.5' : `${s}x`}
+                                    </button>
+                                ))}
+                                <div className="w-px h-5 bg-white/10 mx-0.5" />
+                                <button onClick={() => setSoundEnabled(!soundEnabled)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                    {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
+                                </button>
+                                <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                    <Palette size={13} />
+                                </button>
+                                <button onClick={() => setShowNames(!showNames)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[9px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                    ID
+                                </button>
+                                <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                    <Camera size={13} />
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
+                                    <Settings size={13} />
+                                </button>
+                                <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-700 text-slate-300 transition-all active:scale-95">
+                                    <X size={13} />
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     {isSmallLandscape && (
                         <div className="absolute inset-0 z-40 pointer-events-none">
                             <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                                <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
-                                    <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
-                                    <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
-                                    <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
-                                </div>
-                                <div className="mt-1 bg-black/45 backdrop-blur px-2 py-1 rounded-full border border-slate-700/80 flex items-center gap-2 text-[8px] text-slate-200">
-                                    <span>{match.stats?.homePossession ?? 50}%</span>
-                                    <span className="text-slate-500">pos</span>
-                                    <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
-                                    <span className="text-slate-500">shots</span>
-                                    <span>{match.stats?.awayPossession ?? 50}%</span>
-                                </div>
-                                {compactLatestEvent && (
-                                    <div className={`mt-1 max-w-[52vw] rounded-full border px-2 py-1 text-[8px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
-                                        <span className="block truncate">{compactLatestEvent}</span>
+                                {goalBanner ? (
+                                    /* GOAL BANNER — landscape mobile overlay */
+                                    <div className={`px-4 py-1.5 rounded-full border flex items-center gap-2 text-xs font-black tracking-widest uppercase shadow-2xl animate-bounce ${goalBanner.side === 'HOME' ? 'bg-emerald-900/95 text-emerald-200 border-emerald-500/60' : 'bg-blue-900/95 text-blue-200 border-blue-500/60'}`}>
+                                        <span>⚽</span>
+                                        <span>GOL!</span>
+                                        <span className="opacity-80">{goalBanner.text?.match(/\(([^)]+)\)/)?.[1] ?? goalBanner.text}</span>
                                     </div>
-                                )}
-                                {(() => {
-                                    const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
-                                    const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
-                                    if (homeGoals.length === 0 && awayGoals.length === 0) return null;
-                                    return (
-                                        <div className="mt-1 flex items-center gap-2 bg-black/40 backdrop-blur px-2 py-0.5 rounded-full border border-slate-700/60 text-[7px] max-w-[60vw]">
-                                            <span className="text-emerald-300 truncate">{homeGoals.map(g => `⚽${g.minute}'`).join(' ')}</span>
-                                            {homeGoals.length > 0 && awayGoals.length > 0 && <span className="text-slate-600">|</span>}
-                                            <span className="text-blue-300 truncate">{awayGoals.map(g => `⚽${g.minute}'`).join(' ')}</span>
+                                ) : (
+                                    <>
+                                        <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2 scale-90">
+                                            <span className="text-white font-mono font-black text-lg">{match.homeScore}</span>
+                                            <span className="text-emerald-400 font-mono font-bold text-xs bg-black/40 px-1.5 rounded-lg">{match.currentMinute}'</span>
+                                            <span className="text-white font-mono font-black text-lg">{match.awayScore}</span>
                                         </div>
-                                    );
-                                })()}
+                                        <div className="mt-1 bg-black/45 backdrop-blur px-2 py-1 rounded-full border border-slate-700/80 flex items-center gap-2 text-[8px] text-slate-200">
+                                            <span>{match.stats?.homePossession ?? 50}%</span>
+                                            <span className="text-slate-500">pos</span>
+                                            <span>{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
+                                            <span className="text-slate-500">shots</span>
+                                            <span>{match.stats?.awayPossession ?? 50}%</span>
+                                        </div>
+                                        {compactLatestEvent && (
+                                            <div className={`mt-1 max-w-[52vw] rounded-full border px-2 py-1 text-[8px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
+                                                <span className="block truncate">{compactLatestEvent}</span>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
                             </div>
 
                             <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto scale-90 origin-top-left">
@@ -2440,46 +2450,140 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                             </div>
 
                             {/* Bottom compact stats strip */}
-                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/55 backdrop-blur px-3 py-1 rounded-full border border-slate-700/60 text-[7px] text-slate-300 whitespace-nowrap">
-                                <span className="text-orange-300">{eventStats.homeFouls}</span>
-                                <span className="text-slate-600">faul</span>
-                                <span className="text-orange-300">{eventStats.awayFouls}</span>
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 bg-black/60 backdrop-blur px-3 py-1 rounded-full border border-slate-700/60 text-[8px] text-slate-300 whitespace-nowrap">
+                                {/* Fouls */}
+                                <span className="text-orange-300 font-bold">{eventStats.homeFouls}</span>
+                                <span className="text-slate-500 text-[7px]">faul</span>
+                                <span className="text-orange-300 font-bold">{eventStats.awayFouls}</span>
+                                {/* Corners */}
                                 {(eventStats.homeCorners > 0 || eventStats.awayCorners > 0) && (
                                     <>
-                                        <span className="text-slate-600 mx-0.5">·</span>
-                                        <span className="text-slate-300">{eventStats.homeCorners}</span>
-                                        <span className="text-slate-600">köşe</span>
-                                        <span className="text-slate-300">{eventStats.awayCorners}</span>
+                                        <span className="text-slate-600 mx-1">|</span>
+                                        <span className="text-sky-300 font-bold">{eventStats.homeCorners}</span>
+                                        <span className="text-slate-500 text-[7px]">köşe</span>
+                                        <span className="text-sky-300 font-bold">{eventStats.awayCorners}</span>
                                     </>
                                 )}
+                                {/* Cards */}
                                 {(eventStats.homeYellow > 0 || eventStats.awayYellow > 0 || eventStats.homeRed > 0 || eventStats.awayRed > 0) && (
                                     <>
-                                        <span className="text-slate-600 mx-0.5">·</span>
-                                        {eventStats.homeYellow > 0 && <span className="text-yellow-300">🟨{eventStats.homeYellow}</span>}
-                                        {eventStats.homeRed > 0 && <span className="text-red-400">🟥{eventStats.homeRed}</span>}
-                                        {eventStats.awayYellow > 0 && <span className="text-yellow-300">🟨{eventStats.awayYellow}</span>}
-                                        {eventStats.awayRed > 0 && <span className="text-red-400">🟥{eventStats.awayRed}</span>}
+                                        <span className="text-slate-600 mx-1">|</span>
+                                        <span className="text-yellow-400 font-bold">{eventStats.homeYellow + eventStats.awayYellow}🟨</span>
+                                        {(eventStats.homeRed + eventStats.awayRed) > 0 && <span className="text-red-400 font-bold">{eventStats.homeRed + eventStats.awayRed}🟥</span>}
                                     </>
                                 )}
+                                {/* Attendance */}
                                 {match.attendance > 0 && (
                                     <>
-                                        <span className="text-slate-600 mx-0.5">·</span>
-                                        <span className="text-slate-400">👥{match.attendance.toLocaleString()}</span>
+                                        <span className="text-slate-600 mx-1">|</span>
+                                        <span className="text-slate-400">👥 {(match.attendance / 1000).toFixed(0)}K</span>
                                     </>
                                 )}
                             </div>
                         </div>
                     )}
 
-                    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-                        <canvas
-                            ref={canvasRef}
-                            width={CANVAS_W}
-                            height={CANVAS_H}
-                            className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
-                            style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
-                        />
-                    </div>
+                    {/* PORTRAIT: canvas top + info below | LANDSCAPE: standard canvas wrapper */}
+                    {!isLandscape && !isSmallLandscape ? (
+                        <>
+                            {/* Canvas at top, full width */}
+                            <div className="w-full shrink-0">
+                                <canvas
+                                    ref={canvasRef}
+                                    width={CANVAS_W}
+                                    height={CANVAS_H}
+                                    className="w-full object-contain border-b-2 border-slate-800 bg-slate-900"
+                                    style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
+                                />
+                            </div>
+                            {/* Info area in the black space below */}
+                            <div className="flex-1 flex flex-col items-center justify-center gap-2 px-3 py-2 overflow-hidden">
+                                {/* Status pill */}
+                                <div className="bg-black/80 text-white px-4 py-1.5 rounded-full border border-slate-600 flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></div>
+                                    <span className="font-bold uppercase tracking-wide text-[10px] whitespace-nowrap">{statusText}</span>
+                                </div>
+                                {/* Stats row */}
+                                <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                                    <span className="font-bold text-white">{match.stats?.homePossession ?? 50}%</span>
+                                    <span>pos</span>
+                                    <span className="font-bold text-white">{match.stats?.homeShots ?? 0}-{match.stats?.awayShots ?? 0}</span>
+                                    <span>şut</span>
+                                    <span className="font-bold text-white">{match.stats?.awayPossession ?? 50}%</span>
+                                    {(eventStats.homeYellow + eventStats.awayYellow + eventStats.homeRed + eventStats.awayRed) > 0 && (
+                                        <>
+                                            <span className="text-slate-600">|</span>
+                                            <span className="text-yellow-400">{eventStats.homeYellow + eventStats.awayYellow}🟨</span>
+                                            {(eventStats.homeRed + eventStats.awayRed) > 0 && <span className="text-red-400">{eventStats.homeRed + eventStats.awayRed}🟥</span>}
+                                        </>
+                                    )}
+                                </div>
+                                {/* OVR breakdown row */}
+                                <div className="flex items-center gap-2 text-[9px] font-mono">
+                                    <div className="flex items-center gap-1 bg-slate-900/70 px-2 py-1 rounded-full border border-emerald-500/20">
+                                        <span className="text-sky-400">D:{homeDetailedOvr.defs.avg}<span className="text-sky-700">({homeDetailedOvr.defs.liveAvg})</span></span>
+                                        <span className="text-emerald-400">M:{homeDetailedOvr.mids.avg}<span className="text-emerald-700">({homeDetailedOvr.mids.liveAvg})</span></span>
+                                        <span className="text-orange-400">F:{homeDetailedOvr.fwds.avg}<span className="text-orange-700">({homeDetailedOvr.fwds.liveAvg})</span></span>
+                                        <span className="text-white font-bold">⌀{homeDetailedOvr.all.avg}</span>
+                                    </div>
+                                    <span className="text-slate-600">vs</span>
+                                    <div className="flex items-center gap-1 bg-slate-900/70 px-2 py-1 rounded-full border border-blue-500/20">
+                                        <span className="text-sky-400">D:{awayDetailedOvr.defs.avg}<span className="text-sky-700">({awayDetailedOvr.defs.liveAvg})</span></span>
+                                        <span className="text-emerald-400">M:{awayDetailedOvr.mids.avg}<span className="text-emerald-700">({awayDetailedOvr.mids.liveAvg})</span></span>
+                                        <span className="text-orange-400">F:{awayDetailedOvr.fwds.avg}<span className="text-orange-700">({awayDetailedOvr.fwds.liveAvg})</span></span>
+                                        <span className="text-white font-bold">⌀{awayDetailedOvr.all.avg}</span>
+                                    </div>
+                                </div>
+                                {/* Latest event */}
+                                {compactLatestEvent && (
+                                    <div className={`max-w-[90vw] rounded-full border px-3 py-1 text-[10px] font-bold leading-tight shadow-xl ${getEventAccentClass(latestEvent!.type)}`}>
+                                        <span className="block truncate">{compactLatestEvent}</span>
+                                    </div>
+                                )}
+                                {/* Controls */}
+                                <div className="flex items-center gap-1 flex-wrap justify-center">
+                                    <button onClick={() => setSpeed(speed === 0 ? 1 : 0)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${speed === 0 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+                                        {speed === 0 ? <Play size={13} fill="currentColor" /> : <Pause size={13} fill="currentColor" />}
+                                    </button>
+                                    {([0.5, 1, 2, 4] as const).map(s => (
+                                        <button key={s} onClick={() => setSpeed(s)}
+                                            className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all active:scale-95 ${speed === s ? (s === 4 ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white') : 'bg-slate-800 text-slate-400'}`}>
+                                            {s === 0.5 ? '.5' : `${s}x`}
+                                        </button>
+                                    ))}
+                                    <div className="w-px h-5 bg-white/10" />
+                                    <button onClick={() => setSoundEnabled(!soundEnabled)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${soundEnabled ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                        {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
+                                    </button>
+                                    <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${useDefaultColors ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                        <Palette size={13} />
+                                    </button>
+                                    <button onClick={() => setShowNames(!showNames)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 text-[9px] font-black ${showNames ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                        ID
+                                    </button>
+                                    <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                        <Camera size={13} />
+                                    </button>
+                                    <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
+                                        <Settings size={13} />
+                                    </button>
+                                    <button onClick={() => { setSpeed(0); setShowExitModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-700 text-slate-300 transition-all active:scale-95">
+                                        <X size={13} />
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                            <canvas
+                                ref={canvasRef}
+                                width={CANVAS_W}
+                                height={CANVAS_H}
+                                className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
+                                style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <div className={`w-full lg:w-72 bg-slate-900 border-l border-slate-800 flex-col z-10 shrink-0 ${isSmallLandscape ? 'hidden' : (activeTab === 'STATS' ? 'flex' : 'hidden lg:flex')}`}>
@@ -2563,11 +2667,22 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
             {/* MODALS */}
 
-            {showTacticsModal && (
+            {showTacticsModal && (() => {
+                const managedTeam = managedSide === 'HOME' ? homeTeam : awayTeam;
+                const subsMade = getSubsMade(managedTeam.id);
+                const maxSubs = getMaxSubs();
+                const subsLeft = maxSubs - subsMade;
+                return (
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col p-4 md:p-8 overflow-hidden">
-                    <div className="flex justify-end mb-4">
-                        <button 
-                            onClick={() => { setShowTacticsModal(false); setSpeed(1); }} 
+                    <div className="flex items-center justify-between mb-4">
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold ${subsLeft <= 0 ? 'bg-red-900/60 text-red-300 border border-red-700' : subsLeft <= 2 ? 'bg-amber-900/60 text-amber-300 border border-amber-700' : 'bg-slate-800 text-slate-300 border border-slate-700'}`}>
+                            <span>🔄</span>
+                            <span>Değişiklik: {subsMade}/{maxSubs}</span>
+                            {subsLeft <= 0 && <span className="text-xs font-normal">(doldu)</span>}
+                            {subsLeft > 0 && <span className="text-xs font-normal opacity-60">({subsLeft} kaldı)</span>}
+                        </div>
+                        <button
+                            onClick={() => { setShowTacticsModal(false); setSpeed(1); }}
                             className="p-2 bg-zinc-800 hover:bg-red-600 rounded-lg text-white transition-colors"
                             title="Close"
                         >
@@ -2604,92 +2719,81 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                         </div>
                     </div>
                 </div>
-            )}
+                );
+            })()}
 
-            {showHalfTime && (
-                <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4">
-                    <div className="bg-slate-900/90 border border-white/10 p-5 md:p-8 rounded-2xl flex flex-col items-center gap-4 shadow-2xl max-w-md w-full relative overflow-hidden backdrop-blur-md">
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
-                        <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
+            {showHalfTime && (() => {
+                const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                const statRow = (homeVal: string | number, label: string, awayVal: string | number, highlight?: boolean) => (
+                    <div className="flex items-center gap-2 text-xs">
+                        <span className={`w-8 text-right font-bold ${highlight ? 'text-emerald-400' : 'text-white'}`}>{homeVal}</span>
+                        <span className="flex-1 text-center text-slate-500 text-[10px] uppercase tracking-wide">{label}</span>
+                        <span className={`w-8 font-bold ${highlight ? 'text-emerald-400' : 'text-white'}`}>{awayVal}</span>
+                    </div>
+                );
+                return (
+                    <div className="fixed inset-0 z-[100] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-2">
+                        <div className="bg-slate-900/95 border border-amber-500/20 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden relative">
+                            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
 
-                        <div className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest shadow-lg">
-                            {t.halfTime || 'Devre Arası'}
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter">HALF TIME</h2>
-
-                        {/* Score */}
-                        <div className="flex items-center justify-center gap-6 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
-                            <div className="flex flex-col items-center gap-1 flex-1">
-                                <div className="text-4xl md:text-5xl font-black text-white leading-none">{match.homeScore}</div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{homeTeam.shortName || homeTeam.name}</div>
+                            {/* Header */}
+                            <div className="flex items-center justify-center gap-3 py-2 px-4 border-b border-slate-800">
+                                <span className="bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full">Devre Arası</span>
+                                <span className="text-slate-600 font-mono text-sm">45'</span>
                             </div>
-                            <div className="text-slate-600 text-3xl font-black">-</div>
-                            <div className="flex flex-col items-center gap-1 flex-1">
-                                <div className="text-4xl md:text-5xl font-black text-white leading-none">{match.awayScore}</div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{awayTeam.shortName || awayTeam.name}</div>
-                            </div>
-                        </div>
 
-                        {/* Goal Scorers */}
-                        {(() => {
-                            const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
-                            const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
-                            if (homeGoals.length === 0 && awayGoals.length === 0) return null;
-                            return (
-                                <div className="w-full flex gap-4 text-xs">
-                                    <div className="flex-1 text-right space-y-1">
-                                        {homeGoals.map((g, i) => <div key={i} className="text-emerald-300">⚽ {g.minute}'</div>)}
-                                    </div>
-                                    <div className="w-px bg-slate-700" />
-                                    <div className="flex-1 text-left space-y-1">
-                                        {awayGoals.map((g, i) => <div key={i} className="text-blue-300">⚽ {g.minute}'</div>)}
+                            {/* Main content — landscape: side by side, portrait: stacked */}
+                            <div className="flex flex-col landscape:flex-row landscape:divide-x landscape:divide-slate-800">
+
+                                {/* Score + Scorers */}
+                                <div className="flex flex-col items-center justify-center px-4 py-3 landscape:py-4 landscape:flex-1">
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-right flex-1 min-w-0">
+                                            <div className="text-2xl landscape:text-3xl font-black text-white">{match.homeScore}</div>
+                                            <div className="text-[9px] text-slate-400 uppercase truncate">{homeTeam.shortName || homeTeam.name}</div>
+                                        </div>
+                                        <div className="text-slate-600 text-xl font-black shrink-0">-</div>
+                                        <div className="text-left flex-1 min-w-0">
+                                            <div className="text-2xl landscape:text-3xl font-black text-white">{match.awayScore}</div>
+                                            <div className="text-[9px] text-slate-400 uppercase truncate">{awayTeam.shortName || awayTeam.name}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            );
-                        })()}
 
-                        {/* First half stats */}
-                        <div className="w-full space-y-2 bg-slate-800/50 rounded-xl p-4">
-                            <div className="text-xs text-slate-500 uppercase font-bold text-center mb-2">{t.firstHalfStats || 'İlk Yarı İstatistikleri'}</div>
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-white w-8 text-right">{match.stats?.homePossession ?? 50}%</span>
-                                <span className="text-slate-500 text-xs">{t.possession || 'Topa Sahiplik'}</span>
-                                <span className="font-bold text-white w-8">{match.stats?.awayPossession ?? 50}%</span>
+                                {/* Stats */}
+                                <div className="px-4 py-3 landscape:flex-1 space-y-1.5 border-t landscape:border-t-0 border-slate-800">
+                                    <div className="text-[9px] text-slate-600 uppercase font-bold text-center mb-1">İlk Yarı</div>
+                                    {statRow(`${match.stats?.homePossession ?? 50}%`, 'Top', `${match.stats?.awayPossession ?? 50}%`)}
+                                    {statRow(match.stats?.homeShots ?? 0, 'Şut', match.stats?.awayShots ?? 0)}
+                                    {statRow(match.stats?.homeOnTarget ?? 0, 'İsabetli', match.stats?.awayOnTarget ?? 0, true)}
+                                    {statRow(`${(match.stats?.homeXG ?? 0).toFixed(1)}`, 'xG', `${(match.stats?.awayXG ?? 0).toFixed(1)}`)}
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-white w-8 text-right">{match.stats?.homeShots ?? 0}</span>
-                                <span className="text-slate-500 text-xs">{t.shots || 'Şutlar'}</span>
-                                <span className="font-bold text-white w-8">{match.stats?.awayShots ?? 0}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="font-bold text-emerald-400 w-8 text-right">{match.stats?.homeOnTarget ?? 0}</span>
-                                <span className="text-slate-500 text-xs">{t.onTarget || 'İsabetli'}</span>
-                                <span className="font-bold text-emerald-400 w-8">{match.stats?.awayOnTarget ?? 0}</span>
-                            </div>
-                        </div>
 
-                        {/* Buttons */}
-                        <div className="flex gap-3 w-full">
-                            <button
-                                onClick={() => { setShowHalfTime(false); setShowTacticsModal(true); }}
-                                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors text-sm"
-                            >
-                                ⚙️ {t.changeTactic || 'Taktik'}
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setShowHalfTime(false);
-                                    onSync(match.id, { minuteIncrement: true, event: null, additionalEvents: [], trace: [], liveData: match.liveData, stats: match.stats });
-                                    setSpeed(1);
-                                }}
-                                className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl transition-colors text-sm"
-                            >
-                                ▶️ {t.startSecondHalf || '2. Yarı'}
-                            </button>
+                            {/* Buttons */}
+                            <div className="flex gap-2 p-3 border-t border-slate-800">
+                                <button
+                                    onClick={() => { setShowHalfTime(false); setShowTacticsModal(true); }}
+                                    className="flex-1 py-2 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-xl text-xs transition-colors"
+                                >
+                                    ⚙️ Taktik
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowHalfTime(false);
+                                        onSync(match.id, { minuteIncrement: true, event: null, additionalEvents: [], trace: [], liveData: match.liveData, stats: match.stats });
+                                        setSpeed(1);
+                                    }}
+                                    className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-colors"
+                                >
+                                    ▶ 2. Yarı
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
 
             {showExitModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -2722,56 +2826,75 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             )}
 
             {/* FULL TIME MODAL — shown when match.isPlayed becomes true */}
-            {match.isPlayed && (
-                <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-4">
-                    <div className="bg-slate-900/90 border border-white/10 p-6 md:p-10 rounded-2xl flex flex-col items-center gap-6 shadow-2xl max-w-lg w-full relative overflow-hidden backdrop-blur-md">
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
-                        <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
-                            FULL TIME
-                        </h2>
+            {match.isPlayed && (() => {
+                const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                const isHomeWin = match.homeScore > match.awayScore;
+                const isAwayWin = match.awayScore > match.homeScore;
+                return (
+                    <div className="absolute inset-0 z-[100] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-2">
+                        <div className="bg-slate-900/95 border border-emerald-500/20 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden relative">
+                            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
 
-                        {/* Score */}
-                        <div className="flex items-center justify-center gap-8 w-full py-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
-                            <div className="flex flex-col items-center gap-2 flex-1">
-                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${homeTeam.primaryColor}` }}>
-                                    {match.homeScore}
-                                </div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{homeTeam.name}</div>
+                            {/* Header */}
+                            <div className="flex items-center justify-center gap-3 py-2 px-4 border-b border-slate-800">
+                                <span className="bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full">Full Time</span>
+                                <span className="text-slate-600 font-mono text-sm">90'</span>
                             </div>
-                            <div className="text-slate-600 text-4xl font-black opacity-50">-</div>
-                            <div className="flex flex-col items-center gap-2 flex-1">
-                                <div className="text-5xl md:text-7xl font-black text-white leading-none" style={{ textShadow: `0 0 20px ${awayTeam.primaryColor}` }}>
-                                    {match.awayScore}
+
+                            {/* Main content */}
+                            <div className="flex flex-col landscape:flex-row landscape:divide-x landscape:divide-slate-800">
+
+                                {/* Score + Scorers */}
+                                <div className="flex items-center justify-center gap-4 px-4 py-4 landscape:flex-1">
+                                    <div className="text-right flex-1 min-w-0">
+                                        <div className={`text-3xl landscape:text-4xl font-black leading-none ${isHomeWin ? 'text-emerald-400' : 'text-white'}`}
+                                            style={{ textShadow: isHomeWin ? `0 0 16px ${homeTeam.primaryColor}` : undefined }}>
+                                            {match.homeScore}
+                                        </div>
+                                        <div className="text-[9px] text-slate-400 uppercase truncate">{homeTeam.shortName || homeTeam.name}</div>
+                                    </div>
+                                    <div className="text-slate-600 text-xl font-black shrink-0">-</div>
+                                    <div className="text-left flex-1 min-w-0">
+                                        <div className={`text-3xl landscape:text-4xl font-black leading-none ${isAwayWin ? 'text-blue-400' : 'text-white'}`}
+                                            style={{ textShadow: isAwayWin ? `0 0 16px ${awayTeam.primaryColor}` : undefined }}>
+                                            {match.awayScore}
+                                        </div>
+                                        <div className="text-[9px] text-slate-400 uppercase truncate">{awayTeam.shortName || awayTeam.name}</div>
+                                    </div>
                                 </div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center px-2">{awayTeam.name}</div>
+
+                                {/* Stats */}
+                                <div className="px-4 py-3 landscape:flex-1 border-t landscape:border-t-0 border-slate-800 space-y-1.5">
+                                    <div className="text-[9px] text-slate-600 uppercase font-bold text-center mb-1">İstatistikler</div>
+                                    {[
+                                        [`${match.stats?.homePossession ?? 50}%`, 'Top', `${match.stats?.awayPossession ?? 50}%`],
+                                        [match.stats?.homeShots ?? 0, 'Şut', match.stats?.awayShots ?? 0],
+                                        [match.stats?.homeOnTarget ?? 0, 'İsabetli', match.stats?.awayOnTarget ?? 0],
+                                        [`${(match.stats?.homeXG ?? 0).toFixed(1)}`, 'xG', `${(match.stats?.awayXG ?? 0).toFixed(1)}`],
+                                    ].map(([h, label, a], i) => (
+                                        <div key={i} className="flex items-center gap-2 text-xs">
+                                            <span className="w-8 text-right font-bold text-white">{h}</span>
+                                            <span className="flex-1 text-center text-slate-500 text-[10px] uppercase tracking-wide">{label}</span>
+                                            <span className="w-8 font-bold text-white">{a}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Continue button */}
+                            <div className="p-3 border-t border-slate-800">
+                                <button
+                                    onClick={() => onFinish(match.id)}
+                                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition-all uppercase tracking-widest"
+                                >
+                                    Devam →
+                                </button>
                             </div>
                         </div>
-
-                        {/* Stats summary */}
-                        <div className="grid grid-cols-3 gap-4 w-full text-center py-2">
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Possession</div>
-                                <div className="text-white font-mono text-sm">{match.stats?.homePossession ?? 50}% - {match.stats?.awayPossession ?? 50}%</div>
-                            </div>
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Shots</div>
-                                <div className="text-white font-mono text-sm">{match.stats?.homeShots ?? 0} - {match.stats?.awayShots ?? 0}</div>
-                            </div>
-                            <div>
-                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">xG</div>
-                                <div className="text-white font-mono text-sm">{(match.stats?.homeXG ?? 0).toFixed(1)} - {(match.stats?.awayXG ?? 0).toFixed(1)}</div>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => onFinish(match.id)}
-                            className="w-full mt-2 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black rounded-xl text-lg shadow-lg shadow-emerald-900/40 transition-all uppercase tracking-widest"
-                        >
-                            Continue
-                        </button>
                     </div>
-                </div>
-            )}
+                );
+            })()}
         </div>
     );
 };

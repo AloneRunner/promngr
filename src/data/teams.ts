@@ -19,7 +19,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#A90432",
         secondaryColor: "#FDB912",
         reputation: 7100,
-        budget: 65000000,
+        budget: 28000000,
         stadiumCapacity: 52000,
       },
       {
@@ -28,7 +28,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#002d72",
         secondaryColor: "#f4e04d",
         reputation: 7000,
-        budget: 60000000,
+        budget: 24000000,
         stadiumCapacity: 47000,
       },
       {
@@ -37,7 +37,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#ffffff",
         reputation: 6800,
-        budget: 45000000,
+        budget: 18000000,
         stadiumCapacity: 42000,
       },
       {
@@ -46,7 +46,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#87CEEB",
         reputation: 6200,
-        budget: 30000000,
+        budget: 12000000,
         stadiumCapacity: 41000,
       },
       {
@@ -55,7 +55,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E25920",
         secondaryColor: "#182A4A",
         reputation: 5800,
-        budget: 25000000,
+        budget: 9000000,
         stadiumCapacity: 17000,
       },
       {
@@ -64,7 +64,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#CC0000",
         secondaryColor: "#FFFFFF",
         reputation: 5400,
-        budget: 18000000,
+        budget: 7000000,
         stadiumCapacity: 33000,
       },
       {
@@ -73,7 +73,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 42000,
       },
       {
@@ -82,7 +82,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#FFFFFF",
         reputation: 5000,
-        budget: 12000000,
+        budget: 5000000,
         stadiumCapacity: 14000,
       },
       {
@@ -91,7 +91,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#0000FF",
         reputation: 4900,
-        budget: 12000000,
+        budget: 5000000,
         stadiumCapacity: 15000,
       },
       {
@@ -100,7 +100,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 4800,
-        budget: 11000000,
+        budget: 5000000,
         stadiumCapacity: 35000,
       },
       {
@@ -109,7 +109,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 5100,
-        budget: 14000000,
+        budget: 5500000,
         stadiumCapacity: 33000,
       },
       {
@@ -118,7 +118,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#FF0000",
         reputation: 4800,
-        budget: 11000000,
+        budget: 5000000,
         stadiumCapacity: 32000,
       },
       {
@@ -127,7 +127,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#008000",
         reputation: 4900,
-        budget: 12000000,
+        budget: 5000000,
         stadiumCapacity: 10000,
       },
       {
@@ -136,7 +136,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#FF0000",
         reputation: 5200,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 20000,
       },
       {
@@ -145,16 +145,16 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800080",
         secondaryColor: "#FFFF00",
         reputation: 5000,
-        budget: 20000000,
+        budget: 8000000,
         stadiumCapacity: 14500,
-      }, // High budget scaling
+      },
       {
         name: "Karagumruk Black",
         city: "Istanbul",
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 4700,
-        budget: 10000000,
+        budget: 5000000,
         stadiumCapacity: 15000,
       },
       {
@@ -163,7 +163,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#000000",
         reputation: 4600,
-        budget: 9000000,
+        budget: 5000000,
         stadiumCapacity: 34000,
       },
       {
@@ -172,7 +172,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 4500,
-        budget: 9000000,
+        budget: 5000000,
         stadiumCapacity: 19000,
       },
     ],
@@ -700,7 +700,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DD0000",
         secondaryColor: "#FFFFFF",
         reputation: 6400,
-        budget: 30000000,
+        budget: 33000000,
         stadiumCapacity: 30000,
       },
       {
@@ -709,7 +709,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#000000",
         reputation: 6300,
-        budget: 28000000,
+        budget: 32000000,
         stadiumCapacity: 11000,
       },
       {
@@ -718,7 +718,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 6000,
-        budget: 25000000,
+        budget: 28000000,
         stadiumCapacity: 49000,
       },
       {
@@ -736,7 +736,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#6C1D45",
         secondaryColor: "#99D6EA",
         reputation: 6000,
-        budget: 22000000,
+        budget: 30000000,
         stadiumCapacity: 22000,
       },
     ],
@@ -804,7 +804,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E20613",
         secondaryColor: "#000000",
         reputation: 6200,
-        budget: 30000000,
+        budget: 14000000,
         stadiumCapacity: 23142,
       },
       {
@@ -822,7 +822,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#CE1126",
         reputation: 6000,
-        budget: 25000000,
+        budget: 12000000,
         stadiumCapacity: 14708,
       },
       {
@@ -831,7 +831,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#005EB8",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 22000000,
+        budget: 11000000,
         stadiumCapacity: 19840,
       },
       {
@@ -885,7 +885,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#16315C",
         reputation: 6100,
-        budget: 30000000,
+        budget: 14000000,
         stadiumCapacity: 23576,
       },
       {
@@ -894,7 +894,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#005999",
         secondaryColor: "#FFFFFF",
         reputation: 6000,
-        budget: 28000000,
+        budget: 12000000,
         stadiumCapacity: 17000,
       },
       {
@@ -903,7 +903,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#007FC8",
         secondaryColor: "#FFFFFF",
         reputation: 6000,
-        budget: 32000000,
+        budget: 15000000,
         stadiumCapacity: 40000,
       },
       {
@@ -912,7 +912,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 5800,
-        budget: 15000000,
+        budget: 8000000,
         stadiumCapacity: 15000,
       },
       {
@@ -921,7 +921,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFE400",
         secondaryColor: "#005BAC",
         reputation: 5900,
-        budget: 18000000,
+        budget: 10000000,
         stadiumCapacity: 32400,
       },
       {
@@ -930,7 +930,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#6A0DAD",
         secondaryColor: "#FFFFFF",
         reputation: 5800,
-        budget: 15000000,
+        budget: 8000000,
         stadiumCapacity: 28012,
       },
     ],
@@ -1043,7 +1043,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#00A752",
         secondaryColor: "#000000",
         reputation: 6000,
-        budget: 20000000,
+        budget: 12000000,
         stadiumCapacity: 21525,
       },
       {
@@ -1052,7 +1052,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#000000",
         reputation: 5900,
-        budget: 18000000,
+        budget: 10000000,
         stadiumCapacity: 25144,
       },
       {
@@ -1070,7 +1070,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFF200",
         secondaryColor: "#DA291C",
         reputation: 5800,
-        budget: 15000000,
+        budget: 9000000,
         stadiumCapacity: 31533,
       },
       {
@@ -1079,7 +1079,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#FDB913",
         reputation: 5800,
-        budget: 16000000,
+        budget: 9000000,
         stadiumCapacity: 31045,
       },
       {
@@ -1097,7 +1097,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#001A4C",
         secondaryColor: "#A21C26",
         reputation: 5700,
-        budget: 18000000,
+        budget: 10000000,
         stadiumCapacity: 16416,
       },
       {
@@ -1115,7 +1115,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#F0F0F0",
         secondaryColor: "#E31837",
         reputation: 5900,
-        budget: 16000000,
+        budget: 9000000,
         stadiumCapacity: 15039,
       },
       {
@@ -1124,7 +1124,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF6600",
         secondaryColor: "#006633",
         reputation: 5800,
-        budget: 12000000,
+        budget: 7000000,
         stadiumCapacity: 11150,
       },
     ],
@@ -1499,7 +1499,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#DA291C",
         reputation: 8000,
-        budget: 50000000,
+        budget: 18000000,
         stadiumCapacity: 84500,
       },
       {
@@ -1508,7 +1508,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003090",
         secondaryColor: "#FDB913",
         reputation: 7900,
-        budget: 45000000,
+        budget: 16000000,
         stadiumCapacity: 54000,
       },
       {
@@ -1517,7 +1517,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#87CEEB",
         secondaryColor: "#FFFFFF",
         reputation: 7500,
-        budget: 30000000,
+        budget: 10000000,
         stadiumCapacity: 51000,
       },
       {
@@ -1526,7 +1526,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 25000000,
+        budget: 9000000,
         stadiumCapacity: 42000,
       },
       {
@@ -1535,7 +1535,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003090",
         secondaryColor: "#DA291C",
         reputation: 7300,
-        budget: 20000000,
+        budget: 8000000,
         stadiumCapacity: 47000,
       },
       {
@@ -1544,7 +1544,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FFFFFF",
         reputation: 7200,
-        budget: 18000000,
+        budget: 7500000,
         stadiumCapacity: 32000,
       },
       {
@@ -1553,7 +1553,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#003090",
         reputation: 7100,
-        budget: 16000000,
+        budget: 7000000,
         stadiumCapacity: 49000,
       },
       {
@@ -1562,7 +1562,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003090",
         secondaryColor: "#FDB913",
         reputation: 7000,
-        budget: 15000000,
+        budget: 6500000,
         stadiumCapacity: 41000,
       },
       {
@@ -1571,7 +1571,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#DA291C",
         reputation: 7000,
-        budget: 15000000,
+        budget: 6500000,
         stadiumCapacity: 42000,
       },
       {
@@ -1783,7 +1783,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006400",
         secondaryColor: "#FFFFFF",
         reputation: 8500,
-        budget: 110000000,
+        budget: 25000000,
         stadiumCapacity: 43713,
       },
       {
@@ -1792,7 +1792,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#000000",
         reputation: 8300,
-        budget: 95000000,
+        budget: 22000000,
         stadiumCapacity: 78838,
       },
       {
@@ -1801,7 +1801,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#FFFFFF",
         reputation: 8100,
-        budget: 80000000,
+        budget: 18000000,
         stadiumCapacity: 61846,
       },
       {
@@ -1810,7 +1810,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 7900,
-        budget: 60000000,
+        budget: 15000000,
         stadiumCapacity: 78838,
       },
       {
@@ -1819,7 +1819,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#DA291C",
         reputation: 7900,
-        budget: 60000000,
+        budget: 14000000,
         stadiumCapacity: 50025,
       },
       {
@@ -1828,7 +1828,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 7900,
-        budget: 60000000,
+        budget: 14000000,
         stadiumCapacity: 78838,
       },
       {
@@ -1837,7 +1837,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 7800,
-        budget: 55000000,
+        budget: 13000000,
         stadiumCapacity: 47605,
       },
       {
@@ -1846,7 +1846,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#000000",
         reputation: 7800,
-        budget: 50000000,
+        budget: 12000000,
         stadiumCapacity: 16798,
       },
       {
@@ -1855,7 +1855,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#008000",
         reputation: 7800,
-        budget: 50000000,
+        budget: 12000000,
         stadiumCapacity: 78838,
       },
       {
@@ -1864,7 +1864,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#87CEEB",
         secondaryColor: "#000000",
         reputation: 7600,
-        budget: 42000000,
+        budget: 10000000,
         stadiumCapacity: 55662,
       },
       {
@@ -1873,7 +1873,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 7600,
-        budget: 42000000,
+        budget: 10000000,
         stadiumCapacity: 61846,
       },
       {
@@ -1882,7 +1882,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FFFFFF",
         reputation: 7500,
-        budget: 40000000,
+        budget: 9000000,
         stadiumCapacity: 66795,
       },
       {
@@ -1891,7 +1891,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 48000000,
+        budget: 15000000,
         stadiumCapacity: 17726,
       },
       {
@@ -1900,7 +1900,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 30000000,
+        budget: 8500000,
         stadiumCapacity: 50128,
       },
       {
@@ -1909,7 +1909,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#000000",
         reputation: 7200,
-        budget: 22000000,
+        budget: 7000000,
         stadiumCapacity: 42372,
       },
       {
@@ -1918,7 +1918,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#000000",
         reputation: 7000,
-        budget: 14000000,
+        budget: 6000000,
         stadiumCapacity: 36393,
       },
       {
@@ -1927,7 +1927,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006400",
         secondaryColor: "#FFFFFF",
         reputation: 6900,
-        budget: 13000000,
+        budget: 5500000,
         stadiumCapacity: 40502,
       },
       {
@@ -1936,7 +1936,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006400",
         secondaryColor: "#FFFFFF",
         reputation: 6800,
-        budget: 7000000,
+        budget: 4000000,
         stadiumCapacity: 22600,
       },
       {
@@ -1945,7 +1945,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FDB913",
         secondaryColor: "#008000",
         reputation: 7000,
-        budget: 15000000,
+        budget: 4500000,
         stadiumCapacity: 15000,
       },
       {
@@ -1954,7 +1954,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#FFFFFF",
         reputation: 6800,
-        budget: 9000000,
+        budget: 4000000,
         stadiumCapacity: 16200,
       },
     ],
@@ -1995,7 +1995,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#5D9732",
         secondaryColor: "#0033A0",
         reputation: 5800,
-        budget: 40000000,
+        budget: 25000000,
         stadiumCapacity: 68000,
       },
       {
@@ -2013,7 +2013,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#6CACE4",
         secondaryColor: "#00205B",
         reputation: 5700,
-        budget: 45000000,
+        budget: 28000000,
         stadiumCapacity: 30000,
       },
       {
@@ -2022,7 +2022,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#ED1E36",
         secondaryColor: "#FFFFFF",
         reputation: 5500,
-        budget: 38000000,
+        budget: 22000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2031,7 +2031,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#AB1E2D",
         secondaryColor: "#3F4743",
         reputation: 5400,
-        budget: 36000000,
+        budget: 22000000,
         stadiumCapacity: 30000,
       },
       {
@@ -2040,7 +2040,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#80000A",
         secondaryColor: "#221F1F",
         reputation: 5600,
-        budget: 40000000,
+        budget: 25000000,
         stadiumCapacity: 71000,
       },
       {
@@ -2049,7 +2049,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#011D44",
         reputation: 5300,
-        budget: 32000000,
+        budget: 18000000,
         stadiumCapacity: 61500,
       },
       {
@@ -2058,7 +2058,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#00245E",
         secondaryColor: "#9CC2E5",
         reputation: 5200,
-        budget: 30000000,
+        budget: 17000000,
         stadiumCapacity: 22120,
       },
       {
@@ -2067,7 +2067,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0033A1",
         secondaryColor: "#000000",
         reputation: 5200,
-        budget: 30000000,
+        budget: 17000000,
         stadiumCapacity: 19619,
       },
       {
@@ -2076,7 +2076,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#071B2C",
         secondaryColor: "#B2985F",
         reputation: 5400,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 18500,
       },
       {
@@ -2085,7 +2085,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FEF200",
         secondaryColor: "#000000",
         reputation: 5500,
-        budget: 36000000,
+        budget: 21000000,
         stadiumCapacity: 20371,
       },
       {
@@ -2094,7 +2094,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#004812",
         secondaryColor: "#EAE70F",
         reputation: 5400,
-        budget: 34000000,
+        budget: 19000000,
         stadiumCapacity: 25218,
       },
       {
@@ -2103,7 +2103,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#B30838",
         secondaryColor: "#012B5C",
         reputation: 5200,
-        budget: 32000000,
+        budget: 18000000,
         stadiumCapacity: 20213,
       },
       {
@@ -2112,7 +2112,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF6B00",
         secondaryColor: "#000000",
         reputation: 5200,
-        budget: 32000000,
+        budget: 18000000,
         stadiumCapacity: 22039,
       },
       {
@@ -2121,7 +2121,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#BF0D3E",
         secondaryColor: "#00205B",
         reputation: 5200,
-        budget: 32000000,
+        budget: 18000000,
         stadiumCapacity: 20500,
       },
       {
@@ -2130,7 +2130,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#91B0D5",
         secondaryColor: "#002A5C",
         reputation: 5300,
-        budget: 33000000,
+        budget: 19000000,
         stadiumCapacity: 18467,
       },
       {
@@ -2139,7 +2139,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#0067B1",
         reputation: 5100,
-        budget: 30000000,
+        budget: 17000000,
         stadiumCapacity: 18000,
       },
       {
@@ -2148,7 +2148,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#612B9B",
         secondaryColor: "#FDE302",
         reputation: 5400,
-        budget: 34000000,
+        budget: 19000000,
         stadiumCapacity: 25500,
       },
       {
@@ -2157,7 +2157,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#F05323",
         secondaryColor: "#171C2C",
         reputation: 5400,
-        budget: 36000000,
+        budget: 20000000,
         stadiumCapacity: 26000,
       },
       {
@@ -2166,7 +2166,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E9004C",
         secondaryColor: "#0F1823",
         reputation: 5300,
-        budget: 34000000,
+        budget: 19000000,
         stadiumCapacity: 22500,
       },
       {
@@ -2175,7 +2175,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#ECE81A",
         secondaryColor: "#1F1646",
         reputation: 5300,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 30000,
       },
       {
@@ -2184,7 +2184,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#00B140",
         secondaryColor: "#000000",
         reputation: 5300,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 20738,
       },
       {
@@ -2193,7 +2193,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0085CA",
         secondaryColor: "#000000",
         reputation: 5200,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 38000,
       },
     ],
@@ -2216,7 +2216,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 5400,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2225,7 +2225,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FDB913",
         secondaryColor: "#005596",
         reputation: 6000,
-        budget: 55000000,
+        budget: 32000000,
         stadiumCapacity: 42000,
       },
       {
@@ -2234,7 +2234,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#00519E",
         secondaryColor: "#FFFFFF",
         reputation: 5800,
-        budget: 45000000,
+        budget: 26000000,
         stadiumCapacity: 87000,
       },
       {
@@ -2243,7 +2243,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#F5E216",
         secondaryColor: "#001E62",
         reputation: 6000,
-        budget: 50000000,
+        budget: 30000000,
         stadiumCapacity: 87000,
       },
       {
@@ -2252,7 +2252,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#092246",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 52000000,
+        budget: 30000000,
         stadiumCapacity: 53500,
       },
       {
@@ -2261,7 +2261,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E30613",
         secondaryColor: "#002758",
         reputation: 6000,
-        budget: 48000000,
+        budget: 28000000,
         stadiumCapacity: 46000,
       },
       {
@@ -2270,7 +2270,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 5000,
-        budget: 25000000,
+        budget: 13000000,
         stadiumCapacity: 27000,
       },
       {
@@ -2279,7 +2279,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#00FF00",
         secondaryColor: "#000000",
         reputation: 4800,
-        budget: 20000000,
+        budget: 11000000,
         stadiumCapacity: 19000,
       },
       {
@@ -2288,7 +2288,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#FFFFFF",
         reputation: 5300,
-        budget: 30000000,
+        budget: 17000000,
         stadiumCapacity: 27000,
       },
       {
@@ -2297,7 +2297,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#D4AF37",
         secondaryColor: "#000080",
         reputation: 5500,
-        budget: 35000000,
+        budget: 20000000,
         stadiumCapacity: 58000,
       },
       {
@@ -2306,7 +2306,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 28000000,
+        budget: 16000000,
         stadiumCapacity: 30000,
       },
       {
@@ -2315,7 +2315,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#000000",
         reputation: 4700,
-        budget: 18000000,
+        budget: 10000000,
         stadiumCapacity: 33000,
       },
       {
@@ -2324,7 +2324,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 4800,
-        budget: 20000000,
+        budget: 11000000,
         stadiumCapacity: 23000,
       },
       {
@@ -2333,7 +2333,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 5100,
-        budget: 25000000,
+        budget: 14000000,
         stadiumCapacity: 55000,
       },
       {
@@ -2342,7 +2342,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 4600,
-        budget: 15000000,
+        budget: 8000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2351,7 +2351,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800080",
         secondaryColor: "#FFFFFF",
         reputation: 4500,
-        budget: 14000000,
+        budget: 7000000,
         stadiumCapacity: 20000,
       },
       {
@@ -2360,7 +2360,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 30000000,
+        budget: 17000000,
         stadiumCapacity: 31000,
       },
       {
@@ -2369,7 +2369,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#000080",
         reputation: 4800,
-        budget: 20000000,
+        budget: 11000000,
         stadiumCapacity: 51000,
       },
     ],
@@ -2392,7 +2392,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0055A5",
         secondaryColor: "#FFFFFF",
         reputation: 8000,
-        budget: 150000000,
+        budget: 90000000,
         stadiumCapacity: 68000,
       },
       {
@@ -2401,7 +2401,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000CC",
         reputation: 7900,
-        budget: 140000000,
+        budget: 80000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2410,7 +2410,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006400",
         secondaryColor: "#FFFFFF",
         reputation: 7600,
-        budget: 100000000,
+        budget: 60000000,
         stadiumCapacity: 62000,
       },
       {
@@ -2419,7 +2419,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFF200",
         secondaryColor: "#000000",
         reputation: 7800,
-        budget: 110000000,
+        budget: 70000000,
         stadiumCapacity: 62000,
       },
       {
@@ -2428,7 +2428,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 6900,
-        budget: 45000000,
+        budget: 35000000,
         stadiumCapacity: 22000,
       },
       {
@@ -2437,7 +2437,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#FFFF00",
         reputation: 7400,
-        budget: 85000000,
+        budget: 55000000,
         stadiumCapacity: 15000,
       },
       {
@@ -2446,7 +2446,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 6500,
-        budget: 35000000,
+        budget: 25000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2455,7 +2455,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#007A33",
         secondaryColor: "#C8102E",
         reputation: 6800,
-        budget: 55000000,
+        budget: 40000000,
         stadiumCapacity: 35000,
       },
       {
@@ -2464,7 +2464,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#008000",
         reputation: 5500,
-        budget: 22000000,
+        budget: 16000000,
         stadiumCapacity: 10000,
       },
       {
@@ -2473,7 +2473,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 6000,
-        budget: 60000000,
+        budget: 40000000,
         stadiumCapacity: 12000,
       },
       {
@@ -2482,7 +2482,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#009900",
         secondaryColor: "#FFFFFF",
         reputation: 5800,
-        budget: 25000000,
+        budget: 18000000,
         stadiumCapacity: 20000,
       },
       {
@@ -2568,7 +2568,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#D4AF37",
         reputation: 5000,
-        budget: 30000000,
+        budget: 13000000,
         stadiumCapacity: 15000,
       },
       {
@@ -2577,7 +2577,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#87CEEB",
         reputation: 5800,
-        budget: 50000000,
+        budget: 22000000,
         stadiumCapacity: 30000,
       },
       {
@@ -2586,7 +2586,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#D21616",
         secondaryColor: "#FFFFFF",
         reputation: 6200,
-        budget: 45000000,
+        budget: 20000000,
         stadiumCapacity: 75000,
       },
       {
@@ -2595,7 +2595,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#000000",
         reputation: 4800,
-        budget: 15000000,
+        budget: 8000000,
         stadiumCapacity: 22000,
       },
       {
@@ -2604,7 +2604,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#D21616",
         reputation: 6000,
-        budget: 40000000,
+        budget: 18000000,
         stadiumCapacity: 75000,
       },
       {
@@ -2613,7 +2613,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5000,
-        budget: 15000000,
+        budget: 8000000,
         stadiumCapacity: 18000,
       },
       {
@@ -2744,7 +2744,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#B50029",
         secondaryColor: "#000000",
         reputation: 5800,
-        budget: 45000000,
+        budget: 12000000,
         stadiumCapacity: 40728,
       },
       {
@@ -2753,7 +2753,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#000000",
         reputation: 5700,
-        budget: 42000000,
+        budget: 12000000,
         stadiumCapacity: 39694,
       },
       {
@@ -2762,7 +2762,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E6002D",
         secondaryColor: "#000000",
         reputation: 6100,
-        budget: 50000000,
+        budget: 14000000,
         stadiumCapacity: 63700,
       }, // Existing
       {
@@ -2771,7 +2771,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#2EA7E0",
         secondaryColor: "#000000",
         reputation: 5950,
-        budget: 48000000,
+        budget: 14000000,
         stadiumCapacity: 26232,
       }, // Existing
       {
@@ -2780,7 +2780,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#E60012",
         reputation: 6050,
-        budget: 52000000,
+        budget: 15000000,
         stadiumCapacity: 72327,
       }, // Existing
       {
@@ -2789,7 +2789,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#950029",
         secondaryColor: "#FFFFFF",
         reputation: 6200,
-        budget: 55000000,
+        budget: 13000000,
         stadiumCapacity: 30132,
       }, // Existing
       {
@@ -2798,7 +2798,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#3F186D",
         secondaryColor: "#FFFFFF",
         reputation: 5700,
-        budget: 38000000,
+        budget: 12000000,
         stadiumCapacity: 36894,
       }, // Existing -> Updated Data
       {
@@ -2807,7 +2807,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#E60012",
         reputation: 5500,
-        budget: 40000000,
+        budget: 15000000,
         stadiumCapacity: 49970,
       },
       {
@@ -2816,7 +2816,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#F49AC1",
         secondaryColor: "#00205B",
         reputation: 5500,
-        budget: 38000000,
+        budget: 11000000,
         stadiumCapacity: 24481,
       },
       {
@@ -2825,7 +2825,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#DA291C",
         secondaryColor: "#FDB913",
         reputation: 5400,
-        budget: 35000000,
+        budget: 13000000,
         stadiumCapacity: 45000,
       },
       {
@@ -2834,7 +2834,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFF200",
         secondaryColor: "#000000",
         reputation: 5200,
-        budget: 30000000,
+        budget: 10000000,
         stadiumCapacity: 15349,
       },
       {
@@ -2843,7 +2843,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006934",
         secondaryColor: "#FFFFFF",
         reputation: 5000,
-        budget: 22000000,
+        budget: 8000000,
         stadiumCapacity: 49970,
       },
       {
@@ -2852,7 +2852,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#FFFFFF",
         reputation: 5100,
-        budget: 25000000,
+        budget: 8000000,
         stadiumCapacity: 15489,
       },
       {
@@ -2861,7 +2861,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#741B7C",
         secondaryColor: "#FFFFFF",
         reputation: 4900,
-        budget: 20000000,
+        budget: 7000000,
         stadiumCapacity: 21600,
       },
       {
@@ -2870,7 +2870,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#A4A8AC",
         reputation: 4900,
-        budget: 18000000,
+        budget: 7000000,
         stadiumCapacity: 22563,
       },
       {
@@ -2879,7 +2879,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#009933",
         reputation: 4700,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 19781,
       },
       {
@@ -2888,7 +2888,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#F26522",
         reputation: 4600,
-        budget: 14000000,
+        budget: 5500000,
         stadiumCapacity: 20246,
       },
       {
@@ -2897,7 +2897,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#003399",
         reputation: 4800,
-        budget: 25000000,
+        budget: 8000000,
         stadiumCapacity: 20248,
       },
       {
@@ -2906,7 +2906,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003399",
         secondaryColor: "#FFFFFF",
         reputation: 4400,
-        budget: 10000000,
+        budget: 5000000,
         stadiumCapacity: 12000,
       },
       {
@@ -2915,7 +2915,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#B50029",
         secondaryColor: "#003399",
         reputation: 4500,
-        budget: 12000000,
+        budget: 5000000,
         stadiumCapacity: 20000,
       },
     ],
@@ -2938,7 +2938,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#003280",
         secondaryColor: "#FFCC00",
         reputation: 5900,
-        budget: 45000000,
+        budget: 11000000,
         stadiumCapacity: 44102,
       }, // Existing (Updated Name)
       {
@@ -2947,7 +2947,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#009900",
         secondaryColor: "#000080",
         reputation: 6000,
-        budget: 48000000,
+        budget: 12000000,
         stadiumCapacity: 42477,
       }, // Existing
       {
@@ -2956,7 +2956,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FF0000",
         reputation: 5700,
-        budget: 35000000,
+        budget: 8000000,
         stadiumCapacity: 17443,
       }, // Existing
       {
@@ -2965,7 +2965,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FF0000",
         reputation: 5600,
-        budget: 38000000,
+        budget: 9000000,
         stadiumCapacity: 66704,
       }, // Existing
       {
@@ -2974,7 +2974,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#4B0082",
         secondaryColor: "#800000",
         reputation: 5400,
-        budget: 32000000,
+        budget: 7000000,
         stadiumCapacity: 40535,
       },
       {
@@ -2983,7 +2983,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 5300,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 25000,
       },
       {
@@ -2992,7 +2992,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF6600",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 18000000,
+        budget: 6000000,
         stadiumCapacity: 13500,
       },
       {
@@ -3001,7 +3001,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF6600",
         secondaryColor: "#000000",
         reputation: 5300,
-        budget: 20000000,
+        budget: 7000000,
         stadiumCapacity: 29791,
       },
       {
@@ -3010,7 +3010,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#000000",
         reputation: 5100,
-        budget: 18000000,
+        budget: 7000000,
         stadiumCapacity: 20891,
       },
       {
@@ -3060,7 +3060,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#000080",
         reputation: 5300,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 20059,
       },
       {
@@ -3069,7 +3069,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#000000",
         reputation: 5000,
-        budget: 12000000,
+        budget: 6000000,
         stadiumCapacity: 34500,
       },
       {
@@ -3078,7 +3078,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#0000FF",
         reputation: 4800,
-        budget: 20000000,
+        budget: 8000000,
         stadiumCapacity: 25000,
       },
       {
@@ -3087,7 +3087,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#87CEEB",
         secondaryColor: "#000080",
         reputation: 5500,
-        budget: 25000000,
+        budget: 9000000,
         stadiumCapacity: 45500,
       }, // Existing
       {
@@ -3096,7 +3096,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#FFFFFF",
         reputation: 5600,
-        budget: 28000000,
+        budget: 10000000,
         stadiumCapacity: 30050,
       }, // Existing
       {
@@ -3105,7 +3105,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#87CEEB",
         secondaryColor: "#FFFFFF",
         reputation: 5700,
-        budget: 40000000,
+        budget: 12000000,
         stadiumCapacity: 30050,
       }, // Existing (Corrected Name)
       {
@@ -3114,7 +3114,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#000000",
         reputation: 4900,
-        budget: 14000000,
+        budget: 5000000,
         stadiumCapacity: 17500,
       },
       {
@@ -3123,7 +3123,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 5400,
-        budget: 22000000,
+        budget: 8000000,
         stadiumCapacity: 30000,
       },
       {
@@ -3132,7 +3132,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#000000",
         reputation: 5200,
-        budget: 16000000,
+        budget: 7000000,
         stadiumCapacity: 16500,
       },
       {
@@ -3141,7 +3141,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#000000",
         reputation: 5100,
-        budget: 15000000,
+        budget: 6000000,
         stadiumCapacity: 52500,
       },
       {
@@ -3150,7 +3150,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#000000",
         reputation: 4800,
-        budget: 14000000,
+        budget: 5000000,
         stadiumCapacity: 15000,
       },
       {
@@ -3159,7 +3159,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#D4AF37",
         reputation: 4700,
-        budget: 10000000,
+        budget: 5000000,
         stadiumCapacity: 33000,
       },
       {
@@ -3168,7 +3168,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800080",
         secondaryColor: "#FFFFFF",
         reputation: 4800,
-        budget: 13000000,
+        budget: 5000000,
         stadiumCapacity: 20500,
       },
     ],
@@ -4232,7 +4232,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#006400",
         secondaryColor: "#000000",
         reputation: 6500,
-        budget: 45000000,
+        budget: 26000000,
         stadiumCapacity: 35000,
       },
       {
@@ -4241,7 +4241,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#41B6E6",
         secondaryColor: "#FFFFFF",
         reputation: 7000,
-        budget: 80000000,
+        budget: 42000000,
         stadiumCapacity: 68000,
       },
       {
@@ -4250,7 +4250,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FF0000",
         reputation: 6200,
-        budget: 40000000,
+        budget: 22000000,
         stadiumCapacity: 27000,
       },
       {
@@ -4259,7 +4259,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#0000FF",
         reputation: 6300,
-        budget: 42000000,
+        budget: 24000000,
         stadiumCapacity: 30000,
       },
       {
@@ -4277,7 +4277,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 6600,
-        budget: 50000000,
+        budget: 28000000,
         stadiumCapacity: 45000,
       },
       {
@@ -4286,7 +4286,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#008000",
         reputation: 5800,
-        budget: 25000000,
+        budget: 15000000,
         stadiumCapacity: 45000,
       },
       {
@@ -4295,7 +4295,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5500,
-        budget: 20000000,
+        budget: 10000000,
         stadiumCapacity: 30000,
       },
       {
@@ -4548,7 +4548,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 7800,
-        budget: 60000000,
+        budget: 40000000,
         stadiumCapacity: 50000,
       },
       {
@@ -4557,7 +4557,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 7700,
-        budget: 55000000,
+        budget: 38000000,
         stadiumCapacity: 50000,
       },
       {
@@ -4566,7 +4566,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 7900,
-        budget: 65000000,
+        budget: 45000000,
         stadiumCapacity: 64000,
       },
       {
@@ -4724,7 +4724,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 7500,
-        budget: 50000000,
+        budget: 32000000,
         stadiumCapacity: 35000,
       },
       {
@@ -4733,7 +4733,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 45000000,
+        budget: 30000000,
         stadiumCapacity: 51000,
       },
       {
@@ -4742,7 +4742,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 7600,
-        budget: 55000000,
+        budget: 35000000,
         stadiumCapacity: 55000,
       },
       {
@@ -4900,7 +4900,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 6800,
-        budget: 25000000,
+        budget: 8000000,
         stadiumCapacity: 9000,
       },
       {
@@ -4909,7 +4909,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 5800,
-        budget: 10000000,
+        budget: 4000000,
         stadiumCapacity: 14000,
       },
       {
@@ -4918,7 +4918,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#0000FF",
         reputation: 7200,
-        budget: 40000000,
+        budget: 18000000,
         stadiumCapacity: 29000,
       },
       {
@@ -4927,7 +4927,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800080",
         secondaryColor: "#FFFFFF",
         reputation: 7000,
-        budget: 35000000,
+        budget: 15000000,
         stadiumCapacity: 21000,
       },
       {
@@ -4936,7 +4936,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 6700,
-        budget: 22000000,
+        budget: 10000000,
         stadiumCapacity: 20000,
       },
       {
@@ -4945,7 +4945,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#FF0000",
         reputation: 6000,
-        budget: 12000000,
+        budget: 5000000,
         stadiumCapacity: 16000,
       },
       {
@@ -4954,7 +4954,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 11000000,
+        budget: 4500000,
         stadiumCapacity: 15000,
       },
       {
@@ -4963,7 +4963,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 6600,
-        budget: 20000000,
+        budget: 9000000,
         stadiumCapacity: 27000,
       },
       {
@@ -4972,7 +4972,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 6800,
-        budget: 24000000,
+        budget: 12000000,
         stadiumCapacity: 16000,
       },
       {
@@ -4981,7 +4981,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#008000",
         reputation: 5600,
-        budget: 9000000,
+        budget: 3500000,
         stadiumCapacity: 12000,
       },
       {
@@ -4990,7 +4990,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 6700,
-        budget: 23000000,
+        budget: 11000000,
         stadiumCapacity: 23000,
       },
       {
@@ -4999,7 +4999,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 5500,
-        budget: 8500000,
+        budget: 3000000,
         stadiumCapacity: 8000,
       },
       {
@@ -5008,7 +5008,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5000,
-        budget: 5000000,
+        budget: 2500000,
         stadiumCapacity: 12000,
       },
       {
@@ -5017,7 +5017,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFFFF",
         secondaryColor: "#000000",
         reputation: 5400,
-        budget: 8000000,
+        budget: 3500000,
         stadiumCapacity: 10000,
       },
       {
@@ -5026,7 +5026,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#000000",
         reputation: 5700,
-        budget: 9500000,
+        budget: 4000000,
         stadiumCapacity: 29000,
       },
       {
@@ -5035,7 +5035,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#000000",
         reputation: 4800,
-        budget: 4000000,
+        budget: 1800000,
         stadiumCapacity: 6000,
       },
     ],
@@ -6155,7 +6155,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 7500,
-        budget: 35000000,
+        budget: 18000000,
         stadiumCapacity: 60000,
       },
       {
@@ -6164,7 +6164,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 30000000,
+        budget: 15000000,
         stadiumCapacity: 50000,
       },
       {
@@ -6173,7 +6173,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#800000",
         secondaryColor: "#FFFFFF",
         reputation: 6500,
-        budget: 8000000,
+        budget: 4000000,
         stadiumCapacity: 20000,
       },
       {
@@ -6182,7 +6182,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 6400,
-        budget: 7500000,
+        budget: 3500000,
         stadiumCapacity: 20000,
       },
       {
@@ -6191,7 +6191,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 6600,
-        budget: 9000000,
+        budget: 5000000,
         stadiumCapacity: 20000,
       },
       {
@@ -6200,7 +6200,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#800000",
         reputation: 5800,
-        budget: 4000000,
+        budget: 2500000,
         stadiumCapacity: 13000,
       },
       {
@@ -6209,7 +6209,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#000000",
         reputation: 6000,
-        budget: 5000000,
+        budget: 3000000,
         stadiumCapacity: 14000,
       },
       {
@@ -6218,7 +6218,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5600,
-        budget: 3500000,
+        budget: 2000000,
         stadiumCapacity: 11000,
       },
       {
@@ -6227,7 +6227,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 5700,
-        budget: 3800000,
+        budget: 2200000,
         stadiumCapacity: 8000,
       },
       {
@@ -6236,7 +6236,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 4500000,
+        budget: 2500000,
         stadiumCapacity: 15000,
       },
       {
@@ -6245,7 +6245,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000080",
         secondaryColor: "#FFFFFF",
         reputation: 5400,
-        budget: 2500000,
+        budget: 1500000,
         stadiumCapacity: 6500,
       },
       {
@@ -6254,7 +6254,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 2200000,
+        budget: 1200000,
         stadiumCapacity: 10000,
       },
     ],
@@ -6521,7 +6521,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 7500,
-        budget: 40000000,
+        budget: 18000000,
         stadiumCapacity: 32000,
       },
       {
@@ -6530,7 +6530,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 7400,
-        budget: 35000000,
+        budget: 15000000,
         stadiumCapacity: 29000,
       },
       {
@@ -6539,7 +6539,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#000000",
         reputation: 7400,
-        budget: 35000000,
+        budget: 15000000,
         stadiumCapacity: 31000,
       },
       {
@@ -6548,7 +6548,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 7300,
-        budget: 32000000,
+        budget: 13000000,
         stadiumCapacity: 16000,
       },
       {
@@ -6557,7 +6557,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#000000",
         reputation: 6800,
-        budget: 12000000,
+        budget: 7000000,
         stadiumCapacity: 22000,
       },
       {
@@ -6566,7 +6566,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#0000FF",
         reputation: 6000,
-        budget: 6000000,
+        budget: 3500000,
         stadiumCapacity: 22000,
       },
       {
@@ -6575,7 +6575,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 6100,
-        budget: 6500000,
+        budget: 4000000,
         stadiumCapacity: 10000,
       },
       {
@@ -6584,7 +6584,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 6000,
-        budget: 6000000,
+        budget: 3500000,
         stadiumCapacity: 7000,
       },
       {
@@ -6593,7 +6593,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#000000",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 5500000,
+        budget: 3000000,
         stadiumCapacity: 9000,
       },
       {
@@ -6602,7 +6602,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 5700,
-        budget: 4500000,
+        budget: 2500000,
         stadiumCapacity: 7000,
       },
       {
@@ -6611,7 +6611,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5500,
-        budget: 3500000,
+        budget: 2000000,
         stadiumCapacity: 5000,
       },
       {
@@ -6620,7 +6620,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5600,
-        budget: 4000000,
+        budget: 2200000,
         stadiumCapacity: 7000,
       },
       {
@@ -6629,7 +6629,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5400,
-        budget: 3000000,
+        budget: 1800000,
         stadiumCapacity: 4000,
       },
       {
@@ -6638,7 +6638,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 5500,
-        budget: 3500000,
+        budget: 2000000,
         stadiumCapacity: 9000,
       },
     ],
@@ -7433,7 +7433,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#E60012",
         secondaryColor: "#FFFFFF",
         reputation: 6500,
-        budget: 40000000,
+        budget: 10000000,
         stadiumCapacity: 37000,
       },
       {
@@ -7442,7 +7442,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0055A5",
         secondaryColor: "#FFFFFF",
         reputation: 6200,
-        budget: 35000000,
+        budget: 8000000,
         stadiumCapacity: 33060,
       },
       {
@@ -7451,7 +7451,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 6000,
-        budget: 30000000,
+        budget: 8000000,
         stadiumCapacity: 40000,
       },
       {
@@ -7460,7 +7460,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFF00",
         reputation: 6100,
-        budget: 32000000,
+        budget: 9000000,
         stadiumCapacity: 68000,
       },
       {
@@ -7469,7 +7469,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF6600",
         secondaryColor: "#FFFFFF",
         reputation: 5900,
-        budget: 28000000,
+        budget: 7000000,
         stadiumCapacity: 56808,
       },
       {
@@ -7478,7 +7478,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#4169E1",
         secondaryColor: "#FFFFFF",
         reputation: 5500,
-        budget: 22000000,
+        budget: 5500000,
         stadiumCapacity: 54696,
       },
       {
@@ -7487,7 +7487,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#008000",
         secondaryColor: "#FFFFFF",
         reputation: 5600,
-        budget: 24000000,
+        budget: 6000000,
         stadiumCapacity: 51971,
       },
       {
@@ -7496,7 +7496,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFOO00",
         secondaryColor: "#008000",
         reputation: 5400,
-        budget: 20000000,
+        budget: 5000000,
         stadiumCapacity: 29860,
       },
       {
@@ -7505,7 +7505,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 5200,
-        budget: 18000000,
+        budget: 4500000,
         stadiumCapacity: 38500,
       },
       {
@@ -7514,7 +7514,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFFF00",
         secondaryColor: "#0000FF",
         reputation: 4800,
-        budget: 15000000,
+        budget: 4000000,
         stadiumCapacity: 20000,
       },
       {
@@ -7523,7 +7523,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 5700,
-        budget: 25000000,
+        budget: 7000000,
         stadiumCapacity: 54000,
       },
       {
@@ -7532,7 +7532,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FFA500",
         secondaryColor: "#0000FF",
         reputation: 4900,
-        budget: 16000000,
+        budget: 4000000,
         stadiumCapacity: 45000,
       },
       {
@@ -7541,7 +7541,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 4800,
-        budget: 14000000,
+        budget: 3500000,
         stadiumCapacity: 31836,
       },
       {
@@ -7550,7 +7550,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFF00",
         reputation: 5000,
-        budget: 18000000,
+        budget: 5500000,
         stadiumCapacity: 60334,
       },
       {
@@ -7559,7 +7559,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#FF0000",
         secondaryColor: "#FFFFFF",
         reputation: 4700,
-        budget: 12000000,
+        budget: 3000000,
         stadiumCapacity: 27000,
       },
       {
@@ -7568,7 +7568,7 @@ export const LEAGUE_PRESETS = [
         primaryColor: "#0000FF",
         secondaryColor: "#FFFFFF",
         reputation: 4600,
-        budget: 10000000,
+        budget: 2800000,
         stadiumCapacity: 32244,
       },
     ],
