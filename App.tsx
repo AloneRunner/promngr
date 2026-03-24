@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, getTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, ManagerCourseKey, ManagerCreationData, ManagerStaffRoleKey, ManagerTalentKey } from './types';
-import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier, createManagerProfile, ensureGameStateManagerProfile, purchaseManagerCourse, spendManagerSkillPoint, resetManagerTalents, upgradeManagerPersonalStaff, assignManagerObjectivesForCurrentTeam, canSelectStartingTeam, getInitialManagerSalaryForTeamReputation, getInitialUserManagerRating, getRequiredManagerRatingForJobOffer } from './services/engine';
+import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier, createManagerProfile, ensureGameStateManagerProfile, purchaseManagerCourse, spendManagerSkillPoint, resetManagerTalents, upgradeManagerPersonalStaff, assignManagerObjectivesForCurrentTeam, canSelectStartingTeam, getInitialManagerSalaryForTeamReputation, getInitialUserManagerRating, getRequiredManagerRatingForJobOffer, performSubstitution as enginePerformSubstitution } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
@@ -14,7 +14,7 @@ import { TransferMarket } from './components/TransferMarket';
 import { PlayerModal } from './components/PlayerModal';
 import { NewsCenter, MessageTab } from './components/NewsCenter';
 import { TrainingCenter } from './components/TrainingCenter';
-import { SponsorModal } from './components/SponsorModal';
+// SponsorModal removed — sponsors are auto-assigned based on team reputation
 import { TeamInspector } from './components/TeamInspector';
 import { AssistantReport } from './components/AssistantReport';
 import { GameGuide } from './components/GameGuide';
@@ -78,6 +78,7 @@ const App: React.FC = () => {
     const [isResignMode, setIsResignMode] = useState(false); // Resign mode: don't reset world, just switch team
     const [showSeasonSummary, setShowSeasonSummary] = useState(false);
     const [seasonSummaryData, setSeasonSummaryData] = useState<{ winner: Team, retired: string[], promoted: string[] } | null>(null);
+    const [isSeasonEndLoading, setIsSeasonEndLoading] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
     const [inspectedTeamId, setInspectedTeamId] = useState<string | null>(null);
     const [viewLeagueId, setViewLeagueId] = useState<string>('tr'); // Will sync to user's league on load
@@ -114,6 +115,68 @@ const App: React.FC = () => {
     });
     const [isWeekSimulating, setIsWeekSimulating] = useState(false);
     const [simulationProgress, setSimulationProgress] = useState(0);
+    const [simDoneResult, setSimDoneResult] = useState<{ homeTeam: string; awayTeam: string; homeScore: number; awayScore: number } | null>(null);
+    const [simNoMatchWeek, setSimNoMatchWeek] = useState(false);
+    const gameStateRef = React.useRef<typeof gameState>(gameState);
+    const simJustRanRef = React.useRef(false);
+
+    // Keep gameStateRef in sync so callbacks can read latest state
+    React.useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
+
+    // After sim runs, wait for React to commit new state, then find the user's match
+    React.useEffect(() => {
+        if (!simJustRanRef.current || !gameState) return;
+        simJustRanRef.current = false;
+        const uid = gameState.userTeamId;
+        const weekPlayed = gameState.currentWeek - 1;
+
+        // Search league matches
+        let found: { homeTeamId: string; awayTeamId: string; homeScore: number; awayScore: number } | null = null;
+        const leagueMatch = gameState.matches.find(m =>
+            (m.homeTeamId === uid || m.awayTeamId === uid) && m.week === weekPlayed && m.isPlayed
+        );
+        if (leagueMatch) found = leagueMatch;
+
+        // Search European Cup (group + knockout)
+        if (!found && gameState.europeanCup) {
+            const all = [
+                ...(gameState.europeanCup.groups?.flatMap(g => g.matches) ?? []),
+                ...(gameState.europeanCup.knockoutMatches ?? [])
+            ] as any[];
+            const m = all.find(m => (m.homeTeamId === uid || m.awayTeamId === uid) && m.week === weekPlayed && m.isPlayed);
+            if (m) found = m;
+        }
+
+        // Search Europa League
+        if (!found && gameState.europaLeague) {
+            const all = [
+                ...(gameState.europaLeague.groups?.flatMap(g => g.matches) ?? []),
+                ...(gameState.europaLeague.knockoutMatches ?? [])
+            ] as any[];
+            const m = all.find(m => (m.homeTeamId === uid || m.awayTeamId === uid) && m.week === weekPlayed && m.isPlayed);
+            if (m) found = m;
+        }
+
+        // Search Super Cup
+        if (!found && gameState.superCup?.match) {
+            const sc = gameState.superCup.match as any;
+            if ((sc.homeTeamId === uid || sc.awayTeamId === uid) && sc.week === weekPlayed && sc.isPlayed) found = sc;
+        }
+
+        if (found) {
+            const home = gameState.teams.find(t => t.id === found!.homeTeamId);
+            const away = gameState.teams.find(t => t.id === found!.awayTeamId);
+            setSimDoneResult({
+                homeTeam: home?.name || '?',
+                awayTeam: away?.name || '?',
+                homeScore: found.homeScore ?? 0,
+                awayScore: found.awayScore ?? 0,
+            });
+        } else {
+            // No user match this week (cup/empty week) — show brief notice then auto-dismiss
+            setSimNoMatchWeek(true);
+        }
+    }, [gameState?.currentWeek]);
 
     // FIX: Schedule Super Cup (Week 39) dynamically
     useEffect(() => {
@@ -363,10 +426,8 @@ const App: React.FC = () => {
                 clearInterval(progressInterval);
                 clearTimeout(safetyTimeout);
                 setSimulationProgress(finalProgress);
-                setTimeout(() => {
-                    setIsWeekSimulating(false);
-                    setSimulationProgress(0);
-                }, 500);
+                // Signal useEffect to find user's match once React commits the new gameState
+                simJustRanRef.current = true;
             };
 
             // Simulate progress animation
@@ -388,7 +449,7 @@ const App: React.FC = () => {
                     cleanupSimulationUi(100);
                 } catch (error: any) {
                     console.error("Simulation error:", error);
-                    alert("Simulasyon hatasi: " + error.message);
+                    console.error("Simulasyon hatasi:", error.message);
                     cleanupSimulationUi(0);
                 } finally {
                     cleanupSimulationUi(100);
@@ -1084,6 +1145,52 @@ const App: React.FC = () => {
         setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
     };
 
+    // Auto-calculate sponsor based on team reputation and league
+    const calculateAutoSponsor = (team: Team): Sponsor => {
+        const leagueMult = getLeagueMultiplier(team.leagueId);
+        const rep = team.reputation;
+
+        // Sponsor tier by reputation
+        let tierName: string;
+        let tierId: string;
+        if (rep >= 9500) { tierName = 'Premium Global'; tierId = 'premium'; }
+        else if (rep >= 8000) { tierName = 'Global'; tierId = 'global'; }
+        else if (rep >= 6000) { tierName = 'National'; tierId = 'national'; }
+        else if (rep >= 3500) { tierName = 'Regional'; tierId = 'regional'; }
+        else { tierName = 'Local'; tierId = 'local'; }
+
+        // Sponsor names by tier
+        const sponsorNames: Record<string, string[]> = {
+            local: ['Şehir İnşaat', 'Yerel Market', 'Belediye Desteği', 'Bölge Sigorta'],
+            regional: ['Bölge Holding', 'TürkTelecom Bölge', 'Ulusal Banka Bölge', 'Enerji Kooperatifi'],
+            national: ['Ulusal Havayolları', 'Türkiye Bankası', 'Milli Enerji', 'Teknoloji A.Ş.'],
+            global: ['EuroSport Partners', 'Global Motors', 'InternationalBank', 'WorldTech Group'],
+            premium: ['PremiumStar Global', 'Elite Sports Corp', 'WorldClass Energy', 'Apex Ventures'],
+        };
+        const names = sponsorNames[tierId];
+        const name = names[Math.floor(rep % names.length)]; // deterministic pick
+
+        // Weekly income: scales with rep + league
+        const repFactor = Math.pow(Math.min(rep, 10000) / 10000, 1.3);
+        const weeklyIncome = Math.floor((8000 + repFactor * 192000) * leagueMult);
+        const winBonus = Math.floor(weeklyIncome * 0.04);
+        const bonus1st = weeklyIncome * 12;  // ~3 months
+        const bonus2nd = weeklyIncome * 6;
+        const bonus3rd = weeklyIncome * 3;
+
+        return {
+            id: `auto_sponsor_${tierId}`,
+            name,
+            description: `${tierName} sponsorluğu — takımın başarısına göre güncellenir`,
+            weeklyIncome,
+            winBonus,
+            duration: 1,
+            bonus1st,
+            bonus2nd,
+            bonus3rd,
+        };
+    };
+
     const handleSelectSponsor = (sponsor: Sponsor) => {
         if (!gameState) return;
         const updatedTeams = gameState.teams.map(t =>
@@ -1458,22 +1565,44 @@ const App: React.FC = () => {
         setAssistantAdvice(null);
 
         if (activeMatchId && view === 'match' && gameState) {
-            // Find match in league OR European cups
-            // Find match in league OR European cups
-            // FIX: Correctly finding match in Groups/Knockouts
-            let match: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
+            // Track actual substitutions made by auto-pick so the sub counter stays accurate
+            const originalStarterIds = new Set(
+                userPlayers.filter(p => p.lineup === 'STARTING').map(p => p.id)
+            );
+            const newStarterIds = new Set(
+                playersCopy.filter((p: Player) => p.lineup === 'STARTING').map((p: Player) => p.id)
+            );
+            const enteringPlayers: Player[] = playersCopy.filter((p: Player) =>
+                p.lineup === 'STARTING' && !originalStarterIds.has(p.id)
+            );
+            const leavingPlayerIds: string[] = userPlayers
+                .filter(p => p.lineup === 'STARTING' && !newStarterIds.has(p.id))
+                .map(p => p.id);
 
+            // Call engine substitutePlayer for each swap so subsMade counter is updated.
+            // If engine REJECTS (sub limit full), revert that swap in playersCopy so React state matches engine.
+            enteringPlayers.forEach((cp: Player, i: number) => {
+                if (i >= leavingPlayerIds.length) return;
+                const inPlayer = gameState.players.find(p => p.id === cp.id);
+                if (!inPlayer) return;
+                const accepted = enginePerformSubstitution(activeMatchId, inPlayer, leavingPlayerIds[i]);
+                if (!accepted) {
+                    // Revert this swap in playersCopy — engine blocked it
+                    const enteringCopy = playersCopy.find((p: Player) => p.id === cp.id);
+                    const leavingCopy = playersCopy.find((p: Player) => p.id === leavingPlayerIds[i]);
+                    if (enteringCopy) enteringCopy.lineup = 'BENCH';
+                    if (leavingCopy) leavingCopy.lineup = 'STARTING';
+                }
+            });
+
+            // Find match in league OR European cups
+            let match: Match | undefined = gameState.matches.find(m => m.id === activeMatchId);
             if (!match && gameState.europeanCup) {
-                // Check Knockouts
                 match = gameState.europeanCup.knockoutMatches?.find((m: GlobalCupMatch) => m.id === activeMatchId) as unknown as Match;
-                // Check Groups
                 if (!match && gameState.europeanCup.groups) {
                     for (const group of gameState.europeanCup.groups) {
                         const m = group.matches.find(m => m.id === activeMatchId);
-                        if (m) {
-                            match = m as unknown as Match;
-                            break;
-                        }
+                        if (m) { match = m as unknown as Match; break; }
                     }
                 }
             }
@@ -1481,8 +1610,6 @@ const App: React.FC = () => {
             if (match) {
                 const homeP = updatedPlayers.filter(p => p.teamId === match!.homeTeamId);
                 const awayP = updatedPlayers.filter(p => p.teamId === match!.awayTeamId);
-
-                // Only sync if we have valid players for both teams
                 if (homeP.length > 0 && awayP.length > 0) {
                     syncEngineLineups(homeP, awayP);
                 }
@@ -1780,6 +1907,20 @@ const App: React.FC = () => {
 
     const prepareSeasonEnd = () => {
         if (!gameState) return;
+        setIsSeasonEndLoading(true);
+
+        // Defer heavy work so React can render the loading overlay first
+        setTimeout(() => {
+        try {
+        _prepareSeasonEndInner();
+        } finally {
+        setIsSeasonEndLoading(false);
+        }
+        }, 80);
+    };
+
+    const _prepareSeasonEndInner = () => {
+        if (!gameState) return;
 
         let tempState = { ...gameState };
 
@@ -1846,9 +1987,22 @@ const App: React.FC = () => {
             promoted: []
         });
         setShowSeasonSummary(true);
-    };
+    }; // end _prepareSeasonEndInner
 
     const handleStartNewSeason = async () => {
+        if (!gameState) return;
+        setIsSeasonEndLoading(true);
+        // Defer so loading overlay renders first
+        setTimeout(() => {
+        try {
+        _handleStartNewSeasonInner();
+        } finally {
+        setIsSeasonEndLoading(false);
+        }
+        }, 80);
+    };
+
+    const _handleStartNewSeasonInner = () => {
         if (!gameState) return;
         const { newState } = processSeasonEnd(gameState, t);
 
@@ -1884,11 +2038,19 @@ const App: React.FC = () => {
             }]);
         }
 
+        // Auto-renew sponsor based on new season rep
+        const userTeamAfter = finalState.teams.find(t => t.id === finalState.userTeamId);
+        if (userTeamAfter) {
+            const newSponsor = calculateAutoSponsor(userTeamAfter);
+            finalState.teams = finalState.teams.map(t =>
+                t.id === finalState.userTeamId ? { ...t, sponsor: newSponsor } : t
+            );
+        }
+
         setGameState(finalState);
-        alert(`${t.startNewSeason}: ${gameState.currentSeason + 1}`);
         setShowSeasonSummary(false);
         setView('dashboard');
-    };
+    }; // end _handleStartNewSeasonInner
 
 
     // Transfer logic migrated to useTransferMarket hook
@@ -2243,10 +2405,24 @@ const App: React.FC = () => {
         );
     }
 
+    // Auto-assign sponsor if missing (e.g. first load of old save or new game)
+    if (!userTeam.sponsor) {
+        const autoSponsor = calculateAutoSponsor(userTeam);
+        handleSelectSponsor(autoSponsor);
+    }
+
     return (
         <Layout bannerPosition={view === 'match' ? 'bottom' : 'top'}>
             {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-            {!userTeam.sponsor && <SponsorModal onSelect={handleSelectSponsor} t={t} />}
+
+            {/* Season End Loading Overlay */}
+            {isSeasonEndLoading && (
+                <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+                    <div className="w-16 h-16 border-4 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin" />
+                    <p className="text-white text-lg font-semibold">Sezon işleniyor...</p>
+                    <p className="text-slate-400 text-sm">Lütfen bekleyin</p>
+                </div>
+            )}
 
             {/* Engine banner moved to Transfer Offers area */}
 
@@ -2506,6 +2682,16 @@ const App: React.FC = () => {
                             <button onClick={() => setView('manager')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'manager' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><UserCircle size={20} /> <span className="hidden md:inline">Menajer</span></button>
                             <button onClick={() => setView('match')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${(view as string) === 'match' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><SkipForward size={20} /> <span className="hidden md:inline">{t.matchDay}</span></button>
                             <button onClick={() => setView('fixtures')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${view === 'fixtures' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Calendar size={20} /> <span className="hidden md:inline">{t.fixtures}</span></button>
+                            {gameState?.europeanCup?.isActive && (
+                                <button onClick={() => gameState.europeanCup && setViewingCup({ cup: gameState.europeanCup, name: t.internationalEliteCup || 'Şampiyonlar Kupası' })} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-purple-400 hover:bg-slate-800 hover:text-purple-300">
+                                    <Trophy size={20} /> <span className="hidden md:inline text-xs font-bold">{t.internationalEliteCup || 'Şampiyonlar Kupası'}</span>
+                                </button>
+                            )}
+                            {gameState?.europaLeague?.isActive && (
+                                <button onClick={() => gameState.europaLeague && setViewingCup({ cup: gameState.europaLeague, name: t.internationalChallengeCup || 'Kıtalar Arası Kupa' })} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-orange-400 hover:bg-slate-800 hover:text-orange-300">
+                                    <Trophy size={20} /> <span className="hidden md:inline text-xs font-bold">{t.internationalChallengeCup || 'Kıtalar Arası Kupa'}</span>
+                                </button>
+                            )}
                             <button onClick={openDerbySelector} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mt-4 text-yellow-400 hover:bg-slate-800 border border-yellow-500/30 font-bold transition-all hover:border-yellow-500"><Zap size={20} /> <span className="hidden md:inline">{t.playFriendly}</span></button>
 
 
@@ -2684,175 +2870,195 @@ const App: React.FC = () => {
                         <div key={view} className="animate-fade-in w-full">
                             {/* Mobile Menu View */}
                             {view === 'menu' && (
-                                <div className="flex flex-col gap-4 animate-fade-in pb-20">
-                                    <h1 className="text-2xl font-bold text-white mb-2 ml-1">{t.menu || 'Menu'}</h1>
-                                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                                        <button onClick={() => setView('match')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-match.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Match" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-emerald-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.matchDay}</div>
+                                <div className="flex flex-col gap-5 animate-fade-in pb-24">
+                                    <h1 className="text-2xl font-bold text-white ml-1">{t.menu || 'Menu'}</h1>
+
+                                    {/* === DÜNYA SIRALAMASI (geniş öne çıkan) === */}
+                                    <button onClick={() => setShowWorldRankings(true)} className="fm-card p-0 relative group overflow-hidden rounded-2xl w-full flex items-center justify-between px-6 active:scale-95 transition-transform" style={{height:'72px'}}>
+                                        <img src="/assets/icon-rank.jpg" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all mix-blend-screen" alt="Rankings" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/70"></div>
+                                        <div className="relative z-10 flex items-center gap-3">
+                                            <span className="text-2xl">🌐</span>
+                                            <div>
+                                                <div className="text-pink-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-widest">{t.worldRankings || 'Dünya Sıralaması'}</div>
+                                                <div className="text-slate-400 text-[10px]">Tüm takımlar & ligler</div>
                                             </div>
-                                        </button>
+                                        </div>
+                                        <div className="relative z-10 text-slate-500 text-lg">›</div>
+                                    </button>
 
-                                        <button onClick={() => setView('squad')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-squad-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Squad" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-blue-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.squad}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('training')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-training-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Training" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-orange-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.training}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('club')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-shield-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Club" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.club}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('transfers')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-transfer-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Transfers" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-cyan-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.market}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('fixtures')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-fixtures-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Fixtures" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-teal-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.fixtures}</div>
-                                            </div>
-                                        </button >
-
-                                        <button onClick={() => setView('league')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-league.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="League" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-amber-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.standings}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('news')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-news-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="News" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-red-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.news}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('guide')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-guide-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Guide" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-teal-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.gameGuide}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setShowUpdates(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/80 to-pink-600/80"></div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 text-5xl mb-2">✨</div>
-                                            <div className="relative z-10 text-center">
-                                                <div className="text-purple-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.whatsNew || "What's New"}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setView('manager')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-indigo-900/80"></div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 text-5xl mb-2">👔</div>
-                                            <div className="relative z-10 text-center">
-                                                <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">MENAJER</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setShowGlobalHistory(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-blue-900/80"></div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 text-5xl mb-2">🌍</div>
-                                            <div className="relative z-10 text-center">
-                                                <div className="text-indigo-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.history || 'HISTORY'}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setShowWorldRankings(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-rank.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="World Rankings" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-pink-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.worldRankings || 'RANKINGS'}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : prev === 'es' ? 'fr' : prev === 'fr' ? 'ru' : prev === 'ru' ? 'id' : 'tr')} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-
-                                            <img src="/assets/icon-language-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Language" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-indigo-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{lang === 'tr' ? 'TÜRKÇE' : lang === 'en' ? 'ENGLISH' : lang === 'es' ? 'ESPAÑOL' : lang === 'fr' ? 'FRANÇAIS' : lang === 'ru' ? 'РУССКИЙ' : 'INDONESIA'}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => setShowSettings(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-cyan-900/80"></div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 text-5xl mb-2">⚙️</div>
-                                            <div className="relative z-10 text-center">
-                                                <div className="text-blue-300 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.settings || 'SETTINGS'}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={openDerbySelector} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-friendly-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Friendly" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-yellow-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.playFriendly}</div>
-                                            </div>
-                                        </button>
-
-                                        <button onClick={() => adMobService.isBannerVisible() ? adMobService.hideBanner() : adMobService.showBanner()} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-ads-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Ads" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-emerald-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">ADS ON/OFF</div>
-                                            </div>
-                                        </button>
-
-                                        {/* İş Teklifleri - Only show if offers exist */}
-                                        {(gameState?.jobOffers?.length || 0) > 0 && (
-                                            <button onClick={() => setShowJobOffers(true)} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform border-2 border-purple-500/50">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-slate-900/90"></div>
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                                <div className="relative z-10 mt-auto mb-3 text-center">
-                                                    <div className="text-purple-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">İş Teklifleri</div>
-                                                    <span className="absolute -top-8 right-2 w-5 h-5 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center font-bold animate-pulse">
-                                                        {gameState?.jobOffers?.length || 0}
-                                                    </span>
+                                    {/* === KULÜP YÖNETİMİ === */}
+                                    <div>
+                                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2 ml-1">Kulüp</p>
+                                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                                            <button onClick={() => setView('club')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-shield-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="Club" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-purple-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.club}</div>
                                                 </div>
                                             </button>
-                                        )}
+                                            <button onClick={() => setView('transfers')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-transfer-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="Transfers" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-cyan-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.market}</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('training')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-training-neon.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="Training" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-orange-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.training}</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('fixtures')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-fixtures-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="Fixtures" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-teal-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.fixtures}</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('league')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-league.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="League" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-amber-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.standings}</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('squad')} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                <img src="/assets/icon-squad-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all mix-blend-screen" alt="Squad" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-2 text-center">
+                                                    <div className="text-blue-400 font-bold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.squad}</div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
 
-                                        <button onClick={handleBackToProfiles} className="fm-card p-0 relative group overflow-hidden aspect-square flex flex-col items-center justify-center active:scale-95 transition-transform">
-                                            <img src="/assets/icon-exit-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 group-active:scale-95 transition-all mix-blend-screen" alt="Exit" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-active:from-black/90"></div>
-                                            <div className="relative z-10 mt-auto mb-3 text-center">
-                                                <div className="text-rose-400 font-bold text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide">{t.saveAndExit}</div>
+                                    {/* === KUPALAR (koşullu) === */}
+                                    {(gameState?.europeanCup?.isActive || gameState?.europaLeague?.isActive) && (
+                                        <div>
+                                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2 ml-1">Kupalar</p>
+                                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                                                {gameState?.europeanCup?.isActive && (
+                                                    <button onClick={() => gameState.europeanCup && setViewingCup({ cup: gameState.europeanCup, name: t.internationalEliteCup || 'Şampiyonlar Kupası' })} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-indigo-800/80"></div>
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                                        <div className="relative z-10 text-2xl mb-1">🏆</div>
+                                                        <div className="relative z-10 text-center px-1">
+                                                            <div className="text-purple-300 font-bold text-[10px] drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide leading-tight">ŞAMP. KUPASI</div>
+                                                        </div>
+                                                    </button>
+                                                )}
+                                                {gameState?.europaLeague?.isActive && (
+                                                    <button onClick={() => gameState.europaLeague && setViewingCup({ cup: gameState.europaLeague, name: t.internationalChallengeCup || 'Kıtalar Arası Kupa' })} className="fm-card p-0 relative group overflow-hidden aspect-square max-h-24 flex flex-col items-center justify-center active:scale-95 transition-transform">
+                                                        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/80 to-amber-800/80"></div>
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                                        <div className="relative z-10 text-2xl mb-1">🥇</div>
+                                                        <div className="relative z-10 text-center px-1">
+                                                            <div className="text-orange-300 font-bold text-[10px] drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wide leading-tight">KITALAR KUPASI</div>
+                                                        </div>
+                                                    </button>
+                                                )}
                                             </div>
-                                        </button>
+                                        </div>
+                                    )}
 
+                                    {/* === KEŞFET === */}
+                                    <div>
+                                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2 ml-1">Keşfet</p>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            <button onClick={() => setView('manager')} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square max-h-20">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-indigo-900/70 rounded-xl"></div>
+                                                <div className="relative z-10 text-2xl">👔</div>
+                                                <div className="relative z-10 text-center">
+                                                    <div className="text-purple-300 font-bold text-[9px] uppercase tracking-wide leading-tight">MENAJER</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setShowGlobalHistory(true)} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square max-h-20">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 to-blue-900/70 rounded-xl"></div>
+                                                <div className="relative z-10 text-2xl">🌍</div>
+                                                <div className="relative z-10 text-center">
+                                                    <div className="text-indigo-300 font-bold text-[9px] uppercase tracking-wide leading-tight">{t.history || 'GEÇMİŞ'}</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setShowUpdates(true)} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square max-h-20">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/70 to-pink-600/70 rounded-xl"></div>
+                                                <div className="relative z-10 text-2xl">✨</div>
+                                                <div className="relative z-10 text-center">
+                                                    <div className="text-purple-200 font-bold text-[9px] uppercase tracking-wide leading-tight">YENİLİKLER</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('news')} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square max-h-20">
+                                                <img src="/assets/icon-news-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen" alt="News" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-1 text-center">
+                                                    <div className="text-red-400 font-bold text-[9px] uppercase tracking-wide leading-tight">HABERLER</div>
+                                                </div>
+                                            </button>
+                                            <button onClick={() => setView('guide')} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square max-h-20">
+                                                <img src="/assets/icon-guide-glass.jpg" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen" alt="Guide" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                                <div className="relative z-10 mt-auto mb-1 text-center">
+                                                    <div className="text-teal-400 font-bold text-[9px] uppercase tracking-wide leading-tight">REHBER</div>
+                                                </div>
+                                            </button>
+                                            {(gameState?.jobOffers?.length || 0) > 0 && (
+                                                <button onClick={() => setShowJobOffers(true)} className="fm-card p-2 relative group overflow-hidden flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform aspect-square border border-purple-500/50">
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 to-slate-900/70 rounded-xl"></div>
+                                                    <div className="relative z-10 text-2xl">💼</div>
+                                                    <div className="relative z-10 text-center">
+                                                        <div className="text-purple-400 font-bold text-[9px] uppercase tracking-wide leading-tight">İŞ TEKLİFİ</div>
+                                                    </div>
+                                                    <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-purple-500 text-white text-[9px] flex items-center justify-center font-bold animate-pulse">
+                                                        {gameState?.jobOffers?.length || 0}
+                                                    </span>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
 
-                                    </div >
-                                </div >
+                                    {/* === SİSTEM === */}
+                                    <div>
+                                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2 ml-1">Sistem</p>
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setLang(prev => prev === 'tr' ? 'en' : prev === 'en' ? 'es' : prev === 'es' ? 'fr' : prev === 'fr' ? 'ru' : prev === 'ru' ? 'id' : 'tr')} className="fm-card flex-1 flex items-center gap-3 px-4 py-3 active:scale-95 transition-transform">
+                                                    <img src="/assets/icon-language-glass.jpg" className="w-8 h-8 rounded-lg object-cover mix-blend-screen opacity-80" alt="Language" />
+                                                    <div className="text-left">
+                                                        <div className="text-indigo-400 font-bold text-xs uppercase tracking-wide">Dil</div>
+                                                        <div className="text-slate-400 text-[10px]">{lang === 'tr' ? 'Türkçe' : lang === 'en' ? 'English' : lang === 'es' ? 'Español' : lang === 'fr' ? 'Français' : lang === 'ru' ? 'Русский' : 'Indonesia'}</div>
+                                                    </div>
+                                                </button>
+                                                <button onClick={() => setShowSettings(true)} className="fm-card flex-1 flex items-center gap-3 px-4 py-3 active:scale-95 transition-transform">
+                                                    <span className="text-2xl">⚙️</span>
+                                                    <div className="text-left">
+                                                        <div className="text-blue-300 font-bold text-xs uppercase tracking-wide">{t.settings || 'Ayarlar'}</div>
+                                                        <div className="text-slate-400 text-[10px]">Ses, motor...</div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => adMobService.isBannerVisible() ? adMobService.hideBanner() : adMobService.showBanner()} className="fm-card flex-1 flex items-center gap-3 px-4 py-3 active:scale-95 transition-transform">
+                                                    <img src="/assets/icon-ads-glass.jpg" className="w-8 h-8 rounded-lg object-cover mix-blend-screen opacity-80" alt="Ads" />
+                                                    <div className="text-left">
+                                                        <div className="text-emerald-400 font-bold text-xs uppercase tracking-wide">Reklam</div>
+                                                        <div className="text-slate-400 text-[10px]">Aç / Kapat</div>
+                                                    </div>
+                                                </button>
+                                                <button onClick={handleBackToProfiles} className="fm-card flex-1 flex items-center gap-3 px-4 py-3 active:scale-95 transition-transform">
+                                                    <img src="/assets/icon-exit-glass.jpg" className="w-8 h-8 rounded-lg object-cover mix-blend-screen opacity-80" alt="Exit" />
+                                                    <div className="text-left">
+                                                        <div className="text-rose-400 font-bold text-xs uppercase tracking-wide">{t.saveAndExit}</div>
+                                                        <div className="text-slate-400 text-[10px]">Kaydet & çık</div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             )}
                             {
                                 view === 'dashboard' && (
@@ -3280,7 +3486,7 @@ const App: React.FC = () => {
                                     />
                                 )
                             }
-                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} europeanCup={gameState.europeanCup} europaLeague={gameState.europaLeague} superCup={gameState.superCup} onPlayCupMatch={handlePlayEuropeanCupMatch} onPlaySuperCup={handlePlaySuperCup} onOpenCupDetails={() => gameState.europeanCup && setViewingCup({ cup: gameState.europeanCup, name: t.internationalEliteCup || 'International Elite Cup' })} onOpenEuropaDetails={() => gameState.europaLeague && setViewingCup({ cup: gameState.europaLeague, name: t.internationalChallengeCup || 'International Challenge Cup' })} />}
+                            {view === 'fixtures' && <FixturesView matches={gameState.matches.map(m => ({ ...m, events: m.events || [] }))} teams={gameState.teams} players={gameState.players} currentWeek={gameState.currentWeek} t={t} userTeamId={userTeam.id} userLeagueId={gameState.leagueId} availableLeagues={LEAGUE_PRESETS.map(l => ({ id: l.id, name: t[`league${l.country}` as keyof typeof t] as string || l.name }))} />}
                             {view === 'guide' && <GameGuide t={t} />}
                             {view === 'manager' && <ManagerProfile gameState={gameState} userTeam={userTeam} lang={lang} t={t} onBack={() => setView('dashboard')} onUpgradeTalent={handleUpgradeManagerTalent} onResetTalents={handleResetManagerTalents} onPurchaseCourse={handlePurchaseManagerCourse} onUpgradeStaff={handleUpgradeManagerStaff} />}
                         </div >
@@ -3360,6 +3566,14 @@ const App: React.FC = () => {
                 currentWeek={gameState?.currentWeek || 1}
                 progress={simulationProgress}
                 t={t}
+                doneResult={simDoneResult}
+                noMatchWeek={simNoMatchWeek}
+                onDismiss={() => {
+                    setSimDoneResult(null);
+                    setSimNoMatchWeek(false);
+                    setIsWeekSimulating(false);
+                    setSimulationProgress(0);
+                }}
             />
 
             {/* Settings Modal */}

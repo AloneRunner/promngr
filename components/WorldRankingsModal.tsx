@@ -117,7 +117,7 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in p-4 text-white">
-            <div className="bg-slate-900 border border-slate-700/50 rounded-2xl w-full max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="bg-slate-900 border border-slate-700/50 rounded-2xl w-full max-w-5xl h-[95vh] landscape:h-[92vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden">
                 {/* Header - Compact */}
                 <div className="p-3 sm:p-4 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-2 sm:gap-3">
@@ -173,12 +173,12 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-0">
                     {activeTab === 'clubs' && (
                         <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-950 text-slate-400 text-xs uppercase font-bold sticky top-0 z-10 shadow-lg">
+                            <thead className="bg-slate-950 text-slate-400 text-[10px] uppercase font-bold sticky top-0 z-10 shadow-lg">
                                 <tr>
-                                    <th className="p-4 text-center w-16">Rank</th>
-                                    <th className="p-4">Team</th>
-                                    <th className="p-4 text-right">Reputation</th>
-                                    <th className="p-4 text-right hidden sm:table-cell">Squad Value</th>
+                                    <th className="px-2 py-2 text-center w-10">#</th>
+                                    <th className="px-2 py-2">Takım</th>
+                                    <th className="px-2 py-2 text-right">Rep</th>
+                                    <th className="px-2 py-2 text-right">Değer</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
@@ -188,29 +188,29 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                                         className={`hover:bg-slate-800/30 transition-colors group ${onInspectTeam ? 'cursor-pointer' : ''}`}
                                         onClick={() => { if (onInspectTeam) { onInspectTeam(team.id); onClose(); } }}
                                     >
-                                        <td className={`p-4 text-center font-bold text-lg ${getRankColor(team.rank)}`}>
+                                        <td className={`px-2 py-2.5 text-center font-bold text-sm ${getRankColor(team.rank)}`}>
                                             #{team.rank}
                                         </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white shadow-inner" style={{ backgroundColor: team.primaryColor }}>
+                                        <td className="px-2 py-2.5">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-7 h-7 sm:w-9 sm:h-9 shrink-0 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-inner" style={{ backgroundColor: team.primaryColor }}>
                                                     {team.name.substring(0, 1)}
                                                 </div>
-                                                <div>
-                                                    <div className="font-bold text-white group-hover:text-emerald-400 transition-colors">{team.name}</div>
-                                                    <div className="text-xs text-slate-500 uppercase tracking-wider">{team.leagueId}</div>
+                                                <div className="min-w-0">
+                                                    <div className="font-bold text-white text-xs sm:text-sm group-hover:text-emerald-400 transition-colors truncate">{team.name}</div>
+                                                    <div className="text-[10px] text-slate-500 uppercase tracking-wider">{team.leagueId}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-right font-mono text-emerald-400 font-bold">
+                                        <td className="px-2 py-2.5 text-right font-mono text-emerald-400 font-bold text-sm">
                                             {team.reputation}
                                         </td>
-                                        <td className="p-4 text-right font-mono text-slate-300 hidden sm:table-cell">
+                                        <td className="px-2 py-2.5 text-right font-mono text-slate-300 text-xs">
                                             €{(team.squadValue / 1000000).toFixed(1)}M
                                         </td>
                                         {onInspectTeam && (
-                                            <td className="p-4 text-right">
-                                                <span className="text-xs text-slate-600 group-hover:text-emerald-400 transition-colors">Kadro →</span>
+                                            <td className="px-2 py-2.5 text-right hidden sm:table-cell">
+                                                <span className="text-xs text-slate-600 group-hover:text-emerald-400 transition-colors">→</span>
                                             </td>
                                         )}
                                     </tr>
@@ -221,42 +221,42 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
 
                     {activeTab === 'players' && (
                         <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-950 text-slate-400 text-xs uppercase font-bold sticky top-0 z-10 shadow-lg">
+                            <thead className="bg-slate-950 text-slate-400 text-[10px] uppercase font-bold sticky top-0 z-10 shadow-lg">
                                 <tr>
-                                    <th className="p-4 text-center w-16">Rank</th>
-                                    <th className="p-4">Player</th>
-                                    <th className="p-4 hidden sm:table-cell">Team</th>
-                                    <th className="p-4 text-center">Pos</th>
-                                    <th className="p-4 text-center">OVR</th>
-                                    <th className="p-4 text-center hidden sm:table-cell">Age</th>
+                                    <th className="px-2 py-2 text-center w-10">#</th>
+                                    <th className="px-2 py-2">Oyuncu</th>
+                                    <th className="px-2 py-2 hidden sm:table-cell">Takım</th>
+                                    <th className="px-2 py-2 text-center">Pos</th>
+                                    <th className="px-2 py-2 text-center">OVR</th>
+                                    <th className="px-2 py-2 text-center hidden sm:table-cell">Yaş</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
                                 {rankedPlayers.map((player, index) => (
                                     <tr key={player.id} className="hover:bg-slate-800/30 transition-colors group">
-                                        <td className={`p-4 text-center font-bold text-lg ${getRankColor(index + 1)}`}>
+                                        <td className={`px-2 py-2.5 text-center font-bold text-sm ${getRankColor(index + 1)}`}>
                                             #{index + 1}
                                         </td>
-                                        <td className="p-4">
+                                        <td className="px-2 py-2.5">
                                             <div className="flex flex-col">
-                                                <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
+                                                <div className="font-bold text-white text-xs sm:text-sm group-hover:text-blue-400 transition-colors">
                                                     {player.firstName} {player.lastName}
                                                 </div>
-                                                <div className="text-xs text-slate-500">{player.nationality}</div>
+                                                <div className="text-[10px] text-slate-500">{player.nationality}</div>
                                             </div>
                                         </td>
-                                        <td className="p-4 hidden sm:table-cell text-sm text-slate-300">
+                                        <td className="px-2 py-2.5 hidden sm:table-cell text-xs text-slate-300">
                                             {getTeamName(player.teamId)}
                                         </td>
-                                        <td className="p-4 text-center">
-                                            <span className="bg-slate-800 border border-slate-700 text-[10px] px-2 py-1 rounded text-slate-300">
+                                        <td className="px-2 py-2.5 text-center">
+                                            <span className="bg-slate-800 border border-slate-700 text-[9px] px-1.5 py-0.5 rounded text-slate-300">
                                                 {player.position}
                                             </span>
                                         </td>
-                                        <td className={`p-4 text-center font-mono text-lg ${getOverallColor(player.overall)}`}>
+                                        <td className={`px-2 py-2.5 text-center font-mono text-sm font-bold ${getOverallColor(player.overall)}`}>
                                             {player.overall}
                                         </td>
-                                        <td className="p-4 text-center text-slate-500 font-mono hidden sm:table-cell">
+                                        <td className="px-2 py-2.5 text-center text-slate-500 font-mono text-xs hidden sm:table-cell">
                                             {player.age}
                                         </td>
                                     </tr>
@@ -266,48 +266,43 @@ export const WorldRankingsModal: React.FC<WorldRankingsModalProps> = ({ isOpen, 
                     )}
 
                     {activeTab === 'leagues' && (
-                        <table className="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead className="bg-slate-950 text-slate-400 text-[10px] sm:text-xs uppercase font-bold sticky top-0 z-10 shadow-lg">
+                        <table className="w-full text-left border-collapse text-xs">
+                            <thead className="bg-slate-950 text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold sticky top-0 z-10 shadow-lg">
                                 <tr>
-                                    <th className="p-2 sm:p-3 text-center w-10 sm:w-14">Rank</th>
-                                    <th className="p-2 sm:p-3">League</th>
-                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y1</th>
-                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y2</th>
-                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y3</th>
-                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y4</th>
-                                    <th className="p-1 sm:p-2 text-center text-slate-500 font-mono">Y5</th>
-                                    <th className="p-2 sm:p-3 text-right text-emerald-400">Total</th>
-                                    <th className="p-2 sm:p-3 text-right hidden lg:table-cell">Squad Value</th>
+                                    <th className="px-1.5 py-2 text-center w-8">#</th>
+                                    <th className="px-2 py-2">Lig</th>
+                                    <th className="px-1 py-2 text-center text-slate-500 font-mono">Y1</th>
+                                    <th className="px-1 py-2 text-center text-slate-500 font-mono">Y2</th>
+                                    <th className="px-1 py-2 text-center text-slate-500 font-mono">Y3</th>
+                                    <th className="px-1 py-2 text-center text-slate-500 font-mono">Y4</th>
+                                    <th className="px-1 py-2 text-center text-slate-500 font-mono">Y5</th>
+                                    <th className="px-2 py-2 text-right text-emerald-400">Top</th>
+                                    <th className="px-2 py-2 text-right hidden sm:table-cell text-slate-500">Değer</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800/50">
                                 {rankedLeagues.map((league) => (
                                     <tr key={league.id} className="hover:bg-slate-800/30 transition-colors group">
-                                        <td className={`p-2 sm:p-3 text-center font-bold text-sm sm:text-base ${getRankColor(league.rank)}`}>
+                                        <td className={`px-1.5 py-2 text-center font-bold text-xs ${getRankColor(league.rank)}`}>
                                             #{league.rank}
                                         </td>
-                                        <td className="p-2 sm:p-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-md flex items-center justify-center font-bold bg-slate-800 text-slate-300 border border-slate-700 text-[10px] sm:text-xs">
+                                        <td className="px-2 py-2">
+                                            <div className="flex items-center gap-1.5">
+                                                <div className="w-6 h-6 rounded shrink-0 flex items-center justify-center font-bold bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">
                                                     {league.country.substring(0, 2).toUpperCase()}
                                                 </div>
-                                                <div>
-                                                    <div className="font-bold text-white group-hover:text-purple-400 transition-colors text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">{league.name}</div>
-                                                    <div className="text-[10px] sm:text-xs text-slate-500 hidden sm:block">{league.country}</div>
-                                                </div>
+                                                <div className="font-bold text-white group-hover:text-purple-400 transition-colors text-xs truncate max-w-[90px] sm:max-w-[140px]">{league.name}</div>
                                             </div>
                                         </td>
-                                        {/* 5-Year Coefficients - Now visible on all screens */}
                                         {league.coefficients.map((score, idx) => (
-                                            <td key={idx} className="p-1 sm:p-2 text-center font-mono text-slate-400 text-[10px] sm:text-xs">
+                                            <td key={idx} className="px-1 py-2 text-center font-mono text-slate-400 text-[10px]">
                                                 {score.toFixed(1)}
                                             </td>
                                         ))}
-
-                                        <td className="p-2 sm:p-3 text-right font-mono text-emerald-400 font-bold text-sm sm:text-base">
+                                        <td className="px-2 py-2 text-right font-mono text-emerald-400 font-bold text-xs">
                                             {league.reputation.toFixed(1)}
                                         </td>
-                                        <td className="p-2 sm:p-3 text-right font-mono text-slate-300 text-xs hidden lg:table-cell">
+                                        <td className="px-2 py-2 text-right font-mono text-slate-400 text-[10px] hidden sm:table-cell">
                                             €{(league.totalSquadValue / 1000000).toFixed(0)}M
                                         </td>
                                     </tr>

@@ -277,13 +277,12 @@ export class AIService {
         needsPerPos[pos]++;
       }
 
-      // Check Depth (We need at least 1 decent sub per line)
-      // Skip if already have plenty of depth
-      if (availablePlayers.length < requiredCount + 1 && needsPerPos[pos] < MAX_NEEDS_PER_POS) {
+      // Check Depth (We need at least 2 decent subs per line for bench coverage)
+      if (availablePlayers.length < requiredCount + 2 && needsPerPos[pos] < MAX_NEEDS_PER_POS) {
         needs.push({
           position: pos,
           role: this.recommendRole(pos, team.tactic),
-          urgency: 40,
+          urgency: availablePlayers.length < requiredCount + 1 ? 60 : 40, // More urgent if only 1 sub
           targetRating: ambitionBaseline - 5,
           reason: `Lack of depth at ${pos}`,
         });

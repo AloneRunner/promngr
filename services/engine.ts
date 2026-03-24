@@ -1796,6 +1796,7 @@ export const applyManagerProfileMatchProgression = (
     isHome?: boolean;
     engineUsed?: "classic" | "ikinc" | "ucuncu";
     comebackWin?: boolean;
+    isSimulated?: boolean; // true = weekly sim (not played live), achievements skipped
   },
 ): GameState => {
   if (input.teamId !== gameState.userTeamId) return gameState;
@@ -1836,20 +1837,25 @@ export const applyManagerProfileMatchProgression = (
 
   const engineUsed = input.engineUsed || getEngineChoice();
   const currentEngineMatches = hydratedState.managerProfile!.engineMatchesPlayed || {};
-  const newEngineMatchCount = (currentEngineMatches[engineUsed] || 0) + 1;
+  // Simulated matches don't count toward engine-pref achievements
+  const newEngineMatchCount = input.isSimulated
+    ? (currentEngineMatches[engineUsed] || 0)
+    : (currentEngineMatches[engineUsed] || 0) + 1;
 
   const updatedProfileBase: ManagerProfileData = {
     ...hydratedState.managerProfile!,
     xp: hydratedState.managerProfile!.xp + xpGain,
     reputation: Math.max(10, Math.min(100, hydratedState.managerProfile!.reputation + reputationDelta)),
     currentTeamId: input.teamId,
-    careerStats: {
-      ...hydratedState.managerProfile!.careerStats,
-      matchesManaged: hydratedState.managerProfile!.careerStats.matchesManaged + 1,
-      wins: hydratedState.managerProfile!.careerStats.wins + (won ? 1 : 0),
-      draws: hydratedState.managerProfile!.careerStats.draws + (drew ? 1 : 0),
-      losses: hydratedState.managerProfile!.careerStats.losses + (!won && !drew ? 1 : 0),
-    },
+    careerStats: input.isSimulated
+      ? hydratedState.managerProfile!.careerStats // Simulated: don't count in career stats
+      : {
+          ...hydratedState.managerProfile!.careerStats,
+          matchesManaged: hydratedState.managerProfile!.careerStats.matchesManaged + 1,
+          wins: hydratedState.managerProfile!.careerStats.wins + (won ? 1 : 0),
+          draws: hydratedState.managerProfile!.careerStats.draws + (drew ? 1 : 0),
+          losses: hydratedState.managerProfile!.careerStats.losses + (!won && !drew ? 1 : 0),
+        },
     engineMatchesPlayed: {
       ...currentEngineMatches,
       [engineUsed]: newEngineMatchCount,
@@ -1875,7 +1881,8 @@ export const applyManagerProfileMatchProgression = (
   let finalProfile = nextProfile;
   let finalMessages = newMessages;
 
-  if (won && !(finalProfile.unlockedAchievements || []).includes('FIRST_OFFICIAL_WIN')) {
+  // Simulated matches don't unlock any achievements
+  if (!input.isSimulated && won && !(finalProfile.unlockedAchievements || []).includes('FIRST_OFFICIAL_WIN')) {
     const achievementUnlock = unlockManagerAchievement(
       { ...hydratedState, messages: finalMessages },
       finalProfile,
@@ -1885,8 +1892,8 @@ export const applyManagerProfileMatchProgression = (
     finalMessages = achievementUnlock.messages;
   }
 
-  // Check Engine Preference Achievements
-  if (engineUsed === 'classic' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_CLASSIC')) {
+  // Check Engine Preference Achievements (only for live matches)
+  if (!input.isSimulated && engineUsed === 'classic' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_CLASSIC')) {
     const achievementUnlock = unlockManagerAchievement(
       { ...hydratedState, messages: finalMessages },
       finalProfile,
@@ -1895,7 +1902,7 @@ export const applyManagerProfileMatchProgression = (
     finalProfile = achievementUnlock.profile;
     finalMessages = achievementUnlock.messages;
   }
-  if (engineUsed === 'ikinc' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_ARCADE')) {
+  if (!input.isSimulated && engineUsed === 'ikinc' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_ARCADE')) {
     const achievementUnlock = unlockManagerAchievement(
       { ...hydratedState, messages: finalMessages },
       finalProfile,
@@ -1904,7 +1911,7 @@ export const applyManagerProfileMatchProgression = (
     finalProfile = achievementUnlock.profile;
     finalMessages = achievementUnlock.messages;
   }
-  if (engineUsed === 'ucuncu' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_PRO')) {
+  if (!input.isSimulated && engineUsed === 'ucuncu' && newEngineMatchCount === 10 && !(finalProfile.unlockedAchievements || []).includes('ENGINE_PREF_PRO')) {
     const achievementUnlock = unlockManagerAchievement(
       { ...hydratedState, messages: finalMessages },
       finalProfile,
@@ -1914,114 +1921,78 @@ export const applyManagerProfileMatchProgression = (
     finalMessages = achievementUnlock.messages;
   }
 
-  // ========== NEW ACHIEVEMENT CHECKS ==========
+  // ========== NEW ACHIEVEMENT CHECKS (live matches only) ==========
+  if (!input.isSimulated) {
+    // GOAL_MACHINE: Score 7+ goals in a single match
+    if (input.goalsFor >= 7 && !(finalProfile.unlockedAchievements || []).includes('GOAL_MACHINE')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'GOAL_MACHINE');
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
 
-  // GOAL_MACHINE: Score 7+ goals in a single match
-  if (input.goalsFor >= 7 && !(finalProfile.unlockedAchievements || []).includes('GOAL_MACHINE')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'GOAL_MACHINE',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
+    // DAVID_GOLIATH: Beat a team with 30%+ higher reputation
+    if (won && userTeam) {
+      const opponentRep = input.opponent.reputation || 5000;
+      const userRep = userTeam.reputation || 5000;
+      if (opponentRep >= userRep * 1.3 && !(finalProfile.unlockedAchievements || []).includes('DAVID_GOLIATH')) {
+        const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'DAVID_GOLIATH');
+        finalProfile = achievementUnlock.profile;
+        finalMessages = achievementUnlock.messages;
+      }
+    }
 
-  // DAVID_GOLIATH: Beat a team with 30%+ higher reputation
-  if (won && userTeam) {
-    const opponentRep = input.opponent.reputation || 5000;
-    const userRep = userTeam.reputation || 5000;
-    if (opponentRep >= userRep * 1.3 && !(finalProfile.unlockedAchievements || []).includes('DAVID_GOLIATH')) {
-      const achievementUnlock = unlockManagerAchievement(
-        { ...hydratedState, messages: finalMessages },
-        finalProfile,
-        'DAVID_GOLIATH',
-      );
+    // COMEBACK_KING: Win after trailing past the 70th minute
+    if (won && input.comebackWin && !(finalProfile.unlockedAchievements || []).includes('COMEBACK_KING')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'COMEBACK_KING');
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+
+    // MONEY_TALKS: Have 100M+ in the budget
+    if (userTeam && userTeam.budget >= 100_000_000 && !(finalProfile.unlockedAchievements || []).includes('MONEY_TALKS')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'MONEY_TALKS');
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+
+    // FIRST_MATCH: Play any live match
+    if (!(finalProfile.unlockedAchievements || []).includes('FIRST_MATCH')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'FIRST_MATCH');
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+
+    // CONTINENTAL_DEBUT: Play first European match
+    if (input.isEuropeanMatch && !(finalProfile.unlockedAchievements || []).includes('CONTINENTAL_DEBUT')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'CONTINENTAL_DEBUT');
+      finalProfile = achievementUnlock.profile;
+      finalMessages = achievementUnlock.messages;
+    }
+
+    // LEVEL_10: Reach manager level 10
+    if (finalProfile.level >= 10 && !(finalProfile.unlockedAchievements || []).includes('LEVEL_10')) {
+      const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'LEVEL_10');
       finalProfile = achievementUnlock.profile;
       finalMessages = achievementUnlock.messages;
     }
   }
 
-  // COMEBACK_KING: Win after trailing past the 70th minute (uses comebackWin flag from match)
-  if (won && input.comebackWin && !(finalProfile.unlockedAchievements || []).includes('COMEBACK_KING')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'COMEBACK_KING',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
-
-  // MONEY_TALKS: Have 100M+ in the budget
-  if (userTeam && userTeam.budget >= 100_000_000 && !(finalProfile.unlockedAchievements || []).includes('MONEY_TALKS')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'MONEY_TALKS',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
-
-  // CLEAN_SHEET_STREAK: 5 consecutive clean sheets
+  // CLEAN_SHEET_STREAK & AWAY_MACHINE: track streaks but only unlock achievement for live matches
   const prevCleanSheetStreak = finalProfile.cleanSheetStreak || 0;
   const newCleanSheetStreak = input.goalsAgainst === 0 ? prevCleanSheetStreak + 1 : 0;
   finalProfile = { ...finalProfile, cleanSheetStreak: newCleanSheetStreak };
-  if (newCleanSheetStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('CLEAN_SHEET_STREAK')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'CLEAN_SHEET_STREAK',
-    );
+  if (!input.isSimulated && newCleanSheetStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('CLEAN_SHEET_STREAK')) {
+    const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'CLEAN_SHEET_STREAK');
     finalProfile = achievementUnlock.profile;
     finalMessages = achievementUnlock.messages;
   }
 
-  // FIRST_MATCH: Play any match
-  if (!(finalProfile.unlockedAchievements || []).includes('FIRST_MATCH')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'FIRST_MATCH',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
-
-  // CONTINENTAL_DEBUT: Play first European match
-  if (input.isEuropeanMatch && !(finalProfile.unlockedAchievements || []).includes('CONTINENTAL_DEBUT')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'CONTINENTAL_DEBUT',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
-
-  // AWAY_MACHINE: 5 consecutive away wins
   const isAway = input.isHome === false;
   const prevAwayWinStreak = finalProfile.awayWinStreak || 0;
   const newAwayWinStreak = isAway ? (won ? prevAwayWinStreak + 1 : 0) : prevAwayWinStreak;
   finalProfile = { ...finalProfile, awayWinStreak: newAwayWinStreak };
-  if (newAwayWinStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('AWAY_MACHINE')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'AWAY_MACHINE',
-    );
-    finalProfile = achievementUnlock.profile;
-    finalMessages = achievementUnlock.messages;
-  }
-
-  // LEVEL_10: Reach manager level 10 (check after XP/level updates)
-  if (finalProfile.level >= 10 && !(finalProfile.unlockedAchievements || []).includes('LEVEL_10')) {
-    const achievementUnlock = unlockManagerAchievement(
-      { ...hydratedState, messages: finalMessages },
-      finalProfile,
-      'LEVEL_10',
-    );
+  if (!input.isSimulated && newAwayWinStreak >= 5 && !(finalProfile.unlockedAchievements || []).includes('AWAY_MACHINE')) {
+    const achievementUnlock = unlockManagerAchievement({ ...hydratedState, messages: finalMessages }, finalProfile, 'AWAY_MACHINE');
     finalProfile = achievementUnlock.profile;
     finalMessages = achievementUnlock.messages;
   }
@@ -3894,6 +3865,16 @@ export const getSubstitutedOutPlayerIds = (): Set<string> => {
   return new Set();
 };
 
+export const getSubsMade = (teamId: string): number => {
+  if (activeEngine) return activeEngine.getSubsMade(teamId);
+  return 0;
+};
+
+export const getMaxSubs = (): number => {
+  if (activeEngine) return activeEngine.getMaxSubs();
+  return 5;
+};
+
 export const simulateFullMatch = (
   match: Match,
   homeTeam: Team,
@@ -4119,10 +4100,10 @@ export const simulateLeagueRound = (
   // ========== SQUAD REGENERATION (Exploit Prevention) ==========
   // Minimum 16 players per team, position requirements enforced
   // Generated players are LOW QUALITY youth academy rejects (not exploitable)
-  const MIN_SQUAD_SIZE = 16;
+  const MIN_SQUAD_SIZE = 20;
   const MIN_GK = 2;
-  const MIN_DEF = 5;
-  const MIN_MID = 5;
+  const MIN_DEF = 6;
+  const MIN_MID = 6;
   const MIN_FWD = 4;
 
   let allPlayers = [...gameState.players];
@@ -4799,6 +4780,7 @@ export const simulateLeagueRound = (
           isEuropeanMatch,
           isHome: userIsHome,
           engineUsed: getEngineChoice(),
+          isSimulated: true, // weekly sim — achievements skipped, only XP/rep
         });
       }
     }
@@ -6958,7 +6940,7 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
               aiTeam.reputation >= 8500 ||
               aiTeam.budget >= 250_000_000 ||
               avgOverall >= 80;
-            const reserveBuffer = isEliteClub ? 2 : 1;
+            const reserveBuffer = isEliteClub ? 3 : 2;
             // Fully relative: floor tracks squad average so high-OVR squads still list surplus
             const swapListingFloor = Math.round(avgOverall - (isEliteClub ? 5 : 4));
 
@@ -7226,10 +7208,10 @@ export const processWeeklyEvents = (gameState: GameState, t: any, aiTransferActi
     const financialPressure =
       aiTeam.budget < 0 ||
       budgetRunwayWeeks < (eliteClub ? 18 : 12);
-    const reserveDepthBuffer = eliteClub ? 2 : 1;
+    const reserveDepthBuffer = eliteClub ? 3 : 2;
     const coreProtectionCount = Math.min(
       squadSize,
-      eliteClub ? 18 : strongClub ? 16 : 14,
+      eliteClub ? 22 : strongClub ? 20 : 18,
     );
     // Fully relative: no hard floor so high-OVR squads still list their weakest players
     const minimumListableOverall = Math.round(avgOverall - (eliteClub ? 5 : strongClub ? 4 : 4));

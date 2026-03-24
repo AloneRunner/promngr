@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { GameState, Player, Team, LineupStatus, MessageType } from '../../types';
 import { assignJerseyNumber, uuid } from '../utils/playerUtils';
 import { appendMessages, prunePendingOffers } from '../utils/stateLimits';
+import { getLeagueMultiplier } from '../../services/engine';
 
 interface UseTransferMarketProps {
     gameState: GameState | null;
@@ -52,58 +53,68 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         if (!userTeam) return;
 
         // ========== PLAYER AMBITION / WILLINGNESS SYSTEM ==========
-        // Elite players may REFUSE to join clubs far below their current club's reputation.
-        // A 90 OVR player at Man City won't join a Turkish mid-table team just because you paid the price.
-        // Factors: player OVR, player age, reputation gap, overpay ratio
+        // Factors: reputation gap, LEAGUE TIER DROP (dynamic), player age, OVR, overpay
         if (player.teamId !== 'FREE_AGENT') {
             const sellerTeam = currentGameState.teams.find(t => t.id === player.teamId);
             const sellerRep = sellerTeam?.reputation || 5000;
             const buyerRep = userTeam.reputation || 5000;
-            const repGap = sellerRep - buyerRep; // Positive = player coming from a BETTER club
+            const repGap = sellerRep - buyerRep;
 
-            // Only check ambition if player is coming from a significantly better club
-            if (repGap > 1000 && player.overall >= 80 && player.age <= 30) {
-                // Calculate willingness (0.0 = never, 1.0 = always accepts)
-                // Base: reputation gap reduces willingness
+            if (repGap > 800) {
                 let willingness = 1.0;
 
-                // Reputation penalty: larger gap = less willing
-                if (repGap > 4000) willingness -= 0.7;       // Massive gap (e.g. Man City → Kenya league)
-                else if (repGap > 3000) willingness -= 0.5;  // Huge gap (e.g. Barcelona → Turkey mid-table)
-                else if (repGap > 2000) willingness -= 0.35; // Big gap (e.g. Juventus → Turkey top)
-                else if (repGap > 1000) willingness -= 0.15; // Moderate gap
+                // 1. Reputation gap penalty
+                if (repGap > 4000) willingness -= 0.65;
+                else if (repGap > 3000) willingness -= 0.45;
+                else if (repGap > 2000) willingness -= 0.30;
+                else if (repGap > 1000) willingness -= 0.15;
+                else willingness -= 0.05;
 
-                // OVR penalty: higher rated players are pickier
-                if (player.overall >= 90) willingness -= 0.3;      // World class — very picky
-                else if (player.overall >= 87) willingness -= 0.2; // Elite — picky
-                else if (player.overall >= 84) willingness -= 0.1; // Quality — slightly picky
+                // 2. LEAGUE TIER DROP — dynamic via getLeagueMultiplier
+                const srcMult = getLeagueMultiplier(sellerTeam?.leagueId || '');
+                const dstMult = getLeagueMultiplier(userTeam.leagueId);
+                const tierDrop = srcMult - dstMult; // Positive = moving to weaker league
 
-                // Age bonus: older players are more willing to move for money
-                if (player.age >= 29) willingness += 0.25;   // Career winding down, open to adventure
-                else if (player.age >= 27) willingness += 0.1;
+                if (tierDrop > 0.7) {
+                    // Big drop (e.g. PL/La Liga → Turkish/smaller league)
+                    if (player.age < 27) willingness -= 0.65;       // Young prime: very reluctant
+                    else if (player.age < 30) willingness -= 0.40;  // Late prime: reluctant
+                    else willingness -= 0.10;                        // 30+: slight penalty (career move)
+                } else if (tierDrop > 0.35) {
+                    // Medium drop (e.g. Bundesliga → Turkish)
+                    if (player.age < 27) willingness -= 0.35;
+                    else if (player.age < 30) willingness -= 0.15;
+                    // 30+: no extra penalty for medium drops
+                }
 
-                // Overpay bonus: paying significantly above market value shows commitment
+                // 3. Age: veterans more open to adventure/money
+                if (player.age >= 32) willingness += 0.35;
+                else if (player.age >= 29) willingness += 0.20;
+                else if (player.age >= 27) willingness += 0.05;
+
+                // 4. Overpay — money helps but can't fully replace prestige gap
                 const overpayRatio = finalPrice / Math.max(1, player.value);
-                if (overpayRatio >= 2.0) willingness += 0.4;       // Paying 2x+ value = strong motivation
-                else if (overpayRatio >= 1.5) willingness += 0.25; // 1.5x = decent incentive
-                else if (overpayRatio >= 1.2) willingness += 0.1;  // Slight premium
+                if (overpayRatio >= 2.5) willingness += 0.20;
+                else if (overpayRatio >= 2.0) willingness += 0.14;
+                else if (overpayRatio >= 1.5) willingness += 0.07;
+                else if (overpayRatio >= 1.2) willingness += 0.03;
 
-                // Morale penalty: unhappy players are MORE willing to leave
-                if ((player.morale || 75) < 40) willingness += 0.3; // Unhappy = wants out
+                // 5. Unhappy players more willing to leave
+                if ((player.morale || 75) < 40) willingness += 0.25;
 
-                // Clamp willingness
-                willingness = Math.max(0.05, Math.min(1.0, willingness));
+                willingness = Math.max(0.02, Math.min(0.97, willingness));
 
-                // Roll the dice
                 if (Math.random() > willingness) {
-                    // Player REFUSES the transfer
-                    const refusalReasons = [
-                        t.playerRefusedAmbition || `${player.firstName} ${player.lastName} kariyer hedefleri nedeniyle takımınıza transfer olmayı reddetti. Daha prestijli bir kulüpte oynamak istiyor.`,
-                        t.playerRefusedReputation || `${player.firstName} ${player.lastName} takımınızın itibarını yeterli görmedi ve teklifi reddetti.`,
-                        t.playerRefusedChampionsLeague || `${player.firstName} ${player.lastName} Şampiyonlar Ligi'nde oynamak istiyor ve teklifinizi geri çevirdi.`
-                    ];
-                    alert(refusalReasons[Math.floor(Math.random() * refusalReasons.length)]);
-                    return; // Transfer cancelled — player says no
+                    // Player refuses — add as inbox message instead of alert
+                    const reason = tierDrop > 0.7 && player.age < 30
+                        ? `${player.firstName} ${player.lastName} daha prestijli bir ligde oynamayı tercih ediyor ve teklifinizi reddetti.`
+                        : `${player.firstName} ${player.lastName} kariyer hedefleri nedeniyle transferi kabul etmedi.`;
+                    setGameState(prev => {
+                        if (!prev) return null;
+                        const msg = { id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: 'Transfer Reddedildi', body: reason, isRead: false, date: new Date().toISOString() };
+                        return { ...prev, messages: [msg, ...prev.messages].slice(0, 200) };
+                    });
+                    return;
                 }
             }
         }
@@ -112,9 +123,12 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         const transferTax = Math.floor(finalPrice * 0.10);
         const totalCost = finalPrice + transferTax;
 
-        // Validation Check (Outside setGameState)
         if (userTeam.budget < totalCost) {
-            alert(t.notEnoughFunds);
+            setGameState(prev => {
+                if (!prev) return null;
+                const msg = { id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: 'Yetersiz Bütçe', body: t.notEnoughFunds || 'Transfer için yeterli bütçeniz yok.', isRead: false, date: new Date().toISOString() };
+                return { ...prev, messages: [msg, ...prev.messages].slice(0, 200) };
+            });
             return;
         }
 
@@ -171,7 +185,6 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
         });
 
         setNegotiatingPlayer(null);
-        alert(`${t.successfullySigned} ${player.lastName} for €${(finalPrice / 1000000).toFixed(2)}M! (+€${(transferTax / 1000000).toFixed(2)}M transfer vergisi)`);
     }, [setGameState, t]);
 
 

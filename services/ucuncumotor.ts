@@ -279,6 +279,13 @@ const getAllFatigueModifiers = (
     : getFieldPlayerFatigueModifiers(stamina);
 };
 
+// === MORAL ETKİSİ (hem user hem AI için geçerli) ===
+const getMoraleMod = (morale: number): number => {
+  if (morale >= 65) return 1.0 + Math.min(0.06, ((morale - 65) / 35) * 0.06);
+  if (morale >= 40) return 1.0;
+  return 0.90 + (morale / 40) * 0.10;
+};
+
 // === BASİTLEŞTİRİLMİŞ YORGUNLUK FONKSİYONU (geriye uyumluluk için) ===
 // type: 'physical' (hız, ivme), 'technical' (pas, şut, dribling), 'mental' (karar, pozisyon)
 const getFatigueModifier = (
@@ -2095,6 +2102,14 @@ export class MatchEngine {
     return this.playerStates[id]?.currentStamina;
   }
 
+  public getSubsMade(teamId: string): number {
+    return this.homeTeam.id === teamId ? this.homeSubsMade : this.awaySubsMade;
+  }
+
+  public getMaxSubs(): number {
+    return this.MAX_SUBS;
+  }
+
   // --- COMMUNICATION SYSTEM ---
   private emitTeamSignal(
     from: Player,
@@ -2790,10 +2805,16 @@ export class MatchEngine {
               startX = isHome ? 66 : PITCH_LENGTH - 66;
             }
           } else {
-            if (role === Position.FWD) {
-              startX = isHome ? 83 : PITCH_LENGTH - 83;
+            // Defending team: clear of the kicking area
+            if (role === Position.GK) {
+              startX = isHome ? PITCH_LENGTH - 10 : 10;
+              startY = PITCH_CENTER_Y;
             } else if (role === Position.DEF) {
-              startX = isHome ? 49 : PITCH_LENGTH - 49;
+              startX = isHome ? PITCH_LENGTH - 35 : 35;
+            } else if (role === Position.MID) {
+              startX = isHome ? PITCH_LENGTH - 45 : 45;
+            } else if (role === Position.FWD) {
+              startX = isHome ? PITCH_LENGTH - 20 : 20;
             }
           }
         } else if (mode.includes("CORNER")) {
@@ -4425,11 +4446,12 @@ export class MatchEngine {
                 this.traceLog.push(
                   `🚩 OFSAYT! ${p.lastName} sahipsiz topu ofsayt pozisyonda aldı!`,
                 );
+                const defendingTeamId = isPlayerHome ? this.awayTeam.id : this.homeTeam.id;
                 this.pendingEvents.push({
                   minute: this.internalMinute,
                   type: MatchEventType.OFFSIDE,
-                  description: `🚩 ${p.lastName} offside! Free kick.`,
-                  teamId: p.teamId,
+                  description: `🚩 ${p.lastName} ofsayt! Rakip serbest vuruş kullanacak.`,
+                  teamId: defendingTeamId,
                   playerId: p.id,
                 });
                 // Rakip takıma ver
@@ -10352,11 +10374,12 @@ export class MatchEngine {
     // === YORGUNLUK DAHİL GERÇEK STATLAR ===
     const isGK = carrier.position === Position.GK;
     const fatigueMods = getAllFatigueModifiers(state.currentStamina, isGK);
+    const moraleMod = getMoraleMod(carrier.morale ?? 50);
 
-    const pasStat = carrier.attributes.passing * fatigueMods.passing;
-    const vision = carrier.attributes.vision * fatigueMods.vision;
-    const composure = carrier.attributes.composure * fatigueMods.composure;
-    const decisions = carrier.attributes.decisions * fatigueMods.decisions;
+    const pasStat = carrier.attributes.passing * fatigueMods.passing * moraleMod;
+    const vision = carrier.attributes.vision * fatigueMods.vision * moraleMod;
+    const composure = carrier.attributes.composure * fatigueMods.composure * moraleMod;
+    const decisions = carrier.attributes.decisions * fatigueMods.decisions * moraleMod;
 
     let tx = targetOverrideX !== undefined ? targetOverrideX : tPos.x;
     let ty = targetOverrideY !== undefined ? targetOverrideY : tPos.y;
@@ -10643,13 +10666,14 @@ export class MatchEngine {
 
     // === GLOBAL SKILL BUFF (PHASE 14 - HYBRID ENGINE) ===
     const GLOBAL_BUFF = 1.2; // G Motoru Akışkanlık Bonusu
+    const moraleMod = getMoraleMod(p.morale ?? 50);
 
-    const fin = p.attributes.finishing * fatigueMods.finishing * GLOBAL_BUFF;
-    const pwr = p.attributes.strength * fatigueMods.strength * GLOBAL_BUFF;
+    const fin = p.attributes.finishing * fatigueMods.finishing * GLOBAL_BUFF * moraleMod;
+    const pwr = p.attributes.strength * fatigueMods.strength * GLOBAL_BUFF * moraleMod;
 
     // Composure ve Decisions da bufflanıyor (soğukkanlılık artsın)
-    const composure = p.attributes.composure * fatigueMods.composure * 1.1;
-    const decisions = p.attributes.decisions * fatigueMods.decisions * 1.1;
+    const composure = p.attributes.composure * fatigueMods.composure * 1.1 * moraleMod;
+    const decisions = p.attributes.decisions * fatigueMods.decisions * 1.1 * moraleMod;
 
     // === xG HESABI (BUFF v2: Bitiricilerin Etkisi Artirildi) ===
     const distToGoal = dist(pos.x, pos.y, goalX, PITCH_CENTER_Y);
@@ -10730,19 +10754,18 @@ export class MatchEngine {
     let traceText = `${p.lastName} şut çekti!`;
     const ballZ = this.sim.ball.z || 0;
 
-    // 0. FREE KICK DETECTION
+    // 0. FREE KICK DETECTION — only fires during actual FREE_KICK set piece mode
     const isStationary =
       Math.abs(this.sim.players[p.id].vx) < 0.1 &&
       Math.abs(this.sim.players[p.id].vy) < 0.1;
-    const nearbyEnemies = enemyPlayers.filter((e) => {
-      const ePos = this.sim.players[e.id];
-      return ePos && dist(ePos.x, ePos.y, pos.x, pos.y) < 8;
-    });
+    const isRealFreeKickMode =
+      this.sim.mode === "FREE_KICK_HOME" ||
+      this.sim.mode === "FREE_KICK_AWAY";
     const isFreeKickShot =
+      isRealFreeKickMode &&
       isStationary &&
-      nearbyEnemies.length === 0 &&
-      distToGoal > 18 &&
-      distToGoal < 35;
+      distToGoal > 14 &&
+      distToGoal < 40;
 
     if (isFreeKickShot) {
       shotType = "FREE_KICK";
@@ -11165,10 +11188,12 @@ export class MatchEngine {
 
     // BUFF: General Defense Quality +10% (was +5%)
     // HYBRID: Defansif Global Buff (1.10 -> 1.20 yapmıyoruz, defans zaten güçlü)
+    const defMoraleMod = getMoraleMod(defender.morale ?? 50);
     let effectiveDef =
       applyStatFloor(defender.attributes.tackling, 45) *
       defFatigueMods.tackling *
-      1.1;
+      1.1 *
+      defMoraleMod;
     const defStrength =
       applyStatFloor(defender.attributes.strength, 40) *
       defFatigueMods.strength;
@@ -11203,8 +11228,9 @@ export class MatchEngine {
     );
 
     // BUFF: General Dribbling Quality +5%
+    const attMoraleMod = getMoraleMod(attacker.morale ?? 50);
     let effectiveDri =
-      attacker.attributes.dribbling * attFatigueMods.dribbling * 1.05;
+      attacker.attributes.dribbling * attFatigueMods.dribbling * 1.05 * attMoraleMod;
     const attStrength = attacker.attributes.strength * attFatigueMods.strength;
     const attComposure =
       attacker.attributes.composure * attFatigueMods.composure;
@@ -11674,8 +11700,8 @@ export class MatchEngine {
       })[0];
     } else if (mode.includes("FREE_KICK")) {
       taker = attackingTeamPlayers.sort((a, b) => {
-        const scoreA = a.attributes.finishing + (a.playStyles?.includes("Ölü Top Uzmanı") ? 35 : 0) + (a.playStyles?.includes("Plase Şut") ? 15 : 0) + (a.playStyles?.includes("Roket") ? 10 : 0);
-        const scoreB = b.attributes.finishing + (b.playStyles?.includes("Ölü Top Uzmanı") ? 35 : 0) + (b.playStyles?.includes("Plase Şut") ? 15 : 0) + (b.playStyles?.includes("Roket") ? 10 : 0);
+        const scoreA = a.attributes.finishing + (a.attributes.composure || 0) * 0.3 + (a.playStyles?.includes("Ölü Top Uzmanı") ? 35 : 0) + (a.playStyles?.includes("Plase Şut") ? 15 : 0) + (a.playStyles?.includes("Roket") ? 10 : 0);
+        const scoreB = b.attributes.finishing + (b.attributes.composure || 0) * 0.3 + (b.playStyles?.includes("Ölü Top Uzmanı") ? 35 : 0) + (b.playStyles?.includes("Plase Şut") ? 15 : 0) + (b.playStyles?.includes("Roket") ? 10 : 0);
         return scoreB - scoreA;
       })[0];
     } else {
@@ -11862,7 +11888,7 @@ export class MatchEngine {
           simWp.vy = 0;
           simWp.facing = Math.atan2(y - simWp.y, x - simWp.x);
           if (this.playerStates[wp.id]) {
-            this.playerStates[wp.id].actionLock = 8;
+            this.playerStates[wp.id].actionLock = 40; // Hold wall until taker shoots
           }
         }
       });
