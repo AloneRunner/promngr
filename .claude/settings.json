@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(mv \"c:/Users/kaano/OneDrive/Desktop/10/fixbudgets.js\" \"c:/Users/kaano/OneDrive/Desktop/10/fixbudgets.cjs\")",
+      "Bash(node fixbudgets.cjs)",
+      "Bash(grep -A5 'id: \"\"\"\"nl\"\"\"\"' \"c:/Users/kaano/OneDrive/Desktop/10/src/data/teams.ts\")",
+      "Bash(node fix2.cjs)",
+      "Bash(node fix3.cjs)",
+      "Bash(grep -rn \"WorldRankings\\\\|showWorldRankings\" c:/Users/kaano/OneDrive/Desktop/10/ --include=*.tsx --include=*.ts -l)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\kaano\\OneDrive\\Desktop\\10\\services"
+    ]
+  }
+}

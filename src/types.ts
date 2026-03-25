@@ -266,6 +266,7 @@ export interface PerformanceSettings {
     backgroundSimulation: boolean;     // Hafta simülasyonu arka planda çalışsın (loading ekranı)
     autoSave: 'ALWAYS' | 'WEEKLY' | 'MONTHLY'; // Otomatik kayıt sıklığı
     aiTransferActivity: 'LOW' | 'NORMAL' | 'HIGH'; // AI takımların transfer piyasası aktivitesi
+    goalReplay?: boolean;              // Gol sonrası yavaş çekim tekrar
 }
 
 export interface GameState {

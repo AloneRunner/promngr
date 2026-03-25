@@ -410,7 +410,8 @@ const App: React.FC = () => {
             detailedStats: true,
             backgroundSimulation: true,
             autoSave: 'WEEKLY' as const,
-            aiTransferActivity: 'NORMAL' as const
+            aiTransferActivity: 'NORMAL' as const,
+            goalReplay: true
         };
 
         if (performanceSettings.backgroundSimulation) {
@@ -2840,6 +2841,7 @@ const App: React.FC = () => {
                                 onSync={simulation.handleMatchSync} onFinish={handleMatchFinish} onInstantFinish={simulation.handleInstantFinish}
                                 onSubstitute={handleSubstitution} onUpdateTactic={simulation.handleUpdateTactic} onAutoFix={handleAutoFix}
                                 userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
+                                goalReplay={gameState.performanceSettings?.goalReplay ?? true}
                             />
                         ) : (
                             <MatchCenter
@@ -3585,7 +3587,8 @@ const App: React.FC = () => {
                     detailedStats: true,
                     backgroundSimulation: true,
                     autoSave: 'WEEKLY',
-                    aiTransferActivity: 'NORMAL'
+                    aiTransferActivity: 'NORMAL',
+                    goalReplay: true
                 }}
                 onSettingsChange={(settings) => {
                     if (gameState) {

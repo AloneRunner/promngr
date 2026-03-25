@@ -23,6 +23,7 @@ interface DetailedMatchCenterProps {
     t: Translation;
     debugLogs: string[];
     onPlayerClick: (player: Player) => void;
+    goalReplay?: boolean;
 }
 
 type LiveAttackPlan = {
@@ -598,7 +599,8 @@ const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z
 
 const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     match, homeTeam, awayTeam, homePlayers, awayPlayers, onSync, onFinish, onInstantFinish,
-    onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, debugLogs, onPlayerClick
+    onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, debugLogs, onPlayerClick,
+    goalReplay = true
 }) => {
     const [speed, setSpeed] = useState(1.0);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -608,6 +610,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const managedSideRef = useRef<'HOME' | 'AWAY'>('HOME');
     const [useDefaultColors, setUseDefaultColors] = useState(false);
     const [showNames, setShowNames] = useState(true);
+    const [isGoalReplayEnabled, setIsGoalReplayEnabled] = useState(goalReplay);
     const [cameraTracking, setCameraTracking] = useState(false); // Kamera takibi isteğe bağlı
     const [activeTab, setActiveTab] = useState<'PITCH' | 'FEED' | 'STATS'>('PITCH');
     const [isLandscape, setIsLandscape] = useState(false);
@@ -615,6 +618,16 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     const [goalFlash, setGoalFlash] = useState<'HOME' | 'AWAY' | null>(null);
     const [goalBanner, setGoalBanner] = useState<{ text: string; side: 'HOME' | 'AWAY' } | null>(null);
     const goalBannerTimerRef = useRef<number | null>(null);
+    // === GOL TEKRARI ===
+    const REPLAY_BUFFER_SIZE = 180; // ~6 saniye @ 20fps (180 * 50ms)
+    const replayBufferRef = useRef<any[]>([]); // ring buffer — her tick beslenir
+    const replaySnapshotRef = useRef<any[]>([]); // gol anında dondurulan kopya
+    const [isReplaying, setIsReplaying] = useState(false);
+    const isReplayingRef = useRef(false);
+    const replayFrameRef = useRef(0);
+    const replayZoomRef = useRef(1.0);
+    const replayZoomCenterRef = useRef({ x: 50, y: 50 }); // pitch % coords
+    const replayTimerRef = useRef<number | null>(null);
     const [showHalfTime, setShowHalfTime] = useState(false);
     const [setPieceCue, setSetPieceCue] = useState<{ label: string; accent: string } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -957,11 +970,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         if (speed > 0) {
             const ms = speed === 2 ? 25 : speed === 0.5 ? 100 : speed === 4 ? 12 : 50;
             logicTimerRef.current = window.setInterval(() => {
+                if (isReplayingRef.current) return; // replay sırasında simülasyonu durdur
                 const result = simulateTick(matchRef.current, homeTeamRef.current, awayTeamRef.current, homePlayersRef.current, awayPlayersRef.current, userTeamId);
                 if (result.simulation) {
                     lastTickState.current = nextTickState.current || result.simulation;
                     nextTickState.current = result.simulation;
                     lastTickTime.current = performance.now();
+                    // Simülasyon objesi mutable olduğu için derin kopya alıyoruz, 
+                    // aksi halde buffer'daki tüm objeler aynı referansta kalır ve "donmuş ekran" sorunu olur
+                    try {
+                        const simDeepClone = JSON.parse(JSON.stringify(result.simulation));
+                        replayBufferRef.current.push(simDeepClone);
+                    } catch(e) { /* fallback */ }
+                    
+                    if (replayBufferRef.current.length > REPLAY_BUFFER_SIZE) replayBufferRef.current.shift();
                 }
 
                 // Play event sounds
@@ -975,6 +997,18 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                             if (goalBannerTimerRef.current) window.clearTimeout(goalBannerTimerRef.current);
                             setGoalBanner({ text: bannerText, side: goalSide });
                             goalBannerTimerRef.current = window.setTimeout(() => setGoalBanner(null), 3500);
+                            // Gol tekrarı — 1.5s sonra başlat (banner görünsün)
+                            if (isGoalReplayEnabled) {
+                                // Son iki tick'te muhtemelen top merkeze dönmüş olabilir (engine reset). 
+                                // Olayın çok gerisinden başlamaması için son ~2.7 saniyelik/55 tick'lik kısmı alıyoruz (55 * 110ms = ~6 saniye replay)
+                                const startIndex = Math.max(0, replayBufferRef.current.length - 55);
+                                const endIndex = Math.max(1, replayBufferRef.current.length - 2);
+                                const cleanSnapshot = startIndex < endIndex ? replayBufferRef.current.slice(startIndex, endIndex) : replayBufferRef.current;
+                                const scoringTeamIsHome = result.event.teamId === homeTeamRef.current.id;
+                                const goalX = scoringTeamIsHome ? 97 : 3;
+                                const goalY = 50;
+                                window.setTimeout(() => startReplayRef.current(cleanSnapshot, goalX, goalY), 1500);
+                            }
                             break;
                         }
                         case MatchEventType.CARD_YELLOW:
@@ -1026,7 +1060,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                 }
             }, ms);
         }
-    }, [speed, match.isPlayed, soundEnabled, userTeamId, onSync, triggerSetPiecePause]);
+    }, [speed, match.isPlayed, soundEnabled, userTeamId, onSync, triggerSetPiecePause, isReplaying]);
 
     // Draw Sprite/Pixel Player (Dynamic Actions & Animations!)
     const drawSpritePlayer = (
@@ -1034,7 +1068,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         xPct: number, yPct: number, z: number, facing: number,
         primary: string, secondary: string, num: number,
         hasBall: boolean, name: string, state: string, stamina: number,
-        velocity: number,    // 0..~1 normalised movement speed this tick
+        velocity: number,    // ...~1 normalised movement speed this tick
         stridePhase: number, // distance-driven gait phase (foot planting)
         actionBlend: number, // short transition hold for kick/tackle/dive
         phaseOffset: number, // per-player unique walk phase (0..2π)
@@ -1746,6 +1780,42 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         ctx.restore();
     };
 
+    // === GOL TEKRARI — REPLAY BAŞLATICI ===
+    const startReplayRef = useRef<(snapshot: any[], ballX: number, ballY: number) => void>(() => {});
+
+    const startReplay = useCallback((snapshot: any[], ballX: number, ballY: number) => {
+        if (!isGoalReplayEnabled || snapshot.length < 10) return;
+        if (logicTimerRef.current) { window.clearInterval(logicTimerRef.current); logicTimerRef.current = null; }
+        if (replayTimerRef.current) { window.clearInterval(replayTimerRef.current); replayTimerRef.current = null; }
+        replaySnapshotRef.current = snapshot;
+        replayFrameRef.current = 0;
+        replayZoomCenterRef.current = { x: ballX, y: ballY };
+        replayZoomRef.current = 1.0;
+        isReplayingRef.current = true;
+        setIsReplaying(true);
+        // Her 150ms'de bir frame ilerle → ~0.33x yavaş çekim
+        replayTimerRef.current = window.setInterval(() => {
+            const snap = replaySnapshotRef.current;
+            const idx = replayFrameRef.current;
+            if (idx >= snap.length - 1) {
+                window.clearInterval(replayTimerRef.current!);
+                replayTimerRef.current = null;
+                isReplayingRef.current = false;
+                setIsReplaying(false);
+                return;
+            }
+            replayFrameRef.current = idx + 1;
+            lastTickState.current = snap[Math.max(0, idx)];
+            nextTickState.current = snap[idx + 1];
+            lastTickTime.current = performance.now();
+            
+            // Kullanıcı isteği: Kameranın olay yerine 'birden' gelmesi ve yavaş yavaş yakınlaşmak yerine direk izletmesi.
+            replayZoomRef.current = 1.9;
+        }, 110);
+    }, [isGoalReplayEnabled]);
+    // Her render'da ref'i güncelle — useEffect kapanımları eski versiyonu yakalamaz
+    startReplayRef.current = startReplay;
+
     // Render loop
     const render = useCallback(() => {
         if (!canvasRef.current || !lastTickState.current || !nextTickState.current) {
@@ -1789,6 +1859,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
             targetCamY = lerp(pb.y, nb.y, alpha);
         }
 
+        // --- REPLAY KAMERA GEÇERSİZ KILMA ---
+        if (isReplayingRef.current) {
+            // Replay oynarken doğrudan gol ağzına (veya hedeflenen merkeze) odaklan
+            const rCenter = replayZoomCenterRef.current;
+            // Aksiyona tam kilitlenmek yerine kaleye yakın bölgeye bak, top yaklaşıyorsa top+kale
+            // Yumuşak geçiş için sadece hedeflenen pozisyonu değiştiriyoruz
+            const diffX = rCenter.x - targetCamX;
+            // Eğer top kaleye çok uzaksa (replay başı), kamerayı top ile kale arasında tutuyoruz
+            // Top kaleye yaklaştıkça kaleye tam kitleniyor
+            const weight = Math.min(1.0, Math.max(0, 1.0 - (Math.abs(diffX) / 40)));
+            targetCamX = lerp(targetCamX, rCenter.x, weight * 0.8 + 0.2);
+            targetCamY = lerp(targetCamY, rCenter.y, weight * 0.8 + 0.2);
+        }
+
         // Kamerayi topun etrafinda tutarken cizgilere fazla yaslanmasini engelle.
         // Boylece saha disi daha az gorunur ve takip daha dengeli hissedilir.
         targetCamX = clamp(targetCamX, 22, 78);
@@ -1806,27 +1890,35 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         let camOffsetY = centerScreen.y - camFocusScreen.y;
 
         ctx.save();
-        // Zoom-in efekti verip, hesapladığımız ofseti uyguluyoruz.
-        // Daha sinematik bir his için sahanın geri kalanı ekran dışına taşabilir.
-        if (cameraTrackingRef.current) {
-            const ZOOM_LEVEL = 1.58;
-            
-            // Kamera kaymasını sınırla (Clamp): Ekranın kenarlarında boşluk/siyahlık (render edilmemiş alan) görmemek için.
-            const maxOffsetX = (CANVAS_W * ZOOM_LEVEL - CANVAS_W) / 2;
-            const maxOffsetY = (CANVAS_H * ZOOM_LEVEL - CANVAS_H) / 2;
+        // === KAMERA RENDER & ZOOMLAR ===
+        let appliedZoom = 1.0;
+        
+        // Replay modunda ana zoom ve tracking'i birleştiriyoruz
+        if (isReplayingRef.current) {
+            appliedZoom = Math.max(1.0, replayZoomRef.current);
+            // Gol tekrarında daha sinematik olması için temel tracking zoomunu da ekleyebiliriz
+            if (cameraTrackingRef.current) {
+                appliedZoom *= 1.3; // Replay modunda biraz ekstra zoom
+            }
+        } else if (cameraTrackingRef.current) {
+            appliedZoom = 1.58;
+        }
+
+        if (appliedZoom > 1.0) {
+            const maxOffsetX = (CANVAS_W * appliedZoom - CANVAS_W) / 2;
+            const maxOffsetY = (CANVAS_H * appliedZoom - CANVAS_H) / 2;
+            // Güvenlik sınırları
             const safeOffsetX = Math.max(0, maxOffsetX - 92);
             const safeOffsetY = Math.max(0, maxOffsetY - 56);
             
-            camOffsetX = Math.max(-safeOffsetX, Math.min(safeOffsetX, camOffsetX));
-            camOffsetY = Math.max(-safeOffsetY, Math.min(safeOffsetY, camOffsetY));
+            camOffsetX = Math.max(-safeOffsetX, Math.min(safeOffsetX, camOffsetX * appliedZoom));
+            camOffsetY = Math.max(-safeOffsetY, Math.min(safeOffsetY, camOffsetY * appliedZoom));
 
-            // Float değerlerinden kaynaklı 'iz bırakma (Ghosting/Subpixel rendering)' sorununu önlemek için 
-            // kameranın pozisyonunu tam sayılara (Math.round) yuvarlıyoruz
             ctx.translate(CANVAS_W / 2, CANVAS_H / 2);
-            ctx.scale(ZOOM_LEVEL, ZOOM_LEVEL);
+            ctx.scale(appliedZoom, appliedZoom);
             ctx.translate(-CANVAS_W / 2, -CANVAS_H / 2);
             
-            ctx.translate(Math.round(camOffsetX), Math.round(camOffsetY));
+            ctx.translate(Math.round(camOffsetX / appliedZoom), Math.round(camOffsetY / appliedZoom));
         }
 
         // 1. Draw Field Environment
@@ -2364,6 +2456,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
                                     <Camera size={13} />
                                 </button>
+                                <button onClick={() => setIsGoalReplayEnabled(!isGoalReplayEnabled)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${isGoalReplayEnabled ? 'bg-fuchsia-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                    <MonitorPlay size={13} />
+                                </button>
                                 <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
                                     <Settings size={13} />
                                 </button>
@@ -2420,8 +2515,14 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 <button onClick={() => setUseDefaultColors(!useDefaultColors)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${useDefaultColors ? 'bg-emerald-600/80 border-emerald-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
                                     <Palette size={14} />
                                 </button>
+                                <button onClick={() => setShowNames(!showNames)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white text-[9px] font-black ${showNames ? 'bg-amber-600/80 border-amber-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
+                                    ID
+                                </button>
                                 <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${cameraTracking ? 'bg-indigo-600/80 border-indigo-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
                                     <Camera size={14} />
+                                </button>
+                                <button onClick={() => setIsGoalReplayEnabled(!isGoalReplayEnabled)} className={`w-8 h-8 rounded-full border flex items-center justify-center text-white ${isGoalReplayEnabled ? 'bg-fuchsia-600/80 border-fuchsia-400/30' : 'bg-slate-700/80 border-slate-500/30'}`}>
+                                    <MonitorPlay size={14} />
                                 </button>
                                 <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-full bg-purple-600/80 border border-purple-400/30 flex items-center justify-center text-white">
                                     <Settings size={14} />
@@ -2487,7 +2588,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     {!isLandscape && !isSmallLandscape ? (
                         <>
                             {/* Canvas at top, full width */}
-                            <div className="w-full shrink-0">
+                            <div className="w-full shrink-0 relative">
                                 <canvas
                                     ref={canvasRef}
                                     width={CANVAS_W}
@@ -2495,6 +2596,21 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                     className="w-full object-contain border-b-2 border-slate-800 bg-slate-900"
                                     style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
                                 />
+                                {isReplaying && (
+                                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-2">
+                                        <div className="flex justify-between items-start">
+                                            <div className="bg-black/70 text-yellow-400 font-black text-xs px-3 py-1 rounded-full border border-yellow-500/50 tracking-widest animate-pulse">
+                                                ▶ TEKRAR
+                                            </div>
+                                            <button
+                                                className="pointer-events-auto bg-black/70 text-white text-xs px-3 py-1 rounded-full border border-white/20 active:scale-95"
+                                                onClick={() => { isReplayingRef.current = false; setIsReplaying(false); if (replayTimerRef.current) { window.clearInterval(replayTimerRef.current); replayTimerRef.current = null; } }}
+                                            >
+                                                Atla ✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             {/* Info area in the black space below */}
                             <div className="flex-1 flex flex-col items-center justify-center gap-2 px-3 py-2 overflow-hidden">
@@ -2564,6 +2680,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                     <button onClick={() => setCameraTracking(!cameraTracking)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${cameraTracking ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
                                         <Camera size={13} />
                                     </button>
+                                    <button onClick={() => setIsGoalReplayEnabled(!isGoalReplayEnabled)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95 ${isGoalReplayEnabled ? 'bg-fuchsia-600 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                        <MonitorPlay size={13} />
+                                    </button>
                                     <button onClick={() => { setSpeed(0); setShowTacticsModal(true); }} className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-600 text-white transition-all active:scale-95">
                                         <Settings size={13} />
                                     </button>
@@ -2582,6 +2701,21 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 className={`max-w-full max-h-full object-contain shadow-2xl rounded-lg border-2 md:border-4 border-slate-800 bg-slate-900 ${isSmallLandscape ? 'rounded-none border-0' : ''}`}
                                 style={{ aspectRatio: `${CANVAS_W}/${CANVAS_H}`, touchAction: 'none' }}
                             />
+                            {isReplaying && (
+                                <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-2">
+                                    <div className="flex justify-between items-start">
+                                        <div className="bg-black/70 text-yellow-400 font-black text-xs px-3 py-1 rounded-full border border-yellow-500/50 tracking-widest animate-pulse">
+                                            ▶ TEKRAR
+                                        </div>
+                                        <button
+                                            className="pointer-events-auto bg-black/70 text-white text-xs px-3 py-1 rounded-full border border-white/20 active:scale-95"
+                                            onClick={() => { isReplayingRef.current = false; setIsReplaying(false); if (replayTimerRef.current) { window.clearInterval(replayTimerRef.current); replayTimerRef.current = null; } }}
+                                        >
+                                            Atla ✕
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

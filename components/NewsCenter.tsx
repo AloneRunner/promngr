@@ -124,7 +124,7 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
    return (
       <div className="space-y-4 animate-fade-in">
          <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl mb-6">
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                <div>
                   <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                      <Mail className="text-emerald-500" /> {t.inbox}
@@ -137,23 +137,25 @@ export const NewsCenter: React.FC<NewsCenterProps> = ({ messages, pendingOffers,
                   <p className="text-slate-400 text-sm">{t.lastNews}</p>
                </div>
 
-               {/* Delete All Read Button */}
-               {readMessages > 0 && onDeleteAllRead && (
-                  <button
-                     onClick={onDeleteAllRead}
-                     className="flex items-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 text-sm font-bold rounded-lg border border-slate-500/30 transition-all"
-                  >
-                     <Trash2 size={16} /> {t.deleteRead} ({readMessages})
-                  </button>
-               )}
-               {messages.length > 0 && onDeleteAll && (
-                  <button
-                     onClick={onDeleteAll}
-                     className="flex items-center gap-2 px-3 py-2 bg-red-900/30 hover:bg-red-800/50 text-red-400 text-sm font-bold rounded-lg border border-red-500/30 transition-all"
-                  >
-                     <Trash2 size={16} /> {t.deleteAll}
-                  </button>
-               )}
+               <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto">
+                   {/* Delete All Read Button */}
+                   {readMessages > 0 && onDeleteAllRead && (
+                      <button
+                         onClick={onDeleteAllRead}
+                         className="flex items-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 text-sm font-bold rounded-lg border border-slate-500/30 transition-all whitespace-nowrap"
+                      >
+                         <Trash2 size={16} /> {t.deleteRead} ({readMessages})
+                      </button>
+                   )}
+                   {messages.length > 0 && onDeleteAll && (
+                      <button
+                         onClick={onDeleteAll}
+                         className="flex items-center gap-2 px-3 py-2 bg-red-900/30 hover:bg-red-800/50 text-red-400 text-sm font-bold rounded-lg border border-red-500/30 transition-all whitespace-nowrap"
+                      >
+                         <Trash2 size={16} /> {t.deleteAll}
+                      </button>
+                   )}
+               </div>
             </div>
             {/* Reject All Offers button — only shown when pending offers exist */}
             {pendingOfferCount > 0 && onRejectAllOffers && (
