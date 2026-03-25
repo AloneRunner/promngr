@@ -1,0 +1,10 @@
+﻿diff --git a/MatchEngine.ts b/ucuncumotor.ts
+index 3326c1b..67956f6 100644
+--- a/MatchEngine.ts
++++ b/ucuncumotor.ts
+@@ -1,4 +1,4 @@
+-´╗┐import {
++import {
+   Match,
+   Team,
+   Player,

@@ -11,6 +11,7 @@ interface SettingsModalProps {
     backgroundSimulation: boolean;
     autoSave: 'ALWAYS' | 'WEEKLY' | 'MONTHLY';
     aiTransferActivity?: 'LOW' | 'NORMAL' | 'HIGH';
+    goalReplay?: boolean;
   };
   onSettingsChange: (settings: any) => void;
   currentLanguage: string;
@@ -189,23 +190,19 @@ export default function SettingsModal({
               {t.performance || 'Performance'}
             </h3>
             <div className="space-y-4">
-              {/* Show Animations */}
-              <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700 opacity-60">
+              {/* Goal Replay */}
+              <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <div>
                   <div className="font-medium text-white flex items-center gap-2">
-                    {t.showAnimations || 'Show Animations'}
-                    <span className="text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded">🔜 {t.comingSoon || 'Coming Soon'}</span>
+                    🎬 {t.goalReplay || 'Gol Tekrarı'}
                   </div>
-                  <div className="text-sm text-gray-400">{t.showAnimationsDesc || 'Display match animations and effects'}</div>
+                  <div className="text-sm text-gray-400">{t.goalReplayDesc || 'Gol sonrası yavaş çekim tekrar göster'}</div>
                 </div>
                 <button
-                  onClick={() => setLocalSettings({ ...localSettings, showAnimations: !localSettings.showAnimations })}
-                  className={`relative w-14 h-7 rounded-full transition-colors ${localSettings.showAnimations ? 'bg-blue-600' : 'bg-gray-600'
-                    }`}
-                  disabled
+                  onClick={() => setLocalSettings({ ...localSettings, goalReplay: !(localSettings.goalReplay ?? true) })}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${(localSettings.goalReplay ?? true) ? 'bg-blue-600' : 'bg-gray-600'}`}
                 >
-                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${localSettings.showAnimations ? 'translate-x-7' : 'translate-x-0'
-                    }`} />
+                  <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${(localSettings.goalReplay ?? true) ? 'translate-x-7' : 'translate-x-0'}`} />
                 </button>
               </div>
 
