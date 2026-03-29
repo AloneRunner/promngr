@@ -154,6 +154,20 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Online maç bitince (isPlayed=true) ELO'yu submit et — Continue butonuna basmadan önce modal'da göster
+    const eloSubmittedRef = React.useRef<string | null>(null);
+    const activeOnlineMatch = onlineMatchOpponent && activeMatchId
+        ? gameState?.matches.find(m => m.id === activeMatchId)
+        : null;
+    React.useEffect(() => {
+        if (!onlineMatchOpponent || !activeMatchId || !activeOnlineMatch?.isPlayed) return;
+        if (eloSubmittedRef.current === activeMatchId) return; // zaten submit edildi
+        eloSubmittedRef.current = activeMatchId;
+        submitMatchResult(onlineMatchOpponent.player_id, activeOnlineMatch.homeScore, activeOnlineMatch.awayScore, onlineMatchType)
+            .then(r => { if (r) setOnlineEloChange(r.homeEloChange); })
+            .catch(() => {});
+    }, [activeOnlineMatch?.isPlayed, activeMatchId, onlineMatchOpponent]);
+
     // Auto-sync snapshot to Railway so user appears in matchmaking pool even without playing online
     React.useEffect(() => {
         if (!gameState || !userTeam) return;
@@ -2385,12 +2399,6 @@ const App: React.FC = () => {
     }, [activeMatchId, gameState, simulation]); const handleMatchFinish = useCallback(async () => {
         // Online match: submit ELO result and clean up temp data
         if (onlineMatchOpponent && activeMatchId) {
-            const finishedMatch = gameState?.matches.find(m => m.id === activeMatchId);
-            if (finishedMatch) {
-                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore, onlineMatchType)
-                    .then(r => { if (r) setOnlineEloChange(r.homeEloChange); })
-                    .catch(() => {});
-            }
             const oppTeamPrefix = 'online-opp-';
             setGameState(prev => {
                 if (!prev) return null;
@@ -2403,6 +2411,7 @@ const App: React.FC = () => {
             });
             setOnlineMatchOpponent(null);
             setOnlineEloChange(null);
+            eloSubmittedRef.current = null;
             // Maç tamamlandı — pending kaydını sil
             try { localStorage.removeItem('pending_online_match'); } catch {}
             // Önceki motor seçimine geri dön
