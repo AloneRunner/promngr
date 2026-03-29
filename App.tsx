@@ -135,14 +135,39 @@ const App: React.FC = () => {
     // Auto-sync snapshot to Railway so user appears in matchmaking pool even without playing online
     React.useEffect(() => {
         if (!gameState || !userTeam) return;
-        const starters = gameState.players.filter(p => p.teamId === gameState.userTeamId && p.lineup === 'STARTING').slice(0, 11);
+        const teamPlayers = gameState.players.filter(p => p.teamId === gameState.userTeamId);
+        const starters = teamPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11);
         if (starters.length === 0) return;
+        const bench = teamPlayers.filter(p => p.lineup === 'BENCH').slice(0, 7);
         const avgOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / starters.length);
         const displayName = gameState.managerProfile?.displayName || 'Manager';
+        const tactic: any = userTeam.tactic || {};
         registerPlayer(displayName, userTeam.name).catch(() => {});
         syncTeamSnapshot(
-            (userTeam.tactic?.formation as string) || '4-3-3', {},
-            starters.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}`.trim(), ovr: p.overall, position: p.position })),
+            (tactic.formation as string) || '4-3-3',
+            {
+                style: tactic.style, aggression: tactic.aggression, tempo: tactic.tempo,
+                width: tactic.width, defensiveLine: tactic.defensiveLine, passingStyle: tactic.passingStyle,
+                marking: tactic.marking, mentality: tactic.mentality, pressingIntensity: tactic.pressingIntensity,
+                attackPlan: tactic.attackPlan,
+                managerArchetype: gameState.managerProfile?.archetype,
+            },
+            [
+                ...starters.map(p => ({
+                    id: p.id,
+                    name: `${p.firstName} ${p.lastName}`.trim(),
+                    ovr: p.overall, position: p.position,
+                    lineup: 'STARTING', lineupIndex: p.lineupIndex ?? 0,
+                    playStyles: p.playStyles ?? [],
+                })),
+                ...bench.map(p => ({
+                    id: p.id,
+                    name: `${p.firstName} ${p.lastName}`.trim(),
+                    ovr: p.overall, position: p.position,
+                    lineup: 'BENCH', lineupIndex: p.lineupIndex ?? 99,
+                    playStyles: p.playStyles ?? [],
+                })),
+            ],
             avgOvr
         ).catch(() => {});
     // Sadece ilk yüklemede ve takım değiştiğinde çalışsın
@@ -1026,20 +1051,31 @@ const App: React.FC = () => {
         if (!gameState || !userTeam) return;
 
         const oppTeamId = `online-opp-${Date.now()}`;
-        const positions: Position[] = [Position.GK, Position.DEF, Position.DEF, Position.DEF, Position.DEF, Position.MID, Position.MID, Position.MID, Position.FWD, Position.FWD, Position.FWD];
         const rawSquad: any[] = Array.isArray(opponent.squad) ? opponent.squad : [];
         const baseOvr = opponent.avg_ovr || 72;
+        const snapTactics: any = opponent.tactics || {};
 
-        const buildOppPlayer = (pos: Position, i: number, lineup: LineupStatus, ovrOverride?: number) => {
-            const snap = rawSquad[i];
-            const ovr = ovrOverride ?? snap?.ovr ?? baseOvr;
+        // Snapshot'tan oyuncu oluştur — gerçek playStyles, lineup, lineupIndex dahil
+        const buildPlayerFromSnap = (snap: any, idx: number): Player => {
+            const ovr = snap?.ovr ?? baseOvr;
+            const pos: Position = (snap?.position as Position) || Position.MID;
             const isGK = pos === Position.GK;
             const isDEF = pos === Position.DEF;
             const isMID = pos === Position.MID;
+            const snapStyles: string[] = Array.isArray(snap?.playStyles) ? snap.playStyles : [];
+            // Fallback playStyles eğer snapshot'ta yoksa OVR bazlı ata
+            const fallbackStyles = isGK
+                ? (ovr >= 80 ? ['Kedi Refleks'] : [])
+                : pos === Position.FWD
+                ? (ovr >= 82 ? ['Plase Şut'] : ovr >= 78 ? ['Roket'] : [])
+                : isMID
+                ? (ovr >= 80 ? ['Maestro'] : [])
+                : [];
+            const nameParts = (snap?.name || `Player ${idx + 1}`).split(' ');
             return {
-                id: `${oppTeamId}-p${i}`,
-                firstName: snap?.name ?? `Player`,
-                lastName: `${i + 1}`,
+                id: `${oppTeamId}-p${idx}`,
+                firstName: nameParts[0] || `Player`,
+                lastName: nameParts.slice(1).join(' ') || `${idx + 1}`,
                 age: 26, nationality: 'XX', position: pos,
                 attributes: {
                     finishing:   isGK ? 5  : isDEF ? 30  : isMID ? 52 : ovr + 3,
@@ -1059,26 +1095,34 @@ const App: React.FC = () => {
                 morale: 75, condition: 92, form: 7,
                 teamId: oppTeamId,
                 isTransferListed: false, weeksInjured: 0, matchSuspension: 0,
-                lineup,
-                lineupIndex: i,
-                playStyles: pos === Position.GK
-                    ? (ovr >= 80 ? ['Kedi Refleks'] : [])
-                    : pos === Position.FWD
-                    ? (ovr >= 82 ? ['Plase Şut'] : ovr >= 78 ? ['Roket'] : [])
-                    : pos === Position.MID
-                    ? (ovr >= 80 ? ['Maestro'] : [])
-                    : [],
+                lineup: (snap?.lineup || 'STARTING') as LineupStatus,
+                lineupIndex: snap?.lineupIndex ?? idx,
+                playStyles: snapStyles.length > 0 ? snapStyles : fallbackStyles,
             } as unknown as Player;
         };
 
+        // Snapshot'tan STARTING ve BENCH'i ayır
+        const snapStarters = rawSquad.filter((s: any) => s?.lineup !== 'BENCH').slice(0, 11);
+        const snapBench = rawSquad.filter((s: any) => s?.lineup === 'BENCH').slice(0, 7);
+
+        // Yeterli starting yoksa varsayılan pozisyonlarla tamamla
+        const defaultPositions: Position[] = [Position.GK, Position.DEF, Position.DEF, Position.DEF, Position.DEF, Position.MID, Position.MID, Position.MID, Position.FWD, Position.FWD, Position.FWD];
+        while (snapStarters.length < 11) {
+            snapStarters.push({ position: defaultPositions[snapStarters.length], ovr: baseOvr, lineup: 'STARTING' });
+        }
+
+        // Bench yoksa 5 tane fallback bench oluştur
+        const benchSnaps = snapBench.length > 0 ? snapBench : [
+            { position: Position.MID, ovr: Math.max(60, baseOvr - 4), lineup: 'BENCH' },
+            { position: Position.FWD, ovr: Math.max(60, baseOvr - 3), lineup: 'BENCH' },
+            { position: Position.DEF, ovr: Math.max(60, baseOvr - 5), lineup: 'BENCH' },
+            { position: Position.MID, ovr: Math.max(60, baseOvr - 4), lineup: 'BENCH' },
+            { position: Position.FWD, ovr: Math.max(60, baseOvr - 3), lineup: 'BENCH' },
+        ];
+
         const oppPlayers: Player[] = [
-            ...positions.map((pos, i) => buildOppPlayer(pos, i, 'STARTING' as LineupStatus)),
-            // 5 bench oyuncu (biraz daha düşük OVR, değişiklikte devreye girecek)
-            buildOppPlayer(Position.MID, 11, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 4)),
-            buildOppPlayer(Position.FWD, 12, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 3)),
-            buildOppPlayer(Position.DEF, 13, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 5)),
-            buildOppPlayer(Position.MID, 14, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 4)),
-            buildOppPlayer(Position.FWD, 15, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 3)),
+            ...snapStarters.map((s: any, i: number) => buildPlayerFromSnap({ ...s, lineup: 'STARTING' }, i)),
+            ...benchSnaps.map((s: any, i: number) => buildPlayerFromSnap({ ...s, lineup: 'BENCH' }, 11 + i)),
         ];
 
         // Rakip rengi kullanıcı rengiyle çakışmasın — sabit deplasman seti kullan
@@ -1104,16 +1148,18 @@ const App: React.FC = () => {
             objectives: [],
             tactic: {
                 formation: (opponent.formation as TacticType) || TacticType.T_433,
-                style: opponent.avg_ovr >= 80 ? 'Possession' : opponent.avg_ovr >= 73 ? 'Counter' : 'Direct',
-                aggression: opponent.avg_ovr >= 78 ? 'High' : 'Normal',
-                tempo: opponent.avg_ovr >= 76 ? 'High' : 'Normal',
-                width: 'Normal', defensiveLine: opponent.avg_ovr >= 78 ? 'High' : 'Medium',
-                passingStyle: opponent.avg_ovr >= 80 ? 'Short' : 'Mixed',
-                marking: 'Zonal', mentality: opponent.avg_ovr >= 75 ? 'Attacking' : 'Balanced',
-                pressingIntensity: opponent.avg_ovr >= 76 ? 'High' : 'Balanced',
-                attackPlan: opponent.avg_ovr >= 78 ? 'THROUGH_BALL' : 'WIDE_CROSS',
+                style: snapTactics.style || (baseOvr >= 80 ? 'Possession' : baseOvr >= 73 ? 'Counter' : 'Direct'),
+                aggression: snapTactics.aggression || (baseOvr >= 78 ? 'High' : 'Normal'),
+                tempo: snapTactics.tempo || (baseOvr >= 76 ? 'High' : 'Normal'),
+                width: snapTactics.width || 'Normal',
+                defensiveLine: snapTactics.defensiveLine || (baseOvr >= 78 ? 'High' : 'Medium'),
+                passingStyle: snapTactics.passingStyle || (baseOvr >= 80 ? 'Short' : 'Mixed'),
+                marking: snapTactics.marking || 'Zonal',
+                mentality: snapTactics.mentality || (baseOvr >= 75 ? 'Attacking' : 'Balanced'),
+                pressingIntensity: snapTactics.pressingIntensity || (baseOvr >= 76 ? 'High' : 'Balanced'),
+                attackPlan: snapTactics.attackPlan || (baseOvr >= 78 ? 'THROUGH_BALL' : 'WIDE_CROSS'),
             },
-            coachArchetype: CoachArchetype.TACTICIAN,
+            coachArchetype: (snapTactics.managerArchetype as CoachArchetype) || CoachArchetype.TACTICIAN,
             trainingFocus: 'BALANCED', trainingIntensity: 'NORMAL',
             youthCandidates: [], recentForm: [],
             stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 },

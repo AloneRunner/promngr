@@ -24,6 +24,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   const [errorMsg, setErrorMsg] = useState('');
 
   const starters = userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11);
+  const bench = userPlayers.filter(p => p.lineup === 'BENCH').slice(0, 7);
   const myOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / Math.max(1, starters.length)) || 70;
 
   useEffect(() => {
@@ -34,9 +35,29 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   async function handleFindMatch() {
     setPhase('syncing');
     setErrorMsg('');
+    const tactic: any = userTeam.tactic || {};
     await syncTeamSnapshot(
-      (userTeam.tactic?.formation as string) || '4-3-3', {},
-      starters.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}`.trim(), ovr: p.overall, position: p.position })),
+      (tactic.formation as string) || '4-3-3',
+      {
+        style: tactic.style, aggression: tactic.aggression, tempo: tactic.tempo,
+        width: tactic.width, defensiveLine: tactic.defensiveLine, passingStyle: tactic.passingStyle,
+        marking: tactic.marking, mentality: tactic.mentality, pressingIntensity: tactic.pressingIntensity,
+        attackPlan: tactic.attackPlan,
+      },
+      [
+        ...starters.map(p => ({
+          id: p.id, name: `${p.firstName} ${p.lastName}`.trim(),
+          ovr: p.overall, position: p.position,
+          lineup: 'STARTING', lineupIndex: p.lineupIndex ?? 0,
+          playStyles: p.playStyles ?? [],
+        })),
+        ...bench.map(p => ({
+          id: p.id, name: `${p.firstName} ${p.lastName}`.trim(),
+          ovr: p.overall, position: p.position,
+          lineup: 'BENCH', lineupIndex: p.lineupIndex ?? 99,
+          playStyles: p.playStyles ?? [],
+        })),
+      ],
       myOvr
     );
     setPhase('searching');
