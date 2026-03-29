@@ -2970,7 +2970,7 @@ const App: React.FC = () => {
             <div className={`relative z-10 h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-none p-4 2xl:p-8 pb-48 2xl:pb-8 2xl:pt-4 ${view !== 'match' ? '2xl:ml-64 landscape:ml-16 landscape:2xl:ml-64 landscape:pb-4' : 'w-full'}`}>
                 <div className="max-w-7xl mx-auto min-h-full">
                     {view === 'match' && activeMatch && activeHome && activeAway ? (
-                        matchViewMode === 'detailed' ? (
+                        (matchViewMode === 'detailed' || !!onlineMatchOpponent) ? (
                             <DetailedMatchCenter
                                 match={activeMatch} homeTeam={activeHome} awayTeam={activeAway}
                                 homePlayers={gameState.players.filter(p => p.teamId === activeHome.id)}
