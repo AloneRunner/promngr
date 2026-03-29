@@ -312,6 +312,24 @@ app.get('/api/profile/:playerId', async (req, res) => {
   }
 });
 
+// POST /api/admin/reset-elo  — sezon sıfırlama (admin key gerekli)
+app.post('/api/admin/reset-elo', async (req, res) => {
+  const { adminKey } = req.body;
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  try {
+    await pool.query(`
+      UPDATE players SET elo = 1000, wins = 0, losses = 0, draws = 0, updated_at = NOW()
+      WHERE player_id NOT LIKE 'bot-%'
+    `);
+    await pool.query(`DELETE FROM matches`);
+    res.json({ ok: true, message: 'ELO reset complete. New season started!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
 // Health check
 app.get('/', (req, res) => res.json({ status: 'ok', version: '1.0.0' }));
 
