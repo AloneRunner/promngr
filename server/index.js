@@ -21,6 +21,7 @@ async function initDB() {
       player_id   VARCHAR(36) PRIMARY KEY,
       username    VARCHAR(100) NOT NULL DEFAULT 'Manager',
       team_name   VARCHAR(100) NOT NULL DEFAULT 'My Team',
+      nationality VARCHAR(10) DEFAULT NULL,
       elo         INTEGER NOT NULL DEFAULT 1000,
       wins        INTEGER NOT NULL DEFAULT 0,
       losses      INTEGER NOT NULL DEFAULT 0,
@@ -28,6 +29,7 @@ async function initDB() {
       created_at  TIMESTAMP DEFAULT NOW(),
       updated_at  TIMESTAMP DEFAULT NOW()
     );
+    ALTER TABLE players ADD COLUMN IF NOT EXISTS nationality VARCHAR(10) DEFAULT NULL;
 
     CREATE TABLE IF NOT EXISTS team_snapshots (
       player_id   VARCHAR(36) PRIMARY KEY REFERENCES players(player_id) ON DELETE CASCADE,
@@ -108,18 +110,19 @@ function calcElo(winnerElo, loserElo, draw = false) {
 
 // POST /api/register  — oyuncu kayıt / profil güncelle
 app.post('/api/register', async (req, res) => {
-  const { playerId, username, teamName } = req.body;
+  const { playerId, username, teamName, nationality } = req.body;
   if (!playerId) return res.status(400).json({ error: 'playerId required' });
 
   try {
     await pool.query(`
-      INSERT INTO players (player_id, username, team_name)
-      VALUES ($1, $2, $3)
+      INSERT INTO players (player_id, username, team_name, nationality)
+      VALUES ($1, $2, $3, $4)
       ON CONFLICT (player_id) DO UPDATE
-        SET username  = EXCLUDED.username,
-            team_name = EXCLUDED.team_name,
-            updated_at = NOW()
-    `, [playerId, username || 'Manager', teamName || 'My Team']);
+        SET username    = EXCLUDED.username,
+            team_name   = EXCLUDED.team_name,
+            nationality = COALESCE(EXCLUDED.nationality, players.nationality),
+            updated_at  = NOW()
+    `, [playerId, username || 'Manager', teamName || 'My Team', nationality || null]);
 
     const { rows } = await pool.query('SELECT * FROM players WHERE player_id = $1', [playerId]);
     res.json(rows[0]);
@@ -285,7 +288,7 @@ app.post('/api/match/result', async (req, res) => {
 app.get('/api/leaderboard', async (req, res) => {
   try {
     const { rows } = await pool.query(`
-      SELECT player_id, username, team_name, elo, wins, draws, losses
+      SELECT player_id, username, team_name, nationality, elo, wins, draws, losses
       FROM players
       WHERE (wins + draws + losses) > 0
       ORDER BY elo DESC
@@ -302,7 +305,7 @@ app.get('/api/leaderboard', async (req, res) => {
 app.get('/api/profile/:playerId', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      'SELECT player_id, username, team_name, elo, wins, draws, losses FROM players WHERE player_id = $1',
+      'SELECT player_id, username, team_name, nationality, elo, wins, draws, losses FROM players WHERE player_id = $1',
       [req.params.playerId]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Player not found' });

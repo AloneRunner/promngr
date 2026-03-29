@@ -43,6 +43,14 @@ function winRate(p: MPPlayer): number {
   return Math.round((p.wins / total) * 100);
 }
 
+function nationalityToFlag(nat?: string): string {
+  if (!nat || nat.length < 2) return '';
+  // ISO 3166-1 alpha-2 → regional indicator emoji
+  const code = nat.trim().toUpperCase().slice(0, 2);
+  const flag = [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
+  return flag;
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function OnlineLeaderboard({ onClose, t }: Props) {
@@ -181,10 +189,13 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
+                      {p.nationality && (
+                        <span className="text-base shrink-0 leading-none">{nationalityToFlag(p.nationality)}</span>
+                      )}
                       <span className={`font-bold text-sm truncate ${isMe ? 'text-white' : 'text-slate-200'}`}>
                         {p.username && p.username !== 'Manager' ? p.username : p.team_name}
                       </span>
-                      {isMe && <span className="text-[9px] px-1 py-0.5 bg-purple-600/60 text-purple-300 rounded font-bold">SEN</span>}
+                      {isMe && <span className="text-[9px] px-1 py-0.5 bg-purple-600/60 text-purple-300 rounded font-bold shrink-0">SEN</span>}
                     </div>
                     <div className="text-[10px] text-slate-500 truncate">
                       {p.username && p.username !== 'Manager' ? `${p.team_name} • ` : ''}

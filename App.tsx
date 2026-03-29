@@ -141,8 +141,9 @@ const App: React.FC = () => {
         const bench = teamPlayers.filter(p => p.lineup === 'BENCH').slice(0, 7);
         const avgOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / starters.length);
         const displayName = gameState.managerProfile?.displayName || 'Manager';
+        const managerNationality = gameState.managerProfile?.nationality;
         const tactic: any = userTeam.tactic || {};
-        registerPlayer(displayName, userTeam.name).catch(() => {});
+        registerPlayer(displayName, userTeam.name, managerNationality).catch(() => {});
         syncTeamSnapshot(
             (tactic.formation as string) || '4-3-3',
             {
@@ -3417,96 +3418,147 @@ const App: React.FC = () => {
                                             })()}
                                         </div>
 
-                                        {/* --- Match Engine Notice Banner (full-width below the top cards) --- */}
-                                        <div className="w-full flex items-center justify-center mt-3">
-                                            <div className="max-w-5xl w-full mx-4 p-3 rounded-lg bg-gradient-to-r from-yellow-500/8 via-amber-600/8 to-red-600/8 border border-yellow-600/30 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                                                <div className="flex-1">
-                                                    <div className="font-bold text-sm md:text-base flex items-center gap-2">
-                                                        {t.engineCurrentlySelected || 'Seçili Motor'}:
-                                                        <span className={`px-2 py-1 rounded text-xs ${
-                                                            engineChoice === 'classic' ? 'bg-blue-600' :
-                                                            engineChoice === 'ikinc' ? 'bg-purple-600' :
-                                                            'bg-gradient-to-r from-yellow-600 to-orange-600'
-                                                        }`}>
-                                                            {engineChoice === 'classic' ? (t.engineClassic || 'Klasik Motor') :
-                                                             engineChoice === 'ikinc' ? (t.engineIkinc || 'Arcade Motor') :
-                                                             (t.engineUcuncu || 'Pro Motor')}
-                                                        </span>
-                                                    </div>
-                                                    <div className="text-xs md:text-sm text-gray-200 mt-1">
-                                                        {engineChoice === 'classic'
-                                                            ? (t.engineClassicBanner || "Kurduğun taktiğin maçta gerçekten işe yaradığını görmek istiyorsan bu motor senin için.")
-                                                            : engineChoice === 'ikinc'
-                                                            ? (t.engineIkincBanner || "Taktik değil saf aksiyon — toplar direkt gider, goller bol gelir, yıldızlar fark yaratır.")
-                                                            : (t.engineUcuncuBanner || "Maçı gerçekten anlamak isteyenler için. Her taktik hamlenin bir karşılığı var.")}
-                                                    </div>
-                                                </div>
-                                                {/* Inline engine + view mode selectors */}
-                                                <div className="flex flex-col gap-2 w-full md:w-auto">
-                                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                                        <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mr-1">{t.engineChoiceLabel || 'Motor'}:</span>
+                                        {/* --- Match Engine + View Mode Card --- */}
+                                        {(() => {
+                                            const isProEngine = engineChoice === 'ucuncu';
+                                            const isDetailed = matchViewMode === 'detailed';
+                                            return (
+                                            <div className={`rounded-xl border p-3 flex flex-col gap-3 ${
+                                                isProEngine
+                                                    ? 'bg-gradient-to-br from-amber-950/60 to-slate-900 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.08)]'
+                                                    : 'bg-slate-900/80 border-white/8'
+                                            }`}>
+                                                {/* Engine row */}
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold shrink-0">{t.engineChoiceLabel || 'Motor'}</span>
+                                                    <div className="flex gap-1.5">
                                                         <button
                                                             onClick={() => { setEngineChoice('classic'); serviceSetEngineChoice('classic'); }}
-                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                            className={`py-1 px-3 rounded-lg text-xs font-bold transition-all ${engineChoice === 'classic' ? 'bg-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.4)]' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
                                                         >{t.engineClassic || 'Klasik'}</button>
                                                         <button
                                                             onClick={() => { setEngineChoice('ikinc'); serviceSetEngineChoice('ikinc'); }}
-                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'ikinc' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                            className={`py-1 px-3 rounded-lg text-xs font-bold transition-all ${engineChoice === 'ikinc' ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.4)]' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
                                                         >{t.engineIkinc || 'Arcade'}</button>
                                                         <button
                                                             onClick={() => { setEngineChoice('ucuncu'); serviceSetEngineChoice('ucuncu'); }}
-                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${engineChoice === 'ucuncu' ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                                                        >{t.engineUcuncu || 'Pro'}</button>
+                                                            className={`py-1 px-3 rounded-lg text-xs font-bold transition-all ${engineChoice === 'ucuncu' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-[0_0_12px_rgba(245,158,11,0.5)]' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                                                        >
+                                                            {engineChoice === 'ucuncu' && <span className="mr-1">⚡</span>}
+                                                            {t.engineUcuncu || 'Pro'}
+                                                        </button>
                                                     </div>
-                                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                                        <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mr-1">{t.matchViewMode || 'Görünüm'}:</span>
+                                                </div>
+                                                {/* View mode row */}
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold shrink-0">{t.matchViewMode || 'Görünüm'}</span>
+                                                    <div className="flex gap-1.5">
                                                         <button
                                                             onClick={() => { setMatchViewMode('classic'); try { localStorage.setItem('matchViewMode', 'classic'); } catch {} }}
-                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${matchViewMode === 'classic' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                                            className={`py-1 px-3 rounded-lg text-xs font-bold transition-all ${matchViewMode === 'classic' ? 'bg-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.4)]' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
                                                         >{t.classicMatchView || 'Klasik'}</button>
                                                         <button
                                                             onClick={() => { setMatchViewMode('detailed'); try { localStorage.setItem('matchViewMode', 'detailed'); } catch {} }}
-                                                            className={`py-1 px-2.5 rounded text-xs font-medium transition-all ${matchViewMode === 'detailed' ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                                                        >{t.detailedMatchView || 'Detaylı'}</button>
+                                                            className={`py-1 px-3 rounded-lg text-xs font-bold transition-all ${matchViewMode === 'detailed' ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                                                        >
+                                                            {matchViewMode === 'detailed' && <span className="mr-1">🎬</span>}
+                                                            {t.detailedMatchView || 'Detaylı'}
+                                                        </button>
                                                     </div>
+                                                </div>
+                                                {/* Active combo hint */}
+                                                {(isProEngine || isDetailed) && (
+                                                    <div className="text-[10px] text-amber-400/80 bg-amber-500/10 rounded-lg px-2 py-1.5 border border-amber-500/20 text-center">
+                                                        {isProEngine && isDetailed
+                                                            ? '⚡ Pro Motor + Detaylı Maç Merkezi — Online maç için hazırsın!'
+                                                            : isProEngine
+                                                            ? '⚡ Pro Motor aktif — gerçekçi taktik simülasyonu'
+                                                            : '🎬 Detaylı Maç Merkezi aktif'}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            );
+                                        })()}
+
+                                        {/* ── Online Bölümü ── */}
+                                        {(() => {
+                                            const [onlineInfoOpen, setOnlineInfoOpen] = React.useState(false);
+                                            return (
+                                            <div className="rounded-xl border border-purple-500/25 bg-gradient-to-br from-purple-950/40 to-slate-900 shadow-[0_0_24px_rgba(139,92,246,0.07)] overflow-hidden">
+                                                {/* Header row */}
+                                                <div className="flex items-center justify-between px-4 pt-3 pb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <Globe size={15} className="text-purple-400" />
+                                                        <span className="font-bold text-white text-sm">{t.onlineMatch || 'Online Mod'}</span>
+                                                        <span className="text-[9px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/40 text-purple-300 rounded font-bold uppercase tracking-wider">BETA</span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setOnlineInfoOpen(v => !v)}
+                                                        className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-purple-300 transition-colors px-2 py-1 rounded-lg hover:bg-purple-500/10"
+                                                    >
+                                                        <Info size={12} />
+                                                        {onlineInfoOpen ? 'Kapat' : 'Bilgi'}
+                                                    </button>
+                                                </div>
+
+                                                {/* Info panel — expandable */}
+                                                {onlineInfoOpen && (
+                                                    <div className="mx-3 mb-3 p-3 bg-slate-800/60 rounded-xl border border-white/5 text-xs text-slate-300 flex flex-col gap-2">
+                                                        <div className="flex items-start gap-2 text-amber-300">
+                                                            <span className="text-base shrink-0">⚠️</span>
+                                                            <span>Beta sürecinde ELO puanları periyodik olarak sıfırlanabilir. Bu normal — sıralama henüz deneysel.</span>
+                                                        </div>
+                                                        <div className="h-px bg-white/5" />
+                                                        <div className="font-bold text-white text-[11px] uppercase tracking-wider">Şu an aktif özellikler:</div>
+                                                        <div className="flex flex-col gap-1.5">
+                                                            <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Gerçek rakip vs. senin ghost takımın</div>
+                                                            <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> ELO sıralama sistemi (Bronz → Elmas)</div>
+                                                            <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Kadronun taktikler + talimatlarla senkronize</div>
+                                                            <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Çevrimdışıyken bile ghost takımın savaşır</div>
+                                                            <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> AI değişiklikler (35/55/65/80. dk)</div>
+                                                        </div>
+                                                        <div className="h-px bg-white/5" />
+                                                        <div className="flex flex-col gap-1.5 text-slate-400">
+                                                            <div className="flex items-center gap-2"><span className="text-slate-500">○</span> Başarımlar <span className="text-slate-500 text-[10px]">(yakında)</span></div>
+                                                            <div className="flex items-center gap-2"><span className="text-slate-500">○</span> Sezon ödülleri <span className="text-slate-500 text-[10px]">(yakında)</span></div>
+                                                            <div className="flex items-center gap-2"><span className="text-slate-500">○</span> Günlük maç limiti <span className="text-slate-500 text-[10px]">(yakında)</span></div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Action buttons */}
+                                                <div className="grid grid-cols-2 gap-2 px-3 pb-3">
+                                                    <button
+                                                        onClick={() => setShowOnlineMatch(true)}
+                                                        className="group relative flex items-center gap-2.5 p-3 rounded-xl bg-purple-600/20 border border-purple-500/30 hover:bg-purple-600/30 hover:border-purple-400/50 transition-all active:scale-95 overflow-hidden"
+                                                    >
+                                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                        <div className="w-9 h-9 rounded-lg bg-purple-600/30 border border-purple-500/40 flex items-center justify-center shrink-0 relative z-10">
+                                                            <Swords size={18} className="text-purple-300 drop-shadow-[0_0_6px_rgba(168,85,247,0.7)]" />
+                                                        </div>
+                                                        <div className="text-left relative z-10">
+                                                            <div className="font-bold text-white text-xs">{t.onlineMatch || 'Online Maç'}</div>
+                                                            <div className="text-[10px] text-purple-400/80">Rakip bul</div>
+                                                        </div>
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => setShowOnlineLeaderboard(true)}
+                                                        className="group relative flex items-center gap-2.5 p-3 rounded-xl bg-yellow-600/15 border border-yellow-500/25 hover:bg-yellow-600/25 hover:border-yellow-400/45 transition-all active:scale-95 overflow-hidden"
+                                                    >
+                                                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                        <div className="w-9 h-9 rounded-lg bg-yellow-600/25 border border-yellow-500/35 flex items-center justify-center shrink-0 relative z-10">
+                                                            <Trophy size={18} className="text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.5)]" />
+                                                        </div>
+                                                        <div className="text-left relative z-10">
+                                                            <div className="font-bold text-white text-xs">{t.onlineRankings || 'Sıralama'}</div>
+                                                            <div className="text-[10px] text-yellow-500/80">Top 50</div>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        {/* Online Cards Row */}
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {/* Online Maç */}
-                                            <button
-                                                onClick={() => setShowOnlineMatch(true)}
-                                                className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-purple-500/50 transition-all active:scale-95 overflow-hidden"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center relative z-10">
-                                                    <Swords size={20} className="text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
-                                                </div>
-                                                <div className="text-center relative z-10">
-                                                    <div className="flex items-center justify-center gap-1">
-                                                        <span className="font-bold text-white text-sm">Online Maç</span>
-                                                    </div>
-                                                    <div className="text-[10px] text-purple-400/70 font-bold tracking-wider uppercase">BETA</div>
-                                                </div>
-                                            </button>
-
-                                            {/* Leaderboard */}
-                                            <button
-                                                onClick={() => setShowOnlineLeaderboard(true)}
-                                                className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-yellow-500/50 transition-all active:scale-95 overflow-hidden"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                <div className="w-10 h-10 rounded-xl bg-yellow-600/20 border border-yellow-500/30 flex items-center justify-center relative z-10">
-                                                    <Trophy size={20} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
-                                                </div>
-                                                <div className="text-center relative z-10">
-                                                    <div className="font-bold text-white text-sm">Sıralama</div>
-                                                    <div className="text-[10px] text-yellow-400/70 font-bold tracking-wider uppercase">TOP 50</div>
-                                                </div>
-                                            </button>
-                                        </div>
+                                            );
+                                        })()}
 
                                         {/* Next Match Card - Detailed */}
                                         <div className="fm-card w-full">
@@ -3918,6 +3970,7 @@ const App: React.FC = () => {
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
                     managerName={gameState.managerProfile?.displayName}
+                    managerNationality={gameState.managerProfile?.nationality}
                     t={t}
                 />
             )}

@@ -17,6 +17,7 @@ export interface MPPlayer {
   player_id: string;
   username: string;
   team_name: string;
+  nationality?: string;
   elo: number;
   wins: number;
   losses: number;
@@ -41,12 +42,12 @@ export interface MatchResult {
 
 // ─── API Calls ───────────────────────────────────────────────────────────────
 
-export async function registerPlayer(username: string, teamName: string): Promise<MPPlayer | null> {
+export async function registerPlayer(username: string, teamName: string, nationality?: string): Promise<MPPlayer | null> {
   try {
     const res = await fetch(`${API_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerId: getOrCreatePlayerId(), username, teamName }),
+      body: JSON.stringify({ playerId: getOrCreatePlayerId(), username, teamName, nationality }),
     });
     if (!res.ok) return null;
     return res.json();
