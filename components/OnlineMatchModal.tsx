@@ -41,7 +41,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
       onClose();
       onStartMatch(result.opponent as MPOpponent, 'challenge');
     } else if ((result as any).limitReached) {
-      alert((result as any).error || 'Günlük limit doldu');
+      alert((result as any).error || t.onlineDailyLimitReached || 'Daily limit reached');
     }
   }
 
@@ -111,7 +111,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           {challenges.filter(c => c.challenged_id !== undefined).length > 0 && (
             <div className="flex flex-col gap-2">
               <div className="text-[10px] text-slate-400 uppercase tracking-wider font-bold flex items-center gap-1.5">
-                <Swords size={11} className="text-purple-400" /> Gelen Davetler ({challenges.length})
+                <Swords size={11} className="text-purple-400" /> {t.onlineIncomingChallenges || 'Incoming Challenges'} ({challenges.length})
               </div>
               {challenges.map(c => (
                 <div key={c.id} className="flex items-center justify-between p-2.5 bg-purple-900/20 border border-purple-500/25 rounded-xl gap-2">

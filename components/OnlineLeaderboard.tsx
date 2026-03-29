@@ -20,11 +20,18 @@ interface League {
 }
 
 const LEAGUES: League[] = [
-  { name: 'Elmas', minElo: 1400, maxElo: 9999, icon: '💎', color: 'text-cyan-300',    gradient: 'from-cyan-900/40 to-slate-900',    border: 'border-cyan-500/40' },
-  { name: 'Altın',  minElo: 1200, maxElo: 1399, icon: '🥇', color: 'text-yellow-300', gradient: 'from-yellow-900/40 to-slate-900',   border: 'border-yellow-500/40' },
-  { name: 'Gümüş', minElo: 1050, maxElo: 1199, icon: '🥈', color: 'text-slate-300',   gradient: 'from-slate-700/40 to-slate-900',   border: 'border-slate-400/40' },
-  { name: 'Bronz',  minElo: 0,    maxElo: 1049, icon: '🥉', color: 'text-orange-300', gradient: 'from-orange-900/30 to-slate-900',   border: 'border-orange-600/40' },
+  { name: 'Diamond', minElo: 1400, maxElo: 9999, icon: '💎', color: 'text-cyan-300',    gradient: 'from-cyan-900/40 to-slate-900',    border: 'border-cyan-500/40' },
+  { name: 'Gold',    minElo: 1200, maxElo: 1399, icon: '🥇', color: 'text-yellow-300', gradient: 'from-yellow-900/40 to-slate-900',   border: 'border-yellow-500/40' },
+  { name: 'Silver',  minElo: 1050, maxElo: 1199, icon: '🥈', color: 'text-slate-300',   gradient: 'from-slate-700/40 to-slate-900',   border: 'border-slate-400/40' },
+  { name: 'Bronze',  minElo: 0,    maxElo: 1049, icon: '🥉', color: 'text-orange-300', gradient: 'from-orange-900/30 to-slate-900',   border: 'border-orange-600/40' },
 ];
+
+const LEAGUE_NAME_KEYS: Record<string, string> = {
+  Diamond: 'onlineLeagueDiamond',
+  Gold: 'onlineLeagueGold',
+  Silver: 'onlineLeagueSilver',
+  Bronze: 'onlineLeagueBronze',
+};
 
 function getLeague(elo: number): League {
   return LEAGUES.find(l => elo >= l.minElo && elo <= l.maxElo) ?? LEAGUES[LEAGUES.length - 1];
@@ -116,7 +123,7 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
         <div className="mx-4 mt-3 flex items-start gap-2 p-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl shrink-0">
           <span className="text-base shrink-0">⚠️</span>
           <div className="text-[10px] text-amber-300 leading-relaxed">
-            <span className="font-bold">Beta Dönemi:</span> ELO puanları her gün veya gün aşırı sıfırlanabilir. Bu süreç hazırlık maçları gibi düşünün — asıl sezon yakında başlıyor.
+            <span className="font-bold">{t.onlineBetaPeriod || 'Beta Period'}:</span> {t.onlineBetaLeaderboardWarning || 'ELO ratings may reset daily or every other day. Think of this as pre-season — the real season is coming soon.'}
           </div>
         </div>
 
@@ -133,13 +140,13 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                 {myProfile.username && myProfile.username !== 'Manager' && (
                   <div className="text-[10px] text-slate-400">{myProfile.team_name}</div>
                 )}
-                <div className={`text-xs font-bold ${myLeague.color}`}>{myLeague.name} Ligi • {myRank > 0 ? `#${myRank}` : 'Sırasız'}</div>
+                <div className={`text-xs font-bold ${myLeague.color}`}>{t[LEAGUE_NAME_KEYS[myLeague.name]] || myLeague.name} {t.onlineLeagueSuffix || 'League'} • {myRank > 0 ? `#${myRank}` : (t.onlineUnranked || 'Unranked')}</div>
               </div>
             </div>
             <div className="text-right">
               <div className="text-[10px] text-purple-400 uppercase tracking-wider">ELO</div>
               <div className="text-2xl font-black text-purple-300">{myProfile.elo}</div>
-              <div className="text-[10px] text-slate-500">{myProfile.wins}G {myProfile.draws}B {myProfile.losses}M • %{winRate(myProfile)}</div>
+              <div className="text-[10px] text-slate-500">{myProfile.wins}{t.onlineWinShort || 'W'} {myProfile.draws}{t.onlineDrawShort || 'D'} {myProfile.losses}{t.onlineLossShort || 'L'} • %{winRate(myProfile)}</div>
             </div>
           </div>
         )}
@@ -154,7 +161,7 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
             <button key={l.name}
               onClick={() => setActiveLeague(l.name)}
               className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeLeague === l.name ? 'bg-slate-700 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-            >{l.icon} {l.name}</button>
+            >{l.icon} {t[LEAGUE_NAME_KEYS[l.name]] || l.name}</button>
           ))}
         </div>
 
@@ -221,8 +228,8 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                     <div className="text-[10px] text-slate-500 truncate">
                       {p.username && p.username !== 'Manager' ? `${p.team_name} • ` : ''}
                       {total > 0
-                        ? `${p.wins}G ${p.draws}B ${p.losses}M • %${winRate(p)} kazanma`
-                        : 'Henüz maç yok'}
+                        ? `${p.wins}${t.onlineWinShort || 'W'} ${p.draws}${t.onlineDrawShort || 'D'} ${p.losses}${t.onlineLossShort || 'L'} • %${winRate(p)} ${t.onlineWinRateSuffix || 'win rate'}`
+                        : (t.onlineNoMatchesYet || 'No matches yet')}
                     </div>
                   </div>
 
@@ -238,7 +245,7 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                       const diff = Math.abs(p.elo - myElo);
                       const tooFar = diff > 500;
                       if (tooFar) return (
-                        <div className="text-[9px] text-slate-600 text-right">ELO farkı büyük</div>
+                        <div className="text-[9px] text-slate-600 text-right">{t.onlineEloDiffTooLarge || 'ELO gap too large'}</div>
                       );
                       return (
                         <button
@@ -252,7 +259,7 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                           }`}
                         >
                           <Swords size={10} />
-                          {st === 'sent' ? 'Gönderildi' : st === 'sending' ? '...' : st === 'error' ? 'Hata' : 'Meydan Oku'}
+                          {st === 'sent' ? (t.onlineChallengeSent || 'Sent') : st === 'sending' ? '...' : st === 'error' ? (t.onlineChallengeError || 'Error') : (t.onlineChallenge || 'Challenge')}
                         </button>
                       );
                     })()}
@@ -269,7 +276,7 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
             {LEAGUES.map(l => (
               <div key={l.name} className={`p-2 rounded-lg bg-slate-800/50 border ${l.border} text-center`}>
                 <div className="text-base">{l.icon}</div>
-                <div className={`text-[9px] font-bold ${l.color}`}>{l.name}</div>
+                <div className={`text-[9px] font-bold ${l.color}`}>{t[LEAGUE_NAME_KEYS[l.name]] || l.name}</div>
                 <div className="text-[9px] text-slate-500">
                   {l.minElo === 0 ? '<1050' : l.maxElo === 9999 ? '1400+' : `${l.minElo}+`}
                 </div>
