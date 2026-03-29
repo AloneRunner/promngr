@@ -50,6 +50,48 @@ async function initDB() {
     );
   `);
   console.log('DB tables ready.');
+  await seedBots();
+}
+
+// ─── BOT SEED ────────────────────────────────────────────────────────────────
+
+async function seedBots() {
+  const bots = [
+    { id: 'bot-001', username: 'IronDefense FC', teamName: 'IronDefense FC', elo: 980, ovr: 68 },
+    { id: 'bot-002', username: 'Golden Eagles', teamName: 'Golden Eagles',   elo: 1020, ovr: 72 },
+    { id: 'bot-003', username: 'Red Storm',      teamName: 'Red Storm',       elo: 1050, ovr: 75 },
+    { id: 'bot-004', username: 'Blue Lions',     teamName: 'Blue Lions',      elo: 1100, ovr: 78 },
+    { id: 'bot-005', username: 'Silver Wolves',  teamName: 'Silver Wolves',   elo: 960,  ovr: 70 },
+    { id: 'bot-006', username: 'Dark Knights',   teamName: 'Dark Knights',    elo: 1150, ovr: 82 },
+    { id: 'bot-007', username: 'Phoenix Rising', teamName: 'Phoenix Rising',  elo: 900,  ovr: 65 },
+    { id: 'bot-008', username: 'Thunder Hawks',  teamName: 'Thunder Hawks',   elo: 1080, ovr: 76 },
+    { id: 'bot-009', username: 'Emerald City FC','teamName': 'Emerald City FC', elo: 1200, ovr: 85 },
+    { id: 'bot-010', username: 'White Tigers',   teamName: 'White Tigers',    elo: 850,  ovr: 62 },
+  ];
+
+  for (const bot of bots) {
+    // Upsert player
+    await pool.query(`
+      INSERT INTO players (player_id, username, team_name, elo, wins, losses, draws)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      ON CONFLICT (player_id) DO NOTHING
+    `, [bot.id, bot.username, bot.teamName, bot.elo,
+        Math.floor(Math.random() * 20), Math.floor(Math.random() * 15), Math.floor(Math.random() * 10)]);
+
+    // Bot squad (11 generic players)
+    const squad = Array.from({ length: 11 }, (_, i) => ({
+      id: `${bot.id}-p${i}`, name: `Player ${i + 1}`,
+      ovr: bot.ovr + Math.floor(Math.random() * 6) - 3,
+      position: ['GK','CB','CB','LB','RB','CM','CM','CAM','LW','RW','ST'][i],
+    }));
+
+    await pool.query(`
+      INSERT INTO team_snapshots (player_id, formation, tactics, squad, avg_ovr)
+      VALUES ($1, $2, $3, $4, $5)
+      ON CONFLICT (player_id) DO NOTHING
+    `, [bot.id, '4-3-3', '{}', JSON.stringify(squad), bot.ovr]);
+  }
+  console.log('Bot players seeded.');
 }
 
 // ─── ELO HELPER ─────────────────────────────────────────────────────────────
@@ -129,7 +171,7 @@ app.get('/api/matchmaking/:playerId', async (req, res) => {
     );
 
     const myOvr = self.rows[0]?.avg_ovr || 70;
-    const ovrRange = 5; // ±5 OVR tolerans
+    const ovrRange = 10; // ±10 OVR tolerans (beta: geniş tutuyoruz)
 
     // Kendisi hariç, OVR yakın, son 7 gün içinde aktif birini bul
     const { rows } = await pool.query(`
