@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLeagueLogo, hasTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
-import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, ManagerCourseKey, ManagerCreationData, ManagerStaffRoleKey, ManagerTalentKey } from './types';
+import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, ManagerCourseKey, ManagerCreationData, ManagerStaffRoleKey, ManagerTalentKey, TacticType, CoachArchetype } from './types';
 import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier, createManagerProfile, ensureGameStateManagerProfile, purchaseManagerCourse, spendManagerSkillPoint, resetManagerTalents, upgradeManagerPersonalStaff, assignManagerObjectivesForCurrentTeam, canSelectStartingTeam, getInitialManagerSalaryForTeamReputation, getInitialUserManagerRating, getRequiredManagerRatingForJobOffer, performSubstitution as enginePerformSubstitution } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
@@ -30,6 +30,7 @@ import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { TeamCustomizationModal } from './components/TeamCustomizationModal';
 import OnlineMatchModal from './components/OnlineMatchModal';
+import { MPOpponent, submitMatchResult, getOrCreatePlayerId } from './src/services/multiplayerService';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
 import { Layout } from './src/components/Layout';
@@ -102,6 +103,7 @@ const App: React.FC = () => {
     const [showUpdates, setShowUpdates] = useState(false);
     const [showTeamCustomization, setShowTeamCustomization] = useState(false);
     const [showOnlineMatch, setShowOnlineMatch] = useState(false);
+    const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
     const [newsFilter, setNewsFilter] = useState<MessageTab | undefined>(undefined);
@@ -998,6 +1000,100 @@ const App: React.FC = () => {
     };
 
 
+
+    // ========== ONLINE MATCH ==========
+    const handleStartOnlineMatch = (opponent: MPOpponent) => {
+        if (!gameState || !userTeam) return;
+
+        const oppTeamId = `online-opp-${Date.now()}`;
+        const positions: Position[] = [Position.GK, Position.DEF, Position.DEF, Position.DEF, Position.DEF, Position.MID, Position.MID, Position.MID, Position.FWD, Position.FWD, Position.FWD];
+        const rawSquad: any[] = Array.isArray(opponent.squad) ? opponent.squad : [];
+
+        const oppPlayers: Player[] = positions.map((pos, i) => {
+            const snap = rawSquad[i];
+            const ovr = snap?.ovr ?? (opponent.avg_ovr || 72);
+            const isGK = pos === Position.GK;
+            const isDEF = pos === Position.DEF;
+            const isMID = pos === Position.MID;
+            return {
+                id: `${oppTeamId}-p${i}`,
+                firstName: snap?.name ?? `Player`,
+                lastName: `${i + 1}`,
+                age: 26, nationality: 'XX', position: pos,
+                attributes: {
+                    finishing:   isGK ? 5  : isDEF ? 30  : isMID ? 52 : ovr + 3,
+                    passing:     isGK ? 40 : isDEF ? ovr - 5 : isMID ? ovr : ovr - 2,
+                    tackling:    isGK ? 20 : isDEF ? ovr + 5 : isMID ? ovr - 5 : 40,
+                    dribbling:   isGK ? 10 : isDEF ? ovr - 10 : isMID ? ovr : ovr + 2,
+                    goalkeeping: isGK ? ovr + 5 : 5,
+                    speed: ovr - 3, stamina: ovr - 2, strength: ovr - 4,
+                    positioning: isDEF || isGK ? ovr + 3 : ovr - 2,
+                    aggression: ovr - 8, composure: ovr - 5,
+                    vision: isMID ? ovr + 3 : ovr - 5,
+                    leadership: ovr - 10, decisions: ovr - 5,
+                },
+                hiddenAttributes: { consistency: 70, importantMatches: 65, injuryProneness: 15 },
+                stats: {}, overall: ovr, potential: ovr + 2,
+                value: 1000000, wage: 10000, salary: 10000, contractYears: 2,
+                morale: 75, condition: 92, form: 7,
+                teamId: oppTeamId,
+                isTransferListed: false, weeksInjured: 0, matchSuspension: 0,
+                lineup: 'STARTING' as LineupStatus,
+                lineupIndex: i, playStyles: [],
+            } as unknown as Player;
+        });
+
+        const oppTeam: Team = {
+            id: oppTeamId, name: opponent.team_name, city: opponent.team_name,
+            primaryColor: '#1a1a2e', secondaryColor: '#e94560',
+            reputation: 70, budget: 10000000, boardConfidence: 70,
+            leagueId: 'online', wages: 500000,
+            facilities: { stadiumCapacity: 15000, stadiumLevel: 2, trainingLevel: 2, academyLevel: 2 },
+            staff: { headCoachLevel: 3, scoutLevel: 2, physioLevel: 2 },
+            objectives: [],
+            tactic: {
+                formation: TacticType.T_433, style: 'Possession', aggression: 'Normal',
+                tempo: 'Normal', width: 'Normal', defensiveLine: 'Medium', passingStyle: 'Mixed',
+                marking: 'Zonal', mentality: 'Balanced', pressingIntensity: 'Balanced', attackPlan: 'WIDE_CROSS',
+            },
+            coachArchetype: CoachArchetype.TACTICIAN,
+            trainingFocus: 'BALANCED', trainingIntensity: 'NORMAL',
+            youthCandidates: [], recentForm: [],
+            stats: { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 },
+        } as unknown as Team;
+
+        const onlineMatch: Match = {
+            id: uuid(), week: 0,
+            homeTeamId: userTeam.id, awayTeamId: oppTeamId,
+            homeScore: 0, awayScore: 0, events: [],
+            isPlayed: false, isFriendly: true,
+            date: Date.now(), attendance: userTeam.facilities.stadiumCapacity,
+            currentMinute: 0, weather: 'Sunny', timeOfDay: 'Night',
+            stats: { homePossession: 50, awayPossession: 50, homeShots: 0, awayShots: 0, homeOnTarget: 0, awayOnTarget: 0, homeXG: 0, awayXG: 0 },
+        } as unknown as Match;
+
+        const homePlayers = gameState.players.filter(p => p.teamId === userTeam.id);
+        const initialSim = initializeMatch(onlineMatch, userTeam, oppTeam, homePlayers, oppPlayers, gameState.userTeamId);
+
+        setOnlineMatchOpponent(opponent);
+
+        setGameState(prev => {
+            if (!prev) return null;
+            return {
+                ...prev,
+                teams: [...prev.teams, oppTeam],
+                players: [...prev.players, ...oppPlayers],
+                matches: [...prev.matches, {
+                    ...onlineMatch,
+                    liveData: { ballHolderId: null, pitchZone: 50, lastActionText: 'Online Match Kickoff', simulation: initialSim },
+                }],
+            };
+        });
+
+        setActiveMatchId(onlineMatch.id);
+        setView('match');
+        setDebugLog([]);
+    };
 
     // ========== TACTICAL ANALYSIS TOOL (DEBUG) ==========
     // Exposed to window for user to manually verify tactical impacts
@@ -2143,9 +2239,27 @@ const App: React.FC = () => {
         if (!p1) return;
         simulation.performSubstitution(activeMatchId, p1, p2Id);
     }, [activeMatchId, gameState, simulation]); const handleMatchFinish = useCallback(async () => {
+        // Online match: submit ELO result and clean up temp data
+        if (onlineMatchOpponent && activeMatchId) {
+            const finishedMatch = gameState?.matches.find(m => m.id === activeMatchId);
+            if (finishedMatch) {
+                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore).catch(() => {});
+            }
+            const oppTeamPrefix = 'online-opp-';
+            setGameState(prev => {
+                if (!prev) return null;
+                return {
+                    ...prev,
+                    teams: prev.teams.filter(t => !t.id.startsWith(oppTeamPrefix)),
+                    players: prev.players.filter(p => !p.teamId.startsWith(oppTeamPrefix)),
+                    matches: prev.matches.filter(m => m.id !== activeMatchId),
+                };
+            });
+            setOnlineMatchOpponent(null);
+        }
         await simulation.handleMatchFinish();
         setView('dashboard');
-    }, [simulation]);
+    }, [simulation, onlineMatchOpponent, activeMatchId, gameState]);
 
 
     // Show Profile Selector if requested
@@ -3663,6 +3777,7 @@ const App: React.FC = () => {
             {showOnlineMatch && userTeam && (
                 <OnlineMatchModal
                     onClose={() => setShowOnlineMatch(false)}
+                    onStartMatch={(opp) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp); }}
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
                     lang={lang}
