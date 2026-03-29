@@ -99,6 +99,14 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
           </div>
         </div>
 
+        {/* Beta ELO Reset Warning */}
+        <div className="mx-4 mt-3 flex items-start gap-2 p-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl shrink-0">
+          <span className="text-base shrink-0">⚠️</span>
+          <div className="text-[10px] text-amber-300 leading-relaxed">
+            <span className="font-bold">Beta Dönemi:</span> ELO puanları her gün veya gün aşırı sıfırlanabilir. Bu süreç hazırlık maçları gibi düşünün — asıl sezon yakında başlıyor.
+          </div>
+        </div>
+
         {/* My profile banner */}
         {myProfile && myLeague && (
           <div className={`mx-4 mt-4 p-3 rounded-xl bg-gradient-to-r ${myLeague.gradient} border ${myLeague.border} flex items-center justify-between shrink-0`}>

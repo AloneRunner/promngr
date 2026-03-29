@@ -288,61 +288,47 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onDetail, onInteractSta
                         <MessageSquare size={14} />
                     </button>
 
-                    <div 
-                        onClick={(e) => { e.stopPropagation(); onDetail(player); }} 
-                        className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg shadow-lg border-2 cursor-pointer active:scale-95 transition-all duration-200 group/ovr-btn
-                            hover:scale-110 hover:shadow-emerald-500/20 hover:border-white/40
-                            ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
-                        effectiveRating >= 80 ? 'bg-gradient-to-b from-slate-200 to-slate-400 border-slate-200 shadow-white/20' :
-                            effectiveRating >= 70 ? 'bg-gradient-to-b from-amber-600 to-amber-800 border-amber-700 shadow-orange-900/40' :
-                                'bg-slate-800 border-slate-700'
-                        }`} title={`Detay için tıkla | Base: ${player.overall} | Live: ${effectiveRating}`}>
-                        <span className={`font-black text-base leading-none transition-all duration-200 group-hover/ovr-btn:scale-110 ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
-                            {effectiveRating}
-                        </span>
-                        {/* Hover Detail Indicator */}
-                        <div className="absolute -top-1.5 -right-1.5 opacity-0 group-hover/ovr-btn:opacity-100 transition-all duration-300 scale-50 group-hover/ovr-btn:scale-100">
-                            <div className="bg-white/90 backdrop-blur rounded-full p-0.5 shadow-lg border border-white/50">
-                                <Search size={8} className="text-slate-900" />
-                            </div>
-                        </div>
-                        {player.overall !== effectiveRating && (
-                            <div className="group/ovr relative flex flex-col items-center">
-                                <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 ${effectiveRating < player.overall ? 'text-red-900/80 animate-pulse' : 'text-emerald-900'}`}>
-                                    {effectiveRating < player.overall ? (t.drop || 'DROP') : (t.buff || 'BUFF')}
+                    {/* OVR + Detay Butonu */}
+                    {(() => {
+                        const contractExpiring = player.contractYears <= 1;
+                        const contractCritical = player.contractYears <= 0;
+                        return (
+                        <div className="flex flex-col items-center gap-0.5">
+                            <div
+                                onClick={(e) => { e.stopPropagation(); onDetail(player); }}
+                                className={`relative w-11 h-11 flex flex-col items-center justify-center rounded-xl shadow-lg border-2 cursor-pointer active:scale-95 transition-all duration-200
+                                    ${contractCritical
+                                        ? 'bg-gradient-to-b from-red-500 to-red-700 border-red-400 shadow-red-500/40 animate-pulse'
+                                        : contractExpiring
+                                        ? 'bg-gradient-to-b from-orange-500 to-orange-700 border-orange-400 shadow-orange-500/30'
+                                        : effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30'
+                                        : effectiveRating >= 80 ? 'bg-gradient-to-b from-slate-200 to-slate-400 border-slate-200 shadow-white/20'
+                                        : effectiveRating >= 70 ? 'bg-gradient-to-b from-amber-600 to-amber-800 border-amber-700 shadow-orange-900/40'
+                                        : 'bg-slate-800 border-slate-700'
+                                    }`}>
+                                <span className={`font-black text-base leading-none ${contractExpiring || effectiveRating >= 70 ? 'text-white' : 'text-slate-300'}`}>
+                                    {effectiveRating}
                                 </span>
-
-                                {/* Rating Impact Tooltip */}
-                                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-48 p-2 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl opacity-0 group-hover/ovr:opacity-100 transition-opacity pointer-events-none z-[60] text-[10px]">
-                                    <div className="font-bold text-white mb-1 border-b border-slate-700 pb-1">{t.ratingFactors || 'Reyting Faktörleri'}</div>
-                                    <div className="space-y-1">
-                                        <div className="flex justify-between items-center text-slate-400">
-                                            <span>{t.baseOverall || 'Base Overall'}</span>
-                                            <span className="font-mono">{player.overall}</span>
-                                        </div>
-                                        {getRatingImpacts(player, roleToUse, player.condition).map((impact, idx) => {
-                                            const labelMap = {
-                                                POSITION: t.ratingImpactPosition || 'Out of Position',
-                                                MORALE: t.ratingImpactMorale || 'Low Morale',
-                                                CONDITION: t.ratingImpactCondition || 'Low Condition',
-                                                FIT: t.ratingImpactStable || 'Optimal State'
-                                            };
-                                            return (
-                                                <div key={idx} className={`flex justify-between items-center ${impact.value > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                                    <span>{labelMap[impact.reason]}</span>
-                                                    <span className="font-mono font-bold">{impact.value > 0 ? '+' : ''}{impact.value}</span>
-                                                </div>
-                                            );
-                                        })}
-                                        <div className="pt-1 mt-1 border-t border-slate-700 flex justify-between items-center font-bold text-white">
-                                            <span>{t.currentOverall || 'Current'}</span>
-                                            <span className="text-emerald-400">{effectiveRating}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* DROP/BUFF etiket */}
+                                {player.overall !== effectiveRating && !contractExpiring && (
+                                    <span className={`text-[7px] font-black uppercase leading-none mt-0.5 ${effectiveRating < player.overall ? 'text-red-200' : 'text-emerald-900'}`}>
+                                        {effectiveRating < player.overall ? (t.drop || 'DROP') : (t.buff || 'ARTIS')}
+                                    </span>
+                                )}
+                                {/* Sözleşme uyarı etiketi */}
+                                {contractExpiring && (
+                                    <span className="text-[7px] font-black uppercase leading-none mt-0.5 text-white">
+                                        {contractCritical ? '⚠ BİTTİ' : '⚠ BİTİYOR'}
+                                    </span>
+                                )}
                             </div>
-                        )}
-                    </div>
+                            {/* Kalıcı DETAY etiketi — mobilde görünür */}
+                            <span className={`text-[8px] font-bold uppercase tracking-wider leading-none ${contractExpiring ? 'text-orange-400' : 'text-slate-500'}`}>
+                                {contractExpiring ? 'YENİLE' : 'DETAY'}
+                            </span>
+                        </div>
+                        );
+                    })()}
 
                     {onMove && (
                         <div className="flex flex-col gap-1 ml-1">
