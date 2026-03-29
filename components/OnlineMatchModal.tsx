@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, X, Search, AlertCircle, Wifi } from 'lucide-react';
 import {
-  getOrCreatePlayerId,
-  registerPlayer,
-  syncTeamSnapshot,
-  findOpponent,
-  getMyProfile,
-  MPOpponent,
-  MPPlayer,
+  registerPlayer, syncTeamSnapshot, findOpponent, getMyProfile,
+  MPOpponent, MPPlayer,
 } from '../src/services/multiplayerService';
 import { Team, Player } from '../src/types';
 
@@ -16,21 +11,19 @@ interface Props {
   onStartMatch: (opponent: MPOpponent) => void;
   userTeam: Team;
   userPlayers: Player[];
-  lang: string;
+  t: any;
 }
 
 type Phase = 'idle' | 'syncing' | 'searching' | 'found' | 'error';
 
-export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, userPlayers, lang }: Props) {
+export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, userPlayers, t }: Props) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [profile, setProfile] = useState<MPPlayer | null>(null);
   const [opponent, setOpponent] = useState<MPOpponent | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const myOvr = Math.round(
-    userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11)
-      .reduce((s, p) => s + p.overall, 0) / Math.max(1, userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11).length)
-  ) || 70;
+  const starters = userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11);
+  const myOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / Math.max(1, starters.length)) || 70;
 
   useEffect(() => {
     registerPlayer('Manager', userTeam.name);
@@ -40,7 +33,6 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   async function handleFindMatch() {
     setPhase('syncing');
     setErrorMsg('');
-    const starters = userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11);
     await syncTeamSnapshot(
       (userTeam.tactic?.formation as string) || '4-3-3', {},
       starters.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}`.trim(), ovr: p.overall, position: p.position })),
@@ -50,7 +42,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
     const opp = await findOpponent();
     if (!opp) {
       setPhase('error');
-      setErrorMsg(lang === 'tr' ? 'Henüz yeterli oyuncu yok. Birkaç dakika sonra tekrar dene!' : 'No opponents found yet!');
+      setErrorMsg(t.onlineNoOpponent || 'No opponents found yet!');
       return;
     }
     setOpponent(opp);
@@ -65,8 +57,8 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
         <div className="flex items-center justify-between p-4 border-b border-white/5">
           <div className="flex items-center gap-2">
             <Globe size={18} className="text-purple-400" />
-            <span className="font-bold text-white">Online Maç</span>
-            <span className="text-[10px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/50 text-purple-300 rounded font-bold uppercase tracking-wider">BETA</span>
+            <span className="font-bold text-white">{t.onlineMatch || 'Online Match'}</span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/50 text-purple-300 rounded font-bold uppercase tracking-wider">{t.onlineMatchBeta || 'BETA'}</span>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
             <X size={18} />
@@ -78,7 +70,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           {phase === 'idle' && (
             <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-amber-300">
               <AlertCircle size={14} className="shrink-0 mt-0.5" />
-              <span>{lang === 'tr' ? 'Deneme aşaması. Maç sonuçları ELO puanını etkiler.' : 'Beta feature. Match results affect your ELO rating.'}</span>
+              <span>{t.onlineBetaWarning || 'Beta phase — ELO ratings will be reset periodically.'}</span>
             </div>
           )}
 
@@ -86,7 +78,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           {profile && (
             <div className="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-white/5">
               <div>
-                <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">{lang === 'tr' ? 'Senin Takımın' : 'Your Team'}</div>
+                <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">{t.onlineYourTeam || 'Your Team'}</div>
                 <div className="font-bold text-white text-sm">{userTeam.name}</div>
                 <div className="text-[11px] text-slate-400">OVR {myOvr}</div>
               </div>
@@ -99,10 +91,10 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           )}
 
           {/* Opponent found */}
-          {(phase === 'found') && opponent && (
+          {phase === 'found' && opponent && (
             <div className="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-purple-500/20">
               <div>
-                <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">{lang === 'tr' ? 'Rakip Bulundu!' : 'Opponent Found!'}</div>
+                <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">{t.onlineOpponentFound || 'Opponent Found!'}</div>
                 <div className="font-bold text-white text-sm">{opponent.team_name}</div>
                 <div className="text-[11px] text-slate-400">OVR {Math.round(opponent.avg_ovr)} • {opponent.username}</div>
               </div>
@@ -124,15 +116,15 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
             <button onClick={handleFindMatch}
               className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95">
               <Search size={16} />
-              {lang === 'tr' ? 'Rakip Bul' : 'Find Opponent'}
+              {t.onlineFindOpponent || 'Find Opponent'}
             </button>
           )}
 
           {(phase === 'syncing' || phase === 'searching') && (
             <div className="w-full py-3 bg-slate-700/50 text-slate-300 rounded-xl flex items-center justify-center gap-2 text-sm">
               {phase === 'syncing'
-                ? <><Wifi size={16} className="animate-pulse text-purple-400" /> {lang === 'tr' ? 'Kadron senkronize ediliyor...' : 'Syncing squad...'}</>
-                : <><Search size={16} className="animate-bounce text-purple-400" /> {lang === 'tr' ? 'Rakip aranıyor...' : 'Searching...'}</>
+                ? <><Wifi size={16} className="animate-pulse text-purple-400" /> {t.onlineSyncing || 'Syncing squad...'}</>
+                : <><Search size={16} className="animate-bounce text-purple-400" /> {t.onlineSearching || 'Searching...'}</>
               }
             </div>
           )}
@@ -140,7 +132,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           {phase === 'found' && opponent && (
             <button onClick={() => { onClose(); onStartMatch(opponent); }}
               className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95">
-              ⚽ {lang === 'tr' ? 'Maça Başla!' : 'Start Match!'}
+              ⚽ {t.onlineStartMatch || 'Start Match!'}
             </button>
           )}
 

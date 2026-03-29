@@ -1,6 +1,6 @@
 # Gizlilik Politikası
 
-**Son Güncelleme:** 25 Aralık 2025
+**Son Güncelleme:** 29 Mart 2026
 
 Bu Gizlilik Politikası, **Pocket Football Manager** ("biz", "bizim" veya "uygulama") uygulamasını kullandığınızda bilgilerinizin nasıl toplandığını, kullanıldığını ve paylaşıldığını açıklar. Uygulamamızı indirerek veya kullanarak bu politikanın şartlarını kabul etmiş sayılırsınız.
 
@@ -63,8 +63,19 @@ Uygulamamız, 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamaz
 
 Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Herhangi bir değişiklik olması durumunda, yeni Gizlilik Politikasını bu sayfada yayınlayarak sizi bilgilendireceğiz. Bu değişiklikler, bu sayfada yayınlandıktan hemen sonra geçerli olur.
 
-## 8. İletişim
+## 8. Çevrimiçi Maç Özelliği ve Sunucu Verileri
+
+Uygulama, çevrimiçi maç özelliği kapsamında aşağıdaki oyun verilerini kendi sunucularımızda (Railway platformu) saklamaktadır:
+
+*   **Takım adı** ve **kadro istatistikleri** (oyuncu genel puanı, mevki, diziliş)
+*   **ELO puanı** ve maç geçmişi (kazanma/kaybetme/beraberlik sayısı)
+*   **Anonim oyuncu kimliği** (cihazda rastgele üretilen UUID — isim, e-posta veya gerçek kimlik içermez)
+
+Bu veriler yalnızca rakip eşleştirme ve sıralama tablosu amacıyla kullanılmaktadır. Kişisel kimlik bilgisi toplanmamaktadır. ELO puanları ve maç geçmişi belirli aralıklarla sıfırlanabilir (sezon sistemi).
+
+## 9. İletişim
 
 Gizlilik Politikamızla ilgili herhangi bir sorunuz veya öneriniz varsa, lütfen bizimle şu adresten iletişime geçin:
 
 **E-posta:** kaanozarik@gmail.com
+

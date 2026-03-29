@@ -25,6 +25,7 @@ interface DetailedMatchCenterProps {
     onPlayerClick: (player: Player) => void;
     goalReplay?: boolean;
     isOnlineMatch?: boolean;
+    onlineEloChange?: number | null;
 }
 
 type LiveAttackPlan = {
@@ -601,7 +602,7 @@ const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z
 const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     match, homeTeam, awayTeam, homePlayers, awayPlayers, onSync, onFinish, onInstantFinish,
     onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, debugLogs, onPlayerClick,
-    goalReplay = true, isOnlineMatch = false
+    goalReplay = true, isOnlineMatch = false, onlineEloChange = null
 }) => {
     const [speed, setSpeed] = useState(1.0);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -3032,6 +3033,23 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                     ))}
                                 </div>
                             </div>
+
+                            {/* ELO Change (online only) */}
+                            {isOnlineMatch && onlineEloChange !== null && (
+                                <div className={`mx-4 mb-3 py-2.5 px-4 rounded-xl border flex items-center justify-center gap-2 font-black text-base ${
+                                    onlineEloChange > 0
+                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                        : onlineEloChange < 0
+                                        ? 'bg-red-500/10 border-red-500/30 text-red-400'
+                                        : 'bg-slate-800 border-slate-700 text-slate-400'
+                                }`}>
+                                    <span>ELO</span>
+                                    <span>{onlineEloChange > 0 ? `+${onlineEloChange}` : onlineEloChange}</span>
+                                    <span className="text-[10px] font-normal text-slate-500 ml-1">
+                                        {onlineEloChange > 0 ? '🏆' : onlineEloChange < 0 ? '😔' : '🤝'}
+                                    </span>
+                                </div>
+                            )}
 
                             {/* Continue button */}
                             <div className="p-3 border-t border-slate-800">

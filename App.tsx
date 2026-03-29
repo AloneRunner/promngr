@@ -31,7 +31,7 @@ import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { TeamCustomizationModal } from './components/TeamCustomizationModal';
 import OnlineMatchModal from './components/OnlineMatchModal';
 import OnlineLeaderboard from './components/OnlineLeaderboard';
-import { MPOpponent, submitMatchResult, getOrCreatePlayerId } from './src/services/multiplayerService';
+import { MPOpponent, submitMatchResult, getOrCreatePlayerId, registerPlayer, syncTeamSnapshot } from './src/services/multiplayerService';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
 import { Layout } from './src/components/Layout';
@@ -106,6 +106,7 @@ const App: React.FC = () => {
     const [showOnlineMatch, setShowOnlineMatch] = useState(false);
     const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
+    const [onlineEloChange, setOnlineEloChange] = useState<number | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
     const [newsFilter, setNewsFilter] = useState<MessageTab | undefined>(undefined);
@@ -130,6 +131,22 @@ const App: React.FC = () => {
 
     // Keep gameStateRef in sync so callbacks can read latest state
     React.useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
+
+    // Auto-sync snapshot to Railway so user appears in matchmaking pool even without playing online
+    React.useEffect(() => {
+        if (!gameState || !userTeam) return;
+        const starters = gameState.players.filter(p => p.teamId === gameState.userTeamId && p.lineup === 'STARTING').slice(0, 11);
+        if (starters.length === 0) return;
+        const avgOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / starters.length);
+        registerPlayer('Manager', userTeam.name).catch(() => {});
+        syncTeamSnapshot(
+            (userTeam.tactic?.formation as string) || '4-3-3', {},
+            starters.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}`.trim(), ovr: p.overall, position: p.position })),
+            avgOvr
+        ).catch(() => {});
+    // Sadece ilk yüklemede ve takım değiştiğinde çalışsın
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [gameState?.userTeamId]);
 
     // After sim runs, wait for React to commit new state, then find the user's match
     React.useEffect(() => {
@@ -1041,13 +1058,33 @@ const App: React.FC = () => {
                 teamId: oppTeamId,
                 isTransferListed: false, weeksInjured: 0, matchSuspension: 0,
                 lineup: 'STARTING' as LineupStatus,
-                lineupIndex: i, playStyles: [],
+                lineupIndex: i,
+                playStyles: pos === Position.GK
+                    ? (ovr >= 80 ? ['Kedi Refleks'] : [])
+                    : pos === Position.FWD
+                    ? (ovr >= 82 ? ['Plase Şut'] : ovr >= 78 ? ['Roket'] : [])
+                    : pos === Position.MID
+                    ? (ovr >= 80 ? ['Maestro'] : [])
+                    : [],
             } as unknown as Player;
         });
 
+        // Rakip rengi kullanıcı rengiyle çakışmasın — sabit deplasman seti kullan
+        const userPrimary = (userTeam.primaryColor || '').toLowerCase();
+        const awayKits = [
+            { primary: '#ffffff', secondary: '#1a1a2e' },
+            { primary: '#f5f5f5', secondary: '#c0392b' },
+            { primary: '#ffd700', secondary: '#1a1a2e' },
+            { primary: '#ff6b35', secondary: '#ffffff' },
+            { primary: '#2ecc71', secondary: '#ffffff' },
+        ];
+        // Kullanıcı beyaza yakınsa koyu, değilse beyaz seç
+        const isUserLight = ['#fff', '#ffd', '#f5f', '#eee', '#fff'].some(c => userPrimary.startsWith(c));
+        const oppKit = isUserLight ? awayKits[1] : awayKits[0];
+
         const oppTeam: Team = {
             id: oppTeamId, name: opponent.team_name, city: opponent.team_name,
-            primaryColor: '#1a1a2e', secondaryColor: '#e94560',
+            primaryColor: oppKit.primary, secondaryColor: oppKit.secondary,
             reputation: 70, budget: 10000000, boardConfidence: 70,
             leagueId: 'online', wages: 500000,
             facilities: { stadiumCapacity: 15000, stadiumLevel: 2, trainingLevel: 2, academyLevel: 2 },
@@ -2252,7 +2289,9 @@ const App: React.FC = () => {
         if (onlineMatchOpponent && activeMatchId) {
             const finishedMatch = gameState?.matches.find(m => m.id === activeMatchId);
             if (finishedMatch) {
-                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore).catch(() => {});
+                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore)
+                    .then(r => { if (r) setOnlineEloChange(r.homeEloChange); })
+                    .catch(() => {});
             }
             const oppTeamPrefix = 'online-opp-';
             setGameState(prev => {
@@ -2265,6 +2304,7 @@ const App: React.FC = () => {
                 };
             });
             setOnlineMatchOpponent(null);
+            setOnlineEloChange(null);
             // Önceki motor seçimine geri dön
             const prevEngine = (window as any).__prevEngineChoice || 'ucuncu';
             serviceSetEngineChoice(prevEngine);
@@ -2994,6 +3034,7 @@ const App: React.FC = () => {
                                 userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
                                 goalReplay={gameState.performanceSettings?.goalReplay ?? true}
                                 isOnlineMatch={!!onlineMatchOpponent}
+                                onlineEloChange={onlineEloChange}
                             />
                         ) : (
                             <MatchCenter
@@ -3804,7 +3845,7 @@ const App: React.FC = () => {
                 }}
             />
             {showOnlineLeaderboard && (
-                <OnlineLeaderboard onClose={() => setShowOnlineLeaderboard(false)} lang={lang} />
+                <OnlineLeaderboard onClose={() => setShowOnlineLeaderboard(false)} t={t} />
             )}
             {showOnlineMatch && userTeam && (
                 <OnlineMatchModal
@@ -3812,7 +3853,7 @@ const App: React.FC = () => {
                     onStartMatch={(opp) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp); }}
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
-                    lang={lang}
+                    t={t}
                 />
             )}
             {showTeamCustomization && userTeam && (

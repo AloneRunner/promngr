@@ -4,7 +4,7 @@ import { getLeaderboard, getMyProfile, MPPlayer, getOrCreatePlayerId } from '../
 
 interface Props {
   onClose: () => void;
-  lang: string;
+  t: any;
 }
 
 // ─── Liga sistemi (ileride genişler) ────────────────────────────────────────
@@ -45,7 +45,7 @@ function winRate(p: MPPlayer): number {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function OnlineLeaderboard({ onClose, lang }: Props) {
+export default function OnlineLeaderboard({ onClose, t }: Props) {
   const [players, setPlayers] = useState<MPPlayer[]>([]);
   const [myProfile, setMyProfile] = useState<MPPlayer | null>(null);
   const [loading, setLoading] = useState(true);
@@ -77,7 +77,7 @@ export default function OnlineLeaderboard({ onClose, lang }: Props) {
         <div className="flex items-center justify-between p-4 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-2">
             <Globe size={18} className="text-purple-400" />
-            <span className="font-bold text-white">Online Sıralama</span>
+            <span className="font-bold text-white">{t.onlineRankings || 'Online Rankings'}</span>
             <span className="text-[10px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/50 text-purple-300 rounded font-bold uppercase tracking-wider">BETA</span>
           </div>
           <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export default function OnlineLeaderboard({ onClose, lang }: Props) {
             <div className="flex items-center gap-3">
               <span className="text-2xl">{myLeague.icon}</span>
               <div>
-                <div className="text-[10px] text-slate-400 uppercase tracking-wider">Sıraman</div>
+                <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t.onlineMyRank || 'Your Rank'}</div>
                 <div className="font-bold text-white text-sm">{myProfile.team_name}</div>
                 <div className={`text-xs font-bold ${myLeague.color}`}>{myLeague.name} Ligi • {myRank > 0 ? `#${myRank}` : 'Sırasız'}</div>
               </div>
@@ -115,7 +115,7 @@ export default function OnlineLeaderboard({ onClose, lang }: Props) {
           <button
             onClick={() => setActiveLeague('all')}
             className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeLeague === 'all' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-          >Tümü</button>
+          >{t.onlineAllLeagues || 'All'}</button>
           {LEAGUES.map(l => (
             <button key={l.name}
               onClick={() => setActiveLeague(l.name)}
@@ -146,7 +146,7 @@ export default function OnlineLeaderboard({ onClose, lang }: Props) {
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 text-slate-500 text-sm">
-              {activeLeague === 'all' ? 'Henüz sıralama yok.' : `${activeLeague} liginde oyuncu yok.`}
+              {activeLeague === 'all' ? (t.onlineNoMatches || 'No rankings yet.') : (t.onlineNoLeaguePlayers || 'No players in this league.')}
             </div>
           ) : (
             filtered.map((p, i) => {
