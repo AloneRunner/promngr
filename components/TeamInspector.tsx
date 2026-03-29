@@ -29,7 +29,9 @@ const PlayerRow: React.FC<{ player: Player }> = ({ player }) => (
               <div className="text-[10px] text-slate-500">{player.nationality}</div>
            </div>
       </div>
-      <div className={`font-bold ${getOverallColor(player.overall)}`}>{player.overall}</div>
+      <div className={`font-bold ${getOverallColor(player.overall)}`}>
+          {player.overall}
+      </div>
   </div>
 );
 

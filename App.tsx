@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { getLeagueLogo, getTeamLogo } from './logoMapping';
+import { getLeagueLogo, hasTeamLogo } from './logoMapping';
 import { DERBY_RIVALS } from './src/data/teams';
 import { GameState, Team, Player, MatchEventType, TeamTactic, MessageType, LineupStatus, TrainingFocus, TrainingIntensity, Sponsor, Message, Match, AssistantAdvice, TeamStaff, Position, GameProfile, EuropeanCup, MatchEvent, EuropeanCupMatch, GlobalCupMatch, ManagerCourseKey, ManagerCreationData, ManagerStaffRoleKey, ManagerTalentKey } from './types';
 import { generateWorld, simulateTick, processWeeklyEvents, simulateFullMatch, processSeasonEnd, initializeMatch, updateMatchTactic, simulateLeagueRound, analyzeClubHealth, autoPickLineup, syncEngineLineups, getLivePlayerStamina, getSubstitutedOutPlayerIds, generateEuropeanCup, generateGlobalCup, simulateGlobalCupMatch, simulateAIGlobalCupMatches, advanceGlobalCupStage, calculateCupRewards, calculateMatchAttendance, initializeEngine, getEngineState, checkAndScheduleSuperCup, getLastLeagueWeek, getEngineChoice as serviceGetEngineChoice, setEngineChoice as serviceSetEngineChoice, teamHasRemainingMatches, getLeagueMultiplier, createManagerProfile, ensureGameStateManagerProfile, purchaseManagerCourse, spendManagerSkillPoint, resetManagerTalents, upgradeManagerPersonalStaff, assignManagerObjectivesForCurrentTeam, canSelectStartingTeam, getInitialManagerSalaryForTeamReputation, getInitialUserManagerRating, getRequiredManagerRatingForJobOffer, performSubstitution as enginePerformSubstitution } from './services/engine';
 import { loadAllProfiles, createProfile, loadProfileData, saveProfileData, deleteProfile, resetProfile, updateProfileMetadata, setActiveProfile, getActiveProfileId, migrateOldSave } from './services/profileManager';
 import { TeamManagement } from './components/TeamManagement';
 import { LeagueTable } from './components/LeagueTable';
+import { TeamLogo } from './components/TeamLogo';
 import { MatchCenter } from './components/MatchCenter';
 import DetailedMatchCenter from './components/DetailedMatchCenter';
 import { ClubManagement } from './components/ClubManagement';
@@ -28,6 +28,7 @@ import { UpdatesModal } from './components/UpdatesModal';
 import { ManagerCreationModal } from './components/ManagerCreationModal';
 import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
+import { TeamCustomizationModal } from './components/TeamCustomizationModal';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
 import { Layout } from './src/components/Layout';
@@ -38,7 +39,7 @@ import { appendMessages } from './src/utils/stateLimits';
 
 import { TRANSLATIONS } from './src/data/translations';
 import { LEAGUE_PRESETS } from './src/data/teams';
-import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock } from 'lucide-react';
+import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock, Edit2 } from 'lucide-react';
 import { adMobService } from './src/services/adMobService';
 import { playGamesService } from './src/services/playGamesService';
 import { PLAY_GAMES_ACHIEVEMENT_IDS, ManagerAchievementId } from './src/data/managerAchievements';
@@ -98,6 +99,7 @@ const App: React.FC = () => {
     // negotiatedPlayer moved to hook
     const [showJobOffers, setShowJobOffers] = useState(false);
     const [showUpdates, setShowUpdates] = useState(false);
+    const [showTeamCustomization, setShowTeamCustomization] = useState(false);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
     const [newsFilter, setNewsFilter] = useState<MessageTab | undefined>(undefined);
@@ -909,6 +911,29 @@ const App: React.FC = () => {
             setShowTeamSelect(false);
             setView('dashboard');
         }
+    };
+
+    const handleRenameLeague = (leagueId: string, newName: string) => {
+        if (!gameState) return;
+        setGameState(prev => prev ? { 
+            ...prev, 
+            customLeagueNames: { ...(prev.customLeagueNames || {}), [leagueId]: newName } 
+        } : null);
+    };
+
+    const handleRenameTeam = (teamId: string, newName: string, primaryColor: string, secondaryColor: string, newLogoKey?: string) => {
+        if (!gameState) return;
+        const updatedTeams = gameState.teams.map(t =>
+            t.id === teamId ? { 
+                ...t, 
+                name: newName, 
+                primaryColor,
+                secondaryColor,
+                // logoKey: seçilen logo varsa onu kullan, yoksa mevcut logoKey'i koru, o da yoksa orijinal ismi sakla
+                logoKey: newLogoKey || (t as any).logoKey || t.name 
+            } : t
+        );
+        setGameState(prev => prev ? { ...prev, teams: updatedTeams } : null);
     };
 
     const openDerbySelector = () => {
@@ -2340,22 +2365,7 @@ const App: React.FC = () => {
                                 <div className="h-28 md:h-36 relative flex items-center justify-center overflow-hidden" style={{ backgroundColor: team.primaryColor }}>
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-white/10"></div>
                                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden bg-slate-900/90 backdrop-blur flex items-center justify-center z-10 shadow-2xl border border-white/10">
-                                        {getTeamLogo(team.name) ? (
-                                            <img
-                                                src={getTeamLogo(team.name)}
-                                                alt={team.name}
-                                                className="w-full h-full object-cover"
-                                                onError={(e) => {
-                                                    (e.target as HTMLImageElement).style.display = 'none';
-                                                    (e.target as HTMLImageElement).parentElement!.innerText = team.name.substring(0, 1);
-                                                    (e.target as HTMLImageElement).parentElement!.className = "w-full h-full flex items-center justify-center text-4xl font-bold text-white";
-                                                }}
-                                            />
-                                        ) : (
-                                            <span className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
-                                                {team.name.substring(0, 1)}
-                                            </span>
-                                        )}
+                                        <TeamLogo team={team} className="w-full h-full" />
                                     </div>
                                 </div>
                                 <div className="p-3 md:p-4 flex-1 flex flex-col w-full bg-gradient-to-t from-slate-900 to-slate-900/80">
@@ -2412,6 +2422,20 @@ const App: React.FC = () => {
         handleSelectSponsor(autoSponsor);
     }
 
+    const handleRenamePlayer = (player: Player, newFirstName: string, newLastName: string) => {
+        if (!gameState) return;
+        setGameState(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                players: prev.players.map(p => p.id === player.id ? { ...p, firstName: newFirstName, lastName: newLastName } : p)
+            };
+        });
+        if (selectedPlayer && selectedPlayer.id === player.id) {
+            setSelectedPlayer(prev => prev ? { ...prev, firstName: newFirstName, lastName: newLastName } : null);
+        }
+    };
+
     return (
         <Layout bannerPosition={view === 'match' ? 'bottom' : 'top'}>
             {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
@@ -2466,7 +2490,12 @@ const App: React.FC = () => {
                 onToggleTransferList={selectedPlayer?.teamId === userTeam.id ? handleToggleTransferList : undefined}
                 onToggleNotForSale={selectedPlayer?.teamId === userTeam.id ? handleToggleNotForSale : undefined}
                 onTerminateContract={selectedPlayer?.teamId === userTeam.id ? handleTerminateContract : undefined}
+                onRenamePlayer={handleRenamePlayer}
                 t={t}
+                scoutLevel={userTeam.staff.scoutLevel}
+                isOwnTeam={selectedPlayer?.teamId === userTeam.id}
+                scoutingTalent={gameState.managerProfile?.talents?.scouting || 0}
+                scoutAdvisor={gameState.managerProfile?.personalStaff?.scoutAdvisor || 0}
             />
             {inspectedTeamId && <TeamInspector team={gameState.teams.find(t => t.id === inspectedTeamId)!} players={gameState.players.filter(p => p.teamId === inspectedTeamId)} onClose={() => setInspectedTeamId(null)} t={t} />}
             {assistantAdvice && <AssistantReport advice={assistantAdvice} onAutoFix={handleAutoFix} onClose={() => setAssistantAdvice(null)} t={t} />}
@@ -2568,16 +2597,8 @@ const App: React.FC = () => {
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in p-4">
                         <div className="bg-gradient-to-b from-slate-800 to-slate-900 border border-white/10 rounded-3xl max-w-lg w-full p-8 shadow-2xl text-center relative z-50">
                             <div className="flex justify-center mb-6">
-                                <div className="w-28 h-28 rounded-2xl overflow-hidden flex items-center justify-center shadow-2xl border-2 border-white/20" style={{ backgroundColor: userTeam.primaryColor || '#64748b' }}>
-                                    <img
-                                        src={getTeamLogo(userTeam.name || '')}
-                                        alt={userTeam.name || 'Team'}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            const fallbackInitial = (userTeam?.name || 'T')[0];
-                                            (e.target as HTMLImageElement).outerHTML = `<span class="text-5xl font-bold" style="color: #fff">${fallbackInitial}</span>`;
-                                        }}
-                                    />
+                                <div className="w-28 h-28 rounded-2xl overflow-hidden flex items-center justify-center shadow-2xl border-2 border-white/20">
+                                    <TeamLogo team={userTeam} className="w-full h-full" />
                                 </div>
                             </div>
                             <h2 className="text-2xl font-bold text-white mb-2">{t.welcomeTitle}</h2>
@@ -3068,12 +3089,18 @@ const App: React.FC = () => {
                                         {/* Top Row: Manager Profile & Quick Stats */}
                                         <div className="fm-panel rounded-2xl p-4 flex items-center justify-between gap-4 border border-white/5">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center border border-white/10 shadow-xl" style={{ backgroundColor: userTeam.primaryColor }}>
-                                                    <img src={getTeamLogo(userTeam.name)} alt={userTeam.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).outerHTML = `<span class="text-2xl font-bold" style="color: #fff">${userTeam.name.substring(0, 1)}</span>`; }} />
-                                                </div>
+                                                <TeamLogo team={userTeam} className="w-16 h-16 shadow-xl" />
                                                 <div>
                                                     <div className="text-[10px] uppercase text-emerald-500 font-bold tracking-wider mb-0.5">TEKNİK</div>
-                                                    <h2 className="text-xl font-bold text-white leading-tight">{userTeam.name}</h2>
+                                                    <h2 className="text-xl font-bold text-white leading-tight flex items-center gap-2">
+                                                        {userTeam.name}
+                                                        <button 
+                                                            onClick={() => setShowTeamCustomization(true)}
+                                                            className="text-slate-400 hover:text-emerald-400 transition-colors p-1 bg-slate-800/80 rounded"
+                                                        >
+                                                            <Edit2 size={14} />
+                                                        </button>
+                                                    </h2>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <span className="bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded font-mono">{t.reputation}: {userTeam.reputation}</span>
                                                     </div>
@@ -3318,23 +3345,15 @@ const App: React.FC = () => {
                                                     return (
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex items-center gap-3">
-                                                                <div className={`w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center border shadow-lg ${isCup
-                                                                    ? (isSuperCup ? 'bg-amber-600 border-amber-400' : isCL ? 'bg-purple-900 border-purple-500' : 'bg-emerald-900 border-emerald-500')
-                                                                    : 'bg-slate-800 border-slate-700'}`}>
-                                                                    {opponent ? (
-                                                                        <img
-                                                                            src={getTeamLogo(opponent.name || '')}
-                                                                            alt={opponent.name || 'Opponent'}
-                                                                            className="w-full h-full object-cover"
-                                                                            onError={(e) => {
-                                                                                const fallbackInitial = (opponent?.name || 'T')[0];
-                                                                                (e.target as HTMLImageElement).outerHTML = `<span class="text-lg font-bold" style="color: #fff">${fallbackInitial}</span>`;
-                                                                            }}
-                                                                        />
-                                                                    ) : (
-                                                                        isCup ? <Trophy size={18} /> : 'VS'
-                                                                    )}
-                                                                </div>
+                                                                    <div className={`w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center border shadow-lg ${isCup
+                                                                        ? (isSuperCup ? 'bg-amber-600 border-amber-400' : isCL ? 'bg-purple-900 border-purple-500' : 'bg-emerald-900 border-emerald-500')
+                                                                        : 'bg-slate-800 border-slate-700'}`}>
+                                                                        {opponent ? (
+                                                                            <TeamLogo team={opponent} className="w-full h-full" />
+                                                                        ) : (
+                                                                            isCup ? <Trophy size={18} /> : 'VS'
+                                                                        )}
+                                                                    </div>
                                                                 <div>
                                                                     <div className={`text-[10px] font-bold uppercase ${isCup
                                                                         ? (isSuperCup ? 'text-amber-300' : isCL ? 'text-purple-400' : 'text-emerald-400')
@@ -3485,6 +3504,8 @@ const App: React.FC = () => {
                                         onInspectTeam={setInspectedTeamId}
                                         currentLeagueId={viewLeagueId}
                                         onSelectLeague={setViewLeagueId}
+                                        customLeagueNames={gameState.customLeagueNames}
+                                        onRenameLeague={handleRenameLeague}
                                     />
                                 )
                             }
@@ -3607,16 +3628,25 @@ const App: React.FC = () => {
                     setEngineChoice(choice);
                     serviceSetEngineChoice(choice);
                 }}
-                matchViewMode={matchViewMode}
                 onMatchViewModeChange={(mode) => {
                     setMatchViewMode(mode);
                     try {
                         localStorage.setItem('matchViewMode', mode);
                     } catch {
-                        // Ignore storage failures and keep the in-memory preference.
+                        // Ignore storage failures
                     }
                 }}
             />
+            {showTeamCustomization && userTeam && (
+                <TeamCustomizationModal 
+                    team={userTeam}
+                    translations={t}
+                    onClose={() => setShowTeamCustomization(false)}
+                    onSave={(newName, primary, secondary, logoKey) => {
+                        handleRenameTeam(userTeam.id, newName, primary, secondary, logoKey);
+                    }}
+                />
+            )}
         </Layout >
     );
 };

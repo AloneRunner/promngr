@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Team, Player, Translation, LeagueHistoryEntry } from '../types';
 import { LEAGUE_PRESETS } from '../constants';
-import { Trophy, Target, Award, Crown, History, Eye } from 'lucide-react';
+import { Trophy, Target, Award, Crown, History, Eye, Edit2 } from 'lucide-react';
 import { TeamLogo } from './TeamLogo';
 
 interface LeagueTableProps {
@@ -15,9 +15,11 @@ interface LeagueTableProps {
     onInspectTeam: (teamId: string) => void;
     currentLeagueId: string;
     onSelectLeague: (leagueId: string) => void;
+    customLeagueNames?: Record<string, string>;
+    onRenameLeague?: (leagueId: string, newName: string) => void;
 }
 
-export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, players, t, history = [], onInspectTeam, currentLeagueId, onSelectLeague }) => {
+export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, players, t, history = [], onInspectTeam, currentLeagueId, onSelectLeague, customLeagueNames, onRenameLeague }) => {
     const [tab, setTab] = useState<'TABLE' | 'GOALS' | 'ASSISTS' | 'TOP_RATED' | 'RATING' | 'HISTORY'>('TABLE');
     const lookupTeams = allTeams || teams;
 
@@ -121,7 +123,23 @@ export const LeagueTable: React.FC<LeagueTableProps> = ({ teams, allTeams, playe
             <div className="bg-slate-950 p-3 border-b border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Trophy className="text-yellow-500" size={20} />
-                    <span className="font-bold text-lg text-white">{LEAGUE_PRESETS.find(l => l.id === currentLeagueId)?.name || 'League Table'}</span>
+                    <span className="font-bold text-lg text-white flex items-center gap-2">
+                        {customLeagueNames?.[currentLeagueId] || LEAGUE_PRESETS.find(l => l.id === currentLeagueId)?.name || 'League Table'}
+                        {onRenameLeague && (
+                            <button 
+                                onClick={() => {
+                                    const currName = customLeagueNames?.[currentLeagueId] || LEAGUE_PRESETS.find(l => l.id === currentLeagueId)?.name || '';
+                                    const newName = prompt(t.enterNewName || 'Yeni lig ismi girin:', currName);
+                                    if (newName && newName.trim().length > 0) {
+                                        onRenameLeague(currentLeagueId, newName.trim());
+                                    }
+                                }}
+                                className="text-slate-400 hover:text-yellow-400 transition-colors p-1 bg-slate-800 rounded"
+                            >
+                                <Edit2 size={14} />
+                            </button>
+                        )}
+                    </span>
                 </div>
                 <select
                     value={currentLeagueId}

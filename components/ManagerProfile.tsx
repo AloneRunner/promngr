@@ -1,6 +1,6 @@
 import React from 'react';
 import { GameState, ManagerCourseKey, ManagerStaffRoleKey, ManagerTalentKey, Team } from '../types';
-import { getTeamLogo } from '../logoMapping';
+import { getTeamLogo, hasTeamLogo } from '../logoMapping';
 import { getManagerGameplayEffects, getManagerPersonalStaffWeeklyCost, getManagerStaffLevelCap, getManagerTalentLevelCap } from '../services/engine';
 
 interface ManagerProfileProps {
@@ -363,15 +363,23 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
 
                             <div className="text-gray-400 text-sm">{t.currentTeam || t.currentTeamLabel || ui.currentTeam}</div>
                             <div className="mt-1 flex flex-wrap items-center gap-3">
-                                <img
-                                    src={getTeamLogo(userTeam?.name || '')}
-                                    alt={userTeam?.name || 'Team'}
-                                    className="w-8 h-8 object-contain"
-                                    onError={(e) => {
-                                        const fallback = (userTeam?.name || 'T')[0];
-                                        (e.target as HTMLImageElement).outerHTML = `<span class="text-xl font-bold" style="color: ${userTeam?.primaryColor || '#fff'}">${fallback}</span>`;
-                                    }}
-                                />
+                                {(() => {
+                                    const lookupName = (userTeam as any)?.logoKey || userTeam?.name || '';
+                                    const hasLogo = lookupName && hasTeamLogo(lookupName);
+                                    return hasLogo ? (
+                                        <img
+                                            src={getTeamLogo(lookupName)}
+                                            alt={userTeam?.name || 'Team'}
+                                            className="w-8 h-8 object-contain"
+                                            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                                        />
+                                    ) : (
+                                        <span className="w-8 h-8 flex items-center justify-center rounded text-sm font-bold"
+                                            style={{ backgroundColor: userTeam?.primaryColor || '#334155', color: userTeam?.secondaryColor || '#fff', borderRadius: '20%' }}>
+                                            {(userTeam?.name || 'T')[0]}
+                                        </span>
+                                    );
+                                })()}
                                 <span className="min-w-0 break-words text-lg font-bold text-white sm:text-xl">{userTeam?.name || ui.unknownTeam}</span>
                             </div>
 
@@ -816,6 +824,52 @@ export const ManagerProfile: React.FC<ManagerProfileProps> = ({ gameState, userT
                         </div>
                     )}
                 </div>
+
+                {/* League Manager Rankings */}
+                {(() => {
+                    const aiRatings = gameState.aiManagerRatings || {};
+                    const leagueTeams = gameState.teams.filter(tm => tm.leagueId === userTeam.leagueId);
+                    const rankings = leagueTeams.map(tm => ({
+                        teamId: tm.id,
+                        teamName: tm.name,
+                        isUser: tm.id === gameState.userTeamId,
+                        rating: tm.id === gameState.userTeamId
+                            ? (managerProfile?.reputation || rating)
+                            : (aiRatings[tm.id] ?? Math.round(40 + (tm.reputation / 10000) * 40)),
+                    })).sort((a, b) => b.rating - a.rating);
+                    return (
+                        <div className="bg-slate-800/60 rounded-2xl p-4 sm:p-6 border border-slate-600/30">
+                            <h2 className="text-xl font-bold text-white mb-1">🏅 {t.leagueManagerRankings || 'Lig Menajer Sıralaması'}</h2>
+                            <p className="text-sm text-gray-400 mb-4">{t.leagueManagerRankingsDesc || 'Bu ligteki takımların menajer itibar puanları'}</p>
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="text-left text-gray-400 border-b border-slate-600 text-sm">
+                                            <th className="pb-2 w-8">#</th>
+                                            <th className="pb-2">{t.team || 'Takım'}</th>
+                                            <th className="pb-2 text-center">{t.rating || 'İtibar'}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rankings.map((row, idx) => (
+                                            <tr key={row.teamId} className={`border-b border-slate-700/40 ${row.isUser ? 'bg-blue-900/20' : ''}`}>
+                                                <td className="py-2 text-gray-400 text-sm">{idx + 1}</td>
+                                                <td className="py-2">
+                                                    <span className={`font-medium ${row.isUser ? 'text-blue-300' : 'text-gray-200'}`}>
+                                                        {row.isUser ? '⭐ ' : ''}{row.teamName}
+                                                    </span>
+                                                </td>
+                                                <td className={`py-2 text-center font-bold text-sm ${getRatingColor(row.rating)}`}>
+                                                    {row.rating}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* Cup Prize Info */}
                 <div className="bg-slate-800/60 rounded-2xl p-4 sm:p-6 border border-slate-600/30">

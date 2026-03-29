@@ -282,7 +282,7 @@ export class AIService {
         needs.push({
           position: pos,
           role: this.recommendRole(pos, team.tactic),
-          urgency: availablePlayers.length < requiredCount + 1 ? 60 : 40, // More urgent if only 1 sub
+          urgency: availablePlayers.length < requiredCount + 1 ? 60 : 42, // 42 > default threshold(40); 60 if only 1 sub
           targetRating: ambitionBaseline - 5,
           reason: `Lack of depth at ${pos}`,
         });

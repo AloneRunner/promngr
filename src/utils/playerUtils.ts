@@ -36,3 +36,109 @@ export const migrateJerseyNumbers = (gameState: any): any => {
     });
     return { ...gameState, players };
 };
+
+export const getMaskedAttribute = (
+    attributeValue: number,
+    _scoutLevel?: number,
+    _isOwnTeam?: boolean,
+    _playerId?: string,
+    _scoutingTalent?: number,
+    _scoutAdvisor?: number
+): number => {
+    return attributeValue;
+};
+
+export const getMaskedValue = (
+    exactValue: number, 
+    scoutLevel: number, 
+    isOwnTeam: boolean,
+    playerId: string
+): string => {
+    if (isOwnTeam || scoutLevel >= 5) return `€${(exactValue / 1000000).toFixed(1)}M`;
+
+    let hash = 0;
+    for (let i = 0; i < playerId.length; i++) {
+        hash = ((hash << 5) - hash) + playerId.charCodeAt(i);
+        hash |= 0; 
+    }
+    const seededRandom = Math.abs(hash) / 2147483647; 
+
+    let variancePercent;
+    switch (scoutLevel) {
+        case 1: variancePercent = 0.40; break;
+        case 2: variancePercent = 0.25; break;
+        case 3: variancePercent = 0.15; break;
+        case 4: variancePercent = 0.05; break;
+        default: variancePercent = 0.40;
+    }
+
+    const offsetPercentage = (seededRandom * 2 * variancePercent) - variancePercent;
+    let predictedValue = exactValue * (1 + offsetPercentage);
+    
+    const rangeStart = Math.max(0.1, predictedValue * (1 - variancePercent / 2));
+    const rangeEnd = predictedValue * (1 + variancePercent / 2);
+
+    return `€${(rangeStart / 1000000).toFixed(1)}M - €${(rangeEnd / 1000000).toFixed(1)}M`;
+};
+
+export const getMaskedWage = (
+    exactWage: number,
+    scoutLevel: number,
+    isOwnTeam: boolean,
+    playerId: string
+): string => {
+    if (isOwnTeam || scoutLevel >= 5) return `€${Math.floor(exactWage).toLocaleString()}/h`;
+
+    let hash = 0;
+    for (let i = 0; i < playerId.length; i++) {
+        hash = ((hash << 5) - hash) + playerId.charCodeAt(i);
+        hash |= 0; 
+    }
+    const seededRandom = Math.abs(hash) / 2147483647; 
+
+    let variancePercent;
+    switch (scoutLevel) {
+        case 1: variancePercent = 0.30; break;
+        case 2: variancePercent = 0.20; break;
+        case 3: variancePercent = 0.10; break;
+        case 4: variancePercent = 0.05; break;
+        default: variancePercent = 0.30;
+    }
+
+    const offsetPercentage = (seededRandom * 2 * variancePercent) - variancePercent;
+    let predictedWage = exactWage * (1 + offsetPercentage);
+
+    const rangeStart = Math.max(0, predictedWage * (1 - variancePercent / 2));
+    const rangeEnd = predictedWage * (1 + variancePercent / 2);
+
+    const rs = Math.round(rangeStart / 10) * 10;
+    const re = Math.round(rangeEnd / 10) * 10;
+
+    return `€${rs.toLocaleString()} - €${re.toLocaleString()}/h`;
+};
+
+export const getLocalizedPlaystyle = (style: string, t: any): string => {
+    switch (style) {
+        case "Kedi Refleks": return t.styleCatReflexes || style;
+        case "Ortaya Çıkan": return t.styleSweeper || style;
+        case "Penaltı Canavarı": return t.stylePenaltySaver || style;
+        case "Top Kesici": return t.styleInterceptor || style;
+        case "Kaya": return t.styleRock || style;
+        case "Amansız": return t.styleRelentless || style;
+        case "Baskıya Dayanıklı": return t.stylePressResistant || style;
+        case "Seri": return t.styleRapid || style;
+        case "Top Cambazı": return t.styleTrickster || style;
+        case "İlk Dokunuş": return t.styleFirstTouch || style;
+        case "Keskin Pas": return t.styleIncisivePass || style;
+        case "Maestro": return t.styleMaestro || style;
+        case "Ölü Top Uzmanı": return t.styleDeadBall || style;
+        case "Plase Şut": return t.styleFinesse || style;
+        case "Roket": return t.styleRocket || style;
+        case "Aşırtma": return t.styleLob || style;
+        case "Hava Hakimi": return t.styleAerialThreat || style;
+        case "Uzaktan Şutör": return t.styleLongRanger || style;
+        case "Gizli Forvet": return t.styleShadowStriker || style;
+        case "İleride Bekleyen": return t.stylePoacher || style;
+        default: return style;
+    }
+};

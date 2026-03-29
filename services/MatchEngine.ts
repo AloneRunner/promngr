@@ -1,4 +1,4 @@
-﻿import {
+import {
   Match,
   Team,
   Player,
@@ -814,6 +814,7 @@ export class MatchEngine {
   private traceLog: string[] = [];
   private playerRoles: Record<string, Position> = {};
   private baseOffsets: Record<string, { x: number; y: number }> = {};
+  private _pendingGoalObj: { side: 'HOME'|'AWAY', scorerId: string | null, ticks: number } | null = null;
 
   // Helper for cover shadow calculation
   private distToSegment(
@@ -3673,6 +3674,20 @@ export class MatchEngine {
       ((isHome && ballX < 37) || (!isHome && ballX > 68)) && // Ceza sahası yakını
       Math.abs(this.sim.ball.vy) > 0.5; // Top içeri doğru hareket ediyor
 
+    // === AYAK DİBİNDE TOP: Hücumcu çok yakın → şut bekleme, doğrudan müdahale ===
+    if (ballCarrierId && !isBallLoose) {
+      const proximityCarrier = this.getPlayer(ballCarrierId);
+      const proximityCarrierPos = this.sim.players[ballCarrierId];
+      if (proximityCarrier && proximityCarrier.teamId !== p.teamId && proximityCarrierPos) {
+        const distToProximityCarrier = dist(simP.x, simP.y, proximityCarrierPos.x, proximityCarrierPos.y);
+        const gkStateProx = this.playerStates[p.id];
+        if (distToProximityCarrier < 3.0 && gkStateProx && gkStateProx.actionLock <= 0) {
+          this.actionTackle(p, proximityCarrier);
+          gkStateProx.actionLock = 40;
+        }
+      }
+    }
+
     // === SAHİPSİZ TOP - ÇIKIŞ ===
     if (
       isBallLoose &&
@@ -3729,6 +3744,17 @@ export class MatchEngine {
         );
         simP.facing = angleToCarrier;
         simP.state = "RUN";
+
+        // === 1v1 AYAĞA DALIŞ: Kaleci yeterince yaklaştıysa ayağına atılsın ===
+        const distToCarrierNow = dist(simP.x, simP.y, carrierPos.x, carrierPos.y);
+        const gkState1v1 = this.playerStates[p.id];
+        if (distToCarrierNow < 4.5 && gkState1v1 && gkState1v1.actionLock <= 0) {
+          const carrier1v1 = this.getPlayer(ballCarrierId);
+          if (carrier1v1) {
+            this.actionTackle(p, carrier1v1);
+            gkState1v1.actionLock = 35;
+          }
+        }
         return;
       }
     }
@@ -3867,25 +3893,50 @@ export class MatchEngine {
     // --- GOALKEEPER AI (Clearance) ---
     if (this.playerRoles[p.id] === Position.GK) {
       const bestPass = this.findBestPassOption(p, isHome, offsideLineX, goalX);
-      // GK prefers safe ground passing if available (high score)
-      if (bestPass && bestPass.score > 20) {
-        this.actionPass(
-          p,
-          bestPass.player,
-          bestPass.type,
-          bestPass.targetX,
-          bestPass.targetY,
-        );
+
+      // Yakında rakip sayısı
+      const nearbyOpponents = (isHome ? this.awayPlayers : this.homePlayers).filter((op) => {
+        const opPos = this.sim.players[op.id];
+        if (!opPos || op.lineup !== 'STARTING') return false;
+        return dist(simP.x, simP.y, opPos.x, opPos.y) < 18;
+      }).length;
+
+      // Ceza sahası içinde rakip var mı?
+      const opponentNearOwnBox = (isHome ? this.awayPlayers : this.homePlayers).some((op) => {
+        const opPos = this.sim.players[op.id];
+        if (!opPos || op.lineup !== 'STARTING') return false;
+        const inBox = isHome ? opPos.x < PENALTY_BOX_DEPTH + 3 : opPos.x > PITCH_LENGTH - PENALTY_BOX_DEPTH - 3;
+        return inBox;
+      });
+
+      // Hedef ceza sahasında mı?
+      const targetInOwnBox = bestPass && (
+        isHome
+          ? this.sim.players[bestPass.player.id]?.x < PENALTY_BOX_DEPTH + 2
+          : this.sim.players[bestPass.player.id]?.x > PITCH_LENGTH - PENALTY_BOX_DEPTH - 2
+      );
+
+      const minSafeScore = (opponentNearOwnBox || nearbyOpponents > 0) ? 999 : 95;
+      const canPlayShort = bestPass && bestPass.score > minSafeScore && !targetInOwnBox && bestPass.type !== "AERIAL";
+
+      if (canPlayShort && bestPass) {
+        this.actionPass(p, bestPass.player, bestPass.type, bestPass.targetX, bestPass.targetY);
       } else {
-        // Clear the ball
+        // Degaj: Uzun yüksek top, ceza sahasının dışına
         this.sim.ball.ownerId = null;
-        this.sim.mode = undefined; // YENİ: Set piece sonrası oyun normale döner
-        const clearAngle = isHome ? 0 : Math.PI;
-        const power = 3.5 + Math.random();
+        this.sim.mode = undefined;
+        const clearAngleBase = isHome ? 0 : Math.PI;
+        let clearAngle = clearAngleBase + (Math.random() * 0.38 - 0.19);
+        if (opponentNearOwnBox || nearbyOpponents > 0) {
+          clearAngle = isHome
+            ? simP.y < PITCH_CENTER_Y ? 0.25 : -0.25
+            : simP.y < PITCH_CENTER_Y ? Math.PI - 0.25 : Math.PI + 0.25;
+        }
+        const power = (nearbyOpponents > 0 || opponentNearOwnBox) ? 4.3 + Math.random() * 0.7 : 3.7 + Math.random() * 0.8;
         this.sim.ball.vx = Math.cos(clearAngle) * power;
         this.sim.ball.vy = Math.sin(clearAngle) * power;
-        this.sim.ball.vz = 2.5;
-        this.playerStates[p.id].possessionCooldown = 25;
+        this.sim.ball.vz = (nearbyOpponents > 0 || opponentNearOwnBox) ? 3.1 + Math.random() * 0.4 : 2.7 + Math.random() * 0.3;
+        this.playerStates[p.id].possessionCooldown = nearbyOpponents > 0 ? 32 : 25;
       }
       return;
     }
@@ -5949,6 +6000,28 @@ export class MatchEngine {
     const ballX = this.sim.ball.x;
     const ballY = this.sim.ball.y;
     const myGoalX = isHome ? 0 : PITCH_LENGTH; // Moved here for scope visibility
+
+    // === 0. KALECI TOPU TUTUYORSA: CEZA SAHASININ DIŞINA ÇEKİL ===
+    // Rakip kaleci topu eliyle tutuyorsa, ceza sahasından çık ki kaleci oynayabilsin
+    const ballOwnerId = this.sim.ball.ownerId;
+    if (ballOwnerId && role !== Position.GK) {
+      const ballOwner = isHome
+        ? this.awayPlayers.find(op => op.id === ballOwnerId)
+        : this.homePlayers.find(op => op.id === ballOwnerId);
+      if (ballOwner && this.playerRoles[ballOwnerId] === Position.GK) {
+        const gkIsHome = !isHome; // rakip GK, biz away isek gk home
+        const penaltyEdge = gkIsHome ? 18.5 : PITCH_LENGTH - 18.5;
+        const isInsidePenaltyArea = gkIsHome
+          ? simP.x < penaltyEdge
+          : simP.x > penaltyEdge;
+        if (isInsidePenaltyArea) {
+          const retreatX = gkIsHome ? penaltyEdge + 4 : penaltyEdge - 4;
+          this.applySteeringBehavior(p, retreatX, simP.y, MAX_PLAYER_SPEED * 0.9);
+          simP.state = 'RUN';
+          return;
+        }
+      }
+    }
 
     // === 1. MUTLAK ÖNCELİK: TOP BANA GELİYOR (G MOTORU RUHU) ===
     // Eğer top bana geliyorsa, her şeyi bırak topa sprint at!
@@ -8755,52 +8828,78 @@ export class MatchEngine {
       };
     }
 
+    // === GOAL DELAY LOGIC ===
+    if (this._pendingGoalObj) {
+      this._pendingGoalObj.ticks++;
+      // Topun ağlarda yavaşlamasını sağla
+      this.sim.ball.vx *= 0.8;
+      this.sim.ball.vy *= 0.8;
+      this.sim.ball.vz *= 0.8;
+      
+      // Top ağları delip geçmesin (x < -2.3 veya x > PITCH_LENGTH + 2.3)
+      if (this.sim.ball.x < -2.3) this.sim.ball.x = -2.3;
+      if (this.sim.ball.x > PITCH_LENGTH + 2.3) this.sim.ball.x = PITCH_LENGTH + 2.3;
+
+      // ~1.2 saniye bekle (12 tick)
+      if (this._pendingGoalObj.ticks > 12) {
+        const side = this._pendingGoalObj.side;
+        const scorerId = this._pendingGoalObj.scorerId;
+        const scorer = scorerId ? this.getPlayer(scorerId) : null;
+        this.lastShooterId = null;
+        
+        if (side === 'HOME') {
+            this.resetPositions("KICKOFF", this.awayTeam.id);
+            this.pendingEvents.push({
+                minute: this.internalMinute,
+                type: MatchEventType.KICKOFF,
+                description: "Kickoff",
+                teamId: this.awayTeam.id,
+            });
+            this.match.homeScore++;
+            const evt = {
+                minute: this.internalMinute,
+                type: MatchEventType.GOAL,
+                description: `Goal! ${scorer ? scorer.lastName : this.homeTeam.name}`,
+                teamId: this.homeTeam.id,
+                playerId: scorerId || undefined,
+            };
+            this._pendingGoalObj = null;
+            return evt;
+        } else {
+            this.resetPositions("KICKOFF", this.homeTeam.id);
+            this.pendingEvents.push({
+                minute: this.internalMinute,
+                type: MatchEventType.KICKOFF,
+                description: "Kickoff",
+                teamId: this.homeTeam.id,
+            });
+            this.match.awayScore++;
+            const evt = {
+                minute: this.internalMinute,
+                type: MatchEventType.GOAL,
+                description: `Goal! ${scorer ? scorer.lastName : this.awayTeam.name}`,
+                teamId: this.awayTeam.id,
+                playerId: scorerId || undefined,
+            };
+            this._pendingGoalObj = null;
+            return evt;
+        }
+      }
+      return null;
+    }
+
     // === GOAL or OUT on goal line ===
     if (outLeft || outRight) {
       if (b.y > GOAL_Y_TOP && b.y < GOAL_Y_BOTTOM && b.z < 2.44) {
-        // GOAL!
-        if (outLeft) {
-          const scorerId = this.lastShooterId;
-          const scorer = scorerId ? this.getPlayer(scorerId) : null;
-          this.lastShooterId = null;
-          this.resetPositions("KICKOFF", this.homeTeam.id);
-          // Queue KICKOFF event after GOAL
-          this.pendingEvents.push({
-            minute: this.internalMinute,
-            type: MatchEventType.KICKOFF,
-            description: "Kickoff",
-            teamId: this.homeTeam.id,
-          });
-          this.match.awayScore++; // Update internal score state
-          return {
-            minute: this.internalMinute,
-            type: MatchEventType.GOAL,
-            description: `Goal! ${scorer ? scorer.lastName : this.awayTeam.name}`,
-            teamId: this.awayTeam.id,
-            playerId: scorerId || undefined,
-          };
+        // GOAL DETECTED!
+        if (!this._pendingGoalObj) {
+            this._pendingGoalObj = {
+                side: outLeft ? 'AWAY' : 'HOME',
+                scorerId: this.lastShooterId,
+                ticks: 0
+            };
         }
-        if (outRight) {
-          const scorerId = this.lastShooterId;
-          const scorer = scorerId ? this.getPlayer(scorerId) : null;
-          this.lastShooterId = null;
-          this.resetPositions("KICKOFF", this.awayTeam.id);
-          // Queue KICKOFF event after GOAL
-          this.pendingEvents.push({
-            minute: this.internalMinute,
-            type: MatchEventType.KICKOFF,
-            description: "Kickoff",
-            teamId: this.awayTeam.id,
-          });
-          this.match.homeScore++; // Update internal score state
-          return {
-            minute: this.internalMinute,
-            type: MatchEventType.GOAL,
-            description: `Goal! ${scorer ? scorer.lastName : this.homeTeam.name}`,
-            teamId: this.homeTeam.id,
-            playerId: scorerId || undefined,
-          };
-        }
+        return null;
       } else {
         // Corner or Goal Kick
         const isHomeGoalSide = outLeft;

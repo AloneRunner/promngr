@@ -1007,7 +1007,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                                 const scoringTeamIsHome = result.event.teamId === homeTeamRef.current.id;
                                 const goalX = scoringTeamIsHome ? 97 : 3;
                                 const goalY = 50;
-                                window.setTimeout(() => startReplayRef.current(cleanSnapshot, goalX, goalY), 1500);
+                                window.setTimeout(() => startReplayRef.current(cleanSnapshot, goalX, goalY), 0);
                             }
                             break;
                         }
@@ -2134,8 +2134,20 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
         
         // Zıplayan topun fizik kurallarına(Yerden sekme hissi) uyması için z de ufak bir eğri eklemek iyi olabilir 
         // Ancak ana sorun subpixel rendering, x ve y de ondalıklı kaldı.
-        const RenderBX = Math.round(bX * 100) / 100;
-        const RenderBY = Math.round(bY * 100) / 100;
+        let finalBX = bX;
+        let finalBY = bY;
+        
+        // Gol Ağları Fiziği (Topun ağları delmesini önle)
+        if (bY > 44.0 && bY < 56.0) { // Kale genişliği içinde
+            finalBX = clamp(bX, -3.8, 103.8); // Ağın arkası (-4 ve 104)
+            if (bX < 0 || bX > 100) {
+               // Kale içi yan ağlara (şut direk dibine gitmişse) çarpıp durmasını sağla
+               finalBY = clamp(bY, 44.5, 55.5);
+            }
+        }
+
+        const RenderBX = Math.round(finalBX * 100) / 100;
+        const RenderBY = Math.round(finalBY * 100) / 100;
 
         // Kuyruk / İvme Hesaplaması (Motion Blur için)
         const speedMagnitude = Math.sqrt(Math.pow(nxtBNrm.x - prevBNrm.x, 2) + Math.pow(nxtBNrm.y - prevBNrm.y, 2));
@@ -2231,7 +2243,7 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     };
 
     const keyEvents = useMemo(
-        () => match.events.filter(event =>
+        () => (match.events || []).filter(event =>
             event.type !== MatchEventType.INFO &&
             event.type !== MatchEventType.KICKOFF &&
             event.type !== MatchEventType.GOAL &&
@@ -2294,8 +2306,8 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
             <div className={`bg-slate-900/70 backdrop-blur-xl border-b border-white/10 items-center justify-between px-2 md:px-6 py-1.5 md:py-2 gap-2 shrink-0 z-20 shadow-2xl ${isSmallLandscape ? 'hidden' : 'flex'}`}>
                 {(() => {
-                    const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
-                    const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                    const homeGoals = (match.events || []).filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                    const awayGoals = (match.events || []).filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
                     return (
                         <>
                             <div className="flex items-center gap-2 md:gap-3 min-w-0 w-[32%]">
@@ -2961,8 +2973,8 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
 
             {/* FULL TIME MODAL — shown when match.isPlayed becomes true */}
             {match.isPlayed && (() => {
-                const homeGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
-                const awayGoals = match.events.filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
+                const homeGoals = (match.events || []).filter(e => e.type === MatchEventType.GOAL && e.teamId === homeTeam.id);
+                const awayGoals = (match.events || []).filter(e => e.type === MatchEventType.GOAL && e.teamId === awayTeam.id);
                 const isHomeWin = match.homeScore > match.awayScore;
                 const isAwayWin = match.awayScore > match.homeScore;
                 return (

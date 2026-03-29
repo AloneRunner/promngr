@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Player, PlayerAttributes, Team, Position, TacticType, Translation, TeamTactic, LineupStatus, AssistantAdvice } from '../types';
-import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, ShieldAlert, MessageSquare, ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Shield, ArrowRightLeft, Gauge, Wand2, ArrowRight, AlertTriangle, ShieldAlert, MessageSquare, ChevronUp, ChevronDown, CheckCircle2, Search } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { getFormationStructure, getRoleFromX, calculateEffectiveRating, getBaseFormationOffset, getRatingImpacts, RatingImpact } from '../services/MatchEngine';
 import { autoPickLineup as smartAutoPick, analyzeClubHealth, analyzeMatchSituation, getEngineChoice } from '../services/engine';
@@ -9,6 +9,7 @@ import { TACTICAL_PRESETS, applyPreset, validateTactic, PresetKey, detectPreset 
 // AssistantReport removed - replaced by inline opponent tactical panel
 import { PlayerInteractionModal } from './PlayerInteractionModal';
 import { handlePlayerInteraction } from '../services/engine';
+import { getLocalizedPlaystyle } from '../src/utils/playerUtils';
 
 const getOverallColor = (ovr: number) => {
     if (ovr >= 85) return 'text-emerald-400';
@@ -203,8 +204,8 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onDetail, onInteractSta
                         )}
                         {/* Playstyles as small floating badges */}
                         {player.playStyles && player.playStyles.slice(0, 2).map((style, idx) => (
-                            <span key={idx} className="px-1.5 border border-indigo-400/30 bg-indigo-900/40 text-indigo-300 text-[8px] rounded-full uppercase tracking-wider">
-                                {style.split(' ')[0]} {/* Shortened style name */}
+                            <span key={idx} className="px-1.5 border border-indigo-400/20 bg-indigo-900/40 text-indigo-300/80 text-[7px] md:text-[8px] rounded font-bold uppercase tracking-tighter">
+                                {getLocalizedPlaystyle(style, t)}
                             </span>
                         ))}
                     </div>
@@ -287,15 +288,24 @@ const PlayerRow = ({ player, selectedPlayerId, onSelect, onDetail, onInteractSta
                         <MessageSquare size={14} />
                     </button>
 
-                    {/* Premium OVR Box — click to view player details (bypasses substitution mode) */}
-                    <div onClick={(e) => { e.stopPropagation(); onDetail(player); }} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg shadow-lg border-2 cursor-pointer active:scale-95 transition-transform ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
+                    <div 
+                        onClick={(e) => { e.stopPropagation(); onDetail(player); }} 
+                        className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg shadow-lg border-2 cursor-pointer active:scale-95 transition-all duration-200 group/ovr-btn
+                            hover:scale-110 hover:shadow-emerald-500/20 hover:border-white/40
+                            ${effectiveRating >= 90 ? 'bg-gradient-to-b from-yellow-300 to-yellow-600 border-yellow-300 shadow-yellow-500/30' :
                         effectiveRating >= 80 ? 'bg-gradient-to-b from-slate-200 to-slate-400 border-slate-200 shadow-white/20' :
                             effectiveRating >= 70 ? 'bg-gradient-to-b from-amber-600 to-amber-800 border-amber-700 shadow-orange-900/40' :
                                 'bg-slate-800 border-slate-700'
                         }`} title={`Detay için tıkla | Base: ${player.overall} | Live: ${effectiveRating}`}>
-                        <span className={`font-black text-base leading-none ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
+                        <span className={`font-black text-base leading-none transition-all duration-200 group-hover/ovr-btn:scale-110 ${effectiveRating >= 70 ? 'text-slate-900 text-glow-white' : 'text-slate-300'}`}>
                             {effectiveRating}
                         </span>
+                        {/* Hover Detail Indicator */}
+                        <div className="absolute -top-1.5 -right-1.5 opacity-0 group-hover/ovr-btn:opacity-100 transition-all duration-300 scale-50 group-hover/ovr-btn:scale-100">
+                            <div className="bg-white/90 backdrop-blur rounded-full p-0.5 shadow-lg border border-white/50">
+                                <Search size={8} className="text-slate-900" />
+                            </div>
+                        </div>
                         {player.overall !== effectiveRating && (
                             <div className="group/ovr relative flex flex-col items-center">
                                 <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 ${effectiveRating < player.overall ? 'text-red-900/80 animate-pulse' : 'text-emerald-900'}`}>

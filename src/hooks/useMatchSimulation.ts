@@ -1154,6 +1154,7 @@ export const useMatchSimulation = ({
                         },
                         teams: updatedTeams,
                         players: nextPlayers,
+                        currentWeek: prev.currentWeek + 1,
                         messages: [...messageSeed, {
                             id: uuid(),
                             week: prev.currentWeek,
@@ -1641,15 +1642,18 @@ export const useMatchSimulation = ({
                         winnerId: result.homeScore > result.awayScore ? home.id : away.id,
                         isComplete: true
                     };
-                    setGameState(prev => prev ? { ...prev, superCup: completedSuperCup } : null);
+                    setGameState(prev => prev ? { ...prev, superCup: completedSuperCup, currentWeek: prev.currentWeek + 1 } : null);
                     return;
                 }
             }
 
             // Season end becomes available only after seasonEndWeek
             if (checkState.currentWeek >= seasonEndWeek) {
-                // Check if Super Cup needs to be played first
+                // Season is over - advance the week so the loading UI dismisses,
+                // then the dashboard will show the "End Season" button
                 console.log('Season finished - use End Season button in dashboard');
+                setGameState(prev => prev ? { ...prev, currentWeek: prev.currentWeek + 1 } : null);
+                return;
 
             } else if (isOnCupWeek) {
                 // AUTO-SKIP CUP WEEK
@@ -1684,22 +1688,25 @@ export const useMatchSimulation = ({
                     updatedState.europaLeague = engine.advanceGlobalCupStage(updatedState.europaLeague);
                 }
 
-                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
-
-                setGameState({
-                    ...updatedState,
-                    teams: updatedTeams,
-                    players: updatedPlayers,
-                    transferMarket: updatedMarket,
-                    managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
-                    currentWeek: updatedState.currentWeek + 1,
-                    pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
-                    messages: appendMessages(
-                        updatedState.messages,
-                        buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
-                    )
-                });
+                // Defer heavy computation: React render cycle'ını bitirsin, sonra çalışsın
+                const cupWeekSnapshot = updatedState;
+                setTimeout(() => {
+                    const weeklyEventsResults = engine.processWeeklyEvents(cupWeekSnapshot, t, cupWeekSnapshot.performanceSettings?.aiTransferActivity ?? 'NORMAL');
+                    const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
+                    setGameState({
+                        ...cupWeekSnapshot,
+                        teams: updatedTeams,
+                        players: updatedPlayers,
+                        transferMarket: updatedMarket,
+                        managerProfile: updatedManagerProfile ?? cupWeekSnapshot.managerProfile,
+                        currentWeek: cupWeekSnapshot.currentWeek + 1,
+                        pendingOffers: appendPendingOffers(cupWeekSnapshot.pendingOffers || [], newPendingOffers || []),
+                        messages: appendMessages(
+                            cupWeekSnapshot.messages,
+                            buildWeeklyMessages(cupWeekSnapshot.currentWeek, t.trainingReport, report, offers)
+                        )
+                    });
+                }, 0);
 
             } else {
                 // Empty week
@@ -1737,22 +1744,25 @@ export const useMatchSimulation = ({
                     updatedState.europaLeague = engine.advanceGlobalCupStage(updatedState.europaLeague);
                 }
 
-                const weeklyEventsResults = engine.processWeeklyEvents(updatedState, t, updatedState.performanceSettings?.aiTransferActivity ?? 'NORMAL');
-                const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
-
-                setGameState({
-                    ...updatedState,
-                    teams: updatedTeams,
-                    players: updatedPlayers,
-                    transferMarket: updatedMarket,
-                    managerProfile: updatedManagerProfile ?? updatedState.managerProfile,
-                    currentWeek: updatedState.currentWeek + 1,
-                    pendingOffers: appendPendingOffers(updatedState.pendingOffers || [], newPendingOffers || []),
-                    messages: appendMessages(
-                        updatedState.messages,
-                        buildWeeklyMessages(updatedState.currentWeek, t.trainingReport, report, offers)
-                    )
-                });
+                // Defer heavy computation: React render cycle'ını bitirsin, sonra çalışsın
+                const emptyWeekSnapshot = updatedState;
+                setTimeout(() => {
+                    const weeklyEventsResults = engine.processWeeklyEvents(emptyWeekSnapshot, t, emptyWeekSnapshot.performanceSettings?.aiTransferActivity ?? 'NORMAL');
+                    const { updatedTeams, updatedPlayers, updatedMarket, updatedManagerProfile, report, offers, newPendingOffers } = weeklyEventsResults;
+                    setGameState({
+                        ...emptyWeekSnapshot,
+                        teams: updatedTeams,
+                        players: updatedPlayers,
+                        transferMarket: updatedMarket,
+                        managerProfile: updatedManagerProfile ?? emptyWeekSnapshot.managerProfile,
+                        currentWeek: emptyWeekSnapshot.currentWeek + 1,
+                        pendingOffers: appendPendingOffers(emptyWeekSnapshot.pendingOffers || [], newPendingOffers || []),
+                        messages: appendMessages(
+                            emptyWeekSnapshot.messages,
+                            buildWeeklyMessages(emptyWeekSnapshot.currentWeek, t.trainingReport, report, offers)
+                        )
+                    });
+                }, 0);
             }
         }
     }, [gameState, setGameState, t, onForcePlaySuperCup, executeMatchUpdate]);
