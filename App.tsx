@@ -105,6 +105,7 @@ const App: React.FC = () => {
     const [showTeamCustomization, setShowTeamCustomization] = useState(false);
     const [showOnlineMatch, setShowOnlineMatch] = useState(false);
     const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
+    const [onlineInfoOpen, setOnlineInfoOpen] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
     const [onlineEloChange, setOnlineEloChange] = useState<number | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
@@ -3511,10 +3512,7 @@ const App: React.FC = () => {
                                         })()}
 
                                         {/* ── Online Bölümü ── */}
-                                        {(() => {
-                                            const [onlineInfoOpen, setOnlineInfoOpen] = React.useState(false);
-                                            return (
-                                            <div className="rounded-xl border border-purple-500/25 bg-gradient-to-br from-purple-950/40 to-slate-900 shadow-[0_0_24px_rgba(139,92,246,0.07)] overflow-hidden">
+                                        <div className="rounded-xl border border-purple-500/25 bg-gradient-to-br from-purple-950/40 to-slate-900 shadow-[0_0_24px_rgba(139,92,246,0.07)] overflow-hidden">
                                                 {/* Header row */}
                                                 <div className="flex items-center justify-between px-4 pt-3 pb-2">
                                                     <div className="flex items-center gap-2">
@@ -3587,8 +3585,6 @@ const App: React.FC = () => {
                                                     </button>
                                                 </div>
                                             </div>
-                                            );
-                                        })()}
 
                                         {/* Next Match Card - Detailed */}
                                         <div className="fm-card w-full">
