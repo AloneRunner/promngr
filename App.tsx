@@ -29,6 +29,7 @@ import { ManagerCreationModal } from './components/ManagerCreationModal';
 import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { TeamCustomizationModal } from './components/TeamCustomizationModal';
+import OnlineMatchModal from './components/OnlineMatchModal';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
 import { Layout } from './src/components/Layout';
@@ -39,7 +40,7 @@ import { appendMessages } from './src/utils/stateLimits';
 
 import { TRANSLATIONS } from './src/data/translations';
 import { LEAGUE_PRESETS } from './src/data/teams';
-import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock, Edit2 } from 'lucide-react';
+import { LayoutDashboard, Users, Trophy, SkipForward, Briefcase, CheckCircle2, Building2, ShoppingCart, Mail, RefreshCw, Globe, Activity, DollarSign, Zap, X, Target, BookOpen, UserCircle, Calendar, LogOut, Menu, Info, Clock, Edit2, Swords } from 'lucide-react';
 import { adMobService } from './src/services/adMobService';
 import { playGamesService } from './src/services/playGamesService';
 import { PLAY_GAMES_ACHIEVEMENT_IDS, ManagerAchievementId } from './src/data/managerAchievements';
@@ -100,6 +101,7 @@ const App: React.FC = () => {
     const [showJobOffers, setShowJobOffers] = useState(false);
     const [showUpdates, setShowUpdates] = useState(false);
     const [showTeamCustomization, setShowTeamCustomization] = useState(false);
+    const [showOnlineMatch, setShowOnlineMatch] = useState(false);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
     const [newsFilter, setNewsFilter] = useState<MessageTab | undefined>(undefined);
@@ -3237,6 +3239,27 @@ const App: React.FC = () => {
                                             </div>
                                         </div>
 
+                                        {/* Online Match BETA Card */}
+                                        <button
+                                            onClick={() => setShowOnlineMatch(true)}
+                                            className="w-full fm-card group relative p-4 flex items-center justify-between gap-4 hover:border-purple-500/50 transition-all active:scale-95 overflow-hidden"
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="flex items-center gap-3 relative z-10">
+                                                <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
+                                                    <Globe size={20} className="text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-bold text-white text-sm">Online Maç</span>
+                                                        <span className="text-[9px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/50 text-purple-300 rounded font-bold uppercase tracking-wider">BETA</span>
+                                                    </div>
+                                                    <div className="text-[11px] text-slate-400">Gerçek oyuncularla karşılaş</div>
+                                                </div>
+                                            </div>
+                                            <Swords size={18} className="text-purple-400/60 group-hover:text-purple-400 transition-colors relative z-10" />
+                                        </button>
+
                                         {/* Next Match Card - Detailed */}
                                         <div className="fm-card w-full">
                                             <div className="bg-gradient-to-r from-emerald-900/30 to-slate-900/50 p-3 border-b border-white/5 flex justify-between items-center">
@@ -3637,6 +3660,14 @@ const App: React.FC = () => {
                     }
                 }}
             />
+            {showOnlineMatch && userTeam && (
+                <OnlineMatchModal
+                    onClose={() => setShowOnlineMatch(false)}
+                    userTeam={userTeam}
+                    userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
+                    lang={lang}
+                />
+            )}
             {showTeamCustomization && userTeam && (
                 <TeamCustomizationModal 
                     team={userTeam}
