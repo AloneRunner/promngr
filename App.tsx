@@ -30,6 +30,7 @@ import { ManagerProfile } from './components/ManagerProfile';
 import { GlobalHistoryModal } from './components/GlobalHistoryModal';
 import { TeamCustomizationModal } from './components/TeamCustomizationModal';
 import OnlineMatchModal from './components/OnlineMatchModal';
+import OnlineLeaderboard from './components/OnlineLeaderboard';
 import { MPOpponent, submitMatchResult, getOrCreatePlayerId } from './src/services/multiplayerService';
 import { SeasonSummaryModal } from './components/SeasonSummaryModal';
 import { WorldRankingsModal } from './components/WorldRankingsModal';
@@ -103,6 +104,7 @@ const App: React.FC = () => {
     const [showUpdates, setShowUpdates] = useState(false);
     const [showTeamCustomization, setShowTeamCustomization] = useState(false);
     const [showOnlineMatch, setShowOnlineMatch] = useState(false);
+    const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
@@ -3365,26 +3367,40 @@ const App: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* Online Match BETA Card */}
-                                        <button
-                                            onClick={() => setShowOnlineMatch(true)}
-                                            className="w-full fm-card group relative p-4 flex items-center justify-between gap-4 hover:border-purple-500/50 transition-all active:scale-95 overflow-hidden"
-                                        >
-                                            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <div className="flex items-center gap-3 relative z-10">
-                                                <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
-                                                    <Globe size={20} className="text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                                        {/* Online Cards Row */}
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {/* Online Maç */}
+                                            <button
+                                                onClick={() => setShowOnlineMatch(true)}
+                                                className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-purple-500/50 transition-all active:scale-95 overflow-hidden"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center relative z-10">
+                                                    <Swords size={20} className="text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
                                                 </div>
-                                                <div className="text-left">
-                                                    <div className="flex items-center gap-2">
+                                                <div className="text-center relative z-10">
+                                                    <div className="flex items-center justify-center gap-1">
                                                         <span className="font-bold text-white text-sm">Online Maç</span>
-                                                        <span className="text-[9px] px-1.5 py-0.5 bg-purple-600/50 border border-purple-500/50 text-purple-300 rounded font-bold uppercase tracking-wider">BETA</span>
                                                     </div>
-                                                    <div className="text-[11px] text-slate-400">Gerçek oyuncularla karşılaş</div>
+                                                    <div className="text-[10px] text-purple-400/70 font-bold tracking-wider uppercase">BETA</div>
                                                 </div>
-                                            </div>
-                                            <Swords size={18} className="text-purple-400/60 group-hover:text-purple-400 transition-colors relative z-10" />
-                                        </button>
+                                            </button>
+
+                                            {/* Leaderboard */}
+                                            <button
+                                                onClick={() => setShowOnlineLeaderboard(true)}
+                                                className="fm-card group relative p-4 flex flex-col items-center justify-center gap-2 hover:border-yellow-500/50 transition-all active:scale-95 overflow-hidden"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                <div className="w-10 h-10 rounded-xl bg-yellow-600/20 border border-yellow-500/30 flex items-center justify-center relative z-10">
+                                                    <Trophy size={20} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
+                                                </div>
+                                                <div className="text-center relative z-10">
+                                                    <div className="font-bold text-white text-sm">Sıralama</div>
+                                                    <div className="text-[10px] text-yellow-400/70 font-bold tracking-wider uppercase">TOP 50</div>
+                                                </div>
+                                            </button>
+                                        </div>
 
                                         {/* Next Match Card - Detailed */}
                                         <div className="fm-card w-full">
@@ -3786,6 +3802,9 @@ const App: React.FC = () => {
                     }
                 }}
             />
+            {showOnlineLeaderboard && (
+                <OnlineLeaderboard onClose={() => setShowOnlineLeaderboard(false)} lang={lang} />
+            )}
             {showOnlineMatch && userTeam && (
                 <OnlineMatchModal
                     onClose={() => setShowOnlineMatch(false)}
