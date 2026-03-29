@@ -1077,6 +1077,13 @@ const App: React.FC = () => {
 
         setOnlineMatchOpponent(opponent);
 
+        // Online maçta her zaman ucuncumotor (Pro) zorunlu — önceki seçimi sakla
+        const prevEngine = engineChoice;
+        serviceSetEngineChoice('ucuncu');
+        setEngineChoice('ucuncu');
+        // Maç sonrası geri dönmek için ref'e yaz
+        (window as any).__prevEngineChoice = prevEngine;
+
         setGameState(prev => {
             if (!prev) return null;
             return {
@@ -2256,6 +2263,11 @@ const App: React.FC = () => {
                 };
             });
             setOnlineMatchOpponent(null);
+            // Önceki motor seçimine geri dön
+            const prevEngine = (window as any).__prevEngineChoice || 'ucuncu';
+            serviceSetEngineChoice(prevEngine);
+            setEngineChoice(prevEngine);
+            delete (window as any).__prevEngineChoice;
         }
         await simulation.handleMatchFinish();
         setView('dashboard');
