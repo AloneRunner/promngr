@@ -132,6 +132,26 @@ const App: React.FC = () => {
     // Keep gameStateRef in sync so callbacks can read latest state
     React.useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
 
+    // Uygulama açılışında yarım kalmış online maçı berabere gönder
+    React.useEffect(() => {
+        try {
+            const raw = localStorage.getItem('pending_online_match');
+            if (!raw) return;
+            const pending = JSON.parse(raw);
+            if (!pending?.opponentPlayerId) { localStorage.removeItem('pending_online_match'); return; }
+            // 3 saatten eskiyse zaten anlamsız, temizle
+            if (Date.now() - (pending.startedAt || 0) > 3 * 60 * 60 * 1000) {
+                localStorage.removeItem('pending_online_match');
+                return;
+            }
+            // Beraberlik olarak gönder (1-1 simgesel)
+            submitMatchResult(pending.opponentPlayerId, 1, 1).catch(() => {});
+            localStorage.removeItem('pending_online_match');
+        } catch {}
+    // Sadece ilk yüklemede
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Auto-sync snapshot to Railway so user appears in matchmaking pool even without playing online
     React.useEffect(() => {
         if (!gameState || !userTeam) return;
@@ -1180,6 +1200,14 @@ const App: React.FC = () => {
         const initialSim = initializeMatch(onlineMatch, userTeam, oppTeam, homePlayers, oppPlayers, gameState.userTeamId);
 
         setOnlineMatchOpponent(opponent);
+
+        // Uygulama kapanırsa berabere gönderebilmek için maç bilgisini kaydet
+        try {
+            localStorage.setItem('pending_online_match', JSON.stringify({
+                opponentPlayerId: opponent.player_id,
+                startedAt: Date.now(),
+            }));
+        } catch {}
 
         // Online maçta her zaman ucuncumotor (Pro) zorunlu — önceki seçimi sakla
         const prevEngine = engineChoice;
@@ -2370,6 +2398,8 @@ const App: React.FC = () => {
             });
             setOnlineMatchOpponent(null);
             setOnlineEloChange(null);
+            // Maç tamamlandı — pending kaydını sil
+            try { localStorage.removeItem('pending_online_match'); } catch {}
             // Önceki motor seçimine geri dön
             const prevEngine = (window as any).__prevEngineChoice || 'ucuncu';
             serviceSetEngineChoice(prevEngine);
