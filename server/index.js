@@ -48,8 +48,10 @@ async function initDB() {
       away_score      INTEGER,
       home_elo_change INTEGER DEFAULT 0,
       away_elo_change INTEGER DEFAULT 0,
+      match_type      VARCHAR(20) DEFAULT 'ranked',
       played_at       TIMESTAMP DEFAULT NOW()
     );
+    ALTER TABLE matches ADD COLUMN IF NOT EXISTS match_type VARCHAR(20) DEFAULT 'ranked';
 
     CREATE TABLE IF NOT EXISTS challenges (
       id              SERIAL PRIMARY KEY,
@@ -230,7 +232,7 @@ app.get('/api/matchmaking/:playerId', async (req, res) => {
 
 // POST /api/match/result  — maç sonucunu kaydet, ELO güncelle
 app.post('/api/match/result', async (req, res) => {
-  const { homePlayerId, awayPlayerId, homeScore, awayScore } = req.body;
+  const { homePlayerId, awayPlayerId, homeScore, awayScore, matchType } = req.body;
   if (!homePlayerId || !awayPlayerId) return res.status(400).json({ error: 'Both player IDs required' });
 
   try {
@@ -287,9 +289,9 @@ app.post('/api/match/result', async (req, res) => {
 
     // Maç kaydı
     await pool.query(`
-      INSERT INTO matches (home_player_id, away_player_id, home_score, away_score, home_elo_change, away_elo_change)
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `, [homePlayerId, awayPlayerId, homeScore, awayScore, homeChange, awayChange]);
+      INSERT INTO matches (home_player_id, away_player_id, home_score, away_score, home_elo_change, away_elo_change, match_type)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `, [homePlayerId, awayPlayerId, homeScore, awayScore, homeChange, awayChange, matchType || 'ranked']);
 
     res.json({ homeEloChange: homeChange, awayEloChange: awayChange });
   } catch (err) {
@@ -411,6 +413,8 @@ app.get('/api/challenges/:playerId', async (req, res) => {
 });
 
 // POST /api/challenge/:id/accept  — daveti kabul et (maç başlar)
+const DAILY_CHALLENGE_LIMIT = 3;
+
 app.post('/api/challenge/:id/accept', async (req, res) => {
   const { playerId } = req.body;
   const challengeId = req.params.id;
@@ -420,6 +424,29 @@ app.post('/api/challenge/:id/accept', async (req, res) => {
       [challengeId, playerId]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Challenge not found' });
+
+    // Günlük limit kontrolü — her iki oyuncu için de
+    const checkLimit = async (pid) => {
+      const r = await pool.query(`
+        SELECT COUNT(*) FROM matches
+        WHERE (home_player_id = $1 OR away_player_id = $1)
+          AND match_type = 'challenge'
+          AND played_at > NOW() - INTERVAL '24 hours'
+      `, [pid]);
+      return parseInt(r.rows[0].count);
+    };
+
+    const [acceptorCount, challengerCount] = await Promise.all([
+      checkLimit(playerId),
+      checkLimit(rows[0].challenger_id),
+    ]);
+
+    if (acceptorCount >= DAILY_CHALLENGE_LIMIT) {
+      return res.status(429).json({ error: `Günlük ${DAILY_CHALLENGE_LIMIT} meydan okuma limitine ulaştın. Yarın tekrar dene!`, limitReached: true });
+    }
+    if (challengerCount >= DAILY_CHALLENGE_LIMIT) {
+      return res.status(429).json({ error: 'Rakibin bugün limitini doldurdu. Yarın tekrar dene!', limitReached: true });
+    }
 
     // Challenger snapshot'ını getir (rakip verisi olarak)
     const snap = await pool.query(`

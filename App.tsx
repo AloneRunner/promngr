@@ -107,6 +107,7 @@ const App: React.FC = () => {
     const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
     const [onlineInfoOpen, setOnlineInfoOpen] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
+    const [onlineMatchType, setOnlineMatchType] = useState<'ranked' | 'challenge'>('ranked');
     const [onlineEloChange, setOnlineEloChange] = useState<number | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
@@ -1069,7 +1070,7 @@ const App: React.FC = () => {
 
 
     // ========== ONLINE MATCH ==========
-    const handleStartOnlineMatch = (opponent: MPOpponent) => {
+    const handleStartOnlineMatch = (opponent: MPOpponent, matchType: 'ranked' | 'challenge' = 'ranked') => {
         if (!gameState || !userTeam) return;
 
         const oppTeamId = `online-opp-${Date.now()}`;
@@ -1202,10 +1203,13 @@ const App: React.FC = () => {
 
         setOnlineMatchOpponent(opponent);
 
+        setOnlineMatchType(matchType);
+
         // Uygulama kapanırsa berabere gönderebilmek için maç bilgisini kaydet
         try {
             localStorage.setItem('pending_online_match', JSON.stringify({
                 opponentPlayerId: opponent.player_id,
+                matchType,
                 startedAt: Date.now(),
             }));
         } catch {}
@@ -2383,7 +2387,7 @@ const App: React.FC = () => {
         if (onlineMatchOpponent && activeMatchId) {
             const finishedMatch = gameState?.matches.find(m => m.id === activeMatchId);
             if (finishedMatch) {
-                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore)
+                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore, onlineMatchType)
                     .then(r => { if (r) setOnlineEloChange(r.homeEloChange); })
                     .catch(() => {});
             }
@@ -3992,7 +3996,7 @@ const App: React.FC = () => {
             {showOnlineMatch && userTeam && (
                 <OnlineMatchModal
                     onClose={() => setShowOnlineMatch(false)}
-                    onStartMatch={(opp) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp); }}
+                    onStartMatch={(opp, type) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp, type); }}
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
                     managerName={gameState.managerProfile?.displayName}

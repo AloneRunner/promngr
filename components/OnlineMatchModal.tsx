@@ -8,7 +8,7 @@ import { Team, Player } from '../src/types';
 
 interface Props {
   onClose: () => void;
-  onStartMatch: (opponent: MPOpponent) => void;
+  onStartMatch: (opponent: MPOpponent, matchType?: 'ranked' | 'challenge') => void;
   userTeam: Team;
   userPlayers: Player[];
   managerName?: string;
@@ -39,7 +39,9 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
     const result = await acceptChallenge(challenge.id);
     if (result.ok && result.opponent) {
       onClose();
-      onStartMatch(result.opponent as MPOpponent);
+      onStartMatch(result.opponent as MPOpponent, 'challenge');
+    } else if ((result as any).limitReached) {
+      alert((result as any).error || 'Günlük limit doldu');
     }
   }
 

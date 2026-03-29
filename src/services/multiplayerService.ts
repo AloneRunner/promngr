@@ -93,7 +93,8 @@ export async function findOpponent(): Promise<MPOpponent | null> {
 export async function submitMatchResult(
   awayPlayerId: string,
   homeScore: number,
-  awayScore: number
+  awayScore: number,
+  matchType: 'ranked' | 'challenge' = 'ranked'
 ): Promise<MatchResult | null> {
   try {
     const res = await fetch(`${API_URL}/match/result`, {
@@ -104,6 +105,7 @@ export async function submitMatchResult(
         awayPlayerId,
         homeScore,
         awayScore,
+        matchType,
       }),
     });
     if (!res.ok) return null;
