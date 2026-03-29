@@ -2993,6 +2993,7 @@ const App: React.FC = () => {
                                 onSubstitute={handleSubstitution} onUpdateTactic={simulation.handleUpdateTactic} onAutoFix={handleAutoFix}
                                 userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
                                 goalReplay={gameState.performanceSettings?.goalReplay ?? true}
+                                isOnlineMatch={!!onlineMatchOpponent}
                             />
                         ) : (
                             <MatchCenter
