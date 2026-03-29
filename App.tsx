@@ -1042,7 +1042,14 @@ const App: React.FC = () => {
                 teamId: oppTeamId,
                 isTransferListed: false, weeksInjured: 0, matchSuspension: 0,
                 lineup: 'STARTING' as LineupStatus,
-                lineupIndex: i, playStyles: [],
+                lineupIndex: i,
+                playStyles: pos === Position.GK
+                    ? (ovr >= 80 ? ['Kedi Refleks'] : [])
+                    : pos === Position.FWD
+                    ? (ovr >= 82 ? ['Plase Şut'] : ovr >= 78 ? ['Roket'] : [])
+                    : pos === Position.MID
+                    ? (ovr >= 80 ? ['Maestro'] : [])
+                    : [],
             } as unknown as Player;
         });
 
