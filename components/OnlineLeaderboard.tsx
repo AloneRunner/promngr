@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Trophy, TrendingUp, TrendingDown, Minus, RefreshCw, Globe, Medal } from 'lucide-react';
-import { getLeaderboard, getMyProfile, MPPlayer, getOrCreatePlayerId } from '../src/services/multiplayerService';
+import { X, Trophy, RefreshCw, Globe, Swords } from 'lucide-react';
+import { getLeaderboard, getMyProfile, MPPlayer, getOrCreatePlayerId, sendChallenge } from '../src/services/multiplayerService';
 
 interface Props {
   onClose: () => void;
@@ -58,7 +58,20 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
   const [myProfile, setMyProfile] = useState<MPPlayer | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeLeague, setActiveLeague] = useState<string>('all');
+  const [challengeStatus, setChallengeStatus] = useState<Record<string, 'sending' | 'sent' | 'error' | 'blocked'>>({});
   const myId = getOrCreatePlayerId();
+
+  async function handleChallenge(p: MPPlayer) {
+    setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'sending' }));
+    const result = await sendChallenge(p.player_id);
+    if (result.ok) {
+      setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'sent' }));
+    } else if (result.error?.includes('ELO')) {
+      setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'blocked' }));
+    } else {
+      setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'error' }));
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -213,10 +226,36 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                     </div>
                   </div>
 
-                  {/* ELO */}
-                  <div className="text-right shrink-0">
-                    <div className={`text-base font-black ${league.color}`}>{p.elo}</div>
-                    <div className="text-[10px] text-slate-500">ELO</div>
+                  {/* ELO + Meydan Oku */}
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <div className="text-right">
+                      <div className={`text-base font-black ${league.color}`}>{p.elo}</div>
+                      <div className="text-[10px] text-slate-500">ELO</div>
+                    </div>
+                    {!isMe && (() => {
+                      const st = challengeStatus[p.player_id];
+                      const myElo = myProfile?.elo ?? 1000;
+                      const diff = Math.abs(p.elo - myElo);
+                      const tooFar = diff > 500;
+                      if (tooFar) return (
+                        <div className="text-[9px] text-slate-600 text-right">ELO farkı büyük</div>
+                      );
+                      return (
+                        <button
+                          onClick={() => handleChallenge(p)}
+                          disabled={!!st}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold transition-all active:scale-95 ${
+                            st === 'sent' ? 'bg-emerald-700/40 text-emerald-400 cursor-default' :
+                            st === 'sending' ? 'bg-slate-700 text-slate-400 cursor-wait' :
+                            st === 'error' ? 'bg-red-700/40 text-red-400' :
+                            'bg-purple-600/30 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50'
+                          }`}
+                        >
+                          <Swords size={10} />
+                          {st === 'sent' ? 'Gönderildi' : st === 'sending' ? '...' : st === 'error' ? 'Hata' : 'Meydan Oku'}
+                        </button>
+                      );
+                    })()}
                   </div>
                 </div>
               );

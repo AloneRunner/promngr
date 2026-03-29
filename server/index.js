@@ -50,6 +50,16 @@ async function initDB() {
       away_elo_change INTEGER DEFAULT 0,
       played_at       TIMESTAMP DEFAULT NOW()
     );
+
+    CREATE TABLE IF NOT EXISTS challenges (
+      id              SERIAL PRIMARY KEY,
+      challenger_id   VARCHAR(36) REFERENCES players(player_id) ON DELETE CASCADE,
+      challenged_id   VARCHAR(36) REFERENCES players(player_id) ON DELETE CASCADE,
+      status          VARCHAR(20) DEFAULT 'pending',
+      created_at      TIMESTAMP DEFAULT NOW(),
+      expires_at      TIMESTAMP DEFAULT NOW() + INTERVAL '24 hours',
+      UNIQUE(challenger_id, challenged_id)
+    );
   `);
   console.log('DB tables ready.');
   await seedBots();
@@ -99,10 +109,14 @@ async function seedBots() {
 // ─── ELO HELPER ─────────────────────────────────────────────────────────────
 
 function calcElo(winnerElo, loserElo, draw = false) {
+  const eloDiff = Math.abs(winnerElo - loserElo);
+  // ELO farkı 400+ ise güçlü taraf kazanırsa puan yok, kaybederse tam ceza
   const K = 30;
   const expected = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
   const score = draw ? 0.5 : 1;
-  const change = Math.round(K * (score - expected));
+  let change = Math.round(K * (score - expected));
+  // Çok güçlü kazanırsa (expected > 0.85) sıfırla — farming önlemi
+  if (!draw && expected > 0.85) change = 0;
   return change;
 }
 
@@ -310,6 +324,130 @@ app.get('/api/profile/:playerId', async (req, res) => {
     );
     if (!rows[0]) return res.status(404).json({ error: 'Player not found' });
     res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// ─── CHALLENGE / DIRECT MATCH ────────────────────────────────────────────────
+
+// POST /api/challenge  — meydan oku
+app.post('/api/challenge', async (req, res) => {
+  const { challengerId, challengedId } = req.body;
+  if (!challengerId || !challengedId) return res.status(400).json({ error: 'Both IDs required' });
+  if (challengerId === challengedId) return res.status(400).json({ error: 'Cannot challenge yourself' });
+
+  try {
+    // Anti-spam: max 3 bekleyen davet
+    const pending = await pool.query(
+      `SELECT COUNT(*) FROM challenges WHERE challenger_id = $1 AND status = 'pending' AND expires_at > NOW()`,
+      [challengerId]
+    );
+    if (parseInt(pending.rows[0].count) >= 3) {
+      return res.status(429).json({ error: 'Max 3 pending challenges at a time' });
+    }
+
+    // Aynı kişiye 24 saatte bir davet
+    const recent = await pool.query(
+      `SELECT id FROM challenges WHERE challenger_id = $1 AND challenged_id = $2 AND created_at > NOW() - INTERVAL '24 hours'`,
+      [challengerId, challengedId]
+    );
+    if (recent.rows.length > 0) {
+      return res.status(429).json({ error: 'Already challenged this player recently' });
+    }
+
+    // ELO fark kontrolü — 500+ ise davet engelle
+    const [chRow, cdRow] = await Promise.all([
+      pool.query('SELECT elo FROM players WHERE player_id = $1', [challengerId]),
+      pool.query('SELECT elo FROM players WHERE player_id = $1', [challengedId]),
+    ]);
+    if (!chRow.rows[0] || !cdRow.rows[0]) return res.status(404).json({ error: 'Player not found' });
+    const eloDiff = Math.abs(chRow.rows[0].elo - cdRow.rows[0].elo);
+    if (eloDiff > 500) {
+      return res.status(400).json({ error: 'ELO difference too large (>500)', eloDiff });
+    }
+
+    await pool.query(`
+      INSERT INTO challenges (challenger_id, challenged_id)
+      VALUES ($1, $2)
+      ON CONFLICT (challenger_id, challenged_id) DO UPDATE
+        SET status = 'pending', created_at = NOW(), expires_at = NOW() + INTERVAL '24 hours'
+    `, [challengerId, challengedId]);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// GET /api/challenges/:playerId  — bekleyen davetleri getir (gelen + giden)
+app.get('/api/challenges/:playerId', async (req, res) => {
+  const { playerId } = req.params;
+  try {
+    // Süresi dolmuş davetleri temizle
+    await pool.query(`DELETE FROM challenges WHERE expires_at < NOW()`);
+
+    const { rows } = await pool.query(`
+      SELECT c.id, c.challenger_id, c.challenged_id, c.status, c.created_at,
+             p1.username AS challenger_name, p1.team_name AS challenger_team, p1.elo AS challenger_elo,
+             p2.username AS challenged_name, p2.team_name AS challenged_team, p2.elo AS challenged_elo,
+             s.formation, s.tactics, s.squad, s.avg_ovr
+      FROM challenges c
+      JOIN players p1 ON p1.player_id = c.challenger_id
+      JOIN players p2 ON p2.player_id = c.challenged_id
+      LEFT JOIN team_snapshots s ON s.player_id = c.challenger_id
+      WHERE (c.challenger_id = $1 OR c.challenged_id = $1)
+        AND c.status = 'pending'
+        AND c.expires_at > NOW()
+      ORDER BY c.created_at DESC
+    `, [playerId]);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// POST /api/challenge/:id/accept  — daveti kabul et (maç başlar)
+app.post('/api/challenge/:id/accept', async (req, res) => {
+  const { playerId } = req.body;
+  const challengeId = req.params.id;
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM challenges WHERE id = $1 AND challenged_id = $2 AND status = 'pending'`,
+      [challengeId, playerId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Challenge not found' });
+
+    // Challenger snapshot'ını getir (rakip verisi olarak)
+    const snap = await pool.query(`
+      SELECT p.username, p.team_name, p.elo, p.nationality,
+             s.formation, s.tactics, s.squad, s.avg_ovr
+      FROM players p
+      LEFT JOIN team_snapshots s ON s.player_id = p.player_id
+      WHERE p.player_id = $1
+    `, [rows[0].challenger_id]);
+
+    await pool.query(`UPDATE challenges SET status = 'accepted' WHERE id = $1`, [challengeId]);
+
+    res.json({ ok: true, opponent: { ...snap.rows[0], player_id: rows[0].challenger_id } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// POST /api/challenge/:id/decline
+app.post('/api/challenge/:id/decline', async (req, res) => {
+  const { playerId } = req.body;
+  try {
+    await pool.query(
+      `UPDATE challenges SET status = 'declined' WHERE id = $1 AND challenged_id = $2`,
+      [req.params.id, playerId]
+    );
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'DB error' });
   }

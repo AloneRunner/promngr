@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, X, Search, AlertCircle, Wifi } from 'lucide-react';
+import { Globe, X, Search, AlertCircle, Wifi, Swords, Check, XCircle } from 'lucide-react';
 import {
   registerPlayer, syncTeamSnapshot, findOpponent, getMyProfile,
-  MPOpponent, MPPlayer,
+  MPOpponent, MPPlayer, MPChallenge, getChallenges, acceptChallenge, declineChallenge,
 } from '../src/services/multiplayerService';
 import { Team, Player } from '../src/types';
 
@@ -23,6 +23,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   const [profile, setProfile] = useState<MPPlayer | null>(null);
   const [opponent, setOpponent] = useState<MPOpponent | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [challenges, setChallenges] = useState<MPChallenge[]>([]);
 
   const starters = userPlayers.filter(p => p.lineup === 'STARTING').slice(0, 11);
   const bench = userPlayers.filter(p => p.lineup === 'BENCH').slice(0, 7);
@@ -31,7 +32,21 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   useEffect(() => {
     registerPlayer(managerName || 'Manager', userTeam.name, managerNationality);
     getMyProfile().then(setProfile);
+    getChallenges().then(setChallenges);
   }, []);
+
+  async function handleAccept(challenge: MPChallenge) {
+    const result = await acceptChallenge(challenge.id);
+    if (result.ok && result.opponent) {
+      onClose();
+      onStartMatch(result.opponent as MPOpponent);
+    }
+  }
+
+  async function handleDecline(challenge: MPChallenge) {
+    await declineChallenge(challenge.id);
+    setChallenges(prev => prev.filter(c => c.id !== challenge.id));
+  }
 
   async function handleFindMatch() {
     setPhase('syncing');
@@ -88,7 +103,35 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           </button>
         </div>
 
-        <div className="p-4 flex flex-col gap-4">
+        <div className="p-4 flex flex-col gap-3">
+
+          {/* Gelen Davetler */}
+          {challenges.filter(c => c.challenged_id !== undefined).length > 0 && (
+            <div className="flex flex-col gap-2">
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-bold flex items-center gap-1.5">
+                <Swords size={11} className="text-purple-400" /> Gelen Davetler ({challenges.length})
+              </div>
+              {challenges.map(c => (
+                <div key={c.id} className="flex items-center justify-between p-2.5 bg-purple-900/20 border border-purple-500/25 rounded-xl gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-white text-xs truncate">{c.challenger_name || c.challenger_team}</div>
+                    <div className="text-[10px] text-slate-400">{c.challenger_team} • ELO {c.challenger_elo}</div>
+                  </div>
+                  <div className="flex gap-1.5 shrink-0">
+                    <button
+                      onClick={() => handleAccept(c)}
+                      className="w-8 h-8 flex items-center justify-center bg-emerald-600/30 border border-emerald-500/40 rounded-lg text-emerald-400 hover:bg-emerald-600/50 active:scale-95 transition-all"
+                    ><Check size={14} /></button>
+                    <button
+                      onClick={() => handleDecline(c)}
+                      className="w-8 h-8 flex items-center justify-center bg-red-600/20 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-600/40 active:scale-95 transition-all"
+                    ><XCircle size={14} /></button>
+                  </div>
+                </div>
+              ))}
+              <div className="h-px bg-white/5" />
+            </div>
+          )}
 
           {phase === 'idle' && (
             <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-amber-300">
