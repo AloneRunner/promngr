@@ -138,7 +138,8 @@ const App: React.FC = () => {
         const starters = gameState.players.filter(p => p.teamId === gameState.userTeamId && p.lineup === 'STARTING').slice(0, 11);
         if (starters.length === 0) return;
         const avgOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / starters.length);
-        registerPlayer('Manager', userTeam.name).catch(() => {});
+        const displayName = gameState.managerProfile?.displayName || 'Manager';
+        registerPlayer(displayName, userTeam.name).catch(() => {});
         syncTeamSnapshot(
             (userTeam.tactic?.formation as string) || '4-3-3', {},
             starters.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}`.trim(), ovr: p.overall, position: p.position })),
@@ -1027,10 +1028,11 @@ const App: React.FC = () => {
         const oppTeamId = `online-opp-${Date.now()}`;
         const positions: Position[] = [Position.GK, Position.DEF, Position.DEF, Position.DEF, Position.DEF, Position.MID, Position.MID, Position.MID, Position.FWD, Position.FWD, Position.FWD];
         const rawSquad: any[] = Array.isArray(opponent.squad) ? opponent.squad : [];
+        const baseOvr = opponent.avg_ovr || 72;
 
-        const oppPlayers: Player[] = positions.map((pos, i) => {
+        const buildOppPlayer = (pos: Position, i: number, lineup: LineupStatus, ovrOverride?: number) => {
             const snap = rawSquad[i];
-            const ovr = snap?.ovr ?? (opponent.avg_ovr || 72);
+            const ovr = ovrOverride ?? snap?.ovr ?? baseOvr;
             const isGK = pos === Position.GK;
             const isDEF = pos === Position.DEF;
             const isMID = pos === Position.MID;
@@ -1057,7 +1059,7 @@ const App: React.FC = () => {
                 morale: 75, condition: 92, form: 7,
                 teamId: oppTeamId,
                 isTransferListed: false, weeksInjured: 0, matchSuspension: 0,
-                lineup: 'STARTING' as LineupStatus,
+                lineup,
                 lineupIndex: i,
                 playStyles: pos === Position.GK
                     ? (ovr >= 80 ? ['Kedi Refleks'] : [])
@@ -1067,7 +1069,17 @@ const App: React.FC = () => {
                     ? (ovr >= 80 ? ['Maestro'] : [])
                     : [],
             } as unknown as Player;
-        });
+        };
+
+        const oppPlayers: Player[] = [
+            ...positions.map((pos, i) => buildOppPlayer(pos, i, 'STARTING' as LineupStatus)),
+            // 5 bench oyuncu (biraz daha düşük OVR, değişiklikte devreye girecek)
+            buildOppPlayer(Position.MID, 11, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 4)),
+            buildOppPlayer(Position.FWD, 12, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 3)),
+            buildOppPlayer(Position.DEF, 13, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 5)),
+            buildOppPlayer(Position.MID, 14, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 4)),
+            buildOppPlayer(Position.FWD, 15, 'BENCH' as LineupStatus, Math.max(60, baseOvr - 3)),
+        ];
 
         // Rakip rengi kullanıcı rengiyle çakışmasın — sabit deplasman seti kullan
         const userPrimary = (userTeam.primaryColor || '').toLowerCase();
@@ -1091,9 +1103,15 @@ const App: React.FC = () => {
             staff: { headCoachLevel: 3, scoutLevel: 2, physioLevel: 2 },
             objectives: [],
             tactic: {
-                formation: TacticType.T_433, style: 'Possession', aggression: 'Normal',
-                tempo: 'Normal', width: 'Normal', defensiveLine: 'Medium', passingStyle: 'Mixed',
-                marking: 'Zonal', mentality: 'Balanced', pressingIntensity: 'Balanced', attackPlan: 'WIDE_CROSS',
+                formation: (opponent.formation as TacticType) || TacticType.T_433,
+                style: opponent.avg_ovr >= 80 ? 'Possession' : opponent.avg_ovr >= 73 ? 'Counter' : 'Direct',
+                aggression: opponent.avg_ovr >= 78 ? 'High' : 'Normal',
+                tempo: opponent.avg_ovr >= 76 ? 'High' : 'Normal',
+                width: 'Normal', defensiveLine: opponent.avg_ovr >= 78 ? 'High' : 'Medium',
+                passingStyle: opponent.avg_ovr >= 80 ? 'Short' : 'Mixed',
+                marking: 'Zonal', mentality: opponent.avg_ovr >= 75 ? 'Attacking' : 'Balanced',
+                pressingIntensity: opponent.avg_ovr >= 76 ? 'High' : 'Balanced',
+                attackPlan: opponent.avg_ovr >= 78 ? 'THROUGH_BALL' : 'WIDE_CROSS',
             },
             coachArchetype: CoachArchetype.TACTICIAN,
             trainingFocus: 'BALANCED', trainingIntensity: 'NORMAL',
@@ -3853,6 +3871,7 @@ const App: React.FC = () => {
                     onStartMatch={(opp) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp); }}
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
+                    managerName={gameState.managerProfile?.displayName}
                     t={t}
                 />
             )}

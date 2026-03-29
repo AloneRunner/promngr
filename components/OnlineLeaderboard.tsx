@@ -98,7 +98,12 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
               <span className="text-2xl">{myLeague.icon}</span>
               <div>
                 <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t.onlineMyRank || 'Your Rank'}</div>
-                <div className="font-bold text-white text-sm">{myProfile.team_name}</div>
+                <div className="font-bold text-white text-sm">
+                  {myProfile.username && myProfile.username !== 'Manager' ? myProfile.username : myProfile.team_name}
+                </div>
+                {myProfile.username && myProfile.username !== 'Manager' && (
+                  <div className="text-[10px] text-slate-400">{myProfile.team_name}</div>
+                )}
                 <div className={`text-xs font-bold ${myLeague.color}`}>{myLeague.name} Ligi • {myRank > 0 ? `#${myRank}` : 'Sırasız'}</div>
               </div>
             </div>
@@ -177,11 +182,12 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <span className={`font-bold text-sm truncate ${isMe ? 'text-white' : 'text-slate-200'}`}>
-                        {p.team_name}
+                        {p.username && p.username !== 'Manager' ? p.username : p.team_name}
                       </span>
                       {isMe && <span className="text-[9px] px-1 py-0.5 bg-purple-600/60 text-purple-300 rounded font-bold">SEN</span>}
                     </div>
-                    <div className="text-[10px] text-slate-500">
+                    <div className="text-[10px] text-slate-500 truncate">
+                      {p.username && p.username !== 'Manager' ? `${p.team_name} • ` : ''}
                       {total > 0
                         ? `${p.wins}G ${p.draws}B ${p.losses}M • %${winRate(p)} kazanma`
                         : 'Henüz maç yok'}

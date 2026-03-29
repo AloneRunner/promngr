@@ -11,12 +11,13 @@ interface Props {
   onStartMatch: (opponent: MPOpponent) => void;
   userTeam: Team;
   userPlayers: Player[];
+  managerName?: string;
   t: any;
 }
 
 type Phase = 'idle' | 'syncing' | 'searching' | 'found' | 'error';
 
-export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, userPlayers, t }: Props) {
+export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, userPlayers, managerName, t }: Props) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [profile, setProfile] = useState<MPPlayer | null>(null);
   const [opponent, setOpponent] = useState<MPOpponent | null>(null);
@@ -26,7 +27,7 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
   const myOvr = Math.round(starters.reduce((s, p) => s + p.overall, 0) / Math.max(1, starters.length)) || 70;
 
   useEffect(() => {
-    registerPlayer('Manager', userTeam.name);
+    registerPlayer(managerName || 'Manager', userTeam.name);
     getMyProfile().then(setProfile);
   }, []);
 
