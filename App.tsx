@@ -106,6 +106,7 @@ const App: React.FC = () => {
     const [showOnlineMatch, setShowOnlineMatch] = useState(false);
     const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
+    const [onlineEloChange, setOnlineEloChange] = useState<number | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
     const [newsFilter, setNewsFilter] = useState<MessageTab | undefined>(undefined);
@@ -1045,9 +1046,22 @@ const App: React.FC = () => {
             } as unknown as Player;
         });
 
+        // Rakip rengi kullanıcı rengiyle çakışmasın — sabit deplasman seti kullan
+        const userPrimary = (userTeam.primaryColor || '').toLowerCase();
+        const awayKits = [
+            { primary: '#ffffff', secondary: '#1a1a2e' },
+            { primary: '#f5f5f5', secondary: '#c0392b' },
+            { primary: '#ffd700', secondary: '#1a1a2e' },
+            { primary: '#ff6b35', secondary: '#ffffff' },
+            { primary: '#2ecc71', secondary: '#ffffff' },
+        ];
+        // Kullanıcı beyaza yakınsa koyu, değilse beyaz seç
+        const isUserLight = ['#fff', '#ffd', '#f5f', '#eee', '#fff'].some(c => userPrimary.startsWith(c));
+        const oppKit = isUserLight ? awayKits[1] : awayKits[0];
+
         const oppTeam: Team = {
             id: oppTeamId, name: opponent.team_name, city: opponent.team_name,
-            primaryColor: '#1a1a2e', secondaryColor: '#e94560',
+            primaryColor: oppKit.primary, secondaryColor: oppKit.secondary,
             reputation: 70, budget: 10000000, boardConfidence: 70,
             leagueId: 'online', wages: 500000,
             facilities: { stadiumCapacity: 15000, stadiumLevel: 2, trainingLevel: 2, academyLevel: 2 },
@@ -2252,7 +2266,9 @@ const App: React.FC = () => {
         if (onlineMatchOpponent && activeMatchId) {
             const finishedMatch = gameState?.matches.find(m => m.id === activeMatchId);
             if (finishedMatch) {
-                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore).catch(() => {});
+                submitMatchResult(onlineMatchOpponent.player_id, finishedMatch.homeScore, finishedMatch.awayScore)
+                    .then(r => { if (r) setOnlineEloChange(r.homeEloChange); })
+                    .catch(() => {});
             }
             const oppTeamPrefix = 'online-opp-';
             setGameState(prev => {
@@ -2265,6 +2281,7 @@ const App: React.FC = () => {
                 };
             });
             setOnlineMatchOpponent(null);
+            setOnlineEloChange(null);
             // Önceki motor seçimine geri dön
             const prevEngine = (window as any).__prevEngineChoice || 'ucuncu';
             serviceSetEngineChoice(prevEngine);
@@ -2994,6 +3011,7 @@ const App: React.FC = () => {
                                 userTeamId={userTeam.id} t={t} debugLogs={debugLog} onPlayerClick={setSelectedPlayer}
                                 goalReplay={gameState.performanceSettings?.goalReplay ?? true}
                                 isOnlineMatch={!!onlineMatchOpponent}
+                                onlineEloChange={onlineEloChange}
                             />
                         ) : (
                             <MatchCenter
