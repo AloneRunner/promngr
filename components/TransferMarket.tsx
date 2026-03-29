@@ -195,87 +195,103 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
           </button>
         </div>
 
-        {/* Collapsible Attribute Sliders */}
+        {/* Collapsible Attribute Filters — Slider based */}
         {showAdvancedSearch && (
           <div className="space-y-4 pt-4 border-t border-white/5 animate-fade-in">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Age Range */}
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
-                  <span>{t.age || 'Age'}</span>
-                  <span className="text-white bg-slate-800 px-2 py-0.5 rounded border border-white/10">{ageRange.min} - {ageRange.max}</span>
-                </label>
-                <div className="flex gap-2 items-center">
+
+            {/* Age & OVR sliders — full width, 4 rows */}
+            <div className="bg-slate-800/60 rounded-xl p-3 border border-white/5 space-y-3">
+              {/* Age */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">{t.age || 'Yaş'}</span>
+                  <span className="text-xs font-bold text-white tabular-nums">{ageRange.min} – {ageRange.max}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-500 w-6 shrink-0">Min</span>
                   <input
-                    type="range" min="16" max={ageRange.max} value={ageRange.min}
-                    onChange={(e) => setAgeRange(prev => ({ ...prev, min: parseInt(e.target.value) }))}
-                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                    type="range" min="16" max="45" step="1" value={ageRange.min}
+                    onChange={(e) => setAgeRange(prev => ({ ...prev, min: Math.min(parseInt(e.target.value), prev.max) }))}
+                    className="flex-1 accent-emerald-500 cursor-pointer"
                   />
+                  <span className="text-[10px] text-slate-400 w-5 text-right tabular-nums">{ageRange.min}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-500 w-6 shrink-0">Max</span>
                   <input
-                    type="range" min={Math.max(16, ageRange.min)} max="45" value={ageRange.max}
-                    onChange={(e) => setAgeRange(prev => ({ ...prev, max: parseInt(e.target.value) }))}
-                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                    type="range" min="16" max="45" step="1" value={ageRange.max}
+                    onChange={(e) => setAgeRange(prev => ({ ...prev, max: Math.max(parseInt(e.target.value), prev.min) }))}
+                    className="flex-1 accent-emerald-500 cursor-pointer"
                   />
+                  <span className="text-[10px] text-slate-400 w-5 text-right tabular-nums">{ageRange.max}</span>
                 </div>
               </div>
 
-              {/* Rating Range */}
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
-                  <span>OVR Rating</span>
-                  <span className="text-white bg-slate-800 px-2 py-0.5 rounded border border-white/10">{ratingRange.min} - {ratingRange.max}</span>
-                </label>
-                <div className="flex gap-2 items-center">
+              <div className="border-t border-white/5" />
+
+              {/* OVR */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold text-amber-500/80 tracking-wider">OVR</span>
+                  <span className="text-xs font-bold text-amber-400 tabular-nums">{ratingRange.min} – {ratingRange.max}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-500 w-6 shrink-0">Min</span>
                   <input
-                    type="range" min="40" max={ratingRange.max} value={ratingRange.min}
-                    onChange={(e) => setRatingRange(prev => ({ ...prev, min: parseInt(e.target.value) }))}
-                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-amber-500"
+                    type="range" min="40" max="99" step="1" value={ratingRange.min}
+                    onChange={(e) => setRatingRange(prev => ({ ...prev, min: Math.min(parseInt(e.target.value), prev.max) }))}
+                    className="flex-1 accent-amber-500 cursor-pointer"
                   />
+                  <span className="text-[10px] text-slate-400 w-5 text-right tabular-nums">{ratingRange.min}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-500 w-6 shrink-0">Max</span>
                   <input
-                    type="range" min={Math.max(40, ratingRange.min)} max="99" value={ratingRange.max}
-                    onChange={(e) => setRatingRange(prev => ({ ...prev, max: parseInt(e.target.value) }))}
-                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-amber-500"
+                    type="range" min="40" max="99" step="1" value={ratingRange.max}
+                    onChange={(e) => setRatingRange(prev => ({ ...prev, max: Math.max(parseInt(e.target.value), prev.min) }))}
+                    className="flex-1 accent-amber-500 cursor-pointer"
                   />
+                  <span className="text-[10px] text-slate-400 w-5 text-right tabular-nums">{ratingRange.max}</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {/* Min Attributes — slider per attribute */}
+            <div className="bg-slate-800/60 rounded-xl p-3 border border-white/5 space-y-2.5">
+              <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">{t.minAttributes || 'Min Attributes'}</div>
               {Object.entries({
-                speed: 'SPD', finishing: 'SHT', passing: 'PAS', dribbling: 'DRI', tackling: 'DEF'
+                speed: t.attrSpd || 'SPD', finishing: t.attrSht || 'SHT', passing: t.attrPas || 'PAS', dribbling: t.attrDri || 'DRI', tackling: t.attrDef || 'DEF'
               }).map(([key, label]) => (
-                <div key={key} className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-slate-500 flex justify-between">
-                    <span>Min {label}</span>
-                    <span className="text-blue-400">{(minAttributes as any)[key]}</span>
-                  </label>
+                <div key={key} className="flex items-center gap-3">
+                  <span className="text-[10px] font-bold text-blue-400 w-7 shrink-0">{label}</span>
                   <input
-                    type="range"
-                    min="0"
-                    max="99"
-                    value={(minAttributes as any)[key]}
+                    type="range" min="0" max="95" step="5" value={(minAttributes as any)[key]}
                     onChange={(e) => setMinAttributes(prev => ({ ...prev, [key]: parseInt(e.target.value) }))}
-                    className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+                    className="flex-1 h-1.5 rounded-full accent-blue-500 cursor-pointer"
                   />
+                  <span className="text-[11px] font-bold tabular-nums w-6 text-right text-blue-300">
+                    {(minAttributes as any)[key] === 0 ? '—' : (minAttributes as any)[key]}
+                  </span>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-end">
               <button
                 onClick={() => {
                   setMinAttributes({ speed: 0, finishing: 0, passing: 0, dribbling: 0, tackling: 0 });
                   setAgeRange({ min: 16, max: 45 });
                   setRatingRange({ min: 40, max: 99 });
                 }}
-                className="px-6 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded-lg border border-slate-600 transition-colors font-bold"
+                className="px-5 py-2 bg-slate-700 active:bg-slate-600 text-slate-300 text-xs rounded-lg border border-slate-600 transition-colors font-bold"
               >
-                {t.resetAttributes || 'Reset Search Filters'}
+                {t.resetAttributes || 'Reset Filters'}
               </button>
             </div>
           </div>
         )}
       </div>
+
 
       {/* List - Premium Table */}
       <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl border border-white/10">
@@ -335,8 +351,13 @@ export const TransferMarket: React.FC<TransferMarketProps> = ({
                   <td className="p-2 text-center hidden sm:table-cell"><span className={getAttributeClass(player.attributes.passing)}>{player.attributes.passing}</span></td>
                   <td className="p-2 text-center hidden sm:table-cell"><span className={getAttributeClass(player.attributes.dribbling)}>{player.attributes.dribbling}</span></td>
                   <td className="p-2 text-center hidden sm:table-cell"><span className={getAttributeClass(player.attributes.tackling)}>{player.attributes.tackling}</span></td>
-                  <td className="p-2 text-right font-mono text-emerald-400 font-bold">€{(player.value / 1000000).toFixed(1)}M</td>
-                  <td className="p-2 text-right font-mono text-red-400 text-xs hidden md:table-cell">€{Math.floor(player.wage).toLocaleString()}/h</td>
+                  {/* Fiyat — açık göster */}
+                  <td className="p-2 text-right font-mono text-emerald-400 font-bold text-xs">
+                    {player.value >= 1000000
+                      ? `€${(player.value / 1000000).toFixed(1)}M`
+                      : `€${Math.round(player.value / 1000)}K`
+                    }
+                  </td>
                   <td className="p-2 text-center">
                     {isOwned(player) ? (
                       <span className="text-[10px] bg-slate-700 text-slate-400 px-2 py-1 rounded font-bold">{t.owned || 'OWNED'}</span>

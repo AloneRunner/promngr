@@ -671,3 +671,10 @@ export const getLeagueLogo = (leagueId: string): string => {
 export const hasTeamLogo = (teamName: string): boolean => {
     return teamName in TEAM_LOGOS;
 };
+
+/**
+ * Get all available team logos as an array of {name, path} for logo picker UI
+ */
+export const getAllTeamLogos = (): Array<{ name: string; path: string }> => {
+    return Object.entries(TEAM_LOGOS).map(([name, path]) => ({ name, path }));
+};

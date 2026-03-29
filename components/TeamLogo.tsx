@@ -17,13 +17,15 @@ export const TeamLogo: React.FC<TeamLogoProps> = ({
     className = "w-10 h-10",
     size
 }) => {
-    const name = team?.name || teamName || 'Unknown';
-    const hasCustomLogo = hasTeamLogo(name);
+    const displayName = team?.name || teamName || 'Unknown';
+    // logoKey is the original name used for logo lookup — it survives renames
+    const lookupName = (team as any)?.logoKey || displayName;
+    const hasCustomLogo = hasTeamLogo(lookupName);
 
     // Style for explicit size if provided
     const style = size ? { width: size, height: size } : {};
 
-    // 1. Render Logo if available
+    // 1. Render Logo ONLY if a real custom logo exists (not default fallback)
     if (hasCustomLogo) {
         return (
             <div
@@ -31,22 +33,23 @@ export const TeamLogo: React.FC<TeamLogoProps> = ({
                 style={style}
             >
                 <img
-                    src={getTeamLogo(name)}
-                    alt={name}
-                    className="w-full h-full object-contain p-1" // Added padding to avoid edge clipping
+                    src={getTeamLogo(lookupName)}
+                    alt={displayName}
+                    className="w-full h-full object-contain p-1"
+                    onError={(e) => {
+                        // Logo yüklenemezse initials'a düş
+                        (e.target as HTMLElement).style.display = 'none';
+                    }}
                 />
             </div>
         );
     }
 
     // 2. Render Initials Box if no logo
-    const primaryColor = team?.primaryColor || '#64748b'; // Slate-500 fallback
+    const primaryColor = team?.primaryColor || '#64748b';
     const secondaryColor = team?.secondaryColor || '#ffffff';
 
-    // Get single initial
-    const initial = name.charAt(0).toUpperCase();
-
-    // Calculate high contrast text color
+    const initial = displayName.charAt(0).toUpperCase();
     const textColor = ensureContrast(primaryColor, secondaryColor);
 
     return (
@@ -55,10 +58,10 @@ export const TeamLogo: React.FC<TeamLogoProps> = ({
             style={{
                 backgroundColor: primaryColor,
                 color: textColor,
-                borderRadius: '20%', // Soft rounded square
+                borderRadius: '20%',
                 ...style
             }}
-            title={name}
+            title={displayName}
         >
             {/* Inner "shine" gradient */}
             <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-white/20 pointer-events-none"></div>

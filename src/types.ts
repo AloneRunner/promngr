@@ -225,6 +225,7 @@ export interface FinancialRecord {
 export interface Team {
     id: string; name: string; shortName?: string; city: string; primaryColor: string; secondaryColor: string;
     reputation: number; budget: number; boardConfidence: number; leagueId: string; wages: number;
+    logoKey?: string; // Original team name used for logo lookup — survives renames
     facilities: { stadiumCapacity: number; stadiumLevel: number; trainingLevel: number; academyLevel: number; stadiumConstructionWeeks?: number; trainingConstructionWeeks?: number; academyConstructionWeeks?: number; };
     staff: { headCoachLevel: number; scoutLevel: number; physioLevel: number; };
     objectives: any[]; tactic: TeamTactic; coachArchetype: CoachArchetype;
@@ -278,12 +279,14 @@ export interface GameState {
     managerProfile?: ManagerProfileData;
     managerRating?: number; managerSalary?: number; managerCareerHistory?: any[]; managerTrophies?: any;
     jobOffers?: any[]; tacticalHistory?: any[];
+    aiManagerRatings?: Record<string, number>;
     leagueReputationBonuses?: any; baseLeagueReputations?: any; leagueEuropeanBonuses?: any; leagueCoefficients?: any; leagueCoefficientHistory?: any;
     performanceSettings?: PerformanceSettings; // YENI: Performans ayarları
     isWeekSimulating?: boolean;        // YENI: Background simulation durumu
     simulationProgress?: number;       // YENI: Simülasyon ilerlemesi (0-100)
     marketInflationMultiplier?: number; // Smooth market inflation (kademeli, haftalık güncellenir)
     transferTaxPot?: number; // Global transfer tax pool — distributed at season end
+    customLeagueNames?: Record<string, string>; // YENI: Özel Lig İsimleri
 }
 
 export type Translation = any;

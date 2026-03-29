@@ -76,15 +76,12 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                 const tierDrop = srcMult - dstMult; // Positive = moving to weaker league
 
                 if (tierDrop > 0.7) {
-                    // Big drop (e.g. PL/La Liga → Turkish/smaller league)
-                    if (player.age < 27) willingness -= 0.65;       // Young prime: very reluctant
-                    else if (player.age < 30) willingness -= 0.40;  // Late prime: reluctant
-                    else willingness -= 0.10;                        // 30+: slight penalty (career move)
+                    if (player.age < 27) willingness -= 0.65;
+                    else if (player.age < 30) willingness -= 0.40;
+                    else willingness -= 0.10;
                 } else if (tierDrop > 0.35) {
-                    // Medium drop (e.g. Bundesliga → Turkish)
                     if (player.age < 27) willingness -= 0.35;
                     else if (player.age < 30) willingness -= 0.15;
-                    // 30+: no extra penalty for medium drops
                 }
 
                 // 3. Age: veterans more open to adventure/money
@@ -102,24 +99,123 @@ export const useTransferMarket = ({ gameState, setGameState, t }: UseTransferMar
                 // 5. Unhappy players more willing to leave
                 if ((player.morale || 75) < 40) willingness += 0.25;
 
+                // 6. REJECTION COOLDOWN — each rejection makes the player slightly more willing
+                // This prevents infinite spam but still requires effort (max 3 rejections = +0.30)
+                const rejKey = `pfm_reject_${player.id}`;
+                const prevRejects = parseInt(sessionStorage.getItem(rejKey) || '0');
+                willingness += prevRejects * 0.10; // Each past rejection adds 10% willingness
+
                 willingness = Math.max(0.02, Math.min(0.97, willingness));
 
                 if (Math.random() > willingness) {
-                    // Player refuses — add as inbox message instead of alert
+                    // Track rejection count for cooldown
+                    sessionStorage.setItem(rejKey, String(Math.min(prevRejects + 1, 5)));
+
+                    // ★ VISUAL TOAST — user sees rejection immediately ★
                     const reason = tierDrop > 0.7 && player.age < 30
-                        ? `${player.firstName} ${player.lastName} daha prestijli bir ligde oynamayı tercih ediyor ve teklifinizi reddetti.`
-                        : `${player.firstName} ${player.lastName} kariyer hedefleri nedeniyle transferi kabul etmedi.`;
+                        ? (t.playerPrefersPrestigiousLeague || `⛔ ${player.firstName} ${player.lastName} daha prestijli bir ligde oynamayı tercih ediyor!`)
+                        : (t.playerRejectedCareerGoals || `⛔ ${player.firstName} ${player.lastName} kariyer hedefleri nedeniyle transferi reddetti!`);
+
+                    // Use alert for IMMEDIATE visual feedback (shows before inbox message)
+                    alert(reason);
+
+                    // Also add to inbox for record
                     setGameState(prev => {
                         if (!prev) return null;
-                        const msg = { id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: 'Transfer Reddedildi', body: reason, isRead: false, date: new Date().toISOString() };
+                        const msg = { id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: t.transferRejectedSubject || 'Transfer Reddedildi', body: reason, isRead: false, date: new Date().toISOString() };
                         return { ...prev, messages: [msg, ...prev.messages].slice(0, 200) };
                     });
                     return;
+                } else {
+                    // Player accepted! Clear rejection counter
+                    sessionStorage.removeItem(rejKey);
                 }
             }
         }
 
-        // 10% transfer tax on buyer
+        // ========== SELLING TEAM REJECTION SYSTEM ==========
+        // Same rules as AI-to-AI: the selling club is NOT obligated to sell just because user wants to buy.
+        // Exception: transfer-listed (club wants to sell), free agents, expiring contracts
+        if (player.teamId !== 'FREE_AGENT' && !player.isTransferListed) {
+            const sellerTeam = currentGameState.teams.find(t => t.id === player.teamId);
+            if (sellerTeam) {
+                const sellerPlayers = currentGameState.players.filter(p => p.teamId === sellerTeam.id);
+                const isStarter = player.lineup === 'STARTING';
+                const posCount = sellerPlayers.filter(p => p.position === player.position).length;
+                const wouldLeaveShort = posCount <= 3;
+                const sellerAvg = sellerPlayers.reduce((s, p) => s + p.overall, 0) / Math.max(1, sellerPlayers.length);
+                const sortedByOvr = [...sellerPlayers].sort((a, b) => b.overall - a.overall);
+                const isTop3 = sortedByOvr.slice(0, 3).some(p => p.id === player.id);
+                const isTop5 = sortedByOvr.slice(0, 5).some(p => p.id === player.id);
+                const offerRatio = finalPrice / Math.max(1, player.value);
+                const hasExpiringContract = (player.contractYears ?? 99) <= 1;
+
+                // Expiring contract = selling team is more willing (player leaving anyway)
+                if (!hasExpiringContract) {
+                    // "Can I replace him?" — same check as AI-to-AI
+                    const sellerBudgetAfterSale = sellerTeam.budget + finalPrice;
+                    const replacementExists = currentGameState.players.some(rp =>
+                        rp.id !== player.id &&
+                        rp.teamId !== sellerTeam.id &&
+                        rp.position === player.position &&
+                        rp.overall >= player.overall - 3 &&
+                        (rp.isTransferListed || rp.teamId === 'FREE_AGENT' || (rp.contractYears ?? 99) <= 1) &&
+                        rp.value <= sellerBudgetAfterSale * 0.7
+                    );
+
+                    // Calculate rejection chance
+                    let clubRejectChance = 0.10;
+                    if (isStarter) clubRejectChance += 0.25;
+                    if (wouldLeaveShort) clubRejectChance += 0.30;
+                    if (isTop3 && player.overall >= 85) clubRejectChance += 0.25;
+                    else if (isTop5 && player.overall >= 80) clubRejectChance += 0.15;
+
+                    // No replacement = much higher rejection
+                    if (!replacementExists && (isStarter || player.overall >= sellerAvg)) {
+                        clubRejectChance += 0.30;
+                    }
+
+                    // Overpay reduces rejection
+                    if (offerRatio >= 2.5) clubRejectChance -= 0.35;
+                    else if (offerRatio >= 2.0) clubRejectChance -= 0.25;
+                    else if (offerRatio >= 1.5) clubRejectChance -= 0.15;
+                    else if (offerRatio >= 1.2) clubRejectChance -= 0.05;
+                    // Underpay increases rejection
+                    if (offerRatio < 0.9) clubRejectChance += 0.20;
+
+                    // Buyer prestige helps (big clubs get respect)
+                    if (userTeam.reputation > sellerTeam.reputation + 2000) clubRejectChance -= 0.15;
+
+                    clubRejectChance = Math.max(0.05, Math.min(0.90, clubRejectChance));
+
+                    // Rejection cooldown for club too (separate from player willingness)
+                    const clubRejKey = `pfm_club_reject_${player.id}`;
+                    const prevClubRejects = parseInt(sessionStorage.getItem(clubRejKey) || '0');
+                    clubRejectChance -= prevClubRejects * 0.08; // Each retry reduces by 8%
+                    clubRejectChance = Math.max(0.05, clubRejectChance);
+
+                    if (Math.random() < clubRejectChance) {
+                        sessionStorage.setItem(clubRejKey, String(Math.min(prevClubRejects + 1, 6)));
+
+                        const clubReason = isTop3
+                            ? (t.clubRejectsStarSale || `🚫 ${sellerTeam.name} yıldız oyuncusunu satmayı reddetti!`)
+                            : !replacementExists
+                                ? (t.clubRejectsNoReplacement || `🚫 ${sellerTeam.name} yerine oyuncu bulamayacağı için teklifi reddetti!`)
+                                : (t.clubRejectsOffer || `🚫 ${sellerTeam.name} teklifi yeterli bulmadı!`);
+
+                        alert(clubReason);
+                        setGameState(prev => {
+                            if (!prev) return null;
+                            const msg = { id: uuid(), week: prev.currentWeek, type: MessageType.INFO, subject: t.clubRejectedSubject || 'Kulüp Teklifi Reddetti', body: clubReason, isRead: false, date: new Date().toISOString() };
+                            return { ...prev, messages: [msg, ...prev.messages].slice(0, 200) };
+                        });
+                        return;
+                    } else {
+                        sessionStorage.removeItem(clubRejKey);
+                    }
+                }
+            }
+        }
         const transferTax = Math.floor(finalPrice * 0.10);
         const totalCost = finalPrice + transferTax;
 

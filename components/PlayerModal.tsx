@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Player, Translation, Position } from '../types';
-import { X, Clock, FileText, BarChart2, Eye, History, DollarSign, Ban, Star, Hexagon, LayoutGrid, Lock } from 'lucide-react';
+import { X, Clock, FileText, BarChart2, Eye, History, DollarSign, Ban, Star, Hexagon, LayoutGrid, Lock, Edit2 } from 'lucide-react';
 import { PlayerAvatar } from './PlayerAvatar';
 import { RadarChart } from './RadarChart';
 import { calculateEffectiveRating } from '../services/MatchEngine';
@@ -13,52 +13,40 @@ interface PlayerModalProps {
     onToggleTransferList?: (player: Player) => void;
     onToggleNotForSale?: (player: Player) => void;
     onTerminateContract?: (player: Player) => void; // New: Release player
+    onRenamePlayer?: (player: Player, newFirstName: string, newLastName: string) => void;
     t: Translation;
+    scoutLevel?: number;
+    isOwnTeam?: boolean;
+    scoutingTalent?: number;
+    scoutAdvisor?: number;
 }
 
-export const getLocalizedPlaystyle = (style: string, t: Translation): string => {
-    switch (style) {
-        case "Kedi Refleks": return t.styleCatReflexes || style;
-        case "Ortaya Çıkan": return t.styleSweeper || style;
-        case "Penaltı Canavarı": return t.stylePenaltySaver || style;
-        case "Top Kesici": return t.styleInterceptor || style;
-        case "Kaya": return t.styleRock || style;
-        case "Amansız": return t.styleRelentless || style;
-        case "Baskıya Dayanıklı": return t.stylePressResistant || style;
-        case "Seri": return t.styleRapid || style;
-        case "Top Cambazı": return t.styleTrickster || style;
-        case "İlk Dokunuş": return t.styleFirstTouch || style;
-        case "Keskin Pas": return t.styleIncisivePass || style;
-        case "Maestro": return t.styleMaestro || style;
-        case "Ölü Top Uzmanı": return t.styleDeadBall || style;
-        case "Plase Şut": return t.styleFinesse || style;
-        case "Roket": return t.styleRocket || style;
-        case "Aşırtma": return t.styleLob || style;
-        case "Hava Hakimi": return t.styleAerialThreat || style;
-        case "Uzaktan Şutör": return t.styleLongRanger || style;
-        case "Gizli Forvet": return t.styleShadowStriker || style;
-        case "İleride Bekleyen": return t.stylePoacher || style;
-        default: return style;
-    }
-}
+import { getMaskedAttribute, getMaskedValue, getLocalizedPlaystyle } from '../src/utils/playerUtils';
 
-export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onToggleNotForSale, onTerminateContract, t }) => {
+export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRenew, onToggleTransferList, onToggleNotForSale, onTerminateContract, onRenamePlayer, t, scoutLevel = 1, isOwnTeam = true, scoutingTalent = 0, scoutAdvisor = 0 }) => {
     const [viewMode, setViewMode] = React.useState<'GRID' | 'GRAPH'>('GRAPH');
     if (!player) return null;
 
-    const getAttrColor = (val: number) => {
-        if (val >= 80) return 'text-emerald-400 font-bold';
-        if (val >= 60) return 'text-green-300';
-        if (val >= 40) return 'text-yellow-200';
+    const getAttrColor = (val: number | string) => {
+        const num = typeof val === 'number' ? val : parseInt(val.toString().split('-')[0] || '50') + 5;
+        if (num >= 80) return 'text-emerald-400 font-bold';
+        if (num >= 60) return 'text-green-300';
+        if (num >= 40) return 'text-yellow-200';
         return 'text-slate-400';
     };
 
-    const AttrRow = ({ label, value }: { label: string, value: number }) => (
+    const AttrRow = ({ label, value }: { label: string, value: number | string }) => (
         <div className="flex justify-between items-center text-sm py-1 border-b border-slate-700/50">
             <span className="text-slate-400">{label}</span>
             <span className={getAttrColor(value)}>{value}</span>
         </div>
     );
+
+    const getNumericAttr = (val: number | string) => {
+        if (typeof val === 'number') return val;
+        const parts = val.split('-');
+        return parts.length === 2 ? Math.floor((parseInt(parts[0]) + parseInt(parts[1])) / 2) : 50;
+    };
 
     const renewalCost = Math.floor(player.value * 0.1);
     const terminationCost = Math.floor(player.salary * player.contractYears * 0.5); // 50% of remaining contract
@@ -81,6 +69,21 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2">
                                 <h2 className="text-lg font-bold text-white truncate">{player.firstName} {player.lastName}</h2>
+                                {onRenamePlayer && (
+                                    <button 
+                                        onClick={() => {
+                                            const newFirst = window.prompt("Yeni Ad:", player.firstName) || player.firstName;
+                                            const newLast = window.prompt("Yeni Soyad:", player.lastName) || player.lastName;
+                                            if (newFirst !== player.firstName || newLast !== player.lastName) {
+                                                onRenamePlayer(player, newFirst, newLast);
+                                            }
+                                        }}
+                                        className="text-slate-500 hover:text-white transition-colors p-1"
+                                        title="İsmi Düzenle"
+                                    >
+                                        <Edit2 size={14} />
+                                    </button>
+                                )}
                                 {player.jerseyNumber && (
                                     <div className="text-sm font-bold px-2 py-0.5 rounded bg-slate-800 border border-slate-600 text-white">
                                         #{player.jerseyNumber}
@@ -90,15 +93,19 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                                     const posMap: Record<string, Position> = { 'GK': Position.GK, 'DEF': Position.DEF, 'MID': Position.MID, 'FWD': Position.FWD };
                                     const pos = posMap[player.position] || Position.MID;
                                     const effectiveOvr = calculateEffectiveRating(player, pos, player.condition);
+                                    
+                                    const maskedEffectiveOvr = getMaskedAttribute(effectiveOvr, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor);
+                                    const maskedBaseOvr = getMaskedAttribute(player.overall, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor);
+
                                     return effectiveOvr !== player.overall ? (
                                         <div className="flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700" title={`Baz: ${player.overall} | Anlık: ${effectiveOvr}`}>
-                                            <span className="text-slate-500 line-through text-xs">{player.overall}</span>
+                                            <span className="text-slate-500 line-through text-xs">{maskedBaseOvr}</span>
                                             <span className="text-slate-600">→</span>
-                                            <span className={effectiveOvr >= 80 ? 'text-emerald-400' : effectiveOvr >= 70 ? 'text-green-300' : 'text-orange-400'}>{effectiveOvr}</span>
+                                            <span className={getAttrColor(maskedEffectiveOvr)}>{maskedEffectiveOvr}</span>
                                         </div>
                                     ) : (
-                                        <div className={`text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 ${getAttrColor(player.overall)}`}>
-                                            {player.overall}
+                                        <div className={`text-sm font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 ${getAttrColor(maskedBaseOvr)}`}>
+                                            {maskedBaseOvr}
                                         </div>
                                     );
                                 })()}
@@ -254,14 +261,14 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                             <div className="w-full max-w-[320px] mx-auto">
                                 <RadarChart
                                     stats={[
-                                        { label: t.attrPace || 'Pace', value: player.attributes.speed, fullMark: 100 },
-                                        { label: t.attrShoot || 'Shoot', value: player.attributes.finishing, fullMark: 100 },
-                                        { label: t.attrPass || 'Pass', value: player.attributes.passing, fullMark: 100 },
-                                        { label: t.attrDribble || 'Drib', value: player.attributes.dribbling, fullMark: 100 },
-                                        { label: t.attrDefense || 'Def', value: player.attributes.tackling, fullMark: 100 },
-                                        { label: t.attrPhys || 'Phys', value: player.attributes.strength, fullMark: 100 },
+                                        { label: t.attrPace || 'Pace', value: getNumericAttr(getMaskedAttribute(player.attributes.speed, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
+                                        { label: t.attrShoot || 'Shoot', value: getNumericAttr(getMaskedAttribute(player.attributes.finishing, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
+                                        { label: t.attrPass || 'Pass', value: getNumericAttr(getMaskedAttribute(player.attributes.passing, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
+                                        { label: t.attrDribble || 'Drib', value: getNumericAttr(getMaskedAttribute(player.attributes.dribbling, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
+                                        { label: t.attrDefense || 'Def', value: getNumericAttr(getMaskedAttribute(player.attributes.tackling, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
+                                        { label: t.attrPhys || 'Phys', value: getNumericAttr(getMaskedAttribute(player.attributes.strength, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)), fullMark: 100 },
                                     ]}
-                                    color={player.overall >= 80 ? '#34d399' : player.overall >= 70 ? '#60a5fa' : '#facc15'}
+                                    color={getNumericAttr(getMaskedAttribute(player.overall, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)) >= 80 ? '#34d399' : getNumericAttr(getMaskedAttribute(player.overall, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)) >= 70 ? '#60a5fa' : '#facc15'}
                                     size={200}
                                 />
                             </div>
@@ -270,29 +277,29 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onRen
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-emerald-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.technical}</h4>
-                                <AttrRow label={t.attrFinishing || "Finishing"} value={player.attributes.finishing} />
-                                <AttrRow label={t.attrPassing || "Passing"} value={player.attributes.passing} />
-                                <AttrRow label={t.attrDribbling || "Dribbling"} value={player.attributes.dribbling} />
-                                <AttrRow label={t.attrTackling || "Tackling"} value={player.attributes.tackling} />
-                                <AttrRow label={t.attrGoalkeeping || "Goalkeeping"} value={player.attributes.goalkeeping} />
+                                <AttrRow label={t.attrFinishing || "Finishing"} value={getMaskedAttribute(player.attributes.finishing, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrPassing || "Passing"} value={getMaskedAttribute(player.attributes.passing, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrDribbling || "Dribbling"} value={getMaskedAttribute(player.attributes.dribbling, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrTackling || "Tackling"} value={getMaskedAttribute(player.attributes.tackling, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrGoalkeeping || "Goalkeeping"} value={getMaskedAttribute(player.attributes.goalkeeping, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
                             </div>
 
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-blue-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.physical}</h4>
-                                <AttrRow label={t.attrSpeed || "Speed"} value={player.attributes.speed} />
-                                <AttrRow label={t.attrStamina || "Stamina"} value={player.attributes.stamina} />
-                                <AttrRow label={t.attrStrength || "Strength"} value={player.attributes.strength} />
-                                <AttrRow label={t.condition || "Condition"} value={player.condition} />
+                                <AttrRow label={t.attrSpeed || "Speed"} value={getMaskedAttribute(player.attributes.speed, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrStamina || "Stamina"} value={getMaskedAttribute(player.attributes.stamina, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrStrength || "Strength"} value={getMaskedAttribute(player.attributes.strength, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.condition || "Condition"} value={getMaskedAttribute(player.condition, 5, true, player.id)} />
                             </div>
 
                             <div className="bg-slate-900/40 p-3 rounded border border-white/5">
                                 <h4 className="text-yellow-500 font-bold mb-2 uppercase text-[10px] tracking-wider">{t.mental}</h4>
-                                <AttrRow label={t.attrDecisions || "Decisions"} value={player.attributes.decisions || 50} />
-                                <AttrRow label={t.attrPositioning || "Positioning"} value={player.attributes.positioning} />
-                                <AttrRow label={t.attrVision || "Vision"} value={player.attributes.vision} />
-                                <AttrRow label={t.attrComposure || "Composure"} value={player.attributes.composure} />
-                                <AttrRow label={t.attrLeadership || "Leadership"} value={player.attributes.leadership} />
-                                <AttrRow label={t.attrAggression || "Aggression"} value={player.attributes.aggression} />
+                                <AttrRow label={t.attrDecisions || "Decisions"} value={getMaskedAttribute(player.attributes.decisions || 50, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrPositioning || "Positioning"} value={getMaskedAttribute(player.attributes.positioning, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrVision || "Vision"} value={getMaskedAttribute(player.attributes.vision, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrComposure || "Composure"} value={getMaskedAttribute(player.attributes.composure, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrLeadership || "Leadership"} value={getMaskedAttribute(player.attributes.leadership, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
+                                <AttrRow label={t.attrAggression || "Aggression"} value={getMaskedAttribute(player.attributes.aggression, scoutLevel, isOwnTeam, player.id, scoutingTalent, scoutAdvisor)} />
                             </div>
                         </div>
                     )}
