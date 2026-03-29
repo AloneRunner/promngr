@@ -24,6 +24,7 @@ interface DetailedMatchCenterProps {
     debugLogs: string[];
     onPlayerClick: (player: Player) => void;
     goalReplay?: boolean;
+    isOnlineMatch?: boolean;
 }
 
 type LiveAttackPlan = {
@@ -600,7 +601,7 @@ const drawBall3D = (ctx: CanvasRenderingContext2D, xPct: number, yPct: number, z
 const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
     match, homeTeam, awayTeam, homePlayers, awayPlayers, onSync, onFinish, onInstantFinish,
     onSubstitute, onUpdateTactic, onAutoFix, userTeamId, t, debugLogs, onPlayerClick,
-    goalReplay = true
+    goalReplay = true, isOnlineMatch = false
 }) => {
     const [speed, setSpeed] = useState(1.0);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -2946,7 +2947,9 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                     <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-8 max-w-sm w-full shadow-2xl">
                         <h3 className="text-2xl font-bold text-white mb-2">{t.quitMatch || 'Exit Match?'}</h3>
                         <p className="text-zinc-400 text-sm mb-6">
-                            {t.matchContinues?.replace('{minute}', match.currentMinute.toString()) || `The match will be auto-simulated for the remaining time.`}
+                            {isOnlineMatch
+                                ? (t.onlineMatchCannotQuit || 'Online maçtan çıkamazsın — maçı tamamlaman gerekiyor.')
+                                : (t.matchContinues?.replace('{minute}', match.currentMinute.toString()) || `The match will be auto-simulated for the remaining time.`)}
                         </p>
                         <div className="flex gap-3">
                             <button
@@ -2955,17 +2958,19 @@ const DetailedMatchCenter: React.FC<DetailedMatchCenterProps> = ({
                             >
                                 {t.cancel || 'Cancel'}
                             </button>
-                            <button
-                                onClick={() => {
-                                    setShowExitModal(false);
-                                    soundManager.stopAll();
-                                    onInstantFinish(match.id);
-                                    setTimeout(() => onFinish(match.id), 100);
-                                }}
-                                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-emerald-900/30"
-                            >
-                                {t.simulateAndQuit || 'Simulate & Exit'}
-                            </button>
+                            {!isOnlineMatch && (
+                                <button
+                                    onClick={() => {
+                                        setShowExitModal(false);
+                                        soundManager.stopAll();
+                                        onInstantFinish(match.id);
+                                        setTimeout(() => onFinish(match.id), 100);
+                                    }}
+                                    className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-emerald-900/30"
+                                >
+                                    {t.simulateAndQuit || 'Simulate & Exit'}
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
