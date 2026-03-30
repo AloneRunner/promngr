@@ -3148,5 +3148,2966 @@
         "position": "ST"
       }
     ]
+  },
+  {
+    "id": "bot-rb-leipzig",
+    "teamName": "RB Saxony",
+    "elo": 1380,
+    "avg": 82,
+    "squad": [
+      {
+        "name": "P.Gulacsi",
+        "position": "GK",
+        "ovr": 83
+      },
+      {
+        "name": "W.Orban",
+        "position": "CB",
+        "ovr": 82
+      },
+      {
+        "name": "A.Simakan",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "B.Henrichs",
+        "position": "LB",
+        "ovr": 83
+      },
+      {
+        "name": "D.Raum",
+        "position": "RB",
+        "ovr": 79
+      },
+      {
+        "name": "K.Kampl",
+        "position": "CM",
+        "ovr": 85
+      },
+      {
+        "name": "X.Schlager",
+        "position": "CM",
+        "ovr": 80
+      },
+      {
+        "name": "K.Simons",
+        "position": "CAM",
+        "ovr": 85
+      },
+      {
+        "name": "C.Nkunku",
+        "position": "LW",
+        "ovr": 82
+      },
+      {
+        "name": "L.Openda",
+        "position": "RW",
+        "ovr": 81
+      },
+      {
+        "name": "B.Sesko",
+        "position": "ST",
+        "ovr": 79
+      }
+    ]
+  },
+  {
+    "id": "bot-real2",
+    "teamName": "Royal CF",
+    "elo": 1370,
+    "avg": 81,
+    "squad": [
+      {
+        "name": "A.Remiro",
+        "position": "GK",
+        "ovr": 77
+      },
+      {
+        "name": "D.Vivian",
+        "position": "CB",
+        "ovr": 84
+      },
+      {
+        "name": "M.Zubeldia",
+        "position": "CB",
+        "ovr": 82
+      },
+      {
+        "name": "A.Elustondo",
+        "position": "LB",
+        "ovr": 83
+      },
+      {
+        "name": "J.Aramburu",
+        "position": "RB",
+        "ovr": 82
+      },
+      {
+        "name": "B.Zubimendi",
+        "position": "CM",
+        "ovr": 82
+      },
+      {
+        "name": "M.Merino",
+        "position": "CM",
+        "ovr": 83
+      },
+      {
+        "name": "D.Silva",
+        "position": "CAM",
+        "ovr": 79
+      },
+      {
+        "name": "T.Kubo",
+        "position": "LW",
+        "ovr": 78
+      },
+      {
+        "name": "M.Oyarzabal",
+        "position": "RW",
+        "ovr": 84
+      },
+      {
+        "name": "I.Sadiq",
+        "position": "ST",
+        "ovr": 82
+      }
+    ]
+  },
+  {
+    "id": "bot-porto2",
+    "teamName": "Dragoes FC",
+    "elo": 1355,
+    "avg": 80,
+    "squad": [
+      {
+        "name": "D.Costa",
+        "position": "GK",
+        "ovr": 76
+      },
+      {
+        "name": "N.Marcano",
+        "position": "CB",
+        "ovr": 81
+      },
+      {
+        "name": "P.Anderson",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "Z.Tiago",
+        "position": "LB",
+        "ovr": 81
+      },
+      {
+        "name": "J.Mario",
+        "position": "RB",
+        "ovr": 82
+      },
+      {
+        "name": "S.Uribe",
+        "position": "CM",
+        "ovr": 78
+      },
+      {
+        "name": "A.Grujic",
+        "position": "CM",
+        "ovr": 82
+      },
+      {
+        "name": "F.Pepey",
+        "position": "CAM",
+        "ovr": 81
+      },
+      {
+        "name": "G.Galeno",
+        "position": "LW",
+        "ovr": 81
+      },
+      {
+        "name": "E.Taremi",
+        "position": "RW",
+        "ovr": 80
+      },
+      {
+        "name": "C.Conceicao",
+        "position": "ST",
+        "ovr": 78
+      }
+    ]
+  },
+  {
+    "id": "bot-boca",
+    "teamName": "Buenos Aires Xeneize",
+    "elo": 1340,
+    "avg": 80,
+    "squad": [
+      {
+        "name": "S.Romero",
+        "position": "GK",
+        "ovr": 77
+      },
+      {
+        "name": "L.Rojo",
+        "position": "CB",
+        "ovr": 83
+      },
+      {
+        "name": "C.Lema",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "F.Figal",
+        "position": "LB",
+        "ovr": 82
+      },
+      {
+        "name": "F.Advíncula",
+        "position": "RB",
+        "ovr": 83
+      },
+      {
+        "name": "N.Fernandez",
+        "position": "CM",
+        "ovr": 82
+      },
+      {
+        "name": "E.Pol Fernandez",
+        "position": "CM",
+        "ovr": 82
+      },
+      {
+        "name": "M.Zenon",
+        "position": "CAM",
+        "ovr": 78
+      },
+      {
+        "name": "B.Merentiel",
+        "position": "LW",
+        "ovr": 82
+      },
+      {
+        "name": "D.Cavani",
+        "position": "RW",
+        "ovr": 81
+      },
+      {
+        "name": "E.Cavani",
+        "position": "ST",
+        "ovr": 80
+      }
+    ]
+  },
+  {
+    "id": "bot-river",
+    "teamName": "Millonarios River",
+    "elo": 1320,
+    "avg": 80,
+    "squad": [
+      {
+        "name": "F.Musso",
+        "position": "GK",
+        "ovr": 82
+      },
+      {
+        "name": "P.Alarcon",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "E.Diaz",
+        "position": "CB",
+        "ovr": 81
+      },
+      {
+        "name": "M.Mammana",
+        "position": "LB",
+        "ovr": 78
+      },
+      {
+        "name": "M.Bustos",
+        "position": "RB",
+        "ovr": 79
+      },
+      {
+        "name": "N.De la Cruz",
+        "position": "CM",
+        "ovr": 83
+      },
+      {
+        "name": "A.Enzo Perez",
+        "position": "CM",
+        "ovr": 81
+      },
+      {
+        "name": "S.Palavecino",
+        "position": "CAM",
+        "ovr": 79
+      },
+      {
+        "name": "A.Driussi",
+        "position": "LW",
+        "ovr": 76
+      },
+      {
+        "name": "R.Beltran",
+        "position": "RW",
+        "ovr": 82
+      },
+      {
+        "name": "J.Quintero",
+        "position": "ST",
+        "ovr": 80
+      }
+    ]
+  },
+  {
+    "id": "bot-flamengo",
+    "teamName": "Rio Flamingos",
+    "elo": 1310,
+    "avg": 79,
+    "squad": [
+      {
+        "name": "R.Rossi",
+        "position": "GK",
+        "ovr": 76
+      },
+      {
+        "name": "D.Varela",
+        "position": "CB",
+        "ovr": 76
+      },
+      {
+        "name": "F.Nino",
+        "position": "CB",
+        "ovr": 77
+      },
+      {
+        "name": "A.Gomes",
+        "position": "LB",
+        "ovr": 80
+      },
+      {
+        "name": "B.Alex Sandro",
+        "position": "RB",
+        "ovr": 76
+      },
+      {
+        "name": "G.Pulgar",
+        "position": "CM",
+        "ovr": 75
+      },
+      {
+        "name": "E.De Arascaeta",
+        "position": "CM",
+        "ovr": 80
+      },
+      {
+        "name": "J.Gerson",
+        "position": "CAM",
+        "ovr": 78
+      },
+      {
+        "name": "B.Luiz Araujo",
+        "position": "LW",
+        "ovr": 82
+      },
+      {
+        "name": "G.Barbosa",
+        "position": "RW",
+        "ovr": 76
+      },
+      {
+        "name": "P.Gabigol",
+        "position": "ST",
+        "ovr": 81
+      }
+    ]
+  },
+  {
+    "id": "bot-galatasaray2",
+    "teamName": "Bosphorus Giants",
+    "elo": 1295,
+    "avg": 79,
+    "squad": [
+      {
+        "name": "F.Muslera",
+        "position": "GK",
+        "ovr": 76
+      },
+      {
+        "name": "B.Elmasy",
+        "position": "CB",
+        "ovr": 80
+      },
+      {
+        "name": "W.Ndidi",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "K.Djiku",
+        "position": "LB",
+        "ovr": 79
+      },
+      {
+        "name": "S.Yilmaz",
+        "position": "RB",
+        "ovr": 76
+      },
+      {
+        "name": "D.Berkan Kutlu",
+        "position": "CM",
+        "ovr": 82
+      },
+      {
+        "name": "L.Torreira",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "B.Icardi",
+        "position": "CAM",
+        "ovr": 78
+      },
+      {
+        "name": "D.Zaha",
+        "position": "LW",
+        "ovr": 78
+      },
+      {
+        "name": "V.Osimheno",
+        "position": "RW",
+        "ovr": 79
+      },
+      {
+        "name": "A.Akturkoglu",
+        "position": "ST",
+        "ovr": 82
+      }
+    ]
+  },
+  {
+    "id": "bot-monterrey",
+    "teamName": "Rayados Norte",
+    "elo": 1285,
+    "avg": 78,
+    "squad": [
+      {
+        "name": "E.Andrada",
+        "position": "GK",
+        "ovr": 79
+      },
+      {
+        "name": "J.Arteaga",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "S.Medina",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "G.Montes",
+        "position": "LB",
+        "ovr": 76
+      },
+      {
+        "name": "D.Gallardo",
+        "position": "RB",
+        "ovr": 74
+      },
+      {
+        "name": "E.Gutierrez",
+        "position": "CM",
+        "ovr": 78
+      },
+      {
+        "name": "C.Rodrigues",
+        "position": "CM",
+        "ovr": 79
+      },
+      {
+        "name": "C.Rodriguez",
+        "position": "CAM",
+        "ovr": 78
+      },
+      {
+        "name": "R.Funes Mori",
+        "position": "LW",
+        "ovr": 79
+      },
+      {
+        "name": "G.Maxi Meza",
+        "position": "RW",
+        "ovr": 78
+      },
+      {
+        "name": "V.Janssen",
+        "position": "ST",
+        "ovr": 76
+      }
+    ]
+  },
+  {
+    "id": "bot-fluminense",
+    "teamName": "Rio Flu",
+    "elo": 1275,
+    "avg": 78,
+    "squad": [
+      {
+        "name": "F.Fabio",
+        "position": "GK",
+        "ovr": 77
+      },
+      {
+        "name": "M.Felipe Melo",
+        "position": "CB",
+        "ovr": 80
+      },
+      {
+        "name": "N.Nino",
+        "position": "CB",
+        "ovr": 79
+      },
+      {
+        "name": "M.Marcelo",
+        "position": "LB",
+        "ovr": 79
+      },
+      {
+        "name": "G.Samuel Xavier",
+        "position": "RB",
+        "ovr": 74
+      },
+      {
+        "name": "A.Andre",
+        "position": "CM",
+        "ovr": 80
+      },
+      {
+        "name": "P.Paulo Henrique Ganso",
+        "position": "CM",
+        "ovr": 79
+      },
+      {
+        "name": "G.Ganso",
+        "position": "CAM",
+        "ovr": 81
+      },
+      {
+        "name": "D.Keno",
+        "position": "LW",
+        "ovr": 80
+      },
+      {
+        "name": "J.Jhon Arias",
+        "position": "RW",
+        "ovr": 81
+      },
+      {
+        "name": "C.Cano",
+        "position": "ST",
+        "ovr": 77
+      }
+    ]
+  },
+  {
+    "id": "bot-palmeiras",
+    "teamName": "Sao Paulo Palms",
+    "elo": 1265,
+    "avg": 78,
+    "squad": [
+      {
+        "name": "W.Weverton",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "G.Gomez",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "M.Murilo",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "J.Piquerez",
+        "position": "LB",
+        "ovr": 76
+      },
+      {
+        "name": "M.Marcos Rocha",
+        "position": "RB",
+        "ovr": 79
+      },
+      {
+        "name": "R.Richard Rios",
+        "position": "CM",
+        "ovr": 81
+      },
+      {
+        "name": "G.Gabriel Menino",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "R.Raphael Veiga",
+        "position": "CAM",
+        "ovr": 75
+      },
+      {
+        "name": "D.Dudu",
+        "position": "LW",
+        "ovr": 74
+      },
+      {
+        "name": "R.Rony",
+        "position": "RW",
+        "ovr": 79
+      },
+      {
+        "name": "E.Endrick",
+        "position": "ST",
+        "ovr": 81
+      }
+    ]
+  },
+  {
+    "id": "bot-corinthians",
+    "teamName": "Sao Paulo Timao",
+    "elo": 1245,
+    "avg": 77,
+    "squad": [
+      {
+        "name": "C.Cassio",
+        "position": "GK",
+        "ovr": 80
+      },
+      {
+        "name": "R.Raul Gustavo",
+        "position": "CB",
+        "ovr": 78
+      },
+      {
+        "name": "F.Felix Torres",
+        "position": "CB",
+        "ovr": 77
+      },
+      {
+        "name": "H.Hugo",
+        "position": "LB",
+        "ovr": 80
+      },
+      {
+        "name": "L.Lucas Verissimo",
+        "position": "RB",
+        "ovr": 77
+      },
+      {
+        "name": "R.Raniele",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "G.Garro",
+        "position": "CM",
+        "ovr": 79
+      },
+      {
+        "name": "R.Rodrigo Garro",
+        "position": "CAM",
+        "ovr": 75
+      },
+      {
+        "name": "P.Pedro Henrique",
+        "position": "LW",
+        "ovr": 75
+      },
+      {
+        "name": "Y.Yuri Alberto",
+        "position": "RW",
+        "ovr": 77
+      },
+      {
+        "name": "J.Romero",
+        "position": "ST",
+        "ovr": 76
+      }
+    ]
+  },
+  {
+    "id": "bot-ajax2",
+    "teamName": "Amsterdam Royals",
+    "elo": 1235,
+    "avg": 77,
+    "squad": [
+      {
+        "name": "D.Diant Ramaj",
+        "position": "GK",
+        "ovr": 76
+      },
+      {
+        "name": "J.Jorrel Hato",
+        "position": "CB",
+        "ovr": 77
+      },
+      {
+        "name": "O.Owen Wijndal",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "E.Edson Alvarez",
+        "position": "LB",
+        "ovr": 75
+      },
+      {
+        "name": "K.Kenneth Taylor",
+        "position": "RB",
+        "ovr": 77
+      },
+      {
+        "name": "J.Jordan Henderson",
+        "position": "CM",
+        "ovr": 75
+      },
+      {
+        "name": "B.Branco Van den Boomen",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "C.Chuba Akpom",
+        "position": "CAM",
+        "ovr": 77
+      },
+      {
+        "name": "S.Steven Bergwijn",
+        "position": "LW",
+        "ovr": 74
+      },
+      {
+        "name": "B.Brian Brobbey",
+        "position": "RW",
+        "ovr": 79
+      },
+      {
+        "name": "W.Wout Weghorst",
+        "position": "ST",
+        "ovr": 77
+      }
+    ]
+  },
+  {
+    "id": "bot-santos",
+    "teamName": "Santos Coast FC",
+    "elo": 1215,
+    "avg": 76,
+    "squad": [
+      {
+        "name": "J.Joao Paulo",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "M.Maicon",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "M.Messias",
+        "position": "CB",
+        "ovr": 76
+      },
+      {
+        "name": "C.Cadu",
+        "position": "LB",
+        "ovr": 72
+      },
+      {
+        "name": "L.Lucas Pires",
+        "position": "RB",
+        "ovr": 72
+      },
+      {
+        "name": "D.Diego Pituca",
+        "position": "CM",
+        "ovr": 72
+      },
+      {
+        "name": "W.Willian Abel",
+        "position": "CM",
+        "ovr": 72
+      },
+      {
+        "name": "V.Vinicius Balieiro",
+        "position": "CAM",
+        "ovr": 73
+      },
+      {
+        "name": "A.Angelo Gabriel",
+        "position": "LW",
+        "ovr": 78
+      },
+      {
+        "name": "A.Aderlan",
+        "position": "RW",
+        "ovr": 72
+      },
+      {
+        "name": "L.Lucas Lima",
+        "position": "ST",
+        "ovr": 76
+      }
+    ]
+  },
+  {
+    "id": "bot-sivasspor",
+    "teamName": "Sivas Red White",
+    "elo": 1185,
+    "avg": 75,
+    "squad": [
+      {
+        "name": "A.Aykut Ekici",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "M.Magnus Andersson",
+        "position": "CB",
+        "ovr": 73
+      },
+      {
+        "name": "T.Tomas Cindrak",
+        "position": "CB",
+        "ovr": 71
+      },
+      {
+        "name": "Y.Yasin Oztekin",
+        "position": "LB",
+        "ovr": 73
+      },
+      {
+        "name": "C.Caner Osmanpasa",
+        "position": "RB",
+        "ovr": 78
+      },
+      {
+        "name": "M.Max Gradel",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "R.Robinho",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "S.Salih Ucan",
+        "position": "CAM",
+        "ovr": 75
+      },
+      {
+        "name": "M.Musa Araz",
+        "position": "LW",
+        "ovr": 74
+      },
+      {
+        "name": "U.Umar Sako",
+        "position": "RW",
+        "ovr": 75
+      },
+      {
+        "name": "G.Gael Clichy",
+        "position": "ST",
+        "ovr": 74
+      }
+    ]
+  },
+  {
+    "id": "bot-istanbul2",
+    "teamName": "Istanbul Royals",
+    "elo": 1175,
+    "avg": 75,
+    "squad": [
+      {
+        "name": "U.Ugurcan Cakir",
+        "position": "GK",
+        "ovr": 78
+      },
+      {
+        "name": "M.Mbaye Diagne",
+        "position": "CB",
+        "ovr": 73
+      },
+      {
+        "name": "K.Kamil Ahmet Corekci",
+        "position": "CB",
+        "ovr": 72
+      },
+      {
+        "name": "B.Bruno Peres",
+        "position": "LB",
+        "ovr": 71
+      },
+      {
+        "name": "V.Vitor Hugo",
+        "position": "RB",
+        "ovr": 77
+      },
+      {
+        "name": "Y.Yusuf Yazici",
+        "position": "CM",
+        "ovr": 77
+      },
+      {
+        "name": "A.Abdulkadir Omur",
+        "position": "CM",
+        "ovr": 78
+      },
+      {
+        "name": "F.Fode Koita",
+        "position": "CAM",
+        "ovr": 76
+      },
+      {
+        "name": "A.Andreas Cornelius",
+        "position": "LW",
+        "ovr": 73
+      },
+      {
+        "name": "E.Edgar Ie",
+        "position": "RW",
+        "ovr": 77
+      },
+      {
+        "name": "M.Majeed Waris",
+        "position": "ST",
+        "ovr": 76
+      }
+    ]
+  },
+  {
+    "id": "bot-adana",
+    "teamName": "Adana Fire",
+    "elo": 1165,
+    "avg": 74,
+    "squad": [
+      {
+        "name": "M.Mert Gunok",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "K.Kaan Caliskaner",
+        "position": "CB",
+        "ovr": 72
+      },
+      {
+        "name": "B.Bojan Nastić",
+        "position": "CB",
+        "ovr": 76
+      },
+      {
+        "name": "S.Serdar Ozkan",
+        "position": "LB",
+        "ovr": 76
+      },
+      {
+        "name": "H.Hasan Karaoglan",
+        "position": "RB",
+        "ovr": 75
+      },
+      {
+        "name": "M.Mario Balotelliy",
+        "position": "CM",
+        "ovr": 75
+      },
+      {
+        "name": "F.Fredy Ribeiro",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "S.Sousa",
+        "position": "CAM",
+        "ovr": 73
+      },
+      {
+        "name": "T.Tayyip Talha Sanuac",
+        "position": "LW",
+        "ovr": 70
+      },
+      {
+        "name": "I.Ibrahim Amada",
+        "position": "RW",
+        "ovr": 77
+      },
+      {
+        "name": "B.Berkay Ozcan",
+        "position": "ST",
+        "ovr": 75
+      }
+    ]
+  },
+  {
+    "id": "bot-sevilla2",
+    "teamName": "Seville Blues",
+    "elo": 1155,
+    "avg": 74,
+    "squad": [
+      {
+        "name": "A.Alfonso Pastor",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "C.Carlos Clerc",
+        "position": "CB",
+        "ovr": 75
+      },
+      {
+        "name": "L.Leo Baptistao",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "I.Ivan Marcone",
+        "position": "LB",
+        "ovr": 73
+      },
+      {
+        "name": "M.Markus Pink",
+        "position": "RB",
+        "ovr": 71
+      },
+      {
+        "name": "S.Stefan Savic",
+        "position": "CM",
+        "ovr": 77
+      },
+      {
+        "name": "R.Rober Pier",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "G.Giorgi Chakvetadze",
+        "position": "CAM",
+        "ovr": 77
+      },
+      {
+        "name": "D.Denis Suarez",
+        "position": "LW",
+        "ovr": 76
+      },
+      {
+        "name": "H.Haris Seferovic",
+        "position": "RW",
+        "ovr": 72
+      },
+      {
+        "name": "G.Gonzalo Melero",
+        "position": "ST",
+        "ovr": 71
+      }
+    ]
+  },
+  {
+    "id": "bot-moscow",
+    "teamName": "Moscow Dynamo",
+    "elo": 1145,
+    "avg": 74,
+    "squad": [
+      {
+        "name": "A.Anton Shunin",
+        "position": "GK",
+        "ovr": 73
+      },
+      {
+        "name": "F.Filip Novak",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "N.Nikola Moro",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "E.Egor Kharina",
+        "position": "LB",
+        "ovr": 73
+      },
+      {
+        "name": "G.Grégoire Lefebvre",
+        "position": "RB",
+        "ovr": 74
+      },
+      {
+        "name": "D.Denis Makarov",
+        "position": "CM",
+        "ovr": 77
+      },
+      {
+        "name": "A.Arsen Adamov",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "E.Eduard Spertsyan",
+        "position": "CAM",
+        "ovr": 76
+      },
+      {
+        "name": "T.Tonci Mujan",
+        "position": "LW",
+        "ovr": 77
+      },
+      {
+        "name": "T.Tyufyakov",
+        "position": "RW",
+        "ovr": 75
+      },
+      {
+        "name": "R.Roberto Fernandez",
+        "position": "ST",
+        "ovr": 75
+      }
+    ]
+  },
+  {
+    "id": "bot-warsaw",
+    "teamName": "Warsaw Eagles",
+    "elo": 1135,
+    "avg": 73,
+    "squad": [
+      {
+        "name": "W.Wojciech Szczesny",
+        "position": "GK",
+        "ovr": 75
+      },
+      {
+        "name": "M.Michal Helik",
+        "position": "CB",
+        "ovr": 73
+      },
+      {
+        "name": "B.Bartosz Salamon",
+        "position": "CB",
+        "ovr": 72
+      },
+      {
+        "name": "T.Tymoteusz Puchacz",
+        "position": "LB",
+        "ovr": 72
+      },
+      {
+        "name": "M.Maciej Rybus",
+        "position": "RB",
+        "ovr": 69
+      },
+      {
+        "name": "G.Grzegorz Krychowiak",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "J.Jakub Moder",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "S.Sebastian Szymanski",
+        "position": "CAM",
+        "ovr": 73
+      },
+      {
+        "name": "P.Piotr Zielinski",
+        "position": "LW",
+        "ovr": 72
+      },
+      {
+        "name": "A.Arkadiusz Milik",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "R.Robert Lewandowy",
+        "position": "ST",
+        "ovr": 72
+      }
+    ]
+  },
+  {
+    "id": "bot-prague",
+    "teamName": "Prague Slavia",
+    "elo": 1125,
+    "avg": 73,
+    "squad": [
+      {
+        "name": "J.Jiri Pavlenka",
+        "position": "GK",
+        "ovr": 75
+      },
+      {
+        "name": "D.David Hovorka",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "L.Lukas Masopust",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "O.Oscar Dorley",
+        "position": "LB",
+        "ovr": 73
+      },
+      {
+        "name": "S.Simon Deli",
+        "position": "RB",
+        "ovr": 72
+      },
+      {
+        "name": "A.Antonin Kinsky",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "M.Mojmir Chytil",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "L.Ladislav Takacs",
+        "position": "CAM",
+        "ovr": 69
+      },
+      {
+        "name": "P.Peter Olayinka",
+        "position": "LW",
+        "ovr": 74
+      },
+      {
+        "name": "T.Tomas Chory",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "A.Adam Krejci",
+        "position": "ST",
+        "ovr": 72
+      }
+    ]
+  },
+  {
+    "id": "bot-budapest",
+    "teamName": "Budapest Ferencvaros",
+    "elo": 1115,
+    "avg": 72,
+    "squad": [
+      {
+        "name": "D.Denes Dibusz",
+        "position": "GK",
+        "ovr": 74
+      },
+      {
+        "name": "A.Attila Fiola",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "J.Joshua Amankwah",
+        "position": "CB",
+        "ovr": 71
+      },
+      {
+        "name": "B.Bart Nieuwkoop",
+        "position": "LB",
+        "ovr": 69
+      },
+      {
+        "name": "H.Henry Wingo",
+        "position": "RB",
+        "ovr": 68
+      },
+      {
+        "name": "A.Adama Traore",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "I.Ihor Kharatin",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "S.Serhiy Sydorchuk",
+        "position": "CAM",
+        "ovr": 72
+      },
+      {
+        "name": "A.Aleksander Pesic",
+        "position": "LW",
+        "ovr": 72
+      },
+      {
+        "name": "T.Tokmac Nguen",
+        "position": "RW",
+        "ovr": 73
+      },
+      {
+        "name": "A.Abu Fofana",
+        "position": "ST",
+        "ovr": 75
+      }
+    ]
+  },
+  {
+    "id": "bot-istanbul3",
+    "teamName": "Kadikoy United",
+    "elo": 1105,
+    "avg": 71,
+    "squad": [
+      {
+        "name": "S.Serkan Kirintili",
+        "position": "GK",
+        "ovr": 67
+      },
+      {
+        "name": "K.Kamil Conkbayir",
+        "position": "CB",
+        "ovr": 68
+      },
+      {
+        "name": "U.Ufuk Ayvaz",
+        "position": "CB",
+        "ovr": 70
+      },
+      {
+        "name": "C.Can Uzun",
+        "position": "LB",
+        "ovr": 72
+      },
+      {
+        "name": "M.Mert Yildirim",
+        "position": "RB",
+        "ovr": 70
+      },
+      {
+        "name": "A.Ahmet Ozan",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "T.Tolga Cigerci",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "E.Ersin Destanoglu",
+        "position": "CAM",
+        "ovr": 70
+      },
+      {
+        "name": "F.Ferdi Kadioglu",
+        "position": "LW",
+        "ovr": 73
+      },
+      {
+        "name": "E.Emre Akbaba",
+        "position": "RW",
+        "ovr": 67
+      },
+      {
+        "name": "I.Irfan Can Kahveci",
+        "position": "ST",
+        "ovr": 71
+      }
+    ]
+  },
+  {
+    "id": "bot-copenhagen",
+    "teamName": "Copenhagen Lions",
+    "elo": 1095,
+    "avg": 71,
+    "squad": [
+      {
+        "name": "K.Kamil Grabara",
+        "position": "GK",
+        "ovr": 67
+      },
+      {
+        "name": "V.Victor Kristiansen",
+        "position": "CB",
+        "ovr": 73
+      },
+      {
+        "name": "D.Denis Vavro",
+        "position": "CB",
+        "ovr": 74
+      },
+      {
+        "name": "M.Modibo Sagnan",
+        "position": "LB",
+        "ovr": 69
+      },
+      {
+        "name": "P.Peter Ankersen",
+        "position": "RB",
+        "ovr": 72
+      },
+      {
+        "name": "M.Marcus Ingvartsen",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "O.Orri Óskarsson",
+        "position": "CM",
+        "ovr": 72
+      },
+      {
+        "name": "H.Hakon Arnar Haraldsson",
+        "position": "CAM",
+        "ovr": 74
+      },
+      {
+        "name": "J.Jens Stage",
+        "position": "LW",
+        "ovr": 73
+      },
+      {
+        "name": "M.Mohamed Elyounoussi",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "A.Andreas Cornelius",
+        "position": "ST",
+        "ovr": 68
+      }
+    ]
+  },
+  {
+    "id": "bot-stockholm",
+    "teamName": "Stockholm AIK",
+    "elo": 1085,
+    "avg": 70,
+    "squad": [
+      {
+        "name": "O.Oscar Linner",
+        "position": "GK",
+        "ovr": 68
+      },
+      {
+        "name": "H.Hugo Granstrom",
+        "position": "CB",
+        "ovr": 70
+      },
+      {
+        "name": "J.Johan Lundstrom",
+        "position": "CB",
+        "ovr": 68
+      },
+      {
+        "name": "A.Alexander Milosevic",
+        "position": "LB",
+        "ovr": 71
+      },
+      {
+        "name": "E.Enoch Adu",
+        "position": "RB",
+        "ovr": 67
+      },
+      {
+        "name": "I.Isak Ssewankambo",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "S.Sebastian Larsson",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "K.Kristoffer Olsson",
+        "position": "CAM",
+        "ovr": 71
+      },
+      {
+        "name": "N.Nicolas Stefanelli",
+        "position": "LW",
+        "ovr": 71
+      },
+      {
+        "name": "M.Musa Barrow",
+        "position": "RW",
+        "ovr": 73
+      },
+      {
+        "name": "T.Tarik Elyounoussi",
+        "position": "ST",
+        "ovr": 71
+      }
+    ]
+  },
+  {
+    "id": "bot-belgrade",
+    "teamName": "Belgrade Red Star",
+    "elo": 1075,
+    "avg": 70,
+    "squad": [
+      {
+        "name": "J.Jovovic",
+        "position": "GK",
+        "ovr": 69
+      },
+      {
+        "name": "M.Milunovic",
+        "position": "CB",
+        "ovr": 70
+      },
+      {
+        "name": "G.Gajic",
+        "position": "CB",
+        "ovr": 72
+      },
+      {
+        "name": "D.Dragovic",
+        "position": "LB",
+        "ovr": 71
+      },
+      {
+        "name": "L.Lucic",
+        "position": "RB",
+        "ovr": 73
+      },
+      {
+        "name": "S.Sanogo",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "K.Kanga",
+        "position": "CM",
+        "ovr": 68
+      },
+      {
+        "name": "S.Srnić",
+        "position": "CAM",
+        "ovr": 69
+      },
+      {
+        "name": "O.Olayinka",
+        "position": "LW",
+        "ovr": 72
+      },
+      {
+        "name": "M.Myrto Uzuni",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "A.Aleksandar Katai",
+        "position": "ST",
+        "ovr": 70
+      }
+    ]
+  },
+  {
+    "id": "bot-kayseri",
+    "teamName": "Kayseri Volcano",
+    "elo": 1035,
+    "avg": 69,
+    "squad": [
+      {
+        "name": "O.Onur Recep Kivrak",
+        "position": "GK",
+        "ovr": 65
+      },
+      {
+        "name": "A.Ahmetcan Kaplan",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "B.Bogdan Stancu",
+        "position": "CB",
+        "ovr": 68
+      },
+      {
+        "name": "H.Halis Ozkahya",
+        "position": "LB",
+        "ovr": 65
+      },
+      {
+        "name": "L.Luis Ibañez",
+        "position": "RB",
+        "ovr": 66
+      },
+      {
+        "name": "E.Emrah Bassan",
+        "position": "CM",
+        "ovr": 71
+      },
+      {
+        "name": "A.Alpaslan Ozturk",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "S.Soner Dikmen",
+        "position": "CAM",
+        "ovr": 68
+      },
+      {
+        "name": "B.Burak Camoglu",
+        "position": "LW",
+        "ovr": 65
+      },
+      {
+        "name": "O.Oğuzhan Özyakup",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "K.Kerem Şen",
+        "position": "ST",
+        "ovr": 65
+      }
+    ]
+  },
+  {
+    "id": "bot-hatay",
+    "teamName": "Hatay Falcons",
+    "elo": 1015,
+    "avg": 68,
+    "squad": [
+      {
+        "name": "K.Konrad Laimer",
+        "position": "GK",
+        "ovr": 64
+      },
+      {
+        "name": "M.Mert Celik",
+        "position": "CB",
+        "ovr": 71
+      },
+      {
+        "name": "G.Gokhan Akkan",
+        "position": "CB",
+        "ovr": 65
+      },
+      {
+        "name": "D.Deniz Tumer",
+        "position": "LB",
+        "ovr": 68
+      },
+      {
+        "name": "F.Furkan Soyalp",
+        "position": "RB",
+        "ovr": 66
+      },
+      {
+        "name": "M.Mattias Svanberg",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "H.Harun Alpsoy",
+        "position": "CM",
+        "ovr": 68
+      },
+      {
+        "name": "M.Mehmet Ekici",
+        "position": "CAM",
+        "ovr": 69
+      },
+      {
+        "name": "A.Aytunc Kara",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "B.Burak Kapacak",
+        "position": "RW",
+        "ovr": 65
+      },
+      {
+        "name": "T.Tayfun Cora",
+        "position": "ST",
+        "ovr": 64
+      }
+    ]
+  },
+  {
+    "id": "bot-cairo",
+    "teamName": "Cairo Pharaohs",
+    "elo": 1005,
+    "avg": 68,
+    "squad": [
+      {
+        "name": "M.Mohamed El Shenawy",
+        "position": "GK",
+        "ovr": 64
+      },
+      {
+        "name": "A.Ahmed Hegazy",
+        "position": "CB",
+        "ovr": 68
+      },
+      {
+        "name": "O.Omar Gaber",
+        "position": "CB",
+        "ovr": 66
+      },
+      {
+        "name": "M.Mohamed Abdelshafy",
+        "position": "LB",
+        "ovr": 67
+      },
+      {
+        "name": "A.Ali Maaloul",
+        "position": "RB",
+        "ovr": 65
+      },
+      {
+        "name": "T.Tarek Hamed",
+        "position": "CM",
+        "ovr": 70
+      },
+      {
+        "name": "A.Amr El Sulaya",
+        "position": "CM",
+        "ovr": 67
+      },
+      {
+        "name": "A.Ahmed Refaat",
+        "position": "CAM",
+        "ovr": 70
+      },
+      {
+        "name": "A.Akram Tawfik",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "O.Omar Marmoush",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "M.Mohamed Salah",
+        "position": "ST",
+        "ovr": 67
+      }
+    ]
+  },
+  {
+    "id": "bot-buenos",
+    "teamName": "Buenos Aires Boca",
+    "elo": 995,
+    "avg": 67,
+    "squad": [
+      {
+        "name": "J.Javier Garcia",
+        "position": "GK",
+        "ovr": 65
+      },
+      {
+        "name": "B.Bruno Valdez",
+        "position": "CB",
+        "ovr": 64
+      },
+      {
+        "name": "L.Leonardo Jara",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "F.Franco Soldano",
+        "position": "LB",
+        "ovr": 63
+      },
+      {
+        "name": "A.Alan Varela",
+        "position": "RB",
+        "ovr": 69
+      },
+      {
+        "name": "A.Agustin Almendra",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "V.Villa",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "L.Luca Langoni",
+        "position": "CAM",
+        "ovr": 67
+      },
+      {
+        "name": "D.Dario Benedetto",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "S.Sebastian Villa",
+        "position": "RW",
+        "ovr": 70
+      },
+      {
+        "name": "E.Equi Fernandez",
+        "position": "ST",
+        "ovr": 69
+      }
+    ]
+  },
+  {
+    "id": "bot-tunis",
+    "teamName": "Tunis Carthage",
+    "elo": 985,
+    "avg": 67,
+    "squad": [
+      {
+        "name": "B.Bechir Ben Said",
+        "position": "GK",
+        "ovr": 65
+      },
+      {
+        "name": "A.Ali Maaloul",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "Y.Yohan Benalouane",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "G.Ghilane Chaâlali",
+        "position": "LB",
+        "ovr": 64
+      },
+      {
+        "name": "K.Khalil Chammam",
+        "position": "RB",
+        "ovr": 63
+      },
+      {
+        "name": "M.Mohamed Ali Ben Romdhane",
+        "position": "CM",
+        "ovr": 69
+      },
+      {
+        "name": "F.Ferjani Sassi",
+        "position": "CM",
+        "ovr": 69
+      },
+      {
+        "name": "S.Saifeddine Khaoui",
+        "position": "CAM",
+        "ovr": 68
+      },
+      {
+        "name": "H.Hamza Rafia",
+        "position": "LW",
+        "ovr": 65
+      },
+      {
+        "name": "Y.Youssef Msakni",
+        "position": "RW",
+        "ovr": 69
+      },
+      {
+        "name": "W.Wahbi Khazri",
+        "position": "ST",
+        "ovr": 64
+      }
+    ]
+  },
+  {
+    "id": "bot-dakar",
+    "teamName": "Dakar Teranga",
+    "elo": 975,
+    "avg": 66,
+    "squad": [
+      {
+        "name": "A.Alfred Gomis",
+        "position": "GK",
+        "ovr": 63
+      },
+      {
+        "name": "K.Kalidou Koulibaly",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "A.Abdou Diallo",
+        "position": "CB",
+        "ovr": 66
+      },
+      {
+        "name": "C.Cheikhou Kouyate",
+        "position": "LB",
+        "ovr": 66
+      },
+      {
+        "name": "P.Pape Abou Cisse",
+        "position": "RB",
+        "ovr": 65
+      },
+      {
+        "name": "I.Idrissa Gueye",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "N.Nampalys Mendy",
+        "position": "CM",
+        "ovr": 67
+      },
+      {
+        "name": "A.Amadou Diallo",
+        "position": "CAM",
+        "ovr": 65
+      },
+      {
+        "name": "I.Ismaila Sarr",
+        "position": "LW",
+        "ovr": 69
+      },
+      {
+        "name": "B.Boulaye Dia",
+        "position": "RW",
+        "ovr": 64
+      },
+      {
+        "name": "S.Sadio Maney",
+        "position": "ST",
+        "ovr": 69
+      }
+    ]
+  },
+  {
+    "id": "bot-dubai",
+    "teamName": "Dubai Desert Stars",
+    "elo": 960,
+    "avg": 66,
+    "squad": [
+      {
+        "name": "K.Khalid Essa",
+        "position": "GK",
+        "ovr": 63
+      },
+      {
+        "name": "W.Walid Abbas",
+        "position": "CB",
+        "ovr": 67
+      },
+      {
+        "name": "M.Mohamed Al-Shamsi",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "A.Ahmed Barman",
+        "position": "LB",
+        "ovr": 66
+      },
+      {
+        "name": "O.Omar Abdulrahman",
+        "position": "RB",
+        "ovr": 67
+      },
+      {
+        "name": "H.Harib Asad",
+        "position": "CM",
+        "ovr": 65
+      },
+      {
+        "name": "A.Ali Saleh",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "M.Mohamed Al Akbari",
+        "position": "CAM",
+        "ovr": 69
+      },
+      {
+        "name": "N.Nassir Al-Shamsi",
+        "position": "LW",
+        "ovr": 68
+      },
+      {
+        "name": "S.Sebastian Tagliabue",
+        "position": "RW",
+        "ovr": 69
+      },
+      {
+        "name": "D.Diego Capel",
+        "position": "ST",
+        "ovr": 63
+      }
+    ]
+  },
+  {
+    "id": "bot-bucharest",
+    "teamName": "Bucharest Steaua",
+    "elo": 945,
+    "avg": 65,
+    "squad": [
+      {
+        "name": "F.Florin Nita",
+        "position": "GK",
+        "ovr": 67
+      },
+      {
+        "name": "I.Iulian Cristea",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "R.Radu Boboc",
+        "position": "CB",
+        "ovr": 61
+      },
+      {
+        "name": "S.Stefan Duta",
+        "position": "LB",
+        "ovr": 66
+      },
+      {
+        "name": "B.Bogdan Mitrea",
+        "position": "RB",
+        "ovr": 62
+      },
+      {
+        "name": "F.Florinel Coman",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "O.Ovidiu Popescu",
+        "position": "CM",
+        "ovr": 63
+      },
+      {
+        "name": "G.George Ganea",
+        "position": "CAM",
+        "ovr": 61
+      },
+      {
+        "name": "A.Adrian Petre",
+        "position": "LW",
+        "ovr": 65
+      },
+      {
+        "name": "D.Denis Alibec",
+        "position": "RW",
+        "ovr": 65
+      },
+      {
+        "name": "C.Claudiu Bumba",
+        "position": "ST",
+        "ovr": 68
+      }
+    ]
+  },
+  {
+    "id": "bot-oslo",
+    "teamName": "Oslo Valerenga",
+    "elo": 930,
+    "avg": 64,
+    "squad": [
+      {
+        "name": "O.Orjan Nyland",
+        "position": "GK",
+        "ovr": 67
+      },
+      {
+        "name": "S.Stefan Strandberg",
+        "position": "CB",
+        "ovr": 61
+      },
+      {
+        "name": "T.Tore Reginiussen",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "E.Elias Hagen",
+        "position": "LB",
+        "ovr": 66
+      },
+      {
+        "name": "M.Mohamed Ofkir",
+        "position": "RB",
+        "ovr": 64
+      },
+      {
+        "name": "A.Ardian Iseni",
+        "position": "CM",
+        "ovr": 61
+      },
+      {
+        "name": "U.Ulrik Saltnes",
+        "position": "CM",
+        "ovr": 60
+      },
+      {
+        "name": "M.Marcus Holmgren Pedersen",
+        "position": "CAM",
+        "ovr": 60
+      },
+      {
+        "name": "J.Julian Ryerson",
+        "position": "LW",
+        "ovr": 61
+      },
+      {
+        "name": "B.Brice Wembangomo",
+        "position": "RW",
+        "ovr": 64
+      },
+      {
+        "name": "C.Carlos Rivas",
+        "position": "ST",
+        "ovr": 63
+      }
+    ]
+  },
+  {
+    "id": "bot-lisbon2",
+    "teamName": "Lisbon Sporting B",
+    "elo": 915,
+    "avg": 64,
+    "squad": [
+      {
+        "name": "R.Rui Silva",
+        "position": "GK",
+        "ovr": 63
+      },
+      {
+        "name": "M.Miguel Luiz",
+        "position": "CB",
+        "ovr": 61
+      },
+      {
+        "name": "P.Paulo Oliveira",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "B.Bruno Wilson",
+        "position": "LB",
+        "ovr": 67
+      },
+      {
+        "name": "R.Rosier",
+        "position": "RB",
+        "ovr": 66
+      },
+      {
+        "name": "T.Tobias Figueiredo",
+        "position": "CM",
+        "ovr": 66
+      },
+      {
+        "name": "P.Pedro Goncalves",
+        "position": "CM",
+        "ovr": 60
+      },
+      {
+        "name": "N.Nuno Santos",
+        "position": "CAM",
+        "ovr": 61
+      },
+      {
+        "name": "P.Pablo Sarabia",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "D.Diego Callai",
+        "position": "RW",
+        "ovr": 60
+      },
+      {
+        "name": "E.Eduardo Camavinga",
+        "position": "ST",
+        "ovr": 62
+      }
+    ]
+  },
+  {
+    "id": "bot-bangkok",
+    "teamName": "Bangkok United",
+    "elo": 902,
+    "avg": 63,
+    "squad": [
+      {
+        "name": "C.Chokchai Chaiman",
+        "position": "GK",
+        "ovr": 64
+      },
+      {
+        "name": "S.Sakda Suksuwan",
+        "position": "CB",
+        "ovr": 66
+      },
+      {
+        "name": "W.Watcharapong Sanit",
+        "position": "CB",
+        "ovr": 64
+      },
+      {
+        "name": "P.Pansa Hemviboon",
+        "position": "LB",
+        "ovr": 64
+      },
+      {
+        "name": "M.Mika Chunuonsee",
+        "position": "RB",
+        "ovr": 63
+      },
+      {
+        "name": "A.Anon Amornlertsak",
+        "position": "CM",
+        "ovr": 59
+      },
+      {
+        "name": "N.Nurul Sriyankem",
+        "position": "CM",
+        "ovr": 63
+      },
+      {
+        "name": "K.Keagamang Mosele",
+        "position": "CAM",
+        "ovr": 64
+      },
+      {
+        "name": "D.Danilo Augusto",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "O.Ove Pedersen",
+        "position": "RW",
+        "ovr": 65
+      },
+      {
+        "name": "T.Tommy Oar",
+        "position": "ST",
+        "ovr": 62
+      }
+    ]
+  },
+  {
+    "id": "bot-johannesburg",
+    "teamName": "Joburg City FC",
+    "elo": 888,
+    "avg": 63,
+    "squad": [
+      {
+        "name": "R.Ronwen Williams",
+        "position": "GK",
+        "ovr": 60
+      },
+      {
+        "name": "T.Thulani Hlatshwayo",
+        "position": "CB",
+        "ovr": 61
+      },
+      {
+        "name": "B.Buhle Mkhwanazi",
+        "position": "CB",
+        "ovr": 59
+      },
+      {
+        "name": "T.Tercious Malepe",
+        "position": "LB",
+        "ovr": 62
+      },
+      {
+        "name": "S.Siyanda Xulu",
+        "position": "RB",
+        "ovr": 66
+      },
+      {
+        "name": "Y.Yusuf Maart",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "S.Sibusiso Vilakazi",
+        "position": "CM",
+        "ovr": 66
+      },
+      {
+        "name": "E.Evidence Makgopa",
+        "position": "CAM",
+        "ovr": 64
+      },
+      {
+        "name": "B.Bradley Grobler",
+        "position": "LW",
+        "ovr": 66
+      },
+      {
+        "name": "T.Thabo Nodada",
+        "position": "RW",
+        "ovr": 61
+      },
+      {
+        "name": "A.Aubrey Modiba",
+        "position": "ST",
+        "ovr": 59
+      }
+    ]
+  },
+  {
+    "id": "bot-mumbai",
+    "teamName": "Mumbai City FC",
+    "elo": 870,
+    "avg": 62,
+    "squad": [
+      {
+        "name": "P.Phurba Lachenpa",
+        "position": "GK",
+        "ovr": 64
+      },
+      {
+        "name": "A.Amey Ranawade",
+        "position": "CB",
+        "ovr": 64
+      },
+      {
+        "name": "A.Akash Mishra",
+        "position": "CB",
+        "ovr": 60
+      },
+      {
+        "name": "A.Alberto Noguera",
+        "position": "LB",
+        "ovr": 63
+      },
+      {
+        "name": "R.Rahul Bheke",
+        "position": "RB",
+        "ovr": 65
+      },
+      {
+        "name": "L.Lalengmawia",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
+        "name": "B.Bipin Singh",
+        "position": "CM",
+        "ovr": 61
+      },
+      {
+        "name": "V.Vikram Partap Singh",
+        "position": "CAM",
+        "ovr": 60
+      },
+      {
+        "name": "H.Hugo Boumous",
+        "position": "LW",
+        "ovr": 61
+      },
+      {
+        "name": "A.Ayush Adhikari",
+        "position": "RW",
+        "ovr": 60
+      },
+      {
+        "name": "P.Pranjal Bhumij",
+        "position": "ST",
+        "ovr": 64
+      }
+    ]
+  },
+  {
+    "id": "bot-guadalajara",
+    "teamName": "Guadalajara Chivas",
+    "elo": 855,
+    "avg": 62,
+    "squad": [
+      {
+        "name": "R.Raul Gudino",
+        "position": "GK",
+        "ovr": 59
+      },
+      {
+        "name": "A.Antonio Briseno",
+        "position": "CB",
+        "ovr": 64
+      },
+      {
+        "name": "M.Miguel Ponce",
+        "position": "CB",
+        "ovr": 58
+      },
+      {
+        "name": "J.Jesus Angulo",
+        "position": "LB",
+        "ovr": 64
+      },
+      {
+        "name": "G.Gilberto Sepulveda",
+        "position": "RB",
+        "ovr": 60
+      },
+      {
+        "name": "E.Eduardo Torres",
+        "position": "CM",
+        "ovr": 60
+      },
+      {
+        "name": "M.Mateus Uribe",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "S.Sebastian Perez",
+        "position": "CAM",
+        "ovr": 64
+      },
+      {
+        "name": "A.Alan Torres",
+        "position": "LW",
+        "ovr": 58
+      },
+      {
+        "name": "D.Daniel Rios",
+        "position": "RW",
+        "ovr": 61
+      },
+      {
+        "name": "J.Jose Macias",
+        "position": "ST",
+        "ovr": 60
+      }
+    ]
+  },
+  {
+    "id": "bot-belgrade2",
+    "teamName": "Belgrade Partizan",
+    "elo": 840,
+    "avg": 61,
+    "squad": [
+      {
+        "name": "S.Stefan Viuanović",
+        "position": "GK",
+        "ovr": 63
+      },
+      {
+        "name": "L.Lazar Marković",
+        "position": "CB",
+        "ovr": 62
+      },
+      {
+        "name": "B.Bibras Natcho",
+        "position": "CB",
+        "ovr": 60
+      },
+      {
+        "name": "D.Danilo Pantić",
+        "position": "LB",
+        "ovr": 57
+      },
+      {
+        "name": "Z.Zoran Tošić",
+        "position": "RB",
+        "ovr": 60
+      },
+      {
+        "name": "S.Strahinja Pavlović",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "A.Aleksandar Lutovac",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
+        "name": "N.Nemanja Nikolić",
+        "position": "CAM",
+        "ovr": 63
+      },
+      {
+        "name": "R.Rikke Nygaard",
+        "position": "LW",
+        "ovr": 58
+      },
+      {
+        "name": "V.Vujadin Savić",
+        "position": "RW",
+        "ovr": 63
+      },
+      {
+        "name": "U.Umar Khomutov",
+        "position": "ST",
+        "ovr": 62
+      }
+    ]
+  },
+  {
+    "id": "bot-almaty",
+    "teamName": "Almaty Kairat",
+    "elo": 820,
+    "avg": 60,
+    "squad": [
+      {
+        "name": "A.Aleksandr Mokin",
+        "position": "GK",
+        "ovr": 59
+      },
+      {
+        "name": "G.Gafurzhan Suyumbayev",
+        "position": "CB",
+        "ovr": 58
+      },
+      {
+        "name": "I.Islambek Kuat",
+        "position": "CB",
+        "ovr": 58
+      },
+      {
+        "name": "V.Vladimir Loginov",
+        "position": "LB",
+        "ovr": 62
+      },
+      {
+        "name": "B.Bauyrzhan Islamkhan",
+        "position": "RB",
+        "ovr": 56
+      },
+      {
+        "name": "A.Andrey Arshavin",
+        "position": "CM",
+        "ovr": 57
+      },
+      {
+        "name": "S.Serikzhan Muzhikov",
+        "position": "CM",
+        "ovr": 60
+      },
+      {
+        "name": "Y.Yerlan Seidakhmet",
+        "position": "CAM",
+        "ovr": 56
+      },
+      {
+        "name": "N.Nurali Alip",
+        "position": "LW",
+        "ovr": 63
+      },
+      {
+        "name": "A.Abat Aimbetov",
+        "position": "RW",
+        "ovr": 62
+      },
+      {
+        "name": "P.Patrick Twumasi",
+        "position": "ST",
+        "ovr": 61
+      }
+    ]
+  },
+  {
+    "id": "bot-doha",
+    "teamName": "Doha Stars FC",
+    "elo": 805,
+    "avg": 60,
+    "squad": [
+      {
+        "name": "M.Meshaal Barsham",
+        "position": "GK",
+        "ovr": 58
+      },
+      {
+        "name": "P.Pedro Miguel",
+        "position": "CB",
+        "ovr": 60
+      },
+      {
+        "name": "H.Hassan Al-Haydos",
+        "position": "CB",
+        "ovr": 60
+      },
+      {
+        "name": "A.Assim Madibo",
+        "position": "LB",
+        "ovr": 61
+      },
+      {
+        "name": "K.Karim Boudiaf",
+        "position": "RB",
+        "ovr": 57
+      },
+      {
+        "name": "A.Akram Afif",
+        "position": "CM",
+        "ovr": 57
+      },
+      {
+        "name": "A.Almoez Ali",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
+        "name": "N.Nam Tae-hee",
+        "position": "CAM",
+        "ovr": 57
+      },
+      {
+        "name": "J.Jassim Jabir",
+        "position": "LW",
+        "ovr": 56
+      },
+      {
+        "name": "B.Bassam Al-Rawi",
+        "position": "RW",
+        "ovr": 63
+      },
+      {
+        "name": "A.Amro Tarek",
+        "position": "ST",
+        "ovr": 57
+      }
+    ]
+  },
+  {
+    "id": "bot-riga",
+    "teamName": "Riga FC",
+    "elo": 790,
+    "avg": 59,
+    "squad": [
+      {
+        "name": "A.Andris Varacins",
+        "position": "GK",
+        "ovr": 57
+      },
+      {
+        "name": "K.Kristaps Zommers",
+        "position": "CB",
+        "ovr": 62
+      },
+      {
+        "name": "R.Rihards Matrevics",
+        "position": "CB",
+        "ovr": 58
+      },
+      {
+        "name": "G.Georgs Puriņš",
+        "position": "LB",
+        "ovr": 57
+      },
+      {
+        "name": "A.Aleksejs Višnakovs",
+        "position": "RB",
+        "ovr": 62
+      },
+      {
+        "name": "R.Raimonds Salinš",
+        "position": "CM",
+        "ovr": 55
+      },
+      {
+        "name": "A.Arturs Zjuzins",
+        "position": "CM",
+        "ovr": 62
+      },
+      {
+        "name": "E.Emīls Uldriķis",
+        "position": "CAM",
+        "ovr": 56
+      },
+      {
+        "name": "S.Sandro Lima",
+        "position": "LW",
+        "ovr": 62
+      },
+      {
+        "name": "V.Valentin Rugin",
+        "position": "RW",
+        "ovr": 61
+      },
+      {
+        "name": "B.Boubacar Mansaly",
+        "position": "ST",
+        "ovr": 60
+      }
+    ]
+  },
+  {
+    "id": "bot-reykjavik",
+    "teamName": "Reykjavik Vikingur",
+    "elo": 775,
+    "avg": 58,
+    "squad": [
+      {
+        "name": "H.Hannes Thor Halldorsson",
+        "position": "GK",
+        "ovr": 61
+      },
+      {
+        "name": "K.Kristinn Steindorsson",
+        "position": "CB",
+        "ovr": 60
+      },
+      {
+        "name": "A.Aron Einar Gunnarsson",
+        "position": "CB",
+        "ovr": 54
+      },
+      {
+        "name": "B.Birkir Bjarnason",
+        "position": "LB",
+        "ovr": 58
+      },
+      {
+        "name": "S.Sverrir Ingi Ingason",
+        "position": "RB",
+        "ovr": 55
+      },
+      {
+        "name": "R.Runar Mar Sigurdsson",
+        "position": "CM",
+        "ovr": 61
+      },
+      {
+        "name": "E.Elfar Freyr Thordarson",
+        "position": "CM",
+        "ovr": 60
+      },
+      {
+        "name": "J.Johann Berg Gudmundsson",
+        "position": "CAM",
+        "ovr": 57
+      },
+      {
+        "name": "O.Oliver Sigurjonsson",
+        "position": "LW",
+        "ovr": 57
+      },
+      {
+        "name": "V.Viktor Palsson",
+        "position": "RW",
+        "ovr": 59
+      },
+      {
+        "name": "A.Albert Gudmundsson",
+        "position": "ST",
+        "ovr": 54
+      }
+    ]
+  },
+  {
+    "id": "bot-tashkent",
+    "teamName": "Tashkent Pakhtakor",
+    "elo": 760,
+    "avg": 57,
+    "squad": [
+      {
+        "name": "O.Oybek Sobirov",
+        "position": "GK",
+        "ovr": 56
+      },
+      {
+        "name": "A.Abdulloh Abdulloyev",
+        "position": "CB",
+        "ovr": 57
+      },
+      {
+        "name": "S.Sardor Rashidov",
+        "position": "CB",
+        "ovr": 57
+      },
+      {
+        "name": "J.Jaloliddin Masharipov",
+        "position": "LB",
+        "ovr": 60
+      },
+      {
+        "name": "I.Islom Tukhtahujaev",
+        "position": "RB",
+        "ovr": 60
+      },
+      {
+        "name": "N.Nodir Bafoev",
+        "position": "CM",
+        "ovr": 56
+      },
+      {
+        "name": "B.Bobur Abdixoliqov",
+        "position": "CM",
+        "ovr": 55
+      },
+      {
+        "name": "D.Doniyor Ganiev",
+        "position": "CAM",
+        "ovr": 57
+      },
+      {
+        "name": "F.Firdavs Tursunov",
+        "position": "LW",
+        "ovr": 59
+      },
+      {
+        "name": "U.Ulugbek Asatov",
+        "position": "RW",
+        "ovr": 59
+      },
+      {
+        "name": "A.Akbar Kholdorov",
+        "position": "ST",
+        "ovr": 55
+      }
+    ]
+  },
+  {
+    "id": "bot-dar",
+    "teamName": "Dar es Salaam FC",
+    "elo": 740,
+    "avg": 56,
+    "squad": [
+      {
+        "name": "J.Joseph Mnzava",
+        "position": "GK",
+        "ovr": 52
+      },
+      {
+        "name": "T.Thomas Ulimwengu",
+        "position": "CB",
+        "ovr": 54
+      },
+      {
+        "name": "N.Nizar Khalfan",
+        "position": "CB",
+        "ovr": 52
+      },
+      {
+        "name": "A.Aggrey Morris",
+        "position": "LB",
+        "ovr": 53
+      },
+      {
+        "name": "A.Abdul Mwambi",
+        "position": "RB",
+        "ovr": 53
+      },
+      {
+        "name": "I.Ibrahim Ajibu",
+        "position": "CM",
+        "ovr": 54
+      },
+      {
+        "name": "H.Haruna Nyakabete",
+        "position": "CM",
+        "ovr": 53
+      },
+      {
+        "name": "G.Gideon Sanga",
+        "position": "CAM",
+        "ovr": 59
+      },
+      {
+        "name": "B.Ben Simama",
+        "position": "LW",
+        "ovr": 52
+      },
+      {
+        "name": "S.Salum Abubakar",
+        "position": "RW",
+        "ovr": 55
+      },
+      {
+        "name": "C.Clatous Chama",
+        "position": "ST",
+        "ovr": 59
+      }
+    ]
+  },
+  {
+    "id": "bot-ulaanbaatar",
+    "teamName": "Ulaanbaatar Kings",
+    "elo": 715,
+    "avg": 55,
+    "squad": [
+      {
+        "name": "U.Uuganbayar Tserenpuntsag",
+        "position": "GK",
+        "ovr": 51
+      },
+      {
+        "name": "B.Batbaatar Gantulga",
+        "position": "CB",
+        "ovr": 58
+      },
+      {
+        "name": "E.Enkhtaivan Nasan",
+        "position": "CB",
+        "ovr": 55
+      },
+      {
+        "name": "M.Munkh-Erdene Batjargal",
+        "position": "LB",
+        "ovr": 55
+      },
+      {
+        "name": "T.Tserenpuntsag Myagmarsuren",
+        "position": "RB",
+        "ovr": 56
+      },
+      {
+        "name": "G.Gantulga Badarch",
+        "position": "CM",
+        "ovr": 54
+      },
+      {
+        "name": "B.Baterdene Ganbold",
+        "position": "CM",
+        "ovr": 52
+      },
+      {
+        "name": "N.Naranbaatar Tserenpuntsag",
+        "position": "CAM",
+        "ovr": 53
+      },
+      {
+        "name": "D.Dolgorsuren Otgonbayar",
+        "position": "LW",
+        "ovr": 56
+      },
+      {
+        "name": "A.Altangerel Batzul",
+        "position": "RW",
+        "ovr": 53
+      },
+      {
+        "name": "G.Gantulga Purev",
+        "position": "ST",
+        "ovr": 58
+      }
+    ]
   }
 ]
