@@ -367,8 +367,9 @@ app.get('/api/leaderboard', async (req, res) => {
       SELECT player_id, username, team_name, nationality, elo, wins, draws, losses
       FROM players
       WHERE (wins + draws + losses) > 0
+         OR player_id NOT LIKE 'bot-%'
       ORDER BY elo DESC
-      LIMIT 50
+      LIMIT 100
     `);
     res.json(rows);
   } catch (err) {
