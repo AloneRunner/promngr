@@ -65,47 +65,107 @@ async function initDB() {
   `);
   console.log('DB tables ready.');
   await seedBots();
+  // İlk açılışta 20 bot maçı simüle et — leaderboard canlı görünsün
+  await simulateBotMatches(20);
+  // Her 30 dakikada 8 bot maçı simüle et
+  setInterval(() => simulateBotMatches(8), 30 * 60 * 1000);
 }
 
 // ─── BOT SEED ────────────────────────────────────────────────────────────────
 
-async function seedBots() {
-  const bots = [
-    { id: 'bot-001', username: 'IronDefense FC', teamName: 'IronDefense FC', elo: 980, ovr: 68 },
-    { id: 'bot-002', username: 'Golden Eagles', teamName: 'Golden Eagles',   elo: 1020, ovr: 72 },
-    { id: 'bot-003', username: 'Red Storm',      teamName: 'Red Storm',       elo: 1050, ovr: 75 },
-    { id: 'bot-004', username: 'Blue Lions',     teamName: 'Blue Lions',      elo: 1100, ovr: 78 },
-    { id: 'bot-005', username: 'Silver Wolves',  teamName: 'Silver Wolves',   elo: 960,  ovr: 70 },
-    { id: 'bot-006', username: 'Dark Knights',   teamName: 'Dark Knights',    elo: 1150, ovr: 82 },
-    { id: 'bot-007', username: 'Phoenix Rising', teamName: 'Phoenix Rising',  elo: 900,  ovr: 65 },
-    { id: 'bot-008', username: 'Thunder Hawks',  teamName: 'Thunder Hawks',   elo: 1080, ovr: 76 },
-    { id: 'bot-009', username: 'Emerald City FC','teamName': 'Emerald City FC', elo: 1200, ovr: 85 },
-    { id: 'bot-010', username: 'White Tigers',   teamName: 'White Tigers',    elo: 850,  ovr: 62 },
-  ];
+const BOT_DATA = require('./bot_data.json');
 
-  for (const bot of bots) {
-    // Upsert player
+// Bot initial ELO map — used to restore correct ELOs on reset
+const BOT_INITIAL_ELO = {};
+BOT_DATA.forEach(b => { BOT_INITIAL_ELO[b.id] = b.elo; });
+
+const BOT_FORMATIONS = ['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-1-4-1', '5-3-2'];
+
+async function seedBots() {
+  for (const bot of BOT_DATA) {
+    const formation = BOT_FORMATIONS[Math.floor(Math.random() * BOT_FORMATIONS.length)];
+    const wins  = Math.floor(Math.random() * 30) + 10;
+    const draws = Math.floor(Math.random() * 10) + 2;
+    const losses= Math.floor(Math.random() * 20) + 5;
+
+    // Insert only if not exists — reset-elo handles restoring ELO separately
     await pool.query(`
-      INSERT INTO players (player_id, username, team_name, elo, wins, losses, draws)
+      INSERT INTO players (player_id, username, team_name, elo, wins, draws, losses)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (player_id) DO NOTHING
-    `, [bot.id, bot.username, bot.teamName, bot.elo,
-        Math.floor(Math.random() * 20), Math.floor(Math.random() * 15), Math.floor(Math.random() * 10)]);
-
-    // Bot squad (11 generic players)
-    const squad = Array.from({ length: 11 }, (_, i) => ({
-      id: `${bot.id}-p${i}`, name: `Player ${i + 1}`,
-      ovr: bot.ovr + Math.floor(Math.random() * 6) - 3,
-      position: ['GK','CB','CB','LB','RB','CM','CM','CAM','LW','RW','ST'][i],
-    }));
+    `, [bot.id, bot.teamName, bot.teamName, bot.elo, wins, draws, losses]);
 
     await pool.query(`
       INSERT INTO team_snapshots (player_id, formation, tactics, squad, avg_ovr)
       VALUES ($1, $2, $3, $4, $5)
-      ON CONFLICT (player_id) DO NOTHING
-    `, [bot.id, '4-3-3', '{}', JSON.stringify(squad), bot.ovr]);
+      ON CONFLICT (player_id) DO UPDATE
+        SET formation = EXCLUDED.formation, squad = EXCLUDED.squad, avg_ovr = EXCLUDED.avg_ovr
+    `, [bot.id, formation, JSON.stringify({ style: 'HighPress' }), JSON.stringify(bot.squad), bot.avg]);
   }
-  console.log('Bot players seeded.');
+  console.log(`Bot players seeded: ${BOT_DATA.length} bots.`);
+}
+
+// ─── BOT VS BOT SIMULATION ──────────────────────────────────────────────────
+
+async function simulateBotMatches(count = 8) {
+  try {
+    const { rows: botPlayers } = await pool.query(
+      `SELECT player_id, elo FROM players WHERE player_id LIKE 'bot-%' ORDER BY RANDOM() LIMIT $1`,
+      [count * 2]
+    );
+    if (botPlayers.length < 2) return;
+
+    const pairs = [];
+    for (let i = 0; i + 1 < botPlayers.length; i += 2) {
+      pairs.push([botPlayers[i], botPlayers[i + 1]]);
+    }
+
+    for (const [home, away] of pairs) {
+      // ELO-weighted random result
+      const expected = 1 / (1 + Math.pow(10, (away.elo - home.elo) / 400));
+      const r = Math.random();
+      let homeScore, awayScore;
+      if (r < expected * 0.55) {
+        homeScore = Math.floor(Math.random() * 3) + 1;
+        awayScore = Math.floor(Math.random() * homeScore);
+      } else if (r < expected * 0.55 + 0.22) {
+        homeScore = Math.floor(Math.random() * 3) + 1;
+        awayScore = homeScore;
+      } else {
+        awayScore = Math.floor(Math.random() * 3) + 1;
+        homeScore = Math.floor(Math.random() * awayScore);
+      }
+
+      const isDraw = homeScore === awayScore;
+      const homeWon = homeScore > awayScore;
+      const homeChange = isDraw ? calcElo(home.elo, away.elo, true)
+        : homeWon ? calcElo(home.elo, away.elo, false) : -calcElo(home.elo, away.elo, false);
+      const awayChange = isDraw ? calcElo(away.elo, home.elo, true)
+        : !homeWon ? calcElo(away.elo, home.elo, false) : -calcElo(away.elo, home.elo, false);
+
+      await pool.query(`
+        UPDATE players SET
+          elo = GREATEST(100, elo + $2),
+          wins = wins + $3, draws = draws + $4, losses = losses + $5
+        WHERE player_id = $1
+      `, [home.player_id, homeChange, homeWon?1:0, isDraw?1:0, (!homeWon&&!isDraw)?1:0]);
+
+      await pool.query(`
+        UPDATE players SET
+          elo = GREATEST(100, elo + $2),
+          wins = wins + $3, draws = draws + $4, losses = losses + $5
+        WHERE player_id = $1
+      `, [away.player_id, awayChange, (!homeWon&&!isDraw)?1:0, isDraw?1:0, homeWon?1:0]);
+
+      await pool.query(`
+        INSERT INTO matches (home_player_id, away_player_id, home_score, away_score, home_elo_change, away_elo_change, match_type)
+        VALUES ($1, $2, $3, $4, $5, $6, 'bot')
+      `, [home.player_id, away.player_id, homeScore, awayScore, homeChange, awayChange]);
+    }
+    console.log(`Bot sim: ${pairs.length} matches played.`);
+  } catch (err) {
+    console.error('Bot sim error:', err.message);
+  }
 }
 
 // ─── ELO HELPER ─────────────────────────────────────────────────────────────
@@ -487,12 +547,26 @@ app.post('/api/admin/reset-elo', async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   try {
+    // Gerçek oyuncuları sıfırla
     await pool.query(`
       UPDATE players SET elo = 1000, wins = 0, losses = 0, draws = 0, updated_at = NOW()
       WHERE player_id NOT LIKE 'bot-%'
     `);
+    // Botları initial ELO'larına döndür
+    for (const [botId, initialElo] of Object.entries(BOT_INITIAL_ELO)) {
+      const wins  = Math.floor(Math.random() * 30) + 10;
+      const draws = Math.floor(Math.random() * 10) + 2;
+      const losses= Math.floor(Math.random() * 20) + 5;
+      await pool.query(`
+        UPDATE players SET elo = $2, wins = $3, draws = $4, losses = $5, updated_at = NOW()
+        WHERE player_id = $1
+      `, [botId, initialElo, wins, draws, losses]);
+    }
     await pool.query(`DELETE FROM matches`);
-    res.json({ ok: true, message: 'ELO reset complete. New season started!' });
+    await pool.query(`DELETE FROM challenges`);
+    // Sıfırdan bot simülasyonu başlat
+    await simulateBotMatches(20);
+    res.json({ ok: true, message: 'ELO reset complete. Bots restored. New season started!' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'DB error' });
