@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, X, Search, AlertCircle, Wifi, ChevronDown, ChevronUp, Shield } from 'lucide-react';
+import { Globe, X, Search, AlertCircle, Wifi, Shield, Swords, Users } from 'lucide-react';
 import {
   registerPlayer, syncTeamSnapshot, findOpponent, getMyProfile,
   MPOpponent, MPPlayer,
@@ -14,70 +14,212 @@ interface Props {
   managerName?: string;
   managerNationality?: string;
   t: any;
-  // Direct match: opponent already chosen from leaderboard
   directOpponent?: MPOpponent | null;
 }
 
 type Phase = 'idle' | 'syncing' | 'searching' | 'found' | 'error';
 
-const POS_ORDER = ['GK','CB','LB','RB','CM','CAM','LW','RW','ST','CF','CDM'];
+const POS_ORDER = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','CF','ST'];
+
+function posColor(pos: string) {
+  if (pos === 'GK') return 'bg-yellow-600/30 text-yellow-400 border-yellow-500/30';
+  if (['CB','LB','RB','CDM'].includes(pos)) return 'bg-blue-600/30 text-blue-400 border-blue-500/30';
+  if (['CM','CAM','DM'].includes(pos)) return 'bg-green-600/30 text-green-400 border-green-500/30';
+  return 'bg-red-600/30 text-red-400 border-red-500/30';
+}
+
+function ovrColor(ovr: number) {
+  if (ovr >= 88) return 'text-yellow-400';
+  if (ovr >= 80) return 'text-emerald-400';
+  if (ovr >= 72) return 'text-white';
+  return 'text-slate-400';
+}
+
+// Key stats to show per position
+function keyStats(pos: string, attrs: any): { label: string; val: number }[] {
+  if (!attrs) return [];
+  if (pos === 'GK') return [
+    { label: 'KAL', val: attrs.goalkeeping },
+    { label: 'HIZ', val: attrs.speed },
+    { label: 'GÜÇ', val: attrs.strength },
+  ];
+  if (['CB','CDM'].includes(pos)) return [
+    { label: 'MUD', val: attrs.tackling },
+    { label: 'GÜÇ', val: attrs.strength },
+    { label: 'HIZ', val: attrs.speed },
+  ];
+  if (['LB','RB'].includes(pos)) return [
+    { label: 'HIZ', val: attrs.speed },
+    { label: 'MUD', val: attrs.tackling },
+    { label: 'PAS', val: attrs.passing },
+  ];
+  if (['CM','CAM','DM'].includes(pos)) return [
+    { label: 'PAS', val: attrs.passing },
+    { label: 'VZY', val: attrs.vision },
+    { label: 'DRB', val: attrs.dribbling },
+  ];
+  // FWD / wingers
+  return [
+    { label: 'FNŞ', val: attrs.finishing },
+    { label: 'HIZ', val: attrs.speed },
+    { label: 'DRB', val: attrs.dribbling },
+  ];
+}
+
+function StatBar({ val }: { val: number }) {
+  const pct = Math.min(100, Math.max(0, val));
+  const color = pct >= 85 ? 'bg-yellow-400' : pct >= 75 ? 'bg-emerald-400' : pct >= 65 ? 'bg-blue-400' : 'bg-slate-500';
+  return (
+    <div className="w-10 h-1 bg-slate-700 rounded-full overflow-hidden">
+      <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+function TacticPill({ label, value, color = 'slate' }: { label: string; value: string; color?: string }) {
+  const colorMap: Record<string, string> = {
+    purple: 'bg-purple-600/20 border-purple-500/30 text-purple-300',
+    blue:   'bg-blue-600/20 border-blue-500/30 text-blue-300',
+    amber:  'bg-amber-600/20 border-amber-500/30 text-amber-300',
+    red:    'bg-red-600/20 border-red-500/30 text-red-300',
+    green:  'bg-green-600/20 border-green-500/30 text-green-300',
+    slate:  'bg-slate-700/50 border-white/10 text-slate-300',
+  };
+  return (
+    <div className={`flex flex-col items-center px-2 py-1.5 rounded-lg border ${colorMap[color] || colorMap.slate}`}>
+      <span className="text-[9px] uppercase tracking-wider opacity-60 mb-0.5">{label}</span>
+      <span className="text-[10px] font-bold leading-none">{value || '—'}</span>
+    </div>
+  );
+}
 
 function OpponentSquadPreview({ opponent, t }: { opponent: MPOpponent; t: any }) {
-  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<'tactics' | 'squad'>('tactics');
   const squad: any[] = Array.isArray(opponent.squad) ? opponent.squad : [];
   const tactics: any = opponent.tactics || {};
-  const style = tactics.style || tactics.playStyle || '—';
+  const starters = squad.filter((p: any) => p.lineup !== 'BENCH').slice(0, 11);
+  const bench    = squad.filter((p: any) => p.lineup === 'BENCH').slice(0, 7);
+
+  const sortedStarters = [...starters].sort((a, b) =>
+    (POS_ORDER.indexOf(a.position) + 99) - (POS_ORDER.indexOf(b.position) + 99)
+  );
 
   return (
     <div className="bg-slate-800/60 rounded-xl border border-purple-500/20 overflow-hidden">
-      {/* Opponent header */}
-      <div className="flex items-center justify-between p-3">
+      {/* Header */}
+      <div className="flex items-center justify-between px-3 pt-3 pb-2">
         <div>
-          <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">{t.onlineOpponentFound || 'Opponent Found!'}</div>
-          <div className="font-bold text-white text-sm">{opponent.team_name}</div>
-          <div className="text-[11px] text-slate-400">
-            OVR {Math.round(opponent.avg_ovr)} • {opponent.formation || '4-3-3'} • {style}
+          <div className="text-[9px] text-purple-400 uppercase tracking-wider mb-0.5">{t.onlineOpponentFound || 'Opponent Found!'}</div>
+          <div className="font-bold text-white text-sm leading-tight">{opponent.team_name}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">
+            OVR <span className="text-white font-semibold">{Math.round(opponent.avg_ovr)}</span>
+            <span className="mx-1.5 opacity-30">•</span>
+            <span className="text-purple-300 font-semibold">{opponent.formation || '4-3-3'}</span>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] text-purple-400 uppercase tracking-wider mb-0.5">ELO</div>
-          <div className="text-xl font-bold text-purple-300">{opponent.elo}</div>
+          <div className="text-[9px] text-purple-400 uppercase tracking-wider mb-0.5">ELO</div>
+          <div className="text-2xl font-black text-purple-300 leading-none">{opponent.elo}</div>
         </div>
       </div>
 
-      {/* Toggle squad */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-slate-700/40 border-t border-white/5 text-[11px] text-slate-400 hover:text-white transition-colors"
-      >
-        <div className="flex items-center gap-1.5">
-          <Shield size={11} className="text-purple-400" />
-          <span>Kadroyu Gör ({squad.length} oyuncu)</span>
-        </div>
-        {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-      </button>
+      {/* Tabs */}
+      <div className="flex border-t border-white/5">
+        <button
+          onClick={() => setTab('tactics')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold transition-colors ${tab === 'tactics' ? 'bg-purple-600/20 text-purple-300 border-b-2 border-purple-500' : 'text-slate-500 hover:text-slate-300'}`}
+        >
+          <Swords size={11} /> Taktik
+        </button>
+        <button
+          onClick={() => setTab('squad')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold transition-colors ${tab === 'squad' ? 'bg-purple-600/20 text-purple-300 border-b-2 border-purple-500' : 'text-slate-500 hover:text-slate-300'}`}
+        >
+          <Users size={11} /> Kadro ({starters.length})
+        </button>
+      </div>
 
-      {open && squad.length > 0 && (
-        <div className="px-3 pb-3 pt-2 flex flex-col gap-1 max-h-52 overflow-y-auto">
-          {squad
-            .slice()
-            .sort((a: any, b: any) => (POS_ORDER.indexOf(a.position) + 99) - (POS_ORDER.indexOf(b.position) + 99) || (b.ovr || 0) - (a.ovr || 0))
-            .map((p: any, i: number) => (
-              <div key={i} className="flex items-center gap-2 py-1 border-b border-white/5 last:border-0">
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
-                  p.position === 'GK' ? 'bg-yellow-600/30 text-yellow-400' :
-                  ['CB','LB','RB','CDM'].includes(p.position) ? 'bg-blue-600/30 text-blue-400' :
-                  ['CM','CAM'].includes(p.position) ? 'bg-green-600/30 text-green-400' :
-                  'bg-red-600/30 text-red-400'
-                }`}>{p.position || 'CM'}</span>
-                <span className="flex-1 text-xs text-slate-200 truncate">{p.name || 'Player'}</span>
-                <span className={`text-xs font-bold shrink-0 ${
-                  (p.ovr || 0) >= 85 ? 'text-yellow-400' :
-                  (p.ovr || 0) >= 78 ? 'text-emerald-400' :
-                  (p.ovr || 0) >= 70 ? 'text-white' : 'text-slate-400'
-                }`}>{p.ovr || '?'}</span>
+      {/* Tactics tab */}
+      {tab === 'tactics' && (
+        <div className="p-3 flex flex-col gap-2">
+          {/* Main style row */}
+          <div className="grid grid-cols-3 gap-1.5">
+            <TacticPill label="Stil" value={tactics.style || '—'} color="purple" />
+            <TacticPill label="Formasyon" value={opponent.formation || '4-3-3'} color="blue" />
+            <TacticPill label="Mentality" value={tactics.mentality || '—'} color="amber" />
+          </div>
+          {/* Detail row */}
+          <div className="grid grid-cols-3 gap-1.5">
+            <TacticPill label="Agresiflik" value={tactics.aggression || '—'} color={tactics.aggression === 'Yüksek' ? 'red' : tactics.aggression === 'Düşük' ? 'green' : 'slate'} />
+            <TacticPill label="Tempo" value={tactics.tempo || '—'} color="slate" />
+            <TacticPill label="Genişlik" value={tactics.width || '—'} color="slate" />
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <TacticPill label="Def. Hattı" value={tactics.defensiveLine || '—'} color="slate" />
+            <TacticPill label="Pressing" value={tactics.pressingIntensity || '—'} color={tactics.pressingIntensity === 'Yüksek' ? 'red' : 'slate'} />
+            <TacticPill label="Pas Stili" value={tactics.passingStyle || '—'} color="slate" />
+          </div>
+          {tactics.marking && (
+            <div className="grid grid-cols-2 gap-1.5">
+              <TacticPill label="Marking" value={tactics.marking} color="slate" />
+              {tactics.attackPlan && <TacticPill label="Atak Planı" value={tactics.attackPlan} color="green" />}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Squad tab */}
+      {tab === 'squad' && (
+        <div className="max-h-64 overflow-y-auto">
+          {/* Starters */}
+          <div className="px-3 pt-2 pb-1">
+            <div className="text-[9px] text-slate-500 uppercase tracking-wider mb-1.5">İlk 11</div>
+            <div className="flex flex-col gap-0.5">
+              {sortedStarters.map((p: any, i: number) => {
+                const attrs = p.attributes;
+                const stats = keyStats(p.position, attrs);
+                return (
+                  <div key={i} className="flex items-center gap-2 py-1 border-b border-white/5 last:border-0">
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 w-9 text-center ${posColor(p.position)}`}>
+                      {p.position || 'CM'}
+                    </span>
+                    <span className="flex-1 text-[11px] text-slate-200 truncate">{p.name || 'Player'}</span>
+                    {/* Key stats */}
+                    {stats.length > 0 && (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {stats.map((s, si) => (
+                          <div key={si} className="flex flex-col items-center gap-0.5">
+                            <span className="text-[8px] text-slate-500 leading-none">{s.label}</span>
+                            <span className="text-[10px] font-bold leading-none" style={{
+                              color: s.val >= 85 ? '#facc15' : s.val >= 75 ? '#34d399' : s.val >= 65 ? '#cbd5e1' : '#64748b'
+                            }}>{s.val || '?'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <span className={`text-[11px] font-black shrink-0 ml-1 ${ovrColor(p.ovr)}`}>{p.ovr || '?'}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Bench */}
+          {bench.length > 0 && (
+            <div className="px-3 pt-1 pb-3">
+              <div className="text-[9px] text-slate-500 uppercase tracking-wider mb-1.5">Yedekler</div>
+              <div className="flex flex-col gap-0.5">
+                {bench.map((p: any, i: number) => (
+                  <div key={i} className="flex items-center gap-2 py-0.5">
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 w-9 text-center opacity-70 ${posColor(p.position)}`}>
+                      {p.position || 'CM'}
+                    </span>
+                    <span className="flex-1 text-[10px] text-slate-400 truncate">{p.name || 'Player'}</span>
+                    <span className={`text-[10px] font-bold shrink-0 opacity-70 ${ovrColor(p.ovr)}`}>{p.ovr || '?'}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          )}
         </div>
       )}
     </div>
