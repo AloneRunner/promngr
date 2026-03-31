@@ -125,12 +125,14 @@ export default function OnlineMatchModal({ onClose, onStartMatch, userTeam, user
           ovr: p.overall, position: p.position,
           lineup: 'STARTING', lineupIndex: p.lineupIndex ?? 0,
           playStyles: p.playStyles ?? [],
+          attributes: p.attributes ?? null,
         })),
         ...bench.map(p => ({
           id: p.id, name: `${p.firstName} ${p.lastName}`.trim(),
           ovr: p.overall, position: p.position,
           lineup: 'BENCH', lineupIndex: p.lineupIndex ?? 99,
           playStyles: p.playStyles ?? [],
+          attributes: p.attributes ?? null,
         })),
       ],
       myOvr

@@ -1096,37 +1096,61 @@ const App: React.FC = () => {
         // Snapshot'tan oyuncu oluştur — gerçek playStyles, lineup, lineupIndex dahil
         const buildPlayerFromSnap = (snap: any, idx: number): Player => {
             const ovr = snap?.ovr ?? baseOvr;
-            const pos: Position = (snap?.position as Position) || Position.MID;
-            const isGK = pos === Position.GK;
-            const isDEF = pos === Position.DEF;
-            const isMID = pos === Position.MID;
+            // Granular positions (CB, LB, RB, CM, CAM, LW, RW, ST) → coarse Position enum
+            const rawPos: string = snap?.position || 'CM';
+            const coarsePos: Position =
+                rawPos === 'GK' ? Position.GK :
+                ['CB','LB','RB','CDM'].includes(rawPos) ? Position.DEF :
+                ['CM','CAM','DM'].includes(rawPos) ? Position.MID :
+                ['LW','RW','ST','CF','SS'].includes(rawPos) ? Position.FWD :
+                Position.MID;
+            const isGK  = coarsePos === Position.GK;
+            const isDEF = coarsePos === Position.DEF;
+            const isMID = coarsePos === Position.MID;
             const snapStyles: string[] = Array.isArray(snap?.playStyles) ? snap.playStyles : [];
-            // Fallback playStyles eğer snapshot'ta yoksa OVR bazlı ata
             const fallbackStyles = isGK
                 ? (ovr >= 80 ? ['Kedi Refleks'] : [])
-                : pos === Position.FWD
+                : coarsePos === Position.FWD
                 ? (ovr >= 82 ? ['Plase Şut'] : ovr >= 78 ? ['Roket'] : [])
                 : isMID
                 ? (ovr >= 80 ? ['Maestro'] : [])
                 : [];
             const nameParts = (snap?.name || `Player ${idx + 1}`).split(' ');
+            // Use real attributes from snapshot if available, otherwise estimate from OVR
+            const snapAttrs: any = snap?.attributes && typeof snap.attributes === 'object' ? snap.attributes : null;
+            const attrs = snapAttrs ? {
+                finishing:   Math.min(99, snapAttrs.finishing   ?? (isGK ? 20 : isDEF ? 30 : isMID ? 55 : ovr - 2)),
+                passing:     Math.min(99, snapAttrs.passing     ?? (isGK ? 55 : isDEF ? ovr - 8 : ovr - 3)),
+                tackling:    Math.min(99, snapAttrs.tackling    ?? (isGK ? 20 : isDEF ? ovr + 3 : isMID ? ovr - 10 : 35)),
+                dribbling:   Math.min(99, snapAttrs.dribbling   ?? (isGK ? 20 : isMID ? ovr : ovr - 5)),
+                goalkeeping: Math.min(99, snapAttrs.goalkeeping ?? (isGK ? ovr + 2 : 5)),
+                speed:       Math.min(99, snapAttrs.speed       ?? ovr - 3),
+                stamina:     Math.min(99, snapAttrs.stamina     ?? ovr - 4),
+                strength:    Math.min(99, snapAttrs.strength    ?? ovr - 5),
+                positioning: Math.min(99, snapAttrs.positioning ?? (isDEF || isGK ? ovr + 2 : ovr - 2)),
+                aggression:  Math.min(99, snapAttrs.aggression  ?? (isDEF ? ovr - 3 : 58)),
+                composure:   Math.min(99, snapAttrs.composure   ?? 65),
+                vision:      Math.min(99, snapAttrs.vision      ?? (isMID ? ovr + 2 : ovr - 8)),
+                leadership:  Math.min(99, snapAttrs.leadership  ?? 58),
+                decisions:   Math.min(99, snapAttrs.decisions   ?? 65),
+            } : {
+                finishing:   isGK ? 20 : isDEF ? 30 : isMID ? 55 : ovr - 2,
+                passing:     isGK ? 55 : isDEF ? ovr - 8 : isMID ? ovr + 2 : ovr - 5,
+                tackling:    isGK ? 20 : isDEF ? ovr + 3 : isMID ? ovr - 10 : 35,
+                dribbling:   isGK ? 20 : isDEF ? ovr - 10 : isMID ? ovr : ovr - 3,
+                goalkeeping: isGK ? ovr + 2 : 5,
+                speed: ovr - 3, stamina: ovr - 4, strength: ovr - 5,
+                positioning: isDEF || isGK ? ovr + 2 : ovr - 2,
+                aggression: isDEF ? ovr - 3 : 58, composure: 65,
+                vision: isMID ? ovr + 2 : ovr - 8,
+                leadership: 58, decisions: 65,
+            };
             return {
                 id: `${oppTeamId}-p${idx}`,
                 firstName: nameParts[0] || `Player`,
                 lastName: nameParts.slice(1).join(' ') || `${idx + 1}`,
-                age: 26, nationality: 'XX', position: pos,
-                attributes: {
-                    finishing:   isGK ? 5  : isDEF ? 30  : isMID ? 52 : ovr + 3,
-                    passing:     isGK ? 40 : isDEF ? ovr - 5 : isMID ? ovr : ovr - 2,
-                    tackling:    isGK ? 20 : isDEF ? ovr + 5 : isMID ? ovr - 5 : 40,
-                    dribbling:   isGK ? 10 : isDEF ? ovr - 10 : isMID ? ovr : ovr + 2,
-                    goalkeeping: isGK ? ovr + 5 : 5,
-                    speed: ovr - 3, stamina: ovr - 2, strength: ovr - 4,
-                    positioning: isDEF || isGK ? ovr + 3 : ovr - 2,
-                    aggression: ovr - 8, composure: ovr - 5,
-                    vision: isMID ? ovr + 3 : ovr - 5,
-                    leadership: ovr - 10, decisions: ovr - 5,
-                },
+                age: 26, nationality: 'XX', position: coarsePos,
+                attributes: attrs,
                 hiddenAttributes: { consistency: 70, importantMatches: 65, injuryProneness: 15 },
                 stats: {}, overall: ovr, potential: ovr + 2,
                 value: 1000000, wage: 10000, salary: 10000, contractYears: 2,
