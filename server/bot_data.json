@@ -8,57 +8,57 @@
       {
         "name": "K. Mbappey",
         "ovr": 91,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "J. Bellin",
         "ovr": 90,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "V. Juniorr",
         "ovr": 89,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "F. Valverdy",
         "ovr": 89,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "T. Courtow",
         "ovr": 89,
-        "position": "GK"
+        "position": "RB"
       },
       {
         "name": "T. Rudigerr",
         "ovr": 86,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "T. Alexandery",
         "ovr": 86,
-        "position": "RB"
+        "position": "CM"
       },
       {
         "name": "Rodrygoa",
         "ovr": 85,
-        "position": "RW"
+        "position": "CAM"
       },
       {
         "name": "D. Carvajall",
         "ovr": 85,
-        "position": "RB"
+        "position": "LW"
       },
       {
         "name": "A. Tchouameny",
         "ovr": 84,
-        "position": "CM"
+        "position": "RW"
       },
       {
         "name": "E. Militao",
         "ovr": 84,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -71,27 +71,27 @@
       {
         "name": "R. Rodry",
         "ovr": 91,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "E. Holland",
         "ovr": 91,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "K. De Bruyn",
         "ovr": 90,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "P. Fodey",
         "ovr": 88,
-        "position": "RW"
+        "position": "LB"
       },
       {
         "name": "R. Diaze",
         "ovr": 88,
-        "position": "CB"
+        "position": "RB"
       },
       {
         "name": "B. Sylva",
@@ -101,27 +101,27 @@
       {
         "name": "E. Edersun",
         "ovr": 88,
-        "position": "GK"
+        "position": "CM"
       },
       {
         "name": "I. Gundogann",
         "ovr": 87,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "J. Gvardy",
         "ovr": 84,
-        "position": "CB"
+        "position": "LW"
       },
       {
         "name": "M. Akanjy",
         "ovr": 84,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "N. Akke",
         "ovr": 84,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -134,57 +134,57 @@
       {
         "name": "J. Kimmic",
         "ovr": 89,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "H. Kane",
         "ovr": 89,
-        "position": "ST"
-      },
-      {
-        "name": "J. Musial",
-        "ovr": 88,
-        "position": "CM"
-      },
-      {
-        "name": "J. Taha",
-        "ovr": 87,
         "position": "CB"
-      },
-      {
-        "name": "M. Olise",
-        "ovr": 86,
-        "position": "RW"
-      },
-      {
-        "name": "L. Diaz",
-        "ovr": 85,
-        "position": "LW"
-      },
-      {
-        "name": "D. Upameca",
-        "ovr": 85,
-        "position": "CB"
-      },
-      {
-        "name": "A. Davids",
-        "ovr": 84,
-        "position": "LB"
-      },
-      {
-        "name": "M. Neuer",
-        "ovr": 84,
-        "position": "GK"
       },
       {
         "name": "D. Garcia",
         "ovr": 89,
-        "position": "GK"
+        "position": "CB"
+      },
+      {
+        "name": "J. Musial",
+        "ovr": 88,
+        "position": "LB"
       },
       {
         "name": "J. Perez",
         "ovr": 88,
-        "position": "GK"
+        "position": "RB"
+      },
+      {
+        "name": "J. Taha",
+        "ovr": 87,
+        "position": "CM"
+      },
+      {
+        "name": "M. Olise",
+        "ovr": 86,
+        "position": "CM"
+      },
+      {
+        "name": "L. Diaz",
+        "ovr": 85,
+        "position": "CAM"
+      },
+      {
+        "name": "D. Upameca",
+        "ovr": 85,
+        "position": "LW"
+      },
+      {
+        "name": "A. Davids",
+        "ovr": 84,
+        "position": "RW"
+      },
+      {
+        "name": "M. Neuer",
+        "ovr": 84,
+        "position": "ST"
       }
     ]
   },
@@ -197,12 +197,12 @@
       {
         "name": "B. Sakoah",
         "ovr": 87,
-        "position": "RW"
+        "position": "GK"
       },
       {
         "name": "M. Odehavn",
         "ovr": 87,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "W. Salvar",
@@ -212,27 +212,27 @@
       {
         "name": "D. Rysell",
         "ovr": 87,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "G. Magales",
         "ovr": 86,
-        "position": "CB"
-      },
-      {
-        "name": "D. Rayo",
-        "ovr": 85,
-        "position": "GK"
+        "position": "RB"
       },
       {
         "name": "K. Haverman",
         "ovr": 86,
-        "position": "ST"
+        "position": "CM"
+      },
+      {
+        "name": "D. Rayo",
+        "ovr": 85,
+        "position": "CM"
       },
       {
         "name": "B. Whitford",
         "ovr": 84,
-        "position": "RB"
+        "position": "CAM"
       },
       {
         "name": "G. Martell",
@@ -242,12 +242,12 @@
       {
         "name": "J. Timmar",
         "ovr": 82,
-        "position": "LB"
+        "position": "RW"
       },
       {
         "name": "L. Tressar",
         "ovr": 82,
-        "position": "LW"
+        "position": "ST"
       }
     ]
   },
@@ -260,57 +260,57 @@
       {
         "name": "O. Dembelley",
         "ovr": 90,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "A. Hakimmy",
         "ovr": 89,
-        "position": "RB"
+        "position": "CB"
       },
       {
         "name": "V. Vitinhah",
         "ovr": 89,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "K. Kavarasky",
         "ovr": 87,
-        "position": "LW"
+        "position": "LB"
       },
       {
         "name": "M. Markinhoss",
         "ovr": 87,
-        "position": "CB"
+        "position": "RB"
       },
       {
         "name": "N. Mendeze",
         "ovr": 86,
-        "position": "LB"
+        "position": "CM"
       },
       {
         "name": "W. Pachoh",
         "ovr": 86,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "J. Nevese",
         "ovr": 85,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "D. Douee",
         "ovr": 85,
-        "position": "RW"
+        "position": "LW"
       },
       {
         "name": "F. Ruize",
         "ovr": 85,
-        "position": "CM"
+        "position": "RW"
       },
       {
         "name": "B. Barcollah",
         "ovr": 84,
-        "position": "LW"
+        "position": "ST"
       }
     ]
   },
@@ -323,7 +323,7 @@
       {
         "name": "M. Sallah",
         "ovr": 89,
-        "position": "RW"
+        "position": "GK"
       },
       {
         "name": "V. Dijkk",
@@ -333,47 +333,47 @@
       {
         "name": "A. Beckery",
         "ovr": 89,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "T. Alexandery",
         "ovr": 86,
-        "position": "RB"
+        "position": "LB"
       },
       {
         "name": "A. Mac Allistery",
         "ovr": 86,
+        "position": "RB"
+      },
+      {
+        "name": "D. Jotta",
+        "ovr": 85,
+        "position": "CM"
+      },
+      {
+        "name": "A. Robertson",
+        "ovr": 85,
         "position": "CM"
       },
       {
         "name": "L. Diaze",
         "ovr": 84,
-        "position": "LW"
-      },
-      {
-        "name": "D. Jotta",
-        "ovr": 85,
-        "position": "ST"
-      },
-      {
-        "name": "A. Robertson",
-        "ovr": 85,
-        "position": "LB"
-      },
-      {
-        "name": "D. Szoboslay",
-        "ovr": 81,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "I. Konatte",
         "ovr": 83,
-        "position": "CB"
+        "position": "LW"
       },
       {
         "name": "C. Gakppo",
         "ovr": 83,
-        "position": "LW"
+        "position": "RW"
+      },
+      {
+        "name": "D. Szoboslay",
+        "ovr": 81,
+        "position": "ST"
       }
     ]
   },
@@ -391,51 +391,51 @@
       {
         "name": "J. Alvareze",
         "ovr": 87,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "A. Grizman",
         "ovr": 85,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "M. Lloren",
         "ovr": 84,
-        "position": "RB"
+        "position": "LB"
       },
       {
         "name": "A. Sorloth",
         "ovr": 84,
-        "position": "ST"
+        "position": "RB"
       },
       {
         "name": "D. Hanckow",
         "ovr": 83,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "R. Le Norman",
         "ovr": 83,
-        "position": "CB"
-      },
-      {
-        "name": "C. Gallaguer",
-        "ovr": 81,
-        "position": "CM"
-      },
-      {
-        "name": "Kokey",
-        "ovr": 81,
-        "position": "CM"
-      },
-      {
-        "name": "Thiago Alma",
-        "ovr": 79,
         "position": "CM"
       },
       {
         "name": "A. Correy",
         "ovr": 82,
+        "position": "CAM"
+      },
+      {
+        "name": "C. Gallaguer",
+        "ovr": 81,
+        "position": "LW"
+      },
+      {
+        "name": "Kokey",
+        "ovr": 81,
+        "position": "RW"
+      },
+      {
+        "name": "Thiago Alma",
+        "ovr": 79,
         "position": "ST"
       }
     ]
@@ -449,56 +449,56 @@
       {
         "name": "C. Palm",
         "ovr": 86,
-        "position": "RW"
+        "position": "GK"
       },
       {
         "name": "C. Nkun",
         "ovr": 84,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "R. Jame",
         "ovr": 83,
-        "position": "RB"
+        "position": "CB"
       },
       {
         "name": "M. Caicedo",
         "ovr": 82,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "E. Ferna",
         "ovr": 82,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "M. Cucure",
         "ovr": 81,
-        "position": "LB"
-      },
-      {
-        "name": "L. Colwi",
-        "ovr": 79,
-        "position": "CB"
-      },
-      {
-        "name": "W. Fofa",
-        "ovr": 79,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "P. Neto",
         "ovr": 80,
+        "position": "CM"
+      },
+      {
+        "name": "N. Jack",
+        "ovr": 80,
+        "position": "CAM"
+      },
+      {
+        "name": "L. Colwi",
+        "ovr": 79,
+        "position": "LW"
+      },
+      {
+        "name": "W. Fofa",
+        "ovr": 79,
         "position": "RW"
       },
       {
         "name": "N. Madu",
         "ovr": 78,
-        "position": "RW"
-      },
-      {
-        "name": "N. Jack",
-        "ovr": 80,
         "position": "ST"
       }
     ]
@@ -512,12 +512,12 @@
       {
         "name": "S. Guirassy",
         "ovr": 87,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "G. Kobell",
         "ovr": 86,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "N. Schlotter",
@@ -525,44 +525,44 @@
         "position": "CB"
       },
       {
-        "name": "J. Bellford",
-        "ovr": 74,
-        "position": "CM"
-      },
-      {
         "name": "Diego Perez",
         "ovr": 83,
-        "position": "GK"
+        "position": "LB"
       },
       {
         "name": "João Costa",
         "ovr": 82,
-        "position": "GK"
+        "position": "RB"
       },
       {
         "name": "Marco Costa",
         "ovr": 81,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "João Perez",
         "ovr": 80,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "David Costa",
         "ovr": 79,
-        "position": "CB"
+        "position": "CAM"
       },
       {
         "name": "Marco Silva",
         "ovr": 78,
-        "position": "RB"
+        "position": "LW"
       },
       {
         "name": "Carlos Silva",
         "ovr": 77,
-        "position": "RB"
+        "position": "RW"
+      },
+      {
+        "name": "J. Bellford",
+        "ovr": 74,
+        "position": "ST"
       }
     ]
   },
@@ -575,7 +575,7 @@
       {
         "name": "L. Martines",
         "ovr": 88,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "A. Bastonny",
@@ -585,47 +585,47 @@
       {
         "name": "Y. Sommerr",
         "ovr": 87,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "N. Barella",
         "ovr": 87,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "H. Calhano",
         "ovr": 86,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "F. Dimarko",
         "ovr": 85,
-        "position": "LB"
+        "position": "CM"
       },
       {
         "name": "M. Thurammo",
         "ovr": 85,
-        "position": "ST"
+        "position": "CM"
       },
       {
         "name": "D. Dumfries",
         "ovr": 84,
-        "position": "RB"
+        "position": "CAM"
       },
       {
         "name": "F. Acerby",
         "ovr": 84,
-        "position": "CB"
+        "position": "LW"
       },
       {
         "name": "S. de Vrij",
         "ovr": 84,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "H. Mkhitary",
         "ovr": 83,
-        "position": "CM"
+        "position": "ST"
       }
     ]
   },
@@ -638,7 +638,7 @@
       {
         "name": "B. Fernann",
         "ovr": 87,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "L. Martines",
@@ -646,29 +646,14 @@
         "position": "CB"
       },
       {
-        "name": "M. Rashfo",
-        "ovr": 81,
-        "position": "LW"
-      },
-      {
         "name": "A. Onann",
-        "ovr": 83,
-        "position": "GK"
-      },
-      {
-        "name": "M. de Ligtto",
         "ovr": 83,
         "position": "CB"
       },
       {
-        "name": "K. Mayno",
-        "ovr": 79,
-        "position": "CM"
-      },
-      {
-        "name": "A. Garnacho",
-        "ovr": 80,
-        "position": "LW"
+        "name": "M. de Ligtto",
+        "ovr": 83,
+        "position": "LB"
       },
       {
         "name": "D. Dalotto",
@@ -676,14 +661,29 @@
         "position": "RB"
       },
       {
+        "name": "M. Rashfo",
+        "ovr": 81,
+        "position": "CM"
+      },
+      {
+        "name": "A. Garnacho",
+        "ovr": 80,
+        "position": "CM"
+      },
+      {
         "name": "N. Mazraou",
         "ovr": 80,
-        "position": "RB"
+        "position": "CAM"
+      },
+      {
+        "name": "K. Mayno",
+        "ovr": 79,
+        "position": "LW"
       },
       {
         "name": "R. Hojlun",
         "ovr": 79,
-        "position": "ST"
+        "position": "RW"
       },
       {
         "name": "J. Zirkee",
@@ -706,22 +706,22 @@
       {
         "name": "C. Pulisecc",
         "ovr": 84,
-        "position": "RW"
+        "position": "CB"
       },
       {
         "name": "R. Leanno",
         "ovr": 84,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "A. Rabbio",
         "ovr": 83,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "L. Modrycc",
         "ovr": 83,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "C. Nukunku",
@@ -731,27 +731,27 @@
       {
         "name": "F. Tomory",
         "ovr": 81,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "Y. Fofann",
         "ovr": 81,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "R. Loftus",
         "ovr": 80,
-        "position": "CM"
+        "position": "LW"
       },
       {
         "name": "P. Estupinan",
         "ovr": 79,
-        "position": "LB"
+        "position": "RW"
       },
       {
         "name": "A. Salemake",
         "ovr": 79,
-        "position": "RW"
+        "position": "ST"
       }
     ]
   },
@@ -764,27 +764,27 @@
       {
         "name": "G. Bremery",
         "ovr": 85,
-        "position": "CB"
+        "position": "GK"
       },
       {
         "name": "M. Locatelly",
         "ovr": 84,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "L. Opendo",
         "ovr": 83,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "J. Davido",
         "ovr": 82,
-        "position": "ST"
+        "position": "LB"
       },
       {
         "name": "D. Vlagovic",
         "ovr": 82,
-        "position": "ST"
+        "position": "RB"
       },
       {
         "name": "K. Thurammo",
@@ -794,27 +794,27 @@
       {
         "name": "F. Kostyc",
         "ovr": 81,
-        "position": "LW"
+        "position": "CM"
       },
       {
         "name": "T. Koopman",
         "ovr": 81,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "M. Gregorrio",
         "ovr": 81,
-        "position": "GK"
+        "position": "LW"
       },
       {
         "name": "P. Kaluluo",
         "ovr": 80,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "F. Gatty",
         "ovr": 80,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -827,32 +827,32 @@
       {
         "name": "K. De Bruynne",
         "ovr": 87,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "S. McTomynay",
         "ovr": 85,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "R. Lukakku",
         "ovr": 84,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "G. Di Lorenzzo",
         "ovr": 83,
-        "position": "RB"
+        "position": "LB"
       },
       {
         "name": "S. Lobotkkah",
         "ovr": 83,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "A. Rrahmanii",
         "ovr": 83,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "F. Anguissah",
@@ -862,22 +862,22 @@
       {
         "name": "A. Merett",
         "ovr": 82,
-        "position": "GK"
+        "position": "CAM"
       },
       {
         "name": "A. Buongiorn",
         "ovr": 82,
-        "position": "CB"
+        "position": "LW"
       },
       {
         "name": "M. Gutierrezz",
         "ovr": 81,
-        "position": "LB"
+        "position": "RW"
       },
       {
         "name": "D. Neress",
         "ovr": 81,
-        "position": "LW"
+        "position": "ST"
       }
     ]
   },
@@ -888,59 +888,59 @@
     "avg": 80,
     "squad": [
       {
-        "name": "W. Benite",
-        "ovr": 79,
+        "name": "J. Veerm",
+        "ovr": 82,
         "position": "GK"
-      },
-      {
-        "name": "O. Boscag",
-        "ovr": 80,
-        "position": "CB"
-      },
-      {
-        "name": "J. Teze",
-        "ovr": 78,
-        "position": "RB"
-      },
-      {
-        "name": "S. Des",
-        "ovr": 78,
-        "position": "LB"
       },
       {
         "name": "J. Schout",
         "ovr": 81,
-        "position": "CM"
-      },
-      {
-        "name": "J. Veerm",
-        "ovr": 82,
-        "position": "CM"
-      },
-      {
-        "name": "I. Saibar",
-        "ovr": 78,
-        "position": "CM"
-      },
-      {
-        "name": "J. Bakayo",
-        "ovr": 80,
-        "position": "RW"
-      },
-      {
-        "name": "N. Lan",
-        "ovr": 79,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "L. de Jon",
         "ovr": 81,
-        "position": "ST"
+        "position": "CB"
+      },
+      {
+        "name": "O. Boscag",
+        "ovr": 80,
+        "position": "LB"
+      },
+      {
+        "name": "J. Bakayo",
+        "ovr": 80,
+        "position": "RB"
+      },
+      {
+        "name": "W. Benite",
+        "ovr": 79,
+        "position": "CM"
+      },
+      {
+        "name": "N. Lan",
+        "ovr": 79,
+        "position": "CM"
       },
       {
         "name": "M. Tillm",
         "ovr": 79,
-        "position": "CM"
+        "position": "CAM"
+      },
+      {
+        "name": "J. Teze",
+        "ovr": 78,
+        "position": "LW"
+      },
+      {
+        "name": "S. Des",
+        "ovr": 78,
+        "position": "RW"
+      },
+      {
+        "name": "I. Saibar",
+        "ovr": 78,
+        "position": "ST"
       }
     ]
   },
@@ -951,8 +951,8 @@
     "avg": 80,
     "squad": [
       {
-        "name": "A. Trubina",
-        "ovr": 81,
+        "name": "A. Di Mario",
+        "ovr": 83,
         "position": "GK"
       },
       {
@@ -961,14 +961,24 @@
         "position": "CB"
       },
       {
-        "name": "A. Silv",
-        "ovr": 80,
+        "name": "O. Kokc",
+        "ovr": 82,
         "position": "CB"
       },
       {
-        "name": "A. Bahh",
-        "ovr": 79,
+        "name": "A. Trubina",
+        "ovr": 81,
+        "position": "LB"
+      },
+      {
+        "name": "V. Pavlid",
+        "ovr": 81,
         "position": "RB"
+      },
+      {
+        "name": "A. Silv",
+        "ovr": 80,
+        "position": "CM"
       },
       {
         "name": "F. Aursne",
@@ -976,29 +986,19 @@
         "position": "CM"
       },
       {
-        "name": "O. Kokc",
-        "ovr": 82,
-        "position": "CM"
-      },
-      {
-        "name": "A. Di Mario",
-        "ovr": 83,
-        "position": "RW"
-      },
-      {
-        "name": "V. Pavlid",
-        "ovr": 81,
-        "position": "ST"
-      },
-      {
         "name": "Joao Mari",
         "ovr": 80,
-        "position": "CM"
+        "position": "CAM"
+      },
+      {
+        "name": "A. Bahh",
+        "ovr": 79,
+        "position": "LW"
       },
       {
         "name": "D. Nere",
         "ovr": 79,
-        "position": "LW"
+        "position": "RW"
       },
       {
         "name": "Arthur C.",
@@ -1021,22 +1021,22 @@
       {
         "name": "A. Varela",
         "ovr": 80,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "W. Galen",
         "ovr": 80,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "Evanil",
         "ovr": 80,
-        "position": "ST"
+        "position": "LB"
       },
       {
         "name": "P. Eustaquio",
         "ovr": 78,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "N. Gonzale",
@@ -1046,27 +1046,27 @@
       {
         "name": "F. Conceica",
         "ovr": 78,
-        "position": "RW"
+        "position": "CM"
       },
       {
         "name": "Wendell",
         "ovr": 77,
-        "position": "LB"
+        "position": "CAM"
       },
       {
         "name": "Joao Mari",
         "ovr": 77,
-        "position": "RB"
+        "position": "LW"
       },
       {
         "name": "Otavio",
         "ovr": 76,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "Ze Pedro",
         "ovr": 74,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -1077,29 +1077,29 @@
     "avg": 77,
     "squad": [
       {
-        "name": "D. Rama",
-        "ovr": 77,
-        "position": "GK"
-      },
-      {
-        "name": "J. Henders",
-        "ovr": 78,
-        "position": "CM"
-      },
-      {
         "name": "S. Berghui",
         "ovr": 79,
-        "position": "RW"
+        "position": "GK"
       },
       {
         "name": "B. Brobbe",
         "ovr": 79,
-        "position": "ST"
+        "position": "CB"
+      },
+      {
+        "name": "J. Henders",
+        "ovr": 78,
+        "position": "CB"
       },
       {
         "name": "J. Hat",
         "ovr": 78,
-        "position": "CB"
+        "position": "LB"
+      },
+      {
+        "name": "D. Rama",
+        "ovr": 77,
+        "position": "RB"
       },
       {
         "name": "K. Taylo",
@@ -1107,29 +1107,29 @@
         "position": "CM"
       },
       {
-        "name": "D. Rensch",
-        "ovr": 76,
-        "position": "RB"
-      },
-      {
         "name": "J. Sutal",
         "ovr": 77,
-        "position": "CB"
+        "position": "CM"
+      },
+      {
+        "name": "D. Rensch",
+        "ovr": 76,
+        "position": "CAM"
       },
       {
         "name": "Chuba Akpo",
         "ovr": 76,
-        "position": "ST"
+        "position": "LW"
       },
       {
         "name": "B. Van den Boom",
         "ovr": 76,
-        "position": "CM"
+        "position": "RW"
       },
       {
         "name": "M. Godt",
         "ovr": 75,
-        "position": "LW"
+        "position": "ST"
       }
     ]
   },
@@ -1140,59 +1140,59 @@
     "avg": 79,
     "squad": [
       {
-        "name": "F. Israel",
-        "ovr": 76,
-        "position": "GK"
-      },
-      {
         "name": "V. Gyoker",
         "ovr": 84,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "P. Goncalv",
         "ovr": 82,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "M. Hjulm",
         "ovr": 80,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "G. Inaci",
         "ovr": 80,
-        "position": "CB"
+        "position": "LB"
       },
       {
         "name": "O. Diomand",
         "ovr": 79,
-        "position": "CB"
-      },
-      {
-        "name": "N. Santo",
-        "ovr": 78,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "M. Edward",
         "ovr": 79,
-        "position": "RW"
+        "position": "CM"
       },
       {
-        "name": "H. Morit",
+        "name": "N. Santo",
         "ovr": 78,
         "position": "CM"
       },
       {
+        "name": "H. Morit",
+        "ovr": 78,
+        "position": "CAM"
+      },
+      {
         "name": "Trincao",
         "ovr": 78,
+        "position": "LW"
+      },
+      {
+        "name": "F. Israel",
+        "ovr": 76,
         "position": "RW"
       },
       {
         "name": "J. Sto-Just",
         "ovr": 76,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -1205,32 +1205,32 @@
       {
         "name": "V. Osimheno",
         "ovr": 87,
-        "position": "ST"
+        "position": "GK"
       },
       {
         "name": "L. Torreyra",
         "ovr": 83,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "I. Gundogann",
         "ovr": 83,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "L. Sanee",
         "ovr": 82,
-        "position": "RW"
+        "position": "LB"
       },
       {
         "name": "M. Icardy",
         "ovr": 81,
-        "position": "ST"
+        "position": "RB"
       },
       {
         "name": "B. Alper Yilmi",
         "ovr": 80,
-        "position": "LW"
+        "position": "CM"
       },
       {
         "name": "G. Sarra",
@@ -1240,22 +1240,22 @@
       {
         "name": "W. Singoh",
         "ovr": 80,
-        "position": "CB"
+        "position": "CAM"
       },
       {
         "name": "U. Cakirry",
         "ovr": 80,
-        "position": "GK"
+        "position": "LW"
       },
       {
         "name": "A. Bardakcy",
         "ovr": 80,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "M. Leminna",
         "ovr": 79,
-        "position": "CM"
+        "position": "ST"
       }
     ]
   },
@@ -1266,11 +1266,6 @@
     "avg": 80,
     "squad": [
       {
-        "name": "A. Candemir",
-        "ovr": 81,
-        "position": "RW"
-      },
-      {
         "name": "E. Edersun",
         "ovr": 85,
         "position": "GK"
@@ -1278,17 +1273,22 @@
       {
         "name": "Y. Nesiry",
         "ovr": 82,
-        "position": "ST"
+        "position": "CB"
+      },
+      {
+        "name": "A. Candemir",
+        "ovr": 81,
+        "position": "CB"
       },
       {
         "name": "A. Taliska",
         "ovr": 81,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "M. Skrinyar",
         "ovr": 81,
-        "position": "CB"
+        "position": "RB"
       },
       {
         "name": "Fredy",
@@ -1298,17 +1298,17 @@
       {
         "name": "M. Asensyo",
         "ovr": 80,
-        "position": "RW"
+        "position": "CM"
       },
       {
         "name": "K. Akturk",
         "ovr": 80,
-        "position": "LW"
+        "position": "CAM"
       },
       {
         "name": "J. Durano",
         "ovr": 79,
-        "position": "ST"
+        "position": "LW"
       },
       {
         "name": "I. Kahvecy",
@@ -1318,7 +1318,7 @@
       {
         "name": "S. Szyman",
         "ovr": 78,
-        "position": "CM"
+        "position": "ST"
       }
     ]
   },
@@ -1329,59 +1329,59 @@
     "avg": 78,
     "squad": [
       {
-        "name": "Kaan Özarık",
-        "ovr": 81,
-        "position": "CM"
-      },
-      {
         "name": "O. Kokcu",
         "ovr": 82,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "R. Sylva",
         "ovr": 82,
-        "position": "CM"
+        "position": "CB"
+      },
+      {
+        "name": "Kaan Özarık",
+        "ovr": 81,
+        "position": "CB"
       },
       {
         "name": "M. Gunok",
         "ovr": 78,
-        "position": "GK"
+        "position": "LB"
       },
       {
         "name": "J. Mario",
         "ovr": 78,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "V. Cerny",
         "ovr": 77,
-        "position": "RW"
+        "position": "CM"
       },
       {
         "name": "T. Abrah",
         "ovr": 77,
-        "position": "ST"
+        "position": "CM"
       },
       {
         "name": "G. Paulis",
         "ovr": 77,
-        "position": "CB"
+        "position": "CAM"
       },
       {
         "name": "M. Rashyc",
         "ovr": 76,
-        "position": "RW"
+        "position": "LW"
       },
       {
         "name": "W. Ndidy",
         "ovr": 76,
-        "position": "CM"
+        "position": "RW"
       },
       {
         "name": "C. Under",
         "ovr": 76,
-        "position": "RW"
+        "position": "ST"
       }
     ]
   },
@@ -1394,12 +1394,12 @@
       {
         "name": "P. Dyballa",
         "ovr": 86,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "A. Dovbykk",
         "ovr": 83,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "G. Mancinny",
@@ -1409,12 +1409,12 @@
       {
         "name": "E. Ndickah",
         "ovr": 81,
-        "position": "CB"
+        "position": "LB"
       },
       {
         "name": "L. Pellegrin",
         "ovr": 80,
-        "position": "CM"
+        "position": "RB"
       },
       {
         "name": "B. Cristant",
@@ -1424,17 +1424,17 @@
       {
         "name": "M. Hermosso",
         "ovr": 80,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "M. Koney",
         "ovr": 79,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "Angelinno",
         "ovr": 79,
-        "position": "LB"
+        "position": "LW"
       },
       {
         "name": "L. Baileyy",
@@ -1444,7 +1444,7 @@
       {
         "name": "M. Soulee",
         "ovr": 78,
-        "position": "CM"
+        "position": "ST"
       }
     ]
   },
@@ -1457,12 +1457,12 @@
       {
         "name": "E. Viska",
         "ovr": 78,
-        "position": "RW"
+        "position": "GK"
       },
       {
         "name": "O. Zubkov",
         "ovr": 78,
-        "position": "RW"
+        "position": "CB"
       },
       {
         "name": "S. Savic",
@@ -1472,42 +1472,42 @@
       {
         "name": "O. Yokush",
         "ovr": 76,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "E. Muchi",
         "ovr": 75,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "T. Naka",
         "ovr": 74,
-        "position": "LW"
+        "position": "CM"
       },
       {
         "name": "D. Sikan",
         "ovr": 74,
-        "position": "ST"
+        "position": "CM"
       },
       {
         "name": "P. Onu",
         "ovr": 74,
-        "position": "ST"
+        "position": "CAM"
       },
       {
         "name": "O. Tuffan",
         "ovr": 73,
-        "position": "CM"
+        "position": "LW"
       },
       {
         "name": "A. Batag",
         "ovr": 72,
-        "position": "CB"
+        "position": "RW"
       },
       {
         "name": "M. Eskihal",
         "ovr": 71,
-        "position": "LB"
+        "position": "ST"
       }
     ]
   },
@@ -1518,49 +1518,44 @@
     "avg": 78,
     "squad": [
       {
-        "name": "T. Wellen",
-        "ovr": 77,
+        "name": "D. Hanck",
+        "ovr": 82,
         "position": "GK"
       },
       {
-        "name": "D. Hanck",
-        "ovr": 82,
-        "position": "CB"
-      },
-      {
-        "name": "G. Traun",
-        "ovr": 78,
+        "name": "S. Gimene",
+        "ovr": 81,
         "position": "CB"
       },
       {
         "name": "Q. Timbe",
         "ovr": 80,
+        "position": "CB"
+      },
+      {
+        "name": "C. Steng",
+        "ovr": 79,
+        "position": "LB"
+      },
+      {
+        "name": "G. Traun",
+        "ovr": 78,
+        "position": "RB"
+      },
+      {
+        "name": "I. Paixa",
+        "ovr": 78,
+        "position": "CM"
+      },
+      {
+        "name": "T. Wellen",
+        "ovr": 77,
         "position": "CM"
       },
       {
         "name": "R. Zerrouk",
         "ovr": 77,
-        "position": "CM"
-      },
-      {
-        "name": "C. Steng",
-        "ovr": 79,
-        "position": "RW"
-      },
-      {
-        "name": "I. Paixa",
-        "ovr": 78,
-        "position": "LW"
-      },
-      {
-        "name": "S. Gimene",
-        "ovr": 81,
-        "position": "ST"
-      },
-      {
-        "name": "A. Ued",
-        "ovr": 76,
-        "position": "ST"
+        "position": "CAM"
       },
       {
         "name": "L. Ivanuse",
@@ -1568,9 +1563,14 @@
         "position": "LW"
       },
       {
+        "name": "A. Ued",
+        "ovr": 76,
+        "position": "RW"
+      },
+      {
         "name": "T. Beelen",
         "ovr": 76,
-        "position": "CB"
+        "position": "ST"
       }
     ]
   },
@@ -1581,9 +1581,14 @@
     "avg": 74,
     "squad": [
       {
+        "name": "J. Tav",
+        "ovr": 78,
+        "position": "GK"
+      },
+      {
         "name": "J. But",
         "ovr": 76,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "C. Gol",
@@ -1591,19 +1596,14 @@
         "position": "CB"
       },
       {
-        "name": "J. Sou",
-        "ovr": 73,
-        "position": "CB"
-      },
-      {
-        "name": "J. Tav",
-        "ovr": 78,
-        "position": "RB"
+        "name": "T. Can",
+        "ovr": 75,
+        "position": "LB"
       },
       {
         "name": "R. Yil",
         "ovr": 74,
-        "position": "LB"
+        "position": "RB"
       },
       {
         "name": "J. Lun",
@@ -1611,28 +1611,28 @@
         "position": "CM"
       },
       {
-        "name": "N. Ras",
-        "ovr": 73,
-        "position": "CM"
-      },
-      {
-        "name": "T. Can",
-        "ovr": 75,
-        "position": "CM"
-      },
-      {
-        "name": "A. Sim",
-        "ovr": 73,
-        "position": "ST"
-      },
-      {
         "name": "C. Des",
         "ovr": 74,
-        "position": "ST"
+        "position": "CM"
       },
       {
         "name": "F. Sil",
         "ovr": 74,
+        "position": "CAM"
+      },
+      {
+        "name": "J. Sou",
+        "ovr": 73,
+        "position": "LW"
+      },
+      {
+        "name": "N. Ras",
+        "ovr": 73,
+        "position": "RW"
+      },
+      {
+        "name": "A. Sim",
+        "ovr": 73,
         "position": "ST"
       }
     ]
@@ -1644,59 +1644,59 @@
     "avg": 73,
     "squad": [
       {
+        "name": "T. Lauritse",
+        "ovr": 76,
+        "position": "GK"
+      },
+      {
         "name": "N. Oli",
         "ovr": 75,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "A. Verschue",
         "ovr": 75,
-        "position": "CM"
-      },
-      {
-        "name": "T. Lauritse",
-        "ovr": 76,
-        "position": "ST"
+        "position": "CB"
       },
       {
         "name": "J. de Guzm",
         "ovr": 74,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "S. Miot",
         "ovr": 73,
-        "position": "RW"
-      },
-      {
-        "name": "C. Neghl",
-        "ovr": 72,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "M. Eerdhuijze",
         "ovr": 73,
-        "position": "CB"
+        "position": "CM"
+      },
+      {
+        "name": "C. Neghl",
+        "ovr": 72,
+        "position": "CM"
       },
       {
         "name": "S. Bakari",
         "ovr": 72,
-        "position": "RB"
-      },
-      {
-        "name": "D. van der Kus",
-        "ovr": 71,
-        "position": "LB"
-      },
-      {
-        "name": "P. Clement",
-        "ovr": 71,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "J. Kitolan",
         "ovr": 72,
-        "position": "CM"
+        "position": "LW"
+      },
+      {
+        "name": "D. van der Kus",
+        "ovr": 71,
+        "position": "RW"
+      },
+      {
+        "name": "P. Clement",
+        "ovr": 71,
+        "position": "ST"
       }
     ]
   },
@@ -1714,52 +1714,52 @@
       {
         "name": "C. Lopeze",
         "ovr": 72,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "D. Garcy",
         "ovr": 70,
-        "position": "GK"
+        "position": "CB"
       },
       {
         "name": "D. Rodrigz",
         "ovr": 69,
-        "position": "CB"
+        "position": "LB"
       },
       {
         "name": "L. Costas",
         "ovr": 68,
-        "position": "CB"
+        "position": "RB"
       },
       {
         "name": "C. Costas",
         "ovr": 67,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "D. Garcy",
         "ovr": 66,
-        "position": "CB"
+        "position": "CM"
       },
       {
         "name": "J. Costas",
         "ovr": 65,
-        "position": "RB"
+        "position": "CAM"
       },
       {
         "name": "P. Pereze",
         "ovr": 64,
-        "position": "RB"
+        "position": "LW"
       },
       {
         "name": "D. Garcy",
         "ovr": 63,
-        "position": "LB"
+        "position": "RW"
       },
       {
         "name": "D. Lopeze",
         "ovr": 62,
-        "position": "LB"
+        "position": "ST"
       }
     ]
   },
@@ -1770,58 +1770,58 @@
     "avg": 97,
     "squad": [
       {
-        "name": "L. Yashinov",
-        "ovr": 97,
+        "name": "R. Ronaldoy",
+        "ovr": 99,
         "position": "GK"
       },
       {
-        "name": "P. Maldiniy",
-        "ovr": 97,
+        "name": "Peley",
+        "ovr": 99,
         "position": "CB"
       },
       {
-        "name": "F. Barresiy",
-        "ovr": 96,
+        "name": "D. Maradonay",
+        "ovr": 99,
         "position": "CB"
-      },
-      {
-        "name": "R. Carlosy",
-        "ovr": 97,
-        "position": "LB"
-      },
-      {
-        "name": "Cafuy",
-        "ovr": 95,
-        "position": "RB"
       },
       {
         "name": "Z. Zidaney",
         "ovr": 98,
+        "position": "LB"
+      },
+      {
+        "name": "L. Yashinov",
+        "ovr": 97,
+        "position": "RB"
+      },
+      {
+        "name": "P. Maldiniy",
+        "ovr": 97,
+        "position": "CM"
+      },
+      {
+        "name": "R. Carlosy",
+        "ovr": 97,
         "position": "CM"
       },
       {
         "name": "J. Cruyffly",
         "ovr": 97,
-        "position": "CM"
+        "position": "CAM"
       },
       {
         "name": "Ronaldinhoy",
         "ovr": 97,
-        "position": "CAM"
-      },
-      {
-        "name": "R. Ronaldoy",
-        "ovr": 99,
         "position": "LW"
       },
       {
-        "name": "Peley",
-        "ovr": 99,
+        "name": "F. Barresiy",
+        "ovr": 96,
         "position": "RW"
       },
       {
-        "name": "D. Maradonay",
-        "ovr": 99,
+        "name": "Cafuy",
+        "ovr": 95,
         "position": "ST"
       }
     ]
@@ -1833,58 +1833,58 @@
     "avg": 86,
     "squad": [
       {
-        "name": "M. Ter Stegenov",
-        "ovr": 85,
-        "position": "GK"
-      },
-      {
-        "name": "R. Araujoy",
-        "ovr": 87,
-        "position": "CB"
-      },
-      {
         "name": "I. Martinezzy",
         "ovr": 88,
-        "position": "CB"
-      },
-      {
-        "name": "J. Baldy",
-        "ovr": 86,
-        "position": "LB"
+        "position": "GK"
       },
       {
         "name": "H. Belleryy",
         "ovr": 88,
-        "position": "RB"
-      },
-      {
-        "name": "P. Gavi",
-        "ovr": 84,
-        "position": "CM"
-      },
-      {
-        "name": "F. De Jongy",
-        "ovr": 85,
-        "position": "CM"
-      },
-      {
-        "name": "P. Pedry",
-        "ovr": 83,
-        "position": "CAM"
-      },
-      {
-        "name": "L. Yamal",
-        "ovr": 86,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "R. Lewandowy",
         "ovr": 88,
-        "position": "RW"
+        "position": "CB"
+      },
+      {
+        "name": "R. Araujoy",
+        "ovr": 87,
+        "position": "LB"
       },
       {
         "name": "D. Olmo",
         "ovr": 87,
+        "position": "RB"
+      },
+      {
+        "name": "J. Baldy",
+        "ovr": 86,
+        "position": "CM"
+      },
+      {
+        "name": "L. Yamal",
+        "ovr": 86,
+        "position": "CM"
+      },
+      {
+        "name": "M. Ter Stegenov",
+        "ovr": 85,
+        "position": "CAM"
+      },
+      {
+        "name": "F. De Jongy",
+        "ovr": 85,
+        "position": "LW"
+      },
+      {
+        "name": "P. Gavi",
+        "ovr": 84,
+        "position": "RW"
+      },
+      {
+        "name": "P. Pedry",
+        "ovr": 83,
         "position": "ST"
       }
     ]
@@ -1896,34 +1896,29 @@
     "avg": 81,
     "squad": [
       {
+        "name": "D. Kukusevsky",
+        "ovr": 83,
+        "position": "GK"
+      },
+      {
+        "name": "B. Johnsony",
+        "ovr": 83,
+        "position": "CB"
+      },
+      {
+        "name": "H. Soney",
+        "ovr": 83,
+        "position": "CB"
+      },
+      {
         "name": "G. Vicarioy",
         "ovr": 82,
-        "position": "GK"
+        "position": "LB"
       },
       {
         "name": "M. Buongiornoy",
         "ovr": 82,
-        "position": "CB"
-      },
-      {
-        "name": "C. Romero",
-        "ovr": 80,
-        "position": "CB"
-      },
-      {
-        "name": "P. Porro",
-        "ovr": 81,
-        "position": "LB"
-      },
-      {
-        "name": "D. Udogiy",
-        "ovr": 80,
         "position": "RB"
-      },
-      {
-        "name": "Y. Bissoumay",
-        "ovr": 78,
-        "position": "CM"
       },
       {
         "name": "J. Madisony",
@@ -1931,23 +1926,28 @@
         "position": "CM"
       },
       {
-        "name": "D. Kukusevsky",
-        "ovr": 83,
+        "name": "D. Richarlisony",
+        "ovr": 82,
+        "position": "CM"
+      },
+      {
+        "name": "P. Porro",
+        "ovr": 81,
         "position": "CAM"
       },
       {
-        "name": "B. Johnsony",
-        "ovr": 83,
+        "name": "C. Romero",
+        "ovr": 80,
         "position": "LW"
       },
       {
-        "name": "H. Soney",
-        "ovr": 83,
+        "name": "D. Udogiy",
+        "ovr": 80,
         "position": "RW"
       },
       {
-        "name": "D. Richarlisony",
-        "ovr": 82,
+        "name": "Y. Bissoumay",
+        "ovr": 78,
         "position": "ST"
       }
     ]
@@ -1964,23 +1964,23 @@
         "position": "GK"
       },
       {
+        "name": "J. Navas",
+        "ovr": 81,
+        "position": "CB"
+      },
+      {
+        "name": "I. Gomez",
+        "ovr": 80,
+        "position": "CB"
+      },
+      {
         "name": "L. Badey",
         "ovr": 79,
-        "position": "CB"
+        "position": "LB"
       },
       {
         "name": "L. Ocampsy",
         "ovr": 79,
-        "position": "CB"
-      },
-      {
-        "name": "A. Djibril",
-        "ovr": 76,
-        "position": "LB"
-      },
-      {
-        "name": "J. Navas",
-        "ovr": 81,
         "position": "RB"
       },
       {
@@ -1994,23 +1994,23 @@
         "position": "CM"
       },
       {
-        "name": "L. Acunya",
-        "ovr": 76,
+        "name": "A. Lukebakio",
+        "ovr": 77,
         "position": "CAM"
       },
       {
-        "name": "I. Gomez",
-        "ovr": 80,
+        "name": "A. Djibril",
+        "ovr": 76,
         "position": "LW"
       },
       {
-        "name": "B. Yildiz",
+        "name": "L. Acunya",
         "ovr": 76,
         "position": "RW"
       },
       {
-        "name": "A. Lukebakio",
-        "ovr": 77,
+        "name": "B. Yildiz",
+        "ovr": 76,
         "position": "ST"
       }
     ]
@@ -2022,43 +2022,43 @@
     "avg": 78,
     "squad": [
       {
-        "name": "F. Trippiery",
-        "ovr": 79,
+        "name": "A. Parejo",
+        "ovr": 80,
         "position": "GK"
       },
       {
-        "name": "A. Parejo",
+        "name": "D. Brequety",
         "ovr": 80,
         "position": "CB"
       },
       {
-        "name": "M. Triguerosy",
-        "ovr": 78,
+        "name": "F. Trippiery",
+        "ovr": 79,
         "position": "CB"
-      },
-      {
-        "name": "S. Coqueliny",
-        "ovr": 78,
-        "position": "LB"
-      },
-      {
-        "name": "J. Capo",
-        "ovr": 75,
-        "position": "RB"
-      },
-      {
-        "name": "A. Baenay",
-        "ovr": 77,
-        "position": "CM"
       },
       {
         "name": "J. Pedraza",
         "ovr": 79,
+        "position": "LB"
+      },
+      {
+        "name": "G. Moreno",
+        "ovr": 79,
+        "position": "RB"
+      },
+      {
+        "name": "M. Triguerosy",
+        "ovr": 78,
         "position": "CM"
       },
       {
-        "name": "N. Jacksonn",
-        "ovr": 76,
+        "name": "S. Coqueliny",
+        "ovr": 78,
+        "position": "CM"
+      },
+      {
+        "name": "A. Baenay",
+        "ovr": 77,
         "position": "CAM"
       },
       {
@@ -2067,13 +2067,13 @@
         "position": "LW"
       },
       {
-        "name": "G. Moreno",
-        "ovr": 79,
+        "name": "N. Jacksonn",
+        "ovr": 76,
         "position": "RW"
       },
       {
-        "name": "D. Brequety",
-        "ovr": 80,
+        "name": "J. Capo",
+        "ovr": 75,
         "position": "ST"
       }
     ]
@@ -2085,58 +2085,58 @@
     "avg": 78,
     "squad": [
       {
-        "name": "M. Flaherty",
-        "ovr": 76,
-        "position": "GK"
-      },
-      {
-        "name": "K. Schmeichely",
-        "ovr": 78,
-        "position": "CB"
-      },
-      {
-        "name": "J. Faesy",
-        "ovr": 77,
-        "position": "CB"
-      },
-      {
-        "name": "W. Faesy",
-        "ovr": 79,
-        "position": "LB"
-      },
-      {
-        "name": "R. Freulerr",
-        "ovr": 75,
-        "position": "RB"
-      },
-      {
         "name": "Y. Winks",
         "ovr": 80,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "J. Sterney",
         "ovr": 80,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "O. Daka",
         "ovr": 80,
-        "position": "CAM"
-      },
-      {
-        "name": "S. Fatawu",
-        "ovr": 76,
-        "position": "LW"
-      },
-      {
-        "name": "K. Iheanacho",
-        "ovr": 78,
-        "position": "RW"
+        "position": "CB"
       },
       {
         "name": "J. Vardy",
         "ovr": 80,
+        "position": "LB"
+      },
+      {
+        "name": "W. Faesy",
+        "ovr": 79,
+        "position": "RB"
+      },
+      {
+        "name": "K. Schmeichely",
+        "ovr": 78,
+        "position": "CM"
+      },
+      {
+        "name": "K. Iheanacho",
+        "ovr": 78,
+        "position": "CM"
+      },
+      {
+        "name": "J. Faesy",
+        "ovr": 77,
+        "position": "CAM"
+      },
+      {
+        "name": "M. Flaherty",
+        "ovr": 76,
+        "position": "LW"
+      },
+      {
+        "name": "S. Fatawu",
+        "ovr": 76,
+        "position": "RW"
+      },
+      {
+        "name": "R. Freulerr",
+        "ovr": 75,
         "position": "ST"
       }
     ]
@@ -2148,28 +2148,28 @@
     "avg": 77,
     "squad": [
       {
-        "name": "N. Popey",
-        "ovr": 76,
+        "name": "K. Trippieery",
+        "ovr": 79,
         "position": "GK"
       },
       {
-        "name": "F. Schar",
-        "ovr": 76,
-        "position": "CB"
-      },
-      {
-        "name": "S. Danksy",
-        "ovr": 74,
+        "name": "A. Isaky",
+        "ovr": 79,
         "position": "CB"
       },
       {
         "name": "D. Guehiy",
         "ovr": 78,
+        "position": "CB"
+      },
+      {
+        "name": "J. Willocky",
+        "ovr": 78,
         "position": "LB"
       },
       {
-        "name": "K. Trippieery",
-        "ovr": 79,
+        "name": "C. Wilsony",
+        "ovr": 78,
         "position": "RB"
       },
       {
@@ -2178,13 +2178,13 @@
         "position": "CM"
       },
       {
-        "name": "S. Longstaffly",
-        "ovr": 74,
+        "name": "N. Popey",
+        "ovr": 76,
         "position": "CM"
       },
       {
-        "name": "J. Willocky",
-        "ovr": 78,
+        "name": "F. Schar",
+        "ovr": 76,
         "position": "CAM"
       },
       {
@@ -2193,13 +2193,13 @@
         "position": "LW"
       },
       {
-        "name": "A. Isaky",
-        "ovr": 79,
+        "name": "S. Danksy",
+        "ovr": 74,
         "position": "RW"
       },
       {
-        "name": "C. Wilsony",
-        "ovr": 78,
+        "name": "S. Longstaffly",
+        "ovr": 74,
         "position": "ST"
       }
     ]
@@ -2211,58 +2211,58 @@
     "avg": 76,
     "squad": [
       {
-        "name": "J. Harty",
-        "ovr": 77,
+        "name": "L. Palmy",
+        "ovr": 78,
         "position": "GK"
       },
       {
-        "name": "K. Haksabanovicy",
-        "ovr": 75,
+        "name": "J. Harty",
+        "ovr": 77,
         "position": "CB"
-      },
-      {
-        "name": "C. Starfelt",
-        "ovr": 74,
-        "position": "CB"
-      },
-      {
-        "name": "L. Palmy",
-        "ovr": 78,
-        "position": "LB"
-      },
-      {
-        "name": "G. Taylor",
-        "ovr": 75,
-        "position": "RB"
-      },
-      {
-        "name": "O. Kowalczyk",
-        "ovr": 76,
-        "position": "CM"
       },
       {
         "name": "C. McGregor",
         "ovr": 77,
-        "position": "CM"
-      },
-      {
-        "name": "A. Bernabei",
-        "ovr": 73,
-        "position": "CAM"
-      },
-      {
-        "name": "L. Idah",
-        "ovr": 73,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "K. Furuhashi",
         "ovr": 77,
-        "position": "RW"
+        "position": "LB"
+      },
+      {
+        "name": "O. Kowalczyk",
+        "ovr": 76,
+        "position": "RB"
       },
       {
         "name": "A. Engjell",
         "ovr": 76,
+        "position": "CM"
+      },
+      {
+        "name": "K. Haksabanovicy",
+        "ovr": 75,
+        "position": "CM"
+      },
+      {
+        "name": "G. Taylor",
+        "ovr": 75,
+        "position": "CAM"
+      },
+      {
+        "name": "C. Starfelt",
+        "ovr": 74,
+        "position": "LW"
+      },
+      {
+        "name": "A. Bernabei",
+        "ovr": 73,
+        "position": "RW"
+      },
+      {
+        "name": "L. Idah",
+        "ovr": 73,
         "position": "ST"
       }
     ]
@@ -2274,23 +2274,23 @@
     "avg": 74,
     "squad": [
       {
-        "name": "R. Fraisl",
-        "ovr": 73,
+        "name": "S. Matriciany",
+        "ovr": 76,
         "position": "GK"
       },
       {
-        "name": "S. Matriciany",
+        "name": "R. Lode",
         "ovr": 76,
+        "position": "CB"
+      },
+      {
+        "name": "T. Drexler",
+        "ovr": 75,
         "position": "CB"
       },
       {
         "name": "M. Pieringer",
         "ovr": 74,
-        "position": "CB"
-      },
-      {
-        "name": "R. Lode",
-        "ovr": 76,
         "position": "LB"
       },
       {
@@ -2304,13 +2304,13 @@
         "position": "CM"
       },
       {
-        "name": "T. Drexler",
-        "ovr": 75,
+        "name": "C. Terodde",
+        "ovr": 74,
         "position": "CM"
       },
       {
-        "name": "C. Terodde",
-        "ovr": 74,
+        "name": "R. Fraisl",
+        "ovr": 73,
         "position": "CAM"
       },
       {
@@ -2337,38 +2337,38 @@
     "avg": 73,
     "squad": [
       {
-        "name": "J. Trafford",
-        "ovr": 71,
-        "position": "GK"
-      },
-      {
-        "name": "C. Taylor",
-        "ovr": 71,
-        "position": "CB"
-      },
-      {
         "name": "D. Harwood",
         "ovr": 75,
-        "position": "CB"
-      },
-      {
-        "name": "J. Brownhill",
-        "ovr": 70,
-        "position": "LB"
-      },
-      {
-        "name": "J. Benson",
-        "ovr": 73,
-        "position": "RB"
-      },
-      {
-        "name": "A. Barnes",
-        "ovr": 70,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "S. Fleck",
         "ovr": 75,
+        "position": "CB"
+      },
+      {
+        "name": "J. Gudmundssony",
+        "ovr": 74,
+        "position": "CB"
+      },
+      {
+        "name": "J. Benson",
+        "ovr": 73,
+        "position": "LB"
+      },
+      {
+        "name": "N. Vota",
+        "ovr": 72,
+        "position": "RB"
+      },
+      {
+        "name": "J. Trafford",
+        "ovr": 71,
+        "position": "CM"
+      },
+      {
+        "name": "C. Taylor",
+        "ovr": 71,
         "position": "CM"
       },
       {
@@ -2377,18 +2377,18 @@
         "position": "CAM"
       },
       {
-        "name": "J. Gudmundssony",
-        "ovr": 74,
+        "name": "M. Treacy",
+        "ovr": 71,
         "position": "LW"
       },
       {
-        "name": "M. Treacy",
-        "ovr": 71,
+        "name": "J. Brownhill",
+        "ovr": 70,
         "position": "RW"
       },
       {
-        "name": "N. Vota",
-        "ovr": 72,
+        "name": "A. Barnes",
+        "ovr": 70,
         "position": "ST"
       }
     ]
@@ -2400,8 +2400,8 @@
     "avg": 72,
     "squad": [
       {
-        "name": "D. Fletchery",
-        "ovr": 69,
+        "name": "E. Capoue",
+        "ovr": 73,
         "position": "GK"
       },
       {
@@ -2410,18 +2410,18 @@
         "position": "CB"
       },
       {
-        "name": "F. Oulare",
-        "ovr": 69,
+        "name": "H. Hughes",
+        "ovr": 72,
         "position": "CB"
+      },
+      {
+        "name": "I. Sarr",
+        "ovr": 72,
+        "position": "LB"
       },
       {
         "name": "K. Troost-Ekong",
         "ovr": 71,
-        "position": "LB"
-      },
-      {
-        "name": "D. Pussetto",
-        "ovr": 70,
         "position": "RB"
       },
       {
@@ -2430,28 +2430,28 @@
         "position": "CM"
       },
       {
-        "name": "H. Hughes",
-        "ovr": 72,
-        "position": "CM"
-      },
-      {
-        "name": "E. Capoue",
-        "ovr": 73,
-        "position": "CAM"
-      },
-      {
-        "name": "I. Sarr",
-        "ovr": 72,
-        "position": "LW"
-      },
-      {
         "name": "T. Dele-Bashiru",
         "ovr": 71,
-        "position": "RW"
+        "position": "CM"
       },
       {
         "name": "J. Pedro",
         "ovr": 71,
+        "position": "CAM"
+      },
+      {
+        "name": "D. Pussetto",
+        "ovr": 70,
+        "position": "LW"
+      },
+      {
+        "name": "D. Fletchery",
+        "ovr": 69,
+        "position": "RW"
+      },
+      {
+        "name": "F. Oulare",
+        "ovr": 69,
         "position": "ST"
       }
     ]
@@ -2463,58 +2463,58 @@
     "avg": 71,
     "squad": [
       {
-        "name": "H. Yamamoty",
-        "ovr": 71,
-        "position": "GK"
-      },
-      {
-        "name": "T. Nagatomy",
-        "ovr": 71,
-        "position": "CB"
-      },
-      {
-        "name": "K. Yoshidey",
-        "ovr": 72,
-        "position": "CB"
-      },
-      {
-        "name": "M. Tanakay",
-        "ovr": 70,
-        "position": "LB"
-      },
-      {
-        "name": "D. Ito",
-        "ovr": 71,
-        "position": "RB"
-      },
-      {
         "name": "R. Doaney",
         "ovr": 73,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "W. Endoy",
         "ovr": 73,
-        "position": "CM"
-      },
-      {
-        "name": "D. Kamada",
-        "ovr": 70,
-        "position": "CAM"
+        "position": "CB"
       },
       {
         "name": "T. Minaminey",
         "ovr": 73,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "S. Itoey",
         "ovr": 73,
-        "position": "RW"
+        "position": "LB"
       },
       {
         "name": "A. Ueda",
         "ovr": 73,
+        "position": "RB"
+      },
+      {
+        "name": "K. Yoshidey",
+        "ovr": 72,
+        "position": "CM"
+      },
+      {
+        "name": "H. Yamamoty",
+        "ovr": 71,
+        "position": "CM"
+      },
+      {
+        "name": "T. Nagatomy",
+        "ovr": 71,
+        "position": "CAM"
+      },
+      {
+        "name": "D. Ito",
+        "ovr": 71,
+        "position": "LW"
+      },
+      {
+        "name": "M. Tanakay",
+        "ovr": 70,
+        "position": "RW"
+      },
+      {
+        "name": "D. Kamada",
+        "ovr": 70,
         "position": "ST"
       }
     ]
@@ -2526,18 +2526,18 @@
     "avg": 70,
     "squad": [
       {
-        "name": "M. Bolany",
-        "ovr": 67,
+        "name": "J. Fitzgerald",
+        "ovr": 72,
         "position": "GK"
       },
       {
-        "name": "N. Atkinson",
-        "ovr": 69,
+        "name": "C. Barbarouses",
+        "ovr": 72,
         "position": "CB"
       },
       {
-        "name": "S. Tonge",
-        "ovr": 67,
+        "name": "I. Ninkovicy",
+        "ovr": 71,
         "position": "CB"
       },
       {
@@ -2546,8 +2546,8 @@
         "position": "LB"
       },
       {
-        "name": "J. Fitzgerald",
-        "ovr": 72,
+        "name": "N. Atkinson",
+        "ovr": 69,
         "position": "RB"
       },
       {
@@ -2561,23 +2561,23 @@
         "position": "CM"
       },
       {
-        "name": "I. Ninkovicy",
-        "ovr": 71,
-        "position": "CAM"
-      },
-      {
-        "name": "C. Barbarouses",
-        "ovr": 72,
-        "position": "LW"
-      },
-      {
         "name": "B. Pattony",
         "ovr": 68,
-        "position": "RW"
+        "position": "CAM"
       },
       {
         "name": "C. Devlin",
         "ovr": 68,
+        "position": "LW"
+      },
+      {
+        "name": "M. Bolany",
+        "ovr": 67,
+        "position": "RW"
+      },
+      {
+        "name": "S. Tonge",
+        "ovr": 67,
         "position": "ST"
       }
     ]
@@ -2589,58 +2589,58 @@
     "avg": 69,
     "squad": [
       {
-        "name": "N. Rourkey",
-        "ovr": 68,
-        "position": "GK"
-      },
-      {
         "name": "K. Almanzar",
         "ovr": 71,
-        "position": "CB"
-      },
-      {
-        "name": "A. Cerillo",
-        "ovr": 66,
-        "position": "CB"
-      },
-      {
-        "name": "C. McVey",
-        "ovr": 67,
-        "position": "LB"
+        "position": "GK"
       },
       {
         "name": "L. Campana",
         "ovr": 71,
-        "position": "RB"
+        "position": "CB"
       },
       {
         "name": "A. Pozuelo",
         "ovr": 71,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "L. Gregus",
         "ovr": 71,
-        "position": "CM"
-      },
-      {
-        "name": "E. Sweat",
-        "ovr": 67,
-        "position": "CAM"
+        "position": "LB"
       },
       {
         "name": "D. Lasso",
         "ovr": 71,
-        "position": "LW"
+        "position": "RB"
       },
       {
-        "name": "J. Morales",
-        "ovr": 66,
-        "position": "RW"
+        "name": "N. Rourkey",
+        "ovr": 68,
+        "position": "CM"
       },
       {
         "name": "G. Torres",
         "ovr": 68,
+        "position": "CM"
+      },
+      {
+        "name": "C. McVey",
+        "ovr": 67,
+        "position": "CAM"
+      },
+      {
+        "name": "E. Sweat",
+        "ovr": 67,
+        "position": "LW"
+      },
+      {
+        "name": "A. Cerillo",
+        "ovr": 66,
+        "position": "RW"
+      },
+      {
+        "name": "J. Morales",
+        "ovr": 66,
         "position": "ST"
       }
     ]
@@ -2652,58 +2652,58 @@
     "avg": 68,
     "squad": [
       {
-        "name": "A. Bayrakliy",
-        "ovr": 65,
+        "name": "M. Kaya",
+        "ovr": 70,
         "position": "GK"
       },
       {
-        "name": "M. Yilmaz",
-        "ovr": 65,
-        "position": "CB"
-      },
-      {
-        "name": "C. Akay",
-        "ovr": 65,
+        "name": "B. Yalin",
+        "ovr": 70,
         "position": "CB"
       },
       {
         "name": "B. Demirel",
         "ovr": 69,
-        "position": "LB"
-      },
-      {
-        "name": "K. Ozkan",
-        "ovr": 68,
-        "position": "RB"
-      },
-      {
-        "name": "H. Sahin",
-        "ovr": 67,
-        "position": "CM"
-      },
-      {
-        "name": "M. Kaya",
-        "ovr": 70,
-        "position": "CM"
+        "position": "CB"
       },
       {
         "name": "E. Bulut",
         "ovr": 69,
-        "position": "CAM"
+        "position": "LB"
       },
       {
         "name": "T. Gulbaz",
         "ovr": 69,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "O. Turan",
         "ovr": 69,
+        "position": "CM"
+      },
+      {
+        "name": "K. Ozkan",
+        "ovr": 68,
+        "position": "CM"
+      },
+      {
+        "name": "H. Sahin",
+        "ovr": 67,
+        "position": "CAM"
+      },
+      {
+        "name": "A. Bayrakliy",
+        "ovr": 65,
+        "position": "LW"
+      },
+      {
+        "name": "M. Yilmaz",
+        "ovr": 65,
         "position": "RW"
       },
       {
-        "name": "B. Yalin",
-        "ovr": 70,
+        "name": "C. Akay",
+        "ovr": 65,
         "position": "ST"
       }
     ]
@@ -2715,23 +2715,23 @@
     "avg": 67,
     "squad": [
       {
-        "name": "B. Otieno",
-        "ovr": 68,
+        "name": "D. Onyango",
+        "ovr": 69,
         "position": "GK"
       },
       {
-        "name": "D. Onyango",
+        "name": "J. Odhiambo",
         "ovr": 69,
         "position": "CB"
       },
       {
-        "name": "P. Onyangoo",
-        "ovr": 64,
+        "name": "B. Otieno",
+        "ovr": 68,
         "position": "CB"
       },
       {
-        "name": "J. Mbuthia",
-        "ovr": 65,
+        "name": "B. Mwenda",
+        "ovr": 68,
         "position": "LB"
       },
       {
@@ -2745,28 +2745,28 @@
         "position": "CM"
       },
       {
-        "name": "B. Mwenda",
-        "ovr": 68,
-        "position": "CM"
-      },
-      {
         "name": "C. Ouma",
         "ovr": 67,
-        "position": "CAM"
-      },
-      {
-        "name": "J. Odhiambo",
-        "ovr": 69,
-        "position": "LW"
+        "position": "CM"
       },
       {
         "name": "D. Waweru",
         "ovr": 67,
-        "position": "RW"
+        "position": "CAM"
       },
       {
         "name": "M. Nyambura",
         "ovr": 66,
+        "position": "LW"
+      },
+      {
+        "name": "J. Mbuthia",
+        "ovr": 65,
+        "position": "RW"
+      },
+      {
+        "name": "P. Onyangoo",
+        "ovr": 64,
         "position": "ST"
       }
     ]
@@ -2778,28 +2778,28 @@
     "avg": 66,
     "squad": [
       {
-        "name": "Y. Bounouy",
-        "ovr": 65,
-        "position": "GK"
-      },
-      {
-        "name": "A. Benchaaboun",
-        "ovr": 65,
-        "position": "CB"
-      },
-      {
         "name": "N. Benrhozil",
         "ovr": 68,
-        "position": "CB"
+        "position": "GK"
       },
       {
         "name": "H. Ziyechy",
         "ovr": 68,
+        "position": "CB"
+      },
+      {
+        "name": "S. Amrabat",
+        "ovr": 68,
+        "position": "CB"
+      },
+      {
+        "name": "E. En-Nesyri",
+        "ovr": 68,
         "position": "LB"
       },
       {
-        "name": "A. El Yamiq",
-        "ovr": 65,
+        "name": "B. Youssefy",
+        "ovr": 67,
         "position": "RB"
       },
       {
@@ -2808,28 +2808,28 @@
         "position": "CM"
       },
       {
-        "name": "Y. Sabiri",
+        "name": "Y. Bounouy",
         "ovr": 65,
         "position": "CM"
       },
       {
-        "name": "A. Ounahi",
+        "name": "A. Benchaaboun",
         "ovr": 65,
         "position": "CAM"
       },
       {
-        "name": "S. Amrabat",
-        "ovr": 68,
+        "name": "A. El Yamiq",
+        "ovr": 65,
         "position": "LW"
       },
       {
-        "name": "E. En-Nesyri",
-        "ovr": 68,
+        "name": "Y. Sabiri",
+        "ovr": 65,
         "position": "RW"
       },
       {
-        "name": "B. Youssefy",
-        "ovr": 67,
+        "name": "A. Ounahi",
+        "ovr": 65,
         "position": "ST"
       }
     ]
@@ -2841,58 +2841,58 @@
     "avg": 65,
     "squad": [
       {
-        "name": "E. Kambuya",
-        "ovr": 66,
+        "name": "M. Rais",
+        "ovr": 67,
         "position": "GK"
       },
       {
-        "name": "B. Pratama",
-        "ovr": 64,
+        "name": "E. Kambuya",
+        "ovr": 66,
         "position": "CB"
-      },
-      {
-        "name": "M. Rais",
-        "ovr": 67,
-        "position": "CB"
-      },
-      {
-        "name": "R. Nugroho",
-        "ovr": 64,
-        "position": "LB"
-      },
-      {
-        "name": "A. Sanjaya",
-        "ovr": 62,
-        "position": "RB"
       },
       {
         "name": "M. Rizky",
         "ovr": 66,
+        "position": "CB"
+      },
+      {
+        "name": "R. Hidayat",
+        "ovr": 66,
+        "position": "LB"
+      },
+      {
+        "name": "A. Putra",
+        "ovr": 65,
+        "position": "RB"
+      },
+      {
+        "name": "B. Pratama",
+        "ovr": 64,
+        "position": "CM"
+      },
+      {
+        "name": "R. Nugroho",
+        "ovr": 64,
         "position": "CM"
       },
       {
         "name": "F. Ramadhan",
         "ovr": 63,
-        "position": "CM"
-      },
-      {
-        "name": "B. Hendra",
-        "ovr": 62,
         "position": "CAM"
       },
       {
-        "name": "I. Santoso",
+        "name": "A. Sanjaya",
         "ovr": 62,
         "position": "LW"
       },
       {
-        "name": "R. Hidayat",
-        "ovr": 66,
+        "name": "B. Hendra",
+        "ovr": 62,
         "position": "RW"
       },
       {
-        "name": "A. Putra",
-        "ovr": 65,
+        "name": "I. Santoso",
+        "ovr": 62,
         "position": "ST"
       }
     ]
@@ -2924,9 +2924,14 @@
         "position": "LB"
       },
       {
-        "name": "E. Lamptey",
-        "ovr": 62,
+        "name": "J. Andrae",
+        "ovr": 66,
         "position": "RB"
+      },
+      {
+        "name": "A. Fatawu",
+        "ovr": 65,
+        "position": "CM"
       },
       {
         "name": "T. Partey",
@@ -2936,26 +2941,21 @@
       {
         "name": "M. Kudus",
         "ovr": 64,
-        "position": "CM"
-      },
-      {
-        "name": "J. Ayew",
-        "ovr": 62,
         "position": "CAM"
-      },
-      {
-        "name": "J. Andrae",
-        "ovr": 66,
-        "position": "LW"
       },
       {
         "name": "I. Sulemana",
         "ovr": 64,
+        "position": "LW"
+      },
+      {
+        "name": "E. Lamptey",
+        "ovr": 62,
         "position": "RW"
       },
       {
-        "name": "A. Fatawu",
-        "ovr": 65,
+        "name": "J. Ayew",
+        "ovr": 62,
         "position": "ST"
       }
     ]
@@ -2967,58 +2967,58 @@
     "avg": 63,
     "squad": [
       {
-        "name": "P. Gallese",
-        "ovr": 60,
-        "position": "GK"
-      },
-      {
-        "name": "C. Zambrano",
-        "ovr": 64,
-        "position": "CB"
-      },
-      {
-        "name": "A. Callens",
-        "ovr": 63,
-        "position": "CB"
-      },
-      {
-        "name": "M. Trauco",
-        "ovr": 60,
-        "position": "LB"
-      },
-      {
-        "name": "L. Advincula",
-        "ovr": 63,
-        "position": "RB"
-      },
-      {
-        "name": "R. Tapia",
-        "ovr": 61,
-        "position": "CM"
-      },
-      {
         "name": "A. Lapadula",
         "ovr": 65,
-        "position": "CM"
+        "position": "GK"
       },
       {
         "name": "E. Flores",
         "ovr": 65,
-        "position": "CAM"
-      },
-      {
-        "name": "Y. Cueva",
-        "ovr": 63,
-        "position": "LW"
+        "position": "CB"
       },
       {
         "name": "J. Carrillo",
         "ovr": 65,
-        "position": "RW"
+        "position": "CB"
+      },
+      {
+        "name": "C. Zambrano",
+        "ovr": 64,
+        "position": "LB"
       },
       {
         "name": "G. Guerrero",
         "ovr": 64,
+        "position": "RB"
+      },
+      {
+        "name": "A. Callens",
+        "ovr": 63,
+        "position": "CM"
+      },
+      {
+        "name": "L. Advincula",
+        "ovr": 63,
+        "position": "CM"
+      },
+      {
+        "name": "Y. Cueva",
+        "ovr": 63,
+        "position": "CAM"
+      },
+      {
+        "name": "R. Tapia",
+        "ovr": 61,
+        "position": "LW"
+      },
+      {
+        "name": "P. Gallese",
+        "ovr": 60,
+        "position": "RW"
+      },
+      {
+        "name": "M. Trauco",
+        "ovr": 60,
         "position": "ST"
       }
     ]
@@ -3030,13 +3030,13 @@
     "avg": 62,
     "squad": [
       {
-        "name": "P. Iliev",
-        "ovr": 63,
+        "name": "D. Yankov",
+        "ovr": 64,
         "position": "GK"
       },
       {
-        "name": "S. Popov",
-        "ovr": 60,
+        "name": "P. Iliev",
+        "ovr": 63,
         "position": "CB"
       },
       {
@@ -3045,43 +3045,43 @@
         "position": "CB"
       },
       {
-        "name": "D. Yankov",
-        "ovr": 64,
-        "position": "LB"
-      },
-      {
         "name": "A. Tsvetanov",
         "ovr": 63,
-        "position": "RB"
-      },
-      {
-        "name": "G. Sarmov",
-        "ovr": 60,
-        "position": "CM"
+        "position": "LB"
       },
       {
         "name": "N. Mihailov",
         "ovr": 63,
-        "position": "CM"
-      },
-      {
-        "name": "K. Despodov",
-        "ovr": 60,
-        "position": "CAM"
-      },
-      {
-        "name": "I. Gadjev",
-        "ovr": 59,
-        "position": "LW"
+        "position": "RB"
       },
       {
         "name": "E. Chochev",
         "ovr": 62,
-        "position": "RW"
+        "position": "CM"
       },
       {
         "name": "G. Minchev",
         "ovr": 61,
+        "position": "CM"
+      },
+      {
+        "name": "S. Popov",
+        "ovr": 60,
+        "position": "CAM"
+      },
+      {
+        "name": "G. Sarmov",
+        "ovr": 60,
+        "position": "LW"
+      },
+      {
+        "name": "K. Despodov",
+        "ovr": 60,
+        "position": "RW"
+      },
+      {
+        "name": "I. Gadjev",
+        "ovr": 59,
         "position": "ST"
       }
     ]
@@ -3093,9 +3093,14 @@
     "avg": 61,
     "squad": [
       {
-        "name": "C. Mazoua",
-        "ovr": 58,
+        "name": "L. Mofan",
+        "ovr": 63,
         "position": "GK"
+      },
+      {
+        "name": "D. Bangao",
+        "ovr": 63,
+        "position": "CB"
       },
       {
         "name": "F. Ngaissona",
@@ -3103,48 +3108,43 @@
         "position": "CB"
       },
       {
-        "name": "L. Mofan",
-        "ovr": 63,
-        "position": "CB"
-      },
-      {
-        "name": "D. Bangao",
-        "ovr": 63,
-        "position": "LB"
-      },
-      {
-        "name": "P. Foua",
-        "ovr": 59,
-        "position": "RB"
-      },
-      {
-        "name": "J. Mamba",
-        "ovr": 59,
-        "position": "CM"
-      },
-      {
         "name": "R. Bongo",
         "ovr": 61,
-        "position": "CM"
-      },
-      {
-        "name": "A. Sakouvou",
-        "ovr": 59,
-        "position": "CAM"
+        "position": "LB"
       },
       {
         "name": "I. Balo",
         "ovr": 61,
-        "position": "LW"
-      },
-      {
-        "name": "M. Kouta",
-        "ovr": 58,
-        "position": "RW"
+        "position": "RB"
       },
       {
         "name": "E. Singo",
         "ovr": 61,
+        "position": "CM"
+      },
+      {
+        "name": "P. Foua",
+        "ovr": 59,
+        "position": "CM"
+      },
+      {
+        "name": "J. Mamba",
+        "ovr": 59,
+        "position": "CAM"
+      },
+      {
+        "name": "A. Sakouvou",
+        "ovr": 59,
+        "position": "LW"
+      },
+      {
+        "name": "C. Mazoua",
+        "ovr": 58,
+        "position": "RW"
+      },
+      {
+        "name": "M. Kouta",
+        "ovr": 58,
         "position": "ST"
       }
     ]
@@ -3156,19 +3156,19 @@
     "avg": 82,
     "squad": [
       {
-        "name": "P.Gulacsi",
+        "name": "K.Kampl",
         "position": "GK",
+        "ovr": 85
+      },
+      {
+        "name": "K.Simons",
+        "position": "CB",
+        "ovr": 85
+      },
+      {
+        "name": "P.Gulacsi",
+        "position": "CB",
         "ovr": 83
-      },
-      {
-        "name": "W.Orban",
-        "position": "CB",
-        "ovr": 82
-      },
-      {
-        "name": "A.Simakan",
-        "position": "CB",
-        "ovr": 78
       },
       {
         "name": "B.Henrichs",
@@ -3176,39 +3176,39 @@
         "ovr": 83
       },
       {
-        "name": "D.Raum",
+        "name": "W.Orban",
         "position": "RB",
-        "ovr": 79
-      },
-      {
-        "name": "K.Kampl",
-        "position": "CM",
-        "ovr": 85
-      },
-      {
-        "name": "X.Schlager",
-        "position": "CM",
-        "ovr": 80
-      },
-      {
-        "name": "K.Simons",
-        "position": "CAM",
-        "ovr": 85
+        "ovr": 82
       },
       {
         "name": "C.Nkunku",
-        "position": "LW",
+        "position": "CM",
         "ovr": 82
       },
       {
         "name": "L.Openda",
-        "position": "RW",
+        "position": "CM",
         "ovr": 81
       },
       {
-        "name": "B.Sesko",
-        "position": "ST",
+        "name": "X.Schlager",
+        "position": "CAM",
+        "ovr": 80
+      },
+      {
+        "name": "D.Raum",
+        "position": "LW",
         "ovr": 79
+      },
+      {
+        "name": "B.Sesko",
+        "position": "RW",
+        "ovr": 79
+      },
+      {
+        "name": "A.Simakan",
+        "position": "ST",
+        "ovr": 78
       }
     ]
   },
@@ -3219,28 +3219,33 @@
     "avg": 81,
     "squad": [
       {
-        "name": "A.Remiro",
+        "name": "D.Vivian",
         "position": "GK",
-        "ovr": 77
+        "ovr": 84
       },
       {
-        "name": "D.Vivian",
+        "name": "M.Oyarzabal",
         "position": "CB",
         "ovr": 84
       },
       {
-        "name": "M.Zubeldia",
+        "name": "A.Elustondo",
         "position": "CB",
-        "ovr": 82
+        "ovr": 83
       },
       {
-        "name": "A.Elustondo",
+        "name": "M.Merino",
         "position": "LB",
         "ovr": 83
       },
       {
-        "name": "J.Aramburu",
+        "name": "M.Zubeldia",
         "position": "RB",
+        "ovr": 82
+      },
+      {
+        "name": "J.Aramburu",
+        "position": "CM",
         "ovr": 82
       },
       {
@@ -3249,29 +3254,24 @@
         "ovr": 82
       },
       {
-        "name": "M.Merino",
-        "position": "CM",
-        "ovr": 83
+        "name": "I.Sadiq",
+        "position": "CAM",
+        "ovr": 82
       },
       {
         "name": "D.Silva",
-        "position": "CAM",
+        "position": "LW",
         "ovr": 79
       },
       {
         "name": "T.Kubo",
-        "position": "LW",
+        "position": "RW",
         "ovr": 78
       },
       {
-        "name": "M.Oyarzabal",
-        "position": "RW",
-        "ovr": 84
-      },
-      {
-        "name": "I.Sadiq",
+        "name": "A.Remiro",
         "position": "ST",
-        "ovr": 82
+        "ovr": 77
       }
     ]
   },
@@ -3282,9 +3282,14 @@
     "avg": 80,
     "squad": [
       {
-        "name": "D.Costa",
+        "name": "J.Mario",
         "position": "GK",
-        "ovr": 76
+        "ovr": 82
+      },
+      {
+        "name": "A.Grujic",
+        "position": "CB",
+        "ovr": 82
       },
       {
         "name": "N.Marcano",
@@ -3292,49 +3297,44 @@
         "ovr": 81
       },
       {
-        "name": "P.Anderson",
-        "position": "CB",
-        "ovr": 78
-      },
-      {
         "name": "Z.Tiago",
         "position": "LB",
         "ovr": 81
       },
       {
-        "name": "J.Mario",
-        "position": "RB",
-        "ovr": 82
-      },
-      {
-        "name": "S.Uribe",
-        "position": "CM",
-        "ovr": 78
-      },
-      {
-        "name": "A.Grujic",
-        "position": "CM",
-        "ovr": 82
-      },
-      {
         "name": "F.Pepey",
-        "position": "CAM",
+        "position": "RB",
         "ovr": 81
       },
       {
         "name": "G.Galeno",
-        "position": "LW",
+        "position": "CM",
         "ovr": 81
       },
       {
         "name": "E.Taremi",
-        "position": "RW",
+        "position": "CM",
         "ovr": 80
       },
       {
-        "name": "C.Conceicao",
-        "position": "ST",
+        "name": "P.Anderson",
+        "position": "CAM",
         "ovr": 78
+      },
+      {
+        "name": "S.Uribe",
+        "position": "LW",
+        "ovr": 78
+      },
+      {
+        "name": "C.Conceicao",
+        "position": "RW",
+        "ovr": 78
+      },
+      {
+        "name": "D.Costa",
+        "position": "ST",
+        "ovr": 76
       }
     ]
   },
@@ -3345,59 +3345,59 @@
     "avg": 80,
     "squad": [
       {
-        "name": "S.Romero",
+        "name": "L.Rojo",
         "position": "GK",
-        "ovr": 77
+        "ovr": 83
       },
       {
-        "name": "L.Rojo",
+        "name": "F.Advíncula",
         "position": "CB",
         "ovr": 83
       },
       {
-        "name": "C.Lema",
+        "name": "F.Figal",
         "position": "CB",
-        "ovr": 78
+        "ovr": 82
       },
       {
-        "name": "F.Figal",
+        "name": "N.Fernandez",
         "position": "LB",
         "ovr": 82
       },
       {
-        "name": "F.Advíncula",
-        "position": "RB",
-        "ovr": 83
-      },
-      {
-        "name": "N.Fernandez",
-        "position": "CM",
-        "ovr": 82
-      },
-      {
         "name": "E.Pol Fernandez",
-        "position": "CM",
+        "position": "RB",
         "ovr": 82
-      },
-      {
-        "name": "M.Zenon",
-        "position": "CAM",
-        "ovr": 78
       },
       {
         "name": "B.Merentiel",
-        "position": "LW",
+        "position": "CM",
         "ovr": 82
       },
       {
         "name": "D.Cavani",
-        "position": "RW",
+        "position": "CM",
         "ovr": 81
       },
       {
         "name": "E.Cavani",
-        "position": "ST",
+        "position": "CAM",
         "ovr": 80
+      },
+      {
+        "name": "C.Lema",
+        "position": "LW",
+        "ovr": 78
+      },
+      {
+        "name": "M.Zenon",
+        "position": "RW",
+        "ovr": 78
+      },
+      {
+        "name": "S.Romero",
+        "position": "ST",
+        "ovr": 77
       }
     ]
   },
@@ -3408,39 +3408,39 @@
     "avg": 80,
     "squad": [
       {
-        "name": "F.Musso",
-        "position": "GK",
-        "ovr": 82
-      },
-      {
-        "name": "P.Alarcon",
-        "position": "CB",
-        "ovr": 78
-      },
-      {
-        "name": "E.Diaz",
-        "position": "CB",
-        "ovr": 81
-      },
-      {
-        "name": "M.Mammana",
-        "position": "LB",
-        "ovr": 78
-      },
-      {
-        "name": "M.Bustos",
-        "position": "RB",
-        "ovr": 79
-      },
-      {
         "name": "N.De la Cruz",
-        "position": "CM",
+        "position": "GK",
         "ovr": 83
       },
       {
-        "name": "A.Enzo Perez",
-        "position": "CM",
+        "name": "F.Musso",
+        "position": "CB",
+        "ovr": 82
+      },
+      {
+        "name": "R.Beltran",
+        "position": "CB",
+        "ovr": 82
+      },
+      {
+        "name": "E.Diaz",
+        "position": "LB",
         "ovr": 81
+      },
+      {
+        "name": "A.Enzo Perez",
+        "position": "RB",
+        "ovr": 81
+      },
+      {
+        "name": "J.Quintero",
+        "position": "CM",
+        "ovr": 80
+      },
+      {
+        "name": "M.Bustos",
+        "position": "CM",
+        "ovr": 79
       },
       {
         "name": "S.Palavecino",
@@ -3448,19 +3448,19 @@
         "ovr": 79
       },
       {
-        "name": "A.Driussi",
+        "name": "P.Alarcon",
         "position": "LW",
-        "ovr": 76
+        "ovr": 78
       },
       {
-        "name": "R.Beltran",
+        "name": "M.Mammana",
         "position": "RW",
-        "ovr": 82
+        "ovr": 78
       },
       {
-        "name": "J.Quintero",
+        "name": "A.Driussi",
         "position": "ST",
-        "ovr": 80
+        "ovr": 76
       }
     ]
   },
@@ -3471,49 +3471,49 @@
     "avg": 79,
     "squad": [
       {
-        "name": "R.Rossi",
+        "name": "B.Luiz Araujo",
         "position": "GK",
-        "ovr": 76
+        "ovr": 82
       },
       {
-        "name": "D.Varela",
+        "name": "P.Gabigol",
         "position": "CB",
-        "ovr": 76
-      },
-      {
-        "name": "F.Nino",
-        "position": "CB",
-        "ovr": 77
+        "ovr": 81
       },
       {
         "name": "A.Gomes",
+        "position": "CB",
+        "ovr": 80
+      },
+      {
+        "name": "E.De Arascaeta",
         "position": "LB",
         "ovr": 80
       },
       {
-        "name": "B.Alex Sandro",
-        "position": "RB",
-        "ovr": 76
-      },
-      {
-        "name": "G.Pulgar",
-        "position": "CM",
-        "ovr": 75
-      },
-      {
-        "name": "E.De Arascaeta",
-        "position": "CM",
-        "ovr": 80
-      },
-      {
         "name": "J.Gerson",
-        "position": "CAM",
+        "position": "RB",
         "ovr": 78
       },
       {
-        "name": "B.Luiz Araujo",
+        "name": "F.Nino",
+        "position": "CM",
+        "ovr": 77
+      },
+      {
+        "name": "R.Rossi",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "D.Varela",
+        "position": "CAM",
+        "ovr": 76
+      },
+      {
+        "name": "B.Alex Sandro",
         "position": "LW",
-        "ovr": 82
+        "ovr": 76
       },
       {
         "name": "G.Barbosa",
@@ -3521,9 +3521,9 @@
         "ovr": 76
       },
       {
-        "name": "P.Gabigol",
+        "name": "G.Pulgar",
         "position": "ST",
-        "ovr": 81
+        "ovr": 75
       }
     ]
   },
@@ -3534,9 +3534,14 @@
     "avg": 79,
     "squad": [
       {
-        "name": "F.Muslera",
+        "name": "D.Berkan Kutlu",
         "position": "GK",
-        "ovr": 76
+        "ovr": 82
+      },
+      {
+        "name": "A.Akturkoglu",
+        "position": "CB",
+        "ovr": 82
       },
       {
         "name": "B.Elmasy",
@@ -3544,49 +3549,44 @@
         "ovr": 80
       },
       {
-        "name": "W.Ndidi",
-        "position": "CB",
-        "ovr": 78
-      },
-      {
         "name": "K.Djiku",
         "position": "LB",
         "ovr": 79
       },
       {
-        "name": "S.Yilmaz",
+        "name": "V.Osimheno",
         "position": "RB",
-        "ovr": 76
+        "ovr": 79
       },
       {
-        "name": "D.Berkan Kutlu",
+        "name": "W.Ndidi",
         "position": "CM",
-        "ovr": 82
-      },
-      {
-        "name": "L.Torreira",
-        "position": "CM",
-        "ovr": 76
+        "ovr": 78
       },
       {
         "name": "B.Icardi",
-        "position": "CAM",
+        "position": "CM",
         "ovr": 78
       },
       {
         "name": "D.Zaha",
-        "position": "LW",
+        "position": "CAM",
         "ovr": 78
       },
       {
-        "name": "V.Osimheno",
-        "position": "RW",
-        "ovr": 79
+        "name": "F.Muslera",
+        "position": "LW",
+        "ovr": 76
       },
       {
-        "name": "A.Akturkoglu",
+        "name": "S.Yilmaz",
+        "position": "RW",
+        "ovr": 76
+      },
+      {
+        "name": "L.Torreira",
         "position": "ST",
-        "ovr": 82
+        "ovr": 76
       }
     ]
   },
@@ -3602,54 +3602,54 @@
         "ovr": 79
       },
       {
-        "name": "J.Arteaga",
+        "name": "C.Rodrigues",
         "position": "CB",
-        "ovr": 74
+        "ovr": 79
+      },
+      {
+        "name": "R.Funes Mori",
+        "position": "CB",
+        "ovr": 79
       },
       {
         "name": "S.Medina",
-        "position": "CB",
+        "position": "LB",
+        "ovr": 78
+      },
+      {
+        "name": "E.Gutierrez",
+        "position": "RB",
+        "ovr": 78
+      },
+      {
+        "name": "C.Rodriguez",
+        "position": "CM",
+        "ovr": 78
+      },
+      {
+        "name": "G.Maxi Meza",
+        "position": "CM",
         "ovr": 78
       },
       {
         "name": "G.Montes",
-        "position": "LB",
-        "ovr": 76
-      },
-      {
-        "name": "D.Gallardo",
-        "position": "RB",
-        "ovr": 74
-      },
-      {
-        "name": "E.Gutierrez",
-        "position": "CM",
-        "ovr": 78
-      },
-      {
-        "name": "C.Rodrigues",
-        "position": "CM",
-        "ovr": 79
-      },
-      {
-        "name": "C.Rodriguez",
         "position": "CAM",
-        "ovr": 78
-      },
-      {
-        "name": "R.Funes Mori",
-        "position": "LW",
-        "ovr": 79
-      },
-      {
-        "name": "G.Maxi Meza",
-        "position": "RW",
-        "ovr": 78
+        "ovr": 76
       },
       {
         "name": "V.Janssen",
-        "position": "ST",
+        "position": "LW",
         "ovr": 76
+      },
+      {
+        "name": "J.Arteaga",
+        "position": "RW",
+        "ovr": 74
+      },
+      {
+        "name": "D.Gallardo",
+        "position": "ST",
+        "ovr": 74
       }
     ]
   },
@@ -3660,9 +3660,14 @@
     "avg": 78,
     "squad": [
       {
-        "name": "F.Fabio",
+        "name": "G.Ganso",
         "position": "GK",
-        "ovr": 77
+        "ovr": 81
+      },
+      {
+        "name": "J.Jhon Arias",
+        "position": "CB",
+        "ovr": 81
       },
       {
         "name": "M.Felipe Melo",
@@ -3670,49 +3675,44 @@
         "ovr": 80
       },
       {
+        "name": "A.Andre",
+        "position": "LB",
+        "ovr": 80
+      },
+      {
+        "name": "D.Keno",
+        "position": "RB",
+        "ovr": 80
+      },
+      {
         "name": "N.Nino",
-        "position": "CB",
+        "position": "CM",
         "ovr": 79
       },
       {
         "name": "M.Marcelo",
-        "position": "LB",
-        "ovr": 79
-      },
-      {
-        "name": "G.Samuel Xavier",
-        "position": "RB",
-        "ovr": 74
-      },
-      {
-        "name": "A.Andre",
         "position": "CM",
-        "ovr": 80
+        "ovr": 79
       },
       {
         "name": "P.Paulo Henrique Ganso",
-        "position": "CM",
+        "position": "CAM",
         "ovr": 79
       },
       {
-        "name": "G.Ganso",
-        "position": "CAM",
-        "ovr": 81
-      },
-      {
-        "name": "D.Keno",
+        "name": "F.Fabio",
         "position": "LW",
-        "ovr": 80
-      },
-      {
-        "name": "J.Jhon Arias",
-        "position": "RW",
-        "ovr": 81
+        "ovr": 77
       },
       {
         "name": "C.Cano",
-        "position": "ST",
+        "position": "RW",
         "ovr": 77
+      },
+      {
+        "name": "G.Samuel Xavier",
+        "position": "ST",
+        "ovr": 74
       }
     ]
   },
@@ -3723,59 +3723,59 @@
     "avg": 78,
     "squad": [
       {
-        "name": "W.Weverton",
+        "name": "R.Richard Rios",
         "position": "GK",
-        "ovr": 74
+        "ovr": 81
+      },
+      {
+        "name": "E.Endrick",
+        "position": "CB",
+        "ovr": 81
+      },
+      {
+        "name": "M.Marcos Rocha",
+        "position": "CB",
+        "ovr": 79
+      },
+      {
+        "name": "R.Rony",
+        "position": "LB",
+        "ovr": 79
       },
       {
         "name": "G.Gomez",
-        "position": "CB",
+        "position": "RB",
         "ovr": 78
       },
       {
         "name": "M.Murilo",
-        "position": "CB",
+        "position": "CM",
         "ovr": 78
       },
       {
         "name": "J.Piquerez",
-        "position": "LB",
+        "position": "CM",
         "ovr": 76
       },
       {
-        "name": "M.Marcos Rocha",
-        "position": "RB",
-        "ovr": 79
-      },
-      {
-        "name": "R.Richard Rios",
-        "position": "CM",
-        "ovr": 81
-      },
-      {
         "name": "G.Gabriel Menino",
-        "position": "CM",
+        "position": "CAM",
         "ovr": 76
       },
       {
         "name": "R.Raphael Veiga",
-        "position": "CAM",
+        "position": "LW",
         "ovr": 75
       },
       {
-        "name": "D.Dudu",
-        "position": "LW",
+        "name": "W.Weverton",
+        "position": "RW",
         "ovr": 74
       },
       {
-        "name": "R.Rony",
-        "position": "RW",
-        "ovr": 79
-      },
-      {
-        "name": "E.Endrick",
+        "name": "D.Dudu",
         "position": "ST",
-        "ovr": 81
+        "ovr": 74
       }
     ]
   },
@@ -3791,54 +3791,54 @@
         "ovr": 80
       },
       {
-        "name": "R.Raul Gustavo",
+        "name": "H.Hugo",
         "position": "CB",
+        "ovr": 80
+      },
+      {
+        "name": "G.Garro",
+        "position": "CB",
+        "ovr": 79
+      },
+      {
+        "name": "R.Raul Gustavo",
+        "position": "LB",
         "ovr": 78
       },
       {
         "name": "F.Felix Torres",
-        "position": "CB",
-        "ovr": 77
-      },
-      {
-        "name": "H.Hugo",
-        "position": "LB",
-        "ovr": 80
-      },
-      {
-        "name": "L.Lucas Verissimo",
         "position": "RB",
         "ovr": 77
       },
       {
-        "name": "R.Raniele",
+        "name": "L.Lucas Verissimo",
         "position": "CM",
-        "ovr": 73
-      },
-      {
-        "name": "G.Garro",
-        "position": "CM",
-        "ovr": 79
-      },
-      {
-        "name": "R.Rodrigo Garro",
-        "position": "CAM",
-        "ovr": 75
-      },
-      {
-        "name": "P.Pedro Henrique",
-        "position": "LW",
-        "ovr": 75
+        "ovr": 77
       },
       {
         "name": "Y.Yuri Alberto",
-        "position": "RW",
+        "position": "CM",
         "ovr": 77
       },
       {
         "name": "J.Romero",
-        "position": "ST",
+        "position": "CAM",
         "ovr": 76
+      },
+      {
+        "name": "R.Rodrigo Garro",
+        "position": "LW",
+        "ovr": 75
+      },
+      {
+        "name": "P.Pedro Henrique",
+        "position": "RW",
+        "ovr": 75
+      },
+      {
+        "name": "R.Raniele",
+        "position": "ST",
+        "ovr": 73
       }
     ]
   },
@@ -3849,9 +3849,9 @@
     "avg": 77,
     "squad": [
       {
-        "name": "D.Diant Ramaj",
+        "name": "B.Brian Brobbey",
         "position": "GK",
-        "ovr": 76
+        "ovr": 79
       },
       {
         "name": "J.Jorrel Hato",
@@ -3859,49 +3859,49 @@
         "ovr": 77
       },
       {
-        "name": "O.Owen Wijndal",
-        "position": "CB",
-        "ovr": 74
-      },
-      {
-        "name": "E.Edson Alvarez",
-        "position": "LB",
-        "ovr": 75
-      },
-      {
         "name": "K.Kenneth Taylor",
+        "position": "CB",
+        "ovr": 77
+      },
+      {
+        "name": "C.Chuba Akpom",
+        "position": "LB",
+        "ovr": 77
+      },
+      {
+        "name": "W.Wout Weghorst",
         "position": "RB",
         "ovr": 77
       },
       {
-        "name": "J.Jordan Henderson",
+        "name": "D.Diant Ramaj",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "E.Edson Alvarez",
         "position": "CM",
         "ovr": 75
       },
       {
-        "name": "B.Branco Van den Boomen",
-        "position": "CM",
-        "ovr": 74
-      },
-      {
-        "name": "C.Chuba Akpom",
+        "name": "J.Jordan Henderson",
         "position": "CAM",
-        "ovr": 77
+        "ovr": 75
       },
       {
-        "name": "S.Steven Bergwijn",
+        "name": "O.Owen Wijndal",
         "position": "LW",
         "ovr": 74
       },
       {
-        "name": "B.Brian Brobbey",
+        "name": "B.Branco Van den Boomen",
         "position": "RW",
-        "ovr": 79
+        "ovr": 74
       },
       {
-        "name": "W.Wout Weghorst",
+        "name": "S.Steven Bergwijn",
         "position": "ST",
-        "ovr": 77
+        "ovr": 74
       }
     ]
   },
@@ -3912,14 +3912,9 @@
     "avg": 76,
     "squad": [
       {
-        "name": "J.Joao Paulo",
+        "name": "A.Angelo Gabriel",
         "position": "GK",
-        "ovr": 74
-      },
-      {
-        "name": "M.Maicon",
-        "position": "CB",
-        "ovr": 74
+        "ovr": 78
       },
       {
         "name": "M.Messias",
@@ -3927,44 +3922,49 @@
         "ovr": 76
       },
       {
-        "name": "C.Cadu",
+        "name": "L.Lucas Lima",
+        "position": "CB",
+        "ovr": 76
+      },
+      {
+        "name": "J.Joao Paulo",
         "position": "LB",
+        "ovr": 74
+      },
+      {
+        "name": "M.Maicon",
+        "position": "RB",
+        "ovr": 74
+      },
+      {
+        "name": "V.Vinicius Balieiro",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
+        "name": "C.Cadu",
+        "position": "CM",
         "ovr": 72
       },
       {
         "name": "L.Lucas Pires",
-        "position": "RB",
+        "position": "CAM",
         "ovr": 72
       },
       {
         "name": "D.Diego Pituca",
-        "position": "CM",
+        "position": "LW",
         "ovr": 72
       },
       {
         "name": "W.Willian Abel",
-        "position": "CM",
-        "ovr": 72
-      },
-      {
-        "name": "V.Vinicius Balieiro",
-        "position": "CAM",
-        "ovr": 73
-      },
-      {
-        "name": "A.Angelo Gabriel",
-        "position": "LW",
-        "ovr": 78
-      },
-      {
-        "name": "A.Aderlan",
         "position": "RW",
         "ovr": 72
       },
       {
-        "name": "L.Lucas Lima",
+        "name": "A.Aderlan",
         "position": "ST",
-        "ovr": 76
+        "ovr": 72
       }
     ]
   },
@@ -3975,59 +3975,59 @@
     "avg": 75,
     "squad": [
       {
-        "name": "A.Aykut Ekici",
-        "position": "GK",
-        "ovr": 74
-      },
-      {
-        "name": "M.Magnus Andersson",
-        "position": "CB",
-        "ovr": 73
-      },
-      {
-        "name": "T.Tomas Cindrak",
-        "position": "CB",
-        "ovr": 71
-      },
-      {
-        "name": "Y.Yasin Oztekin",
-        "position": "LB",
-        "ovr": 73
-      },
-      {
         "name": "C.Caner Osmanpasa",
-        "position": "RB",
+        "position": "GK",
         "ovr": 78
       },
       {
-        "name": "M.Max Gradel",
-        "position": "CM",
-        "ovr": 71
-      },
-      {
         "name": "R.Robinho",
-        "position": "CM",
+        "position": "CB",
         "ovr": 76
       },
       {
         "name": "S.Salih Ucan",
-        "position": "CAM",
+        "position": "CB",
         "ovr": 75
-      },
-      {
-        "name": "M.Musa Araz",
-        "position": "LW",
-        "ovr": 74
       },
       {
         "name": "U.Umar Sako",
-        "position": "RW",
+        "position": "LB",
         "ovr": 75
       },
       {
-        "name": "G.Gael Clichy",
-        "position": "ST",
+        "name": "A.Aykut Ekici",
+        "position": "RB",
         "ovr": 74
+      },
+      {
+        "name": "M.Musa Araz",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "G.Gael Clichy",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "M.Magnus Andersson",
+        "position": "CAM",
+        "ovr": 73
+      },
+      {
+        "name": "Y.Yasin Oztekin",
+        "position": "LW",
+        "ovr": 73
+      },
+      {
+        "name": "T.Tomas Cindrak",
+        "position": "RW",
+        "ovr": 71
+      },
+      {
+        "name": "M.Max Gradel",
+        "position": "ST",
+        "ovr": 71
       }
     ]
   },
@@ -4043,39 +4043,39 @@
         "ovr": 78
       },
       {
-        "name": "M.Mbaye Diagne",
+        "name": "A.Abdulkadir Omur",
         "position": "CB",
-        "ovr": 73
-      },
-      {
-        "name": "K.Kamil Ahmet Corekci",
-        "position": "CB",
-        "ovr": 72
-      },
-      {
-        "name": "B.Bruno Peres",
-        "position": "LB",
-        "ovr": 71
+        "ovr": 78
       },
       {
         "name": "V.Vitor Hugo",
-        "position": "RB",
+        "position": "CB",
         "ovr": 77
       },
       {
         "name": "Y.Yusuf Yazici",
-        "position": "CM",
+        "position": "LB",
         "ovr": 77
       },
       {
-        "name": "A.Abdulkadir Omur",
-        "position": "CM",
-        "ovr": 78
+        "name": "E.Edgar Ie",
+        "position": "RB",
+        "ovr": 77
       },
       {
         "name": "F.Fode Koita",
-        "position": "CAM",
+        "position": "CM",
         "ovr": 76
+      },
+      {
+        "name": "M.Majeed Waris",
+        "position": "CM",
+        "ovr": 76
+      },
+      {
+        "name": "M.Mbaye Diagne",
+        "position": "CAM",
+        "ovr": 73
       },
       {
         "name": "A.Andreas Cornelius",
@@ -4083,14 +4083,14 @@
         "ovr": 73
       },
       {
-        "name": "E.Edgar Ie",
+        "name": "K.Kamil Ahmet Corekci",
         "position": "RW",
-        "ovr": 77
+        "ovr": 72
       },
       {
-        "name": "M.Majeed Waris",
+        "name": "B.Bruno Peres",
         "position": "ST",
-        "ovr": 76
+        "ovr": 71
       }
     ]
   },
@@ -4101,14 +4101,9 @@
     "avg": 74,
     "squad": [
       {
-        "name": "M.Mert Gunok",
+        "name": "I.Ibrahim Amada",
         "position": "GK",
-        "ovr": 74
-      },
-      {
-        "name": "K.Kaan Caliskaner",
-        "position": "CB",
-        "ovr": 72
+        "ovr": 77
       },
       {
         "name": "B.Bojan Nastić",
@@ -4117,23 +4112,28 @@
       },
       {
         "name": "S.Serdar Ozkan",
-        "position": "LB",
+        "position": "CB",
         "ovr": 76
       },
       {
         "name": "H.Hasan Karaoglan",
-        "position": "RB",
+        "position": "LB",
         "ovr": 75
       },
       {
         "name": "M.Mario Balotelliy",
+        "position": "RB",
+        "ovr": 75
+      },
+      {
+        "name": "B.Berkay Ozcan",
         "position": "CM",
         "ovr": 75
       },
       {
-        "name": "F.Fredy Ribeiro",
+        "name": "M.Mert Gunok",
         "position": "CM",
-        "ovr": 71
+        "ovr": 74
       },
       {
         "name": "S.Sousa",
@@ -4141,19 +4141,19 @@
         "ovr": 73
       },
       {
-        "name": "T.Tayyip Talha Sanuac",
+        "name": "K.Kaan Caliskaner",
         "position": "LW",
-        "ovr": 70
+        "ovr": 72
       },
       {
-        "name": "I.Ibrahim Amada",
+        "name": "F.Fredy Ribeiro",
         "position": "RW",
-        "ovr": 77
+        "ovr": 71
       },
       {
-        "name": "B.Berkay Ozcan",
+        "name": "T.Tayyip Talha Sanuac",
         "position": "ST",
-        "ovr": 75
+        "ovr": 70
       }
     ]
   },
@@ -4164,54 +4164,54 @@
     "avg": 74,
     "squad": [
       {
-        "name": "A.Alfonso Pastor",
-        "position": "GK",
-        "ovr": 74
-      },
-      {
-        "name": "C.Carlos Clerc",
-        "position": "CB",
-        "ovr": 75
-      },
-      {
-        "name": "L.Leo Baptistao",
-        "position": "CB",
-        "ovr": 74
-      },
-      {
-        "name": "I.Ivan Marcone",
-        "position": "LB",
-        "ovr": 73
-      },
-      {
-        "name": "M.Markus Pink",
-        "position": "RB",
-        "ovr": 71
-      },
-      {
         "name": "S.Stefan Savic",
-        "position": "CM",
+        "position": "GK",
         "ovr": 77
       },
       {
-        "name": "R.Rober Pier",
-        "position": "CM",
-        "ovr": 71
-      },
-      {
         "name": "G.Giorgi Chakvetadze",
-        "position": "CAM",
+        "position": "CB",
         "ovr": 77
       },
       {
         "name": "D.Denis Suarez",
-        "position": "LW",
+        "position": "CB",
         "ovr": 76
       },
       {
+        "name": "C.Carlos Clerc",
+        "position": "LB",
+        "ovr": 75
+      },
+      {
+        "name": "A.Alfonso Pastor",
+        "position": "RB",
+        "ovr": 74
+      },
+      {
+        "name": "L.Leo Baptistao",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "I.Ivan Marcone",
+        "position": "CM",
+        "ovr": 73
+      },
+      {
         "name": "H.Haris Seferovic",
-        "position": "RW",
+        "position": "CAM",
         "ovr": 72
+      },
+      {
+        "name": "M.Markus Pink",
+        "position": "LW",
+        "ovr": 71
+      },
+      {
+        "name": "R.Rober Pier",
+        "position": "RW",
+        "ovr": 71
       },
       {
         "name": "G.Gonzalo Melero",
@@ -4227,59 +4227,59 @@
     "avg": 74,
     "squad": [
       {
-        "name": "A.Anton Shunin",
-        "position": "GK",
-        "ovr": 73
-      },
-      {
-        "name": "F.Filip Novak",
-        "position": "CB",
-        "ovr": 74
-      },
-      {
-        "name": "N.Nikola Moro",
-        "position": "CB",
-        "ovr": 74
-      },
-      {
-        "name": "E.Egor Kharina",
-        "position": "LB",
-        "ovr": 73
-      },
-      {
-        "name": "G.Grégoire Lefebvre",
-        "position": "RB",
-        "ovr": 74
-      },
-      {
         "name": "D.Denis Makarov",
-        "position": "CM",
+        "position": "GK",
         "ovr": 77
-      },
-      {
-        "name": "A.Arsen Adamov",
-        "position": "CM",
-        "ovr": 73
-      },
-      {
-        "name": "E.Eduard Spertsyan",
-        "position": "CAM",
-        "ovr": 76
       },
       {
         "name": "T.Tonci Mujan",
-        "position": "LW",
+        "position": "CB",
         "ovr": 77
       },
       {
+        "name": "E.Eduard Spertsyan",
+        "position": "CB",
+        "ovr": 76
+      },
+      {
         "name": "T.Tyufyakov",
-        "position": "RW",
+        "position": "LB",
         "ovr": 75
       },
       {
         "name": "R.Roberto Fernandez",
-        "position": "ST",
+        "position": "RB",
         "ovr": 75
+      },
+      {
+        "name": "F.Filip Novak",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "N.Nikola Moro",
+        "position": "CM",
+        "ovr": 74
+      },
+      {
+        "name": "G.Grégoire Lefebvre",
+        "position": "CAM",
+        "ovr": 74
+      },
+      {
+        "name": "A.Anton Shunin",
+        "position": "LW",
+        "ovr": 73
+      },
+      {
+        "name": "E.Egor Kharina",
+        "position": "RW",
+        "ovr": 73
+      },
+      {
+        "name": "A.Arsen Adamov",
+        "position": "ST",
+        "ovr": 73
       }
     ]
   },
@@ -4300,39 +4300,39 @@
         "ovr": 73
       },
       {
-        "name": "B.Bartosz Salamon",
+        "name": "S.Sebastian Szymanski",
         "position": "CB",
-        "ovr": 72
+        "ovr": 73
       },
       {
-        "name": "T.Tymoteusz Puchacz",
+        "name": "B.Bartosz Salamon",
         "position": "LB",
         "ovr": 72
       },
       {
-        "name": "M.Maciej Rybus",
+        "name": "T.Tymoteusz Puchacz",
         "position": "RB",
-        "ovr": 69
-      },
-      {
-        "name": "G.Grzegorz Krychowiak",
-        "position": "CM",
-        "ovr": 70
-      },
-      {
-        "name": "J.Jakub Moder",
-        "position": "CM",
-        "ovr": 71
-      },
-      {
-        "name": "S.Sebastian Szymanski",
-        "position": "CAM",
-        "ovr": 73
+        "ovr": 72
       },
       {
         "name": "P.Piotr Zielinski",
-        "position": "LW",
+        "position": "CM",
         "ovr": 72
+      },
+      {
+        "name": "R.Robert Lewandowy",
+        "position": "CM",
+        "ovr": 72
+      },
+      {
+        "name": "J.Jakub Moder",
+        "position": "CAM",
+        "ovr": 71
+      },
+      {
+        "name": "G.Grzegorz Krychowiak",
+        "position": "LW",
+        "ovr": 70
       },
       {
         "name": "A.Arkadiusz Milik",
@@ -4340,9 +4340,9 @@
         "ovr": 70
       },
       {
-        "name": "R.Robert Lewandowy",
+        "name": "M.Maciej Rybus",
         "position": "ST",
-        "ovr": 72
+        "ovr": 69
       }
     ]
   },
@@ -4358,12 +4358,12 @@
         "ovr": 75
       },
       {
-        "name": "D.David Hovorka",
+        "name": "L.Lukas Masopust",
         "position": "CB",
-        "ovr": 69
+        "ovr": 74
       },
       {
-        "name": "L.Lukas Masopust",
+        "name": "P.Peter Olayinka",
         "position": "CB",
         "ovr": 74
       },
@@ -4378,9 +4378,9 @@
         "ovr": 72
       },
       {
-        "name": "A.Antonin Kinsky",
+        "name": "A.Adam Krejci",
         "position": "CM",
-        "ovr": 70
+        "ovr": 72
       },
       {
         "name": "M.Mojmir Chytil",
@@ -4388,24 +4388,24 @@
         "ovr": 71
       },
       {
-        "name": "L.Ladislav Takacs",
+        "name": "A.Antonin Kinsky",
         "position": "CAM",
-        "ovr": 69
-      },
-      {
-        "name": "P.Peter Olayinka",
-        "position": "LW",
-        "ovr": 74
-      },
-      {
-        "name": "T.Tomas Chory",
-        "position": "RW",
         "ovr": 70
       },
       {
-        "name": "A.Adam Krejci",
+        "name": "T.Tomas Chory",
+        "position": "LW",
+        "ovr": 70
+      },
+      {
+        "name": "D.David Hovorka",
+        "position": "RW",
+        "ovr": 69
+      },
+      {
+        "name": "L.Ladislav Takacs",
         "position": "ST",
-        "ovr": 72
+        "ovr": 69
       }
     ]
   },
@@ -4416,29 +4416,34 @@
     "avg": 72,
     "squad": [
       {
-        "name": "D.Denes Dibusz",
+        "name": "A.Abu Fofana",
         "position": "GK",
+        "ovr": 75
+      },
+      {
+        "name": "D.Denes Dibusz",
+        "position": "CB",
         "ovr": 74
       },
       {
-        "name": "A.Attila Fiola",
+        "name": "T.Tokmac Nguen",
         "position": "CB",
-        "ovr": 69
+        "ovr": 73
+      },
+      {
+        "name": "S.Serhiy Sydorchuk",
+        "position": "LB",
+        "ovr": 72
+      },
+      {
+        "name": "A.Aleksander Pesic",
+        "position": "RB",
+        "ovr": 72
       },
       {
         "name": "J.Joshua Amankwah",
-        "position": "CB",
+        "position": "CM",
         "ovr": 71
-      },
-      {
-        "name": "B.Bart Nieuwkoop",
-        "position": "LB",
-        "ovr": 69
-      },
-      {
-        "name": "H.Henry Wingo",
-        "position": "RB",
-        "ovr": 68
       },
       {
         "name": "A.Adama Traore",
@@ -4447,28 +4452,23 @@
       },
       {
         "name": "I.Ihor Kharatin",
-        "position": "CM",
+        "position": "CAM",
         "ovr": 70
       },
       {
-        "name": "S.Serhiy Sydorchuk",
-        "position": "CAM",
-        "ovr": 72
-      },
-      {
-        "name": "A.Aleksander Pesic",
+        "name": "A.Attila Fiola",
         "position": "LW",
-        "ovr": 72
+        "ovr": 69
       },
       {
-        "name": "T.Tokmac Nguen",
+        "name": "B.Bart Nieuwkoop",
         "position": "RW",
-        "ovr": 73
+        "ovr": 69
       },
       {
-        "name": "A.Abu Fofana",
+        "name": "H.Henry Wingo",
         "position": "ST",
-        "ovr": 75
+        "ovr": 68
       }
     ]
   },
@@ -4479,19 +4479,19 @@
     "avg": 71,
     "squad": [
       {
-        "name": "S.Serkan Kirintili",
+        "name": "T.Tolga Cigerci",
         "position": "GK",
-        "ovr": 67
+        "ovr": 74
       },
       {
-        "name": "K.Kamil Conkbayir",
+        "name": "A.Ahmet Ozan",
         "position": "CB",
-        "ovr": 68
+        "ovr": 73
       },
       {
-        "name": "U.Ufuk Ayvaz",
+        "name": "F.Ferdi Kadioglu",
         "position": "CB",
-        "ovr": 70
+        "ovr": 73
       },
       {
         "name": "C.Can Uzun",
@@ -4499,19 +4499,19 @@
         "ovr": 72
       },
       {
-        "name": "M.Mert Yildirim",
+        "name": "I.Irfan Can Kahveci",
         "position": "RB",
+        "ovr": 71
+      },
+      {
+        "name": "U.Ufuk Ayvaz",
+        "position": "CM",
         "ovr": 70
       },
       {
-        "name": "A.Ahmet Ozan",
+        "name": "M.Mert Yildirim",
         "position": "CM",
-        "ovr": 73
-      },
-      {
-        "name": "T.Tolga Cigerci",
-        "position": "CM",
-        "ovr": 74
+        "ovr": 70
       },
       {
         "name": "E.Ersin Destanoglu",
@@ -4519,19 +4519,19 @@
         "ovr": 70
       },
       {
-        "name": "F.Ferdi Kadioglu",
+        "name": "K.Kamil Conkbayir",
         "position": "LW",
-        "ovr": 73
+        "ovr": 68
       },
       {
-        "name": "E.Emre Akbaba",
+        "name": "S.Serkan Kirintili",
         "position": "RW",
         "ovr": 67
       },
       {
-        "name": "I.Irfan Can Kahveci",
+        "name": "E.Emre Akbaba",
         "position": "ST",
-        "ovr": 71
+        "ovr": 67
       }
     ]
   },
@@ -4542,9 +4542,14 @@
     "avg": 71,
     "squad": [
       {
-        "name": "K.Kamil Grabara",
+        "name": "D.Denis Vavro",
         "position": "GK",
-        "ovr": 67
+        "ovr": 74
+      },
+      {
+        "name": "H.Hakon Arnar Haraldsson",
+        "position": "CB",
+        "ovr": 74
       },
       {
         "name": "V.Victor Kristiansen",
@@ -4552,18 +4557,18 @@
         "ovr": 73
       },
       {
-        "name": "D.Denis Vavro",
-        "position": "CB",
-        "ovr": 74
-      },
-      {
-        "name": "M.Modibo Sagnan",
+        "name": "J.Jens Stage",
         "position": "LB",
-        "ovr": 69
+        "ovr": 73
       },
       {
         "name": "P.Peter Ankersen",
         "position": "RB",
+        "ovr": 72
+      },
+      {
+        "name": "O.Orri Óskarsson",
+        "position": "CM",
         "ovr": 72
       },
       {
@@ -4572,29 +4577,24 @@
         "ovr": 71
       },
       {
-        "name": "O.Orri Óskarsson",
-        "position": "CM",
-        "ovr": 72
-      },
-      {
-        "name": "H.Hakon Arnar Haraldsson",
-        "position": "CAM",
-        "ovr": 74
-      },
-      {
-        "name": "J.Jens Stage",
-        "position": "LW",
-        "ovr": 73
-      },
-      {
         "name": "M.Mohamed Elyounoussi",
-        "position": "RW",
+        "position": "CAM",
         "ovr": 70
       },
       {
+        "name": "M.Modibo Sagnan",
+        "position": "LW",
+        "ovr": 69
+      },
+      {
         "name": "A.Andreas Cornelius",
-        "position": "ST",
+        "position": "RW",
         "ovr": 68
+      },
+      {
+        "name": "K.Kamil Grabara",
+        "position": "ST",
+        "ovr": 67
       }
     ]
   },
@@ -4605,19 +4605,19 @@
     "avg": 70,
     "squad": [
       {
-        "name": "O.Oscar Linner",
+        "name": "I.Isak Ssewankambo",
         "position": "GK",
-        "ovr": 68
+        "ovr": 73
       },
       {
-        "name": "H.Hugo Granstrom",
+        "name": "S.Sebastian Larsson",
         "position": "CB",
-        "ovr": 70
+        "ovr": 73
       },
       {
-        "name": "J.Johan Lundstrom",
+        "name": "M.Musa Barrow",
         "position": "CB",
-        "ovr": 68
+        "ovr": 73
       },
       {
         "name": "A.Alexander Milosevic",
@@ -4625,39 +4625,39 @@
         "ovr": 71
       },
       {
-        "name": "E.Enoch Adu",
-        "position": "RB",
-        "ovr": 67
-      },
-      {
-        "name": "I.Isak Ssewankambo",
-        "position": "CM",
-        "ovr": 73
-      },
-      {
-        "name": "S.Sebastian Larsson",
-        "position": "CM",
-        "ovr": 73
-      },
-      {
         "name": "K.Kristoffer Olsson",
-        "position": "CAM",
+        "position": "RB",
         "ovr": 71
       },
       {
         "name": "N.Nicolas Stefanelli",
-        "position": "LW",
+        "position": "CM",
         "ovr": 71
-      },
-      {
-        "name": "M.Musa Barrow",
-        "position": "RW",
-        "ovr": 73
       },
       {
         "name": "T.Tarik Elyounoussi",
-        "position": "ST",
+        "position": "CM",
         "ovr": 71
+      },
+      {
+        "name": "H.Hugo Granstrom",
+        "position": "CAM",
+        "ovr": 70
+      },
+      {
+        "name": "O.Oscar Linner",
+        "position": "LW",
+        "ovr": 68
+      },
+      {
+        "name": "J.Johan Lundstrom",
+        "position": "RW",
+        "ovr": 68
+      },
+      {
+        "name": "E.Enoch Adu",
+        "position": "ST",
+        "ovr": 67
       }
     ]
   },
@@ -4668,17 +4668,17 @@
     "avg": 70,
     "squad": [
       {
-        "name": "J.Jovovic",
+        "name": "L.Lucic",
         "position": "GK",
-        "ovr": 69
-      },
-      {
-        "name": "M.Milunovic",
-        "position": "CB",
-        "ovr": 70
+        "ovr": 73
       },
       {
         "name": "G.Gajic",
+        "position": "CB",
+        "ovr": 72
+      },
+      {
+        "name": "O.Olayinka",
         "position": "CB",
         "ovr": 72
       },
@@ -4688,39 +4688,39 @@
         "ovr": 71
       },
       {
-        "name": "L.Lucic",
-        "position": "RB",
-        "ovr": 73
-      },
-      {
         "name": "S.Sanogo",
-        "position": "CM",
+        "position": "RB",
         "ovr": 71
       },
       {
-        "name": "K.Kanga",
+        "name": "M.Milunovic",
         "position": "CM",
-        "ovr": 68
-      },
-      {
-        "name": "S.Srnić",
-        "position": "CAM",
-        "ovr": 69
-      },
-      {
-        "name": "O.Olayinka",
-        "position": "LW",
-        "ovr": 72
+        "ovr": 70
       },
       {
         "name": "M.Myrto Uzuni",
-        "position": "RW",
+        "position": "CM",
         "ovr": 70
       },
       {
         "name": "A.Aleksandar Katai",
-        "position": "ST",
+        "position": "CAM",
         "ovr": 70
+      },
+      {
+        "name": "J.Jovovic",
+        "position": "LW",
+        "ovr": 69
+      },
+      {
+        "name": "S.Srnić",
+        "position": "RW",
+        "ovr": 69
+      },
+      {
+        "name": "K.Kanga",
+        "position": "ST",
+        "ovr": 68
       }
     ]
   },
@@ -4731,54 +4731,54 @@
     "avg": 69,
     "squad": [
       {
-        "name": "O.Onur Recep Kivrak",
-        "position": "GK",
-        "ovr": 65
-      },
-      {
-        "name": "A.Ahmetcan Kaplan",
-        "position": "CB",
-        "ovr": 69
-      },
-      {
-        "name": "B.Bogdan Stancu",
-        "position": "CB",
-        "ovr": 68
-      },
-      {
-        "name": "H.Halis Ozkahya",
-        "position": "LB",
-        "ovr": 65
-      },
-      {
-        "name": "L.Luis Ibañez",
-        "position": "RB",
-        "ovr": 66
-      },
-      {
         "name": "E.Emrah Bassan",
-        "position": "CM",
+        "position": "GK",
         "ovr": 71
       },
       {
         "name": "A.Alpaslan Ozturk",
-        "position": "CM",
+        "position": "CB",
         "ovr": 70
       },
       {
-        "name": "S.Soner Dikmen",
-        "position": "CAM",
+        "name": "O.Oğuzhan Özyakup",
+        "position": "CB",
+        "ovr": 70
+      },
+      {
+        "name": "A.Ahmetcan Kaplan",
+        "position": "LB",
+        "ovr": 69
+      },
+      {
+        "name": "B.Bogdan Stancu",
+        "position": "RB",
         "ovr": 68
       },
       {
-        "name": "B.Burak Camoglu",
+        "name": "S.Soner Dikmen",
+        "position": "CM",
+        "ovr": 68
+      },
+      {
+        "name": "L.Luis Ibañez",
+        "position": "CM",
+        "ovr": 66
+      },
+      {
+        "name": "O.Onur Recep Kivrak",
+        "position": "CAM",
+        "ovr": 65
+      },
+      {
+        "name": "H.Halis Ozkahya",
         "position": "LW",
         "ovr": 65
       },
       {
-        "name": "O.Oğuzhan Özyakup",
+        "name": "B.Burak Camoglu",
         "position": "RW",
-        "ovr": 70
+        "ovr": 65
       },
       {
         "name": "K.Kerem Şen",
@@ -4794,19 +4794,19 @@
     "avg": 68,
     "squad": [
       {
-        "name": "K.Konrad Laimer",
-        "position": "GK",
-        "ovr": 64
-      },
-      {
         "name": "M.Mert Celik",
-        "position": "CB",
+        "position": "GK",
         "ovr": 71
       },
       {
-        "name": "G.Gokhan Akkan",
+        "name": "M.Mattias Svanberg",
         "position": "CB",
-        "ovr": 65
+        "ovr": 70
+      },
+      {
+        "name": "M.Mehmet Ekici",
+        "position": "CB",
+        "ovr": 69
       },
       {
         "name": "D.Deniz Tumer",
@@ -4814,34 +4814,34 @@
         "ovr": 68
       },
       {
-        "name": "F.Furkan Soyalp",
-        "position": "RB",
-        "ovr": 66
-      },
-      {
-        "name": "M.Mattias Svanberg",
-        "position": "CM",
-        "ovr": 70
-      },
-      {
         "name": "H.Harun Alpsoy",
-        "position": "CM",
+        "position": "RB",
         "ovr": 68
       },
       {
-        "name": "M.Mehmet Ekici",
-        "position": "CAM",
-        "ovr": 69
-      },
-      {
-        "name": "A.Aytunc Kara",
-        "position": "LW",
+        "name": "F.Furkan Soyalp",
+        "position": "CM",
         "ovr": 66
       },
       {
-        "name": "B.Burak Kapacak",
-        "position": "RW",
+        "name": "A.Aytunc Kara",
+        "position": "CM",
+        "ovr": 66
+      },
+      {
+        "name": "G.Gokhan Akkan",
+        "position": "CAM",
         "ovr": 65
+      },
+      {
+        "name": "B.Burak Kapacak",
+        "position": "LW",
+        "ovr": 65
+      },
+      {
+        "name": "K.Konrad Laimer",
+        "position": "RW",
+        "ovr": 64
       },
       {
         "name": "T.Tayfun Cora",
@@ -4857,34 +4857,29 @@
     "avg": 68,
     "squad": [
       {
-        "name": "M.Mohamed El Shenawy",
+        "name": "T.Tarek Hamed",
         "position": "GK",
-        "ovr": 64
+        "ovr": 70
+      },
+      {
+        "name": "A.Ahmed Refaat",
+        "position": "CB",
+        "ovr": 70
+      },
+      {
+        "name": "O.Omar Marmoush",
+        "position": "CB",
+        "ovr": 70
       },
       {
         "name": "A.Ahmed Hegazy",
-        "position": "CB",
+        "position": "LB",
         "ovr": 68
       },
       {
-        "name": "O.Omar Gaber",
-        "position": "CB",
-        "ovr": 66
-      },
-      {
         "name": "M.Mohamed Abdelshafy",
-        "position": "LB",
-        "ovr": 67
-      },
-      {
-        "name": "A.Ali Maaloul",
         "position": "RB",
-        "ovr": 65
-      },
-      {
-        "name": "T.Tarek Hamed",
-        "position": "CM",
-        "ovr": 70
+        "ovr": 67
       },
       {
         "name": "A.Amr El Sulaya",
@@ -4892,9 +4887,14 @@
         "ovr": 67
       },
       {
-        "name": "A.Ahmed Refaat",
+        "name": "M.Mohamed Salah",
+        "position": "CM",
+        "ovr": 67
+      },
+      {
+        "name": "O.Omar Gaber",
         "position": "CAM",
-        "ovr": 70
+        "ovr": 66
       },
       {
         "name": "A.Akram Tawfik",
@@ -4902,14 +4902,14 @@
         "ovr": 66
       },
       {
-        "name": "O.Omar Marmoush",
+        "name": "A.Ali Maaloul",
         "position": "RW",
-        "ovr": 70
+        "ovr": 65
       },
       {
-        "name": "M.Mohamed Salah",
+        "name": "M.Mohamed El Shenawy",
         "position": "ST",
-        "ovr": 67
+        "ovr": 64
       }
     ]
   },
@@ -4920,59 +4920,59 @@
     "avg": 67,
     "squad": [
       {
-        "name": "J.Javier Garcia",
+        "name": "S.Sebastian Villa",
         "position": "GK",
-        "ovr": 65
-      },
-      {
-        "name": "B.Bruno Valdez",
-        "position": "CB",
-        "ovr": 64
-      },
-      {
-        "name": "L.Leonardo Jara",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
-        "name": "F.Franco Soldano",
-        "position": "LB",
-        "ovr": 63
+        "ovr": 70
       },
       {
         "name": "A.Alan Varela",
-        "position": "RB",
+        "position": "CB",
         "ovr": 69
       },
       {
-        "name": "A.Agustin Almendra",
-        "position": "CM",
-        "ovr": 64
-      },
-      {
-        "name": "V.Villa",
-        "position": "CM",
-        "ovr": 64
+        "name": "E.Equi Fernandez",
+        "position": "CB",
+        "ovr": 69
       },
       {
         "name": "L.Luca Langoni",
-        "position": "CAM",
+        "position": "LB",
         "ovr": 67
       },
       {
         "name": "D.Dario Benedetto",
-        "position": "LW",
+        "position": "RB",
         "ovr": 66
       },
       {
-        "name": "S.Sebastian Villa",
-        "position": "RW",
-        "ovr": 70
+        "name": "J.Javier Garcia",
+        "position": "CM",
+        "ovr": 65
       },
       {
-        "name": "E.Equi Fernandez",
+        "name": "B.Bruno Valdez",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "A.Agustin Almendra",
+        "position": "CAM",
+        "ovr": 64
+      },
+      {
+        "name": "V.Villa",
+        "position": "LW",
+        "ovr": 64
+      },
+      {
+        "name": "L.Leonardo Jara",
+        "position": "RW",
+        "ovr": 63
+      },
+      {
+        "name": "F.Franco Soldano",
         "position": "ST",
-        "ovr": 69
+        "ovr": 63
       }
     ]
   },
@@ -4983,59 +4983,59 @@
     "avg": 67,
     "squad": [
       {
-        "name": "B.Bechir Ben Said",
-        "position": "GK",
-        "ovr": 65
-      },
-      {
-        "name": "A.Ali Maaloul",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
         "name": "Y.Yohan Benalouane",
-        "position": "CB",
+        "position": "GK",
         "ovr": 69
       },
       {
-        "name": "G.Ghilane Chaâlali",
-        "position": "LB",
-        "ovr": 64
-      },
-      {
-        "name": "K.Khalil Chammam",
-        "position": "RB",
-        "ovr": 63
-      },
-      {
         "name": "M.Mohamed Ali Ben Romdhane",
-        "position": "CM",
+        "position": "CB",
         "ovr": 69
       },
       {
         "name": "F.Ferjani Sassi",
-        "position": "CM",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "Y.Youssef Msakni",
+        "position": "LB",
         "ovr": 69
       },
       {
         "name": "S.Saifeddine Khaoui",
-        "position": "CAM",
+        "position": "RB",
         "ovr": 68
       },
       {
-        "name": "H.Hamza Rafia",
-        "position": "LW",
+        "name": "B.Bechir Ben Said",
+        "position": "CM",
         "ovr": 65
       },
       {
-        "name": "Y.Youssef Msakni",
-        "position": "RW",
-        "ovr": 69
+        "name": "H.Hamza Rafia",
+        "position": "CM",
+        "ovr": 65
+      },
+      {
+        "name": "G.Ghilane Chaâlali",
+        "position": "CAM",
+        "ovr": 64
       },
       {
         "name": "W.Wahbi Khazri",
-        "position": "ST",
+        "position": "LW",
         "ovr": 64
+      },
+      {
+        "name": "A.Ali Maaloul",
+        "position": "RW",
+        "ovr": 63
+      },
+      {
+        "name": "K.Khalil Chammam",
+        "position": "ST",
+        "ovr": 63
       }
     ]
   },
@@ -5046,39 +5046,39 @@
     "avg": 66,
     "squad": [
       {
-        "name": "A.Alfred Gomis",
+        "name": "K.Kalidou Koulibaly",
         "position": "GK",
-        "ovr": 63
+        "ovr": 69
       },
       {
-        "name": "K.Kalidou Koulibaly",
+        "name": "I.Ismaila Sarr",
         "position": "CB",
         "ovr": 69
       },
       {
-        "name": "A.Abdou Diallo",
+        "name": "S.Sadio Maney",
         "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "N.Nampalys Mendy",
+        "position": "LB",
+        "ovr": 67
+      },
+      {
+        "name": "A.Abdou Diallo",
+        "position": "RB",
         "ovr": 66
       },
       {
         "name": "C.Cheikhou Kouyate",
-        "position": "LB",
+        "position": "CM",
         "ovr": 66
       },
       {
         "name": "P.Pape Abou Cisse",
-        "position": "RB",
+        "position": "CM",
         "ovr": 65
-      },
-      {
-        "name": "I.Idrissa Gueye",
-        "position": "CM",
-        "ovr": 64
-      },
-      {
-        "name": "N.Nampalys Mendy",
-        "position": "CM",
-        "ovr": 67
       },
       {
         "name": "A.Amadou Diallo",
@@ -5086,9 +5086,9 @@
         "ovr": 65
       },
       {
-        "name": "I.Ismaila Sarr",
+        "name": "I.Idrissa Gueye",
         "position": "LW",
-        "ovr": 69
+        "ovr": 64
       },
       {
         "name": "B.Boulaye Dia",
@@ -5096,9 +5096,9 @@
         "ovr": 64
       },
       {
-        "name": "S.Sadio Maney",
+        "name": "A.Alfred Gomis",
         "position": "ST",
-        "ovr": 69
+        "ovr": 63
       }
     ]
   },
@@ -5109,29 +5109,34 @@
     "avg": 66,
     "squad": [
       {
-        "name": "K.Khalid Essa",
+        "name": "M.Mohamed Al Akbari",
         "position": "GK",
-        "ovr": 63
+        "ovr": 69
+      },
+      {
+        "name": "S.Sebastian Tagliabue",
+        "position": "CB",
+        "ovr": 69
+      },
+      {
+        "name": "N.Nassir Al-Shamsi",
+        "position": "CB",
+        "ovr": 68
       },
       {
         "name": "W.Walid Abbas",
-        "position": "CB",
-        "ovr": 67
-      },
-      {
-        "name": "M.Mohamed Al-Shamsi",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
-        "name": "A.Ahmed Barman",
         "position": "LB",
-        "ovr": 66
+        "ovr": 67
       },
       {
         "name": "O.Omar Abdulrahman",
         "position": "RB",
         "ovr": 67
+      },
+      {
+        "name": "A.Ahmed Barman",
+        "position": "CM",
+        "ovr": 66
       },
       {
         "name": "H.Harib Asad",
@@ -5140,23 +5145,18 @@
       },
       {
         "name": "A.Ali Saleh",
-        "position": "CM",
+        "position": "CAM",
         "ovr": 64
       },
       {
-        "name": "M.Mohamed Al Akbari",
-        "position": "CAM",
-        "ovr": 69
-      },
-      {
-        "name": "N.Nassir Al-Shamsi",
+        "name": "K.Khalid Essa",
         "position": "LW",
-        "ovr": 68
+        "ovr": 63
       },
       {
-        "name": "S.Sebastian Tagliabue",
+        "name": "M.Mohamed Al-Shamsi",
         "position": "RW",
-        "ovr": 69
+        "ovr": 63
       },
       {
         "name": "D.Diego Capel",
@@ -5172,29 +5172,29 @@
     "avg": 65,
     "squad": [
       {
-        "name": "F.Florin Nita",
+        "name": "C.Claudiu Bumba",
         "position": "GK",
+        "ovr": 68
+      },
+      {
+        "name": "F.Florin Nita",
+        "position": "CB",
         "ovr": 67
       },
       {
-        "name": "I.Iulian Cristea",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
-        "name": "R.Radu Boboc",
-        "position": "CB",
-        "ovr": 61
-      },
-      {
         "name": "S.Stefan Duta",
-        "position": "LB",
+        "position": "CB",
         "ovr": 66
       },
       {
-        "name": "B.Bogdan Mitrea",
+        "name": "A.Adrian Petre",
+        "position": "LB",
+        "ovr": 65
+      },
+      {
+        "name": "D.Denis Alibec",
         "position": "RB",
-        "ovr": 62
+        "ovr": 65
       },
       {
         "name": "F.Florinel Coman",
@@ -5202,29 +5202,29 @@
         "ovr": 64
       },
       {
-        "name": "O.Ovidiu Popescu",
+        "name": "I.Iulian Cristea",
         "position": "CM",
         "ovr": 63
       },
       {
-        "name": "G.George Ganea",
+        "name": "O.Ovidiu Popescu",
         "position": "CAM",
+        "ovr": 63
+      },
+      {
+        "name": "B.Bogdan Mitrea",
+        "position": "LW",
+        "ovr": 62
+      },
+      {
+        "name": "R.Radu Boboc",
+        "position": "RW",
         "ovr": 61
       },
       {
-        "name": "A.Adrian Petre",
-        "position": "LW",
-        "ovr": 65
-      },
-      {
-        "name": "D.Denis Alibec",
-        "position": "RW",
-        "ovr": 65
-      },
-      {
-        "name": "C.Claudiu Bumba",
+        "name": "G.George Ganea",
         "position": "ST",
-        "ovr": 68
+        "ovr": 61
       }
     ]
   },
@@ -5240,39 +5240,39 @@
         "ovr": 67
       },
       {
-        "name": "S.Stefan Strandberg",
-        "position": "CB",
-        "ovr": 61
-      },
-      {
-        "name": "T.Tore Reginiussen",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
         "name": "E.Elias Hagen",
-        "position": "LB",
+        "position": "CB",
         "ovr": 66
       },
       {
         "name": "M.Mohamed Ofkir",
-        "position": "RB",
+        "position": "CB",
         "ovr": 64
       },
       {
-        "name": "A.Ardian Iseni",
+        "name": "B.Brice Wembangomo",
+        "position": "LB",
+        "ovr": 64
+      },
+      {
+        "name": "T.Tore Reginiussen",
+        "position": "RB",
+        "ovr": 63
+      },
+      {
+        "name": "C.Carlos Rivas",
+        "position": "CM",
+        "ovr": 63
+      },
+      {
+        "name": "S.Stefan Strandberg",
         "position": "CM",
         "ovr": 61
       },
       {
-        "name": "U.Ulrik Saltnes",
-        "position": "CM",
-        "ovr": 60
-      },
-      {
-        "name": "M.Marcus Holmgren Pedersen",
+        "name": "A.Ardian Iseni",
         "position": "CAM",
-        "ovr": 60
+        "ovr": 61
       },
       {
         "name": "J.Julian Ryerson",
@@ -5280,14 +5280,14 @@
         "ovr": 61
       },
       {
-        "name": "B.Brice Wembangomo",
+        "name": "U.Ulrik Saltnes",
         "position": "RW",
-        "ovr": 64
+        "ovr": 60
       },
       {
-        "name": "C.Carlos Rivas",
+        "name": "M.Marcus Holmgren Pedersen",
         "position": "ST",
-        "ovr": 63
+        "ovr": 60
       }
     ]
   },
@@ -5298,59 +5298,59 @@
     "avg": 64,
     "squad": [
       {
-        "name": "R.Rui Silva",
-        "position": "GK",
-        "ovr": 63
-      },
-      {
-        "name": "M.Miguel Luiz",
-        "position": "CB",
-        "ovr": 61
-      },
-      {
-        "name": "P.Paulo Oliveira",
-        "position": "CB",
-        "ovr": 63
-      },
-      {
         "name": "B.Bruno Wilson",
-        "position": "LB",
+        "position": "GK",
         "ovr": 67
       },
       {
         "name": "R.Rosier",
-        "position": "RB",
+        "position": "CB",
         "ovr": 66
       },
       {
         "name": "T.Tobias Figueiredo",
-        "position": "CM",
+        "position": "CB",
         "ovr": 66
       },
       {
-        "name": "P.Pedro Goncalves",
-        "position": "CM",
-        "ovr": 60
+        "name": "P.Pablo Sarabia",
+        "position": "LB",
+        "ovr": 66
       },
       {
-        "name": "N.Nuno Santos",
+        "name": "R.Rui Silva",
+        "position": "RB",
+        "ovr": 63
+      },
+      {
+        "name": "P.Paulo Oliveira",
+        "position": "CM",
+        "ovr": 63
+      },
+      {
+        "name": "E.Eduardo Camavinga",
+        "position": "CM",
+        "ovr": 62
+      },
+      {
+        "name": "M.Miguel Luiz",
         "position": "CAM",
         "ovr": 61
       },
       {
-        "name": "P.Pablo Sarabia",
+        "name": "N.Nuno Santos",
         "position": "LW",
-        "ovr": 66
+        "ovr": 61
       },
       {
-        "name": "D.Diego Callai",
+        "name": "P.Pedro Goncalves",
         "position": "RW",
         "ovr": 60
       },
       {
-        "name": "E.Eduardo Camavinga",
+        "name": "D.Diego Callai",
         "position": "ST",
-        "ovr": 62
+        "ovr": 60
       }
     ]
   },
@@ -5361,59 +5361,59 @@
     "avg": 63,
     "squad": [
       {
-        "name": "C.Chokchai Chaiman",
-        "position": "GK",
-        "ovr": 64
-      },
-      {
         "name": "S.Sakda Suksuwan",
-        "position": "CB",
+        "position": "GK",
         "ovr": 66
       },
       {
-        "name": "W.Watcharapong Sanit",
-        "position": "CB",
-        "ovr": 64
-      },
-      {
-        "name": "P.Pansa Hemviboon",
-        "position": "LB",
-        "ovr": 64
-      },
-      {
-        "name": "M.Mika Chunuonsee",
-        "position": "RB",
-        "ovr": 63
-      },
-      {
-        "name": "A.Anon Amornlertsak",
-        "position": "CM",
-        "ovr": 59
-      },
-      {
-        "name": "N.Nurul Sriyankem",
-        "position": "CM",
-        "ovr": 63
-      },
-      {
-        "name": "K.Keagamang Mosele",
-        "position": "CAM",
-        "ovr": 64
-      },
-      {
         "name": "D.Danilo Augusto",
-        "position": "LW",
+        "position": "CB",
         "ovr": 66
       },
       {
         "name": "O.Ove Pedersen",
-        "position": "RW",
+        "position": "CB",
         "ovr": 65
       },
       {
+        "name": "C.Chokchai Chaiman",
+        "position": "LB",
+        "ovr": 64
+      },
+      {
+        "name": "W.Watcharapong Sanit",
+        "position": "RB",
+        "ovr": 64
+      },
+      {
+        "name": "P.Pansa Hemviboon",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "K.Keagamang Mosele",
+        "position": "CM",
+        "ovr": 64
+      },
+      {
+        "name": "M.Mika Chunuonsee",
+        "position": "CAM",
+        "ovr": 63
+      },
+      {
+        "name": "N.Nurul Sriyankem",
+        "position": "LW",
+        "ovr": 63
+      },
+      {
         "name": "T.Tommy Oar",
-        "position": "ST",
+        "position": "RW",
         "ovr": 62
+      },
+      {
+        "name": "A.Anon Amornlertsak",
+        "position": "ST",
+        "ovr": 59
       }
     ]
   },
@@ -5424,54 +5424,54 @@
     "avg": 63,
     "squad": [
       {
-        "name": "R.Ronwen Williams",
-        "position": "GK",
-        "ovr": 60
-      },
-      {
-        "name": "T.Thulani Hlatshwayo",
-        "position": "CB",
-        "ovr": 61
-      },
-      {
-        "name": "B.Buhle Mkhwanazi",
-        "position": "CB",
-        "ovr": 59
-      },
-      {
-        "name": "T.Tercious Malepe",
-        "position": "LB",
-        "ovr": 62
-      },
-      {
         "name": "S.Siyanda Xulu",
-        "position": "RB",
+        "position": "GK",
+        "ovr": 66
+      },
+      {
+        "name": "S.Sibusiso Vilakazi",
+        "position": "CB",
+        "ovr": 66
+      },
+      {
+        "name": "B.Bradley Grobler",
+        "position": "CB",
         "ovr": 66
       },
       {
         "name": "Y.Yusuf Maart",
-        "position": "CM",
+        "position": "LB",
         "ovr": 64
-      },
-      {
-        "name": "S.Sibusiso Vilakazi",
-        "position": "CM",
-        "ovr": 66
       },
       {
         "name": "E.Evidence Makgopa",
-        "position": "CAM",
+        "position": "RB",
         "ovr": 64
       },
       {
-        "name": "B.Bradley Grobler",
-        "position": "LW",
-        "ovr": 66
+        "name": "T.Tercious Malepe",
+        "position": "CM",
+        "ovr": 62
+      },
+      {
+        "name": "T.Thulani Hlatshwayo",
+        "position": "CM",
+        "ovr": 61
       },
       {
         "name": "T.Thabo Nodada",
-        "position": "RW",
+        "position": "CAM",
         "ovr": 61
+      },
+      {
+        "name": "R.Ronwen Williams",
+        "position": "LW",
+        "ovr": 60
+      },
+      {
+        "name": "B.Buhle Mkhwanazi",
+        "position": "RW",
+        "ovr": 59
       },
       {
         "name": "A.Aubrey Modiba",
@@ -5487,8 +5487,13 @@
     "avg": 62,
     "squad": [
       {
-        "name": "P.Phurba Lachenpa",
+        "name": "R.Rahul Bheke",
         "position": "GK",
+        "ovr": 65
+      },
+      {
+        "name": "P.Phurba Lachenpa",
+        "position": "CB",
         "ovr": 64
       },
       {
@@ -5497,24 +5502,14 @@
         "ovr": 64
       },
       {
-        "name": "A.Akash Mishra",
-        "position": "CB",
-        "ovr": 60
+        "name": "P.Pranjal Bhumij",
+        "position": "LB",
+        "ovr": 64
       },
       {
         "name": "A.Alberto Noguera",
-        "position": "LB",
-        "ovr": 63
-      },
-      {
-        "name": "R.Rahul Bheke",
         "position": "RB",
-        "ovr": 65
-      },
-      {
-        "name": "L.Lalengmawia",
-        "position": "CM",
-        "ovr": 58
+        "ovr": 63
       },
       {
         "name": "B.Bipin Singh",
@@ -5522,14 +5517,19 @@
         "ovr": 61
       },
       {
-        "name": "V.Vikram Partap Singh",
+        "name": "H.Hugo Boumous",
+        "position": "CM",
+        "ovr": 61
+      },
+      {
+        "name": "A.Akash Mishra",
         "position": "CAM",
         "ovr": 60
       },
       {
-        "name": "H.Hugo Boumous",
+        "name": "V.Vikram Partap Singh",
         "position": "LW",
-        "ovr": 61
+        "ovr": 60
       },
       {
         "name": "A.Ayush Adhikari",
@@ -5537,9 +5537,9 @@
         "ovr": 60
       },
       {
-        "name": "P.Pranjal Bhumij",
+        "name": "L.Lalengmawia",
         "position": "ST",
-        "ovr": 64
+        "ovr": 58
       }
     ]
   },
@@ -5550,28 +5550,33 @@
     "avg": 62,
     "squad": [
       {
-        "name": "R.Raul Gudino",
+        "name": "A.Antonio Briseno",
         "position": "GK",
-        "ovr": 59
+        "ovr": 64
       },
       {
-        "name": "A.Antonio Briseno",
+        "name": "J.Jesus Angulo",
         "position": "CB",
         "ovr": 64
       },
       {
-        "name": "M.Miguel Ponce",
+        "name": "M.Mateus Uribe",
         "position": "CB",
-        "ovr": 58
+        "ovr": 64
       },
       {
-        "name": "J.Jesus Angulo",
+        "name": "S.Sebastian Perez",
         "position": "LB",
         "ovr": 64
       },
       {
-        "name": "G.Gilberto Sepulveda",
+        "name": "D.Daniel Rios",
         "position": "RB",
+        "ovr": 61
+      },
+      {
+        "name": "G.Gilberto Sepulveda",
+        "position": "CM",
         "ovr": 60
       },
       {
@@ -5580,29 +5585,24 @@
         "ovr": 60
       },
       {
-        "name": "M.Mateus Uribe",
-        "position": "CM",
-        "ovr": 64
-      },
-      {
-        "name": "S.Sebastian Perez",
+        "name": "J.Jose Macias",
         "position": "CAM",
-        "ovr": 64
+        "ovr": 60
       },
       {
-        "name": "A.Alan Torres",
+        "name": "R.Raul Gudino",
         "position": "LW",
+        "ovr": 59
+      },
+      {
+        "name": "M.Miguel Ponce",
+        "position": "RW",
         "ovr": 58
       },
       {
-        "name": "D.Daniel Rios",
-        "position": "RW",
-        "ovr": 61
-      },
-      {
-        "name": "J.Jose Macias",
+        "name": "A.Alan Torres",
         "position": "ST",
-        "ovr": 60
+        "ovr": 58
       }
     ]
   },
@@ -5613,59 +5613,59 @@
     "avg": 61,
     "squad": [
       {
-        "name": "S.Stefan Viuanović",
+        "name": "S.Strahinja Pavlović",
         "position": "GK",
+        "ovr": 64
+      },
+      {
+        "name": "S.Stefan Viuanović",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "N.Nemanja Nikolić",
+        "position": "CB",
+        "ovr": 63
+      },
+      {
+        "name": "V.Vujadin Savić",
+        "position": "LB",
         "ovr": 63
       },
       {
         "name": "L.Lazar Marković",
-        "position": "CB",
+        "position": "RB",
+        "ovr": 62
+      },
+      {
+        "name": "U.Umar Khomutov",
+        "position": "CM",
         "ovr": 62
       },
       {
         "name": "B.Bibras Natcho",
-        "position": "CB",
+        "position": "CM",
         "ovr": 60
-      },
-      {
-        "name": "D.Danilo Pantić",
-        "position": "LB",
-        "ovr": 57
       },
       {
         "name": "Z.Zoran Tošić",
-        "position": "RB",
+        "position": "CAM",
         "ovr": 60
       },
       {
-        "name": "S.Strahinja Pavlović",
-        "position": "CM",
-        "ovr": 64
-      },
-      {
         "name": "A.Aleksandar Lutovac",
-        "position": "CM",
-        "ovr": 58
-      },
-      {
-        "name": "N.Nemanja Nikolić",
-        "position": "CAM",
-        "ovr": 63
-      },
-      {
-        "name": "R.Rikke Nygaard",
         "position": "LW",
         "ovr": 58
       },
       {
-        "name": "V.Vujadin Savić",
+        "name": "R.Rikke Nygaard",
         "position": "RW",
-        "ovr": 63
+        "ovr": 58
       },
       {
-        "name": "U.Umar Khomutov",
+        "name": "D.Danilo Pantić",
         "position": "ST",
-        "ovr": 62
+        "ovr": 57
       }
     ]
   },
@@ -5676,59 +5676,59 @@
     "avg": 60,
     "squad": [
       {
-        "name": "A.Aleksandr Mokin",
-        "position": "GK",
-        "ovr": 59
-      },
-      {
-        "name": "G.Gafurzhan Suyumbayev",
-        "position": "CB",
-        "ovr": 58
-      },
-      {
-        "name": "I.Islambek Kuat",
-        "position": "CB",
-        "ovr": 58
-      },
-      {
-        "name": "V.Vladimir Loginov",
-        "position": "LB",
-        "ovr": 62
-      },
-      {
-        "name": "B.Bauyrzhan Islamkhan",
-        "position": "RB",
-        "ovr": 56
-      },
-      {
-        "name": "A.Andrey Arshavin",
-        "position": "CM",
-        "ovr": 57
-      },
-      {
-        "name": "S.Serikzhan Muzhikov",
-        "position": "CM",
-        "ovr": 60
-      },
-      {
-        "name": "Y.Yerlan Seidakhmet",
-        "position": "CAM",
-        "ovr": 56
-      },
-      {
         "name": "N.Nurali Alip",
-        "position": "LW",
+        "position": "GK",
         "ovr": 63
       },
       {
+        "name": "V.Vladimir Loginov",
+        "position": "CB",
+        "ovr": 62
+      },
+      {
         "name": "A.Abat Aimbetov",
-        "position": "RW",
+        "position": "CB",
         "ovr": 62
       },
       {
         "name": "P.Patrick Twumasi",
-        "position": "ST",
+        "position": "LB",
         "ovr": 61
+      },
+      {
+        "name": "S.Serikzhan Muzhikov",
+        "position": "RB",
+        "ovr": 60
+      },
+      {
+        "name": "A.Aleksandr Mokin",
+        "position": "CM",
+        "ovr": 59
+      },
+      {
+        "name": "G.Gafurzhan Suyumbayev",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
+        "name": "I.Islambek Kuat",
+        "position": "CAM",
+        "ovr": 58
+      },
+      {
+        "name": "A.Andrey Arshavin",
+        "position": "LW",
+        "ovr": 57
+      },
+      {
+        "name": "B.Bauyrzhan Islamkhan",
+        "position": "RW",
+        "ovr": 56
+      },
+      {
+        "name": "Y.Yerlan Seidakhmet",
+        "position": "ST",
+        "ovr": 56
       }
     ]
   },
@@ -5739,9 +5739,14 @@
     "avg": 60,
     "squad": [
       {
-        "name": "M.Meshaal Barsham",
+        "name": "B.Bassam Al-Rawi",
         "position": "GK",
-        "ovr": 58
+        "ovr": 63
+      },
+      {
+        "name": "A.Assim Madibo",
+        "position": "CB",
+        "ovr": 61
       },
       {
         "name": "P.Pedro Miguel",
@@ -5750,23 +5755,13 @@
       },
       {
         "name": "H.Hassan Al-Haydos",
-        "position": "CB",
+        "position": "LB",
         "ovr": 60
       },
       {
-        "name": "A.Assim Madibo",
-        "position": "LB",
-        "ovr": 61
-      },
-      {
-        "name": "K.Karim Boudiaf",
+        "name": "M.Meshaal Barsham",
         "position": "RB",
-        "ovr": 57
-      },
-      {
-        "name": "A.Akram Afif",
-        "position": "CM",
-        "ovr": 57
+        "ovr": 58
       },
       {
         "name": "A.Almoez Ali",
@@ -5774,24 +5769,29 @@
         "ovr": 58
       },
       {
-        "name": "N.Nam Tae-hee",
+        "name": "K.Karim Boudiaf",
+        "position": "CM",
+        "ovr": 57
+      },
+      {
+        "name": "A.Akram Afif",
         "position": "CAM",
         "ovr": 57
       },
       {
-        "name": "J.Jassim Jabir",
+        "name": "N.Nam Tae-hee",
         "position": "LW",
-        "ovr": 56
-      },
-      {
-        "name": "B.Bassam Al-Rawi",
-        "position": "RW",
-        "ovr": 63
+        "ovr": 57
       },
       {
         "name": "A.Amro Tarek",
-        "position": "ST",
+        "position": "RW",
         "ovr": 57
+      },
+      {
+        "name": "J.Jassim Jabir",
+        "position": "ST",
+        "ovr": 56
       }
     ]
   },
@@ -5802,59 +5802,59 @@
     "avg": 59,
     "squad": [
       {
-        "name": "A.Andris Varacins",
-        "position": "GK",
-        "ovr": 57
-      },
-      {
         "name": "K.Kristaps Zommers",
-        "position": "CB",
+        "position": "GK",
         "ovr": 62
-      },
-      {
-        "name": "R.Rihards Matrevics",
-        "position": "CB",
-        "ovr": 58
-      },
-      {
-        "name": "G.Georgs Puriņš",
-        "position": "LB",
-        "ovr": 57
       },
       {
         "name": "A.Aleksejs Višnakovs",
-        "position": "RB",
+        "position": "CB",
         "ovr": 62
-      },
-      {
-        "name": "R.Raimonds Salinš",
-        "position": "CM",
-        "ovr": 55
       },
       {
         "name": "A.Arturs Zjuzins",
-        "position": "CM",
+        "position": "CB",
         "ovr": 62
       },
       {
-        "name": "E.Emīls Uldriķis",
-        "position": "CAM",
-        "ovr": 56
-      },
-      {
         "name": "S.Sandro Lima",
-        "position": "LW",
+        "position": "LB",
         "ovr": 62
       },
       {
         "name": "V.Valentin Rugin",
-        "position": "RW",
+        "position": "RB",
         "ovr": 61
       },
       {
         "name": "B.Boubacar Mansaly",
-        "position": "ST",
+        "position": "CM",
         "ovr": 60
+      },
+      {
+        "name": "R.Rihards Matrevics",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
+        "name": "A.Andris Varacins",
+        "position": "CAM",
+        "ovr": 57
+      },
+      {
+        "name": "G.Georgs Puriņš",
+        "position": "LW",
+        "ovr": 57
+      },
+      {
+        "name": "E.Emīls Uldriķis",
+        "position": "RW",
+        "ovr": 56
+      },
+      {
+        "name": "R.Raimonds Salinš",
+        "position": "ST",
+        "ovr": 55
       }
     ]
   },
@@ -5870,49 +5870,49 @@
         "ovr": 61
       },
       {
+        "name": "R.Runar Mar Sigurdsson",
+        "position": "CB",
+        "ovr": 61
+      },
+      {
         "name": "K.Kristinn Steindorsson",
         "position": "CB",
         "ovr": 60
       },
       {
-        "name": "A.Aron Einar Gunnarsson",
-        "position": "CB",
-        "ovr": 54
-      },
-      {
-        "name": "B.Birkir Bjarnason",
-        "position": "LB",
-        "ovr": 58
-      },
-      {
-        "name": "S.Sverrir Ingi Ingason",
-        "position": "RB",
-        "ovr": 55
-      },
-      {
-        "name": "R.Runar Mar Sigurdsson",
-        "position": "CM",
-        "ovr": 61
-      },
-      {
         "name": "E.Elfar Freyr Thordarson",
-        "position": "CM",
+        "position": "LB",
         "ovr": 60
       },
       {
+        "name": "V.Viktor Palsson",
+        "position": "RB",
+        "ovr": 59
+      },
+      {
+        "name": "B.Birkir Bjarnason",
+        "position": "CM",
+        "ovr": 58
+      },
+      {
         "name": "J.Johann Berg Gudmundsson",
-        "position": "CAM",
+        "position": "CM",
         "ovr": 57
       },
       {
         "name": "O.Oliver Sigurjonsson",
-        "position": "LW",
+        "position": "CAM",
         "ovr": 57
       },
       {
-        "name": "V.Viktor Palsson",
+        "name": "S.Sverrir Ingi Ingason",
+        "position": "LW",
+        "ovr": 55
+      },
+      {
+        "name": "A.Aron Einar Gunnarsson",
         "position": "RW",
-        "ovr": 59
+        "ovr": 54
       },
       {
         "name": "A.Albert Gudmundsson",
@@ -5928,54 +5928,54 @@
     "avg": 57,
     "squad": [
       {
-        "name": "O.Oybek Sobirov",
-        "position": "GK",
-        "ovr": 56
-      },
-      {
-        "name": "A.Abdulloh Abdulloyev",
-        "position": "CB",
-        "ovr": 57
-      },
-      {
-        "name": "S.Sardor Rashidov",
-        "position": "CB",
-        "ovr": 57
-      },
-      {
         "name": "J.Jaloliddin Masharipov",
-        "position": "LB",
+        "position": "GK",
         "ovr": 60
       },
       {
         "name": "I.Islom Tukhtahujaev",
-        "position": "RB",
+        "position": "CB",
         "ovr": 60
       },
       {
-        "name": "N.Nodir Bafoev",
-        "position": "CM",
-        "ovr": 56
-      },
-      {
-        "name": "B.Bobur Abdixoliqov",
-        "position": "CM",
-        "ovr": 55
-      },
-      {
-        "name": "D.Doniyor Ganiev",
-        "position": "CAM",
-        "ovr": 57
-      },
-      {
         "name": "F.Firdavs Tursunov",
-        "position": "LW",
+        "position": "CB",
         "ovr": 59
       },
       {
         "name": "U.Ulugbek Asatov",
-        "position": "RW",
+        "position": "LB",
         "ovr": 59
+      },
+      {
+        "name": "A.Abdulloh Abdulloyev",
+        "position": "RB",
+        "ovr": 57
+      },
+      {
+        "name": "S.Sardor Rashidov",
+        "position": "CM",
+        "ovr": 57
+      },
+      {
+        "name": "D.Doniyor Ganiev",
+        "position": "CM",
+        "ovr": 57
+      },
+      {
+        "name": "O.Oybek Sobirov",
+        "position": "CAM",
+        "ovr": 56
+      },
+      {
+        "name": "N.Nodir Bafoev",
+        "position": "LW",
+        "ovr": 56
+      },
+      {
+        "name": "B.Bobur Abdixoliqov",
+        "position": "RW",
+        "ovr": 55
       },
       {
         "name": "A.Akbar Kholdorov",
@@ -5991,59 +5991,59 @@
     "avg": 56,
     "squad": [
       {
-        "name": "J.Joseph Mnzava",
+        "name": "G.Gideon Sanga",
         "position": "GK",
-        "ovr": 52
+        "ovr": 59
+      },
+      {
+        "name": "C.Clatous Chama",
+        "position": "CB",
+        "ovr": 59
+      },
+      {
+        "name": "S.Salum Abubakar",
+        "position": "CB",
+        "ovr": 55
       },
       {
         "name": "T.Thomas Ulimwengu",
-        "position": "CB",
+        "position": "LB",
         "ovr": 54
       },
       {
-        "name": "N.Nizar Khalfan",
-        "position": "CB",
-        "ovr": 52
+        "name": "I.Ibrahim Ajibu",
+        "position": "RB",
+        "ovr": 54
       },
       {
         "name": "A.Aggrey Morris",
-        "position": "LB",
+        "position": "CM",
         "ovr": 53
       },
       {
         "name": "A.Abdul Mwambi",
-        "position": "RB",
-        "ovr": 53
-      },
-      {
-        "name": "I.Ibrahim Ajibu",
         "position": "CM",
-        "ovr": 54
+        "ovr": 53
       },
       {
         "name": "H.Haruna Nyakabete",
-        "position": "CM",
+        "position": "CAM",
         "ovr": 53
       },
       {
-        "name": "G.Gideon Sanga",
-        "position": "CAM",
-        "ovr": 59
-      },
-      {
-        "name": "B.Ben Simama",
+        "name": "J.Joseph Mnzava",
         "position": "LW",
         "ovr": 52
       },
       {
-        "name": "S.Salum Abubakar",
+        "name": "N.Nizar Khalfan",
         "position": "RW",
-        "ovr": 55
+        "ovr": 52
       },
       {
-        "name": "C.Clatous Chama",
+        "name": "B.Ben Simama",
         "position": "ST",
-        "ovr": 59
+        "ovr": 52
       }
     ]
   },
@@ -6054,29 +6054,34 @@
     "avg": 55,
     "squad": [
       {
-        "name": "U.Uuganbayar Tserenpuntsag",
+        "name": "B.Batbaatar Gantulga",
         "position": "GK",
-        "ovr": 51
+        "ovr": 58
       },
       {
-        "name": "B.Batbaatar Gantulga",
+        "name": "G.Gantulga Purev",
         "position": "CB",
         "ovr": 58
       },
       {
-        "name": "E.Enkhtaivan Nasan",
+        "name": "T.Tserenpuntsag Myagmarsuren",
         "position": "CB",
+        "ovr": 56
+      },
+      {
+        "name": "D.Dolgorsuren Otgonbayar",
+        "position": "LB",
+        "ovr": 56
+      },
+      {
+        "name": "E.Enkhtaivan Nasan",
+        "position": "RB",
         "ovr": 55
       },
       {
         "name": "M.Munkh-Erdene Batjargal",
-        "position": "LB",
+        "position": "CM",
         "ovr": 55
-      },
-      {
-        "name": "T.Tserenpuntsag Myagmarsuren",
-        "position": "RB",
-        "ovr": 56
       },
       {
         "name": "G.Gantulga Badarch",
@@ -6084,29 +6089,24 @@
         "ovr": 54
       },
       {
-        "name": "B.Baterdene Ganbold",
-        "position": "CM",
-        "ovr": 52
-      },
-      {
         "name": "N.Naranbaatar Tserenpuntsag",
         "position": "CAM",
         "ovr": 53
       },
       {
-        "name": "D.Dolgorsuren Otgonbayar",
-        "position": "LW",
-        "ovr": 56
-      },
-      {
         "name": "A.Altangerel Batzul",
-        "position": "RW",
+        "position": "LW",
         "ovr": 53
       },
       {
-        "name": "G.Gantulga Purev",
+        "name": "B.Baterdene Ganbold",
+        "position": "RW",
+        "ovr": 52
+      },
+      {
+        "name": "U.Uuganbayar Tserenpuntsag",
         "position": "ST",
-        "ovr": 58
+        "ovr": 51
       }
     ]
   }

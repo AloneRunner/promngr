@@ -392,9 +392,51 @@ app.get('/api/profile/:playerId', async (req, res) => {
   }
 });
 
-// ─── CHALLENGE / DIRECT MATCH ────────────────────────────────────────────────
+// ─── DIRECT MATCH ────────────────────────────────────────────────────────────
 
-// POST /api/challenge  — meydan oku
+const DAILY_DIRECT_LIMIT = 3;
+
+// POST /api/direct-match/:opponentId  — istediğin rakibe direkt meydan oku (günde 3)
+app.post('/api/direct-match/:opponentId', async (req, res) => {
+  const { playerId } = req.body;
+  const { opponentId } = req.params;
+  if (!playerId) return res.status(400).json({ error: 'playerId required' });
+
+  try {
+    // Günlük limit kontrolü
+    const { rows: limitRows } = await pool.query(`
+      SELECT COUNT(*) FROM matches
+      WHERE (home_player_id = $1 OR away_player_id = $1)
+        AND match_type = 'direct'
+        AND played_at > NOW() - INTERVAL '24 hours'
+    `, [playerId]);
+    if (parseInt(limitRows[0].count) >= DAILY_DIRECT_LIMIT) {
+      return res.status(429).json({
+        error: `Günlük ${DAILY_DIRECT_LIMIT} direkt maç hakkın doldu. Yarın tekrar dene!`,
+        limitReached: true
+      });
+    }
+
+    // Rakip snapshot'ı getir
+    const { rows } = await pool.query(`
+      SELECT p.player_id, p.username, p.team_name, p.elo, p.nationality,
+             s.formation, s.tactics, s.squad, s.avg_ovr
+      FROM players p
+      LEFT JOIN team_snapshots s ON s.player_id = p.player_id
+      WHERE p.player_id = $1
+    `, [opponentId]);
+    if (!rows[0]) return res.status(404).json({ error: 'Opponent not found' });
+
+    res.json({ ok: true, opponent: rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// ─── LEGACY CHALLENGE (artık kullanılmıyor, backward compat) ─────────────────
+
+// POST /api/challenge  — eski sistem (devre dışı)
 app.post('/api/challenge', async (req, res) => {
   const { challengerId, challengedId } = req.body;
   if (!challengerId || !challengedId) return res.status(400).json({ error: 'Both IDs required' });

@@ -90,11 +90,24 @@ export async function findOpponent(): Promise<MPOpponent | null> {
   }
 }
 
+export async function requestDirectMatch(opponentId: string): Promise<{ ok?: boolean; opponent?: MPOpponent; error?: string; limitReached?: boolean }> {
+  try {
+    const res = await fetch(`${API_URL}/direct-match/${opponentId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerId: getOrCreatePlayerId() }),
+    });
+    return res.json();
+  } catch {
+    return { error: 'Network error' };
+  }
+}
+
 export async function submitMatchResult(
   awayPlayerId: string,
   homeScore: number,
   awayScore: number,
-  matchType: 'ranked' | 'challenge' = 'ranked'
+  matchType: 'ranked' | 'direct' | 'challenge' = 'ranked'
 ): Promise<MatchResult | null> {
   try {
     const res = await fetch(`${API_URL}/match/result`, {

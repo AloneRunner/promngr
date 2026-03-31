@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trophy, RefreshCw, Globe, Swords } from 'lucide-react';
-import { getLeaderboard, getMyProfile, MPPlayer, getOrCreatePlayerId, sendChallenge } from '../src/services/multiplayerService';
+import { getLeaderboard, getMyProfile, MPPlayer, MPOpponent, getOrCreatePlayerId, requestDirectMatch } from '../src/services/multiplayerService';
 
 interface Props {
   onClose: () => void;
   t: any;
+  onDirectMatch?: (opponent: MPOpponent) => void;
 }
 
 // ─── Liga sistemi (ileride genişler) ────────────────────────────────────────
@@ -60,21 +61,24 @@ function nationalityToFlag(nat?: string): string {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function OnlineLeaderboard({ onClose, t }: Props) {
+export default function OnlineLeaderboard({ onClose, t, onDirectMatch }: Props) {
   const [players, setPlayers] = useState<MPPlayer[]>([]);
   const [myProfile, setMyProfile] = useState<MPPlayer | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeLeague, setActiveLeague] = useState<string>('all');
-  const [challengeStatus, setChallengeStatus] = useState<Record<string, 'sending' | 'sent' | 'error' | 'blocked'>>({});
+  const [challengeStatus, setChallengeStatus] = useState<Record<string, 'sending' | 'sent' | 'error' | 'limit'>>({});
   const myId = getOrCreatePlayerId();
 
-  async function handleChallenge(p: MPPlayer) {
+  async function handleDirectMatch(p: MPPlayer) {
+    if (!onDirectMatch) return;
     setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'sending' }));
-    const result = await sendChallenge(p.player_id);
-    if (result.ok) {
+    const result = await requestDirectMatch(p.player_id);
+    if (result.ok && result.opponent) {
       setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'sent' }));
-    } else if (result.error?.includes('ELO')) {
-      setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'blocked' }));
+      onDirectMatch(result.opponent);
+      onClose();
+    } else if (result.limitReached) {
+      setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'limit' }));
     } else {
       setChallengeStatus(prev => ({ ...prev, [p.player_id]: 'error' }));
     }
@@ -239,27 +243,21 @@ export default function OnlineLeaderboard({ onClose, t }: Props) {
                       <div className={`text-base font-black ${league.color}`}>{p.elo}</div>
                       <div className="text-[10px] text-slate-500">ELO</div>
                     </div>
-                    {!isMe && (() => {
+                    {!isMe && onDirectMatch && (() => {
                       const st = challengeStatus[p.player_id];
-                      const myElo = myProfile?.elo ?? 1000;
-                      const diff = Math.abs(p.elo - myElo);
-                      const tooFar = diff > 500;
-                      if (tooFar) return (
-                        <div className="text-[9px] text-slate-600 text-right">{t.onlineEloDiffTooLarge || 'ELO gap too large'}</div>
-                      );
                       return (
                         <button
-                          onClick={() => handleChallenge(p)}
-                          disabled={!!st}
+                          onClick={() => handleDirectMatch(p)}
+                          disabled={st === 'sending' || st === 'limit'}
                           className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold transition-all active:scale-95 ${
-                            st === 'sent' ? 'bg-emerald-700/40 text-emerald-400 cursor-default' :
+                            st === 'limit' ? 'bg-orange-700/40 text-orange-400 cursor-default' :
                             st === 'sending' ? 'bg-slate-700 text-slate-400 cursor-wait' :
                             st === 'error' ? 'bg-red-700/40 text-red-400' :
                             'bg-purple-600/30 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50'
                           }`}
                         >
                           <Swords size={10} />
-                          {st === 'sent' ? (t.onlineChallengeSent || 'Sent') : st === 'sending' ? '...' : st === 'error' ? (t.onlineChallengeError || 'Error') : (t.onlineChallenge || 'Challenge')}
+                          {st === 'limit' ? '3/3' : st === 'sending' ? '...' : st === 'error' ? (t.onlineChallengeError || 'Error') : (t.onlineChallenge || 'Challenge')}
                         </button>
                       );
                     })()}

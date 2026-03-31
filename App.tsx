@@ -107,7 +107,8 @@ const App: React.FC = () => {
     const [showOnlineLeaderboard, setShowOnlineLeaderboard] = useState(false);
     const [onlineInfoOpen, setOnlineInfoOpen] = useState(false);
     const [onlineMatchOpponent, setOnlineMatchOpponent] = useState<MPOpponent | null>(null);
-    const [onlineMatchType, setOnlineMatchType] = useState<'ranked' | 'challenge'>('ranked');
+    const [onlineMatchType, setOnlineMatchType] = useState<'ranked' | 'direct'>('ranked');
+    const [directMatchOpponent, setDirectMatchOpponent] = useState<MPOpponent | null>(null);
     const [onlineEloChange, setOnlineEloChange] = useState<number | null>(null);
     const [showGlobalHistory, setShowGlobalHistory] = useState(false);
     const [showWorldRankings, setShowWorldRankings] = useState(false);
@@ -1084,7 +1085,7 @@ const App: React.FC = () => {
 
 
     // ========== ONLINE MATCH ==========
-    const handleStartOnlineMatch = (opponent: MPOpponent, matchType: 'ranked' | 'challenge' = 'ranked') => {
+    const handleStartOnlineMatch = (opponent: MPOpponent, matchType: 'ranked' | 'direct' = 'ranked') => {
         if (!gameState || !userTeam) return;
 
         const oppTeamId = `online-opp-${Date.now()}`;
@@ -4000,17 +4001,26 @@ const App: React.FC = () => {
                 }}
             />
             {showOnlineLeaderboard && (
-                <OnlineLeaderboard onClose={() => setShowOnlineLeaderboard(false)} t={t} />
+                <OnlineLeaderboard
+                    onClose={() => setShowOnlineLeaderboard(false)}
+                    t={t}
+                    onDirectMatch={(opp) => {
+                        setDirectMatchOpponent(opp);
+                        setShowOnlineLeaderboard(false);
+                        setShowOnlineMatch(true);
+                    }}
+                />
             )}
             {showOnlineMatch && userTeam && (
                 <OnlineMatchModal
-                    onClose={() => setShowOnlineMatch(false)}
-                    onStartMatch={(opp, type) => { setShowOnlineMatch(false); handleStartOnlineMatch(opp, type); }}
+                    onClose={() => { setShowOnlineMatch(false); setDirectMatchOpponent(null); }}
+                    onStartMatch={(opp, type) => { setShowOnlineMatch(false); setDirectMatchOpponent(null); handleStartOnlineMatch(opp, type); }}
                     userTeam={userTeam}
                     userPlayers={gameState.players.filter(p => p.teamId === gameState.userTeamId)}
                     managerName={gameState.managerProfile?.displayName}
                     managerNationality={gameState.managerProfile?.nationality}
                     t={t}
+                    directOpponent={directMatchOpponent}
                 />
             )}
             {showTeamCustomization && userTeam && (
