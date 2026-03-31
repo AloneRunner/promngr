@@ -250,33 +250,51 @@ app.get('/api/matchmaking/:playerId', async (req, res) => {
     );
 
     const myOvr = self.rows[0]?.avg_ovr || 70;
-    const ovrRange = 10; // ±10 OVR tolerans (beta: geniş tutuyoruz)
+    const ovrRange = 12;
 
-    // Kendisi hariç, OVR yakın, son 7 gün içinde aktif birini bul
-    const { rows } = await pool.query(`
-      SELECT p.player_id, p.username, p.team_name, p.elo,
-             s.formation, s.tactics, s.squad, s.avg_ovr
-      FROM team_snapshots s
+    const humanCols = `p.player_id, p.username, p.team_name, p.elo, s.formation, s.tactics, s.squad, s.avg_ovr`;
+
+    // 1) Gerçek oyuncu — OVR yakın, son 7 gün aktif
+    const human = await pool.query(`
+      SELECT ${humanCols} FROM team_snapshots s
       JOIN players p ON p.player_id = s.player_id
       WHERE s.player_id != $1
+        AND p.player_id NOT LIKE 'bot-%'
         AND s.avg_ovr BETWEEN $2 AND $3
         AND s.updated_at > NOW() - INTERVAL '7 days'
-      ORDER BY RANDOM()
-      LIMIT 1
+      ORDER BY RANDOM() LIMIT 1
+    `, [playerId, myOvr - ovrRange, myOvr + ovrRange]);
+    if (human.rows.length > 0) return res.json(human.rows[0]);
+
+    // 2) Gerçek oyuncu — OVR fark yok, son 30 gün aktif
+    const humanAny = await pool.query(`
+      SELECT ${humanCols} FROM team_snapshots s
+      JOIN players p ON p.player_id = s.player_id
+      WHERE s.player_id != $1
+        AND p.player_id NOT LIKE 'bot-%'
+        AND s.updated_at > NOW() - INTERVAL '30 days'
+      ORDER BY RANDOM() LIMIT 1
+    `, [playerId]);
+    if (humanAny.rows.length > 0) return res.json(humanAny.rows[0]);
+
+    // 3) Bot — OVR yakın
+    const { rows } = await pool.query(`
+      SELECT ${humanCols} FROM team_snapshots s
+      JOIN players p ON p.player_id = s.player_id
+      WHERE s.player_id != $1
+        AND p.player_id LIKE 'bot-%'
+        AND s.avg_ovr BETWEEN $2 AND $3
+      ORDER BY RANDOM() LIMIT 1
     `, [playerId, myOvr - ovrRange, myOvr + ovrRange]);
 
     if (rows.length === 0) {
-      // OVR eşleşmesi yoksa herkesten random seç
+      // 4) Bot — herhangi
       const fallback = await pool.query(`
-        SELECT p.player_id, p.username, p.team_name, p.elo,
-               s.formation, s.tactics, s.squad, s.avg_ovr
-        FROM team_snapshots s
+        SELECT ${humanCols} FROM team_snapshots s
         JOIN players p ON p.player_id = s.player_id
-        WHERE s.player_id != $1
-        ORDER BY RANDOM()
-        LIMIT 1
+        WHERE s.player_id != $1 AND p.player_id LIKE 'bot-%'
+        ORDER BY RANDOM() LIMIT 1
       `, [playerId]);
-
       if (fallback.rows.length === 0) {
         return res.status(404).json({ error: 'No opponents found yet. Try again later!' });
       }

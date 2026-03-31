@@ -51,12 +51,42 @@ function winRate(p: MPPlayer): number {
   return Math.round((p.wins / total) * 100);
 }
 
+const NAT_TO_ISO: Record<string, string> = {
+  // English names
+  'Turkey':'TR','England':'GB','Scotland':'GB','Wales':'GB','France':'FR','Germany':'DE',
+  'Spain':'ES','Italy':'IT','Portugal':'PT','Netherlands':'NL','Belgium':'BE',
+  'Brazil':'BR','Argentina':'AR','Uruguay':'UY','Colombia':'CO','Chile':'CL','Peru':'PE',
+  'Mexico':'MX','USA':'US','Canada':'CA','Japan':'JP','South Korea':'KR','China':'CN',
+  'Australia':'AU','Nigeria':'NG','Ghana':'GH','Senegal':'SN','Morocco':'MA',
+  'Egypt':'EG','Algeria':'DZ','Tunisia':'TN','Cameroon':'CM','Ivory Coast':'CI',
+  'Russia':'RU','Poland':'PL','Ukraine':'UA','Serbia':'RS','Croatia':'HR',
+  'Sweden':'SE','Norway':'NO','Denmark':'DK','Finland':'FI','Iceland':'IS',
+  'Switzerland':'CH','Austria':'AT','Greece':'GR','Czech Republic':'CZ',
+  'Romania':'RO','Hungary':'HU','Bulgaria':'BG','Slovakia':'SK','Slovenia':'SI',
+  'Saudi Arabia':'SA','Iran':'IR','Iraq':'IQ','Qatar':'QA','UAE':'AE',
+  'Indonesia':'ID','Thailand':'TH','India':'IN','Pakistan':'PK','Philippines':'PH',
+  'South Africa':'ZA','Kenya':'KE','Tanzania':'TZ','Ethiopia':'ET','Zimbabwe':'ZW',
+  'Ecuador':'EC','Paraguay':'PY','Bolivia':'BO','Venezuela':'VE','Costa Rica':'CR',
+  'Jamaica':'JM','Trinidad':'TT','New Zealand':'NZ','Ireland':'IE',
+  // Turkish names
+  'Türkiye':'TR','İngiltere':'GB','Fransa':'FR','Almanya':'DE','İspanya':'ES',
+  'İtalya':'IT','Portekiz':'PT','Hollanda':'NL','Belçika':'BE',
+  'Brezilya':'BR','Arjantin':'AR','Japonya':'JP','Güney Kore':'KR','Çin':'CN',
+  'Avustralya':'AU','Nijerya':'NG','Gana':'GH','Fas':'MA','Mısır':'EG',
+  'Rusya':'RU','Polonya':'PL','Ukrayna':'UA','Sırbistan':'RS','Hırvatistan':'HR',
+  'İsveç':'SE','Norveç':'NO','Danimarka':'DK','Yunanistan':'GR',
+  'İsviçre':'CH','Avusturya':'AT','Endonezya':'ID','Hindistan':'IN',
+  'Güney Afrika':'ZA','Kenya':'KE','Ekvator':'EC',
+};
+
 function nationalityToFlag(nat?: string): string {
   if (!nat || nat.length < 2) return '';
-  // ISO 3166-1 alpha-2 → regional indicator emoji
-  const code = nat.trim().toUpperCase().slice(0, 2);
-  const flag = [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
-  return flag;
+  // Try full name lookup first
+  const iso = NAT_TO_ISO[nat.trim()] || NAT_TO_ISO[nat.trim().split(' ')[0]];
+  const code = iso || nat.trim().toUpperCase().slice(0, 2);
+  // Only convert valid A-Z chars
+  if (!/^[A-Z]{2}$/.test(code)) return '';
+  return [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
