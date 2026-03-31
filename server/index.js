@@ -604,8 +604,9 @@ app.post('/api/challenge/:id/decline', async (req, res) => {
 // POST /api/admin/reset-elo  — sezon sıfırlama (admin key gerekli)
 app.post('/api/admin/reset-elo', async (req, res) => {
   const { adminKey } = req.body;
-  if (adminKey !== process.env.ADMIN_KEY) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  const expectedKey = (process.env.ADMIN_KEY || '').trim();
+  if (!expectedKey || adminKey.trim() !== expectedKey) {
+    return res.status(401).json({ error: 'Unauthorized', hint: !expectedKey ? 'ADMIN_KEY env not set' : 'key mismatch' });
   }
   try {
     // Gerçek oyuncuları sıfırla
