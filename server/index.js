@@ -81,7 +81,7 @@ BOT_DATA.forEach(b => { BOT_INITIAL_ELO[b.id] = b.elo; });
 
 const BOT_FORMATIONS = ['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-1-4-1', '5-3-2'];
 
-async function seedBots() {
+async function seedBots(db = pool) {
   for (const bot of BOT_DATA) {
     const formation = BOT_FORMATIONS[Math.floor(Math.random() * BOT_FORMATIONS.length)];
     const wins  = Math.floor(Math.random() * 30) + 10;
@@ -89,13 +89,13 @@ async function seedBots() {
     const losses= Math.floor(Math.random() * 20) + 5;
 
     // Insert only if not exists — reset-elo handles restoring ELO separately
-    await pool.query(`
+    await db.query(`
       INSERT INTO players (player_id, username, team_name, elo, wins, draws, losses)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (player_id) DO NOTHING
     `, [bot.id, bot.teamName, bot.teamName, bot.elo, wins, draws, losses]);
 
-    await pool.query(`
+    await db.query(`
       INSERT INTO team_snapshots (player_id, formation, tactics, squad, avg_ovr)
       VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (player_id) DO UPDATE
@@ -107,9 +107,9 @@ async function seedBots() {
 
 // ─── BOT VS BOT SIMULATION ──────────────────────────────────────────────────
 
-async function simulateBotMatches(count = 8) {
+async function simulateBotMatches(count = 8, db = pool) {
   try {
-    const { rows: botPlayers } = await pool.query(
+    const { rows: botPlayers } = await db.query(
       `SELECT player_id, elo FROM players WHERE player_id LIKE 'bot-%' ORDER BY RANDOM() LIMIT $1`,
       [count * 2]
     );
@@ -143,21 +143,21 @@ async function simulateBotMatches(count = 8) {
       const awayChange = isDraw ? calcElo(away.elo, home.elo, true)
         : !homeWon ? calcElo(away.elo, home.elo, false) : -calcElo(away.elo, home.elo, false);
 
-      await pool.query(`
+      await db.query(`
         UPDATE players SET
           elo = GREATEST(100, elo + $2),
           wins = wins + $3, draws = draws + $4, losses = losses + $5
         WHERE player_id = $1
       `, [home.player_id, homeChange, homeWon?1:0, isDraw?1:0, (!homeWon&&!isDraw)?1:0]);
 
-      await pool.query(`
+      await db.query(`
         UPDATE players SET
           elo = GREATEST(100, elo + $2),
           wins = wins + $3, draws = draws + $4, losses = losses + $5
         WHERE player_id = $1
       `, [away.player_id, awayChange, (!homeWon&&!isDraw)?1:0, isDraw?1:0, homeWon?1:0]);
 
-      await pool.query(`
+      await db.query(`
         INSERT INTO matches (home_player_id, away_player_id, home_score, away_score, home_elo_change, away_elo_change, match_type)
         VALUES ($1, $2, $3, $4, $5, $6, 'bot')
       `, [home.player_id, away.player_id, homeScore, awayScore, homeChange, awayChange]);
@@ -180,6 +180,31 @@ function calcElo(winnerElo, loserElo, draw = false) {
   // Çok güçlü kazanırsa (expected > 0.85) sıfırla — farming önlemi
   if (!draw && expected > 0.85) change = 0;
   return change;
+}
+
+function isAuthorizedAdmin(adminKey) {
+  const expectedKey = (process.env.ADMIN_KEY || '').trim();
+  return Boolean(expectedKey && typeof adminKey === 'string' && adminKey.trim() === expectedKey);
+}
+
+async function rebuildLiveStateFromCurrentBotData() {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(`
+      TRUNCATE TABLE matches, challenges, team_snapshots, players
+      RESTART IDENTITY CASCADE
+    `);
+    await seedBots(client);
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+
+  await simulateBotMatches(20);
 }
 
 // ─── ROUTES ─────────────────────────────────────────────────────────────────
@@ -605,7 +630,7 @@ app.post('/api/challenge/:id/decline', async (req, res) => {
 app.post('/api/admin/reset-elo', async (req, res) => {
   const { adminKey } = req.body;
   const expectedKey = (process.env.ADMIN_KEY || '').trim();
-  if (!expectedKey || adminKey.trim() !== expectedKey) {
+  if (!isAuthorizedAdmin(adminKey)) {
     return res.status(401).json({ error: 'Unauthorized', hint: !expectedKey ? 'ADMIN_KEY env not set' : 'key mismatch' });
   }
   try {
@@ -629,6 +654,26 @@ app.post('/api/admin/reset-elo', async (req, res) => {
     // Sıfırdan bot simülasyonu başlat
     await simulateBotMatches(20);
     res.json({ ok: true, message: 'ELO reset complete. Bots restored. New season started!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
+
+// POST /api/admin/rebuild-live  — tüm canlı veriyi sil, güncel bot verisiyle sıfırdan kur
+app.post('/api/admin/rebuild-live', async (req, res) => {
+  const { adminKey } = req.body;
+  const expectedKey = (process.env.ADMIN_KEY || '').trim();
+  if (!isAuthorizedAdmin(adminKey)) {
+    return res.status(401).json({ error: 'Unauthorized', hint: !expectedKey ? 'ADMIN_KEY env not set' : 'key mismatch' });
+  }
+
+  try {
+    await rebuildLiveStateFromCurrentBotData();
+    res.json({
+      ok: true,
+      message: 'Live data rebuilt from current bot data. Human players, snapshots, matches, and challenges were cleared.'
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'DB error' });
