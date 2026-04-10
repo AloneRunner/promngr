@@ -83,24 +83,44 @@ const BOT_FORMATIONS = ['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-1-4-1', '5-3-2'
 
 async function seedBots(db = pool) {
   for (const bot of BOT_DATA) {
-    const formation = BOT_FORMATIONS[Math.floor(Math.random() * BOT_FORMATIONS.length)];
     const wins  = Math.floor(Math.random() * 30) + 10;
     const draws = Math.floor(Math.random() * 10) + 2;
     const losses= Math.floor(Math.random() * 20) + 5;
 
-    // Insert only if not exists — reset-elo handles restoring ELO separately
     await db.query(`
-      INSERT INTO players (player_id, username, team_name, elo, wins, draws, losses)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      ON CONFLICT (player_id) DO NOTHING
-    `, [bot.id, bot.teamName, bot.teamName, bot.elo, wins, draws, losses]);
+      INSERT INTO players (player_id, username, team_name, nationality, elo, wins, draws, losses)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT (player_id) DO UPDATE
+        SET username = EXCLUDED.username,
+            team_name = EXCLUDED.team_name,
+            nationality = COALESCE(EXCLUDED.nationality, players.nationality)
+    `, [
+      bot.id,
+      bot.managerName || bot.teamName,
+      bot.teamName,
+      bot.nationality || bot.country || null,
+      bot.elo,
+      wins,
+      draws,
+      losses,
+    ]);
 
     await db.query(`
       INSERT INTO team_snapshots (player_id, formation, tactics, squad, avg_ovr)
       VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (player_id) DO UPDATE
-        SET formation = EXCLUDED.formation, squad = EXCLUDED.squad, avg_ovr = EXCLUDED.avg_ovr
-    `, [bot.id, formation, JSON.stringify({ style: 'HighPress' }), JSON.stringify(bot.squad), bot.avg]);
+        SET formation = EXCLUDED.formation,
+            tactics = EXCLUDED.tactics,
+            squad = EXCLUDED.squad,
+            avg_ovr = EXCLUDED.avg_ovr,
+            updated_at = NOW()
+    `, [
+      bot.id,
+      bot.formation || BOT_FORMATIONS[Math.floor(Math.random() * BOT_FORMATIONS.length)],
+      JSON.stringify(bot.tactics || { style: 'Balanced' }),
+      JSON.stringify(bot.squad),
+      bot.avg,
+    ]);
   }
   console.log(`Bot players seeded: ${BOT_DATA.length} bots.`);
 }
@@ -110,7 +130,14 @@ async function seedBots(db = pool) {
 async function simulateBotMatches(count = 8, db = pool) {
   try {
     const { rows: botPlayers } = await db.query(
-      `SELECT player_id, elo FROM players WHERE player_id LIKE 'bot-%' ORDER BY RANDOM() LIMIT $1`,
+      `
+        SELECT p.player_id, p.elo, COALESCE(s.avg_ovr, 70) AS avg_ovr
+        FROM players p
+        LEFT JOIN team_snapshots s ON s.player_id = p.player_id
+        WHERE p.player_id LIKE 'bot-%'
+        ORDER BY RANDOM()
+        LIMIT $1
+      `,
       [count * 2]
     );
     if (botPlayers.length < 2) return;
@@ -121,20 +148,12 @@ async function simulateBotMatches(count = 8, db = pool) {
     }
 
     for (const [home, away] of pairs) {
-      // ELO-weighted random result
-      const expected = 1 / (1 + Math.pow(10, (away.elo - home.elo) / 400));
-      const r = Math.random();
-      let homeScore, awayScore;
-      if (r < expected * 0.55) {
-        homeScore = Math.floor(Math.random() * 3) + 1;
-        awayScore = Math.floor(Math.random() * homeScore);
-      } else if (r < expected * 0.55 + 0.22) {
-        homeScore = Math.floor(Math.random() * 3) + 1;
-        awayScore = homeScore;
-      } else {
-        awayScore = Math.floor(Math.random() * 3) + 1;
-        homeScore = Math.floor(Math.random() * awayScore);
-      }
+      const homeStrength = home.elo + (Number(home.avg_ovr || 70) - 70) * 26 + 24;
+      const awayStrength = away.elo + (Number(away.avg_ovr || 70) - 70) * 26;
+      const expected = 1 / (1 + Math.pow(10, (awayStrength - homeStrength) / 400));
+      const strengthGap = homeStrength - awayStrength;
+      const homeScore = sampleGoals(1.1 + expected * 1.45 + Math.max(0, strengthGap) / 420);
+      const awayScore = sampleGoals(0.95 + (1 - expected) * 1.35 + Math.max(0, -strengthGap) / 420);
 
       const isDraw = homeScore === awayScore;
       const homeWon = homeScore > awayScore;
@@ -166,6 +185,20 @@ async function simulateBotMatches(count = 8, db = pool) {
   } catch (err) {
     console.error('Bot sim error:', err.message);
   }
+}
+
+function sampleGoals(lambda) {
+  const capped = Math.max(0.15, Math.min(4.8, lambda));
+  const threshold = Math.exp(-capped);
+  let goals = 0;
+  let product = 1;
+
+  while (product > threshold && goals < 8) {
+    goals += 1;
+    product *= Math.random();
+  }
+
+  return Math.max(0, goals - 1);
 }
 
 // ─── ELO HELPER ─────────────────────────────────────────────────────────────
@@ -277,7 +310,7 @@ app.get('/api/matchmaking/:playerId', async (req, res) => {
     const myOvr = self.rows[0]?.avg_ovr || 70;
     const ovrRange = 12;
 
-    const humanCols = `p.player_id, p.username, p.team_name, p.elo, s.formation, s.tactics, s.squad, s.avg_ovr`;
+    const humanCols = `p.player_id, p.username, p.team_name, p.nationality, p.elo, s.formation, s.tactics, s.squad, s.avg_ovr`;
 
     // 1) Gerçek oyuncu — OVR yakın, son 7 gün aktif
     const human = await pool.query(`

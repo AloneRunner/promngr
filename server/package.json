@@ -4,6 +4,7 @@
   "description": "Football Manager Ghost Multiplayer API",
   "main": "index.js",
   "scripts": {
+    "generate:bots": "node gen_bots_attrs.js",
     "start": "node index.js",
     "dev": "node index.js"
   },
