@@ -21,7 +21,7 @@ async function initDB() {
       player_id   VARCHAR(36) PRIMARY KEY,
       username    VARCHAR(100) NOT NULL DEFAULT 'Manager',
       team_name   VARCHAR(100) NOT NULL DEFAULT 'My Team',
-      nationality VARCHAR(10) DEFAULT NULL,
+      nationality VARCHAR(60) DEFAULT NULL,
       elo         INTEGER NOT NULL DEFAULT 1000,
       wins        INTEGER NOT NULL DEFAULT 0,
       losses      INTEGER NOT NULL DEFAULT 0,
@@ -29,7 +29,8 @@ async function initDB() {
       created_at  TIMESTAMP DEFAULT NOW(),
       updated_at  TIMESTAMP DEFAULT NOW()
     );
-    ALTER TABLE players ADD COLUMN IF NOT EXISTS nationality VARCHAR(10) DEFAULT NULL;
+    ALTER TABLE players ADD COLUMN IF NOT EXISTS nationality VARCHAR(60) DEFAULT NULL;
+    ALTER TABLE players ALTER COLUMN nationality TYPE VARCHAR(60);
 
     CREATE TABLE IF NOT EXISTS team_snapshots (
       player_id   VARCHAR(36) PRIMARY KEY REFERENCES players(player_id) ON DELETE CASCADE,
